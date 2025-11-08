@@ -8469,7 +8469,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get expandLabel => 'Espandi';
 
   @override
-  String get settingsNotLoggedIn => 'Non connesso';
+  String get settingsNotLoggedIn => 'Non loggato';
 
   @override
   String get settingsLoading => 'Caricamento...';
@@ -8484,13 +8484,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsNoEmail => 'Nessuna email';
 
   @override
-  String get settingsLastUpdated => 'Ultimo aggiornamento';
+  String settingsLastUpdated(Object date) {
+    return 'Ultimo aggiornamento: $date';
+  }
 
   @override
   String get settingsUpdateProfile => 'Aggiorna Profilo';
 
   @override
-  String get settingsAccentColor => 'Colore Principale';
+  String get settingsAccentColor => 'Colore Accento';
 
   @override
   String get settingsFontSize => 'Dimensione Carattere';
@@ -8512,7 +8514,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsAutoStartTimerDesc =>
-      'Avvia timer riposo dopo serie completata';
+      'Avvia timer di riposo dopo aver completato una serie';
 
   @override
   String get settingsDefaultRestTime => 'Tempo Riposo Predefinito';
@@ -8541,14 +8543,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsLiveActivitiesDesc =>
-      'Mostra timer in lockscreen e Dynamic Island';
+      'Mostra timer su schermata di blocco e Dynamic Island';
 
   @override
-  String get settingsHealthAppSync => 'Sincronizzazione Salute';
+  String get settingsHealthAppSync => 'Sincronizzazione Health';
 
   @override
   String get settingsHealthAppSyncDesc =>
-      'Sincronizza allenamenti con Apple Salute';
+      'Sincronizza allenamenti con Apple Health';
 
   @override
   String get settingsAudioFeedback => 'Audio e Feedback';
@@ -8564,7 +8566,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsVibrations => 'Vibrazioni';
 
   @override
-  String get settingsVibrationsDesc => 'Feedback aptico per interazioni';
+  String get settingsVibrationsDesc => 'Feedback aptico per le interazioni';
 
   @override
   String get settingsTestSounds => 'Testa Suoni';
@@ -8601,11 +8603,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsBetaModeEnabled =>
-      'Tutte le funzionalità premium sbloccate per testing';
+      'Modalità Beta abilitata - Tutte le funzioni premium sbloccate!';
 
   @override
-  String get settingsBetaModeDisabled =>
-      'Abilita accesso temporaneo a tutte le funzionalità premium';
+  String get settingsBetaModeDisabled => 'Modalità Beta disabilitata';
 
   @override
   String get settingsBetaModeLabel => 'BETA';
@@ -8680,10 +8681,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsSignOutMessage => 'Sei sicuro di voler disconnetterti?';
 
   @override
-  String get settingsExportComingSoon => 'Funzionalità esportazione in arrivo';
+  String get settingsExportComingSoon => 'Funzione di esportazione in arrivo';
 
   @override
-  String get settingsImportComingSoon => 'Funzionalità importazione in arrivo';
+  String get settingsImportComingSoon => 'Funzione di importazione in arrivo';
 
   @override
   String get templateSearchPlaceholder => 'Cerca template...';
@@ -15759,4 +15760,407 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noExercises => 'Nessun esercizio';
+
+  @override
+  String get settingsWorkout => 'Allenamento';
+
+  @override
+  String get settingsIosFeatures => 'Funzioni iOS';
+
+  @override
+  String get settingsAdvanced => 'Avanzate';
+
+  @override
+  String get settingsExport => 'Esporta Impostazioni';
+
+  @override
+  String get settingsExportDesc => 'Salva impostazioni come file JSON';
+
+  @override
+  String get settingsImport => 'Importa Impostazioni';
+
+  @override
+  String get settingsImportDesc => 'Carica impostazioni da file JSON';
+
+  @override
+  String get settingsDataMigrationAvailable =>
+      'Hai dati da migrare dalla versione precedente';
+
+  @override
+  String get settingsDataMigrationComplete =>
+      'Migrazione completata o non necessaria';
+
+  @override
+  String get settingsAvailable => 'Disponibile';
+
+  @override
+  String get settingsBetaModeEnabledDesc =>
+      'Tutte le funzioni premium sbloccate per test';
+
+  @override
+  String get settingsBetaModeDisabledDesc =>
+      'Abilita accesso temporaneo a tutte le funzioni premium';
+
+  @override
+  String get settingsResetToDefaultsDesc =>
+      'Ripristina tutte le impostazioni predefinite';
+
+  @override
+  String get settingsAccountActions => 'Azioni Account';
+
+  @override
+  String get settingsSignOutDesc => 'Disconnetti dal tuo account';
+
+  @override
+  String get settingsItaliano => 'Italiano';
+
+  @override
+  String get settingsAccentColorDialog => 'Colore Accento';
+
+  @override
+  String get settingsDefaultRestTimeDialog => 'Tempo Riposo Predefinito';
+
+  @override
+  String get settingsResetTimerPositionDialog => 'Ripristina Posizione Timer';
+
+  @override
+  String get settingsResetTimerPositionDialogDesc =>
+      'Questo ripristinerà la posizione del timer trascinabile alla posizione predefinita. Utile se il timer è bloccato fuori schermo.';
+
+  @override
+  String get settingsTimerPositionResetSuccess =>
+      'Posizione timer ripristinata a predefinita';
+
+  @override
+  String settingsFailedToClearCache(Object error) {
+    return 'Impossibile svuotare cache: $error';
+  }
+
+  @override
+  String get settingsResetSettingsDialog => 'Ripristina Impostazioni';
+
+  @override
+  String get settingsResetSettingsDialogDesc =>
+      'Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.';
+
+  @override
+  String get settingsSignOutConfirm => 'Sei sicuro di volerti disconnettere?';
+
+  @override
+  String settingsApreCalculationMethodUpdated(Object method) {
+    return 'Metodo di calcolo APRE aggiornato a $method';
+  }
+
+  @override
+  String get settingsApreCalculationMethodLoading => 'Metodo Calcolo APRE';
+
+  @override
+  String get settingsLoadingGeneric => 'Caricamento...';
+
+  @override
+  String get settingsApreCalculationMethodError => 'Metodo Calcolo APRE';
+
+  @override
+  String settingsErrorGeneric(Object error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get exerciseListEdit => 'Modifica';
+
+  @override
+  String get exerciseListDuplicate => 'Duplica';
+
+  @override
+  String get exerciseListInsight => 'Analisi';
+
+  @override
+  String get exerciseListAddNotesHint => 'Aggiungi note...';
+
+  @override
+  String get exerciseListTapToAddNotes => 'Tocca per aggiungere note';
+
+  @override
+  String exerciseListSetsProgress(Object completed, Object total) {
+    return 'Serie ($completed/$total)';
+  }
+
+  @override
+  String exerciseListSetAdded(Object setNumber) {
+    return 'Serie $setNumber aggiunta';
+  }
+
+  @override
+  String exerciseListSetRestTimeMessage(Object exerciseName) {
+    return 'Imposta tempo riposo tra serie per \"$exerciseName\"';
+  }
+
+  @override
+  String get exerciseListCancel => 'Annulla';
+
+  @override
+  String get exerciseListSave => 'Salva';
+
+  @override
+  String get exerciseListSetRestTimer => 'Imposta Timer Riposo';
+
+  @override
+  String exerciseListCustomTime(Object time) {
+    return 'Personalizzato: $time';
+  }
+
+  @override
+  String get exerciseListCustom => 'Personalizzato';
+
+  @override
+  String get exerciseListConfirm => 'Conferma';
+
+  @override
+  String get exerciseListCustomRestTime => 'Tempo Riposo Personalizzato';
+
+  @override
+  String get exerciseListMinutes => 'Minuti';
+
+  @override
+  String get exerciseListSeconds => 'Secondi';
+
+  @override
+  String get exerciseListSetButton => 'Imposta';
+
+  @override
+  String exerciseListRestTimerSetTo(Object time) {
+    return '⏱️ Timer riposo impostato a $time';
+  }
+
+  @override
+  String get workoutTemplateSearchHint => 'Cerca template...';
+
+  @override
+  String get workoutTemplateRetry => 'Riprova';
+
+  @override
+  String get workoutTemplateNoPopularYet => 'Nessun template popolare ancora';
+
+  @override
+  String get workoutTemplateMostUsedWillAppear =>
+      'I template più usati appariranno qui';
+
+  @override
+  String get workoutTemplateNoCustom => 'Nessun template personalizzato';
+
+  @override
+  String get workoutTemplateCreateFirstCustom =>
+      'Crea il tuo primo template personalizzato';
+
+  @override
+  String get workoutTemplateNoneFound => 'Nessun template trovato';
+
+  @override
+  String get workoutTemplateSharingComingSoon =>
+      '📤 Condivisione template in arrivo...';
+
+  @override
+  String workoutTemplateDuplicatedSuccess(Object templateName) {
+    return '✅ Template duplicato: \"$templateName\"';
+  }
+
+  @override
+  String workoutTemplateDuplicationError(Object error) {
+    return 'Errore duplicazione: $error';
+  }
+
+  @override
+  String get workoutTemplateDeleteTitle => 'Elimina Template';
+
+  @override
+  String workoutTemplateDeleteConfirm(Object templateName) {
+    return 'Sei sicuro di voler eliminare \"$templateName\"?';
+  }
+
+  @override
+  String get workoutTemplateCancel => 'Annulla';
+
+  @override
+  String get workoutTemplateSyncStatus => 'Stato Sincronizzazione';
+
+  @override
+  String get exerciseOptionsTapToEnlarge => 'Tocca per ingrandire';
+
+  @override
+  String get exerciseOptionsExerciseInfo => 'Info esercizio';
+
+  @override
+  String get exerciseOptionsExerciseInfoSubtitle =>
+      'Muscoli coinvolti e tecnica';
+
+  @override
+  String get exerciseOptionsWarmupInfo => 'Info riscaldamento';
+
+  @override
+  String get exerciseOptionsWarmupInfoSubtitle =>
+      'Consigli per il riscaldamento';
+
+  @override
+  String get exerciseOptionsNoWarmupDataAvailable =>
+      'Nessun dato riscaldamento disponibile';
+
+  @override
+  String get exerciseOptionsInjuryPrevention => 'Prevenzione infortuni';
+
+  @override
+  String get exerciseOptionsInjuryPreventionSubtitle =>
+      'Consigli per evitare infortuni';
+
+  @override
+  String get exerciseOptionsNoInjuryPreventionDataAvailable =>
+      'Nessun dato prevenzione infortuni disponibile';
+
+  @override
+  String get exerciseOptionsReportIssue => 'Segnala problema';
+
+  @override
+  String get exerciseOptionsReportIssueSubtitle => 'Bug, errori o suggerimenti';
+
+  @override
+  String get exerciseOptionsHistory => 'Storico';
+
+  @override
+  String get exerciseOptionsEditNameAndNotes => 'Modifica nome e note';
+
+  @override
+  String get exerciseOptionsEditNameAndNotesSubtitle =>
+      'Personalizza nome esercizio e aggiungi note';
+
+  @override
+  String get exerciseOptionsChangeCountingFormat => 'Cambia formato conteggio';
+
+  @override
+  String get exerciseOptionsChangeCountingFormatSubtitle =>
+      'Passa tra peso/ripetizioni/tempo';
+
+  @override
+  String get exerciseOptionsDuplicate => 'Duplica esercizio';
+
+  @override
+  String get exerciseOptionsDelete => 'Elimina esercizio';
+
+  @override
+  String get exerciseOptionsExerciseInfoTitle => 'Info Esercizio';
+
+  @override
+  String get exerciseOptionsPrimaryMuscles => 'Muscoli Primari';
+
+  @override
+  String get exerciseOptionsSecondaryMuscles => 'Muscoli Secondari';
+
+  @override
+  String get exerciseOptionsEquipment => 'Attrezzatura';
+
+  @override
+  String get exerciseOptionsDifficultyLevel => 'Livello Difficoltà';
+
+  @override
+  String get exerciseOptionsWarmupInfoTitle => 'Info Riscaldamento';
+
+  @override
+  String get exerciseOptionsPreWorkoutMobility => 'Mobilità Pre-Allenamento';
+
+  @override
+  String get exerciseOptionsPreWorkoutActivation =>
+      'Attivazione Pre-Allenamento';
+
+  @override
+  String get exerciseOptionsWarmupSets => 'Serie Riscaldamento';
+
+  @override
+  String get exerciseOptionsInjuryPreventionTitle => 'Prevenzione Infortuni';
+
+  @override
+  String get exerciseOptionsInjuryPreventionSection => 'Prevenzione Infortuni';
+
+  @override
+  String get exerciseOptionsRecommendedCooldown => 'Defaticamento Consigliato';
+
+  @override
+  String get exerciseOptionsTechnicalTips => 'Consigli Tecnici';
+
+  @override
+  String get dailyWorkoutAutoCompleting =>
+      'Completamento automatico giorno... ✨';
+
+  @override
+  String get dailyWorkoutDifferentWorkoutCompleted =>
+      'Hai completato un allenamento diverso oggi';
+
+  @override
+  String get dailyWorkoutSubstitute => 'Sostituisci';
+
+  @override
+  String get dailyWorkoutSkip => 'Salta';
+
+  @override
+  String get dailyWorkoutComplete => 'Completa';
+
+  @override
+  String get dailyWorkoutRestAndRecovery => 'Riposo e Recupero';
+
+  @override
+  String get dailyWorkoutRestAndRecoverySubtitle =>
+      'Prenditi una pausa e lascia che il tuo corpo recuperi';
+
+  @override
+  String get dailyWorkoutDefaultWorkoutName => 'Allenamento';
+
+  @override
+  String get dailyWorkoutLoading => 'Caricamento...';
+
+  @override
+  String get dailyWorkoutTapCompleteWhenDone => 'Tocca completa quando finito';
+
+  @override
+  String get dailyWorkoutGreatWork => 'Ottimo lavoro! Continua così 💪';
+
+  @override
+  String get dailyWorkoutDaySkipped =>
+      'Giorno saltato. Considera di recuperarlo!';
+
+  @override
+  String get dailyWorkoutDayRecovered => 'Giorno recuperato con successo!';
+
+  @override
+  String get dailyWorkoutStatusCompleted => 'Completato ✓';
+
+  @override
+  String get dailyWorkoutStatusSkipped => 'Saltato';
+
+  @override
+  String get dailyWorkoutStatusRecovered => 'Recuperato';
+
+  @override
+  String get dailyWorkoutStatusReadyToGo => 'Pronto per iniziare';
+
+  @override
+  String get dailyWorkoutSubstituteDialogTitle => 'Sostituisci Allenamento?';
+
+  @override
+  String get dailyWorkoutSubstituteDialogMessage =>
+      'Hai completato un allenamento diverso oggi. Vuoi segnare questo giorno come completato con quell\'allenamento invece?';
+
+  @override
+  String get dailyWorkoutSubstituteDialogConfirm => 'Sostituisci';
+
+  @override
+  String get dailyWorkoutSubstituteDialogCancel => 'Annulla';
+
+  @override
+  String get exerciseListUseDefaultTimer => 'Usa timer predefinito';
+
+  @override
+  String get exerciseListUsesGlobalRestTimer => 'Usa timer di riposo globale';
+
+  @override
+  String get exerciseListQuickOptions => 'Opzioni rapide';
+
+  @override
+  String get exerciseListUsingDefaultTimer => 'Utilizzo timer predefinito';
 }

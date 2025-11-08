@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/day_detail_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Card showing today's workout
 class DailyWorkoutCard extends ConsumerWidget {
@@ -118,7 +119,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      _getStatusLabel(dayInfo.status),
+                      _getStatusLabel(context, dayInfo.status),
                       style: context.textTheme.bodySmall?.copyWith(
                         color: _getStatusColor(context, dayInfo.status),
                         fontWeight: FontWeight.w600,
@@ -161,7 +162,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Auto-completing day... ✨',
+                              context.l10n.dailyWorkoutAutoCompleting,
                               style: context.textTheme.bodyMedium?.copyWith(
                                 color: Colors.green,
                                 fontWeight: FontWeight.w600,
@@ -189,7 +190,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'You completed a different workout today',
+                                  context.l10n.dailyWorkoutDifferentWorkoutCompleted,
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: context.colors.onSurface.withValues(alpha: 0.7),
                                   ),
@@ -205,7 +206,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                               child: ElevatedButton.icon(
                                 onPressed: () => _showSubstitutionDialog(context, ref, routine, date, status),
                                 icon: Icon(AppIcons.swapHoriz, size: 20),
-                                label: Text('Substitute'),
+                                label: Text(context.l10n.dailyWorkoutSubstitute),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: context.colors.secondary,
                                   foregroundColor: context.colors.onSecondary,
@@ -221,7 +222,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                               child: OutlinedButton.icon(
                                 onPressed: onSkip,
                                 icon: Icon(AppIcons.eventBusy, size: 20),
-                                label: Text('Skip'),
+                                label: Text(context.l10n.dailyWorkoutSkip),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: context.colors.error,
                                   side: BorderSide(color: context.colors.error),
@@ -245,7 +246,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                         child: ElevatedButton.icon(
                           onPressed: onComplete,
                           icon: const Icon(AppIcons.complete, size: 20),
-                          label: const Text('Complete'),
+                          label: Text(context.l10n.dailyWorkoutComplete),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
@@ -261,7 +262,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                         child: OutlinedButton.icon(
                           onPressed: onSkip,
                           icon: Icon(AppIcons.eventBusy, size: 20),
-                          label: Text('Skip'),
+                          label: Text(context.l10n.dailyWorkoutSkip),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: context.colors.error,
                             side: BorderSide(color: context.colors.error),
@@ -275,14 +276,14 @@ class DailyWorkoutCard extends ConsumerWidget {
                     ],
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: LoadingIndicator()),
                 error: (_, __) => Row(
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: onComplete,
                         icon: const Icon(AppIcons.complete, size: 20),
-                        label: const Text('Complete'),
+                        label: Text(context.l10n.dailyWorkoutComplete),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
@@ -298,7 +299,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                       child: OutlinedButton.icon(
                         onPressed: onSkip,
                         icon: Icon(AppIcons.eventBusy, size: 20),
-                        label: Text('Skip'),
+                        label: Text(context.l10n.dailyWorkoutSkip),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: context.colors.error,
                           side: BorderSide(color: context.colors.error),
@@ -319,7 +320,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     child: ElevatedButton.icon(
                       onPressed: onComplete,
                       icon: const Icon(AppIcons.complete, size: 20),
-                      label: const Text('Complete'),
+                      label: Text(context.l10n.dailyWorkoutComplete),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
@@ -335,7 +336,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                     child: OutlinedButton.icon(
                       onPressed: onSkip,
                       icon: Icon(AppIcons.eventBusy, size: 20),
-                      label: Text('Skip'),
+                      label: Text(context.l10n.dailyWorkoutSkip),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.colors.error,
                         side: BorderSide(color: context.colors.error),
@@ -426,7 +427,7 @@ class DailyWorkoutCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Rest & Recovery',
+                  context.l10n.dailyWorkoutRestAndRecovery,
                   style: context.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onSurface,
@@ -434,7 +435,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Take a break and let your body recover',
+                  context.l10n.dailyWorkoutRestAndRecoverySubtitle,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
@@ -453,12 +454,12 @@ class DailyWorkoutCard extends ConsumerWidget {
         ? ref.watch(templateByIdProvider(day.templateId!))
         : null;
 
-    String workoutName = 'Workout';
+    String workoutName = context.l10n.dailyWorkoutDefaultWorkoutName;
     if (templateAsync != null) {
       workoutName = templateAsync.when(
-        data: (template) => template?.name ?? 'Workout',
-        loading: () => 'Loading...',
-        error: (_, __) => day.templateId ?? 'Workout',
+        data: (template) => template?.name ?? context.l10n.dailyWorkoutDefaultWorkoutName,
+        loading: () => context.l10n.dailyWorkoutLoading,
+        error: (_, __) => day.templateId ?? context.l10n.dailyWorkoutDefaultWorkoutName,
       );
     }
 
@@ -491,7 +492,7 @@ class DailyWorkoutCard extends ConsumerWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Tap complete when done',
+                  context.l10n.dailyWorkoutTapCompleteWhenDone,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
@@ -527,10 +528,10 @@ class DailyWorkoutCard extends ConsumerWidget {
           Expanded(
             child: Text(
               day.status == DayStatus.completed
-                  ? 'Great work! Keep it up 💪'
+                  ? context.l10n.dailyWorkoutGreatWork
                   : day.status == DayStatus.skipped
-                      ? 'Day skipped. Consider recovering it!'
-                      : 'Day recovered successfully!',
+                      ? context.l10n.dailyWorkoutDaySkipped
+                      : context.l10n.dailyWorkoutDayRecovered,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurface,
                 fontWeight: FontWeight.w600,
@@ -595,18 +596,18 @@ class DailyWorkoutCard extends ConsumerWidget {
     }
   }
 
-  String _getStatusLabel(DayStatus status) {
+  String _getStatusLabel(BuildContext context, DayStatus status) {
     switch (status) {
       case DayStatus.completed:
-        return 'Completed ✓';
+        return context.l10n.dailyWorkoutStatusCompleted;
       case DayStatus.skipped:
-        return 'Skipped';
+        return context.l10n.dailyWorkoutStatusSkipped;
       case DayStatus.recovered:
-        return 'Recovered';
+        return context.l10n.dailyWorkoutStatusRecovered;
       case DayStatus.rest:
-        return 'Rest Day';
+        return context.l10n.restDay;
       case DayStatus.scheduled:
-        return 'Ready to go';
+        return context.l10n.dailyWorkoutStatusReadyToGo;
     }
   }
 
@@ -657,10 +658,10 @@ class DailyWorkoutCard extends ConsumerWidget {
   ) async {
     final confirmed = await ModalService.showConfirmDialog(
       context,
-      title: 'Substitute Workout?',
-      message: 'You completed a different workout today. Do you want to mark this day as completed with that workout instead?',
-      confirmText: 'Substitute',
-      cancelText: 'Cancel',
+      title: context.l10n.dailyWorkoutSubstituteDialogTitle,
+      message: context.l10n.dailyWorkoutSubstituteDialogMessage,
+      confirmText: context.l10n.dailyWorkoutSubstituteDialogConfirm,
+      cancelText: context.l10n.dailyWorkoutSubstituteDialogCancel,
     );
 
     if (confirmed && context.mounted) {

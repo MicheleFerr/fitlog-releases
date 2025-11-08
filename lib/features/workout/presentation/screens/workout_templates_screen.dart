@@ -10,10 +10,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
 // UNIFIED SYSTEM IMPORT
-import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart' hide ExerciseTemplate, SetTemplate;
+import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
 import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_recovery_dialog.dart';
@@ -97,7 +97,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             button: true,
             hint: l10n.backHint,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(AppIcons.back),
               onPressed: () {
                 if (Navigator.of(context).canPop()) {
                   Navigator.of(context).pop();
@@ -124,7 +124,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                     focusNode: _syncButtonFocusNode,
                     icon: Stack(
                       children: [
-                        const Icon(Icons.cloud),
+                        const Icon(AppIcons.cloud),
                         if (firebaseState.isSyncing)
                           Positioned(
                             right: 0,
@@ -167,7 +167,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             hint: l10n.createTemplateHint,
             child: IconButton(
               focusNode: _createButtonFocusNode,
-              icon: const Icon(Icons.add),
+              icon: const Icon(AppIcons.add),
               onPressed: () => _showCreateTemplateModal(context),
               tooltip: l10n.createTemplate,
             ),
@@ -184,60 +184,6 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       ),
       body: Column(
         children: [
-          // 🔵 DEBUG BANNER - SCHERMATA CORRENTE
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            color: Colors.blue,
-            child: const Text(
-              '🔵 WORKOUT TEMPLATES LIST SCREEN (principale)',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          // DEBUG BANNER per identificare la schermata
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(8),
-            color: Colors.red.withValues(alpha: 0.3),
-            child: Row(
-              children: [
-                const Icon(AppIcons.warning, color: Colors.red, size: 16),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    '❌ WorkoutTemplatesScreen - Qui NON VEDO i miei template',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final templates = ref.watch(customWorkoutTemplatesProvider);
-                    return templates.when(
-                      data: (data) => Text(
-                        'Templates: ${data.length}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      loading: () => const SizedBox.shrink(),
-                      error: (_, __) => const SizedBox.shrink(),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
           // Barra di ricerca
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -245,7 +191,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               controller: _searchController,
               focusNode: _searchFocusNode,
               decoration: InputDecoration(
-                hintText: 'Cerca template...',
+                hintText: context.l10n.workoutTemplateSearchHint,
                 prefixIcon: const Icon(AppIcons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -312,11 +258,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             children: [
               const Icon(AppIcons.error, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Errore: $error'),
+              Text(context.l10n.erroreError),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.invalidate(allWorkoutTemplatesProvider),
-                child: const Text('Riprova'),
+                child: Text(context.l10n.workoutTemplateRetry),
               ),
             ],
           ),
@@ -328,7 +274,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
       
       return searchResultsAsync.when(
         loading: () => const Center(child: LoadingIndicator()),
-        error: (error, stack) => Center(child: Text('Errore: $error')),
+        error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
         data: (templates) => _buildTemplatesList(templates),
       );
     }
@@ -352,20 +298,20 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     
     return popularTemplatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, stack) => Center(child: Text('Errore: $error')),
+      error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
       data: (templates) {
         if (templates.isEmpty) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(AppIcons.trendUp, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text('Nessun template popolare ancora'),
-                SizedBox(height: 8),
+                const Icon(AppIcons.trendUp, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text(context.l10n.workoutTemplateNoPopularYet),
+                const SizedBox(height: 8),
                 Text(
-                  'I template più utilizzati appariranno qui',
-                  style: TextStyle(color: Colors.grey),
+                  context.l10n.workoutTemplateMostUsedWillAppear,
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -388,7 +334,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     
     return customTemplatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
-      error: (error, stack) => Center(child: Text('Errore: $error')),
+      error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
       data: (templates) {
         debugPrint('🔍 MyTemplatesTab - Got ${templates.length} templates from customWorkoutTemplatesProvider');
         for (final template in templates) {
@@ -402,17 +348,17 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               children: [
                 const Icon(AppIcons.workout, size: 64, color: Colors.grey),
                 const SizedBox(height: 16),
-                const Text('Nessun template personalizzato'),
+                Text(context.l10n.workoutTemplateNoCustom),
                 const SizedBox(height: 8),
-                const Text(
-                  'Crea il tuo primo template personalizzato',
-                  style: TextStyle(color: Colors.grey),
+                Text(
+                  context.l10n.workoutTemplateCreateFirstCustom,
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () => _showCreateTemplateModal(context),
                   icon: const Icon(AppIcons.add),
-                  label: const Text('Crea Template'),
+                  label: Text(context.l10n.creaTemplate),
                 ),
               ],
             ),
@@ -426,34 +372,76 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
   Widget _buildTemplatesList(List<WorkoutTemplate> templates) {
     if (templates.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AppIcons.searchOff, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Nessun template trovato'),
+            const Icon(AppIcons.searchOff, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(context.l10n.workoutTemplateNoneFound),
           ],
         ),
       );
     }
 
+    // Vertical ListView with fixed 200px item height for performance
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
       itemCount: templates.length,
+      itemExtent: 216, // 200px card + 16px margin (8px top + 8px bottom)
       itemBuilder: (context, index) {
         final template = templates[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: TemplateCard(
-            template: template,
-            onTap: () => _showStartWorkoutConfirmation(template),
-            onEdit: template.isCustom ? () => _editTemplate(template) : null,
-            onDelete: template.isCustom ? () => _deleteTemplate(template) : null,
-          ),
+        return SwipeableTemplateCard(
+          template: template,
+          onTap: () => _showStartWorkoutConfirmation(template),
+          onShare: () => _shareTemplate(template),
+          onDuplicate: () => _duplicateTemplate(template),
+          onEdit: () => _editTemplate(template),
+          onDelete: () => _deleteTemplate(template),
         );
       },
     );
+  }
+
+  void _shareTemplate(WorkoutTemplate template) {
+    // TODO: Implement template sharing functionality
+    SnackBarService.showInfo(
+      context,
+      context.l10n.workoutTemplateSharingComingSoon,
+    );
+  }
+
+  void _duplicateTemplate(WorkoutTemplate template) async {
+    try {
+      // Create a duplicate with "(Copia)" suffix
+      final duplicatedTemplate = template.copyWith(
+        name: '${template.name} (Copia)',
+        isCustom: true,
+        updatedAt: DateTime.now(),
+      );
+
+      // Save to unified repository
+      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
+      final unifiedTemplate = TemplateBridge.fromLegacy(duplicatedTemplate);
+      await unifiedRepo.createTemplate(unifiedTemplate);
+
+      // Invalidate providers to refresh list
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(userTemplatesProvider);
+
+      if (mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.workoutTemplateDuplicatedSuccess(duplicatedTemplate.name),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.workoutTemplateDuplicationError(e.toString()),
+        );
+      }
+    }
   }
 
   void _showCreateTemplateModal(BuildContext context) {
@@ -664,12 +652,12 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Elimina Template'),
-        content: Text('Sei sicuro di voler eliminare "${template.name}"?'),
+        title: Text(context.l10n.workoutTemplateDeleteTitle),
+        content: Text(context.l10n.workoutTemplateDeleteConfirm(template.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annulla'),
+            child: Text(context.l10n.workoutTemplateCancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -785,11 +773,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           final firebaseState = ref.watch(firebaseTemplateNotifierProvider);
           
           return AlertDialog(
-            title: const Row(
+            title: Row(
               children: [
-                Icon(AppIcons.cloud),
-                SizedBox(width: 8),
-                Text('Stato Sincronizzazione'),
+                const Icon(AppIcons.cloud),
+                const SizedBox(width: 8),
+                Text(context.l10n.workoutTemplateSyncStatus),
               ],
             ),
             content: Column(

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// 🚀 TIER-1: Modal condiviso per opzioni esercizio sia per single che superset
 class ExerciseOptionsModal extends StatelessWidget {
@@ -124,7 +125,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                'Tap per ingrandire',
+                                context.l10n.exerciseOptionsTapToEnlarge,
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 11,
@@ -174,8 +175,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // Info Esercizio
                   ListTile(
                     leading: Icon(AppIcons.info),
-                    title: Text('Info esercizio'),
-                    subtitle: Text('Muscoli coinvolti e tecnica'),
+                    title: Text(context.l10n.exerciseOptionsExerciseInfo),
+                    subtitle: Text(context.l10n.exerciseOptionsExerciseInfoSubtitle),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -183,9 +184,9 @@ class ExerciseOptionsModal extends StatelessWidget {
                         _showExerciseInfoModal(context, exerciseData);
                       } else if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Dati esercizio non disponibili'),
-                            duration: Duration(seconds: 2),
+                          SnackBar(
+                            content: Text(context.l10n.datiEsercizioNonDisponibili),
+                            duration: const Duration(seconds: 2),
                           ),
                         );
                       }
@@ -195,8 +196,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // Info Riscaldamento
                   ListTile(
                     leading: Icon(AppIcons.whatshot, color: Colors.orange),
-                    title: Text('Info riscaldamento'),
-                    subtitle: Text('Consigli per il warmup'),
+                    title: Text(context.l10n.exerciseOptionsWarmupInfo),
+                    subtitle: Text(context.l10n.exerciseOptionsWarmupInfoSubtitle),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -206,8 +207,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(exerciseData == null
-                                ? 'Dati esercizio non disponibili'
-                                : 'Nessun dato di riscaldamento disponibile'),
+                                ? context.l10n.datiEsercizioNonDisponibili
+                                : context.l10n.exerciseOptionsNoWarmupDataAvailable),
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -218,8 +219,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // Prevenzione infortuni
                   ListTile(
                     leading: Icon(AppIcons.shieldOutlined, color: Colors.green),
-                    title: Text('Prevenzione infortuni'),
-                    subtitle: Text('Consigli per evitare infortuni'),
+                    title: Text(context.l10n.exerciseOptionsInjuryPrevention),
+                    subtitle: Text(context.l10n.exerciseOptionsInjuryPreventionSubtitle),
                     onTap: () async {
                       Navigator.pop(context);
                       final exerciseData = await _loadExerciseDataFromJson(exercise.name, languageCode);
@@ -229,8 +230,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(exerciseData == null
-                                ? 'Dati esercizio non disponibili'
-                                : 'Nessun dato di prevenzione infortuni disponibile'),
+                                ? context.l10n.datiEsercizioNonDisponibili
+                                : context.l10n.exerciseOptionsNoInjuryPreventionDataAvailable),
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -243,8 +244,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // 🆕 Segnala problema
                   ListTile(
                     leading: const Icon(AppIcons.flagOutlined, color: Colors.orange),
-                    title: const Text('Segnala problema'),
-                    subtitle: const Text('Bug, errori o suggerimenti'),
+                    title: Text(context.l10n.exerciseOptionsReportIssue),
+                    subtitle: Text(context.l10n.exerciseOptionsReportIssueSubtitle),
                     onTap: () {
                       Navigator.pop(context);
                       // Show feedback dialog
@@ -262,7 +263,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   // Storico
                   ListTile(
                     leading: const Icon(AppIcons.history),
-                    title: const Text('Storico'),
+                    title: Text(context.l10n.exerciseOptionsHistory),
                     onTap: () {
                       Navigator.pop(context);
                       if (onHistory != null) onHistory!();
@@ -273,8 +274,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   if (onEdit != null) ...[
                     ListTile(
                       leading: const Icon(AppIcons.edit),
-                      title: const Text('Modifica nome e note'),
-                      subtitle: const Text('Personalizza nome esercizio e aggiungi note'),
+                      title: Text(context.l10n.exerciseOptionsEditNameAndNotes),
+                      subtitle: Text(context.l10n.exerciseOptionsEditNameAndNotesSubtitle),
                       onTap: () {
                         Navigator.pop(context);
                         onEdit!();
@@ -285,8 +286,8 @@ class ExerciseOptionsModal extends StatelessWidget {
                   if (onChangeCountingMode != null) ...[
                     ListTile(
                       leading: Icon(AppIcons.swapHoriz),
-                      title: const Text('Cambia formato counting'),
-                      subtitle: const Text('Passa tra peso/reps/tempo'),
+                      title: Text(context.l10n.exerciseOptionsChangeCountingFormat),
+                      subtitle: Text(context.l10n.exerciseOptionsChangeCountingFormatSubtitle),
                       onTap: () {
                         Navigator.pop(context);
                         onChangeCountingMode!();
@@ -297,7 +298,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                   if (onDuplicate != null) ...[
                     ListTile(
                       leading: Icon(AppIcons.iconCopy),
-                      title: Text('Duplica esercizio'),
+                      title: Text(context.l10n.exerciseOptionsDuplicate),
                       onTap: () {
                         Navigator.pop(context);
                         onDuplicate!();
@@ -313,7 +314,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         color: Theme.of(context).colorScheme.error,
                       ),
                       title: Text(
-                        'Elimina esercizio',
+                        context.l10n.exerciseOptionsDelete,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
                         ),
@@ -416,7 +417,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        exerciseData['nome'] ?? 'Info Esercizio',
+                        exerciseData['nome'] ?? context.l10n.exerciseOptionsExerciseInfoTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -437,7 +438,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['focus'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Muscoli Primari',
+                        context.l10n.exerciseOptionsPrimaryMuscles,
                         exerciseData['focus'],
                         AppIcons.workout,
                       ),
@@ -447,7 +448,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['muscoliSecondari'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Muscoli Secondari',
+                        context.l10n.exerciseOptionsSecondaryMuscles,
                         exerciseData['muscoliSecondari'],
                         AppIcons.sports,
                       ),
@@ -457,7 +458,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['attrezzatura'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Attrezzatura',
+                        context.l10n.exerciseOptionsEquipment,
                         exerciseData['attrezzatura'],
                         AppIcons.build,
                       ),
@@ -467,7 +468,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['difficolta'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Livello Difficoltà',
+                        context.l10n.exerciseOptionsDifficultyLevel,
                         exerciseData['difficolta'],
                         AppIcons.trendUp,
                       ),
@@ -520,7 +521,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Info Riscaldamento',
+                        context.l10n.exerciseOptionsWarmupInfoTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -541,7 +542,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['mobilitaPre'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Mobilità Pre-Workout',
+                        context.l10n.exerciseOptionsPreWorkoutMobility,
                         exerciseData['mobilitaPre'],
                         AppIcons.accessibility,
                       ),
@@ -551,7 +552,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['attivazionePre'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Attivazione Pre-Workout',
+                        context.l10n.exerciseOptionsPreWorkoutActivation,
                         exerciseData['attivazionePre'],
                         AppIcons.flashOn,
                       ),
@@ -561,7 +562,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['warmupSets'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Serie di Riscaldamento',
+                        context.l10n.exerciseOptionsWarmupSets,
                         exerciseData['warmupSets'],
                         AppIcons.repeat,
                       ),
@@ -613,7 +614,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Prevenzione Infortuni',
+                        context.l10n.exerciseOptionsInjuryPreventionTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -634,7 +635,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['prevenzioneInfortuni'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Prevenzione Infortuni',
+                        context.l10n.exerciseOptionsInjuryPreventionSection,
                         exerciseData['prevenzioneInfortuni'],
                         AppIcons.warningAmber,
                       ),
@@ -644,7 +645,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['cooldownConsigliato'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Defaticamento Consigliato',
+                        context.l10n.exerciseOptionsRecommendedCooldown,
                         exerciseData['cooldownConsigliato'],
                         AppIcons.spa,
                       ),
@@ -654,7 +655,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                     if (exerciseData['noteTecniche'] != null) ...[
                       _buildInfoSection(
                         context,
-                        'Suggerimenti Tecnici',
+                        context.l10n.exerciseOptionsTechnicalTips,
                         exerciseData['noteTecniche'],
                         AppIcons.tip,
                       ),

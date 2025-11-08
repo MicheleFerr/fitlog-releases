@@ -1119,13 +1119,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         // Advanced options - conditional
                         if (showAdvanced) ...[
                           const PopupMenuDivider(),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'edit',
                             child: Row(
                               children: [
                                 Icon(AppIcons.edit, size: 20),
                                 SizedBox(width: 8),
-                                Text('Edit'),
+                                Text(context.l10n.exerciseListEdit),
                               ],
                             ),
                           ),
@@ -1139,13 +1139,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               ],
                             ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'duplicate',
                             child: Row(
                               children: [
                                 Icon(AppIcons.copy, size: 20),
                                 SizedBox(width: 8),
-                                Text('Duplicate'),
+                                Text(context.l10n.exerciseListDuplicate),
                               ],
                             ),
                           ),
@@ -1153,13 +1153,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
                         // Insights - conditional
                         if (showInsights && showAdvanced)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'insight',
                             child: Row(
                               children: [
                                 Icon(AppIcons.insights, size: 20),
                                 SizedBox(width: 8),
-                                Text('Insight'),
+                                Text(context.l10n.exerciseListInsight),
                               ],
                             ),
                           ),
@@ -1245,8 +1245,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     autofocus: true,
                                     maxLines: null,
                                     style: context.textTheme.bodySmall,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Aggiungi note...',
+                                    decoration: InputDecoration(
+                                      hintText: context.l10n.exerciseListAddNotesHint,
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.zero,
                                       isDense: true,
@@ -1257,7 +1257,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     key: const ValueKey('notes-text'),
                                     widget.exercise.notes?.isNotEmpty == true
                                         ? widget.exercise.notes!
-                                        : 'Tocca per aggiungere note',
+                                        : context.l10n.exerciseListTapToAddNotes,
                                     style: context.textTheme.bodySmall
                                         ?.copyWith(
                                           color:
@@ -1771,7 +1771,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         Row(
           children: [
             Text(
-              'Sets (${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length})',
+              context.l10n.exerciseListSetsProgress(
+                widget.exercise.sets.where((s) => s.isCompleted).length.toString(),
+                widget.exercise.sets.length.toString(),
+              ),
               style: context.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
@@ -2247,7 +2250,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     widget.onExerciseUpdate!(updatedExercise);
 
     // Show feedback
-    SnackBarService.showInfo(context, 'Set ${newSet.setNumber} added');
+    SnackBarService.showInfo(
+      context,
+      context.l10n.exerciseListSetAdded(newSet.setNumber.toString()),
+    );
 
     HapticFeedback.lightImpact();
   }
@@ -2667,7 +2673,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ),
               SizedBox(height: 8),
               Text(
-                'Set rest time between sets for "${widget.exercise.name}"',
+                context.l10n.exerciseListSetRestTimeMessage(widget.exercise.name),
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
@@ -2702,7 +2708,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Use Default Timer',
+                                context.l10n.exerciseListUseDefaultTimer,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: selectedTime == null
@@ -2711,7 +2717,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 ),
                               ),
                               Text(
-                                'Uses global rest timer (2 minutes)',
+                                context.l10n.exerciseListUsesGlobalRestTimer,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: context.colors.onSurfaceVariant,
@@ -2734,7 +2740,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               // Quick options
               Text(
-                'Quick Options',
+                context.l10n.exerciseListQuickOptions,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -2765,7 +2771,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(context.l10n.exerciseListCancel),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -2783,12 +2789,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               SnackBarService.showInfo(
                                 context,
                                 selectedTime != null
-                                    ? '⏱️ Rest timer set to ${_formatRestTime(selectedTime!)}'
-                                    : '⏱️ Using default rest timer',
+                                    ? context.l10n.exerciseListRestTimerSetTo(_formatRestTime(selectedTime!))
+                                    : context.l10n.exerciseListUsingDefaultTimer,
                               );
                             }
                           : null,
-                      child: const Text('Save'),
+                      child: Text(context.l10n.exerciseListSave),
                     ),
                   ),
                 ],
@@ -2826,9 +2832,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
 
-              const Text(
-                'Set Rest Timer',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                context.l10n.exerciseListSetRestTimer,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
@@ -2885,8 +2891,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             240,
                             300,
                           ].contains(selectedTime)
-                      ? 'Custom: ${_formatTime(selectedTime!)}'
-                      : 'Custom',
+                      ? context.l10n.exerciseListCustomTime(_formatTime(selectedTime!))
+                      : context.l10n.exerciseListCustom,
                 ),
               ),
 
@@ -2898,7 +2904,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text(context.l10n.exerciseListCancel),
                   ),
                   const SizedBox(width: 12),
                   FilledButton(
@@ -2913,11 +2919,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             // Show confirmation
                             SnackBarService.showInfo(
                               context,
-                              '⏱️ Rest timer set to ${_formatTime(selectedTime!)}',
+                              context.l10n.exerciseListRestTimerSetTo(_formatTime(selectedTime!)),
                             );
                           }
                         : null,
-                    child: const Text('Confirm'),
+                    child: Text(context.l10n.exerciseListConfirm),
                   ),
                 ],
               ),
@@ -2938,7 +2944,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     return showDialog<int>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Custom Rest Time'),
+        title: Text(context.l10n.exerciseListCustomRestTime),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -2946,7 +2952,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Minutes', style: TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListMinutes, style: const TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -2972,7 +2978,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Seconds', style: TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListSeconds, style: const TextStyle(fontSize: 12)),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -2996,14 +3002,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.exerciseListCancel),
           ),
           FilledButton(
             onPressed: () {
               final totalSeconds = (minutes * 60) + seconds;
               Navigator.pop(context, totalSeconds > 0 ? totalSeconds : null);
             },
-            child: const Text('Set'),
+            child: Text(context.l10n.exerciseListSetButton),
           ),
         ],
       ),
@@ -5407,7 +5413,7 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
               child: Row(
                 children: [
                   Icon(
-                    _showMetadataBanner ? Icons.expand_less : Icons.expand_more,
+                    _showMetadataBanner ? AppIcons.expandLess : AppIcons.expandMore,
                     color: context.colors.primary,
                     size: 20,
                   ),
@@ -5424,7 +5430,7 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
                     ),
                   ),
                   Icon(
-                    Icons.info_outline,
+                    AppIcons.info,
                     color: context.colors.primary,
                     size: 18,
                   ),

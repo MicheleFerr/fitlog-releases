@@ -234,13 +234,13 @@ class SettingsScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    user.displayName ?? 'GymBro User',
+                                    user.displayName ?? context.l10n.gymbroUser,
                                     style: context.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
-                                    user.email ?? 'No email',
+                                    user.email ?? context.l10n.settingsNoEmail,
                                     style: context.textTheme.bodySmall?.copyWith(
                                       color: context.colors.onSurface.withValues(alpha: 0.7),
                                     ),
@@ -275,7 +275,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                               );
                             },
-                            icon: Icon(Icons.storage),
+                            icon: Icon(AppIcons.storage),
                             label: Text(context.l10n.databaseManager),
                             style: FilledButton.styleFrom(
                               backgroundColor: context.colors.primary,
@@ -284,9 +284,9 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                       ],
                     )
-                  : Text('Not logged in'),
-              loading: () => Text('Loading...'),
-              error: (_, __) => Text('Error loading user'),
+                  : Text(context.l10n.settingsNotLoggedIn),
+              loading: () => Text(context.l10n.settingsLoading),
+              error: (_, __) => Text(context.l10n.settingsErrorLoadingUser),
             ),
           ],
         ),
@@ -341,7 +341,7 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         if (questionnaire.completedAt != null)
                           Text(
-                            'Last updated: ${questionnaire.completedAt!.day}/${questionnaire.completedAt!.month}/${questionnaire.completedAt!.year}',
+                            context.l10n.settingsLastUpdated('${questionnaire.completedAt!.day}/${questionnaire.completedAt!.month}/${questionnaire.completedAt!.year}'),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: context.colors.onSurface.withValues(alpha: 0.5),
                             ),
@@ -368,7 +368,7 @@ class SettingsScreen extends ConsumerWidget {
                     }
                   },
                   icon: Icon(AppIcons.edit),
-                  label: Text('Update Profile'),
+                  label: Text(context.l10n.settingsUpdateProfile),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.primary,
                   ),
@@ -452,7 +452,7 @@ class SettingsScreen extends ConsumerWidget {
             // Primary Color
             _buildSettingTile(
               context,
-              title: 'Accent Color',
+              title: context.l10n.settingsAccentColor,
               subtitle: config.primaryColor.toUpperCase(),
               leading: Icon(
                 AppIcons.colorLens,
@@ -481,7 +481,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Workout',
+                  context.l10n.settingsWorkout,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -493,8 +493,8 @@ class SettingsScreen extends ConsumerWidget {
             // Auto Start Timer
             _buildSwitchTile(
               context,
-              title: 'Auto-start Timer',
-              subtitle: 'Start rest timer after completing set',
+              title: context.l10n.settingsAutoStartTimer,
+              subtitle: context.l10n.settingsAutoStartTimerDesc,
               value: config.autoStartTimer,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setAutoStartTimer(value);
@@ -506,7 +506,7 @@ class SettingsScreen extends ConsumerWidget {
             // Default Rest Time
             _buildSettingTile(
               context,
-              title: 'Default Rest Time',
+              title: context.l10n.settingsDefaultRestTime,
               subtitle: '${config.defaultRestTime}s',
               leading: const Icon(AppIcons.timer),
               onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
@@ -517,8 +517,8 @@ class SettingsScreen extends ConsumerWidget {
             // Show Intensity Techniques
             _buildSwitchTile(
               context,
-              title: 'Advanced Techniques',
-              subtitle: 'Show drop sets, supersets, etc.',
+              title: context.l10n.settingsAdvancedTechniques,
+              subtitle: context.l10n.settingsAdvancedTechniquesDesc,
               value: config.showIntensityTechniques,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setShowIntensityTechniques(value);
@@ -545,7 +545,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Units & Language',
+                  context.l10n.settingsUnitsLanguage,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -557,7 +557,7 @@ class SettingsScreen extends ConsumerWidget {
             // Language Selection
             _buildSettingTile(
               context,
-              title: 'Language',
+              title: context.l10n.settingsLanguage,
               subtitle: _getLanguageText(config.languageCode),
               leading: const Icon(AppIcons.translate),
               onTap: () => _showLanguageDialog(context, ref, config.languageCode),
@@ -568,7 +568,7 @@ class SettingsScreen extends ConsumerWidget {
             // Measurement Unit
             _buildSettingTile(
               context,
-              title: 'Weight Units',
+              title: context.l10n.weightUnits,
               subtitle: config.measurementUnit.toUpperCase(),
               leading: const Icon(AppIcons.weight),
               onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
@@ -594,7 +594,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'iOS Features',
+                  context.l10n.settingsIosFeatures,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -606,8 +606,8 @@ class SettingsScreen extends ConsumerWidget {
             // Live Activities
             _buildSwitchTile(
               context,
-              title: 'Live Activities',
-              subtitle: 'Show timer on lock screen & Dynamic Island',
+              title: context.l10n.liveActivities,
+              subtitle: context.l10n.settingsLiveActivitiesDesc,
               value: config.enableLiveActivities,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setEnableLiveActivities(value);
@@ -619,8 +619,8 @@ class SettingsScreen extends ConsumerWidget {
             // HealthKit Sync
             _buildSwitchTile(
               context,
-              title: 'Health App Sync',
-              subtitle: 'Sync workouts to Apple Health',
+              title: context.l10n.settingsHealthAppSync,
+              subtitle: context.l10n.settingsHealthAppSyncDesc,
               value: config.syncWithHealthKit,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setSyncWithHealthKit(value);
@@ -647,7 +647,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Audio & Feedback',
+                  context.l10n.settingsAudioFeedback,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -659,8 +659,8 @@ class SettingsScreen extends ConsumerWidget {
             // Sound Effects
             _buildSwitchTile(
               context,
-              title: 'Sound Effects',
-              subtitle: 'Play sounds for timer and completion',
+              title: context.l10n.settingsSoundEffects,
+              subtitle: context.l10n.settingsSoundEffectsDesc,
               value: config.soundEnabled,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setSoundEnabled(value);
@@ -672,8 +672,8 @@ class SettingsScreen extends ConsumerWidget {
             // Vibrations
             _buildSwitchTile(
               context,
-              title: 'Vibrations',
-              subtitle: 'Haptic feedback for interactions',
+              title: context.l10n.settingsVibrations,
+              subtitle: context.l10n.settingsVibrationsDesc,
               value: config.vibrationsEnabled,
               onChanged: (value) {
                 ref.read(appConfigProvider.notifier).setVibrationsEnabled(value);
@@ -691,7 +691,7 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () => _showTimerSoundDialog(context, ref, config.timerSound),
               trailing: IconButton(
                 icon: const Icon(AppIcons.playCircleOutline),
-                tooltip: 'Test Sounds',
+                tooltip: context.l10n.settingsTestSounds,
                 onPressed: () => showTimerSoundTestDialog(context),
               ),
             ),
@@ -716,7 +716,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Advanced',
+                  context.l10n.settingsAdvanced,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -728,8 +728,8 @@ class SettingsScreen extends ConsumerWidget {
             // Export Settings
             _buildSettingTile(
               context,
-              title: 'Export Settings',
-              subtitle: 'Save settings as JSON file',
+              title: context.l10n.settingsExport,
+              subtitle: context.l10n.settingsExportDesc,
               leading: const Icon(AppIcons.fileDownload),
               onTap: () => _exportSettings(context, ref),
             ),
@@ -739,8 +739,8 @@ class SettingsScreen extends ConsumerWidget {
             // Import Settings
             _buildSettingTile(
               context,
-              title: 'Import Settings',
-              subtitle: 'Load settings from JSON file',
+              title: context.l10n.settingsImport,
+              subtitle: context.l10n.settingsImportDesc,
               leading: const Icon(AppIcons.fileUpload),
               onTap: () => _importSettings(context, ref),
             ),
@@ -750,8 +750,8 @@ class SettingsScreen extends ConsumerWidget {
             // Reset Timer Position
             _buildSettingTile(
               context,
-              title: 'Reset Timer Position',
-              subtitle: 'Reset draggable timer to default position',
+              title: context.l10n.settingsResetTimerPosition,
+              subtitle: context.l10n.settingsResetTimerPositionDesc,
               leading: Icon(AppIcons.pictureInPictureAlt),
               onTap: () => _resetTimerPosition(context, ref),
             ),
@@ -763,7 +763,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.clearCache,
               subtitle: context.l10n.clearExerciseCacheDesc,
-              leading: const Icon(Icons.delete_sweep),
+              leading: Icon(AppIcons.clearAll),
               onTap: () => _clearExerciseCache(context, ref),
             ),
 
@@ -789,7 +789,7 @@ class SettingsScreen extends ConsumerWidget {
                     //   context,
                     //   title: 'Fitness Profile Debug',
                     //   subtitle: 'View fitness profile and weight suggestions status',
-                    //   leading: Icon(Icons.bug_report),
+                    //   leading: Icon(AppIcons.bugReport),
                     //   onTap: () => context.pushNamed('fitness-profile-debug'),
                     // ),
                     // const Divider(),
@@ -827,8 +827,8 @@ class SettingsScreen extends ConsumerWidget {
                   context,
                   title: context.l10n.dataMigration,
                   subtitle: migrationState.hasDataToMigrate
-                    ? 'Hai dati da migrare dalla versione precedente'
-                    : 'Migrazione completata o non necessaria',
+                    ? context.l10n.settingsDataMigrationAvailable
+                    : context.l10n.settingsDataMigrationComplete,
                   leading: Icon(
                     AppIcons.syncAlt,
                     color: migrationState.hasDataToMigrate
@@ -843,7 +843,7 @@ class SettingsScreen extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'Disponibile',
+                          context.l10n.settingsAvailable,
                           style: context.textTheme.labelSmall?.copyWith(
                             color: context.colors.onPrimaryContainer,
                           ),
@@ -893,8 +893,8 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   subtitle: Text(
                     betaModeEnabled
-                      ? 'Tutte le funzionalità premium sbloccate per testing'
-                      : 'Abilita accesso temporaneo a tutte le funzionalità premium',
+                      ? context.l10n.settingsBetaModeEnabledDesc
+                      : context.l10n.settingsBetaModeDisabledDesc,
                   ),
                   value: betaModeEnabled,
                   activeThumbColor: context.colors.tertiary,
@@ -904,8 +904,8 @@ class SettingsScreen extends ConsumerWidget {
                       SnackBar(
                         content: Text(
                           value
-                            ? '🧪 Beta Mode attivato - Tutte le funzionalità premium sbloccate!'
-                            : 'Beta Mode disattivato',
+                            ? context.l10n.settingsBetaModeEnabled
+                            : context.l10n.settingsBetaModeDisabled,
                         ),
                         backgroundColor: value
                           ? context.colors.tertiaryContainer
@@ -922,8 +922,8 @@ class SettingsScreen extends ConsumerWidget {
             // Reset to Defaults
             _buildSettingTile(
               context,
-              title: 'Reset to Defaults',
-              subtitle: 'Restore all settings to default',
+              title: context.l10n.settingsResetToDefaults,
+              subtitle: context.l10n.settingsResetToDefaultsDesc,
               leading: const Icon(AppIcons.restore, color: Colors.red),
               onTap: () => _showResetDialog(context, ref),
             ),
@@ -948,7 +948,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Account Actions',
+                  context.l10n.settingsAccountActions,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -960,8 +960,8 @@ class SettingsScreen extends ConsumerWidget {
             // Sign Out
             _buildSettingTile(
               context,
-              title: 'Sign Out',
-              subtitle: 'Sign out of your account',
+              title: context.l10n.settingsSignOut,
+              subtitle: context.l10n.settingsSignOutDesc,
               leading: const Icon(AppIcons.logout, color: Colors.red),
               onTap: () => _showSignOutDialog(context, ref),
             ),
@@ -1018,11 +1018,11 @@ class SettingsScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Font Size',
+                    context.l10n.settingsFontSize,
                     style: context.textTheme.bodyLarge,
                   ),
                   Text(
-                    _getFontSizeText(config.fontSize),
+                    _getFontSizeText(context, config.fontSize),
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
@@ -1090,7 +1090,7 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Choose Language'),
+        title: Text(context.l10n.settingsChooseLanguage),
         content: RadioGroup<String>(
           groupValue: currentLang,
           onChanged: (value) {
@@ -1104,12 +1104,12 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               RadioListTile<String>(
                 title: Text(context.l10n.languageEnglish),
-                subtitle: const Text('English (US)'),
+                subtitle: Text(context.l10n.settingsEnglishUS),
                 value: 'en',
               ),
-              const RadioListTile<String>(
-                title: Text('Italiano'),
-                subtitle: Text('Italian (IT)'),
+              RadioListTile<String>(
+                title: Text(context.l10n.settingsItaliano),
+                subtitle: Text(context.l10n.settingsItalianIT),
                 value: 'it',
               ),
             ],
@@ -1123,7 +1123,7 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Weight Units'),
+        title: Text(context.l10n.weightUnits),
         content: RadioGroup<String>(
           groupValue: currentUnit,
           onChanged: (value) {
@@ -1132,17 +1132,17 @@ class SettingsScreen extends ConsumerWidget {
               Navigator.pop(context);
             }
           },
-          child: const Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RadioListTile<String>(
-                title: Text('Kilograms (kg)'),
-                subtitle: Text('Metric system'),
+                title: Text(context.l10n.settingsKilogramsKg),
+                subtitle: Text(context.l10n.settingsMetricSystem),
                 value: 'kg',
               ),
               RadioListTile<String>(
-                title: Text('Pounds (lbs)'),
-                subtitle: Text('Imperial system'),
+                title: Text(context.l10n.settingsPoundsLbs),
+                subtitle: Text(context.l10n.settingsImperialSystem),
                 value: 'lbs',
               ),
             ],
@@ -1158,7 +1158,7 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Accent Color'),
+        title: Text(context.l10n.settingsAccentColorDialog),
         content: Wrap(
           spacing: 16,
           runSpacing: 16,
@@ -1194,7 +1194,7 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Default Rest Time'),
+          title: Text(context.l10n.settingsDefaultRestTimeDialog),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1234,8 +1234,8 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Reset Timer Position'),
-        content: Text('This will reset the draggable timer to its default position. Useful if the timer is stuck off-screen.'),
+        title: Text(context.l10n.settingsResetTimerPositionDialog),
+        content: Text(context.l10n.settingsResetTimerPositionDialogDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1246,9 +1246,9 @@ class SettingsScreen extends ConsumerWidget {
               // Reset timer position to default
               ref.read(timerUIStateProvider.notifier).updatePosition(const Offset(20, 100));
               Navigator.pop(context);
-              SnackBarService.showSuccess(context, 'Timer position reset to default');
+              SnackBarService.showSuccess(context, context.l10n.settingsTimerPositionResetSuccess);
             },
-            child: Text('Reset Position'),
+            child: Text(context.l10n.settingsResetPosition),
           ),
         ],
       ),
@@ -1281,7 +1281,7 @@ class SettingsScreen extends ConsumerWidget {
               } catch (e) {
                 if (context.mounted) {
                   Navigator.pop(context);
-                  SnackBarService.showError(context, 'Failed to clear cache: $e');
+                  SnackBarService.showError(context, context.l10n.settingsFailedToClearCache(e.toString()));
                 }
               }
             },
@@ -1334,8 +1334,8 @@ class SettingsScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Reset Settings'),
-        content: Text('Are you sure you want to reset all settings to defaults? This cannot be undone.'),
+        title: Text(context.l10n.settingsResetSettingsDialog),
+        content: Text(context.l10n.settingsResetSettingsDialogDesc),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1345,7 +1345,7 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () {
               ref.read(appConfigProvider.notifier).resetToDefaults();
               Navigator.pop(context);
-              SnackBarService.showSuccess(context, 'Settings reset to defaults');
+              SnackBarService.showSuccess(context, context.l10n.settingsResetSuccess);
             },
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: Text(context.l10n.reset),
@@ -1360,7 +1360,7 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(context.l10n.signOutButton),
-        content: Text('Are you sure you want to sign out?'),
+        content: Text(context.l10n.settingsSignOutConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -1383,12 +1383,12 @@ class SettingsScreen extends ConsumerWidget {
   void _exportSettings(BuildContext context, WidgetRef ref) {
     final config = ref.read(appConfigProvider.notifier).exportConfig();
     // In a real app, you'd save this to a file or share it
-    SnackBarService.showInfo(context, 'Export functionality coming soon');
+    SnackBarService.showInfo(context, context.l10n.settingsExportComingSoon);
   }
 
   void _importSettings(BuildContext context, WidgetRef ref) {
     // In a real app, you'd pick a file and import it
-    SnackBarService.showInfo(context, 'Import functionality coming soon');
+    SnackBarService.showInfo(context, context.l10n.settingsImportComingSoon);
   }
 
   void _showTimerSoundDialog(BuildContext context, WidgetRef ref, String currentSound) {
@@ -1433,10 +1433,10 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  String _getFontSizeText(double fontSize) {
-    if (fontSize < 0.9) return 'Small';
-    if (fontSize > 1.1) return 'Large';
-    return 'Normal';
+  String _getFontSizeText(BuildContext context, double fontSize) {
+    if (fontSize < 0.9) return context.l10n.settingsFontSizeSmall;
+    if (fontSize > 1.1) return context.l10n.settingsFontSizeLarge;
+    return context.l10n.settingsFontSizeNormal;
   }
 
   String _getLanguageText(String code) {
@@ -1497,7 +1497,7 @@ class SettingsScreen extends ConsumerWidget {
                             .setConfig(value);
                         SnackBarService.showSuccess(
                           context,
-                          'APRE calculation method updated to ${value.displayName}',
+                          context.l10n.settingsApreCalculationMethodUpdated(value.displayName),
                         );
                       }
                     },
@@ -1508,15 +1508,15 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      loading: () => const ListTile(
+      loading: () => ListTile(
         leading: Icon(AppIcons.calculate),
-        title: Text('APRE Calculation Method'),
-        subtitle: Text('Loading...'),
+        title: Text(context.l10n.settingsApreCalculationMethodLoading),
+        subtitle: Text(context.l10n.settingsLoadingGeneric),
       ),
       error: (error, stack) => ListTile(
         leading: Icon(AppIcons.error, color: context.colors.error),
-        title: const Text('APRE Calculation Method'),
-        subtitle: Text('Error: $error'),
+        title: Text(context.l10n.settingsApreCalculationMethodError),
+        subtitle: Text(context.l10n.settingsErrorGeneric(error.toString())),
       ),
     );
   }

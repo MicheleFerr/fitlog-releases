@@ -15011,8 +15011,8 @@ abstract class AppLocalizations {
   /// Last updated label
   ///
   /// In en, this message translates to:
-  /// **'Last updated'**
-  String get settingsLastUpdated;
+  /// **'Last updated: {date}'**
+  String settingsLastUpdated(Object date);
 
   /// Update profile button
   ///
@@ -15227,13 +15227,13 @@ abstract class AppLocalizations {
   /// Beta enabled
   ///
   /// In en, this message translates to:
-  /// **'All premium features unlocked for testing'**
+  /// **'Beta Mode enabled - All premium features unlocked!'**
   String get settingsBetaModeEnabled;
 
   /// Beta disabled
   ///
   /// In en, this message translates to:
-  /// **'Enable temporary access to all premium features'**
+  /// **'Beta Mode disabled'**
   String get settingsBetaModeDisabled;
 
   /// BETA label
@@ -27887,6 +27887,720 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No exercises'**
   String get noExercises;
+
+  /// No description provided for @settingsWorkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get settingsWorkout;
+
+  /// No description provided for @settingsIosFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS Features'**
+  String get settingsIosFeatures;
+
+  /// No description provided for @settingsAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get settingsAdvanced;
+
+  /// No description provided for @settingsExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Settings'**
+  String get settingsExport;
+
+  /// No description provided for @settingsExportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save settings as JSON file'**
+  String get settingsExportDesc;
+
+  /// No description provided for @settingsImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Settings'**
+  String get settingsImport;
+
+  /// No description provided for @settingsImportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Load settings from JSON file'**
+  String get settingsImportDesc;
+
+  /// No description provided for @settingsDataMigrationAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'You have data to migrate from previous version'**
+  String get settingsDataMigrationAvailable;
+
+  /// No description provided for @settingsDataMigrationComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Migration completed or not needed'**
+  String get settingsDataMigrationComplete;
+
+  /// No description provided for @settingsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get settingsAvailable;
+
+  /// No description provided for @settingsBetaModeEnabledDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All premium features unlocked for testing'**
+  String get settingsBetaModeEnabledDesc;
+
+  /// No description provided for @settingsBetaModeDisabledDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable temporary access to all premium features'**
+  String get settingsBetaModeDisabledDesc;
+
+  /// No description provided for @settingsResetToDefaultsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore all settings to default'**
+  String get settingsResetToDefaultsDesc;
+
+  /// No description provided for @settingsAccountActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Actions'**
+  String get settingsAccountActions;
+
+  /// No description provided for @settingsSignOutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account'**
+  String get settingsSignOutDesc;
+
+  /// No description provided for @settingsItaliano.
+  ///
+  /// In en, this message translates to:
+  /// **'Italian'**
+  String get settingsItaliano;
+
+  /// No description provided for @settingsAccentColorDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent Color'**
+  String get settingsAccentColorDialog;
+
+  /// No description provided for @settingsDefaultRestTimeDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Rest Time'**
+  String get settingsDefaultRestTimeDialog;
+
+  /// No description provided for @settingsResetTimerPositionDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Timer Position'**
+  String get settingsResetTimerPositionDialog;
+
+  /// No description provided for @settingsResetTimerPositionDialogDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This will reset the draggable timer to its default position. Useful if the timer is stuck off-screen.'**
+  String get settingsResetTimerPositionDialogDesc;
+
+  /// No description provided for @settingsTimerPositionResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer position reset to default'**
+  String get settingsTimerPositionResetSuccess;
+
+  /// No description provided for @settingsFailedToClearCache.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to clear cache: {error}'**
+  String settingsFailedToClearCache(Object error);
+
+  /// No description provided for @settingsResetSettingsDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Settings'**
+  String get settingsResetSettingsDialog;
+
+  /// No description provided for @settingsResetSettingsDialogDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset all settings to defaults? This cannot be undone.'**
+  String get settingsResetSettingsDialogDesc;
+
+  /// No description provided for @settingsSignOutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get settingsSignOutConfirm;
+
+  /// No description provided for @settingsApreCalculationMethodUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE calculation method updated to {method}'**
+  String settingsApreCalculationMethodUpdated(Object method);
+
+  /// No description provided for @settingsApreCalculationMethodLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Calculation Method'**
+  String get settingsApreCalculationMethodLoading;
+
+  /// No description provided for @settingsLoadingGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get settingsLoadingGeneric;
+
+  /// No description provided for @settingsApreCalculationMethodError.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Calculation Method'**
+  String get settingsApreCalculationMethodError;
+
+  /// No description provided for @settingsErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String settingsErrorGeneric(Object error);
+
+  /// No description provided for @exerciseListEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get exerciseListEdit;
+
+  /// No description provided for @exerciseListDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get exerciseListDuplicate;
+
+  /// No description provided for @exerciseListInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'Insight'**
+  String get exerciseListInsight;
+
+  /// No description provided for @exerciseListAddNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add notes...'**
+  String get exerciseListAddNotesHint;
+
+  /// No description provided for @exerciseListTapToAddNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add notes'**
+  String get exerciseListTapToAddNotes;
+
+  /// No description provided for @exerciseListSetsProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets ({completed}/{total})'**
+  String exerciseListSetsProgress(Object completed, Object total);
+
+  /// No description provided for @exerciseListSetAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Set {setNumber} added'**
+  String exerciseListSetAdded(Object setNumber);
+
+  /// No description provided for @exerciseListSetRestTimeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set rest time between sets for \"{exerciseName}\"'**
+  String exerciseListSetRestTimeMessage(Object exerciseName);
+
+  /// No description provided for @exerciseListCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get exerciseListCancel;
+
+  /// No description provided for @exerciseListSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get exerciseListSave;
+
+  /// No description provided for @exerciseListSetRestTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Rest Timer'**
+  String get exerciseListSetRestTimer;
+
+  /// No description provided for @exerciseListCustomTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom: {time}'**
+  String exerciseListCustomTime(Object time);
+
+  /// No description provided for @exerciseListCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get exerciseListCustom;
+
+  /// No description provided for @exerciseListConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get exerciseListConfirm;
+
+  /// No description provided for @exerciseListCustomRestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Rest Time'**
+  String get exerciseListCustomRestTime;
+
+  /// No description provided for @exerciseListMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get exerciseListMinutes;
+
+  /// No description provided for @exerciseListSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Seconds'**
+  String get exerciseListSeconds;
+
+  /// No description provided for @exerciseListSetButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get exerciseListSetButton;
+
+  /// No description provided for @exerciseListRestTimerSetTo.
+  ///
+  /// In en, this message translates to:
+  /// **'⏱️ Rest timer set to {time}'**
+  String exerciseListRestTimerSetTo(Object time);
+
+  /// No description provided for @workoutTemplateSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search templates...'**
+  String get workoutTemplateSearchHint;
+
+  /// No description provided for @workoutTemplateRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get workoutTemplateRetry;
+
+  /// No description provided for @workoutTemplateNoPopularYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No popular templates yet'**
+  String get workoutTemplateNoPopularYet;
+
+  /// No description provided for @workoutTemplateMostUsedWillAppear.
+  ///
+  /// In en, this message translates to:
+  /// **'Most used templates will appear here'**
+  String get workoutTemplateMostUsedWillAppear;
+
+  /// No description provided for @workoutTemplateNoCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom templates'**
+  String get workoutTemplateNoCustom;
+
+  /// No description provided for @workoutTemplateCreateFirstCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first custom template'**
+  String get workoutTemplateCreateFirstCustom;
+
+  /// No description provided for @workoutTemplateNoneFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates found'**
+  String get workoutTemplateNoneFound;
+
+  /// No description provided for @workoutTemplateSharingComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'📤 Template sharing coming soon...'**
+  String get workoutTemplateSharingComingSoon;
+
+  /// No description provided for @workoutTemplateDuplicatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Template duplicated: \"{templateName}\"'**
+  String workoutTemplateDuplicatedSuccess(Object templateName);
+
+  /// No description provided for @workoutTemplateDuplicationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error duplicating: {error}'**
+  String workoutTemplateDuplicationError(Object error);
+
+  /// No description provided for @workoutTemplateDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get workoutTemplateDeleteTitle;
+
+  /// No description provided for @workoutTemplateDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{templateName}\"?'**
+  String workoutTemplateDeleteConfirm(Object templateName);
+
+  /// No description provided for @workoutTemplateCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get workoutTemplateCancel;
+
+  /// No description provided for @workoutTemplateSyncStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get workoutTemplateSyncStatus;
+
+  /// No description provided for @exerciseOptionsTapToEnlarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to enlarge'**
+  String get exerciseOptionsTapToEnlarge;
+
+  /// No description provided for @exerciseOptionsExerciseInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise info'**
+  String get exerciseOptionsExerciseInfo;
+
+  /// No description provided for @exerciseOptionsExerciseInfoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Muscles involved and technique'**
+  String get exerciseOptionsExerciseInfoSubtitle;
+
+  /// No description provided for @exerciseOptionsWarmupInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup info'**
+  String get exerciseOptionsWarmupInfo;
+
+  /// No description provided for @exerciseOptionsWarmupInfoSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips for warmup'**
+  String get exerciseOptionsWarmupInfoSubtitle;
+
+  /// No description provided for @exerciseOptionsNoWarmupDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No warmup data available'**
+  String get exerciseOptionsNoWarmupDataAvailable;
+
+  /// No description provided for @exerciseOptionsInjuryPrevention.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury prevention'**
+  String get exerciseOptionsInjuryPrevention;
+
+  /// No description provided for @exerciseOptionsInjuryPreventionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips to avoid injuries'**
+  String get exerciseOptionsInjuryPreventionSubtitle;
+
+  /// No description provided for @exerciseOptionsNoInjuryPreventionDataAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No injury prevention data available'**
+  String get exerciseOptionsNoInjuryPreventionDataAvailable;
+
+  /// No description provided for @exerciseOptionsReportIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report issue'**
+  String get exerciseOptionsReportIssue;
+
+  /// No description provided for @exerciseOptionsReportIssueSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bugs, errors or suggestions'**
+  String get exerciseOptionsReportIssueSubtitle;
+
+  /// No description provided for @exerciseOptionsHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get exerciseOptionsHistory;
+
+  /// No description provided for @exerciseOptionsEditNameAndNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name and notes'**
+  String get exerciseOptionsEditNameAndNotes;
+
+  /// No description provided for @exerciseOptionsEditNameAndNotesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize exercise name and add notes'**
+  String get exerciseOptionsEditNameAndNotesSubtitle;
+
+  /// No description provided for @exerciseOptionsChangeCountingFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Change counting format'**
+  String get exerciseOptionsChangeCountingFormat;
+
+  /// No description provided for @exerciseOptionsChangeCountingFormatSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between weight/reps/time'**
+  String get exerciseOptionsChangeCountingFormatSubtitle;
+
+  /// No description provided for @exerciseOptionsDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate exercise'**
+  String get exerciseOptionsDuplicate;
+
+  /// No description provided for @exerciseOptionsDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete exercise'**
+  String get exerciseOptionsDelete;
+
+  /// No description provided for @exerciseOptionsExerciseInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Info'**
+  String get exerciseOptionsExerciseInfoTitle;
+
+  /// No description provided for @exerciseOptionsPrimaryMuscles.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Muscles'**
+  String get exerciseOptionsPrimaryMuscles;
+
+  /// No description provided for @exerciseOptionsSecondaryMuscles.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary Muscles'**
+  String get exerciseOptionsSecondaryMuscles;
+
+  /// No description provided for @exerciseOptionsEquipment.
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment'**
+  String get exerciseOptionsEquipment;
+
+  /// No description provided for @exerciseOptionsDifficultyLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty Level'**
+  String get exerciseOptionsDifficultyLevel;
+
+  /// No description provided for @exerciseOptionsWarmupInfoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Info'**
+  String get exerciseOptionsWarmupInfoTitle;
+
+  /// No description provided for @exerciseOptionsPreWorkoutMobility.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Workout Mobility'**
+  String get exerciseOptionsPreWorkoutMobility;
+
+  /// No description provided for @exerciseOptionsPreWorkoutActivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-Workout Activation'**
+  String get exerciseOptionsPreWorkoutActivation;
+
+  /// No description provided for @exerciseOptionsWarmupSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Sets'**
+  String get exerciseOptionsWarmupSets;
+
+  /// No description provided for @exerciseOptionsInjuryPreventionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury Prevention'**
+  String get exerciseOptionsInjuryPreventionTitle;
+
+  /// No description provided for @exerciseOptionsInjuryPreventionSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Injury Prevention'**
+  String get exerciseOptionsInjuryPreventionSection;
+
+  /// No description provided for @exerciseOptionsRecommendedCooldown.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Cooldown'**
+  String get exerciseOptionsRecommendedCooldown;
+
+  /// No description provided for @exerciseOptionsTechnicalTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Tips'**
+  String get exerciseOptionsTechnicalTips;
+
+  /// No description provided for @dailyWorkoutAutoCompleting.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-completing day... ✨'**
+  String get dailyWorkoutAutoCompleting;
+
+  /// No description provided for @dailyWorkoutDifferentWorkoutCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'You completed a different workout today'**
+  String get dailyWorkoutDifferentWorkoutCompleted;
+
+  /// No description provided for @dailyWorkoutSubstitute.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitute'**
+  String get dailyWorkoutSubstitute;
+
+  /// No description provided for @dailyWorkoutSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get dailyWorkoutSkip;
+
+  /// No description provided for @dailyWorkoutComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get dailyWorkoutComplete;
+
+  /// No description provided for @dailyWorkoutRestAndRecovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest & Recovery'**
+  String get dailyWorkoutRestAndRecovery;
+
+  /// No description provided for @dailyWorkoutRestAndRecoverySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a break and let your body recover'**
+  String get dailyWorkoutRestAndRecoverySubtitle;
+
+  /// No description provided for @dailyWorkoutDefaultWorkoutName.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get dailyWorkoutDefaultWorkoutName;
+
+  /// No description provided for @dailyWorkoutLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get dailyWorkoutLoading;
+
+  /// No description provided for @dailyWorkoutTapCompleteWhenDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap complete when done'**
+  String get dailyWorkoutTapCompleteWhenDone;
+
+  /// No description provided for @dailyWorkoutGreatWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Great work! Keep it up 💪'**
+  String get dailyWorkoutGreatWork;
+
+  /// No description provided for @dailyWorkoutDaySkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Day skipped. Consider recovering it!'**
+  String get dailyWorkoutDaySkipped;
+
+  /// No description provided for @dailyWorkoutDayRecovered.
+  ///
+  /// In en, this message translates to:
+  /// **'Day recovered successfully!'**
+  String get dailyWorkoutDayRecovered;
+
+  /// No description provided for @dailyWorkoutStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed ✓'**
+  String get dailyWorkoutStatusCompleted;
+
+  /// No description provided for @dailyWorkoutStatusSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get dailyWorkoutStatusSkipped;
+
+  /// No description provided for @dailyWorkoutStatusRecovered.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered'**
+  String get dailyWorkoutStatusRecovered;
+
+  /// No description provided for @dailyWorkoutStatusReadyToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to go'**
+  String get dailyWorkoutStatusReadyToGo;
+
+  /// No description provided for @dailyWorkoutSubstituteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitute Workout?'**
+  String get dailyWorkoutSubstituteDialogTitle;
+
+  /// No description provided for @dailyWorkoutSubstituteDialogMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You completed a different workout today. Do you want to mark this day as completed with that workout instead?'**
+  String get dailyWorkoutSubstituteDialogMessage;
+
+  /// No description provided for @dailyWorkoutSubstituteDialogConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitute'**
+  String get dailyWorkoutSubstituteDialogConfirm;
+
+  /// No description provided for @dailyWorkoutSubstituteDialogCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get dailyWorkoutSubstituteDialogCancel;
+
+  /// No description provided for @exerciseListUseDefaultTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Use default timer'**
+  String get exerciseListUseDefaultTimer;
+
+  /// No description provided for @exerciseListUsesGlobalRestTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses global rest timer'**
+  String get exerciseListUsesGlobalRestTimer;
+
+  /// No description provided for @exerciseListQuickOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick options'**
+  String get exerciseListQuickOptions;
+
+  /// No description provided for @exerciseListUsingDefaultTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Using default timer'**
+  String get exerciseListUsingDefaultTimer;
 }
 
 class _AppLocalizationsDelegate
