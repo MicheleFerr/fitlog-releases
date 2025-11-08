@@ -27359,6 +27359,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No purchases found to restore'**
   String get noPurchasesToRestore;
+
+  /// No description provided for @annual.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual'**
+  String get annual;
+
+  /// No description provided for @premiumMembership.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Membership'**
+  String get premiumMembership;
+
+  /// No description provided for @welcomeToPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Premium! 🎉'**
+  String get welcomeToPremium;
+
+  /// No description provided for @purchaseCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase cancelled'**
+  String get purchaseCancelled;
+
+  /// Template category: strength training
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get templateCategoryStrength;
+
+  /// Template category: cardio training
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio'**
+  String get templateCategoryCardio;
+
+  /// Template category: flexibility/mobility training
+  ///
+  /// In en, this message translates to:
+  /// **'Flexibility'**
+  String get templateCategoryFlexibility;
+
+  /// Template category: hybrid/mixed training
+  ///
+  /// In en, this message translates to:
+  /// **'Hybrid'**
+  String get templateCategoryHybrid;
+
+  /// Difficulty level: expert
+  ///
+  /// In en, this message translates to:
+  /// **'Expert'**
+  String get difficultyExpert;
+
+  /// Template never performed before
+  ///
+  /// In en, this message translates to:
+  /// **'🆕 New'**
+  String get templateStatsNew;
+
+  /// Template performed today
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Today'**
+  String get templateStatsToday;
+
+  /// Template performed yesterday
+  ///
+  /// In en, this message translates to:
+  /// **'🕐 Yesterday'**
+  String get templateStatsYesterday;
+
+  /// Template performed X days ago
+  ///
+  /// In en, this message translates to:
+  /// **'🕐 {days} days ago'**
+  String templateStatsDaysAgo(int days);
+
+  /// Template not performed in 14+ days, encourage resuming
+  ///
+  /// In en, this message translates to:
+  /// **'🔄 Resume?'**
+  String get templateStatsResume;
+
+  /// Share template action
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get templateActionShare;
+
+  /// Duplicate template action
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get templateActionDuplicate;
+
+  /// Edit template action
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get templateActionEdit;
+
+  /// Delete template action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get templateActionDelete;
+
+  /// Purchase error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String purchaseError(String error);
+
+  /// No description provided for @unlockYourFullPotential.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Your Full Potential'**
+  String get unlockYourFullPotential;
+
+  /// No description provided for @syncAcrossAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync across all devices, access community features, and never lose your progress'**
+  String get syncAcrossAllDevices;
+
+  /// No description provided for @popular.
+  ///
+  /// In en, this message translates to:
+  /// **'POPULAR'**
+  String get popular;
+
+  /// No description provided for @whatUsersSay.
+  ///
+  /// In en, this message translates to:
+  /// **'What Users Say'**
+  String get whatUsersSay;
+
+  /// No description provided for @frequentlyAskedQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get frequentlyAskedQuestions;
+
+  /// No description provided for @startFreeTrialThen.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Free Trial - Then \$39.99/year'**
+  String get startFreeTrialThen;
+
+  /// No description provided for @thankYouForSupporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for supporting GymBro'**
+  String get thankYouForSupporting;
+
+  /// No description provided for @faqCanICancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I cancel anytime?'**
+  String get faqCanICancel;
+
+  /// No description provided for @faqWhatHappensToData.
+  ///
+  /// In en, this message translates to:
+  /// **'What happens to my data if I cancel?'**
+  String get faqWhatHappensToData;
+
+  /// No description provided for @faqCanIChangePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I change plans?'**
+  String get faqCanIChangePlans;
+
+  /// No description provided for @faqIsPaymentSecure.
+  ///
+  /// In en, this message translates to:
+  /// **'Is my payment secure?'**
+  String get faqIsPaymentSecure;
+
+  /// No description provided for @faqCancelAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! You can cancel your subscription anytime from settings.'**
+  String get faqCancelAnswer;
+
+  /// No description provided for @faqDataAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data remains safe locally. You just lose cloud sync.'**
+  String get faqDataAnswer;
+
+  /// No description provided for @faqChangePlansAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, you can upgrade or downgrade anytime.'**
+  String get faqChangePlansAnswer;
+
+  /// No description provided for @faqPaymentSecureAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, we use Apple/Google payment systems for maximum security.'**
+  String get faqPaymentSecureAnswer;
+
+  /// No description provided for @testimonialJohnD.
+  ///
+  /// In en, this message translates to:
+  /// **'The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.'**
+  String get testimonialJohnD;
+
+  /// No description provided for @testimonialSarahM.
+  ///
+  /// In en, this message translates to:
+  /// **'Community templates saved me hours of planning. Worth every penny!'**
+  String get testimonialSarahM;
+
+  /// No description provided for @testimonialMikeR.
+  ///
+  /// In en, this message translates to:
+  /// **'Never lost a workout since going premium. The backup is automatic and reliable.'**
+  String get testimonialMikeR;
 }
 
 class _AppLocalizationsDelegate

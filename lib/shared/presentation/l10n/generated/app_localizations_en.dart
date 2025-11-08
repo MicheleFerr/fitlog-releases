@@ -15316,4 +15316,127 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPurchasesToRestore => 'No purchases found to restore';
+
+  @override
+  String get annual => 'Annual';
+
+  @override
+  String get premiumMembership => 'Premium Membership';
+
+  @override
+  String get welcomeToPremium => 'Welcome to Premium! 🎉';
+
+  @override
+  String get purchaseCancelled => 'Purchase cancelled';
+
+  @override
+  String get templateCategoryStrength => 'Strength';
+
+  @override
+  String get templateCategoryCardio => 'Cardio';
+
+  @override
+  String get templateCategoryFlexibility => 'Flexibility';
+
+  @override
+  String get templateCategoryHybrid => 'Hybrid';
+
+  @override
+  String get difficultyExpert => 'Expert';
+
+  @override
+  String get templateStatsNew => '🆕 New';
+
+  @override
+  String get templateStatsToday => '✅ Today';
+
+  @override
+  String get templateStatsYesterday => '🕐 Yesterday';
+
+  @override
+  String templateStatsDaysAgo(int days) {
+    return '🕐 $days days ago';
+  }
+
+  @override
+  String get templateStatsResume => '🔄 Resume?';
+
+  @override
+  String get templateActionShare => 'Share';
+
+  @override
+  String get templateActionDuplicate => 'Duplicate';
+
+  @override
+  String get templateActionEdit => 'Edit';
+
+  @override
+  String get templateActionDelete => 'Delete';
+
+  @override
+  String purchaseError(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get unlockYourFullPotential => 'Unlock Your Full Potential';
+
+  @override
+  String get syncAcrossAllDevices =>
+      'Sync across all devices, access community features, and never lose your progress';
+
+  @override
+  String get popular => 'POPULAR';
+
+  @override
+  String get whatUsersSay => 'What Users Say';
+
+  @override
+  String get frequentlyAskedQuestions => 'Frequently Asked Questions';
+
+  @override
+  String get startFreeTrialThen => 'Start Free Trial - Then \$39.99/year';
+
+  @override
+  String get thankYouForSupporting => 'Thank you for supporting GymBro';
+
+  @override
+  String get faqCanICancel => 'Can I cancel anytime?';
+
+  @override
+  String get faqWhatHappensToData => 'What happens to my data if I cancel?';
+
+  @override
+  String get faqCanIChangePlans => 'Can I change plans?';
+
+  @override
+  String get faqIsPaymentSecure => 'Is my payment secure?';
+
+  @override
+  String get faqCancelAnswer =>
+      'Yes! You can cancel your subscription anytime from settings.';
+
+  @override
+  String get faqDataAnswer =>
+      'Your data remains safe locally. You just lose cloud sync.';
+
+  @override
+  String get faqChangePlansAnswer =>
+      'Yes, you can upgrade or downgrade anytime.';
+
+  @override
+  String get faqPaymentSecureAnswer =>
+      'Yes, we use Apple/Google payment systems for maximum security.';
+
+  @override
+  String get testimonialJohnD =>
+      'The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.';
+
+  @override
+  String get testimonialSarahM =>
+      'Community templates saved me hours of planning. Worth every penny!';
+
+  @override
+  String get testimonialMikeR =>
+      'Never lost a workout since going premium. The backup is automatic and reliable.';
 }

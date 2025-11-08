@@ -158,7 +158,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Unlock Your Full Potential',
+              context.l10n.unlockYourFullPotential,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -166,7 +166,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             ),
             SizedBox(height: 8),
             Text(
-              'Sync across all devices, access community features, and never lose your progress',
+              context.l10n.syncAcrossAllDevices,
               style: theme.textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -193,7 +193,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Premium Features',
+          context.l10n.premiumFeatures,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -228,14 +228,14 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choose Your Plan',
+          context.l10n.chooseYourPlan,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
         // Monthly Plan
         _buildPricingCard(
           context,
-          title: 'Monthly',
+          title: context.l10n.monthly,
           price: '\$4.99',
           period: '/month',
           isPopular: false,
@@ -245,10 +245,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Annual Plan
         _buildPricingCard(
           context,
-          title: 'Annual',
+          title: context.l10n.annual,
           price: '\$39.99',
           period: '/year',
-          savings: 'Save 33%',
+          savings: context.l10n.saveThirtyThreePercent,
           isPopular: true,
           onTap: () => _handlePurchase(context, 'annual'),
         ),
@@ -256,10 +256,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Lifetime Plan
         _buildPricingCard(
           context,
-          title: 'Lifetime',
+          title: context.l10n.lifetime,
           price: '\$99.99',
           period: 'one time',
-          savings: 'Best Value',
+          savings: context.l10n.bestValue,
           isPopular: false,
           onTap: () => _handlePurchase(context, 'lifetime'),
         ),
@@ -309,7 +309,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                     ),
                   ),
                   child: Text(
-                    'POPULAR',
+                    context.l10n.popular,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
@@ -387,16 +387,16 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final colorScheme = theme.colorScheme;
     
     final testimonials = [
-      ('John D.', '⭐⭐⭐⭐⭐', 'The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.'),
-      ('Sarah M.', '⭐⭐⭐⭐⭐', 'Community templates saved me hours of planning. Worth every penny!'),
-      ('Mike R.', '⭐⭐⭐⭐⭐', 'Never lost a workout since going premium. The backup is automatic and reliable.'),
+      ('John D.', '⭐⭐⭐⭐⭐', context.l10n.testimonialJohnD),
+      ('Sarah M.', '⭐⭐⭐⭐⭐', context.l10n.testimonialSarahM),
+      ('Mike R.', '⭐⭐⭐⭐⭐', context.l10n.testimonialMikeR),
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'What Users Say',
+          context.l10n.whatUsersSay,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -465,17 +465,17 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final theme = Theme.of(context);
     
     final faqs = [
-      ('Can I cancel anytime?', 'Yes! You can cancel your subscription anytime from settings.'),
-      ('What happens to my data if I cancel?', 'Your data remains safe locally. You just lose cloud sync.'),
-      ('Can I change plans?', 'Yes, you can upgrade or downgrade anytime.'),
-      ('Is my payment secure?', 'Yes, we use Apple/Google payment systems for maximum security.'),
+      (context.l10n.faqCanICancel, context.l10n.faqCancelAnswer),
+      (context.l10n.faqWhatHappensToData, context.l10n.faqDataAnswer),
+      (context.l10n.faqCanIChangePlans, context.l10n.faqChangePlansAnswer),
+      (context.l10n.faqIsPaymentSecure, context.l10n.faqPaymentSecureAnswer),
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Frequently Asked Questions',
+          context.l10n.frequentlyAskedQuestions,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -540,7 +540,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                         const Icon(AppIcons.rocket),
                         const SizedBox(width: 8),
                         Text(
-                          'Start Free Trial - Then \$39.99/year',
+                          context.l10n.startFreeTrialThen,
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
@@ -562,7 +562,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Premium Membership'),
+        title: Text(context.l10n.premiumMembership),
       ),
       body: Center(
         child: Padding(
@@ -577,14 +577,14 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'You\'re Premium!',
+                context.l10n.yourePremium,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'Thank you for supporting GymBro',
+                context.l10n.thankYouForSupporting,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
@@ -609,7 +609,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   // Navigate to subscription management
                 },
                 icon: const Icon(AppIcons.settings),
-                label: const Text('Manage Subscription'),
+                label: Text(context.l10n.manageSubscription),
               ),
             ],
           ),
@@ -662,9 +662,9 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
           SnackBar(
             content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
+                Icon(AppIcons.checkCircle, color: Theme.of(context).colorScheme.onPrimary),
                 SizedBox(width: 8),
-                Text('Welcome to Premium! 🎉'),
+                Text(context.l10n.welcomeToPremium),
               ],
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,
@@ -681,8 +681,8 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         if (!context.mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Purchase cancelled'),
+          SnackBar(
+            content: Text(context.l10n.purchaseCancelled),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -694,7 +694,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text(context.l10n.purchaseError(e.toString())),
           backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),

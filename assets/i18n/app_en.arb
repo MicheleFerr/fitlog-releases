@@ -19013,5 +19013,97 @@
   "noPurchasesToRestore": "No purchases found to restore",
   "@noPurchasesToRestore": {
     "description": "Message when no purchases to restore"
-  }
+  },
+  "annual": "Annual",
+  "premiumMembership": "Premium Membership",
+  "welcomeToPremium": "Welcome to Premium! 🎉",
+  "purchaseCancelled": "Purchase cancelled",
+  "templateCategoryStrength": "Strength",
+  "@templateCategoryStrength": {
+    "description": "Template category: strength training"
+  },
+  "templateCategoryCardio": "Cardio",
+  "@templateCategoryCardio": {
+    "description": "Template category: cardio training"
+  },
+  "templateCategoryFlexibility": "Flexibility",
+  "@templateCategoryFlexibility": {
+    "description": "Template category: flexibility/mobility training"
+  },
+  "templateCategoryHybrid": "Hybrid",
+  "@templateCategoryHybrid": {
+    "description": "Template category: hybrid/mixed training"
+  },
+  "difficultyExpert": "Expert",
+  "@difficultyExpert": {
+    "description": "Difficulty level: expert"
+  },
+  "templateStatsNew": "🆕 New",
+  "@templateStatsNew": {
+    "description": "Template never performed before"
+  },
+  "templateStatsToday": "✅ Today",
+  "@templateStatsToday": {
+    "description": "Template performed today"
+  },
+  "templateStatsYesterday": "🕐 Yesterday",
+  "@templateStatsYesterday": {
+    "description": "Template performed yesterday"
+  },
+  "templateStatsDaysAgo": "🕐 {days} days ago",
+  "@templateStatsDaysAgo": {
+    "description": "Template performed X days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "templateStatsResume": "🔄 Resume?",
+  "@templateStatsResume": {
+    "description": "Template not performed in 14+ days, encourage resuming"
+  },
+  "templateActionShare": "Share",
+  "@templateActionShare": {
+    "description": "Share template action"
+  },
+  "templateActionDuplicate": "Duplicate",
+  "@templateActionDuplicate": {
+    "description": "Duplicate template action"
+  },
+  "templateActionEdit": "Edit",
+  "@templateActionEdit": {
+    "description": "Edit template action"
+  },
+  "templateActionDelete": "Delete",
+  "@templateActionDelete": {
+    "description": "Delete template action"
+  },
+  "purchaseError": "Error: {error}",
+  "@purchaseError": {
+    "description": "Purchase error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unlockYourFullPotential": "Unlock Your Full Potential",
+  "syncAcrossAllDevices": "Sync across all devices, access community features, and never lose your progress",
+  "popular": "POPULAR",
+  "whatUsersSay": "What Users Say",
+  "frequentlyAskedQuestions": "Frequently Asked Questions",
+  "startFreeTrialThen": "Start Free Trial - Then $39.99/year",
+  "thankYouForSupporting": "Thank you for supporting GymBro",
+  "faqCanICancel": "Can I cancel anytime?",
+  "faqWhatHappensToData": "What happens to my data if I cancel?",
+  "faqCanIChangePlans": "Can I change plans?",
+  "faqIsPaymentSecure": "Is my payment secure?",
+  "faqCancelAnswer": "Yes! You can cancel your subscription anytime from settings.",
+  "faqDataAnswer": "Your data remains safe locally. You just lose cloud sync.",
+  "faqChangePlansAnswer": "Yes, you can upgrade or downgrade anytime.",
+  "faqPaymentSecureAnswer": "Yes, we use Apple/Google payment systems for maximum security.",
+  "testimonialJohnD": "The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.",
+  "testimonialSarahM": "Community templates saved me hours of planning. Worth every penny!",
+  "testimonialMikeR": "Never lost a workout since going premium. The backup is automatic and reliable."
 }

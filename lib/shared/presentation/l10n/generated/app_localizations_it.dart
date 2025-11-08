@@ -14032,7 +14032,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get yourePremium => 'You\\\'re Premium!';
 
   @override
-  String get manageSubscription => 'Manage Subscription';
+  String get manageSubscription => 'Gestisci Abbonamento';
 
   @override
   String get creaTemplate => 'Crea Template';
@@ -15468,4 +15468,127 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noPurchasesToRestore => 'Nessun acquisto da ripristinare';
+
+  @override
+  String get annual => 'Annuale';
+
+  @override
+  String get premiumMembership => 'Abbonamento Premium';
+
+  @override
+  String get welcomeToPremium => 'Benvenuto in Premium! 🎉';
+
+  @override
+  String get purchaseCancelled => 'Acquisto annullato';
+
+  @override
+  String get templateCategoryStrength => 'Forza';
+
+  @override
+  String get templateCategoryCardio => 'Cardio';
+
+  @override
+  String get templateCategoryFlexibility => 'Flessibilità';
+
+  @override
+  String get templateCategoryHybrid => 'Ibrido';
+
+  @override
+  String get difficultyExpert => 'Esperto';
+
+  @override
+  String get templateStatsNew => '🆕 Nuovo';
+
+  @override
+  String get templateStatsToday => '✅ Oggi';
+
+  @override
+  String get templateStatsYesterday => '🕐 Ieri';
+
+  @override
+  String templateStatsDaysAgo(int days) {
+    return '🕐 $days giorni fa';
+  }
+
+  @override
+  String get templateStatsResume => '🔄 Riprendi?';
+
+  @override
+  String get templateActionShare => 'Condividi';
+
+  @override
+  String get templateActionDuplicate => 'Duplica';
+
+  @override
+  String get templateActionEdit => 'Modifica';
+
+  @override
+  String get templateActionDelete => 'Elimina';
+
+  @override
+  String purchaseError(String error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get unlockYourFullPotential => 'Sblocca il Tuo Pieno Potenziale';
+
+  @override
+  String get syncAcrossAllDevices =>
+      'Sincronizza su tutti i dispositivi, accedi alle funzionalità della community e non perdere mai i tuoi progressi';
+
+  @override
+  String get popular => 'POPOLARE';
+
+  @override
+  String get whatUsersSay => 'Cosa Dicono gli Utenti';
+
+  @override
+  String get frequentlyAskedQuestions => 'Domande Frequenti';
+
+  @override
+  String get startFreeTrialThen => 'Inizia Prova Gratuita - Poi €39.99/anno';
+
+  @override
+  String get thankYouForSupporting => 'Grazie per il supporto a GymBro';
+
+  @override
+  String get faqCanICancel => 'Posso annullare in qualsiasi momento?';
+
+  @override
+  String get faqWhatHappensToData => 'Cosa succede ai miei dati se annullo?';
+
+  @override
+  String get faqCanIChangePlans => 'Posso cambiare piano?';
+
+  @override
+  String get faqIsPaymentSecure => 'Il pagamento è sicuro?';
+
+  @override
+  String get faqCancelAnswer =>
+      'Sì! Puoi annullare l\'abbonamento in qualsiasi momento dalle impostazioni.';
+
+  @override
+  String get faqDataAnswer =>
+      'I tuoi dati rimangono al sicuro localmente. Perderai solo la sincronizzazione cloud.';
+
+  @override
+  String get faqChangePlansAnswer =>
+      'Sì, puoi fare upgrade o downgrade in qualsiasi momento.';
+
+  @override
+  String get faqPaymentSecureAnswer =>
+      'Sì, utilizziamo i sistemi di pagamento Apple/Google per la massima sicurezza.';
+
+  @override
+  String get testimonialJohnD =>
+      'La funzione di sincronizzazione è rivoluzionaria! Posso iniziare un allenamento sul telefono e finirlo sul tablet.';
+
+  @override
+  String get testimonialSarahM =>
+      'I template della community mi hanno fatto risparmiare ore di pianificazione. Ne vale ogni centesimo!';
+
+  @override
+  String get testimonialMikeR =>
+      'Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile.';
 }

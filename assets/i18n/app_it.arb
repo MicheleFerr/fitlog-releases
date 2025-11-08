@@ -5549,15 +5549,15 @@
   },
   "difficultyBeginner": "Principiante",
   "@difficultyBeginner": {
-    "description": "Livello di difficoltà: principiante"
+    "description": "Difficulty level: beginner"
   },
   "difficultyIntermediate": "Intermedio",
   "@difficultyIntermediate": {
-    "description": "Livello di difficoltà: intermedio"
+    "description": "Difficulty level: intermediate"
   },
   "difficultyAdvanced": "Avanzato",
   "@difficultyAdvanced": {
-    "description": "Livello di difficoltà: avanzato"
+    "description": "Difficulty level: advanced"
   },
   "authorTierCommunity": "Community",
   "@authorTierCommunity": {
@@ -6232,7 +6232,7 @@
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
   },
-  "manageSubscription": "Manage Subscription",
+  "manageSubscription": "Gestisci Abbonamento",
   "@manageSubscription": {
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
@@ -8429,5 +8429,89 @@
   "noPurchasesToRestore": "Nessun acquisto da ripristinare",
   "@noPurchasesToRestore": {
     "description": "Message when no purchases to restore"
-  }
+  },
+  "annual": "Annuale",
+  "premiumMembership": "Abbonamento Premium",
+  "welcomeToPremium": "Benvenuto in Premium! 🎉",
+  "purchaseCancelled": "Acquisto annullato",
+  "templateCategoryStrength": "Forza",
+  "@templateCategoryStrength": {
+    "description": "Template category: strength training"
+  },
+  "templateCategoryCardio": "Cardio",
+  "@templateCategoryCardio": {
+    "description": "Template category: cardio training"
+  },
+  "templateCategoryFlexibility": "Flessibilità",
+  "@templateCategoryFlexibility": {
+    "description": "Template category: flexibility/mobility training"
+  },
+  "templateCategoryHybrid": "Ibrido",
+  "@templateCategoryHybrid": {
+    "description": "Template category: hybrid/mixed training"
+  },
+  "difficultyExpert": "Esperto",
+  "@difficultyExpert": {
+    "description": "Difficulty level: expert"
+  },
+  "templateStatsNew": "🆕 Nuovo",
+  "@templateStatsNew": {
+    "description": "Template never performed before"
+  },
+  "templateStatsToday": "✅ Oggi",
+  "@templateStatsToday": {
+    "description": "Template performed today"
+  },
+  "templateStatsYesterday": "🕐 Ieri",
+  "@templateStatsYesterday": {
+    "description": "Template performed yesterday"
+  },
+  "templateStatsDaysAgo": "🕐 {days} giorni fa",
+  "@templateStatsDaysAgo": {
+    "description": "Template performed X days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "templateStatsResume": "🔄 Riprendi?",
+  "@templateStatsResume": {
+    "description": "Template not performed in 14+ days, encourage resuming"
+  },
+  "templateActionShare": "Condividi",
+  "@templateActionShare": {
+    "description": "Share template action"
+  },
+  "templateActionDuplicate": "Duplica",
+  "@templateActionDuplicate": {
+    "description": "Duplicate template action"
+  },
+  "templateActionEdit": "Modifica",
+  "@templateActionEdit": {
+    "description": "Edit template action"
+  },
+  "templateActionDelete": "Elimina",
+  "@templateActionDelete": {
+    "description": "Delete template action"
+  },
+  "purchaseError": "Errore: {error}",
+  "unlockYourFullPotential": "Sblocca il Tuo Pieno Potenziale",
+  "syncAcrossAllDevices": "Sincronizza su tutti i dispositivi, accedi alle funzionalità della community e non perdere mai i tuoi progressi",
+  "popular": "POPOLARE",
+  "whatUsersSay": "Cosa Dicono gli Utenti",
+  "frequentlyAskedQuestions": "Domande Frequenti",
+  "startFreeTrialThen": "Inizia Prova Gratuita - Poi €39.99/anno",
+  "thankYouForSupporting": "Grazie per il supporto a GymBro",
+  "faqCanICancel": "Posso annullare in qualsiasi momento?",
+  "faqWhatHappensToData": "Cosa succede ai miei dati se annullo?",
+  "faqCanIChangePlans": "Posso cambiare piano?",
+  "faqIsPaymentSecure": "Il pagamento è sicuro?",
+  "faqCancelAnswer": "Sì! Puoi annullare l'abbonamento in qualsiasi momento dalle impostazioni.",
+  "faqDataAnswer": "I tuoi dati rimangono al sicuro localmente. Perderai solo la sincronizzazione cloud.",
+  "faqChangePlansAnswer": "Sì, puoi fare upgrade o downgrade in qualsiasi momento.",
+  "faqPaymentSecureAnswer": "Sì, utilizziamo i sistemi di pagamento Apple/Google per la massima sicurezza.",
+  "testimonialJohnD": "La funzione di sincronizzazione è rivoluzionaria! Posso iniziare un allenamento sul telefono e finirlo sul tablet.",
+  "testimonialSarahM": "I template della community mi hanno fatto risparmiare ore di pianificazione. Ne vale ogni centesimo!",
+  "testimonialMikeR": "Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile."
 }
