@@ -4,6 +4,132 @@
 
 ---
 
+## ⚙️ Settings Screen Redesign & AppConfig Refactor - November 2025
+
+### **Task 7: Remove 4 Deprecated Settings Sections**
+**Commit**: `283635db` | **Date**: 08/11/2025 20:45:38
+**Tipo**: 🔧 Refactor
+
+**Cosa abbiamo fatto:**
+- ✅ Rimossi 4 deprecated section builders (~414 righe di codice)
+  - `_buildWorkoutSection` (63 lines)
+  - `_buildIOSFeaturesSection` (52 lines)
+  - `_buildAudioFeedbackSection` (68 lines)
+  - `_buildAdvancedSection` (231 lines)
+- ✅ Rimossi 12 unused helper methods (~200 righe)
+- ✅ Rimossi 12 unused imports
+- ✅ Settings screen semplificato: da 7 sezioni a 4 core sections
+
+**File modificati:**
+- `lib/features/settings/presentation/screens/settings_screen.dart` (-614 lines)
+
+**Impact:**
+- ~614 lines of dead code removed
+- Cleaner, more maintainable Settings screen
+- Zero flutter analyze warnings
+- Better UX with focused, essential settings only
+
+---
+
+### **Task 8: Add Sensible Defaults to AppConfig**
+**Commit**: `78c7a033` | **Date**: 08/11/2025 20:48:02
+**Tipo**: ✨ Feature
+
+**Cosa abbiamo fatto:**
+- ✅ Aggiunti default values per 6 core AppConfig fields:
+  - `enableApre: true` - APRE auto-regulation enabled by default
+  - `defaultApreProtocol: 6` - Balanced 6-set protocol
+  - `rpeTracking: true` - Track RPE for APRE system
+  - `autoRestTimer: true` - Auto-start rest timer
+  - `plateCalculator: true` - Plate calculator tool enabled
+  - `warmupSuggestions: true` - Safety suggestions enabled
+
+**File modificati:**
+- `lib/features/settings/domain/entities/app_config.dart`
+
+**Impact:**
+- Better out-of-box experience (no null checks needed)
+- APRE system works immediately for new users
+- Core workout tools enabled by default
+- Backwards compatible via fromJson fallbacks
+
+---
+
+### **Task 9: Remove 6 Deprecated Provider Methods**
+**Commit**: `a13970b5` | **Date**: 08/11/2025 20:54:47
+**Tipo**: 🔧 Refactor
+
+**Cosa abbiamo fatto:**
+- ✅ Rimossi 6 unused provider methods (~90 righe):
+  - `setWorkoutOnboardingCompleted()` → Use OnboardingStateProvider
+  - `setEnableLiveActivities()` → iOS Features section removed
+  - `setSyncWithHealthKit()` → iOS Features section removed
+  - `setVibrationsEnabled()` → Audio & Feedback section removed
+  - `setTimerSound()` → Audio & Feedback section removed
+  - `setShowIntensityTechniques()` → Old Workout section removed
+
+**Metodi mantenuti** (ancora in uso):
+- `setSoundEnabled()` - Used in timer audio tests
+- `resetOnboarding()` - Used in 8+ files (marked deprecated but critical)
+
+**File modificati:**
+- `lib/features/settings/presentation/providers/app_config_provider.dart` (-90 lines)
+
+**Verifica:**
+- ✅ `flutter analyze`: No new errors (3958 pre-existing issues)
+- ✅ Codebase search: Methods only existed in provider (not called anywhere)
+
+**Impact:**
+- ~90 lines of dead code removed
+- Cleaner provider API surface
+- Related to Task 7 (Settings Screen Simplification)
+
+---
+
+### **Task 10: Add AutoDispose to 6 Community StreamProviders**
+**Commit**: `0fe5cb96` | **Date**: 08/11/2025 20:58:49
+**Tipo**: ⚡ Performance
+
+**Cosa abbiamo fatto:**
+- ✅ Aggiunto `.autoDispose` a 6 community StreamProviders:
+  - `exerciseContributionsProvider`
+  - `trendingContributionsProvider`
+  - `contributionsForReviewProvider`
+  - `userContributionStatsProvider`
+  - `userContributionsProvider`
+  - `searchResultsProvider`
+
+**File modificati:**
+- `lib/features/community/presentation/providers/*_provider.dart` (6 files)
+
+**Impact:**
+- Fixed memory leaks from Firestore listeners not being disposed
+- Reduced battery drain on community screens
+- Automatic cleanup when widgets are disposed
+- Better app performance during navigation
+
+---
+
+### **Task 10b: Add AutoDispose to 7 Exercise Database StreamProviders**
+**Commit**: `bb2b2d71` | **Date**: 08/11/2025 21:00:35
+**Tipo**: ⚡ Performance
+
+**Cosa abbiamo fatto:**
+- ✅ Aggiunto `.autoDispose` a 7 exercise database StreamProviders:
+  - Exercise Search (2): `exerciseSearchResultsProvider`, `popularExercisesProvider`
+  - Hybrid Exercise (3): `exerciseSyncStatusProvider`, `exerciseSyncEventsProvider`, `exerciseVersionWatchProvider`
+  - Missing Exercise (2): `allRequestsProvider`, `requestsByStatusProvider` (family)
+
+**File modificati:**
+- `lib/features/exercise_database/presentation/providers/*_provider.dart` (7 files)
+
+**Impact:**
+- Fixed memory leaks from Firestore/stream listeners not being disposed
+- Reduced battery drain on exercise database screens
+- Better app performance during search and sync operations
+
+---
+
 ## 🎨 Icon Design System - Complete Migration to AppIcons.* - November 2025
 
 ### **Part 1: Base Icon Variants + Import Fixes**
