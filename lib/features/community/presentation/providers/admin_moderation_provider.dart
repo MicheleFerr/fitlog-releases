@@ -4,7 +4,9 @@ import 'package:gymbro_flutter_new/features/community/data/repositories/communit
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 
 // Provider per pending contributions (solo admin)
-final pendingContributionsProvider = StreamProvider<List<CommunityContribution>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final pendingContributionsProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) {
   final repository = ref.watch(communityRepositoryProvider);
   return repository.getContributions(status: ContributionStatus.pending);
 });
@@ -96,7 +98,9 @@ final isAdminProvider = FutureProvider<bool>((ref) async {
 });
 
 // Provider per statistiche moderazione (quanti pending, reviewed, etc.)
-final moderationStatsProvider = StreamProvider<ModerationStats>((ref) async* {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final moderationStatsProvider = StreamProvider.autoDispose<ModerationStats>((ref) async* {
   final pending = await ref.watch(pendingContributionsProvider.future);
 
   yield ModerationStats(
