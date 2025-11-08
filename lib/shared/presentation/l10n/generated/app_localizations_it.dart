@@ -14789,4 +14789,615 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get searchByNameOrBrowseByMuscleGroupChooseA =>
       'Search by name or browse by muscle group. Choose any exercise to get started!';
+
+  @override
+  String get asIs => 'AS IS';
+
+  @override
+  String get noValueAssociatedWithKey_errordescriptio =>
+      'No value associated with key \\(_errorDescription(of: key)).';
+
+  @override
+  String get unkeyedContainerIsAtEnd => 'Unkeyed container is at end.';
+
+  @override
+  String get initCoderHasNotBeenImplemented =>
+      'init(coder:) has not been implemented';
+
+  @override
+  String get expectedTypeValueButFoundNullInstead =>
+      'Expected \\(type) value but found null instead.';
+
+  @override
+  String get expectedTypeButFoundNullInstead =>
+      'Expected \\(type) but found null instead.';
+
+  @override
+  String get erroreError => 'Errore: \$error';
+
+  @override
+  String get barbellBenchPress => 'Barbell Bench Press';
+
+  @override
+  String get expectImagepickercontroller => 'Expect imagePickerController';
+
+  @override
+  String get centroStorico => 'Centro Storico';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get benchPress => 'Bench Press';
+
+  @override
+  String get erroreE => 'Errore: \$e';
+
+  @override
+  String get parsedJsonNumberNumberDoesNotFitInType =>
+      'Parsed JSON number <\\(number)> does not fit in \\(type).';
+
+  @override
+  String get expectGroup => 'Expect group';
+
+  @override
+  String get thisMethodMustBeOverridden => 'This method must be overridden.';
+
+  @override
+  String get workout1 => 'Workout 1';
+
+  @override
+  String get corpoLibero => 'Corpo Libero';
+
+  @override
+  String get stackStack => 'Stack: \$stack';
+
+  @override
+  String get workout2 => 'Workout 2';
+
+  @override
+  String get eeeeDMmmmYyyy => 'EEEE, d MMMM yyyy';
+
+  @override
+  String get pancaPiana => 'Panca Piana';
+
+  @override
+  String get timerComplete => '⏰ Timer Completato!';
+
+  @override
+  String get unknownExercise => 'Unknown Exercise';
+
+  @override
+  String get workout3 => 'Workout 3';
+
+  @override
+  String get syncFailedE => 'Sync failed: \$e';
+
+  @override
+  String get legCurl => 'Leg Curl';
+
+  @override
+  String get unauthorizedAdminOnly => 'Unauthorized: Admin only';
+
+  @override
+  String get testExercise => 'Test Exercise';
+
+  @override
+  String get myRoutine => 'My Routine';
+
+  @override
+  String get achievementNotFound => 'Achievement not found';
+
+  @override
+  String get cannotCastTypeOfObjcvalueToValueSelf =>
+      'Cannot cast \\(type(of: objCValue)) to \\(Value.self)';
+
+  @override
+  String get expectCollectionview => 'Expect collectionView';
+
+  @override
+  String get iAut000017 => 'I-AUT000017';
+
+  @override
+  String get thisClassIsNotMeantToBeInitialized =>
+      'This class is not meant to be initialized.';
+
+  @override
+  String get mmmD => 'MMM d';
+
+  @override
+  String get informazioniTut => 'Informazioni TUT';
+
+  @override
+  String get frenchPress => 'French Press';
+
+  @override
+  String get ezBar => 'EZ Bar';
+
+  @override
+  String get workoutReminders => 'Workout Reminders';
+
+  @override
+  String get questaAzioneNonPuEssereAnnullata =>
+      'Questa azione non può essere annullata.';
+
+  @override
+  String get exception => 'Exception: ';
+
+  @override
+  String get eliminaTemplate => 'Elimina Template';
+
+  @override
+  String get jump => '+\$jump';
+
+  @override
+  String get prevenzioneInfortuni => 'Prevenzione infortuni';
+
+  @override
+  String get hapticFeedbackErrorE => 'Haptic feedback error: \$e';
+
+  @override
+  String get ezCurl => 'EZ Curl';
+
+  @override
+  String get legPress => 'Leg Press';
+
+  @override
+  String get barbellBackSquat => 'Barbell Back Squat';
+
+  @override
+  String get erroreE2 => '❌ Errore: \$e';
+
+  @override
+  String get overheadPress => 'Overhead Press';
+
+  @override
+  String get rpeMedio => 'RPE Medio';
+
+  @override
+  String get mmmDY => 'MMM d, y';
+
+  @override
+  String get key1Workout1Rest => '1 Workout + 1 Rest';
+
+  @override
+  String get key2Workouts1Rest => '2 Workouts + 1 Rest';
+
+  @override
+  String get key3Workouts1Rest => '3 Workouts + 1 Rest';
+
+  @override
+  String get key3Workouts2Rest => '3 Workouts + 2 Rest';
+
+  @override
+  String get key4Workouts1Rest => '4 Workouts + 1 Rest';
+
+  @override
+  String get key4Workouts3Rest => '4 Workouts + 3 Rest';
+
+  @override
+  String get key5Workouts2Rest => '5 Workouts + 2 Rest';
+
+  @override
+  String get key6Workouts1Rest => '6 Workouts + 1 Rest';
+
+  @override
+  String get workout4 => 'Workout 4';
+
+  @override
+  String get key3Set => '3 set';
+
+  @override
+  String get continuaCos => 'Continua così!';
+
+  @override
+  String get avviaAllenamento => 'Avvia Allenamento';
+
+  @override
+  String get exerciseCurrentOfTotal => 'Exercise \$current of \$total';
+
+  @override
+  String get missingActivityid => 'Missing activityId';
+
+  @override
+  String get iAut000008 => 'I-AUT000008';
+
+  @override
+  String get idIdentifier => '   - ID: \\(identifier)';
+
+  @override
+  String get liveActivitiesRequireIos161OrLater =>
+      'Live Activities require iOS 16.1 or later';
+
+  @override
+  String get stackStacktrace => 'Stack: \$stackTrace';
+
+  @override
+  String get workoutSummary => 'Riepilogo Allenamento';
+
+  @override
+  String get tracciamentoRpe => 'Tracciamento RPE';
+
+  @override
+  String get timerAutomatico => 'Timer Automatico';
+
+  @override
+  String get suggerimentiCommunity => 'Suggerimenti Community';
+
+  @override
+  String get pettoTricDelt_ant => 'PETTO, TRIC, DELT_ANT';
+
+  @override
+  String get advancedFeatures => 'Advanced Features';
+
+  @override
+  String get useUnreadnotificationcountproviderFromUn =>
+      'Use unreadNotificationCountProvider from unified_notification_provider.dart';
+
+  @override
+  String get useTodaynotificationsproviderFromUnified =>
+      'Use todayNotificationsProvider from unified_notification_provider.dart';
+
+  @override
+  String get providerDisposed => 'Provider disposed';
+
+  @override
+  String get notificationPermissionsNotGranted =>
+      'Notification permissions not granted';
+
+  @override
+  String get workoutReminder => 'Workout Reminder';
+
+  @override
+  String get advancedAnalytics => 'Advanced Analytics';
+
+  @override
+  String get save33 => 'Save 33%';
+
+  @override
+  String get bestValue => 'Best Value';
+
+  @override
+  String get autoBackup => 'Auto Backup';
+
+  @override
+  String get youRePremium => 'You\\\'re Premium!';
+
+  @override
+  String get communityAccess => 'Community Access';
+
+  @override
+  String get shoulderPress => 'Shoulder Press';
+
+  @override
+  String get eliminaUnTemplateEsistenteOPassaAPremium =>
+      'Elimina un template esistente o passa a Premium per avere più spazio.';
+
+  @override
+  String get ilTemplateVerrSalvatoSuFirebaseESarDispo =>
+      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
+
+  @override
+  String get templatePersonalizzato => 'Template personalizzato';
+
+  @override
+  String get eliminaTemplateEsistentiOPassaAPremium =>
+      'Elimina template esistenti o passa a Premium.';
+
+  @override
+  String get fitlogPro => 'FitLog Pro';
+
+  @override
+  String get continueYourRoutine => 'Continue your routine';
+
+  @override
+  String get nessunTemplatePersonalizzato => 'Nessun template personalizzato';
+
+  @override
+  String get statoSincronizzazione => 'Stato Sincronizzazione';
+
+  @override
+  String get updateProfile => 'Update Profile';
+
+  @override
+  String get confermaSerie => 'Conferma Serie';
+
+  @override
+  String get muscoliSecondari => 'Muscoli secondari';
+
+  @override
+  String get tipoEsercizio => 'Tipo esercizio';
+
+  @override
+  String get rangeRipetizioni => 'Range ripetizioni';
+
+  @override
+  String get patternMovimento => 'Pattern movimento';
+
+  @override
+  String get serieRiscaldamento => 'Serie riscaldamento';
+
+  @override
+  String get durataRiscaldamento => 'Durata riscaldamento';
+
+  @override
+  String get mobilitArticolare => 'Mobilità articolare';
+
+  @override
+  String get attivazioneMuscolare => 'Attivazione muscolare';
+
+  @override
+  String get progressioneCarico => 'Progressione carico';
+
+  @override
+  String get noteTecniche => 'Note tecniche';
+
+  @override
+  String get drillTecnico => 'Drill tecnico';
+
+  @override
+  String get cooldownConsigliato => 'Cooldown consigliato';
+
+  @override
+  String get muscoliTarget => 'Muscoli target';
+
+  @override
+  String get serieDiRiscaldamento => 'Serie di Riscaldamento';
+
+  @override
+  String get prevenzioneInfortuni2 => 'Prevenzione Infortuni';
+
+  @override
+  String get hoCapito => 'Ho capito!';
+
+  @override
+  String get preLoadedFixedBar => 'Pre-loaded fixed bar';
+
+  @override
+  String get nonTroviLEsercizioCreaneUnoPersonalizzat =>
+      'Non trovi l\\\'esercizio? Creane uno personalizzato';
+
+  @override
+  String get miniSetIndex => 'Mini-Set \$index';
+
+  @override
+  String get votoPositivo => '👍 Voto positivo!';
+
+  @override
+  String get votoNegativo => '👎 Voto negativo';
+
+  @override
+  String get inAttesa => 'In attesa';
+
+  @override
+  String get partnershipAttiva => 'Partnership attiva';
+
+  @override
+  String get dettagliEsercizio => 'Dettagli Esercizio';
+
+  @override
+  String get bug => '🐛 Bug';
+
+  @override
+  String get errorLoadingFeedback => 'Error loading feedback';
+
+  @override
+  String get eserciziObsoleti => 'Esercizi Obsoleti';
+
+  @override
+  String get eserciziFlaggati => 'Esercizi Flaggati';
+
+  @override
+  String get key3Feedback => '≥3 feedback';
+
+  @override
+  String get allenamentiFunzionali => 'allenamenti funzionali';
+
+  @override
+  String get key2Anni => '2 anni';
+
+  @override
+  String get barbellSquat => 'Barbell Squat';
+
+  @override
+  String get daySkipped => 'Day skipped';
+
+  @override
+  String get useridEmail => ', userId: email)';
+
+  @override
+  String get progressioneCarico2 => 'Progressione Carico';
+
+  @override
+  String get recuperoOttimale => 'Recupero Ottimale';
+
+  @override
+  String get bilanciamentoMuscolare => 'Bilanciamento Muscolare';
+
+  @override
+  String get accediPerVedereIWorkout => 'Accedi per vedere i workout';
+
+  @override
+  String get azioniRapide => 'Azioni Rapide';
+
+  @override
+  String get startRestTimerAfterCompletingSet =>
+      'Start rest timer after completing set';
+
+  @override
+  String get showDropSetsSupersetsEtc => 'Show drop sets, supersets, etc.';
+
+  @override
+  String get showTimerOnLockScreenDynamicIsland =>
+      'Show timer on lock screen & Dynamic Island';
+
+  @override
+  String get syncWorkoutsToAppleHealth => 'Sync workouts to Apple Health';
+
+  @override
+  String get playSoundsForTimerAndCompletion =>
+      'Play sounds for timer and completion';
+
+  @override
+  String get hapticFeedbackForInteractions =>
+      'Haptic feedback for interactions';
+
+  @override
+  String get englishUs => 'English (US)';
+
+  @override
+  String get italianIt => 'Italian (IT)';
+
+  @override
+  String get kilogramsKg => 'Kilograms (kg)';
+
+  @override
+  String get metricSystem => 'Metric system';
+
+  @override
+  String get poundsLbs => 'Pounds (lbs)';
+
+  @override
+  String get imperialSystem => 'Imperial system';
+
+  @override
+  String get areYouSureYouWantToResetAllSettingsToDef =>
+      'Are you sure you want to reset all settings to defaults? This cannot be undone.';
+
+  @override
+  String get areYouSureYouWantToSignOut => 'Are you sure you want to sign out?';
+
+  @override
+  String get exportFunctionalityComingSoon =>
+      'Export functionality coming soon';
+
+  @override
+  String get importFunctionalityComingSoon =>
+      'Import functionality coming soon';
+
+  @override
+  String get cercaEsercizi => 'Cerca esercizi...';
+
+  @override
+  String get aggiungiSerie => 'Aggiungi Serie';
+
+  @override
+  String get dropSet => 'Drop Set';
+
+  @override
+  String get unitDiPeso => 'Unità di Peso';
+
+  @override
+  String get seiSicuroDiVolerRipristinareTutteLeImpos =>
+      'Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.';
+
+  @override
+  String get templateNonTrovato => 'Template non trovato';
+
+  @override
+  String get rimuoviDefinitivamente => 'Rimuovi definitivamente';
+
+  @override
+  String get noteOpzionale => 'Note (opzionale)';
+
+  @override
+  String get aggiuntoExercisenameAllAllenamento =>
+      'Aggiunto \$exerciseName all\\\'allenamento';
+
+  @override
+  String get applicaModifiche => 'Applica Modifiche';
+
+  @override
+  String get saltaPerOra => 'Salta per ora';
+
+  @override
+  String get inserisciLaTuaEmail => 'Inserisci la tua email';
+
+  @override
+  String get creaAccount => 'Crea Account';
+
+  @override
+  String get vaiAllaHome => 'Vai alla Home';
+
+  @override
+  String get seiSicuroDiVolerEliminareName =>
+      'Sei sicuro di voler eliminare \\\"\$name\\\"?';
+
+  @override
+  String get creaRoutine => 'Crea Routine';
+
+  @override
+  String get noCompatibleAlternativesFound =>
+      'No compatible alternatives found';
+
+  @override
+  String get applyingChanges => 'Applying changes...';
+
+  @override
+  String get dropSetPerformExerciseToFailureThenImmed =>
+      'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.';
+
+  @override
+  String get restPausePerformToFailureRest1015Seconds =>
+      'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.';
+
+  @override
+  String get thisActionCannotBeUndone => 'This action cannot be undone.';
+
+  @override
+  String get addedExercisenameToWorkout => 'Added \$exerciseName to workout';
+
+  @override
+  String get applyChanges => 'Apply Changes';
+
+  @override
+  String get key1Template => '1 template';
+
+  @override
+  String get increaseTrainingFrequency => 'Increase Training Frequency';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
+  String get estimated1rm => 'Estimated 1RM';
+
+  @override
+  String get useTheImportFunctionInTheTemplateScreen =>
+      'Use the import function in the template screen';
+
+  @override
+  String get areYouSureYouWantToDeleteName =>
+      'Are you sure you want to delete \\\"\$name\\\"?';
+
+  @override
+  String get errorSavingError => 'Error saving: \$error';
+
+  @override
+  String get noRateLimiterForEndpointEndpoint =>
+      '⚠️ No rate limiter for endpoint: \$endpoint';
+
+  @override
+  String get liveActivitiesAreDisabled => 'Live Activities are disabled';
+
+  @override
+  String get missingRequiredParameters => 'Missing required parameters';
+
+  @override
+  String get yearly => 'Annuale';
+
+  @override
+  String get lifetime => 'A vita';
+
+  @override
+  String get saveThirtyThreePercent => 'Risparmia 33%';
+
+  @override
+  String get prioritySupport => 'Supporto Prioritario';
+
+  @override
+  String get fullAccess => 'Accesso Completo';
+
+  @override
+  String get active => 'Attivo';
 }

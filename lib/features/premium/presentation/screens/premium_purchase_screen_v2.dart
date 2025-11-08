@@ -439,7 +439,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final features = [
       _FeatureData(
         icon: AppIcons.cloudSyncRounded,
-        title: 'Cloud Sync',
+        title: context.l10n.cloudSync,
         description: 'Access your workouts on any device',
         gradient: [colorScheme.primary, colorScheme.secondary],
         delay: 0,
@@ -471,7 +471,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Premium Features',
+          context.l10n.premiumFeatures,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -676,7 +676,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Choose Your Plan',
+                  context.l10n.chooseYourPlan,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: context.colors.surface,
                     fontWeight: FontWeight.bold,
@@ -712,7 +712,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   const SizedBox(height: 20),
                   
                   Text(
-                    'Choose Your Plan',
+                    context.l10n.chooseYourPlan,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: colorScheme.onSurface,
@@ -954,7 +954,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
                 
                 // Save badge (top right)
-                if (info['save']!.isNotEmpty)
+                if (_getSaveBadge(plan).isNotEmpty)
                   Positioned(
                     top: 0,
                     right: 0,
@@ -974,7 +974,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         ],
                       ),
                       child: Text(
-                        info['save']!,
+                        _getSaveBadge(plan),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: isPopular ? context.colors.onSurface : colorScheme.onTertiary,
                           fontWeight: FontWeight.bold,
@@ -1126,7 +1126,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             TextButton(
               onPressed: () => _openUrl('https://gymbro.app/privacy'),
               child: Text(
-                'Privacy Policy',
+                context.l10n.privacyPolicy,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -1144,7 +1144,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             TextButton(
               onPressed: () => _openUrl('https://gymbro.app/terms'),
               child: Text(
-                'Terms of Service',
+                context.l10n.termsOfService,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -1441,7 +1441,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               const SizedBox(height: 32),
               
               Text(
-                'You\'re Premium!',
+                context.l10n.yourePremium,
                 style: theme.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: colorScheme.onSurface,
@@ -1473,7 +1473,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   children: [
                     _buildPremiumFeature(
                       context,
-                      'Cloud Sync',
+                      context.l10n.cloudSync,
                       'Active',
                       AppIcons.cloudDoneRounded,
                       context.colors.success,
@@ -1483,7 +1483,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       context,
                       'Auto Backup',
                       'Enabled',
-                      Icons.backup_rounded,
+                      AppIcons.backupRounded,
                       context.colors.primary,
                     ),
                     const Divider(height: 24),
@@ -1512,7 +1512,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Manage Subscription',
+                      context.l10n.manageSubscription,
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -1571,11 +1571,22 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
   String _getPlanTitle(PremiumPlan? plan) {
     switch (plan) {
       case PremiumPlan.monthly:
-        return 'Monthly';
+        return context.l10n.monthly;
       case PremiumPlan.yearly:
-        return 'Yearly';
+        return context.l10n.yearly;
       case PremiumPlan.lifetime:
-        return 'Lifetime';
+        return context.l10n.lifetime;
+      default:
+        return '';
+    }
+  }
+
+  String _getSaveBadge(PremiumPlan plan) {
+    switch (plan) {
+      case PremiumPlan.yearly:
+        return context.l10n.saveThirtyThreePercent;
+      case PremiumPlan.lifetime:
+        return context.l10n.bestValue;
       default:
         return '';
     }
@@ -1609,7 +1620,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           SnackBar(
             content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
+                Icon(AppIcons.checkCircle, color: Colors.white),
                 SizedBox(width: 8),
                 Text('Premium restored successfully!'),
               ],

@@ -26081,6 +26081,1164 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search by name or browse by muscle group. Choose any exercise to get started!'**
   String get searchByNameOrBrowseByMuscleGroupChooseA;
+
+  /// From quick wins migration - 39 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'AS IS'**
+  String get asIs;
+
+  /// From quick wins migration - 16 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'No value associated with key \\(_errorDescription(of: key)).'**
+  String get noValueAssociatedWithKey_errordescriptio;
+
+  /// From quick wins migration - 16 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Unkeyed container is at end.'**
+  String get unkeyedContainerIsAtEnd;
+
+  /// From quick wins migration - 15 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'init(coder:) has not been implemented'**
+  String get initCoderHasNotBeenImplemented;
+
+  /// From quick wins migration - 15 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Expected \\(type) value but found null instead.'**
+  String get expectedTypeValueButFoundNullInstead;
+
+  /// From quick wins migration - 15 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Expected \\(type) but found null instead.'**
+  String get expectedTypeButFoundNullInstead;
+
+  /// From quick wins migration - 12 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Errore: \$error'**
+  String get erroreError;
+
+  /// From quick wins migration - 12 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell Bench Press'**
+  String get barbellBenchPress;
+
+  /// From quick wins migration - 12 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Expect imagePickerController'**
+  String get expectImagepickercontroller;
+
+  /// From quick wins migration - 11 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Centro Storico'**
+  String get centroStorico;
+
+  /// From quick wins migration - 10 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// From quick wins migration - 10 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Bench Press'**
+  String get benchPress;
+
+  /// From quick wins migration - 10 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Errore: \$e'**
+  String get erroreE;
+
+  /// From quick wins migration - 10 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Parsed JSON number <\\(number)> does not fit in \\(type).'**
+  String get parsedJsonNumberNumberDoesNotFitInType;
+
+  /// From quick wins migration - 9 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Expect group'**
+  String get expectGroup;
+
+  /// From quick wins migration - 9 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'This method must be overridden.'**
+  String get thisMethodMustBeOverridden;
+
+  /// From quick wins migration - 8 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout 1'**
+  String get workout1;
+
+  /// From quick wins migration - 7 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Corpo Libero'**
+  String get corpoLibero;
+
+  /// From quick wins migration - 7 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Stack: \$stack'**
+  String get stackStack;
+
+  /// From quick wins migration - 7 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout 2'**
+  String get workout2;
+
+  /// From quick wins migration - 6 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'EEEE, d MMMM yyyy'**
+  String get eeeeDMmmmYyyy;
+
+  /// From quick wins migration - 6 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Panca Piana'**
+  String get pancaPiana;
+
+  /// From quick wins migration - 6 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Complete'**
+  String get timerComplete;
+
+  /// From quick wins migration - 6 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Exercise'**
+  String get unknownExercise;
+
+  /// From quick wins migration - 6 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout 3'**
+  String get workout3;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed: \$e'**
+  String get syncFailedE;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Curl'**
+  String get legCurl;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Unauthorized: Admin only'**
+  String get unauthorizedAdminOnly;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Test Exercise'**
+  String get testExercise;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'My Routine'**
+  String get myRoutine;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement not found'**
+  String get achievementNotFound;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot cast \\(type(of: objCValue)) to \\(Value.self)'**
+  String get cannotCastTypeOfObjcvalueToValueSelf;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Expect collectionView'**
+  String get expectCollectionview;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'I-AUT000017'**
+  String get iAut000017;
+
+  /// From quick wins migration - 5 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'This class is not meant to be initialized.'**
+  String get thisClassIsNotMeantToBeInitialized;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'MMM d'**
+  String get mmmD;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Informazioni TUT'**
+  String get informazioniTut;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'French Press'**
+  String get frenchPress;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'EZ Bar'**
+  String get ezBar;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Reminders'**
+  String get workoutReminders;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Questa azione non può essere annullata.'**
+  String get questaAzioneNonPuEssereAnnullata;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Exception: '**
+  String get exception;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Elimina Template'**
+  String get eliminaTemplate;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'+\$jump'**
+  String get jump;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Prevenzione infortuni'**
+  String get prevenzioneInfortuni;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback error: \$e'**
+  String get hapticFeedbackErrorE;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'EZ Curl'**
+  String get ezCurl;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Leg Press'**
+  String get legPress;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell Back Squat'**
+  String get barbellBackSquat;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Errore: \$e'**
+  String get erroreE2;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Overhead Press'**
+  String get overheadPress;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'RPE Medio'**
+  String get rpeMedio;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'MMM d, y'**
+  String get mmmDY;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'1 Workout + 1 Rest'**
+  String get key1Workout1Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'2 Workouts + 1 Rest'**
+  String get key2Workouts1Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'3 Workouts + 1 Rest'**
+  String get key3Workouts1Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'3 Workouts + 2 Rest'**
+  String get key3Workouts2Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'4 Workouts + 1 Rest'**
+  String get key4Workouts1Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'4 Workouts + 3 Rest'**
+  String get key4Workouts3Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'5 Workouts + 2 Rest'**
+  String get key5Workouts2Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'6 Workouts + 1 Rest'**
+  String get key6Workouts1Rest;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout 4'**
+  String get workout4;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'3 set'**
+  String get key3Set;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Continua così!'**
+  String get continuaCos;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Avvia Allenamento'**
+  String get avviaAllenamento;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise \$current of \$total'**
+  String get exerciseCurrentOfTotal;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Missing activityId'**
+  String get missingActivityid;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'I-AUT000008'**
+  String get iAut000008;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'   - ID: \\(identifier)'**
+  String get idIdentifier;
+
+  /// From quick wins migration - 4 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities require iOS 16.1 or later'**
+  String get liveActivitiesRequireIos161OrLater;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Stack: \$stackTrace'**
+  String get stackStacktrace;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Summary'**
+  String get workoutSummary;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Tracciamento RPE'**
+  String get tracciamentoRpe;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Automatico'**
+  String get timerAutomatico;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Suggerimenti Community'**
+  String get suggerimentiCommunity;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'PETTO, TRIC, DELT_ANT'**
+  String get pettoTricDelt_ant;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Features'**
+  String get advancedFeatures;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Use unreadNotificationCountProvider from unified_notification_provider.dart'**
+  String get useUnreadnotificationcountproviderFromUn;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Use todayNotificationsProvider from unified_notification_provider.dart'**
+  String get useTodaynotificationsproviderFromUnified;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Provider disposed'**
+  String get providerDisposed;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permissions not granted'**
+  String get notificationPermissionsNotGranted;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Reminder'**
+  String get workoutReminder;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Analytics'**
+  String get advancedAnalytics;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Save 33%'**
+  String get save33;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Best Value'**
+  String get bestValue;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Backup'**
+  String get autoBackup;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'You\\\'re Premium!'**
+  String get youRePremium;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Community Access'**
+  String get communityAccess;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulder Press'**
+  String get shoulderPress;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Elimina un template esistente o passa a Premium per avere più spazio.'**
+  String get eliminaUnTemplateEsistenteOPassaAPremium;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi'**
+  String get ilTemplateVerrSalvatoSuFirebaseESarDispo;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Template personalizzato'**
+  String get templatePersonalizzato;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Elimina template esistenti o passa a Premium.'**
+  String get eliminaTemplateEsistentiOPassaAPremium;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'FitLog Pro'**
+  String get fitlogPro;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your routine'**
+  String get continueYourRoutine;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Nessun template personalizzato'**
+  String get nessunTemplatePersonalizzato;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Stato Sincronizzazione'**
+  String get statoSincronizzazione;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Update Profile'**
+  String get updateProfile;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Conferma Serie'**
+  String get confermaSerie;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Muscoli secondari'**
+  String get muscoliSecondari;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Tipo esercizio'**
+  String get tipoEsercizio;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Range ripetizioni'**
+  String get rangeRipetizioni;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern movimento'**
+  String get patternMovimento;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Serie riscaldamento'**
+  String get serieRiscaldamento;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Durata riscaldamento'**
+  String get durataRiscaldamento;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Mobilità articolare'**
+  String get mobilitArticolare;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Attivazione muscolare'**
+  String get attivazioneMuscolare;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Progressione carico'**
+  String get progressioneCarico;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Note tecniche'**
+  String get noteTecniche;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Drill tecnico'**
+  String get drillTecnico;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Cooldown consigliato'**
+  String get cooldownConsigliato;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Muscoli target'**
+  String get muscoliTarget;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Serie di Riscaldamento'**
+  String get serieDiRiscaldamento;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Prevenzione Infortuni'**
+  String get prevenzioneInfortuni2;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Ho capito!'**
+  String get hoCapito;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Pre-loaded fixed bar'**
+  String get preLoadedFixedBar;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Non trovi l\\\'esercizio? Creane uno personalizzato'**
+  String get nonTroviLEsercizioCreaneUnoPersonalizzat;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Mini-Set \$index'**
+  String get miniSetIndex;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'👍 Voto positivo!'**
+  String get votoPositivo;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'👎 Voto negativo'**
+  String get votoNegativo;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'In attesa'**
+  String get inAttesa;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Partnership attiva'**
+  String get partnershipAttiva;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Dettagli Esercizio'**
+  String get dettagliEsercizio;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'🐛 Bug'**
+  String get bug;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading feedback'**
+  String get errorLoadingFeedback;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Esercizi Obsoleti'**
+  String get eserciziObsoleti;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Esercizi Flaggati'**
+  String get eserciziFlaggati;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'≥3 feedback'**
+  String get key3Feedback;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'allenamenti funzionali'**
+  String get allenamentiFunzionali;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'2 anni'**
+  String get key2Anni;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell Squat'**
+  String get barbellSquat;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Day skipped'**
+  String get daySkipped;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **', userId: email)}'**
+  String get useridEmail;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Progressione Carico'**
+  String get progressioneCarico2;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Recupero Ottimale'**
+  String get recuperoOttimale;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Bilanciamento Muscolare'**
+  String get bilanciamentoMuscolare;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Accedi per vedere i workout'**
+  String get accediPerVedereIWorkout;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Azioni Rapide'**
+  String get azioniRapide;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Start rest timer after completing set'**
+  String get startRestTimerAfterCompletingSet;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Show drop sets, supersets, etc.'**
+  String get showDropSetsSupersetsEtc;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Show timer on lock screen & Dynamic Island'**
+  String get showTimerOnLockScreenDynamicIsland;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts to Apple Health'**
+  String get syncWorkoutsToAppleHealth;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Play sounds for timer and completion'**
+  String get playSoundsForTimerAndCompletion;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback for interactions'**
+  String get hapticFeedbackForInteractions;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'English (US)'**
+  String get englishUs;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Italian (IT)'**
+  String get italianIt;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Kilograms (kg)'**
+  String get kilogramsKg;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Metric system'**
+  String get metricSystem;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Pounds (lbs)'**
+  String get poundsLbs;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial system'**
+  String get imperialSystem;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset all settings to defaults? This cannot be undone.'**
+  String get areYouSureYouWantToResetAllSettingsToDef;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get areYouSureYouWantToSignOut;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Export functionality coming soon'**
+  String get exportFunctionalityComingSoon;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Import functionality coming soon'**
+  String get importFunctionalityComingSoon;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Cerca esercizi...'**
+  String get cercaEsercizi;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Aggiungi Serie'**
+  String get aggiungiSerie;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set'**
+  String get dropSet;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Unità di Peso'**
+  String get unitDiPeso;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.'**
+  String get seiSicuroDiVolerRipristinareTutteLeImpos;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Template non trovato'**
+  String get templateNonTrovato;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Rimuovi definitivamente'**
+  String get rimuoviDefinitivamente;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Note (opzionale)'**
+  String get noteOpzionale;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Aggiunto \$exerciseName all\\\'allenamento'**
+  String get aggiuntoExercisenameAllAllenamento;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Applica Modifiche'**
+  String get applicaModifiche;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Salta per ora'**
+  String get saltaPerOra;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Inserisci la tua email'**
+  String get inserisciLaTuaEmail;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Crea Account'**
+  String get creaAccount;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Vai alla Home'**
+  String get vaiAllaHome;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Sei sicuro di voler eliminare \\\"\$name\\\"?'**
+  String get seiSicuroDiVolerEliminareName;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Crea Routine'**
+  String get creaRoutine;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'No compatible alternatives found'**
+  String get noCompatibleAlternativesFound;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Applying changes...'**
+  String get applyingChanges;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.'**
+  String get dropSetPerformExerciseToFailureThenImmed;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.'**
+  String get restPausePerformToFailureRest1015Seconds;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone.'**
+  String get thisActionCannotBeUndone;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Added \$exerciseName to workout'**
+  String get addedExercisenameToWorkout;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Changes'**
+  String get applyChanges;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'1 template'**
+  String get key1Template;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Increase Training Frequency'**
+  String get increaseTrainingFrequency;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get skipForNow;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated 1RM'**
+  String get estimated1rm;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Use the import function in the template screen'**
+  String get useTheImportFunctionInTheTemplateScreen;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \\\"\$name\\\"?'**
+  String get areYouSureYouWantToDeleteName;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving: \$error'**
+  String get errorSavingError;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ No rate limiter for endpoint: \$endpoint'**
+  String get noRateLimiterForEndpointEndpoint;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities are disabled'**
+  String get liveActivitiesAreDisabled;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Missing required parameters'**
+  String get missingRequiredParameters;
+
+  /// No description provided for @yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get yearly;
+
+  /// No description provided for @lifetime.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifetime'**
+  String get lifetime;
+
+  /// No description provided for @saveThirtyThreePercent.
+  ///
+  /// In en, this message translates to:
+  /// **'Save 33%'**
+  String get saveThirtyThreePercent;
+
+  /// No description provided for @prioritySupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Support'**
+  String get prioritySupport;
+
+  /// No description provided for @fullAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Access'**
+  String get fullAccess;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
 }
 
 class _AppLocalizationsDelegate

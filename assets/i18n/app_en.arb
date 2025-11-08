@@ -17982,5 +17982,946 @@
   "@searchByNameOrBrowseByMuscleGroupChooseA": {
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
-  }
+  },
+  "asIs": "AS IS",
+  "@asIs": {
+    "description": "From quick wins migration - 39 occurrences",
+    "context": "Found in: • Service provided \"AS IS\"\n• No warranty of any kind, * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expre"
+  },
+  "noValueAssociatedWithKey_errordescriptio": "No value associated with key \\(_errorDescription(of: key)).",
+  "@noValueAssociatedWithKey_errordescriptio": {
+    "description": "From quick wins migration - 16 occurrences",
+    "context": "Found in: guard let entry = self.container[key.stringValue] else {\n      throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: self.decoder.codingPath, debugDescription: \"No value associated wi, guard let entry = self.container[key.stringValue] else {\n      throw DecodingError.keyNotFound(key, DecodingError.Context(codingPath: self.decoder.codingPath, debugDescription: \"No value associated wi"
+  },
+  "unkeyedContainerIsAtEnd": "Unkeyed container is at end.",
+  "@unkeyedContainerIsAtEnd": {
+    "description": "From quick wins migration - 16 occurrences",
+    "context": "Found in: guard !self.isAtEnd else {\n      throw DecodingError.valueNotFound(Any?.self, DecodingError.Context(codingPath: self.decoder.codingPath + [_JSONKey(index: self.currentIndex)], debugDescription: \"Unkey, guard !self.isAtEnd else {\n      throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingPath + [_JSONKey(index: self.currentIndex)], debugDescription: \"Unkeyed co"
+  },
+  "initCoderHasNotBeenImplemented": "init(coder:) has not been implemented",
+  "@initCoderHasNotBeenImplemented": {
+    "description": "From quick wins migration - 15 occurrences",
+    "context": "Found in: required init?(coder aDecoder: NSCoder) {\n        fatalError(\"init(coder:) has not been implemented\")\n    }, required init?(coder aDecoder: NSCoder) {\n        fatalError(\"init(coder:) has not been implemented\")\n    }"
+  },
+  "expectedTypeValueButFoundNullInstead": "Expected \\(type) value but found null instead.",
+  "@expectedTypeValueButFoundNullInstead": {
+    "description": "From quick wins migration - 15 occurrences",
+    "context": "Found in: guard let value = try self.decoder.unbox(entry, as: Bool.self) else {\n      throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingPath, debugDescription: \"Expect, guard let value = try self.decoder.unbox(entry, as: Int.self) else {\n      throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingPath, debugDescription: \"Expecte"
+  },
+  "expectedTypeButFoundNullInstead": "Expected \\(type) but found null instead.",
+  "@expectedTypeButFoundNullInstead": {
+    "description": "From quick wins migration - 15 occurrences",
+    "context": "Found in: guard let decoded = try self.decoder.unbox(self.container[self.currentIndex], as: Bool.self) else {\n      throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingP, guard let decoded = try self.decoder.unbox(self.container[self.currentIndex], as: Int.self) else {\n      throw DecodingError.valueNotFound(type, DecodingError.Context(codingPath: self.decoder.codingPa"
+  },
+  "erroreError": "Errore: $error",
+  "@erroreError": {
+    "description": "From quick wins migration - 12 occurrences",
+    "context": "Found in: const SizedBox(height: 16),\n              Text('Errore: $error'),\n              const SizedBox(height: 16),, loading: () => const Center(child: LoadingIndicator()),\n        error: (error, stack) => Center(child: Text('Errore: $error')),\n        data: (templates) => _buildTemplatesList(templates),"
+  },
+  "barbellBenchPress": "Barbell Bench Press",
+  "@barbellBenchPress": {
+    "description": "From quick wins migration - 12 occurrences",
+    "context": "Found in: exerciseId: 'bench_press',\n        exerciseName: 'Barbell Bench Press',\n        userId: 'mock_user_001',, exerciseId: 'bench_press',\n        exerciseName: 'Barbell Bench Press',\n        userId: 'mock_user_002',"
+  },
+  "expectImagepickercontroller": "Expect imagePickerController",
+  "@expectImagepickercontroller": {
+    "description": "From quick wins migration - 12 occurrences",
+    "context": "Found in: guard let imagePickerController = imagePickerController else {\n            assertionFailure(\"Expect imagePickerController\")\n            return, guard let imagePickerController = imagePickerController else {\n            assertionFailure(\"Expect imagePickerController\")\n            return"
+  },
+  "centroStorico": "Centro Storico",
+  "@centroStorico": {
+    "description": "From quick wins migration - 11 occurrences",
+    "context": "Found in: cityCode: milanCity.code,\n        zoneName: 'Centro Storico',\n        matchingPurpose: MatchingPurpose.workoutPartner,, cityCode: bolognaCity.code,\n        zoneName: 'Centro Storico',\n        matchingPurpose: MatchingPurpose.workoutPartner,"
+  },
+  "noData": "No data",
+  "@noData": {
+    "description": "From quick wins migration - 10 occurrences",
+    "context": "Found in: String getMostCommonSkipReason() {\n    if (state.skipReasonCounts.isEmpty) return 'No data';, String getMostSkippedExercise() {\n    if (state.exerciseSkipCounts.isEmpty) return 'No data';"
+  },
+  "benchPress": "Bench Press",
+  "@benchPress": {
+    "description": "From quick wins migration - 10 occurrences",
+    "context": "Found in: 'nome': 'Panca Piana',\n      'nameEn': 'Bench Press',\n      'focus': 'PETTO, TRIC, DELT_ANT',, ? 'Panca Piana'\n                                : 'Bench Press',\n                            style: theme.textTheme.titleMedium?.copyWith("
+  },
+  "erroreE": "Errore: $e",
+  "@erroreE": {
+    "description": "From quick wins migration - 10 occurrences",
+    "context": "Found in: status: MigrationStatus.error,\n        currentMessage: 'Errore: $e',\n        progress: 0.0,, status: MigrationStatus.error,\n        currentMessage: 'Errore: $e',\n        progress: 0.0,"
+  },
+  "parsedJsonNumberNumberDoesNotFitInType": "Parsed JSON number <\\(number)> does not fit in \\(type).",
+  "@parsedJsonNumberNumberDoesNotFitInType": {
+    "description": "From quick wins migration - 10 occurrences",
+    "context": "Found in: guard NSNumber(value: int) == number else {\n      throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: \"Parsed JSON number <\\(number)> does not fit in, guard NSNumber(value: int8) == number else {\n      throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: \"Parsed JSON number <\\(number)> does not fit i"
+  },
+  "expectGroup": "Expect group",
+  "@expectGroup": {
+    "description": "From quick wins migration - 9 occurrences",
+    "context": "Found in: guard let group = context.imagePickerController.groupDataManager.fetchGroup(with: groupId) else {\n            assertionFailure(\"Expect group\")\n            return, guard let group = self.fetchGroup(with: groupId) else {\n            assertionFailure(\"Expect group\")\n            completeBlock(nil, nil)"
+  },
+  "thisMethodMustBeOverridden": "This method must be overridden.",
+  "@thisMethodMustBeOverridden": {
+    "description": "From quick wins migration - 9 occurrences",
+    "context": "Found in: open func perform(with extraInfo: [AnyHashable : Any]) {\n        fatalError(\"This method must be overridden.\")\n    }, open func finish() {\n        fatalError(\"This method must be overridden.\")\n    }"
+  },
+  "workout1": "Workout 1",
+  "@workout1": {
+    "description": "From quick wins migration - 8 occurrences",
+    "context": "Found in: sequence: [\n          'Workout 1',\n          'rest',, sequence: [\n          'Workout 1',\n          'Workout 2',"
+  },
+  "corpoLibero": "Corpo Libero",
+  "@corpoLibero": {
+    "description": "From quick wins migration - 7 occurrences",
+    "context": "Found in: 'difficoltaEn': 'Beginner',\n      'attrezzatura': 'Corpo Libero',\n      'attrezzaturaEn': 'Bodyweight', return [\n      'Corpo Libero',\n      'Bilanciere',"
+  },
+  "stackStack": "Stack: $stack",
+  "@stackStack": {
+    "description": "From quick wins migration - 7 occurrences",
+    "context": "Found in: if (kDebugMode) {\n        debugPrint('Stack: $stack');\n      }, if (kDebugMode) {\n        debugPrint('Stack: $stack');\n      }"
+  },
+  "workout2": "Workout 2",
+  "@workout2": {
+    "description": "From quick wins migration - 7 occurrences",
+    "context": "Found in: 'Workout 1',\n          'Workout 2',\n          'rest',, 'Workout 1',\n          'Workout 2',\n          'Workout 3',"
+  },
+  "eeeeDMmmmYyyy": "EEEE, d MMMM yyyy",
+  "@eeeeDMmmmYyyy": {
+    "description": "From quick wins migration - 6 occurrences",
+    "context": "Found in: Text(\n                    DateFormat('EEEE, d MMMM yyyy', 'it').format(_selectedDate!),\n                    style: theme.textTheme.titleSmall?.copyWith(, child: Text(\n                        DateFormat('EEEE, d MMMM yyyy', 'it').format(widget.date),\n                        style: theme.textTheme.titleLarge?.copyWith("
+  },
+  "pancaPiana": "Panca Piana",
+  "@pancaPiana": {
+    "description": "From quick wins migration - 6 occurrences",
+    "context": "Found in: 'id': 'panca_piana',\n      'nome': 'Panca Piana',\n      'nameEn': 'Bench Press',, Localizations.localeOf(context).languageCode == 'it'\n                                ? 'Panca Piana'\n                                : 'Bench Press',"
+  },
+  "timerComplete": "Timer Complete",
+  "@timerComplete": {
+    "description": "From quick wins migration - 6 occurrences",
+    "context": "Found in: 'timer_complete',\n      'Timer Complete',\n      description: 'Notifications when workout timers complete',, case NotificationType.timerComplete:\n        return 'Timer Complete';\n      case NotificationType.workoutReminder:"
+  },
+  "unknownExercise": "Unknown Exercise",
+  "@unknownExercise": {
+    "description": "From quick wins migration - 6 occurrences",
+    "context": "Found in: id: data['exerciseId'] ?? DateTime.now().millisecondsSinceEpoch.toString(),\n          name: data['exerciseName'] ?? 'Unknown Exercise',\n          type: 'single', // Default type, (data['name'] as String?) ??\n             'Unknown Exercise';\n      notes = exerciseData['notes'] as String?;"
+  },
+  "workout3": "Workout 3",
+  "@workout3": {
+    "description": "From quick wins migration - 6 occurrences",
+    "context": "Found in: 'Workout 2',\n          'Workout 3',\n          'rest',, 'Workout 2',\n          'Workout 3',\n          'Workout 4',"
+  },
+  "syncFailedE": "Sync failed: $e",
+  "@syncFailedE": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: result.success = false;\n      result.message = 'Sync failed: $e';\n      debugPrint('❌ Sync failed: $e');, ..success = false\n          ..message = 'Sync failed: $e',\n      );"
+  },
+  "legCurl": "Leg Curl",
+  "@legCurl": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: 'Stacchi Rumeni',\n      'Leg Curl',\n      'Leg Extension',, Exercise(name: 'Leg Extension', type: ExerciseType.single, category: ExerciseCategory.legs),\n    Exercise(name: 'Leg Curl', type: ExerciseType.single, category: ExerciseCategory.legs),\n    Exercise(na"
+  },
+  "unauthorizedAdminOnly": "Unauthorized: Admin only",
+  "@unauthorizedAdminOnly": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: if (user.email != 'ferrara-michele@hotmail.it') {\n        throw Exception('Unauthorized: Admin only');\n      }, if (user.email != 'ferrara-michele@hotmail.it') {\n        throw Exception('Unauthorized: Admin only');\n      }"
+  },
+  "testExercise": "Test Exercise",
+  "@testExercise": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: final activityId = await liveActivityService.showRPEInterface(\n        exerciseName: 'Test Exercise',\n        targetReps: 12,, return Exercise(\n      name: 'Test Exercise',\n      type: ExerciseType.single,"
+  },
+  "myRoutine": "My Routine",
+  "@myRoutine": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: userId: json['userId'] as String,\n      name: json['name'] as String? ?? 'My Routine',\n      description: json['description'] as String? ?? '',, required this.userId,\n      this.name = 'My Routine',\n      this.description = '',"
+  },
+  "achievementNotFound": "Achievement not found",
+  "@achievementNotFound": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: (a) => a.id == id,\n            orElse: () => throw Exception('Achievement not found'),\n          );, (a) => a.id == id,\n            orElse: () => throw Exception('Achievement not found'),\n          );"
+  },
+  "cannotCastTypeOfObjcvalueToValueSelf": "Cannot cast \\(type(of: objCValue)) to \\(Value.self)",
+  "@cannotCastTypeOfObjcvalueToValueSelf": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: guard let value = objCValue as? Value else {\n      preconditionFailure(\"Cannot cast \\(type(of: objCValue)) to \\(Value.self)\")\n    }, guard let value = Promise<Value>.asValue(objCValue) else {\n          preconditionFailure(\"Cannot cast \\(type(of: objCValue)) to \\(Value.self)\")\n        }"
+  },
+  "expectCollectionview": "Expect collectionView",
+  "@expectCollectionview": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: guard let collectionView = self.collectionView else {\n            assertionFailure(\"Expect collectionView\")\n            return, guard let collectionView = self.collectionView else {\n            assertionFailure(\"Expect collectionView\")\n            return"
+  },
+  "iAut000017": "I-AUT000017",
+  "@iAut000017": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: } else {\n      AuthLog.logDebug(code: \"I-AUT000017\", message: \"Fetching new token from backend.\")\n      return try await requestAccessToken(retryIfExpired: true, service: service, backend: backend), AuthLog.logDebug(\n        code: \"I-AUT000017\",\n        message: \"Updated access token. Estimated expiration date: \" +"
+  },
+  "thisClassIsNotMeantToBeInitialized": "This class is not meant to be initialized.",
+  "@thisClassIsNotMeantToBeInitialized": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: @objc override public init() {\n      fatalError(\"This class is not meant to be initialized.\")\n    }, @objc override public init() {\n    fatalError(\"This class is not meant to be initialized.\")\n  }"
+  },
+  "mmmD": "MMM d",
+  "@mmmD": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: Widget _buildPRCard(BuildContext context, PersonalRecord pr, ColorScheme colorScheme) {\n    final dateFormat = DateFormat('MMM d');\n    final isNew = DateTime.now().difference(pr.achievedAt).inDays <=, value: stats.lastWorkout != null \n          ? DateFormat('MMM d').format(stats.lastWorkout!)\n          : '--',"
+  },
+  "informazioniTut": "Informazioni TUT",
+  "@informazioniTut": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'Timer personalizzati',\n                        'Informazioni TUT',\n                      ],, 'Tracciamento RPE',\n                        'Informazioni TUT',\n                        'Suggerimenti community',"
+  },
+  "frenchPress": "French Press",
+  "@frenchPress": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'id': 'french_press',\n      'nome': 'French Press',\n      'nameEn': 'French Press',, 'nome': 'French Press',\n      'nameEn': 'French Press',\n      'focus': 'TRIC',"
+  },
+  "ezBar": "EZ Bar",
+  "@ezBar": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'attrezzatura': 'Bilanciere EZ',\n      'attrezzaturaEn': 'EZ Bar'\n    }, _buildQuickButton('Women\\'s', 15, Icons.fitness_center, Colors.pink),\n                  _buildQuickButton('EZ Bar', 7.5, Icons.waves, context.colors.tertiary),\n                  _buildQuickButton('Tra"
+  },
+  "workoutReminders": "Workout Reminders",
+  "@workoutReminders": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'reminders',\n          'Workout Reminders',\n          description: 'Reminders to workout and stay active',, ref,\n            title: 'Workout Reminders',\n            subtitle: 'Get reminded before your scheduled workouts',"
+  },
+  "questaAzioneNonPuEssereAnnullata": "Questa azione non può essere annullata.",
+  "@questaAzioneNonPuEssereAnnullata": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: Text(\n              'Questa azione non può essere annullata.',\n              style: TextStyle(, @override\n  String get deleteSetMessage => 'Questa azione non può essere annullata.';"
+  },
+  "exception": "Exception: ",
+  "@exception": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: SizedBox(height: 16),\n                          Text(errorMessage.replaceAll('Exception: ', '')),\n                          SizedBox(height: 8),, context,\n                    context.l10n.savingErrorMessage(errorMessage.replaceAll('Exception: ', '')),\n                  );"
+  },
+  "eliminaTemplate": "Elimina Template",
+  "@eliminaTemplate": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: builder: (context) => AlertDialog(\n        title: const Text('Elimina Template'),\n        content: Text('Sei sicuro di voler eliminare \"${template.name}\"?'),, @override\n  String get deleteTemplate => 'Elimina Template';"
+  },
+  "jump": "+$jump",
+  "@jump": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: child: Text(\n                      jump > 0 ? '+$jump' : '$jump',\n                      style: TextStyle(, child: Text(\n                    jump > 0 ? '+$jump' : '$jump',\n                    style: TextStyle("
+  },
+  "prevenzioneInfortuni": "Prevenzione infortuni",
+  "@prevenzioneInfortuni": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return [\n          'Prevenzione infortuni',\n          'Note tecniche',, return widget.exerciseData?['warmupSets'];\n      case 'Prevenzione infortuni':\n        return widget.exerciseData?['prevenzioneInfortuni'];"
+  },
+  "hapticFeedbackErrorE": "Haptic feedback error: $e",
+  "@hapticFeedbackErrorE": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: if (kDebugMode) {\n            debugPrint('Haptic feedback error: $e');\n          }, if (kDebugMode) {\n              debugPrint('Haptic feedback error: $e');\n            }"
+  },
+  "ezCurl": "EZ Curl",
+  "@ezCurl": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: name: 'Olympic EZ Bar',\n      category: 'EZ Curl',\n      weight: 10,, name: 'Standard EZ Bar',\n      category: 'EZ Curl',\n      weight: 7.5,"
+  },
+  "legPress": "Leg Press",
+  "@legPress": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'Squat',\n      'Leg Press',\n      'Stacchi Rumeni',, Exercise(name: 'Front Squat', type: ExerciseType.single, category: ExerciseCategory.legs),\n    Exercise(name: 'Leg Press', type: ExerciseType.single, category: ExerciseCategory.legs),\n    Exercise(nam"
+  },
+  "barbellBackSquat": "Barbell Back Squat",
+  "@barbellBackSquat": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: exerciseId: 'squat',\n        exerciseName: 'Barbell Back Squat',\n        userId: 'mock_user_009',, exerciseId: 'squat',\n        exerciseName: 'Barbell Back Squat',\n        userId: 'mock_user_010',"
+  },
+  "erroreE2": "❌ Errore: $e",
+  "@erroreE2": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: SnackBar(\n          content: Text('❌ Errore: $e'),\n          backgroundColor: Theme.of(context).colorScheme.error,, SnackBar(\n          content: Text('❌ Errore: $e'),\n          backgroundColor: Theme.of(context).colorScheme.error,"
+  },
+  "overheadPress": "Overhead Press",
+  "@overheadPress": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: {\n      \"name\": \"Overhead Press\",\n      \"sets\": [, exerciseId: 'overhead_press',\n          exerciseName: 'Overhead Press',\n          category: ExerciseCategory.shoulders,"
+  },
+  "rpeMedio": "RPE Medio",
+  "@rpeMedio": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: _buildDetailRow('Sessioni', exercise.sessionsCount.toString()),\n                        _buildDetailRow('RPE Medio', exercise.avgRpe.toString()),, @override\n  String get averageRPE => 'RPE Medio';"
+  },
+  "mmmDY": "MMM d, y",
+  "@mmmDY": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: final locale = Localizations.localeOf(context).toString();\n    final dateFormat = DateFormat('MMM d, y', locale);\n    return dateFormat.format(date);, final locale = Localizations.localeOf(context).toString();\n    final dateFormat = DateFormat('MMM d, y', locale);\n    return dateFormat.format(date);"
+  },
+  "key1Workout1Rest": "1 Workout + 1 Rest",
+  "@key1Workout1Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: switch (pattern.name) {\n      case '1 Workout + 1 Rest':\n        return context.l10n.routinePatternOneWorkoutOneRest;, switch (pattern.name) {\n      case '1 Workout + 1 Rest':\n        return context.l10n.routinePatternOneWorkoutOneRestDesc;"
+  },
+  "key2Workouts1Rest": "2 Workouts + 1 Rest",
+  "@key2Workouts1Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternOneWorkoutOneRest;\n      case '2 Workouts + 1 Rest':\n        return context.l10n.routinePatternTwoWorkoutsOneRest;, return context.l10n.routinePatternOneWorkoutOneRestDesc;\n      case '2 Workouts + 1 Rest':\n        return context.l10n.routinePatternTwoWorkoutsOneRestDesc;"
+  },
+  "key3Workouts1Rest": "3 Workouts + 1 Rest",
+  "@key3Workouts1Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternTwoWorkoutsOneRest;\n      case '3 Workouts + 1 Rest':\n        return context.l10n.routinePatternThreeWorkoutsOneRest;, return context.l10n.routinePatternTwoWorkoutsOneRestDesc;\n      case '3 Workouts + 1 Rest':\n        return context.l10n.routinePatternThreeWorkoutsOneRestDesc;"
+  },
+  "key3Workouts2Rest": "3 Workouts + 2 Rest",
+  "@key3Workouts2Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternThreeWorkoutsOneRest;\n      case '3 Workouts + 2 Rest':\n        return context.l10n.routinePatternThreeWorkoutsTwoRest;, return context.l10n.routinePatternThreeWorkoutsOneRestDesc;\n      case '3 Workouts + 2 Rest':\n        return context.l10n.routinePatternThreeWorkoutsTwoRestDesc;"
+  },
+  "key4Workouts1Rest": "4 Workouts + 1 Rest",
+  "@key4Workouts1Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternThreeWorkoutsTwoRest;\n      case '4 Workouts + 1 Rest':\n        return context.l10n.routinePatternFourWorkoutsOneRest;, return context.l10n.routinePatternThreeWorkoutsTwoRestDesc;\n      case '4 Workouts + 1 Rest':\n        return context.l10n.routinePatternFourWorkoutsOneRestDesc;"
+  },
+  "key4Workouts3Rest": "4 Workouts + 3 Rest",
+  "@key4Workouts3Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternFourWorkoutsOneRest;\n      case '4 Workouts + 3 Rest':\n        return context.l10n.routinePatternFourWorkoutsThreeRest;, return context.l10n.routinePatternFourWorkoutsOneRestDesc;\n      case '4 Workouts + 3 Rest':\n        return context.l10n.routinePatternFourWorkoutsThreeRestDesc;"
+  },
+  "key5Workouts2Rest": "5 Workouts + 2 Rest",
+  "@key5Workouts2Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternFourWorkoutsThreeRest;\n      case '5 Workouts + 2 Rest':\n        return context.l10n.routinePatternFiveWorkoutsTwoRest;, return context.l10n.routinePatternFourWorkoutsThreeRestDesc;\n      case '5 Workouts + 2 Rest':\n        return context.l10n.routinePatternFiveWorkoutsTwoRestDesc;"
+  },
+  "key6Workouts1Rest": "6 Workouts + 1 Rest",
+  "@key6Workouts1Rest": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: return context.l10n.routinePatternFiveWorkoutsTwoRest;\n      case '6 Workouts + 1 Rest':\n        return context.l10n.routinePatternSixWorkoutsOneRest;, return context.l10n.routinePatternFiveWorkoutsTwoRestDesc;\n      case '6 Workouts + 1 Rest':\n        return context.l10n.routinePatternSixWorkoutsOneRestDesc;"
+  },
+  "workout4": "Workout 4",
+  "@workout4": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'Workout 3',\n          'Workout 4',\n          'rest',, 'Workout 3',\n          'Workout 4',\n          'Workout 5',"
+  },
+  "key3Set": "3 set",
+  "@key3Set": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: 'history': [\n            {'period': '4 settimane fa', 'weight': '80.0kg', 'reps': '8', 'sets': '3 set'},\n            {'period': '3 settimane fa', 'weight': '82.5kg', 'reps': '8', 'sets': '3 set'},, {'period': '4 settimane fa', 'weight': '80.0kg', 'reps': '8', 'sets': '3 set'},\n            {'period': '3 settimane fa', 'weight': '82.5kg', 'reps': '8', 'sets': '3 set'},\n            {'period': '2 se"
+  },
+  "continuaCos": "Continua così!",
+  "@continuaCos": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: if (days == 1) return 'Ottimo inizio!';\n    if (days < 7) return 'Continua così!';\n    if (days < 14) return 'Una settimana! 🔥';, @override\n  String get keepGoing => 'Continua così!';"
+  },
+  "avviaAllenamento": "Avvia Allenamento",
+  "@avviaAllenamento": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: type: HomeWidgetType.quickStart,\n      title: 'Avvia Allenamento',\n      icon: AppIcons.play,, @override\n  String get startWorkout => 'Avvia Allenamento';"
+  },
+  "exerciseCurrentOfTotal": "Exercise $current of $total",
+  "@exerciseCurrentOfTotal": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: String migrationWizardExerciseProgress(int current, int total) {\n    return 'Exercise $current of $total';\n  }, String supersetProgress(int current, int total) {\n    return 'Exercise $current of $total';\n  }"
+  },
+  "missingActivityid": "Missing activityId",
+  "@missingActivityid": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: let activityId = args[\"activityId\"] as? String else {\n            result(FlutterError(code: \"INVALID_ARGUMENTS\", message: \"Missing activityId\", details: nil))\n            return, let activityId = args[\"activityId\"] as? String else {\n            result(FlutterError(code: \"INVALID_ARGUMENTS\", message: \"Missing activityId\", details: nil))\n            return"
+  },
+  "iAut000008": "I-AUT000008",
+  "@iAut000008": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: guard let embeddedProfile = String(bytes: outBytes, encoding: .utf8) else {\n          AuthLog.logInfo(code: \"I-AUT000008\",\n                          message: \"Error while reading embedded mobileprovis, guard let plistMap = plistData as? [String: Any] else {\n              AuthLog.logInfo(code: \"I-AUT000008\",\n                              message: \"Error while converting assumed plist to dictionary.\")"
+  },
+  "idIdentifier": "   - ID: \\(identifier)",
+  "@idIdentifier": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: print(\"✅ Timer notification scheduled successfully\")\n                print(\"   - ID: \\(identifier)\")\n                print(\"   - Fires in: \\(seconds) seconds\"), // Notification should be firing now\n                    print(\"   - ID: \\(identifier)\")\n                    print(\"   - Expected sound: \\(soundName).caf\")"
+  },
+  "liveActivitiesRequireIos161OrLater": "Live Activities require iOS 16.1 or later",
+  "@liveActivitiesRequireIos161OrLater": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: // Live Activities require iOS 16.1+\n            result(FlutterError(code: \"UNSUPPORTED_VERSION\", message: \"Live Activities require iOS 16.1 or later\", details: nil))\n        }, } else {\n            result(FlutterError(code: \"UNSUPPORTED_VERSION\", message: \"Live Activities require iOS 16.1 or later\", details: nil))\n        }"
+  },
+  "stackStacktrace": "Stack: $stackTrace",
+  "@stackStacktrace": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: debugPrint('❌ Errore durante l\\'anteprima: $e');\n      debugPrint('Stack: $stackTrace');, debugPrint('❌ Errore critico durante migrazione: $e');\n      debugPrint('Stack: $stackTrace');"
+  },
+  "workoutSummary": "Workout Summary",
+  "@workoutSummary": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: case ExportCSVType.workouts:\n        return 'Workout Summary';\n      case ExportCSVType.exercises:, 'workout_summary',\n      'Workout Summary',\n      description: 'Summary of completed workouts',"
+  },
+  "tracciamentoRpe": "Tracciamento RPE",
+  "@tracciamentoRpe": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: togglesDisabled: [\n                        'Tracciamento RPE',\n                        'Suggerimenti community',, 'Tutti i toggle disponibili',\n                        'Tracciamento RPE',\n                        'Informazioni TUT',"
+  },
+  "timerAutomatico": "Timer Automatico",
+  "@timerAutomatico": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: ToggleInfo(\n          name: 'Timer Automatico',\n          description: 'Avvia automaticamente il timer di riposo dopo ogni serie',, @override\n  String get autoStartTimer => 'Timer Automatico';"
+  },
+  "suggerimentiCommunity": "Suggerimenti Community",
+  "@suggerimentiCommunity": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: ToggleInfo(\n          name: 'Suggerimenti Community',\n          description: 'Consigli e tips dalla community GymBro',, context: context,\n                        title: 'Suggerimenti Community',\n                        subtitle: 'Nasconde i suggerimenti dalla community',"
+  },
+  "pettoTricDelt_ant": "PETTO, TRIC, DELT_ANT",
+  "@pettoTricDelt_ant": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'nameEn': 'Bench Press',\n      'focus': 'PETTO, TRIC, DELT_ANT',\n      'tipoEsercizio': 'Compound',, 'nameEn': 'Dumbbell Press',\n      'focus': 'PETTO, TRIC, DELT_ANT',\n      'tipoEsercizio': 'Compound',"
+  },
+  "advancedFeatures": "Advanced Features",
+  "@advancedFeatures": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: timerRest(6, 'Timer & Rest'),\n  advancedFeatures(7, 'Advanced Features');, @override\n  String get onboardingAdvancedFeaturesTitle => 'Advanced Features';"
+  },
+  "useUnreadnotificationcountproviderFromUn": "Use unreadNotificationCountProvider from unified_notification_provider.dart",
+  "@useUnreadnotificationcountproviderFromUn": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @Deprecated('Use unreadNotificationCountProvider from unified_notification_provider.dart')\nfinal legacyUnreadNotificationCountProvider = Provider<int>((ref) {, /// Legacy provider aliases for backward compatibility\n@Deprecated('Use unreadNotificationCountProvider from unified_notification_provider.dart')\nfinal unreadCountProvider = Provider<int>((ref) {"
+  },
+  "useTodaynotificationsproviderFromUnified": "Use todayNotificationsProvider from unified_notification_provider.dart",
+  "@useTodaynotificationsproviderFromUnified": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @Deprecated('Use todayNotificationsProvider from unified_notification_provider.dart')\nfinal legacyRecentNotificationsProvider = Provider<List<AppNotification>>((ref) {, @Deprecated('Use todayNotificationsProvider from unified_notification_provider.dart')\nfinal recentNotificationsProvider = Provider<List<AppNotification>>((ref) {"
+  },
+  "providerDisposed": "Provider disposed",
+  "@providerDisposed": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: await _ensureInitialized();\n      if (_isDisposed) throw Exception('Provider disposed');\n      final authService = ref.read(authServiceProvider);, if (_isDisposed) {\n        return ScheduleNotificationResult.failure('Provider disposed');\n      }"
+  },
+  "notificationPermissionsNotGranted": "Notification permissions not granted",
+  "@notificationPermissionsNotGranted": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: if (!hasPermissions) {\n        state = state.setError('Notification permissions not granted');\n        return false;, if (!await hasPermissions()) {\n        issues.add('Notification permissions not granted');\n      }"
+  },
+  "workoutReminder": "Workout Reminder",
+  "@workoutReminder": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: case NotificationType.workoutReminder:\n        return 'Workout Reminder';\n      case NotificationType.achievementUnlocked:, type: NotificationType.workoutReminder,\n      title: 'Workout Reminder',\n      body: 'Time for your $workoutName workout! 💪',"
+  },
+  "advancedAnalytics": "Advanced Analytics",
+  "@advancedAnalytics": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: AppIcons.insights,\n                'Advanced Analytics',\n                'Deep insights into your performance',, icon: AppIcons.analyticsRounded,\n        title: 'Advanced Analytics',\n        description: 'Detailed insights & progress tracking',"
+  },
+  "save33": "Save 33%",
+  "@save33": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'price': '\\$39.99/year',\n      'save': 'Save 33%',\n    },, 'period': '/year',\n      'save': 'Save 33%',\n      'popular': 'true',"
+  },
+  "bestValue": "Best Value",
+  "@bestValue": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'price': '\\$99.99 once',\n      'save': 'Best Value',\n    },, 'period': ' once',\n      'save': 'Best Value',\n      'popular': 'false',"
+  },
+  "autoBackup": "Auto Backup",
+  "@autoBackup": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: ('☁️', 'Cloud Sync', 'All devices, always in sync'),\n      ('💾', 'Auto Backup', 'Never lose your data'),\n      ('👥', 'Community', 'Share & discover workouts'),, icon: AppIcons.backupRounded,\n        title: 'Auto Backup',\n        description: 'Never lose your progress again',"
+  },
+  "youRePremium": "You\\'re Premium!",
+  "@youRePremium": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Text(\n                'You\\'re Premium!',\n                style: theme.textTheme.headlineMedium?.copyWith(, Text(\n                'You\\'re Premium!',\n                style: theme.textTheme.headlineLarge?.copyWith("
+  },
+  "communityAccess": "Community Access",
+  "@communityAccess": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: icon: AppIcons.peopleRounded,\n        title: 'Community Access',\n        description: 'Connect with other athletes',, context,\n                      'Community Access',\n                      'Full Access',"
+  },
+  "shoulderPress": "Shoulder Press",
+  "@shoulderPress": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: ('Trazioni', ExerciseCategory.back),\n        ('Shoulder Press', ExerciseCategory.shoulders),\n      ]);, ('Trazioni', ExerciseCategory.back),\n        ('Shoulder Press', ExerciseCategory.shoulders),\n      ]);"
+  },
+  "eliminaUnTemplateEsistenteOPassaAPremium": "Elimina un template esistente o passa a Premium per avere più spazio.",
+  "@eliminaUnTemplateEsistenteOPassaAPremium": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Text(\n                'Elimina un template esistente o passa a Premium per avere più spazio.',\n                style: TextStyle(fontSize: 14),, String get deleteOrUpgrade =>\n      'Elimina un template esistente o passa a Premium per avere più spazio.';"
+  },
+  "ilTemplateVerrSalvatoSuFirebaseESarDispo": "Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi",
+  "@ilTemplateVerrSalvatoSuFirebaseESarDispo": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: child: Text(\n                        'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi',\n                        style: TextStyle(, String get templateSyncInfo =>\n      'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';"
+  },
+  "templatePersonalizzato": "Template personalizzato",
+  "@templatePersonalizzato": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: name: name,\n                      description: description.isEmpty ? 'Template personalizzato' : description,\n                      exercises: currentWorkout.exercises,, @override\n  String get customTemplate => 'Template personalizzato';"
+  },
+  "eliminaTemplateEsistentiOPassaAPremium": "Elimina template esistenti o passa a Premium.",
+  "@eliminaTemplateEsistentiOPassaAPremium": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Text(\n                            'Elimina template esistenti o passa a Premium.',\n                            style: TextStyle(fontSize: 14),, String get deleteExistingOrUpgrade =>\n      'Elimina template esistenti o passa a Premium.';"
+  },
+  "fitlogPro": "FitLog Pro",
+  "@fitlogPro": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: pw.Text(\n                'FitLog Pro',\n                style: pw.TextStyle(, @override\n  String get appTitle => 'FitLog Pro';"
+  },
+  "continueYourRoutine": "Continue your routine",
+  "@continueYourRoutine": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String suggestionReason = patternResult.repetitions >= 3\n            ? 'Continue your routine'\n            : 'Next in rotation';, localizedReason = l10n.startNewCycle;\n    } else if (reason.contains('Continue your routine')) {\n      localizedReason = l10n.continueRoutine;"
+  },
+  "nessunTemplatePersonalizzato": "Nessun template personalizzato",
+  "@nessunTemplatePersonalizzato": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: const SizedBox(height: 16),\n                const Text('Nessun template personalizzato'),\n                const SizedBox(height: 8),, @override\n  String get noCustomTemplates => 'Nessun template personalizzato';"
+  },
+  "statoSincronizzazione": "Stato Sincronizzazione",
+  "@statoSincronizzazione": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: SizedBox(width: 8),\n                Text('Stato Sincronizzazione'),\n              ],, @override\n  String get templateSyncStateTitle => 'Stato Sincronizzazione';"
+  },
+  "updateProfile": "Update Profile",
+  "@updateProfile": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: questionnaire != null\n                                      ? 'Update Profile'\n                                      : 'Calculate Your Level',, icon: Icon(AppIcons.edit),\n                  label: Text('Update Profile'),\n                  style: OutlinedButton.styleFrom("
+  },
+  "confermaSerie": "Conferma Serie",
+  "@confermaSerie": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: _allExercisesCompleted \n                            ? 'Conferma Serie'\n                            : 'Conferma Serie',, ? 'Conferma Serie'\n                            : 'Conferma Serie',\n                      ),"
+  },
+  "muscoliSecondari": "Muscoli secondari",
+  "@muscoliSecondari": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Muscoli primari',\n          'Muscoli secondari',\n          'Tipo esercizio',, return widget.exerciseData?['focus'];\n      case 'Muscoli secondari':\n        return widget.exerciseData?['muscoliSecondari'];"
+  },
+  "tipoEsercizio": "Tipo esercizio",
+  "@tipoEsercizio": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Muscoli secondari',\n          'Tipo esercizio',\n          'Attrezzatura',, return widget.exerciseData?['difficolta'];\n      case 'Tipo esercizio':\n        return widget.exerciseData?['tipoEsercizio'];"
+  },
+  "rangeRipetizioni": "Range ripetizioni",
+  "@rangeRipetizioni": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Attrezzatura',\n          'Range ripetizioni',\n          'Pattern movimento',, return widget.exerciseData?['tipoEsercizio'];\n      case 'Range ripetizioni':\n        return widget.exerciseData?['rangeRipetizioni'];"
+  },
+  "patternMovimento": "Pattern movimento",
+  "@patternMovimento": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Range ripetizioni',\n          'Pattern movimento',\n        ];, return widget.exerciseData?['rangeRipetizioni'];\n      case 'Pattern movimento':\n        return widget.exerciseData?['patternMovimento'];"
+  },
+  "serieRiscaldamento": "Serie riscaldamento",
+  "@serieRiscaldamento": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: return [\n          'Serie riscaldamento',\n          'Durata riscaldamento',, return widget.exercise.name;\n      case 'Serie riscaldamento':\n        return widget.exerciseData?['warmupSets'];"
+  },
+  "durataRiscaldamento": "Durata riscaldamento",
+  "@durataRiscaldamento": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Serie riscaldamento',\n          'Durata riscaldamento',\n          'Mobilità articolare',, return widget.exerciseData?['warmupSets'];\n      case 'Durata riscaldamento':\n        return widget.exerciseData?['tempoWarmup'];"
+  },
+  "mobilitArticolare": "Mobilità articolare",
+  "@mobilitArticolare": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Durata riscaldamento',\n          'Mobilità articolare',\n          'Attivazione muscolare',, return widget.exerciseData?['noteTecniche'];\n      case 'Mobilità articolare':\n        return widget.exerciseData?['mobilitaPre'];"
+  },
+  "attivazioneMuscolare": "Attivazione muscolare",
+  "@attivazioneMuscolare": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Mobilità articolare',\n          'Attivazione muscolare',\n          'Progressione carico',, return widget.exerciseData?['mobilitaPre'];\n      case 'Attivazione muscolare':\n        return widget.exerciseData?['attivazionePre'];"
+  },
+  "progressioneCarico": "Progressione carico",
+  "@progressioneCarico": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Attivazione muscolare',\n          'Progressione carico',\n        ];, return widget.exerciseData?['attivazionePre'];\n      case 'Progressione carico':\n        return widget.exerciseData?['warmupSets'];"
+  },
+  "noteTecniche": "Note tecniche",
+  "@noteTecniche": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Prevenzione infortuni',\n          'Note tecniche',\n          'Drill tecnico',, return widget.exerciseData?['prevenzioneInfortuni'];\n      case 'Note tecniche':\n        return widget.exerciseData?['noteTecniche'];"
+  },
+  "drillTecnico": "Drill tecnico",
+  "@drillTecnico": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Note tecniche',\n          'Drill tecnico',\n          'Cooldown consigliato',, return widget.exerciseData?['noteTecniche'];\n      case 'Drill tecnico':\n        return widget.exerciseData?['drillTecnico'];"
+  },
+  "cooldownConsigliato": "Cooldown consigliato",
+  "@cooldownConsigliato": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'Drill tecnico',\n          'Cooldown consigliato',\n          'Errori comuni',, return widget.exerciseData?['drillTecnico'];\n      case 'Cooldown consigliato':\n        return widget.exerciseData?['cooldownConsigliato'];"
+  },
+  "muscoliTarget": "Muscoli target",
+  "@muscoliTarget": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: return widget.exerciseData?['attivazionePre'];\n      case 'Muscoli target':\n        return widget.exerciseData?['focus'];, return 'attivazionePre';\n    case 'Muscoli target':\n      return 'focus';"
+  },
+  "serieDiRiscaldamento": "Serie di Riscaldamento",
+  "@serieDiRiscaldamento": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: context,\n                        'Serie di Riscaldamento',\n                        exerciseData['warmupSets'],, @override\n  String get warmupSets => 'Serie di Riscaldamento';"
+  },
+  "prevenzioneInfortuni2": "Prevenzione Infortuni",
+  "@prevenzioneInfortuni2": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: child: Text(\n                        'Prevenzione Infortuni',\n                        style: Theme.of(context).textTheme.titleLarge?.copyWith(, context,\n                        'Prevenzione Infortuni',\n                        exerciseData['prevenzioneInfortuni'],"
+  },
+  "hoCapito": "Ho capito!",
+  "@hoCapito": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: ),\n                    child: const Text('Ho capito!'),\n                  ),, @override\n  String get templateOnboardingGotIt => 'Ho capito!';"
+  },
+  "preLoadedFixedBar": "Pre-loaded fixed bar",
+  "@preLoadedFixedBar": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: color: context.colors.surfaceContainerHighest,\n      description: 'Pre-loaded fixed bar',\n    ),, color: context.colors.surfaceContainerHighest,\n      description: 'Pre-loaded fixed bar',\n    ),"
+  },
+  "nonTroviLEsercizioCreaneUnoPersonalizzat": "Non trovi l\\'esercizio? Creane uno personalizzato",
+  "@nonTroviLEsercizioCreaneUnoPersonalizzat": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text(\n              'Non trovi l\\'esercizio? Creane uno personalizzato',\n              style: TextStyle(, String get cantFindExercise =>\n      'Non trovi l\\'esercizio? Creane uno personalizzato';"
+  },
+  "miniSetIndex": "Mini-Set $index",
+  "@miniSetIndex": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Text(\n                                      index == 0 ? 'Serie Principale' : 'Mini-Set $index',\n                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(, String restPauseMiniSet(int index) {\n    return 'Mini-Set $index';\n  }"
+  },
+  "votoPositivo": "👍 Voto positivo!",
+  "@votoPositivo": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: context,\n        isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo',\n        duration: const Duration(seconds: 1),, SnackBar(\n          content: Text(isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo'),\n          duration: const Duration(seconds: 1),"
+  },
+  "votoNegativo": "👎 Voto negativo",
+  "@votoNegativo": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: context,\n        isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo',\n        duration: const Duration(seconds: 1),, SnackBar(\n          content: Text(isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo'),\n          duration: const Duration(seconds: 1),"
+  },
+  "inAttesa": "In attesa",
+  "@inAttesa": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Tab(text: 'Approvati'),\n                  Tab(text: 'In attesa'),\n                ],, case MatchStatus.pending:\n        return 'In attesa';\n      case MatchStatus.confirmed:"
+  },
+  "partnershipAttiva": "Partnership attiva",
+  "@partnershipAttiva": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: const Text('Partnership Attiva'),\n        subtitle: const Text('Partnership attiva'),\n        trailing: IconButton(, case MatchStatus.partnership:\n        return 'Partnership attiva';\n      case MatchStatus.completed:"
+  },
+  "dettagliEsercizio": "Dettagli Esercizio",
+  "@dettagliEsercizio": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: icon: const Icon(AppIcons.info),\n                  tooltip: 'Dettagli Esercizio',\n                ),, @override\n  String get exerciseDetails => 'Dettagli Esercizio';"
+  },
+  "bug": "🐛 Bug",
+  "@bug": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: items: const [\n                    DropdownMenuItem(value: 'BUG', child: Text('🐛 Bug')),\n                    DropdownMenuItem(value: 'SUGGESTION', child: Text('💡 Suggerimento')),, @override\n  String get feedbackBug => '🐛 Bug';"
+  },
+  "errorLoadingFeedback": "Error loading feedback",
+  "@errorLoadingFeedback": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Text(\n                      'Error loading feedback',\n                      style: context.textTheme.bodyLarge,, @override\n  String get feedbackErrorLoading => 'Error loading feedback';"
+  },
+  "eserciziObsoleti": "Esercizi Obsoleti",
+  "@eserciziObsoleti": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: icon: AppIcons.scheduleOutlined,\n              label: 'Esercizi Obsoleti',\n              value: staleCount.toString(),, @override\n  String get staleExercises => 'Esercizi Obsoleti';"
+  },
+  "eserciziFlaggati": "Esercizi Flaggati",
+  "@eserciziFlaggati": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: icon: AppIcons.flagOutlined,\n              label: 'Esercizi Flaggati',\n              value: flaggedCount.toString(),, @override\n  String get flaggedExercises => 'Esercizi Flaggati';"
+  },
+  "key3Feedback": "≥3 feedback",
+  "@key3Feedback": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: color: context.colors.warning,\n              subtitle: '≥3 feedback',\n            ),, @override\n  String get feedbackThreshold => '≥3 feedback';"
+  },
+  "allenamentiFunzionali": "allenamenti funzionali",
+  "@allenamentiFunzionali": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: // For demo purposes, replace some common template variables\n    message = message.replaceAll('{workout_type}', 'allenamenti funzionali');\n    message = message.replaceAll('{time_period}', '2 anni');, String previewMessage = iceBreaker.messageTemplate;\n    previewMessage = previewMessage.replaceAll('{workout_type}', 'allenamenti funzionali');\n    previewMessage = previewMessage.replaceAll('{time_pe"
+  },
+  "key2Anni": "2 anni",
+  "@key2Anni": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: message = message.replaceAll('{workout_type}', 'allenamenti funzionali');\n    message = message.replaceAll('{time_period}', '2 anni');\n    message = message.replaceAll('{time_preference}', 'mattina');, previewMessage = previewMessage.replaceAll('{workout_type}', 'allenamenti funzionali');\n    previewMessage = previewMessage.replaceAll('{time_period}', '2 anni');\n    previewMessage = previewMessage.r"
+  },
+  "barbellSquat": "Barbell Squat",
+  "@barbellSquat": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: exerciseId: 'squat',\n          exerciseName: 'Barbell Squat',\n          category: ExerciseCategory.legs,, exerciseId: 'squat',\n          exerciseName: 'Barbell Squat',\n          category: ExerciseCategory.legs,"
+  },
+  "daySkipped": "Day skipped",
+  "@daySkipped": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: isLoading: false,\n        successMessage: 'Day skipped',\n      );, if (success) {\n        SnackBarService.showInfo(context, 'Day skipped');\n      } else {"
+  },
+  "useridEmail": ", userId: email)}",
+  "@useridEmail": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: throw Exception(\n        'Too many registration attempts. ${getCooldownMessage('registration', userId: email)}',\n      );, throw Exception(\n        'Too many login attempts. ${getCooldownMessage('login', userId: email)}',\n      );"
+  },
+  "progressioneCarico2": "Progressione Carico",
+  "@progressioneCarico2": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'icon': AppIcons.trendUp,\n        'title': 'Progressione Carico',\n        'message': 'Squat: incremento del 2-5% consigliato',, if (insight['title'] == 'Progressione Carico') {\n      // Build progression table"
+  },
+  "recuperoOttimale": "Recupero Ottimale",
+  "@recuperoOttimale": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'icon': AppIcons.schedule,\n        'title': 'Recupero Ottimale',\n        'message': 'Considera 48-72h tra sessioni intense',, );\n    } else if (insight['title'] == 'Recupero Ottimale') {\n      // Build rest times table"
+  },
+  "bilanciamentoMuscolare": "Bilanciamento Muscolare",
+  "@bilanciamentoMuscolare": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: 'icon': AppIcons.workout,\n        'title': 'Bilanciamento Muscolare',\n        'message': 'Rapporto push/pull equilibrato',, );\n    } else if (insight['title'] == 'Bilanciamento Muscolare') {\n      // Build balance table"
+  },
+  "accediPerVedereIWorkout": "Accedi per vedere i workout",
+  "@accediPerVedereIWorkout": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: if (currentUser == null) {\n      return _buildEmptyState(context, 'Accedi per vedere i workout');\n    }, if (currentUser == null) {\n      return _buildEmptyState(context, 'Accedi per vedere i workout');\n    }"
+  },
+  "azioniRapide": "Azioni Rapide",
+  "@azioniRapide": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: type: HomeWidgetType.quickActions,\n      title: 'Azioni Rapide',\n      icon: AppIcons.apps,, @override\n  String get quickActions => 'Azioni Rapide';"
+  },
+  "startRestTimerAfterCompletingSet": "Start rest timer after completing set",
+  "@startRestTimerAfterCompletingSet": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Auto-start Timer',\n              subtitle: 'Start rest timer after completing set',\n              value: config.autoStartTimer,, @override\n  String get autoStartTimerDesc => 'Start rest timer after completing set';"
+  },
+  "showDropSetsSupersetsEtc": "Show drop sets, supersets, etc.",
+  "@showDropSetsSupersetsEtc": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Advanced Techniques',\n              subtitle: 'Show drop sets, supersets, etc.',\n              value: config.showIntensityTechniques,, @override\n  String get advancedTechniquesDesc => 'Show drop sets, supersets, etc.';"
+  },
+  "showTimerOnLockScreenDynamicIsland": "Show timer on lock screen & Dynamic Island",
+  "@showTimerOnLockScreenDynamicIsland": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Live Activities',\n              subtitle: 'Show timer on lock screen & Dynamic Island',\n              value: config.enableLiveActivities,, @override\n  String get liveActivitiesDesc => 'Show timer on lock screen & Dynamic Island';"
+  },
+  "syncWorkoutsToAppleHealth": "Sync workouts to Apple Health",
+  "@syncWorkoutsToAppleHealth": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Health App Sync',\n              subtitle: 'Sync workouts to Apple Health',\n              value: config.syncWithHealthKit,, @override\n  String get healthAppSyncDesc => 'Sync workouts to Apple Health';"
+  },
+  "playSoundsForTimerAndCompletion": "Play sounds for timer and completion",
+  "@playSoundsForTimerAndCompletion": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Sound Effects',\n              subtitle: 'Play sounds for timer and completion',\n              value: config.soundEnabled,, @override\n  String get soundEffectsDesc => 'Play sounds for timer and completion';"
+  },
+  "hapticFeedbackForInteractions": "Haptic feedback for interactions",
+  "@hapticFeedbackForInteractions": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: 'Vibrations',\n              subtitle: 'Haptic feedback for interactions',\n              value: config.vibrationsEnabled,, @override\n  String get vibrationsDesc => 'Haptic feedback for interactions';"
+  },
+  "englishUs": "English (US)",
+  "@englishUs": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text(context.l10n.languageEnglish),\n                subtitle: const Text('English (US)'),\n                value: 'en',, @override\n  String get languageEnglishDesc => 'English (US)';"
+  },
+  "italianIt": "Italian (IT)",
+  "@italianIt": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text('Italiano'),\n                subtitle: Text('Italian (IT)'),\n                value: 'it',, @override\n  String get languageItalianDesc => 'Italian (IT)';"
+  },
+  "kilogramsKg": "Kilograms (kg)",
+  "@kilogramsKg": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: RadioListTile<String>(\n                title: Text('Kilograms (kg)'),\n                subtitle: Text('Metric system'),, @override\n  String get weightUnitsKg => 'Kilograms (kg)';"
+  },
+  "metricSystem": "Metric system",
+  "@metricSystem": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text('Kilograms (kg)'),\n                subtitle: Text('Metric system'),\n                value: 'kg',, @override\n  String get weightUnitsKgDesc => 'Metric system';"
+  },
+  "poundsLbs": "Pounds (lbs)",
+  "@poundsLbs": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: RadioListTile<String>(\n                title: Text('Pounds (lbs)'),\n                subtitle: Text('Imperial system'),, @override\n  String get weightUnitsLbs => 'Pounds (lbs)';"
+  },
+  "imperialSystem": "Imperial system",
+  "@imperialSystem": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text('Pounds (lbs)'),\n                subtitle: Text('Imperial system'),\n                value: 'lbs',, @override\n  String get weightUnitsLbsDesc => 'Imperial system';"
+  },
+  "areYouSureYouWantToResetAllSettingsToDef": "Are you sure you want to reset all settings to defaults? This cannot be undone.",
+  "@areYouSureYouWantToResetAllSettingsToDef": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text('Reset Settings'),\n        content: Text('Are you sure you want to reset all settings to defaults? This cannot be undone.'),\n        actions: [, String get resetSettingsConfirm =>\n      'Are you sure you want to reset all settings to defaults? This cannot be undone.';"
+  },
+  "areYouSureYouWantToSignOut": "Are you sure you want to sign out?",
+  "@areYouSureYouWantToSignOut": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: title: Text(context.l10n.signOutButton),\n        content: Text('Are you sure you want to sign out?'),\n        actions: [, @override\n  String get signOutConfirm => 'Are you sure you want to sign out?';"
+  },
+  "exportFunctionalityComingSoon": "Export functionality coming soon",
+  "@exportFunctionalityComingSoon": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: // In a real app, you'd save this to a file or share it\n    SnackBarService.showInfo(context, 'Export functionality coming soon');\n  }, @override\n  String get exportFunctioningComingSoon => 'Export functionality coming soon';"
+  },
+  "importFunctionalityComingSoon": "Import functionality coming soon",
+  "@importFunctionalityComingSoon": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: // In a real app, you'd pick a file and import it\n    SnackBarService.showInfo(context, 'Import functionality coming soon');\n  }, @override\n  String get importFunctioningComingSoon => 'Import functionality coming soon';"
+  },
+  "cercaEsercizi": "Cerca esercizi...",
+  "@cercaEsercizi": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get onboardingSearchExercises => 'Cerca esercizi...';, @override\n  String get searchExercises => 'Cerca esercizi...';"
+  },
+  "aggiungiSerie": "Aggiungi Serie",
+  "@aggiungiSerie": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get addSet => 'Aggiungi Serie';, @override\n  String get addSetButton => 'Aggiungi Serie';"
+  },
+  "dropSet": "Drop Set",
+  "@dropSet": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get exerciseTypeDropset => 'Drop Set';, @override\n  String get dropset => 'Drop Set';"
+  },
+  "unitDiPeso": "Unità di Peso",
+  "@unitDiPeso": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get weightUnits => 'Unità di Peso';, @override\n  String get settingsWeightUnits => 'Unità di Peso';"
+  },
+  "seiSicuroDiVolerRipristinareTutteLeImpos": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
+  "@seiSicuroDiVolerRipristinareTutteLeImpos": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String get resetSettingsConfirm =>\n      'Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.';, String get settingsResetSettingsMessage =>\n      'Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.';"
+  },
+  "templateNonTrovato": "Template non trovato",
+  "@templateNonTrovato": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get templateNotFound => 'Template non trovato';, @override\n  String get routineTemplateNotFound => 'Template non trovato';"
+  },
+  "rimuoviDefinitivamente": "Rimuovi definitivamente",
+  "@rimuoviDefinitivamente": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get deleteTemplateSubtitle => 'Rimuovi definitivamente';, @override\n  String get removePermanently => 'Rimuovi definitivamente';"
+  },
+  "noteOpzionale": "Note (opzionale)",
+  "@noteOpzionale": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get notesOptional => 'Note (opzionale)';, @override\n  String get notesLabel => 'Note (opzionale)';"
+  },
+  "aggiuntoExercisenameAllAllenamento": "Aggiunto $exerciseName all\\'allenamento",
+  "@aggiuntoExercisenameAllAllenamento": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String addedToWorkout(String exerciseName) {\n    return 'Aggiunto $exerciseName all\\'allenamento';\n  }, String exerciseAddedMessage(String exerciseName) {\n    return 'Aggiunto $exerciseName all\\'allenamento';\n  }"
+  },
+  "applicaModifiche": "Applica Modifiche",
+  "@applicaModifiche": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get apreApplyChanges => 'Applica Modifiche';, @override\n  String get migrationWizardApplyChanges => 'Applica Modifiche';"
+  },
+  "saltaPerOra": "Salta per ora",
+  "@saltaPerOra": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get fitnessQuestionnaireWelcomeSkip => 'Salta per ora';, @override\n  String get equipmentProfileSkipForNow => 'Salta per ora';"
+  },
+  "inserisciLaTuaEmail": "Inserisci la tua email",
+  "@inserisciLaTuaEmail": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get emailHint => 'Inserisci la tua email';, @override\n  String get pleaseEnterEmail => 'Inserisci la tua email';"
+  },
+  "creaAccount": "Crea Account",
+  "@creaAccount": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get createAccountButton => 'Crea Account';, @override\n  String get createAccountTitle => 'Crea Account';"
+  },
+  "vaiAllaHome": "Vai alla Home",
+  "@vaiAllaHome": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get goHomeButton => 'Vai alla Home';, @override\n  String get goToHome => 'Vai alla Home';"
+  },
+  "seiSicuroDiVolerEliminareName": "Sei sicuro di voler eliminare \\\"$name\\\"?",
+  "@seiSicuroDiVolerEliminareName": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String deleteTemplateConfirm(String name) {\n    return 'Sei sicuro di voler eliminare \\\"$name\\\"?';\n  }, String deleteTemplateQuestion(String name) {\n    return 'Sei sicuro di voler eliminare \\\"$name\\\"?';\n  }"
+  },
+  "creaRoutine": "Crea Routine",
+  "@creaRoutine": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get routineEditorTitle => 'Crea Routine';, @override\n  String get routineButtonCreate => 'Crea Routine';"
+  },
+  "noCompatibleAlternativesFound": "No compatible alternatives found",
+  "@noCompatibleAlternativesFound": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String get migrationWizardNoAlternatives =>\n      'No compatible alternatives found';, String get migrationWizardNoAlternatives =>\n      'No compatible alternatives found';"
+  },
+  "applyingChanges": "Applying changes...",
+  "@applyingChanges": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get migrationWizardApplying => 'Applying changes...';, @override\n  String get migrationWizardApplying => 'Applying changes...';"
+  },
+  "dropSetPerformExerciseToFailureThenImmed": "Drop Set: Perform exercise to failure, then immediately reduce weight and continue.",
+  "@dropSetPerformExerciseToFailureThenImmed": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String get dropsetInfo =>\n      'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.';, String get dropsetDescription =>\n      'Drop Set: Perform exercise to failure, then immediately reduce weight and continue.';"
+  },
+  "restPausePerformToFailureRest1015Seconds": "Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.",
+  "@restPausePerformToFailureRest1015Seconds": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String get restPauseInfo =>\n      'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.';, String get restPauseDescription =>\n      'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.';"
+  },
+  "thisActionCannotBeUndone": "This action cannot be undone.",
+  "@thisActionCannotBeUndone": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get deleteSetMessage => 'This action cannot be undone.';, @override\n  String get deleteTemplateWarning => 'This action cannot be undone.';"
+  },
+  "addedExercisenameToWorkout": "Added $exerciseName to workout",
+  "@addedExercisenameToWorkout": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String addedToWorkout(String exerciseName) {\n    return 'Added $exerciseName to workout';\n  }, String exerciseAddedMessage(String exerciseName) {\n    return 'Added $exerciseName to workout';\n  }"
+  },
+  "applyChanges": "Apply Changes",
+  "@applyChanges": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get apreApplyChanges => 'Apply Changes';, @override\n  String get migrationWizardApplyChanges => 'Apply Changes';"
+  },
+  "key1Template": "1 template",
+  "@key1Template": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: other: '$count templates',\n      one: '1 template',\n    );, other: '$count templates',\n      one: '1 template',\n    );"
+  },
+  "increaseTrainingFrequency": "Increase Training Frequency",
+  "@increaseTrainingFrequency": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get strategyIncreaseFrequencyTitle => 'Increase Training Frequency';, String get strategyBalanceincreasefrequencyTitle =>\n      'Increase Training Frequency';"
+  },
+  "skipForNow": "Skip for now",
+  "@skipForNow": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get fitnessQuestionnaireWelcomeSkip => 'Skip for now';, @override\n  String get equipmentProfileSkipForNow => 'Skip for now';"
+  },
+  "estimated1rm": "Estimated 1RM",
+  "@estimated1rm": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get weightSuggestionDetailsBaseOneRM => 'Estimated 1RM';, @override\n  String get oneRMCalculatorEstimated => 'Estimated 1RM';"
+  },
+  "useTheImportFunctionInTheTemplateScreen": "Use the import function in the template screen",
+  "@useTheImportFunctionInTheTemplateScreen": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String get useTemplateScreenForImport =>\n      'Use the import function in the template screen';, String get useImportFunction =>\n      'Use the import function in the template screen';"
+  },
+  "areYouSureYouWantToDeleteName": "Are you sure you want to delete \\\"$name\\\"?",
+  "@areYouSureYouWantToDeleteName": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String deleteTemplateConfirm(String name) {\n    return 'Are you sure you want to delete \\\"$name\\\"?';\n  }, String deleteTemplateQuestion(String name) {\n    return 'Are you sure you want to delete \\\"$name\\\"?';\n  }"
+  },
+  "errorSavingError": "Error saving: $error",
+  "@errorSavingError": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: String errorSaving(String error) {\n    return 'Error saving: $error';\n  }, String savingErrorMessage(String error) {\n    return 'Error saving: $error';\n  }"
+  },
+  "noRateLimiterForEndpointEndpoint": "⚠️ No rate limiter for endpoint: $endpoint",
+  "@noRateLimiterForEndpointEndpoint": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: if (kDebugMode) {\n        debugPrint('⚠️ No rate limiter for endpoint: $endpoint');\n      }, if (kDebugMode) {\n        debugPrint('⚠️ No rate limiter for endpoint: $endpoint');\n      }"
+  },
+  "liveActivitiesAreDisabled": "Live Activities are disabled",
+  "@liveActivitiesAreDisabled": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: Logger.shared.log(.error, \"❌ Live Activities are disabled in system settings\", category: .general)\n            result(FlutterError(code: \"DISABLED\", message: \"Live Activities are disabled\", details: n, guard ActivityAuthorizationInfo().areActivitiesEnabled else {\n            result(FlutterError(code: \"DISABLED\", message: \"Live Activities are disabled\", details: nil))\n            return"
+  },
+  "missingRequiredParameters": "Missing required parameters",
+  "@missingRequiredParameters": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: let lastUpdated = args[\"lastUpdated\"] as? Int64 else {\n            result(FlutterError(code: \"INVALID_ARGUMENTS\", message: \"Missing required parameters\", details: nil))\n            return, let lastUpdated = args[\"lastUpdated\"] as? Int64 else {\n            result(FlutterError(code: \"INVALID_ARGUMENTS\", message: \"Missing required parameters\", details: nil))\n            return"
+  },
+  "yearly": "Yearly",
+  "lifetime": "Lifetime",
+  "saveThirtyThreePercent": "Save 33%",
+  "prioritySupport": "Priority Support",
+  "fullAccess": "Full Access",
+  "active": "Active"
 }
