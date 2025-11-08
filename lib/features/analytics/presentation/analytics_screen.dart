@@ -10,7 +10,10 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exerc
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/adaptive_banner_ad.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -21,7 +24,7 @@ class AnalyticsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('📊 Analytics'),
+        title: Text('📊 ${context.l10n.analytics}'),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
           icon: Icon(AppIcons.back),
@@ -134,7 +137,7 @@ class _AnalyticsContent extends StatelessWidget {
                 ),
                 SizedBox(width: 8),
                 Text(
-                  'Progress Tracking',
+                  context.l10n.progressTracking,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -152,8 +155,8 @@ class _AnalyticsContent extends StatelessWidget {
                   ? AppIcons.trendUp
                   : AppIcons.trendDown,
               _getThisMonthWorkouts(workouts) > _getLastMonthWorkouts(workouts)
-                  ? Colors.green
-                  : Colors.red,
+                  ? context.colors.success
+                  : context.colors.error,
             ),
             
             _buildProgressTile(
@@ -286,15 +289,15 @@ class _NotAuthenticatedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.lock, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
+          Icon(AppIcons.lock, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          const SizedBox(height: 16),
           Text(
-            'Please log in to view your analytics',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
+            context.l10n.pleaseLoginToViewAnalytics,
+            style: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -307,13 +310,13 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('Loading your analytics...'),
+          const LoadingIndicator(),
+          const SizedBox(height: 16),
+          Text(context.l10n.loadingYourAnalytics),
         ],
       ),
     );
@@ -331,17 +334,17 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.error, size: 64, color: Colors.red),
-          SizedBox(height: 16),
+          Icon(AppIcons.error, size: 64, color: context.colors.error),
+          const SizedBox(height: 16),
           Text(
-            'Error loading analytics',
+            context.l10n.errorLoadingAnalytics,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
             error,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -358,25 +361,25 @@ class _EmptyStateView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.workout, size: 80, color: Colors.grey),
-          SizedBox(height: 24),
+          Icon(AppIcons.workout, size: 80, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          const SizedBox(height: 24),
           Text(
-            'No workout data yet',
+            context.l10n.noWorkoutDataYet,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
-            'Complete some workouts to see your\nanalytics and progress!',
+            context.l10n.completeWorkoutsToSeeAnalytics,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
             icon: const Icon(AppIcons.play),
-            label: const Text('Start Your First Workout'),
+            label: Text(context.l10n.startYourFirstWorkout),
           ),
         ],
       ),

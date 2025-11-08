@@ -2746,7 +2746,7 @@ abstract class AppLocalizations {
   /// Message to complete workouts for analytics
   ///
   /// In en, this message translates to:
-  /// **'Complete some workouts to see your analytics and progress!'**
+  /// **'Complete some workouts to see your\nanalytics and progress!'**
   String get completeWorkoutsToSeeAnalytics;
 
   /// Start first workout button text
@@ -10178,7 +10178,7 @@ abstract class AppLocalizations {
   /// Empty state title for no workouts
   ///
   /// In en, this message translates to:
-  /// **'Start your first workout'**
+  /// **'Start Your First Workout'**
   String get startYourFirstWorkout;
 
   /// Empty state description for no workouts
@@ -27689,6 +27689,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save 33% vs monthly'**
   String get saveVsMonthly;
+
+  /// No description provided for @pleaseLoginToViewAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in to view your analytics'**
+  String get pleaseLoginToViewAnalytics;
 }
 
 class _AppLocalizationsDelegate

@@ -422,7 +422,7 @@
   "playingPreview": "Riproduzione anteprima",
   "statisticsDashboard": "Dashboard Statistiche",
   "workoutAnalytics": "Analisi Allenamenti",
-  "progressTracking": "Tracciamento Progressi",
+  "progressTracking": "Monitoraggio Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
   "thisWeek": "Questa settimana",
   "totalVolume": "totale",
@@ -446,7 +446,7 @@
   "noBodyPartData": "Nessun dato sui gruppi muscolari disponibile",
   "noExerciseData": "Nessun dato sugli esercizi disponibile",
   "noWorkoutData": "Nessun dato allenamento ancora",
-  "completeWorkoutsToSeeAnalytics": "Completa alcuni allenamenti per vedere le tue analisi e progressi!",
+  "completeWorkoutsToSeeAnalytics": "Completa alcuni allenamenti per vedere le\ntue analisi e progressi!",
   "startFirstWorkout": "Inizia il Tuo Primo Allenamento",
   "volumeIncreased": "Volume aumentato di {amount}kg dalla settimana scorsa",
   "volumeDecreased": "Volume diminuito di {amount}kg dalla settimana scorsa",
@@ -2041,7 +2041,7 @@
   "trackYourFitnessJourney": "Monitora il tuo percorso fitness",
   "trackYourWorkoutsAndMonitorProgress": "Monitora i tuoi allenamenti e i tuoi progressi",
   "signInToViewAnalytics": "Accedi per visualizzare le statistiche",
-  "startYourFirstWorkout": "Inizia il tuo primo allenamento",
+  "startYourFirstWorkout": "Inizia il Tuo Primo Allenamento",
   "startYourFirstWorkoutDesc": "Inizia il tuo primo allenamento per vedere le statistiche",
   "fitnessQuoteEmptyState": "Il viaggio di mille miglia inizia con una singola ripetizione",
   "proTip": "💡 Suggerimento:",
@@ -6737,12 +6737,12 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
   },
-  "loadingYourAnalytics": "Loading your analytics...",
+  "loadingYourAnalytics": "Caricamento analisi...",
   "@loadingYourAnalytics": {
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
   },
-  "noWorkoutDataYet": "No workout data yet",
+  "noWorkoutDataYet": "Nessun dato di allenamento",
   "@noWorkoutDataYet": {
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
@@ -8531,5 +8531,6 @@
   "youArePremium": "Sei Premium!",
   "youHaveAccessToAllFeatures": "Hai accesso a tutte le funzionalità",
   "planWillBeAvailableSoon": "Il piano {plan} sarà presto disponibile!",
-  "saveVsMonthly": "Risparmia 33% rispetto al mensile"
+  "saveVsMonthly": "Risparmia 33% rispetto al mensile",
+  "pleaseLoginToViewAnalytics": "Accedi per visualizzare le tue analisi"
 }

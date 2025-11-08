@@ -1421,7 +1421,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completeWorkoutsToSeeAnalytics =>
-      'Complete some workouts to see your analytics and progress!';
+      'Complete some workouts to see your\nanalytics and progress!';
 
   @override
   String get startFirstWorkout => 'Start Your First Workout';
@@ -5586,7 +5586,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInToViewAnalytics => 'Sign in to view analytics';
 
   @override
-  String get startYourFirstWorkout => 'Start your first workout';
+  String get startYourFirstWorkout => 'Start Your First Workout';
 
   @override
   String get startYourFirstWorkoutDesc =>
@@ -15497,4 +15497,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveVsMonthly => 'Save 33% vs monthly';
+
+  @override
+  String get pleaseLoginToViewAnalytics =>
+      'Please log in to view your analytics';
 }

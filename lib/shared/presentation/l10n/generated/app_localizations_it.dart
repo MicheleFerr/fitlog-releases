@@ -1363,7 +1363,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutAnalytics => 'Analisi Allenamenti';
 
   @override
-  String get progressTracking => 'Tracciamento Progressi';
+  String get progressTracking => 'Monitoraggio Progressi';
 
   @override
   String get detailedAnalytics => 'Analisi Dettagliate';
@@ -1436,7 +1436,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get completeWorkoutsToSeeAnalytics =>
-      'Completa alcuni allenamenti per vedere le tue analisi e progressi!';
+      'Completa alcuni allenamenti per vedere le\ntue analisi e progressi!';
 
   @override
   String get startFirstWorkout => 'Inizia il Tuo Primo Allenamento';
@@ -5635,7 +5635,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signInToViewAnalytics => 'Accedi per visualizzare le statistiche';
 
   @override
-  String get startYourFirstWorkout => 'Inizia il tuo primo allenamento';
+  String get startYourFirstWorkout => 'Inizia il Tuo Primo Allenamento';
 
   @override
   String get startYourFirstWorkoutDesc =>
@@ -14349,10 +14349,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Please log in to view your analytics';
 
   @override
-  String get loadingYourAnalytics => 'Loading your analytics...';
+  String get loadingYourAnalytics => 'Caricamento analisi...';
 
   @override
-  String get noWorkoutDataYet => 'No workout data yet';
+  String get noWorkoutDataYet => 'Nessun dato di allenamento';
 
   @override
   String get completeSomeWorkoutsToSeeYournanalyticsA =>
@@ -15655,4 +15655,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get saveVsMonthly => 'Risparmia 33% rispetto al mensile';
+
+  @override
+  String get pleaseLoginToViewAnalytics =>
+      'Accedi per visualizzare le tue analisi';
 }

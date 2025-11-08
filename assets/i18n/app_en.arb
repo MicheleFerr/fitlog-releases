@@ -1815,7 +1815,7 @@
   "@noWorkoutData": {
     "description": "No workout data message"
   },
-  "completeWorkoutsToSeeAnalytics": "Complete some workouts to see your analytics and progress!",
+  "completeWorkoutsToSeeAnalytics": "Complete some workouts to see your\nanalytics and progress!",
   "@completeWorkoutsToSeeAnalytics": {
     "description": "Message to complete workouts for analytics"
   },
@@ -7228,7 +7228,7 @@
   "@signInToViewAnalytics": {
     "description": "Message shown when user is not authenticated"
   },
-  "startYourFirstWorkout": "Start your first workout",
+  "startYourFirstWorkout": "Start Your First Workout",
   "@startYourFirstWorkout": {
     "description": "Empty state title for no workouts"
   },
@@ -19131,5 +19131,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "pleaseLoginToViewAnalytics": "Please log in to view your analytics"
 }
