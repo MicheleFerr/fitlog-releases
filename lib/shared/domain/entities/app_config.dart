@@ -25,11 +25,11 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.syncWithHealthKit = false,
     this.fontSize = 1.0,
     this.preferredTemplateId,
-    this.rpeTracking,
-    this.autoRestTimer,
+    this.rpeTracking = true, // Track RPE for APRE system
+    this.autoRestTimer = true, // Auto-start rest timer for convenience
     this.setDurationTracking,
-    this.plateCalculator,
-    this.warmupSuggestions,
+    this.plateCalculator = true, // Useful tool enabled by default
+    this.warmupSuggestions = true, // Helpful for user safety
     this.availablePlates,
     this.isProMode,
     this.autoCollapseCompleted,
@@ -44,8 +44,8 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.hasSeenWorkoutOnboarding = false,
     this.onboardingVersion = 1,
     this.betaModeEnabled,
-    this.enableApre,
-    this.defaultApreProtocol,
+    this.enableApre = true, // APRE auto-regulation enabled by default
+    this.defaultApreProtocol = 6, // 6-set protocol as balanced default
     this.autoAdjustRestTime = true, // Default to true for APRE users
     this.showQuickInfoIcon,
     this.showWarmupIcon,
@@ -77,9 +77,15 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       syncWithHealthKit: json['syncWithHealthKit'] ?? false,
       fontSize: json['fontSize']?.toDouble() ?? 1.0,
       preferredTemplateId: json['preferredTemplateId'],
+      rpeTracking: json['rpeTracking'] ?? true,
+      autoRestTimer: json['autoRestTimer'] ?? true,
+      plateCalculator: json['plateCalculator'] ?? true,
+      warmupSuggestions: json['warmupSuggestions'] ?? true,
       hasSeenWorkoutOnboarding: json['hasSeenWorkoutOnboarding'] ?? false,
       onboardingVersion: json['onboardingVersion'] ?? 1,
       betaModeEnabled: json['betaModeEnabled'] ?? false,
+      enableApre: json['enableApre'] ?? true,
+      defaultApreProtocol: json['defaultApreProtocol'] ?? 6,
     );
   }
   @HiveField(0)
