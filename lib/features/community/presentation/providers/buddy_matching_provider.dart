@@ -28,19 +28,21 @@ final currentUserBuddyProfileProvider = FutureProvider<BuddyProfile?>((ref) asyn
 });
 
 // Provider per match attivi
-final activeMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final activeMatchesProvider = StreamProvider.autoDispose<List<BuddyMatch>>((ref) {
   try {
     final authService = ref.watch(authServiceProvider);
     final currentUser = authService.currentUser;
-    
+
     if (currentUser?.uid == null) return Stream.value([]);
-    
+
     return FirebaseFirestore.instance
         .collection('buddy_matches')
         .where('participants', arrayContains: currentUser!.uid)
         .where('status', isEqualTo: 'active')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => 
+        .map((snapshot) => snapshot.docs.map((doc) =>
           BuddyMatch.fromFirestore(doc)).toList())
         .handleError((error) {
           // print('Error loading active matches: $error');
@@ -53,19 +55,21 @@ final activeMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
 });
 
 // Provider per match pendenti
-final pendingMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final pendingMatchesProvider = StreamProvider.autoDispose<List<BuddyMatch>>((ref) {
   try {
     final authService = ref.watch(authServiceProvider);
     final currentUser = authService.currentUser;
-    
+
     if (currentUser?.uid == null) return Stream.value([]);
-    
+
     return FirebaseFirestore.instance
         .collection('buddy_matches')
         .where('participants', arrayContains: currentUser!.uid)
         .where('status', isEqualTo: 'pending')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => 
+        .map((snapshot) => snapshot.docs.map((doc) =>
           BuddyMatch.fromFirestore(doc)).toList())
         .handleError((error) {
           // print('Error loading pending matches: $error');
