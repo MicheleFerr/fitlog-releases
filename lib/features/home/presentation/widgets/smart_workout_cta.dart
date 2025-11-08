@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_rou
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -211,6 +212,125 @@ class SmartWorkoutCTA extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+
+  /// Rest mode state - Shows congratulatory message and workout statistics
+  Widget _buildRestModeState(BuildContext context, Workout workout) {
+    final theme = Theme.of(context);
+    final stats = _calculateWorkoutStats(workout);
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.tertiary,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon + Title
+            Row(
+              children: [
+                Icon(
+                  AppIcons.achievement,
+                  size: AppIconSize.large,
+                  color: Colors.white,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.smartWorkoutCTARestModeTitle,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Subtitle
+            Text(
+              context.l10n.smartWorkoutCTARestModeSubtitle,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: Colors.white.withValues(alpha: 0.9),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Stats Container
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildStatRow(
+                    context,
+                    AppIcons.weight,
+                    context.l10n.smartWorkoutCTARestModeVolume(stats.volume),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStatRow(
+                    context,
+                    AppIcons.timer,
+                    context.l10n.smartWorkoutCTARestModeDuration(stats.duration),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStatRow(
+                    context,
+                    AppIcons.checkCircle,
+                    context.l10n.smartWorkoutCTARestModeSets(stats.sets),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Helper to build a single stat row
+  Widget _buildStatRow(BuildContext context, IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: AppIconSize.small,
+          color: Colors.white.withValues(alpha: 0.9),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
