@@ -7,8 +7,10 @@
 /// Repository contract per l'accesso ai dati di feedback
 library;
 
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Modello per un singolo feedback su esercizio
 class ExerciseFeedback {
@@ -184,6 +186,24 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
   static const String _collection = 'exercise_feedback';
 
   final FirebaseFirestore _firestore;
+
+  // 🔧 PERFORMANCE: Cache for admin count stats (1 hour TTL)
+  static const Duration _countCacheDuration = Duration(hours: 1);
+
+  // Cache for countByStatus()
+  Map<String, int>? _cachedStatusCounts;
+  DateTime? _statusCountsTimestamp;
+  static const String _statusCountsCacheKey = 'admin_feedback_status_counts';
+
+  // Cache for countByType()
+  Map<String, int>? _cachedTypeCounts;
+  DateTime? _typeCountsTimestamp;
+  static const String _typeCountsCacheKey = 'admin_feedback_type_counts';
+
+  // Cache for countBySeverity()
+  Map<String, int>? _cachedSeverityCounts;
+  DateTime? _severityCountsTimestamp;
+  static const String _severityCountsCacheKey = 'admin_feedback_severity_counts';
 
   @override
   Stream<List<ExerciseFeedback>> watchAllFeedback() {
@@ -377,6 +397,32 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
   @override
   Future<Map<String, int>> countByStatus() async {
     try {
+      // 🔧 TIER 1 CACHE CHECK: Check memory cache first
+      if (_cachedStatusCounts != null && _statusCountsTimestamp != null) {
+        final cacheAge = DateTime.now().difference(_statusCountsTimestamp!);
+        if (cacheAge < _countCacheDuration) {
+          return _cachedStatusCounts!;
+        }
+      }
+
+      // 🔧 TIER 2 CACHE CHECK: Check SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_statusCountsCacheKey);
+      final cachedTimestamp = prefs.getString('${_statusCountsCacheKey}_timestamp');
+
+      if (cachedJson != null && cachedTimestamp != null) {
+        final timestamp = DateTime.parse(cachedTimestamp);
+        final cacheAge = DateTime.now().difference(timestamp);
+
+        if (cacheAge < _countCacheDuration) {
+          // Restore to memory cache
+          _cachedStatusCounts = Map<String, int>.from(jsonDecode(cachedJson) as Map);
+          _statusCountsTimestamp = timestamp;
+          return _cachedStatusCounts!;
+        }
+      }
+
+      // 🔧 CACHE MISS: Execute full collection scan
       final snapshot =
           await _firestore.collection(_collection).get();
       final counts = <String, int>{};
@@ -385,6 +431,12 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
         final status = doc['status'] ?? 'OPEN';
         counts[status] = (counts[status] ?? 0) + 1;
       }
+
+      // 🔧 SAVE TO BOTH CACHE TIERS
+      _cachedStatusCounts = counts;
+      _statusCountsTimestamp = DateTime.now();
+      await prefs.setString(_statusCountsCacheKey, jsonEncode(counts));
+      await prefs.setString('${_statusCountsCacheKey}_timestamp', DateTime.now().toIso8601String());
 
       return counts;
     } catch (e) {
@@ -398,6 +450,32 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
   @override
   Future<Map<String, int>> countByType() async {
     try {
+      // 🔧 TIER 1 CACHE CHECK: Check memory cache first
+      if (_cachedTypeCounts != null && _typeCountsTimestamp != null) {
+        final cacheAge = DateTime.now().difference(_typeCountsTimestamp!);
+        if (cacheAge < _countCacheDuration) {
+          return _cachedTypeCounts!;
+        }
+      }
+
+      // 🔧 TIER 2 CACHE CHECK: Check SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_typeCountsCacheKey);
+      final cachedTimestamp = prefs.getString('${_typeCountsCacheKey}_timestamp');
+
+      if (cachedJson != null && cachedTimestamp != null) {
+        final timestamp = DateTime.parse(cachedTimestamp);
+        final cacheAge = DateTime.now().difference(timestamp);
+
+        if (cacheAge < _countCacheDuration) {
+          // Restore to memory cache
+          _cachedTypeCounts = Map<String, int>.from(jsonDecode(cachedJson) as Map);
+          _typeCountsTimestamp = timestamp;
+          return _cachedTypeCounts!;
+        }
+      }
+
+      // 🔧 CACHE MISS: Execute full collection scan
       final snapshot =
           await _firestore.collection(_collection).get();
       final counts = <String, int>{};
@@ -406,6 +484,12 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
         final type = doc['feedbackType'] ?? 'OTHER';
         counts[type] = (counts[type] ?? 0) + 1;
       }
+
+      // 🔧 SAVE TO BOTH CACHE TIERS
+      _cachedTypeCounts = counts;
+      _typeCountsTimestamp = DateTime.now();
+      await prefs.setString(_typeCountsCacheKey, jsonEncode(counts));
+      await prefs.setString('${_typeCountsCacheKey}_timestamp', DateTime.now().toIso8601String());
 
       return counts;
     } catch (e) {
@@ -419,6 +503,32 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
   @override
   Future<Map<String, int>> countBySeverity() async {
     try {
+      // 🔧 TIER 1 CACHE CHECK: Check memory cache first
+      if (_cachedSeverityCounts != null && _severityCountsTimestamp != null) {
+        final cacheAge = DateTime.now().difference(_severityCountsTimestamp!);
+        if (cacheAge < _countCacheDuration) {
+          return _cachedSeverityCounts!;
+        }
+      }
+
+      // 🔧 TIER 2 CACHE CHECK: Check SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_severityCountsCacheKey);
+      final cachedTimestamp = prefs.getString('${_severityCountsCacheKey}_timestamp');
+
+      if (cachedJson != null && cachedTimestamp != null) {
+        final timestamp = DateTime.parse(cachedTimestamp);
+        final cacheAge = DateTime.now().difference(timestamp);
+
+        if (cacheAge < _countCacheDuration) {
+          // Restore to memory cache
+          _cachedSeverityCounts = Map<String, int>.from(jsonDecode(cachedJson) as Map);
+          _severityCountsTimestamp = timestamp;
+          return _cachedSeverityCounts!;
+        }
+      }
+
+      // 🔧 CACHE MISS: Execute full collection scan
       final snapshot =
           await _firestore.collection(_collection).get();
       final counts = <String, int>{};
@@ -428,6 +538,12 @@ class FirestoreFeedbackRepository implements FeedbackRepository {
         final sevKey = severity.toString();
         counts[sevKey] = (counts[sevKey] ?? 0) + 1;
       }
+
+      // 🔧 SAVE TO BOTH CACHE TIERS
+      _cachedSeverityCounts = counts;
+      _severityCountsTimestamp = DateTime.now();
+      await prefs.setString(_severityCountsCacheKey, jsonEncode(counts));
+      await prefs.setString('${_severityCountsCacheKey}_timestamp', DateTime.now().toIso8601String());
 
       return counts;
     } catch (e) {
