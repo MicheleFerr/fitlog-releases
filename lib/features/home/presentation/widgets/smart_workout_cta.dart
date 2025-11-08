@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -23,40 +24,54 @@ class SmartWorkoutCTA extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final routineAsync = ref.watch(safeActiveRoutineProvider);
+    final todayWorkoutAsync = ref.watch(todayCompletedWorkoutProvider);
 
-    return routineAsync.when(
+    // Priority 1: Check if already worked out today
+    return todayWorkoutAsync.when(
       loading: () => _buildLoadingState(context, theme),
-      error: (_, __) => _buildDisabledState(
-        context,
-        theme,
-        context.l10n.smartWorkoutCTAErrorLoading,
-      ),
-      data: (routine) {
-        // Guard 1: Check if routine exists and has uncompleted workout
-        if (routine == null || !routine.hasUncompletedWorkout()) {
-          return _buildDisabledState(
-            context,
-            theme,
-            context.l10n.smartWorkoutCTARestDay,
-          );
+      error: (_, __) => _buildLoadingState(context, theme), // Graceful fallback
+      data: (todayWorkout) {
+        if (todayWorkout != null) {
+          // ✅ Workout done today → REST MODE
+          return _buildRestModeState(context, todayWorkout);
         }
 
-        // Guard 2: Get next uncompleted workout
-        final nextWorkout = routine.getNextUncompletedWorkout();
-        if (nextWorkout == null || nextWorkout.templateId == null) {
-          return _buildDisabledState(
+        // No workout today → check routine (existing logic)
+        return routineAsync.when(
+          loading: () => _buildLoadingState(context, theme),
+          error: (_, __) => _buildDisabledState(
             context,
             theme,
-            context.l10n.smartWorkoutCTAIncompleteRoutine,
-          );
-        }
+            context.l10n.smartWorkoutCTAErrorLoading,
+          ),
+          data: (routine) {
+            // Guard 1: Check if routine exists and has uncompleted workout
+            if (routine == null || !routine.hasUncompletedWorkout()) {
+              return _buildDisabledState(
+                context,
+                theme,
+                context.l10n.smartWorkoutCTARestDay,
+              );
+            }
 
-        // ✅ Ready to show active CTA
-        return _buildActiveState(
-          context,
-          ref,
-          theme,
-          nextWorkout.templateId!,
+            // Guard 2: Get next uncompleted workout
+            final nextWorkout = routine.getNextUncompletedWorkout();
+            if (nextWorkout == null || nextWorkout.templateId == null) {
+              return _buildDisabledState(
+                context,
+                theme,
+                context.l10n.smartWorkoutCTAIncompleteRoutine,
+              );
+            }
+
+            // ✅ Ready to show active CTA
+            return _buildActiveState(
+              context,
+              ref,
+              theme,
+              nextWorkout.templateId!,
+            );
+          },
         );
       },
     );
