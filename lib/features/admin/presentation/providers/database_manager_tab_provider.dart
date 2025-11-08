@@ -43,7 +43,9 @@ final selectedExercisesENProvider = StateProvider<Set<String>>((ref) => {});
 // ============================================================================
 
 /// Stream provider for Italian exercises (exercises_it collection)
-final exercisesITStreamProvider = StreamProvider<List<Exercise>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final exercisesITStreamProvider = StreamProvider.autoDispose<List<Exercise>>((ref) {
   return FirebaseFirestore.instance
       .collection('exercises_it')
       .snapshots()
@@ -60,7 +62,9 @@ final exercisesITStreamProvider = StreamProvider<List<Exercise>>((ref) {
 });
 
 /// Stream provider for English exercises (exercises_en collection)
-final exercisesENStreamProvider = StreamProvider<List<Exercise>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final exercisesENStreamProvider = StreamProvider.autoDispose<List<Exercise>>((ref) {
   return FirebaseFirestore.instance
       .collection('exercises_en')
       .snapshots()
@@ -77,7 +81,9 @@ final exercisesENStreamProvider = StreamProvider<List<Exercise>>((ref) {
 });
 
 /// Stream provider for exercises metadata (version_info document)
-final metadataStreamProvider = StreamProvider<Map<String, dynamic>?>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final metadataStreamProvider = StreamProvider.autoDispose<Map<String, dynamic>?>((ref) {
   return FirebaseFirestore.instance
       .collection('exercises_metadata')
       .doc('version_info')
