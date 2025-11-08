@@ -13,60 +13,11 @@
 
 ## 📚 STEP 0: LEGGI LA DOCUMENTAZIONE PRIMA DI IMPLEMENTARE
 
-**⚠️ OBBLIGATORIO PRIMA DI QUALSIASI MODIFICA:**
+**⚠️ OBBLIGATORIO**: Prima di qualsiasi modifica, leggi [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) → trova docs feature → leggi → implementa
 
-### 🔍 Prima di implementare una feature:
+**Documentazione chiave**: `DESIGN_GUIDELINES.md` (design system), `TIMER_SYSTEM_DOCUMENTATION.md` (timer), `ANALYTICS_SYSTEM_DOCUMENTATION.md` (analytics), `USER_PROFILE_DOCUMENTATION.md` (auth), `WORKOUT_SYSTEM_OVERVIEW.md` (workout), `ROUTINE_CENTER_SYSTEM_REPORT.md` (routine), `APRE_INDEX.md` (APRE)
 
-1. **LEGGI** [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) - Mappa completa della documentazione
-2. **TROVA** la documentazione della feature che devi implementare/modificare
-3. **LEGGI** tutta la documentazione correlata (architettura, esempi, best practices)
-4. **IMPLEMENTA** seguendo i pattern documentati
-5. **AGGIORNA** la documentazione se necessario
-
-### 📖 Documentazione Disponibile per Feature:
-
-| Feature | Documentazione | Quando Leggerla |
-|---------|----------------|-----------------|
-| **📚 Comprehensive App Docs** | `docs/STRUTTURA_DATI.md`, `ARCHITETTURA_APP.md`, `SCHERMATE_PRINCIPALI.md`, `FLUSSI_UTENTE.md`, `FEATURES_IMPLEMENTATE.md`, `PROBLEMATICHE_LIMITAZIONI.md` | **ONBOARDING** - Per capire l'intera app (5,445 righe totali) |
-| **🎨 Design System** | `docs/DESIGN_GUIDELINES.md` | **SEMPRE** - Prima di creare widget, colori, spacing, animazioni |
-| **🎯 UI Flows & Components** | `docs/GymBro-UI-Flows.md` | **UI/UX DEVELOPMENT** - User flows dettagliati, componenti UI con codice Dart completo, interaction patterns |
-| **🏋️ Design & Architecture Report** | `docs/GymBro-Design-Report.md` | **ARCHITECTURE REVIEW** - Executive summary, issues identificati, soluzioni proposte, KPIs, roadmap |
-| **Timer & Rest Timer** | `docs/UX_FLOWS/notifications_background/TIMER_SYSTEM_DOCUMENTATION.md` | Prima di modificare timer, Live Activities, audio feedback |
-| **Analytics & Progress** | `docs/UX_FLOWS/home_dashboard/ANALYTICS_SYSTEM_DOCUMENTATION.md` | Prima di modificare metriche, PR detection, chart data |
-| **User Profile & Auth** | `docs/UX_FLOWS/user_account/USER_PROFILE_DOCUMENTATION.md` | Prima di modificare auth, account tiers, quota |
-| **Premium & IAP** | `docs/UX_FLOWS/user_account/PREMIUM_IAP_DOCUMENTATION.md` | Prima di modificare subscriptions, IAP, sync premium |
-| **Workout History** | `docs/UX_FLOWS/home_dashboard/WORKOUT_HISTORY_DOCUMENTATION.md` | Prima di modificare history, editing, export |
-| **Workout Session** | `docs/UX_FLOWS/workout_session/WORKOUT_SYSTEM_OVERVIEW.md` | Prima di modificare workout flow principale |
-| **Exercise Database** | `docs/UX_FLOWS/exercise_database/EXERCISE_DATABASE_SYNC_ARCHITECTURE.md` | Prima di modificare esercizi, feedback, sync |
-| **Routine Center** | `docs/UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` | Prima di modificare routine, swap flow, templates |
-| **APRE System** | `docs/APRE/APRE_INDEX.md` → Start here, poi `APRE_SYSTEM_EXPLORATION.md` (sistema completo), `APRE_ACTION_ITEMS.md` (implementazione) | Prima di modificare APRE protocol, 1RM calculation, auto-adjustment |
-
-### 🎯 Workflow Completo:
-
-```
-1. Ricevi richiesta di implementare feature X
-   ↓
-2. LEGGI docs/NAVIGATION/INDEX.md
-   ↓
-3. TROVA sezione "Quick Navigation by Task"
-   ↓
-4. SEGUI link alla documentazione di feature X
-   ↓
-5. LEGGI documentazione completa (architettura + esempi)
-   ↓
-6. LEGGI documentazione correlata (se presente)
-   ↓
-7. IMPLEMENTA seguendo pattern documentati
-   ↓
-8. TESTA secondo guida di testing
-   ↓
-9. AGGIORNA documentazione se hai fatto modifiche significative
-   ↓
-10. COMMIT con messaggio descrittivo
-```
-
-**❌ MAI**: Implementare una feature senza aver letto la documentazione esistente
-**✅ SEMPRE**: Consultare INDEX.md → Trovare docs → Leggere → Implementare → Aggiornare
+**Workflow**: INDEX.md → Trova feature → Leggi docs → Implementa → Aggiorna docs → Commit
 
 ---
 
@@ -91,408 +42,60 @@
 
 > **⚠️ CRITICAL**: Sistema icone completo con centralizzazione, semantic sizing, colors, accessibility, animations e badges.
 
-### 📐 1. AppIcons Centralizzate (100% Coverage)
-
-**SEMPRE** usa `AppIcons.*` - MAI `Icons.*` direttamente
-
+### 📐 1. AppIcons Centralizzate
+**SEMPRE** `AppIcons.*` - MAI `Icons.*` | ~445 icone | Import: `app_icons.dart`
 ```dart
-// ✅ CORRETTO - Icona centralizzata
-Icon(AppIcons.workout)
-Icon(AppIcons.analytics)
-Icon(AppIcons.settings)
-
-// ❌ SBAGLIATO - Icona inline (Material Icons diretti)
-Icon(Icons.fitness_center)
-Icon(Icons.bar_chart)
-Icon(Icons.settings)
+Icon(AppIcons.workout) // ✅ | Icon(Icons.fitness_center) // ❌
 ```
 
-**Status**: ~445 icone centralizzate (Phase 1+2+3 COMPLETE)
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';`
-
-### 📏 2. AppIconSize - Semantic Sizing (NEW)
-
-**SEMPRE** usa `AppIconSize.*` constants - MAI magic numbers
-
+### 📏 2. AppIconSize
+**SEMPRE** `AppIconSize.*` - MAI magic numbers | Sizes: tiny(16), small(20), medium(24), large(28), xlarge(32), xxlarge(48) | Import: `app_icon_size.dart`
 ```dart
-// ✅ CORRETTO - Semantic sizing
-Icon(AppIcons.workout, size: AppIconSize.medium)
-Icon(AppIcons.timer, size: AppIconSize.large)
-Icon(AppIcons.badge, size: AppIconSize.tiny)
-
-// ❌ SBAGLIATO - Magic numbers
-Icon(AppIcons.workout, size: 24)
-Icon(AppIcons.timer, size: 28)
-Icon(AppIcons.badge, size: 16)
+Icon(AppIcons.workout, size: AppIconSize.medium) // ✅ | size: 24 // ❌
 ```
 
-**Available Sizes**:
-- `tiny` (16dp) - Badge icons, small indicators
-- `small` (20dp) - Chip icons, compact UI
-- `medium` (24dp) - **Default**, standard icons
-- `large` (28dp) - Featured icons, emphasis
-- `xlarge` (32dp) - Header icons, primary actions
-- `xxlarge` (48dp) - Empty states, hero sections
-
-**Context-Specific**: `tabBar`, `buttonPrimary`, `card`, `listTile`, `emptyState`, `loading`
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';`
-
-### 🎨 3. Semantic Icon Colors (NEW)
-
-**SEMPRE** usa `context.icon*` - MAI hardcoded colors
-
+### 🎨 3. Semantic Icon Colors
+**SEMPRE** `context.icon*` - MAI hardcoded | Colors: Primary/Secondary/Tertiary, Success/Error/Warning/Info, Emphasis levels, Workout-specific | Helpers: `iconStateActive()`, `iconProgressColor()`, `iconPriority()` | Import: `app_icon_colors.dart`
 ```dart
-// ✅ CORRETTO - Semantic colors
-Icon(AppIcons.workout, color: context.iconPrimary)
-Icon(AppIcons.success, color: context.iconSuccess)
-Icon(AppIcons.error, color: context.iconError)
-
-// ❌ SBAGLIATO - Hardcoded colors
-Icon(AppIcons.workout, color: Colors.blue)
-Icon(AppIcons.success, color: Colors.green)
-Icon(AppIcons.error, color: Colors.red)
+Icon(AppIcons.workout, color: context.iconPrimary) // ✅ | Colors.blue // ❌
 ```
 
-**Available Colors**:
-- **Primary**: `iconPrimary`, `iconSecondary`, `iconTertiary`
-- **Semantic**: `iconSuccess`, `iconError`, `iconWarning`, `iconInfo`
-- **Emphasis**: `iconDefault`, `iconMediumEmphasis`, `iconLowEmphasis`, `iconDisabled`
-- **Inverse**: `iconOnPrimary`, `iconOnSecondary`
-- **Workout**: `iconWorkoutActive`, `iconRestTimer`, `iconPersonalRecord`, `iconProgress`
-
-**Helpers**:
-- `context.iconStateActive(bool)` - Green if active, gray if not
-- `context.iconProgressColor(double %)` - Red/orange/green based on %
-- `context.iconPriority(String)` - Error/warning/normal based on priority
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';`
-
-### ♿ 4. SemanticIcon - Accessibility (NEW)
-
-**SEMPRE** usa `SemanticIcon` per accessibilità screen readers
-
+### ♿ 4. SemanticIcon - Accessibility
+**SEMPRE** usa `SemanticIcon` per screen readers | Factories: `.button()`, `.state()` | Import: `semantic_icon.dart`
 ```dart
-// ✅ CORRETTO - Accessible icon
-SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: context.l10n.startWorkout,
-  size: AppIconSize.medium,
-  color: context.iconPrimary,
-)
-
-// ✅ CORRETTO - Shorthand extension
-AppIcons.workout.semantic(
-  label: context.l10n.startWorkout,
-  size: AppIconSize.large,
-)
-
-// ❌ SBAGLIATO - Icon senza semantic label (screen reader non lo legge)
-Icon(AppIcons.workout)
+SemanticIcon(icon: AppIcons.workout, semanticLabel: context.l10n.start) // ✅
+AppIcons.workout.semantic(label: context.l10n.start) // ✅ shorthand
 ```
 
-**Factory Constructors**:
-- `SemanticIcon.button()` - For interactive icons (isButton: true)
-- `SemanticIcon.state()` - For toggle states (active/inactive labels)
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';`
-
-### 🎬 5. AnimatedIconPatterns - Reusable Animations (NEW)
-
-Usa pattern riusabili invece di duplicare animation code
-
+### 🎬 5. AnimatedIconPatterns
+Patterns: `rotating()`, `pulsing()`, `bouncing()`, `fading()`, `shaking()` | Import: `animated_icon_patterns.dart`
 ```dart
-// ✅ CORRETTO - Reusable pattern
-AnimatedIconPatterns.rotating(
-  icon: AppIcons.loading,
-  duration: Duration(seconds: 2),
-  color: context.iconPrimary,
-)
-
-AnimatedIconPatterns.pulsing(
-  icon: AppIcons.notification,
-  scaleAmount: 0.2,
-  color: context.iconError,
-)
-
-AnimatedIconPatterns.shaking(
-  icon: AppIcons.error,
-  trigger: hasError,
-  color: context.iconError,
-)
-
-// ❌ SBAGLIATO - Animation code duplicato ovunque
-RotationTransition(...) // ogni volta diverso
+AnimatedIconPatterns.rotating(icon: AppIcons.loading) // ✅
 ```
 
-**Available Patterns**:
-- `rotating()` - Infinite spin (loading indicators)
-- `pulsing()` - Scale animation (call-to-action)
-- `bouncing()` - Elastic entrance (notifications)
-- `fading()` - Opacity transitions (state changes)
-- `shaking()` - Horizontal shake (errors)
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_patterns.dart';`
-
-### 🔴 6. BadgedIcon - Unified Badges/Counters (NEW)
-
-Usa `BadgedIcon` per notification counts e dot indicators
-
+### 🔴 6. BadgedIcon
+Factories: `.notification(count)`, `.dot(showDot)` | Extensions: `.withBadge()`, `.withDot()` | Import: `badged_icon.dart`
 ```dart
-// ✅ CORRETTO - Notification badge
-BadgedIcon.notification(
-  icon: AppIcons.notifications,
-  count: 5,
-)
-
-// ✅ CORRETTO - Dot indicator
-BadgedIcon.dot(
-  icon: AppIcons.mail,
-  showDot: hasUnread,
-)
-
-// ✅ CORRETTO - Shorthand extension
-AppIcons.notifications.withBadge(count: 3)
-AppIcons.mail.withDot(showDot: true)
-
-// ❌ SBAGLIATO - Badge code duplicato ovunque
-Stack(
-  children: [
-    Icon(...),
-    Positioned(top: -2, right: -4, child: Container(...)), // ogni volta diverso
-  ],
-)
+AppIcons.notifications.withBadge(count: 3) // ✅
 ```
 
-**Features**:
-- Auto-sizing (dot: 8dp, single digit: 16dp, multi-digit: 20dp)
-- Handles counts > 99 as "99+"
-- Border for separation from background
-- Customizable position with offset
+### 🔍 7. Icon Showcase
+Tool per esplorare 445 icone | Features: search, 11 categories, copy name | Location: `icon_showcase_screen.dart`
 
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/widgets/badged_icon.dart';`
+### 📦 8-10. Advanced Features (Priority 3)
+- **AppIconCategory**: Type-safe 11 categories | `app_icon_category.dart`
+- **AppIconVariants**: Filled/outlined toggle (13 variants) | `app_icon_variants.dart` | `ToggleIcon` widget
+- **AppIconMetadata**: Rich metadata (descriptions, keywords, semantic labels) | `app_icon_metadata.dart`
 
-### 🔍 7. Icon Showcase - Discovery Tool (NEW)
-
-**Per sviluppatori**: Screen per esplorare tutte le 445 icone
-
-```dart
-// Navigate to showcase
-Navigator.push(
-  context,
-  MaterialPageRoute(builder: (_) => IconShowcaseScreen()),
-);
-```
-
-**Features**:
-- Search/filter per nome
-- Category grouping (11 categorie)
-- Tap to copy "AppIcons.iconName"
-- Visual preview di tutte le icone
-
-**Location**: `lib/shared/presentation/screens/icon_showcase_screen.dart`
-
-### 📦 8. AppIconCategory - Type-Safe Organization (NEW - Priority 3)
-
-**Enum-based categories** per organizzare le 445 icone in modo type-safe
-
-```dart
-// ✅ CORRETTO - Type-safe category access
-final workoutIcons = AppIconCategory.workout.icons;
-final timerIcons = AppIconCategory.timer.icons;
-
-// ✅ CORRETTO - Check icon category
-if (AppIcons.workout.category == AppIconCategory.workout) {
-  // This icon belongs to workout category
-}
-
-// ✅ CORRETTO - Find category for any icon
-final category = AppIconCategory.categoryFor(AppIcons.timer);
-print(category?.displayName); // "Timer"
-
-// ❌ SBAGLIATO - String-based categories (no compile-time safety)
-final icons = getCategoryIcons('workout'); // typo = runtime error
-```
-
-**Available Categories** (11 total):
-- `workout` - Exercise and training icons
-- `timer` - Time tracking and scheduling
-- `analytics` - Data visualization and metrics
-- `status` - State and feedback indicators
-- `action` - User actions and CRUD operations
-- `navigation` - Navigation and directional
-- `social` - Social and user interaction
-- `settings` - Configuration and settings
-- `premium` - Premium features
-- `media` - Media playback and capture
-- `misc` - Utility and miscellaneous
-
-**Methods**:
-- `category.icons` - Get all icons in category as `Map<String, IconData>`
-- `category.contains(icon)` - Check if icon belongs to category
-- `AppIconCategory.categoryFor(icon)` - Get category for any icon
-- `AppIconCategory.allIcons` - Get all icons across all categories
-- `icon.category` - Extension to get category from IconData
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_category.dart';`
-
-### 🔄 9. AppIconVariants - Outlined/Filled Alternatives (NEW - Priority 3)
-
-**Factory system** per icone con varianti filled/outlined (perfetto per toggle states)
-
-```dart
-// ✅ CORRETTO - Toggle between filled/outlined
-Icon(
-  isActive
-    ? AppIconVariants.star.filled
-    : AppIconVariants.star.outlined,
-)
-
-// ✅ CORRETTO - Using ToggleIcon widget
-ToggleIcon(
-  isActive: isFavorite,
-  variant: AppIconVariants.star,
-  activeColor: context.iconSuccess,
-  inactiveColor: context.iconDisabled,
-)
-
-// ✅ CORRETTO - Extension toggle
-Icon(AppIcons.star.toggled) // Switch between filled/outlined
-
-// ❌ SBAGLIATO - Hardcoding both variants
-Icon(isFavorite ? Icons.star : Icons.star_border)
-```
-
-**Available Variants** (13 pre-defined):
-- **Status**: `checkCircle`, `star`, `info`, `error`
-- **Action**: `addCircle`, `delete`
-- **Social**: `people`, `thumbUp`, `thumbDown`
-- **Media**: `playCircle`, `pauseCircle`
-- **Navigation**: `home`, `settings`
-
-**Features**:
-- `variant.filled` - Get filled variant
-- `variant.outlined` - Get outlined variant (nullable)
-- `variant.outlinedOrFilled` - Fallback to filled if no outlined
-- `variant.hasOutlined` - Check if outlined variant exists
-- `icon.outlined` / `icon.filled` - Extensions for dynamic lookup
-- `icon.toggled` - Smart toggle between variants
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_variants.dart';`
-
-### 📚 10. AppIconMetadata - Rich Discovery System (NEW - Priority 3)
-
-**Metadata completo** per ogni icona: descrizioni, use cases, keywords, semantic labels suggeriti
-
-```dart
-// ✅ CORRETTO - Get metadata
-final metadata = AppIcons.workout.metadata;
-print(metadata?.description); // "Exercise and workout tracking"
-print(metadata?.suggestedSemanticLabel); // "Workout"
-
-// ✅ CORRETTO - Search by keyword
-final results = AppIconMetadata.search('timer');
-for (final entry in results) {
-  print(entry.key); // IconData
-  print(entry.value.description); // IconMetadata
-}
-
-// ✅ CORRETTO - Get related icons
-final relatedIcons = AppIcons.cardio.relatedIcons;
-// Returns: [AppIcons.workout, AppIcons.speed]
-
-// ✅ CORRETTO - Get suggested semantic label
-SemanticIcon(
-  icon: AppIcons.timer,
-  semanticLabel: AppIcons.timer.suggestedSemanticLabel ?? 'Timer',
-)
-```
-
-**Metadata Fields**:
-- `description` - Human-readable description
-- `useCases` - Suggested use cases (List<String>)
-- `relatedIcons` - Alternative/complementary icons (List<IconData>)
-- `suggestedSemanticLabel` - WCAG 2.1 AA accessibility label
-- `keywords` - Search keywords/tags (List<String>)
-- `platformNotes` - iOS/Android specific notes (optional)
-- `exampleUsage` - Code example (optional)
-
-**Methods**:
-- `AppIconMetadata.metadataFor(icon)` - Get metadata for specific icon
-- `AppIconMetadata.search(query)` - Search by keyword/description
-- `AppIconMetadata.byCategory(category)` - Get metadata by category
-- `AppIconMetadata.byKeyword(keyword)` - Filter by specific keyword
-- `AppIconMetadata.relatedTo(icon)` - Get related icons
-- `icon.metadata` - Extension to get metadata from IconData
-- `icon.hasMetadata` - Check if metadata exists
-
-**Coverage**: ~30 core icons have rich metadata (workout, timer, analytics, status, action, navigation, social, settings, premium, media, misc)
-
-**Import**: `import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_metadata.dart';`
-
-### 🚫 Enforcement Automatico
-
-- ✅ **Pre-commit hook** blocca `Icons.*` inline
-- ✅ **Pre-commit hook** warn su `Icon()` senza SemanticIcon
-- ✅ **Pre-commit hook** warn su hardcoded sizes
-- ✅ **100% coverage** - ~445 icone centralizzate
-- ✅ **Zero tolleranza** - Qualsiasi `Icons.*` deve essere in `AppIcons`
-
-### 📊 Perché Tier-1 Design System?
-
-1. **Consistency** - Stessi size/color ovunque (no magic numbers)
-2. **Accessibility** - Screen readers leggono tutte le icone (WCAG 2.1 AA compliant)
-3. **Reusability** - Animation/badge patterns riusabili (no duplication)
-4. **Developer Experience** - Icon showcase + auto-complete + metadata search
-5. **Maintainability** - Refactoring facile (semantic constants)
-6. **Performance** - Widget ottimizzati con const
-7. **Type Safety** - Enum-based categories (compile-time safety) 🆕
-8. **Discoverability** - Rich metadata system (search by keyword/use case) 🆕
-9. **Flexibility** - Icon variants (filled/outlined toggle states) 🆕
-10. **Documentation** - Every icon has description, use cases, related icons 🆕
+### 🚫 Enforcement
+Pre-commit hook: blocca `Icons.*` inline, warn su `Icon()` senza SemanticIcon/hardcoded sizes | 100% coverage (~445 icone)
 
 ### ⚡ Quick Examples
-
 ```dart
-// 🎯 Perfect icon usage (tier-1)
-SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: context.l10n.startWorkout,
-  size: AppIconSize.large,
-  color: context.iconPrimary,
-)
-
-// 🔴 Notification badge
-AppIcons.notifications.withBadge(count: unreadCount)
-
-// 🎬 Loading animation
-AnimatedIconPatterns.rotating(
-  icon: AppIcons.loading,
-  color: context.iconPrimary,
-)
-
-// 🎨 State-based icon color
-Icon(
-  AppIcons.wifi,
-  size: AppIconSize.medium,
-  color: context.iconStateActive(isConnected),
-)
-
-// 📦 Type-safe category access (Priority 3)
-final timerIcons = AppIconCategory.timer.icons;
-final category = AppIcons.workout.category;
-
-// 🔄 Icon variants for toggle states (Priority 3)
-ToggleIcon(
-  isActive: isFavorite,
-  variant: AppIconVariants.star,
-  activeColor: context.iconSuccess,
-)
-
-// 📚 Rich metadata discovery (Priority 3)
-final metadata = AppIcons.timer.metadata;
-final suggestedLabel = AppIcons.workout.suggestedSemanticLabel;
-final results = AppIconMetadata.search('workout');
+SemanticIcon(icon: AppIcons.workout, semanticLabel: context.l10n.start, size: AppIconSize.large, color: context.iconPrimary)
+AppIcons.notifications.withBadge(count: 3) // Badge
+AnimatedIconPatterns.rotating(icon: AppIcons.loading) // Animation
+Icon(AppIcons.wifi, color: context.iconStateActive(isConnected)) // State color
 ```
 
 ---
@@ -504,112 +107,26 @@ final results = AppIconMetadata.search('workout');
 > **Reference**: See `BUILD_FIX_SUMMARY.md` for complete fix documentation.
 
 ### 🚫 Pattern 1: NEVER `const` with `context.l10n` (CRITICAL - BLOCKS COMMIT)
-
-**iOS Build Error**: "Not a constant expression"
-**Why**: `context.l10n.*` is evaluated at runtime, NOT compile-time → incompatible with `const`
-
+Runtime evaluation → incompatible with `const`
 ```dart
-// ❌ WRONG - Causes iOS build error
-const Text(context.l10n.title)
-const SnackBar(content: Text(context.l10n.error))
-segments: const [
-  ButtonSegment(label: Text(context.l10n.option))
-]
-
-// ✅ CORRECT - Remove const keyword
-Text(context.l10n.title)
-SnackBar(content: Text(context.l10n.error))
-segments: [
-  ButtonSegment(label: Text(context.l10n.option))
-]
+Text(context.l10n.title) // ✅ | const Text(context.l10n.title) // ❌ iOS build error
 ```
 
-**Pre-commit check**: Automatically detects and BLOCKS commits with this pattern.
+### 🏛️ Pattern 2: Architecture Boundaries (WARNING)
+- **Presentation** (widgets/screens): ✅ CAN use `context.l10n`
+- **Provider**: ❌ SHOULD NOT (use hardcoded strings)
+- **Domain/Data**: ❌ NEVER (use hardcoded strings)
 
----
-
-### 🏛️ Pattern 2: Architecture Boundaries for `context.l10n` (WARNING)
-
-**Presentation Layer** (widgets, screens): ✅ **CAN** use `context.l10n`
-**Provider Layer**: ❌ **SHOULD NOT** use `context.l10n` → use hardcoded strings or parameters
-**Domain/Data Layer**: ❌ **NEVER** use `context.l10n` → hardcoded strings only
-
+### 🔧 Pattern 3: BuildContext Parameter (CRITICAL)
+Methods using `context.l10n` MUST have `BuildContext context` parameter
 ```dart
-// ❌ WRONG - context.l10n in provider
-class NotificationProviderBridge {
-  void showWelcome() {
-    final title = context.l10n.benvenutoInGymbro; // NO BuildContext available!
-  }
-}
-
-// ✅ CORRECT - hardcoded strings in provider
-class NotificationProviderBridge {
-  void showWelcome() {
-    final title = "Welcome to GymBro"; // Hardcoded OK in providers
-  }
-}
-
-// ❌ WRONG - context.l10n in domain layer
-class TemplateValidator {
-  String validate(String name) {
-    return context.l10n.exerciseNameCannotBeEmpty; // Architecture violation!
-  }
-}
-
-// ✅ CORRECT - hardcoded strings in domain
-class TemplateValidator {
-  String validate(String name) {
-    return "Exercise name cannot be empty"; // Hardcoded OK in domain
-  }
-}
+String _format(BuildContext context, ...) { return context.l10n.text; } // ✅
 ```
 
-**Pre-commit check**: Warns about violations but allows commit (not blocking).
-
----
-
-### 🔧 Pattern 3: BuildContext Parameter Required (CRITICAL)
-
-**Rule**: Any method using `context.l10n` MUST have `BuildContext context` parameter
-
+### 📦 Pattern 4: Import Disambiguation
 ```dart
-// ❌ WRONG - No BuildContext parameter
-String _formatDayStatus(DayStatus status) {
-  return context.l10n.restDay; // ERROR: context not available!
-}
-
-// ✅ CORRECT - Add BuildContext parameter
-String _formatDayStatus(BuildContext context, DayStatus status) {
-  return context.l10n.restDay; // Now context is available
-}
-
-// Update call sites:
-_formatDayStatus(context, dayInfo.status) // Pass context
+import 'package:fpdart/fpdart.dart' hide Either, Right, Left; // ✅
 ```
-
-**Pre-commit check**: Does not automatically detect (manual review needed).
-
----
-
-### 📦 Pattern 4: Import Disambiguation (fpdart vs custom Either)
-
-**Problem**: Both `fpdart` and custom `Either` export same class names → type ambiguity
-
-```dart
-// ❌ WRONG - Import conflict
-import 'package:fpdart/fpdart.dart';
-import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
-
-return Right(<Workout>[]); // ERROR: Which Right? fpdart or custom?
-
-// ✅ CORRECT - Use hide keyword
-import 'package:fpdart/fpdart.dart' hide Either, Right, Left;
-import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
-
-return Right(<Workout>[]); // Now unambiguous - custom Either
-```
-
-**Pre-commit check**: Provides info warning but allows commit.
 
 ---
 
@@ -623,30 +140,7 @@ return Right(<Workout>[]); // Now unambiguous - custom Either
 | Missing BuildContext param | 🔴 CRITICAL | (manual) | Add `BuildContext context` |
 | Import conflicts | 🔵 INFO | ℹ️ INFO | Add `hide Either, Right, Left` |
 
----
-
-### 🛠️ Enforcement Details
-
-**Pre-commit hook location**: `.git/hooks/pre-commit` (section 5/5)
-
-**What it checks**:
-1. ✅ Scans all staged `.dart` files (excluding `generated/`)
-2. ✅ Detects `const.*context.l10n` patterns → **BLOCKS commit**
-3. ✅ Detects `context.l10n` in `providers/` → **WARNS**
-4. ✅ Detects `context.l10n` in `domain/` or `data/` → **WARNS**
-5. ✅ Detects fpdart + custom Either imports → **INFO**
-
-**Bypass (NOT RECOMMENDED)**: `git commit --no-verify`
-
----
-
-### 📊 Historical Context
-
-**Before**: 998 iOS build errors (November 2024)
-**After**: 0 errors (fixed in ~10 minutes with automation)
-**Automation**: `fix_remaining_30.py` script (88% automated, 30/34 fixes)
-**Files modified**: 13 files total
-**Documentation**: `BUILD_FIX_SUMMARY.md`, `DETAILED_FIX_LIST.md`, `QUICK_REFERENCE_FIX.md`, `REPRODUCTION_GUIDE.md`
+**Pre-commit hook**: `.git/hooks/pre-commit` (section 5/5) | Full docs: `BUILD_FIX_SUMMARY.md`
 
 ---
 
