@@ -27239,6 +27239,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active'**
   String get active;
+
+  /// Hero section title for premium screen
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock GymBro Premium'**
+  String get unlockGymbroPremium;
+
+  /// Premium hero section subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Sync everywhere • Backup forever • Join the community'**
+  String get premiumTagline;
+
+  /// Cloud sync feature description
+  ///
+  /// In en, this message translates to:
+  /// **'All devices, always in sync'**
+  String get allDevicesAlwaysInSync;
+
+  /// Auto backup feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Never lose your data'**
+  String get neverLoseYourData;
+
+  /// Community feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Share & discover workouts'**
+  String get shareDiscoverWorkouts;
+
+  /// Analytics Pro feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics Pro'**
+  String get analyticsPro;
+
+  /// Live updates feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Live Updates'**
+  String get liveUpdates;
+
+  /// Live updates feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time sync'**
+  String get realTimeSync;
+
+  /// Priority support feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Get help fast'**
+  String get getHelpFast;
+
+  /// Yearly plan broken down to monthly price
+  ///
+  /// In en, this message translates to:
+  /// **'Only \$3.33/month'**
+  String get yearlyPlanMonthlyPrice;
+
+  /// Badge for recommended plan
+  ///
+  /// In en, this message translates to:
+  /// **'RECOMMENDED'**
+  String get recommended;
+
+  /// Terms and conditions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsAndConditions;
+
+  /// iOS subscription terms
+  ///
+  /// In en, this message translates to:
+  /// **'• Cancel anytime from App Store\n• Subscription auto-renews unless turned off\n• Payment charged to iTunes account'**
+  String get cancelAnytimeAppStore;
+
+  /// Android subscription terms
+  ///
+  /// In en, this message translates to:
+  /// **'• Cancel anytime from Google Play\n• Subscription auto-renews unless turned off\n• Payment charged to Google Play account'**
+  String get cancelAnytimeGooglePlay;
+
+  /// Purchase button with plan name
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with {plan}'**
+  String continueWithPlan(String plan);
+
+  /// Generic please wait message
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait'**
+  String get pleaseWait;
+
+  /// Account tier display
+  ///
+  /// In en, this message translates to:
+  /// **'Account tier: {tier}'**
+  String accountTier(String tier);
+
+  /// Automatic backup status
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get automatic;
+
+  /// Success message after restoring premium
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Premium restored successfully!'**
+  String get premiumRestoredSuccess;
+
+  /// Message when no purchases to restore
+  ///
+  /// In en, this message translates to:
+  /// **'No purchases found to restore'**
+  String get noPurchasesToRestore;
 }
 
 class _AppLocalizationsDelegate

@@ -8327,5 +8327,107 @@
   "saveThirtyThreePercent": "Risparmia 33%",
   "prioritySupport": "Supporto Prioritario",
   "fullAccess": "Accesso Completo",
-  "active": "Attivo"
+  "active": "Attivo",
+  "unlockGymbroPremium": "Sblocca GymBro Premium",
+  "@unlockGymbroPremium": {
+    "description": "Hero section title for premium screen"
+  },
+  "premiumTagline": "Sincronizzazione ovunque • Backup permanente • Unisciti alla community",
+  "@premiumTagline": {
+    "description": "Premium hero section subtitle"
+  },
+  "allDevicesAlwaysInSync": "Tutti i dispositivi, sempre sincronizzati",
+  "@allDevicesAlwaysInSync": {
+    "description": "Cloud sync feature description"
+  },
+  "neverLoseYourData": "Non perdere mai i tuoi dati",
+  "@neverLoseYourData": {
+    "description": "Auto backup feature description"
+  },
+  "@community": {
+    "description": "Community feature title"
+  },
+  "shareDiscoverWorkouts": "Condividi e scopri allenamenti",
+  "@shareDiscoverWorkouts": {
+    "description": "Community feature description"
+  },
+  "analyticsPro": "Analytics Pro",
+  "@analyticsPro": {
+    "description": "Analytics Pro feature title"
+  },
+  "@advancedInsights": {
+    "description": "Analytics Pro feature description"
+  },
+  "liveUpdates": "Aggiornamenti in Tempo Reale",
+  "@liveUpdates": {
+    "description": "Live updates feature title"
+  },
+  "realTimeSync": "Sincronizzazione in tempo reale",
+  "@realTimeSync": {
+    "description": "Live updates feature description"
+  },
+  "getHelpFast": "Ottieni aiuto velocemente",
+  "@getHelpFast": {
+    "description": "Priority support feature description"
+  },
+  "yearlyPlanMonthlyPrice": "Solo €3,33/mese",
+  "@yearlyPlanMonthlyPrice": {
+    "description": "Yearly plan broken down to monthly price"
+  },
+  "recommended": "CONSIGLIATO",
+  "@recommended": {
+    "description": "Badge for recommended plan"
+  },
+  "termsAndConditions": "Termini e Condizioni",
+  "@termsAndConditions": {
+    "description": "Terms and conditions section title"
+  },
+  "cancelAnytimeAppStore": "• Annulla in qualsiasi momento dall'App Store\n• L'abbonamento si rinnova automaticamente a meno che non venga disattivato\n• Il pagamento viene addebitato sull'account iTunes",
+  "@cancelAnytimeAppStore": {
+    "description": "iOS subscription terms"
+  },
+  "cancelAnytimeGooglePlay": "• Annulla in qualsiasi momento da Google Play\n• L'abbonamento si rinnova automaticamente a meno che non venga disattivato\n• Il pagamento viene addebitato sull'account Google Play",
+  "@cancelAnytimeGooglePlay": {
+    "description": "Android subscription terms"
+  },
+  "@processing": {
+    "description": "Processing purchase indicator"
+  },
+  "continueWithPlan": "Continua con {plan}",
+  "@continueWithPlan": {
+    "description": "Purchase button with plan name",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseWait": "Attendere prego",
+  "@pleaseWait": {
+    "description": "Generic please wait message"
+  },
+  "accountTier": "Livello account: {tier}",
+  "@accountTier": {
+    "description": "Account tier display",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "automatic": "Automatico",
+  "@automatic": {
+    "description": "Automatic backup status"
+  },
+  "@monthly": {
+    "description": "Monthly plan name"
+  },
+  "premiumRestoredSuccess": "✅ Premium ripristinato con successo!",
+  "@premiumRestoredSuccess": {
+    "description": "Success message after restoring premium"
+  },
+  "noPurchasesToRestore": "Nessun acquisto da ripristinare",
+  "@noPurchasesToRestore": {
+    "description": "Message when no purchases to restore"
+  }
 }

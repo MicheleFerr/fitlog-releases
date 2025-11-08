@@ -18923,5 +18923,95 @@
   "saveThirtyThreePercent": "Save 33%",
   "prioritySupport": "Priority Support",
   "fullAccess": "Full Access",
-  "active": "Active"
+  "active": "Active",
+  "unlockGymbroPremium": "Unlock GymBro Premium",
+  "@unlockGymbroPremium": {
+    "description": "Hero section title for premium screen"
+  },
+  "premiumTagline": "Sync everywhere • Backup forever • Join the community",
+  "@premiumTagline": {
+    "description": "Premium hero section subtitle"
+  },
+  "allDevicesAlwaysInSync": "All devices, always in sync",
+  "@allDevicesAlwaysInSync": {
+    "description": "Cloud sync feature description"
+  },
+  "neverLoseYourData": "Never lose your data",
+  "@neverLoseYourData": {
+    "description": "Auto backup feature description"
+  },
+  "shareDiscoverWorkouts": "Share & discover workouts",
+  "@shareDiscoverWorkouts": {
+    "description": "Community feature description"
+  },
+  "analyticsPro": "Analytics Pro",
+  "@analyticsPro": {
+    "description": "Analytics Pro feature title"
+  },
+  "liveUpdates": "Live Updates",
+  "@liveUpdates": {
+    "description": "Live updates feature title"
+  },
+  "realTimeSync": "Real-time sync",
+  "@realTimeSync": {
+    "description": "Live updates feature description"
+  },
+  "getHelpFast": "Get help fast",
+  "@getHelpFast": {
+    "description": "Priority support feature description"
+  },
+  "yearlyPlanMonthlyPrice": "Only $3.33/month",
+  "@yearlyPlanMonthlyPrice": {
+    "description": "Yearly plan broken down to monthly price"
+  },
+  "recommended": "RECOMMENDED",
+  "@recommended": {
+    "description": "Badge for recommended plan"
+  },
+  "termsAndConditions": "Terms & Conditions",
+  "@termsAndConditions": {
+    "description": "Terms and conditions section title"
+  },
+  "cancelAnytimeAppStore": "• Cancel anytime from App Store\n• Subscription auto-renews unless turned off\n• Payment charged to iTunes account",
+  "@cancelAnytimeAppStore": {
+    "description": "iOS subscription terms"
+  },
+  "cancelAnytimeGooglePlay": "• Cancel anytime from Google Play\n• Subscription auto-renews unless turned off\n• Payment charged to Google Play account",
+  "@cancelAnytimeGooglePlay": {
+    "description": "Android subscription terms"
+  },
+  "continueWithPlan": "Continue with {plan}",
+  "@continueWithPlan": {
+    "description": "Purchase button with plan name",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseWait": "Please wait",
+  "@pleaseWait": {
+    "description": "Generic please wait message"
+  },
+  "accountTier": "Account tier: {tier}",
+  "@accountTier": {
+    "description": "Account tier display",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "automatic": "Automatic",
+  "@automatic": {
+    "description": "Automatic backup status"
+  },
+  "premiumRestoredSuccess": "✅ Premium restored successfully!",
+  "@premiumRestoredSuccess": {
+    "description": "Success message after restoring premium"
+  },
+  "noPurchasesToRestore": "No purchases found to restore",
+  "@noPurchasesToRestore": {
+    "description": "Message when no purchases to restore"
+  }
 }

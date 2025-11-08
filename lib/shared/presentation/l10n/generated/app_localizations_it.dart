@@ -15400,4 +15400,72 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get active => 'Attivo';
+
+  @override
+  String get unlockGymbroPremium => 'Sblocca GymBro Premium';
+
+  @override
+  String get premiumTagline =>
+      'Sincronizzazione ovunque • Backup permanente • Unisciti alla community';
+
+  @override
+  String get allDevicesAlwaysInSync =>
+      'Tutti i dispositivi, sempre sincronizzati';
+
+  @override
+  String get neverLoseYourData => 'Non perdere mai i tuoi dati';
+
+  @override
+  String get shareDiscoverWorkouts => 'Condividi e scopri allenamenti';
+
+  @override
+  String get analyticsPro => 'Analytics Pro';
+
+  @override
+  String get liveUpdates => 'Aggiornamenti in Tempo Reale';
+
+  @override
+  String get realTimeSync => 'Sincronizzazione in tempo reale';
+
+  @override
+  String get getHelpFast => 'Ottieni aiuto velocemente';
+
+  @override
+  String get yearlyPlanMonthlyPrice => 'Solo €3,33/mese';
+
+  @override
+  String get recommended => 'CONSIGLIATO';
+
+  @override
+  String get termsAndConditions => 'Termini e Condizioni';
+
+  @override
+  String get cancelAnytimeAppStore =>
+      '• Annulla in qualsiasi momento dall\'App Store\n• L\'abbonamento si rinnova automaticamente a meno che non venga disattivato\n• Il pagamento viene addebitato sull\'account iTunes';
+
+  @override
+  String get cancelAnytimeGooglePlay =>
+      '• Annulla in qualsiasi momento da Google Play\n• L\'abbonamento si rinnova automaticamente a meno che non venga disattivato\n• Il pagamento viene addebitato sull\'account Google Play';
+
+  @override
+  String continueWithPlan(String plan) {
+    return 'Continua con $plan';
+  }
+
+  @override
+  String get pleaseWait => 'Attendere prego';
+
+  @override
+  String accountTier(String tier) {
+    return 'Livello account: $tier';
+  }
+
+  @override
+  String get automatic => 'Automatico';
+
+  @override
+  String get premiumRestoredSuccess => '✅ Premium ripristinato con successo!';
+
+  @override
+  String get noPurchasesToRestore => 'Nessun acquisto da ripristinare';
 }

@@ -15249,4 +15249,71 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get active => 'Active';
+
+  @override
+  String get unlockGymbroPremium => 'Unlock GymBro Premium';
+
+  @override
+  String get premiumTagline =>
+      'Sync everywhere • Backup forever • Join the community';
+
+  @override
+  String get allDevicesAlwaysInSync => 'All devices, always in sync';
+
+  @override
+  String get neverLoseYourData => 'Never lose your data';
+
+  @override
+  String get shareDiscoverWorkouts => 'Share & discover workouts';
+
+  @override
+  String get analyticsPro => 'Analytics Pro';
+
+  @override
+  String get liveUpdates => 'Live Updates';
+
+  @override
+  String get realTimeSync => 'Real-time sync';
+
+  @override
+  String get getHelpFast => 'Get help fast';
+
+  @override
+  String get yearlyPlanMonthlyPrice => 'Only \$3.33/month';
+
+  @override
+  String get recommended => 'RECOMMENDED';
+
+  @override
+  String get termsAndConditions => 'Terms & Conditions';
+
+  @override
+  String get cancelAnytimeAppStore =>
+      '• Cancel anytime from App Store\n• Subscription auto-renews unless turned off\n• Payment charged to iTunes account';
+
+  @override
+  String get cancelAnytimeGooglePlay =>
+      '• Cancel anytime from Google Play\n• Subscription auto-renews unless turned off\n• Payment charged to Google Play account';
+
+  @override
+  String continueWithPlan(String plan) {
+    return 'Continue with $plan';
+  }
+
+  @override
+  String get pleaseWait => 'Please wait';
+
+  @override
+  String accountTier(String tier) {
+    return 'Account tier: $tier';
+  }
+
+  @override
+  String get automatic => 'Automatic';
+
+  @override
+  String get premiumRestoredSuccess => '✅ Premium restored successfully!';
+
+  @override
+  String get noPurchasesToRestore => 'No purchases found to restore';
 }

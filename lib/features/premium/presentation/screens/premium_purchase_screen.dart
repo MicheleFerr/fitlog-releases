@@ -14,6 +14,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
@@ -180,18 +182,18 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       ),
       child: Column(
         children: [
-          const Icon(AppIcons.star, size: 48, color: Colors.amber),
+          Icon(AppIcons.star, size: 48, color: context.colors.warning),
           const SizedBox(height: 16),
           Text(
-            'Unlock GymBro Premium',
+            context.l10n.unlockGymbroPremium,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'Sync everywhere • Backup forever • Join the community',
+            context.l10n.premiumTagline,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -207,12 +209,12 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
     final colorScheme = theme.colorScheme;
     
     final features = [
-      ('☁️', 'Cloud Sync', 'All devices, always in sync'),
-      ('💾', 'Auto Backup', 'Never lose your data'),
-      ('👥', 'Community', 'Share & discover workouts'),
-      ('📊', 'Analytics Pro', 'Advanced insights'),
-      ('⚡', 'Live Updates', 'Real-time sync'),
-      ('🎯', 'Priority Support', 'Get help fast'),
+      ('☁️', context.l10n.cloudSync, context.l10n.allDevicesAlwaysInSync),
+      ('💾', context.l10n.autoBackup, context.l10n.neverLoseYourData),
+      ('👥', context.l10n.community, context.l10n.shareDiscoverWorkouts),
+      ('📊', context.l10n.analyticsPro, context.l10n.advancedInsights),
+      ('⚡', context.l10n.liveUpdates, context.l10n.realTimeSync),
+      ('🎯', context.l10n.prioritySupport, context.l10n.getHelpFast),
     ];
     
     return GridView.builder(
@@ -270,7 +272,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choose Your Plan',
+          context.l10n.chooseYourPlan,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -352,7 +354,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                                 ),
                                 if (plan == PremiumPlan.yearly)
                                   Text(
-                                    'Only \$3.33/month',
+                                    context.l10n.yearlyPlanMonthlyPrice,
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       color: colorScheme.onSurfaceVariant,
                                     ),
@@ -407,7 +409,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                             ),
                           ),
                           child: Text(
-                            'RECOMMENDED',
+                            context.l10n.recommended,
                             style: TextStyle(
                               color: colorScheme.onPrimary,
                               fontSize: 10,
@@ -437,16 +439,16 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
         const Divider(),
         const SizedBox(height: 8),
         Text(
-          'Terms & Conditions',
+          context.l10n.termsAndConditions,
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 4),
         Text(
-          '• Cancel anytime from ${Platform.isIOS ? "App Store" : "Google Play"}\n'
-          '• Subscription auto-renews unless turned off\n'
-          '• Payment charged to ${Platform.isIOS ? "iTunes" : "Google Play"} account',
+          Platform.isIOS
+              ? context.l10n.cancelAnytimeAppStore
+              : context.l10n.cancelAnytimeGooglePlay,
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurfaceVariant,
           ),
@@ -459,7 +461,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
             TextButton(
               onPressed: () => _showLegalDocument(context, 'privacy'),
               child: Text(
-                'Privacy Policy',
+                context.l10n.privacyPolicy,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -476,7 +478,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
             TextButton(
               onPressed: () => _showLegalDocument(context, 'terms'),
               child: Text(
-                'Terms of Service',
+                context.l10n.termsOfService,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -492,7 +494,6 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   Widget _buildPurchaseButton(BuildContext context, PremiumUpgradeState state) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -559,8 +560,8 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                 ),
                 child: Text(
                   state.isProcessing
-                      ? 'Processing...'
-                      : 'Continue with ${_getPlanTitle(_selectedPlan)}',
+                      ? context.l10n.processing
+                      : context.l10n.continueWithPlan(_getPlanTitle(_selectedPlan)),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -589,14 +590,14 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                 CircularProgressIndicator(
                   color: colorScheme.primary,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
-                  _isRestoring ? 'Restoring purchases...' : 'Processing payment...',
+                  _isRestoring ? context.l10n.restoringPurchases : context.l10n.processingPayment,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'Please wait',
+                  context.l10n.pleaseWait,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -615,7 +616,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Premium Status'),
+        title: Text(context.l10n.premiumStatus),
       ),
       body: Center(
         child: Padding(
@@ -630,14 +631,14 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
               ),
               const SizedBox(height: 24),
               Text(
-                'You\'re Premium!',
+                context.l10n.yourePremium,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Account tier: ${profile.accountTier.name.toUpperCase()}',
+                context.l10n.accountTier(profile.accountTier.name.toUpperCase()),
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -650,26 +651,26 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                     children: [
                       _buildStatusRow(
                         context,
-                        'Cloud Sync',
-                        'Active',
+                        context.l10n.cloudSync,
+                        context.l10n.active,
                         AppIcons.cloudDone,
-                        Colors.green,
+                        context.colors.success,
                       ),
                       const Divider(),
                       _buildStatusRow(
                         context,
-                        'Backup',
-                        'Automatic',
+                        context.l10n.autoBackup,
+                        context.l10n.automatic,
                         AppIcons.backup,
-                        Colors.green,
+                        context.colors.success,
                       ),
                       const Divider(),
                       _buildStatusRow(
                         context,
-                        'Community',
-                        'Full Access',
+                        context.l10n.community,
+                        context.l10n.fullAccess,
                         AppIcons.people,
-                        Colors.green,
+                        context.colors.success,
                       ),
                     ],
                   ),
@@ -679,7 +680,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
               TextButton(
                 onPressed: () => _openManageSubscription(),
                 child: Text(
-                  'Manage Subscription',
+                  context.l10n.manageSubscription,
                   style: TextStyle(color: colorScheme.primary),
                 ),
               ),
@@ -702,7 +703,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       child: Row(
         children: [
           Icon(icon, color: color),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Text(
             title,
             style: Theme.of(context).textTheme.bodyLarge,
@@ -723,11 +724,11 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   String _getPlanTitle(PremiumPlan? plan) {
     switch (plan) {
       case PremiumPlan.monthly:
-        return 'Monthly';
+        return context.l10n.monthly;
       case PremiumPlan.yearly:
-        return 'Yearly';
+        return context.l10n.yearly;
       case PremiumPlan.lifetime:
-        return 'Lifetime';
+        return context.l10n.lifetime;
       default:
         return '';
     }
@@ -760,17 +761,17 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       if (userProfile?.isPremium ?? false) {
         // Successfully restored
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Premium restored successfully!'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text(context.l10n.premiumRestoredSuccess),
+            backgroundColor: context.colors.success,
           ),
         );
         Navigator.of(context).pop();
       } else {
         // No purchases to restore
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No purchases found to restore'),
+          SnackBar(
+            content: Text(context.l10n.noPurchasesToRestore),
           ),
         );
       }
