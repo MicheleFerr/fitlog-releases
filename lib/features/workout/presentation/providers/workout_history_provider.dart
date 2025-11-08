@@ -554,8 +554,8 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
     final now = DateTime.now();
     final todayCutoff = DateTime(now.year, now.month, now.day, 4, 0);
 
-    // Check if workout was after cutoff
-    if (lastWorkout.startTime!.isAfter(todayCutoff)) {
+    // Check if workout was at or after cutoff (04:00:00 inclusive)
+    if (lastWorkout.startTime!.compareTo(todayCutoff) >= 0) {
       if (kDebugMode) {
         debugPrint('✅ [todayCompletedWorkoutProvider] Workout done today: ${lastWorkout.id}');
       }
