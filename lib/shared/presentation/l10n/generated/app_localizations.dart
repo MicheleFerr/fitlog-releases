@@ -3698,19 +3698,19 @@ abstract class AppLocalizations {
   /// Morning greeting
   ///
   /// In en, this message translates to:
-  /// **'Good Morning'**
+  /// **'Good morning! 🌅'**
   String get goodMorning;
 
   /// Afternoon greeting
   ///
   /// In en, this message translates to:
-  /// **'Good Afternoon'**
+  /// **'Good afternoon! ☀️'**
   String get goodAfternoon;
 
   /// Evening greeting
   ///
   /// In en, this message translates to:
-  /// **'Good Evening'**
+  /// **'Good evening! 🌙'**
   String get goodEvening;
 
   /// Motivational subtitle under greeting
@@ -9002,7 +9002,7 @@ abstract class AppLocalizations {
   /// Reset onboarding option title
   ///
   /// In en, this message translates to:
-  /// **'Reset Onboarding Tutorials'**
+  /// **'Reset Onboarding'**
   String get resetOnboarding;
 
   /// Reset onboarding option description
@@ -27695,6 +27695,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please log in to view your analytics'**
   String get pleaseLoginToViewAnalytics;
+
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// No description provided for @userReportsAndBugs.
+  ///
+  /// In en, this message translates to:
+  /// **'User reports and bugs'**
+  String get userReportsAndBugs;
+
+  /// No description provided for @onboardingResetComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding reset complete'**
+  String get onboardingResetComplete;
+
+  /// No description provided for @customizeHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Home'**
+  String get customizeHome;
+
+  /// No description provided for @dragToReorderTapToConfigure.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder, tap to configure'**
+  String get dragToReorderTapToConfigure;
+
+  /// No description provided for @manageExerciseReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage exercise reports'**
+  String get manageExerciseReports;
+
+  /// No description provided for @compact.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get compact;
+
+  /// No description provided for @standard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get standard;
+
+  /// No description provided for @expanded.
+  ///
+  /// In en, this message translates to:
+  /// **'Expanded'**
+  String get expanded;
+
+  /// No description provided for @small.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get small;
+
+  /// No description provided for @large.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get large;
+
+  /// No description provided for @addWidget.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Widget'**
+  String get addWidget;
 }
 
 class _AppLocalizationsDelegate

@@ -1928,13 +1928,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recovery => 'Recovery';
 
   @override
-  String get goodMorning => 'Good Morning';
+  String get goodMorning => 'Good morning! 🌅';
 
   @override
-  String get goodAfternoon => 'Good Afternoon';
+  String get goodAfternoon => 'Good afternoon! ☀️';
 
   @override
-  String get goodEvening => 'Good Evening';
+  String get goodEvening => 'Good evening! 🌙';
 
   @override
   String get readyToDominate => 'Ready to dominate?';
@@ -4872,7 +4872,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseOnboardingGotIt => 'Got it!';
 
   @override
-  String get resetOnboarding => 'Reset Onboarding Tutorials';
+  String get resetOnboarding => 'Reset Onboarding';
 
   @override
   String get resetOnboardingDesc =>
@@ -15501,4 +15501,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pleaseLoginToViewAnalytics =>
       'Please log in to view your analytics';
+
+  @override
+  String get adminPanel => 'Admin Panel';
+
+  @override
+  String get userReportsAndBugs => 'User reports and bugs';
+
+  @override
+  String get onboardingResetComplete => 'Onboarding reset complete';
+
+  @override
+  String get customizeHome => 'Customize Home';
+
+  @override
+  String get dragToReorderTapToConfigure => 'Drag to reorder, tap to configure';
+
+  @override
+  String get manageExerciseReports => 'Manage exercise reports';
+
+  @override
+  String get compact => 'Compact';
+
+  @override
+  String get standard => 'Standard';
+
+  @override
+  String get expanded => 'Expanded';
+
+  @override
+  String get small => 'Small';
+
+  @override
+  String get large => 'Large';
+
+  @override
+  String get addWidget => 'Add Widget';
 }

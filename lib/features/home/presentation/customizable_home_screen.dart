@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/home_widget_factory.dart';
@@ -12,6 +13,7 @@ import 'package:gymbro_flutter_new/shared/data/services/rewarded_ad_service.dart
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -165,7 +167,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isEditing ? 'Personalizza Home' : _getGreeting(),
+                      isEditing ? context.l10n.customizeHome : _getGreeting(),
                       style: TextStyle(
                         fontSize: isEditing ? 20 : 24,
                         fontWeight: FontWeight.bold,
@@ -173,7 +175,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     ),
                     if (isEditing)
                       Text(
-                        'Trascina per riordinare, tocca per configurare',
+                        context.l10n.dragToReorderTapToConfigure,
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
@@ -189,7 +191,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 IconButton(
                   icon: const Icon(AppIcons.edit),
                   onPressed: _startEditMode,
-                  tooltip: 'Personalizza',
+                  tooltip: context.l10n.customize,
                 ),
                 IconButton(
                   icon: const Icon(AppIcons.notificationsOutlined),
@@ -328,7 +330,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Gestisci segnalazioni esercizi',
+                                  context.l10n.manageExerciseReports,
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 14,
@@ -429,11 +431,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   String _getSizeLabel(WidgetSize size) {
     switch (size) {
       case WidgetSize.small:
-        return 'Compatto';
+        return context.l10n.compact;
       case WidgetSize.medium:
-        return 'Standard';
+        return context.l10n.standard;
       case WidgetSize.large:
-        return 'Espanso';
+        return context.l10n.expanded;
     }
   }
   
@@ -483,7 +485,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          Icon(widget.icon, size: 24),
+                          Icon(widget.icon, size: AppIconSize.medium),
                           SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -517,7 +519,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                             children: [
                               Icon(_getSizeIcon(WidgetSize.small)),
                               const SizedBox(width: 8),
-                              const Text('Piccolo'),
+                              Text(context.l10n.small),
                             ],
                           ),
                         ),
@@ -527,7 +529,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                             children: [
                               Icon(_getSizeIcon(WidgetSize.medium)),
                               const SizedBox(width: 8),
-                              const Text('Medio'),
+                              Text(context.l10n.medium),
                             ],
                           ),
                         ),
@@ -537,7 +539,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                             children: [
                               Icon(_getSizeIcon(WidgetSize.large)),
                               const SizedBox(width: 8),
-                              const Text('Grande'),
+                              Text(context.l10n.large),
                             ],
                           ),
                         ),
@@ -556,7 +558,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           SnackBar(
                             content: Text('${widget.title} nascosto'),
                             action: SnackBarAction(
-                              label: 'Annulla',
+                              label: context.l10n.cancel,
                               onPressed: () {
                                 ref.read(homeCustomizationProvider.notifier)
                                     .toggleWidgetVisibility(widget.id);
@@ -599,7 +601,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
               ),
               SizedBox(width: 12),
               Text(
-                'Aggiungi Widget',
+                context.l10n.addWidget,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -624,11 +626,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return 'Buongiorno! 🌅';
+      return context.l10n.goodMorning;
     } else if (hour < 18) {
-      return 'Buon pomeriggio! ☀️';
+      return context.l10n.goodAfternoon;
     } else {
-      return 'Buonasera! 🌙';
+      return context.l10n.goodEvening;
     }
   }
   

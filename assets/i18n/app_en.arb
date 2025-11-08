@@ -2517,15 +2517,15 @@
   "@recovery": {
     "description": "Recovery group title"
   },
-  "goodMorning": "Good Morning",
+  "goodMorning": "Good morning! 🌅",
   "@goodMorning": {
     "description": "Morning greeting"
   },
-  "goodAfternoon": "Good Afternoon",
+  "goodAfternoon": "Good afternoon! ☀️",
   "@goodAfternoon": {
     "description": "Afternoon greeting"
   },
-  "goodEvening": "Good Evening",
+  "goodEvening": "Good evening! 🌙",
   "@goodEvening": {
     "description": "Evening greeting"
   },
@@ -6426,7 +6426,7 @@
   "@exerciseOnboardingGotIt": {
     "description": "Exercise onboarding finish button"
   },
-  "resetOnboarding": "Reset Onboarding Tutorials",
+  "resetOnboarding": "Reset Onboarding",
   "@resetOnboarding": {
     "description": "Reset onboarding option title"
   },
@@ -19132,5 +19132,17 @@
       }
     }
   },
-  "pleaseLoginToViewAnalytics": "Please log in to view your analytics"
+  "pleaseLoginToViewAnalytics": "Please log in to view your analytics",
+  "adminPanel": "Admin Panel",
+  "userReportsAndBugs": "User reports and bugs",
+  "onboardingResetComplete": "Onboarding reset complete",
+  "customizeHome": "Customize Home",
+  "dragToReorderTapToConfigure": "Drag to reorder, tap to configure",
+  "manageExerciseReports": "Manage exercise reports",
+  "compact": "Compact",
+  "standard": "Standard",
+  "expanded": "Expanded",
+  "small": "Small",
+  "large": "Large",
+  "addWidget": "Add Widget"
 }

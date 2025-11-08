@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_hub.dart';
@@ -20,6 +21,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/on
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_target_keys_mixin.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
@@ -103,9 +105,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
         title: Row(
           children: [
             Icon(
-              Icons.people,
+              AppIcons.people,
               color: Theme.of(context).colorScheme.primary,
-              size: 28,
+              size: AppIconSize.large,
             ),
             SizedBox(width: 12),
             Expanded(
@@ -138,9 +140,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
               child: Row(
                 children: [
                   Icon(
-                    Icons.construction,
+                    AppIcons.construction,
                     color: Theme.of(context).colorScheme.primary,
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                   SizedBox(width: 8),
                   Expanded(
@@ -377,8 +379,8 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                             ),
                           ),
                           Icon(
-                            Icons.info_outline,
-                            size: 20,
+                            AppIcons.info,
+                            size: AppIconSize.small,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ],
@@ -423,7 +425,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ),
                               SizedBox(width: 8),
                               Text(
-                                'Admin Panel',
+                                context.l10n.adminPanel,
                                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                   color: Theme.of(context).colorScheme.onErrorContainer,
                                   fontWeight: FontWeight.bold,
@@ -478,7 +480,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            'Segnalazioni e bug utenti',
+                                            context.l10n.userReportsAndBugs,
                                             style: TextStyle(
                                               color: Colors.white.withValues(alpha: 0.8),
                                               fontSize: 12,
@@ -505,7 +507,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ref.read(onboardingStateProvider.notifier).resetOnboarding();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Onboarding reset completato'),
+                                  content: Text(context.l10n.onboardingResetComplete),
                                   backgroundColor: Theme.of(context).colorScheme.primary,
                                 ),
                               );
@@ -514,7 +516,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               backgroundColor: Theme.of(context).colorScheme.error,
                               foregroundColor: Theme.of(context).colorScheme.onError,
                             ),
-                            child: const Text('Reset Onboarding'),
+                            child: Text(context.l10n.resetOnboarding),
                           ),
                         ],
                       ),
@@ -548,7 +550,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       );
                     }
                   },
-                  child: Icon(Icons.refresh, size: 20),
+                  child: Icon(AppIcons.refresh, size: AppIconSize.small),
                 ),
                 SizedBox(height: 8),
                 // Regular Quick Start
@@ -562,7 +564,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       });
                       context.goNamed('workout');
                     },
-                    icon: Icons.add,
+                    icon: AppIcons.add,
                     label: l10n.sessioneLibera,
                   ),
                 ),
@@ -578,7 +580,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   });
                   context.goNamed('workout');
                 },
-                icon: Icons.add,
+                icon: AppIcons.add,
                 label: l10n.sessioneLibera,
               ),
             ),

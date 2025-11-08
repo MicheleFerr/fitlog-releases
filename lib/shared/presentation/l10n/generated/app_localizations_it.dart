@@ -1943,13 +1943,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recovery => 'Recupero';
 
   @override
-  String get goodMorning => 'Buongiorno';
+  String get goodMorning => 'Buongiorno! 🌅';
 
   @override
-  String get goodAfternoon => 'Buon pomeriggio';
+  String get goodAfternoon => 'Buon pomeriggio! ☀️';
 
   @override
-  String get goodEvening => 'Buonasera';
+  String get goodEvening => 'Buonasera! 🌙';
 
   @override
   String get readyToDominate => 'Pronto per dominare?';
@@ -4910,7 +4910,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exerciseOnboardingGotIt => 'Ho capito!';
 
   @override
-  String get resetOnboarding => 'Ripristina Tutorial Onboarding';
+  String get resetOnboarding => 'Reset Onboarding';
 
   @override
   String get resetOnboardingDesc =>
@@ -6485,7 +6485,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get high => 'Alta';
 
   @override
-  String get medium => 'Media';
+  String get medium => 'Medio';
 
   @override
   String get low => 'Bassa';
@@ -15659,4 +15659,41 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get pleaseLoginToViewAnalytics =>
       'Accedi per visualizzare le tue analisi';
+
+  @override
+  String get adminPanel => 'Pannello Admin';
+
+  @override
+  String get userReportsAndBugs => 'Segnalazioni e bug utenti';
+
+  @override
+  String get onboardingResetComplete => 'Onboarding reset completato';
+
+  @override
+  String get customizeHome => 'Personalizza Home';
+
+  @override
+  String get dragToReorderTapToConfigure =>
+      'Trascina per riordinare, tocca per configurare';
+
+  @override
+  String get manageExerciseReports => 'Gestisci segnalazioni esercizi';
+
+  @override
+  String get compact => 'Compatto';
+
+  @override
+  String get standard => 'Standard';
+
+  @override
+  String get expanded => 'Espanso';
+
+  @override
+  String get small => 'Piccolo';
+
+  @override
+  String get large => 'Grande';
+
+  @override
+  String get addWidget => 'Aggiungi Widget';
 }
