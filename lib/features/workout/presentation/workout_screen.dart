@@ -705,8 +705,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                             ),
                             child: Text(
                               context.l10n.customBadge,
-                              style: TextStyle(
-                                fontSize: 10,
+                              style: context.textTheme.labelSmall?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -2099,8 +2098,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             SizedBox(height: 8),
             Text(
               'Questa azione non può essere annullata.',
-              style: TextStyle(
-                fontSize: 12,
+              style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
@@ -2295,8 +2293,8 @@ class _TemplateQuickStartCard extends StatelessWidget {
                         SizedBox(width: 2),
                         Text(
                           '${template.exercises.length}',
-                          style: TextStyle(
-                            fontSize: 11,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            // fontSize handled by labelSmall
                             color: context.colors.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
@@ -2309,8 +2307,8 @@ class _TemplateQuickStartCard extends StatelessWidget {
                         SizedBox(width: 2),
                         Text(
                           '${template.estimatedDuration}min',
-                          style: TextStyle(
-                            fontSize: 11,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            // fontSize handled by labelSmall
                             color: context.colors.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
@@ -2324,8 +2322,8 @@ class _TemplateQuickStartCard extends StatelessWidget {
                           SizedBox(width: 2),
                           Text(
                             '${template.usageCount}',
-                            style: TextStyle(
-                              fontSize: 11,
+                            style: context.textTheme.labelSmall?.copyWith(
+                              // fontSize handled by labelSmall
                               color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
@@ -2557,7 +2555,7 @@ class _SaveTemplateHelper {
               ),
               child: Text(
                 '$usedTemplates/$maxTemplates',
-                style: TextStyle(
+                style: context.textTheme.labelSmall?.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: usedTemplates >= maxTemplates - 2
@@ -2595,7 +2593,7 @@ class _SaveTemplateHelper {
                       Expanded(
                         child: Text(
                           'Solo ${maxTemplates - usedTemplates} template rimanenti nel piano Free',
-                          style: TextStyle(
+                          style: context.textTheme.labelSmall?.copyWith(
                             fontSize: 13,
                             color: context.warningColor,
                           ),
@@ -2646,7 +2644,7 @@ class _SaveTemplateHelper {
                     Expanded(
                       child: Text(
                         'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi',
-                        style: TextStyle(
+                        style: context.textTheme.labelSmall?.copyWith(
                           fontSize: 12,
                           color: context.colors.onSurfaceVariant,
                         ),

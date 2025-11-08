@@ -8,31 +8,36 @@ import 'package:flutter/foundation.dart';
 // Repository provider è già definito in community_repository.dart
 
 // Provider per contributions di un esercizio specifico
-final exerciseContributionsProvider = StreamProvider.family<List<CommunityContribution>, String>((ref, exerciseId) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final exerciseContributionsProvider = StreamProvider.autoDispose.family<List<CommunityContribution>, String>((ref, exerciseId) {
   final repository = ref.watch(communityRepositoryProvider);
   return repository.getContributions(exerciseId: exerciseId);
 });
 
 // Provider per trending contributions
-final trendingContributionsProvider = StreamProvider<List<CommunityContribution>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final trendingContributionsProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) {
   final repository = ref.watch(communityRepositoryProvider);
   return repository.getTrendingContributions();
 });
 
 // Provider per contributions da revieware
-final contributionsForReviewProvider = StreamProvider<List<CommunityContribution>>((ref) async* {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final contributionsForReviewProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) async* {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) {
     yield [];
     return;
   }
-  
+
   final repository = ref.watch(communityRepositoryProvider);
   yield* repository.getContributionsForReview(userAsync.uid);
 });
 
 // Provider per user stats
-final userContributionStatsProvider = StreamProvider<UserContributionStats>((ref) async* {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final userContributionStatsProvider = StreamProvider.autoDispose<UserContributionStats>((ref) async* {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) {
     // Ritorna stats vuote ma valide per utente non autenticato
@@ -63,7 +68,8 @@ final userContributionStatsProvider = StreamProvider<UserContributionStats>((ref
 });
 
 // Provider per user contributions
-final userContributionsProvider = StreamProvider<List<CommunityContribution>>((ref) async* {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final userContributionsProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) async* {
   if (kDebugMode) {
     debugPrint('🔍 [userContributionsProvider] Stream started');
   }
@@ -262,7 +268,8 @@ final activeFiltersProvider = StateProvider<ContributionFilters>((ref) {
 });
 
 // Provider 3: Search Results Stream
-final searchResultsProvider = StreamProvider<List<CommunityContribution>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final searchResultsProvider = StreamProvider.autoDispose<List<CommunityContribution>>((ref) {
   final query = ref.watch(searchQueryProvider);
   final filters = ref.watch(activeFiltersProvider);
   final repository = ref.watch(communityRepositoryProvider);
