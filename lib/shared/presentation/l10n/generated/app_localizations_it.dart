@@ -13975,4 +13975,26 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get smartWorkoutCTATemplateNotFound => 'Template non trovato';
+
+  @override
+  String get smartWorkoutCTARestModeTitle => '💪 Goditi il meritato riposo';
+
+  @override
+  String get smartWorkoutCTARestModeSubtitle =>
+      'Hai fatto un allenamento pazzesco!';
+
+  @override
+  String smartWorkoutCTARestModeVolume(String volume) {
+    return 'Volume: $volume kg';
+  }
+
+  @override
+  String smartWorkoutCTARestModeDuration(String duration) {
+    return 'Durata: $duration';
+  }
+
+  @override
+  String smartWorkoutCTARestModeSets(int sets) {
+    return 'Serie: $sets';
+  }
 }

@@ -6151,5 +6151,31 @@
   "smartWorkoutCTAErrorLoading": "Errore caricamento",
   "smartWorkoutCTAErrorTemplate": "Errore caricamento template",
   "smartWorkoutCTAIncompleteRoutine": "Routine incompleta",
-  "smartWorkoutCTATemplateNotFound": "Template non trovato"
+  "smartWorkoutCTATemplateNotFound": "Template non trovato",
+  "smartWorkoutCTARestModeTitle": "💪 Goditi il meritato riposo",
+  "smartWorkoutCTARestModeSubtitle": "Hai fatto un allenamento pazzesco!",
+  "smartWorkoutCTARestModeVolume": "Volume: {volume} kg",
+  "@smartWorkoutCTARestModeVolume": {
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeDuration": "Durata: {duration}",
+  "@smartWorkoutCTARestModeDuration": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeSets": "Serie: {sets}",
+  "@smartWorkoutCTARestModeSets": {
+    "placeholders": {
+      "sets": {
+        "type": "int"
+      }
+    }
+  }
 }

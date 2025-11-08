@@ -24581,6 +24581,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Template not found'**
   String get smartWorkoutCTATemplateNotFound;
+
+  /// Title for rest mode when user already worked out today
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Enjoy your well-deserved rest'**
+  String get smartWorkoutCTARestModeTitle;
+
+  /// Subtitle congratulating user on completed workout
+  ///
+  /// In en, this message translates to:
+  /// **'You crushed an amazing workout!'**
+  String get smartWorkoutCTARestModeSubtitle;
+
+  /// Total volume lifted in workout
+  ///
+  /// In en, this message translates to:
+  /// **'Volume: {volume} kg'**
+  String smartWorkoutCTARestModeVolume(String volume);
+
+  /// Total workout duration
+  ///
+  /// In en, this message translates to:
+  /// **'Duration: {duration}'**
+  String smartWorkoutCTARestModeDuration(String duration);
+
+  /// Total sets completed
+  ///
+  /// In en, this message translates to:
+  /// **'Sets: {sets}'**
+  String smartWorkoutCTARestModeSets(int sets);
 }
 
 class _AppLocalizationsDelegate

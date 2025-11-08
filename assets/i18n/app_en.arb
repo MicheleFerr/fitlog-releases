@@ -16723,5 +16723,40 @@
   "smartWorkoutCTATemplateNotFound": "Template not found",
   "@smartWorkoutCTATemplateNotFound": {
     "description": "Error message when template doesn't exist"
+  },
+  "smartWorkoutCTARestModeTitle": "💪 Enjoy your well-deserved rest",
+  "@smartWorkoutCTARestModeTitle": {
+    "description": "Title for rest mode when user already worked out today"
+  },
+  "smartWorkoutCTARestModeSubtitle": "You crushed an amazing workout!",
+  "@smartWorkoutCTARestModeSubtitle": {
+    "description": "Subtitle congratulating user on completed workout"
+  },
+  "smartWorkoutCTARestModeVolume": "Volume: {volume} kg",
+  "@smartWorkoutCTARestModeVolume": {
+    "description": "Total volume lifted in workout",
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeDuration": "Duration: {duration}",
+  "@smartWorkoutCTARestModeDuration": {
+    "description": "Total workout duration",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeSets": "Sets: {sets}",
+  "@smartWorkoutCTARestModeSets": {
+    "description": "Total sets completed",
+    "placeholders": {
+      "sets": {
+        "type": "int"
+      }
+    }
   }
 }
