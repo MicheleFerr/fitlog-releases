@@ -19359,5 +19359,6 @@
   "settingsApreAutoAdjustment": "APRE Auto-Adjustment",
   "settingsApreAutoAdjustmentDesc": "Automatic weight progression",
   "settingsApreProtocol": "APRE Protocol",
-  "settingsApreProtocolDesc": "Protocol {number}"
+  "settingsApreProtocolDesc": "Protocol {number}",
+  "settingsApreProtocolUpdated": "APRE protocol updated to {protocol}"
 }

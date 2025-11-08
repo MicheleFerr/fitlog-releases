@@ -8759,5 +8759,6 @@
   "settingsApreAutoAdjustment": "Auto-Regolazione APRE",
   "settingsApreAutoAdjustmentDesc": "Progressione automatica del peso",
   "settingsApreProtocol": "Protocollo APRE",
-  "settingsApreProtocolDesc": "Protocollo {number}"
+  "settingsApreProtocolDesc": "Protocollo {number}",
+  "settingsApreProtocolUpdated": "Protocollo APRE aggiornato a {protocol}"
 }

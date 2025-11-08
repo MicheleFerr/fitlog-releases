@@ -16029,4 +16029,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String settingsApreProtocolDesc(Object number) {
     return 'Protocol $number';
   }
+
+  @override
+  String settingsApreProtocolUpdated(Object protocol) {
+    return 'APRE protocol updated to $protocol';
+  }
 }

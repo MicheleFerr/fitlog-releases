@@ -28655,6 +28655,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Protocol {number}'**
   String settingsApreProtocolDesc(Object number);
+
+  /// No description provided for @settingsApreProtocolUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE protocol updated to {protocol}'**
+  String settingsApreProtocolUpdated(Object protocol);
 }
 
 class _AppLocalizationsDelegate

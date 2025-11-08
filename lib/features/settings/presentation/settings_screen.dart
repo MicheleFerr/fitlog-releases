@@ -73,7 +73,11 @@ class SettingsScreen extends ConsumerWidget {
 
             // Appearance Settings
             _buildAppearanceSection(context, ref, config),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
+
+            // Workout Essentials (NEW)
+            _buildWorkoutEssentialsSection(context, ref, config),
+            const SizedBox(height: 24),
 
             // Workout Settings
             _buildWorkoutSection(context, ref, config),
@@ -460,6 +464,69 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onTap: () => _showColorDialog(context, ref, config.primaryColor),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWorkoutEssentialsSection(BuildContext context, WidgetRef ref, AppConfig config) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(AppIcons.workout, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.settingsWorkoutEssentials,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Default Rest Time
+            _buildSettingTile(
+              context,
+              title: context.l10n.settingsDefaultRestTime,
+              subtitle: '${config.defaultRestTime}s',
+              leading: const Icon(AppIcons.timer),
+              onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
+            ),
+
+            const Divider(),
+
+            // APRE System Toggle
+            _buildSwitchTile(
+              context,
+              title: context.l10n.settingsApreAutoAdjustment,
+              subtitle: context.l10n.settingsApreAutoAdjustmentDesc,
+              value: config.enableApre ?? false,
+              onChanged: (value) {
+                ref.read(appConfigProvider.notifier).updateWorkoutSettings(
+                  enableApre: value,
+                );
+              },
+            ),
+
+            // APRE Protocol Config (only if enabled)
+            if (config.enableApre == true) ...[
+              const Divider(),
+              _buildSettingTile(
+                context,
+                title: context.l10n.settingsApreProtocol,
+                subtitle: context.l10n.settingsApreProtocolDesc(config.defaultApreProtocol ?? 3),
+                leading: const Icon(AppIcons.settings),
+                onTap: () => _showApreProtocolDialog(context, ref, config.defaultApreProtocol ?? 3),
+              ),
+            ],
           ],
         ),
       ),
@@ -1228,6 +1295,51 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _showApreProtocolDialog(BuildContext context, WidgetRef ref, int currentProtocol) {
+    final protocols = [3, 6, 10];
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.settingsApreProtocol),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: protocols.map((protocol) => RadioListTile<int>(
+            title: Text(context.l10n.settingsApreProtocolDesc(protocol)),
+            subtitle: Text(_getApreProtocolDescription(context, protocol)),
+            value: protocol,
+            groupValue: currentProtocol,
+            onChanged: (value) {
+              if (value != null) {
+                ref.read(appConfigProvider.notifier).updateWorkoutSettings(
+                  defaultApreProtocol: value,
+                );
+                Navigator.pop(context);
+                SnackBarService.showSuccess(
+                  context,
+                  context.l10n.settingsApreProtocolUpdated(value),
+                );
+              }
+            },
+          )).toList(),
+        ),
+      ),
+    );
+  }
+
+  String _getApreProtocolDescription(BuildContext context, int protocol) {
+    switch (protocol) {
+      case 3:
+        return '3 sets to failure (fastest)';
+      case 6:
+        return '6 sets progressive (balanced)';
+      case 10:
+        return '10 sets progressive (advanced)';
+      default:
+        return 'Protocol $protocol';
+    }
   }
 
   void _resetTimerPosition(BuildContext context, WidgetRef ref) {
