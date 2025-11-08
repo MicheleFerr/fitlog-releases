@@ -24429,7 +24429,7 @@ abstract class AppLocalizations {
   /// Section title for archived routines
   ///
   /// In en, this message translates to:
-  /// **'Archived'**
+  /// **'Routine archived'**
   String get routineArchived;
 
   /// Button to go back
@@ -27767,6 +27767,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Widget'**
   String get addWidget;
+
+  /// No description provided for @createNewRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Routine'**
+  String get createNewRoutine;
+
+  /// No description provided for @noRoutinesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No routines yet'**
+  String get noRoutinesYet;
+
+  /// No description provided for @createFirstRoutineDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first training routine to get started'**
+  String get createFirstRoutineDescription;
+
+  /// No description provided for @createFirstRoutineButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create routine'**
+  String get createFirstRoutineButton;
+
+  /// No description provided for @chooseFromPopularPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Or choose from popular patterns'**
+  String get chooseFromPopularPatterns;
+
+  /// No description provided for @activateRoutineConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate this routine?'**
+  String get activateRoutineConfirm;
+
+  /// No description provided for @archiveRoutineConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive this routine?'**
+  String get archiveRoutineConfirm;
+
+  /// No description provided for @deleteRoutineConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this routine?'**
+  String get deleteRoutineConfirm;
+
+  /// No description provided for @routineUnarchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine restored'**
+  String get routineUnarchived;
+
+  /// No description provided for @routineDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine deleted'**
+  String get routineDeleted;
+
+  /// No description provided for @failedToActivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to activate routine'**
+  String get failedToActivate;
+
+  /// No description provided for @failedToArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to archive routine'**
+  String get failedToArchive;
+
+  /// No description provided for @failedToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete routine'**
+  String get failedToDelete;
+
+  /// No description provided for @failedToUnarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to restore routine'**
+  String get failedToUnarchive;
+
+  /// No description provided for @failedToLoadTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load template'**
+  String get failedToLoadTemplate;
+
+  /// No description provided for @alternativesComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternatives coming soon'**
+  String get alternativesComingSoon;
+
+  /// No description provided for @checkFirebasePermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check Firebase permissions or contact support'**
+  String get checkFirebasePermissions;
+
+  /// No description provided for @errorLoadingRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading routines'**
+  String get errorLoadingRoutines;
+
+  /// No description provided for @suggestionLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion level'**
+  String get suggestionLevel;
 }
 
 class _AppLocalizationsDelegate

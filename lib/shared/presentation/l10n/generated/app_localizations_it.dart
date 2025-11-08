@@ -13888,7 +13888,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get routineOtherRoutines => 'Altre Routine';
 
   @override
-  String get routineArchived => 'Archiviate';
+  String get routineArchived => 'Routine archiviata';
 
   @override
   String get routineGoBack => 'Indietro';
@@ -15696,4 +15696,64 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addWidget => 'Aggiungi Widget';
+
+  @override
+  String get createNewRoutine => 'Crea Nuova Routine';
+
+  @override
+  String get noRoutinesYet => 'Nessuna routine ancora';
+
+  @override
+  String get createFirstRoutineDescription =>
+      'Crea la tua prima routine di allenamento per iniziare';
+
+  @override
+  String get createFirstRoutineButton => 'Crea routine';
+
+  @override
+  String get chooseFromPopularPatterns =>
+      'Oppure scegli tra i pattern popolari';
+
+  @override
+  String get activateRoutineConfirm => 'Attivare questa routine?';
+
+  @override
+  String get archiveRoutineConfirm => 'Archiviare questa routine?';
+
+  @override
+  String get deleteRoutineConfirm => 'Eliminare questa routine?';
+
+  @override
+  String get routineUnarchived => 'Routine ripristinata';
+
+  @override
+  String get routineDeleted => 'Routine eliminata';
+
+  @override
+  String get failedToActivate => 'Impossibile attivare la routine';
+
+  @override
+  String get failedToArchive => 'Impossibile archiviare la routine';
+
+  @override
+  String get failedToDelete => 'Impossibile eliminare la routine';
+
+  @override
+  String get failedToUnarchive => 'Impossibile ripristinare la routine';
+
+  @override
+  String get failedToLoadTemplate => 'Impossibile caricare il template';
+
+  @override
+  String get alternativesComingSoon => 'Alternative in arrivo';
+
+  @override
+  String get checkFirebasePermissions =>
+      'Controlla i permessi Firebase o contatta il supporto';
+
+  @override
+  String get errorLoadingRoutines => 'Errore nel caricamento delle routine';
+
+  @override
+  String get suggestionLevel => 'Livello suggerimento';
 }

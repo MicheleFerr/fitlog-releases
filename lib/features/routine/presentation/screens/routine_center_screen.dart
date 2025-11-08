@@ -94,7 +94,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Routine Center',
+          context.l10n.routineCenter,
           style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colors.onSurface,
@@ -117,7 +117,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               }
             }
           },
-          tooltip: 'Back',
+          tooltip: context.l10n.back,
         ),
         actions: [
           // Create new routine button
@@ -126,7 +126,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             icon: Icon(AppIcons.addCircleOutline),
             color: context.colors.primary,
             iconSize: 28,
-            tooltip: 'Create New Routine',
+            tooltip: context.l10n.createNewRoutine,
           ),
           // TODO: Reimplementare onboarding migliore
           // More options menu
@@ -321,7 +321,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             ),
             SizedBox(height: 24),
             Text(
-              'No Routines Yet',
+              context.l10n.noRoutinesYet,
               style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: context.colors.onSurface,
@@ -330,7 +330,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             ),
             SizedBox(height: 12),
             Text(
-              'Create your first flexible routine to start tracking your fitness journey with multi-period planning and smart skip recovery.',
+              context.l10n.createFirstRoutineDescription,
               style: context.textTheme.bodyLarge?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
@@ -341,7 +341,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               onPressed: () => _navigateToCreateRoutine(context),
               icon: Icon(AppIcons.add, color: context.colors.onPrimary),
               label: Text(
-                'Create Your First Routine',
+                context.l10n.createFirstRoutineButton,
                 style: TextStyle(
                   color: context.colors.onPrimary,
                   fontWeight: FontWeight.bold,
@@ -360,7 +360,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             ),
             SizedBox(height: 16),
             Text(
-              'Choose from popular patterns or create your own custom schedule',
+              context.l10n.chooseFromPopularPatterns,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.5),
                 fontStyle: FontStyle.italic,
@@ -377,7 +377,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
     final isPermissionError =
         error.toString().toLowerCase().contains('permission');
     final errorMessage = isPermissionError
-        ? 'Please check your Firebase permissions and authentication status'
+        ? context.l10n.checkFirebasePermissions
         : error.toString();
 
     return Center(
@@ -393,7 +393,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             ),
             SizedBox(height: 16),
             Text(
-              'Error loading routines',
+              context.l10n.errorLoadingRoutines,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.error,
                 fontWeight: FontWeight.bold,
@@ -505,7 +505,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
           final error = ref.read(flexibleRoutineNotifierProvider).error;
           SnackBarService.showError(
             context,
-            error ?? 'Failed to activate routine',
+            error ?? context.l10n.failedToActivate,
           );
         }
       }
@@ -533,13 +533,13 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         if (success) {
           SnackBarService.showSuccess(
             context,
-            'Routine archived 📦',
+            context.l10n.routineArchived,
           );
         } else {
           final error = ref.read(flexibleRoutineNotifierProvider).error;
           SnackBarService.showError(
             context,
-            error ?? 'Failed to archive routine',
+            error ?? context.l10n.failedToArchive,
           );
         }
       }
@@ -558,13 +558,13 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
       if (success) {
         SnackBarService.showSuccess(
           context,
-          'Routine unarchived ✅',
+          context.l10n.routineUnarchived,
         );
       } else {
         final error = ref.read(flexibleRoutineNotifierProvider).error;
         SnackBarService.showError(
           context,
-          error ?? 'Failed to unarchive routine',
+          error ?? context.l10n.failedToUnarchive,
         );
       }
     }
@@ -591,13 +591,13 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
         if (success) {
           SnackBarService.showSuccess(
             context,
-            'Routine deleted',
+            context.l10n.routineDeleted,
           );
         } else {
           final error = ref.read(flexibleRoutineNotifierProvider).error;
           SnackBarService.showError(
             context,
-            error ?? 'Failed to delete routine',
+            error ?? context.l10n.failedToDelete,
           );
         }
       }
@@ -646,13 +646,13 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                     loading: () {
                       SnackBarService.showInfo(
                         context,
-                        'Loading template...',
+                        context.l10n.loadingTemplate,
                       );
                     },
                     error: (error, _) {
                       SnackBarService.showError(
                         context,
-                        'Failed to load template: $error',
+                        context.l10n.failedToLoadTemplate,
                       );
                     },
                   );
@@ -661,7 +661,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                   // TODO: Show alternatives dialog with other suggestions
                   SnackBarService.showInfo(
                     context,
-                    'Alternatives feature coming soon!',
+                    context.l10n.alternativesComingSoon,
                   );
                 },
                 onWhyThisSuggestion: () {
@@ -676,7 +676,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Suggestion Level: ${_getLevelName(suggestion.level)}',
+                              '${context.l10n.suggestionLevel}: ${_getLevelName(suggestion.level)}',
                               style: context.textTheme.titleSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),

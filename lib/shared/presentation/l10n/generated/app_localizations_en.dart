@@ -13737,7 +13737,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineOtherRoutines => 'Other Routines';
 
   @override
-  String get routineArchived => 'Archived';
+  String get routineArchived => 'Routine archived';
 
   @override
   String get routineGoBack => 'Go Back';
@@ -15537,4 +15537,63 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addWidget => 'Add Widget';
+
+  @override
+  String get createNewRoutine => 'Create New Routine';
+
+  @override
+  String get noRoutinesYet => 'No routines yet';
+
+  @override
+  String get createFirstRoutineDescription =>
+      'Create your first training routine to get started';
+
+  @override
+  String get createFirstRoutineButton => 'Create routine';
+
+  @override
+  String get chooseFromPopularPatterns => 'Or choose from popular patterns';
+
+  @override
+  String get activateRoutineConfirm => 'Activate this routine?';
+
+  @override
+  String get archiveRoutineConfirm => 'Archive this routine?';
+
+  @override
+  String get deleteRoutineConfirm => 'Delete this routine?';
+
+  @override
+  String get routineUnarchived => 'Routine restored';
+
+  @override
+  String get routineDeleted => 'Routine deleted';
+
+  @override
+  String get failedToActivate => 'Failed to activate routine';
+
+  @override
+  String get failedToArchive => 'Failed to archive routine';
+
+  @override
+  String get failedToDelete => 'Failed to delete routine';
+
+  @override
+  String get failedToUnarchive => 'Failed to restore routine';
+
+  @override
+  String get failedToLoadTemplate => 'Failed to load template';
+
+  @override
+  String get alternativesComingSoon => 'Alternatives coming soon';
+
+  @override
+  String get checkFirebasePermissions =>
+      'Please check Firebase permissions or contact support';
+
+  @override
+  String get errorLoadingRoutines => 'Error loading routines';
+
+  @override
+  String get suggestionLevel => 'Suggestion level';
 }
