@@ -401,7 +401,9 @@ final recentPRsProvider = FutureProvider<List<PersonalRecord>>((ref) async {
 });
 
 /// Workout analytics stream for real-time updates
-final workoutAnalyticsStreamProvider = StreamProvider.family<WorkoutAnalyticsUpdate, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final workoutAnalyticsStreamProvider = StreamProvider.autoDispose.family<WorkoutAnalyticsUpdate, String>(
   (ref, workoutId) {
     final repository = ref.watch(workoutAnalyticsRepositoryProvider);
     return repository.watchWorkoutUpdates(workoutId);
