@@ -91,19 +91,22 @@ final exerciseByIdProvider = FutureProvider.family<Exercise?, String>((ref, exer
 // ====================
 
 /// Provider per stato sincronizzazione repository
-final exerciseSyncStatusProvider = StreamProvider<SyncStatus>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final exerciseSyncStatusProvider = StreamProvider.autoDispose<SyncStatus>((ref) {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.syncStatus;
 });
 
 /// Provider per eventi di sincronizzazione dal service
-final exerciseSyncEventsProvider = StreamProvider<SyncEvent>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final exerciseSyncEventsProvider = StreamProvider.autoDispose<SyncEvent>((ref) {
   final syncService = ref.read(exerciseSyncServiceProvider);
   return syncService.syncEvents;
 });
 
 /// Provider per controllo versione in tempo reale
-final exerciseVersionWatchProvider = StreamProvider<VersionCheckResult>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final exerciseVersionWatchProvider = StreamProvider.autoDispose<VersionCheckResult>((ref) {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.watchForUpdates();
 });

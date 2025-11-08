@@ -15,7 +15,8 @@ final pendingRequestsProvider =
 });
 
 /// Provider for all requests (admin)
-final allRequestsProvider = StreamProvider<List<MissingExerciseRequest>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final allRequestsProvider = StreamProvider.autoDispose<List<MissingExerciseRequest>>((ref) {
   final service = ref.watch(missingExerciseServiceProvider);
   return service.getAllRequests();
 });
@@ -35,7 +36,8 @@ final requestCountsProvider =
 });
 
 /// Provider for requests filtered by status (admin)
-final requestsByStatusProvider = StreamProvider.family<
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final requestsByStatusProvider = StreamProvider.autoDispose.family<
     List<MissingExerciseRequest>, RequestStatus>((ref, status) {
   final service = ref.watch(missingExerciseServiceProvider);
   return service.getRequestsByStatus(status);

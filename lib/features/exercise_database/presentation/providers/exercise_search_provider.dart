@@ -15,7 +15,8 @@ final exerciseCategoryFilterProvider = StateProvider<ExerciseCategory?>((ref) =>
 final exerciseMuscleGroupFilterProvider = StateProvider<String?>((ref) => null);
 
 // Exercise search results provider
-final exerciseSearchResultsProvider = StreamProvider<List<ExerciseTemplate>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final exerciseSearchResultsProvider = StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
   final repository = ref.watch(exerciseRepositoryProvider);
   final query = ref.watch(exerciseSearchQueryProvider);
   final categoryFilter = ref.watch(exerciseCategoryFilterProvider);
@@ -53,7 +54,8 @@ final exerciseSearchResultsProvider = StreamProvider<List<ExerciseTemplate>>((re
 });
 
 // Popular exercises provider (cached)
-final popularExercisesProvider = StreamProvider<List<ExerciseTemplate>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final popularExercisesProvider = StreamProvider.autoDispose<List<ExerciseTemplate>>((ref) {
   final repository = ref.watch(exerciseRepositoryProvider);
   
   // Return popular exercises from each category
