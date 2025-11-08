@@ -215,9 +215,9 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
       if (_isDisposed) return;
 
       // Input validation
-      if (fontSize < 8.0 || fontSize > 24.0) {
+      if (fontSize < 0.8 || fontSize > 1.2) {
         if (kDebugMode) {
-          debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 8-24)');
+          debugPrint('⚠️ [AppConfig] Invalid font size: $fontSize (must be 0.8-1.2)');
         }
         return;
       }
