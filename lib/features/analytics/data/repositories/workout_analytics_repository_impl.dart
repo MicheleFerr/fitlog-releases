@@ -163,7 +163,26 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
   /// Get count of completed workouts on Firebase (fast query)
   /// Note: Many workouts on Firebase have status=null, so we query for both
   /// completed status and null status (treating null as completed)
+  ///
+  /// 🚀 PERFORMANCE FIX: Added 1-hour cache to prevent O(N) reads on every analytics screen open
+  /// Cache key: 'workout_count_$userId'
+  /// Reduces: ~100 reads → 1 read per hour (for user with 100 workouts)
   Future<int> _getFirebaseWorkoutCount(String userId) async {
+    // 🔧 CACHE CHECK: Try to get count from cache first (1h TTL)
+    final cacheKey = 'workout_count_$userId';
+    final cached = await _cacheService.get<int>(cacheKey);
+
+    if (cached != null) {
+      if (kDebugMode) {
+        debugPrint('✅ [Count] Cache HIT for user $userId: $cached workouts');
+      }
+      return cached;
+    }
+
+    if (kDebugMode) {
+      debugPrint('⚠️ [Count] Cache MISS - fetching from Firestore');
+    }
+
     return await rateLimitedQuery(() async {
       try {
         // Query for ALL workouts for this user (many have status=null on Firebase)
@@ -192,6 +211,13 @@ class WorkoutAnalyticsRepositoryImpl with RateLimitedFirestoreMixin implements W
           if (hasExercises || hasName) {
             validWorkoutCount++;
           }
+        }
+
+        // 🔧 CACHE SAVE: Store count for 1 hour
+        await _cacheService.set(cacheKey, validWorkoutCount);
+
+        if (kDebugMode) {
+          debugPrint('✅ [Count] Cached $validWorkoutCount workouts for user $userId');
         }
 
         return validWorkoutCount;
