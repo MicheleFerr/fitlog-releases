@@ -437,32 +437,99 @@ class SettingsScreen extends ConsumerWidget {
             ),
             SizedBox(height: 16),
 
-            // Theme Mode Selection
-            _buildSettingTile(
-              context,
-              title: context.l10n.theme,
-              subtitle: _getThemeModeText(context.l10n, config.themeMode),
+            // Theme Mode Selection (with visual icon preview)
+            ListTile(
+              title: Text(context.l10n.theme),
+              subtitle: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(_getThemeModeIcon(config.themeMode), size: 20),
+                  const SizedBox(width: 8),
+                  Text(_getThemeModeText(context.l10n, config.themeMode)),
+                ],
+              ),
               leading: Icon(_getThemeModeIcon(config.themeMode)),
+              trailing: const Icon(AppIcons.chevronRight),
               onTap: () => _showThemeDialog(context, ref, config.themeMode),
+              contentPadding: EdgeInsets.zero,
             ),
 
             const Divider(),
 
-            // Font Size
-            _buildFontSizeSection(context, ref, config),
-
-            const Divider(),
-
-            // Primary Color
-            _buildSettingTile(
-              context,
-              title: context.l10n.settingsAccentColor,
-              subtitle: config.primaryColor.toUpperCase(),
+            // Theme Color (with color preview circle)
+            ListTile(
+              title: Text(context.l10n.settingsThemeColor),
+              subtitle: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: _getPrimaryColor(config.primaryColor),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: context.colors.outline.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(context.l10n.settingsThemeColorDesc),
+                ],
+              ),
               leading: Icon(
                 AppIcons.colorLens,
                 color: _getPrimaryColor(config.primaryColor),
               ),
+              trailing: const Icon(AppIcons.chevronRight),
               onTap: () => _showColorDialog(context, ref, config.primaryColor),
+              contentPadding: EdgeInsets.zero,
+            ),
+
+            const Divider(),
+
+            // Font Size (with live preview text)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(AppIcons.formatSize),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            context.l10n.settingsTextSize,
+                            style: context.textTheme.bodyLarge,
+                          ),
+                          Text(
+                            context.l10n.settingsTextSizePreview(
+                              _getFontSizeText(context, config.fontSize),
+                            ),
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: context.colors.onSurface.withValues(alpha: 0.6),
+                              fontSize: (context.textTheme.bodyMedium?.fontSize ?? 14) * config.fontSize,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Slider(
+                  value: config.fontSize,
+                  min: 0.8,
+                  max: 1.2,
+                  divisions: 4,
+                  onChanged: (value) {
+                    ref.read(appConfigProvider.notifier).setFontSize(value);
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -1069,47 +1136,6 @@ class SettingsScreen extends ConsumerWidget {
       value: value,
       onChanged: onChanged,
       contentPadding: EdgeInsets.zero,
-    );
-  }
-
-  Widget _buildFontSizeSection(BuildContext context, WidgetRef ref, AppConfig config) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(AppIcons.formatSize),
-            SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.settingsFontSize,
-                    style: context.textTheme.bodyLarge,
-                  ),
-                  Text(
-                    _getFontSizeText(context, config.fontSize),
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurface.withValues(alpha: 0.6),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Slider(
-          value: config.fontSize,
-          min: 0.8,
-          max: 1.2,
-          divisions: 4,
-          onChanged: (value) {
-            ref.read(appConfigProvider.notifier).setFontSize(value);
-          },
-        ),
-      ],
     );
   }
 
