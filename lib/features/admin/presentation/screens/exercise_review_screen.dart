@@ -374,7 +374,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
-                icon: Icons.schedule,
+                icon: AppIcons.schedule,
                 color: context.colors.secondary,
               );
             },

@@ -566,7 +566,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
                       ? AppIcons.arrowUpward
                       : isNegative
                           ? AppIcons.arrowDownward
-                          : Icons.remove,
+                          : AppIcons.remove,
                   color: color,
                   size: 16,
                 ),

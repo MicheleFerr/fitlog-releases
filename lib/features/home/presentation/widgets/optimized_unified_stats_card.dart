@@ -223,7 +223,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.auto_awesome,
+                    AppIcons.autoAwesome,
                     color: context.colors.surface,
                     size: 16,
                   ),
@@ -505,7 +505,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   if (isMilestone)
                     Icon(
-                      Icons.star,
+                      AppIcons.star,
                       color: context.colors.surface.withValues(alpha: 0.9),
                       size: 12,
                     ),

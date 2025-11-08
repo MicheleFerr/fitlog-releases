@@ -93,6 +93,7 @@ dependencies:
   # Data Visualization & Animations (Analytics Feature)
   lottie: ^3.1.0
   animate_do: ^4.2.0  # 🔐 SECURITY: Updated from 3.3.4
+  motor: ^1.0.1  # Motion design engine for smooth animations
   percent_indicator: ^4.2.3
 
   path_provider: any
@@ -108,6 +109,7 @@ dependencies:
   # 🔒 Concurrent access safety
   synchronized: ^3.3.0+3
   flutter_cache_manager: any
+  flutter_slidable: ^4.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

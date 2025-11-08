@@ -244,7 +244,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Icons.touch_app,
+                            AppIcons.touchApp,
                             color: context.colors.surface,
                             size: 12,
                           ),
@@ -263,7 +263,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Icons.star,
+                            AppIcons.star,
                             color: context.colors.surface,
                             size: 12,
                           ),

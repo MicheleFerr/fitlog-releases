@@ -91,7 +91,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.history,
+            AppIcons.history,
             size: 64,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
@@ -190,7 +190,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
 
                   // Icona espandi/comprimi
                   Icon(
-                    isExpanded ? Icons.expand_less : Icons.expand_more,
+                    isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
                 ],
@@ -270,7 +270,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                     SizedBox(width: 8),
                     Icon(
-                      Icons.repeat,
+                      AppIcons.repeat,
                       size: 16,
                       color: context.colors.secondary,
                     ),

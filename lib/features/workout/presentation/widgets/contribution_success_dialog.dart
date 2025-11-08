@@ -241,7 +241,7 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                                     ),
                                   ),
                                   child: Icon(
-                                    Icons.check,
+                                    AppIcons.check,
                                     color: context.colors.surface,
                                     size: 40,
                                   ),

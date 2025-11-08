@@ -306,13 +306,13 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     switch (type) {
       case ContributionType.tip:
         return Icon(
-          Icons.lightbulb,
+          AppIcons.lightbulb,
           size: 20,
           color: context.colors.warning,
         );
       case ContributionType.warning:
         return Icon(
-          Icons.warning,
+          AppIcons.warning,
           size: 20,
           color: context.colors.secondary,
         );
@@ -324,7 +324,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
         );
       case ContributionType.variant:
         return Icon(
-          Icons.alt_route,
+          AppIcons.altRoute,
           size: 20,
           color: context.colors.tertiary,
         );

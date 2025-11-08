@@ -213,7 +213,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     label: l10n.dailyAverage,
                     value: '${(settings.convertWeight(avgDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
-                    icon: Icons.equalizer,
+                    icon: AppIcons.equalizer,
                     color: context.colors.primary,
                   ),
                 ),

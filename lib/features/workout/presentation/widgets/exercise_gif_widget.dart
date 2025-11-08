@@ -130,7 +130,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
                     children: [
                       Icon(
                         is404
-                            ? Icons.image_not_supported
+                            ? AppIcons.imageNotSupported
                             : Icons.fitness_center,
                         color: icColor,
                         size: widget.size * 0.4,

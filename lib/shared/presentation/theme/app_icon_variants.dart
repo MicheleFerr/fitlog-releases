@@ -72,13 +72,13 @@ class AppIconVariants {
 
   /// Info icons
   static const info = AppIconVariant(
-    filled: Icons.info, // ignore: design-system-infrastructure
+    filled: AppIcons.info, // ignore: design-system-infrastructure
     outlined: AppIcons.info, // Already outlined
   );
 
   /// Error icons
   static const error = AppIconVariant(
-    filled: Icons.error, // ignore: design-system-infrastructure
+    filled: AppIcons.error, // ignore: design-system-infrastructure
     outlined: AppIcons.error, // Already outlined
   );
 
@@ -88,7 +88,7 @@ class AppIconVariants {
 
   /// Add circle
   static const addCircle = AppIconVariant(
-    filled: Icons.add_circle, // ignore: design-system-infrastructure
+    filled: AppIcons.addCircle, // ignore: design-system-infrastructure
     outlined: AppIcons.addCircleOutline,
   );
 
@@ -111,13 +111,13 @@ class AppIconVariants {
   /// Thumb up/like
   static const thumbUp = AppIconVariant(
     filled: AppIcons.thumbUp,
-    outlined: Icons.thumb_up_outlined, // ignore: design-system-infrastructure
+    outlined: AppIcons.thumbUpOutlined, // ignore: design-system-infrastructure
   );
 
   /// Thumb down/dislike
   static const thumbDown = AppIconVariant(
     filled: AppIcons.thumbDown,
-    outlined: Icons.thumb_down_outlined, // ignore: design-system-infrastructure
+    outlined: AppIcons.thumbDownOutlined, // ignore: design-system-infrastructure
   );
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -126,14 +126,14 @@ class AppIconVariants {
 
   /// Play circle
   static const playCircle = AppIconVariant(
-    filled: Icons.play_circle_filled, // ignore: design-system-infrastructure
-    outlined: Icons.play_circle_outline, // ignore: design-system-infrastructure
+    filled: AppIcons.playCircleFilled, // ignore: design-system-infrastructure
+    outlined: AppIcons.playCircleOutline, // ignore: design-system-infrastructure
   );
 
   /// Pause circle
   static const pauseCircle = AppIconVariant(
     filled: Icons.pause_circle_filled, // ignore: design-system-infrastructure
-    outlined: Icons.pause_circle_outline, // ignore: design-system-infrastructure
+    outlined: AppIcons.pauseCircleOutline, // ignore: design-system-infrastructure
   );
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -149,7 +149,7 @@ class AppIconVariants {
   /// Settings
   static const settings = AppIconVariant(
     filled: AppIcons.settings,
-    outlined: Icons.settings_outlined, // ignore: design-system-infrastructure
+    outlined: AppIcons.settingsOutlined, // ignore: design-system-infrastructure
   );
 
   /// Get all variants as list
@@ -181,15 +181,15 @@ extension IconDataVariants on IconData {
       AppIcons.star.codePoint: AppIcons.starOutline,
       AppIcons.people.codePoint: AppIcons.peopleOutline,
       AppIcons.delete.codePoint: AppIcons.deleteOutline,
-      Icons.add_circle.codePoint: AppIcons.addCircleOutline, // ignore: inline-icons
-      Icons.info.codePoint: AppIcons.info, // ignore: inline-icons
-      Icons.error.codePoint: AppIcons.error, // ignore: inline-icons
-      Icons.home.codePoint: Icons.home_outlined, // ignore: inline-icons
-      Icons.settings.codePoint: Icons.settings_outlined, // ignore: inline-icons
-      Icons.play_circle_filled.codePoint: Icons.play_circle_outline, // ignore: inline-icons
-      Icons.pause_circle_filled.codePoint: Icons.pause_circle_outline, // ignore: inline-icons
-      AppIcons.thumbUp.codePoint: Icons.thumb_up_outlined, // ignore: inline-icons
-      AppIcons.thumbDown.codePoint: Icons.thumb_down_outlined, // ignore: inline-icons
+      AppIcons.addCircle.codePoint: AppIcons.addCircleOutline, // ignore: inline-icons
+      AppIcons.info.codePoint: AppIcons.info, // ignore: inline-icons
+      AppIcons.error.codePoint: AppIcons.error, // ignore: inline-icons
+      AppIcons.home.codePoint: Icons.home_outlined, // ignore: inline-icons
+      AppIcons.settings.codePoint: AppIcons.settingsOutlined, // ignore: inline-icons
+      AppIcons.playCircleFilled.codePoint: AppIcons.playCircleOutline, // ignore: inline-icons
+      Icons.pause_circle_filled.codePoint: AppIcons.pauseCircleOutline, // ignore: inline-icons
+      AppIcons.thumbUp.codePoint: AppIcons.thumbUpOutlined, // ignore: inline-icons
+      AppIcons.thumbDown.codePoint: AppIcons.thumbDownOutlined, // ignore: inline-icons
     };
 
     return outlinedMap[codePoint];
@@ -204,13 +204,13 @@ extension IconDataVariants on IconData {
       AppIcons.starOutline.codePoint: AppIcons.star,
       AppIcons.peopleOutline.codePoint: AppIcons.people,
       AppIcons.deleteOutline.codePoint: AppIcons.delete,
-      AppIcons.addCircleOutline.codePoint: Icons.add_circle, // ignore: inline-icons
+      AppIcons.addCircleOutline.codePoint: AppIcons.addCircle, // ignore: inline-icons
       Icons.home_outlined.codePoint: AppIcons.home, // ignore: inline-icons
-      Icons.settings_outlined.codePoint: AppIcons.settings, // ignore: inline-icons
-      Icons.play_circle_outline.codePoint: Icons.play_circle_filled, // ignore: inline-icons
-      Icons.pause_circle_outline.codePoint: Icons.pause_circle_filled, // ignore: inline-icons
-      Icons.thumb_up_outlined.codePoint: AppIcons.thumbUp, // ignore: inline-icons
-      Icons.thumb_down_outlined.codePoint: AppIcons.thumbDown, // ignore: inline-icons
+      AppIcons.settingsOutlined.codePoint: AppIcons.settings, // ignore: inline-icons
+      AppIcons.playCircleOutline.codePoint: AppIcons.playCircleFilled, // ignore: inline-icons
+      AppIcons.pauseCircleOutline.codePoint: Icons.pause_circle_filled, // ignore: inline-icons
+      AppIcons.thumbUpOutlined.codePoint: AppIcons.thumbUp, // ignore: inline-icons
+      AppIcons.thumbDownOutlined.codePoint: AppIcons.thumbDown, // ignore: inline-icons
     };
 
     return filledMap[codePoint];

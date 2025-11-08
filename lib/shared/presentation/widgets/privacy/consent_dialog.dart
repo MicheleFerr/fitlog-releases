@@ -198,7 +198,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
         child: Row(
           children: [
             Icon(
-              Icons.policy_outlined,
+              AppIcons.policyOutlined,
               size: 16,
               color: context.colors.primary,
             ),

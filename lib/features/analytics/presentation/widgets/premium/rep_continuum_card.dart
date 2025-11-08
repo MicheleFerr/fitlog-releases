@@ -282,7 +282,7 @@ class RepContinuumCard extends StatelessWidget {
 
     if (data.hypertrophyPercentage >= 60) {
       recommendation = l10n.repContinuumRecommendationBalanced;
-      icon = Icons.check_circle;
+      icon = AppIcons.checkCircle;
       iconColor = context.colors.success;
     } else if (data.strengthPercentage > 50) {
       recommendation = l10n.repContinuumRecommendationStrength;
@@ -290,7 +290,7 @@ class RepContinuumCard extends StatelessWidget {
       iconColor = context.colors.error;
     } else if (data.endurancePercentage > 50) {
       recommendation = l10n.repContinuumRecommendationEndurance;
-      icon = Icons.timer;
+      icon = AppIcons.timer;
       iconColor = context.colors.success;
     } else {
       recommendation = l10n.repContinuumRecommendationMixed;
@@ -464,7 +464,7 @@ class RepContinuumCard extends StatelessWidget {
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,
-                      Icons.timer,
+                      AppIcons.timer,
                       context.colors.success,
                     ),
                     const SizedBox(height: 20),

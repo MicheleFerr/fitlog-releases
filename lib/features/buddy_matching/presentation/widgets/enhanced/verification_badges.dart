@@ -64,7 +64,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isPhotoVerified) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.photo_camera,
+        icon: AppIcons.photoCamera,
         color: context.successColor, // Success
         text: AppLocalizations.of(context).photoVerified,
         tooltip: 'Foto del profilo verificata',
@@ -203,9 +203,9 @@ class TrustScoreIndicator extends ConsumerWidget {
     }
 
     IconData getScoreIcon() {
-      if (trustScore >= 80) return Icons.shield_outlined;
+      if (trustScore >= 80) return AppIcons.shieldOutlined;
       if (trustScore >= 60) return AppIcons.verifiedUserOutlined;
-      if (trustScore >= 40) return Icons.security;
+      if (trustScore >= 40) return AppIcons.security;
       return AppIcons.reportProblemOutlined;
     }
 

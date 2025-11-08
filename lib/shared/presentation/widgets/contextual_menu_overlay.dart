@@ -30,12 +30,12 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///     link: _menuLink,
 ///     items: [
 ///       ContextualMenuItem(
-///         icon: Icons.edit,
+///         icon: AppIcons.edit,
 ///         label: 'Edit',
 ///         onTap: () => _handleEdit(),
 ///       ),
 ///       ContextualMenuItem(
-///         icon: Icons.delete,
+///         icon: AppIcons.delete,
 ///         label: 'Delete',
 ///         color: Colors.red,
 ///         onTap: () => _handleDelete(),

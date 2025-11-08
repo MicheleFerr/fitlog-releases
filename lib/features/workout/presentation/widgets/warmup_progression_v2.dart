@@ -204,7 +204,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    Icons.whatshot,
+                    AppIcons.whatshot,
                     color: context.colors.secondary,
                     size: 24,
                   ),
@@ -388,7 +388,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         // Action button
                         if (set.completed)
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.checkCircle,
                             color: context.colors.success,
                             size: 32,
                           )

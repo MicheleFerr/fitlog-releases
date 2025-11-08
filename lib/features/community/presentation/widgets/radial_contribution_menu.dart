@@ -222,7 +222,7 @@ class _RadialContributionMenuState extends State<RadialContributionMenu>
                         });
                       },
                       icon: Icon(
-                        Icons.close,
+                        AppIcons.close,
                         color: context.colors.surface,
                         size: 32,
                       ),

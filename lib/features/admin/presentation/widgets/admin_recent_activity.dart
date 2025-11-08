@@ -356,9 +356,9 @@ class _ActivityItem extends StatelessWidget {
   IconData _getStatusIcon(String status) {
     return switch (status) {
       'pending' => AppIcons.pending,
-      'approved' => Icons.check_circle,
+      'approved' => AppIcons.checkCircle,
       'rejected' => AppIcons.cancel,
-      _ => Icons.info,
+      _ => AppIcons.info,
     };
   }
 

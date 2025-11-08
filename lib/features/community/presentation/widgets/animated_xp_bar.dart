@@ -269,7 +269,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.add_circle,
+                        AppIcons.addCircle,
                         color: context.colors.surface,
                         size: 24,
                       ),

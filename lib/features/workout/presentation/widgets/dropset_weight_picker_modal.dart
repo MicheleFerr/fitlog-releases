@@ -276,7 +276,7 @@ class _DropSetWeightPickerModalState extends State<DropSetWeightPickerModal> {
               _effectiveEquipmentType == EquipmentType.barbell
                   ? AppIcons.workout
                   : _effectiveEquipmentType == EquipmentType.machine
-                      ? Icons.settings
+                      ? AppIcons.settings
                       : AppIcons.sportsGymnastics,
               color: context.colors.primary,
             ),

@@ -419,7 +419,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Intensità Media',
               'RPE ${(6 + (avgIntensity - 1) * 4 / 9).toStringAsFixed(1)} su 10',
               _getIntensityExplanation(),
-              Icons.flash_on,
+              AppIcons.flashOn,
               _getIntensityColor(context),
             ),
 
@@ -428,7 +428,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Stato di Recupero',
               'Fatica media: ${avgFatigue.toStringAsFixed(1)}/5',
               _getRecoveryExplanation(),
-              Icons.hotel,
+              AppIcons.hotel,
               _getFatigueColor(context),
             ),
             

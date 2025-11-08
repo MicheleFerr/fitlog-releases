@@ -38,7 +38,7 @@ class NotificationHub extends ConsumerWidget {
               onTap: () => _showNotificationPanel(context, ref),
               borderRadius: BorderRadius.circular(22),
               child: Icon(
-                Icons.notifications_outlined,
+                AppIcons.notificationsOutlined,
                 color: context.colors.surface,
                 size: 22,
               ),
@@ -402,7 +402,7 @@ class NotificationTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
-          Icons.delete,
+          AppIcons.delete,
           color: context.colors.surface,
         ),
       ),

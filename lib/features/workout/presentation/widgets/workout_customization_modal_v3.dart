@@ -439,7 +439,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     ButtonSegment<int>(
                       value: 3,
                       label: Text(l10n.apre3),
-                      icon: const Icon(Icons.looks_3, size: 20),
+                      icon: const Icon(AppIcons.looks3, size: 20),
                     ),
                     ButtonSegment<int>(
                       value: 6,
@@ -540,7 +540,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: Icons.speed,
+          icon: AppIcons.speed,
           iconColor: context.colors.secondary,
           title: l10n.enableRpeTitle,
           subtitle: l10n.enableRpeDescription,
@@ -778,7 +778,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         // Category Header
         Row(
           children: [
-            Icon(Icons.star, color: context.colors.primary, size: 24),
+            Icon(AppIcons.star, color: context.colors.primary, size: 24),
             SizedBox(width: 12),
             Text(
               l10n.essentialsSection,
@@ -802,7 +802,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: Icons.timer,
+          icon: AppIcons.timer,
           iconColor: context.colors.primary,
           title: l10n.autoRestTimerTitle,
           subtitle: l10n.autoRestTimerDescription,
@@ -819,7 +819,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: Icons.whatshot,
+          icon: AppIcons.whatshot,
           iconColor: context.colors.secondary,
           title: l10n.warmupSuggestionsTitle,
           subtitle: l10n.warmupSuggestionsDescription,
@@ -861,7 +861,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
   /// ✅ V4: Advanced Section - Collapsible with 3 subcategories
   Widget _buildAdvancedSection(ThemeData theme, AppLocalizations l10n) {
     return ExpansionTile(
-      leading: Icon(Icons.settings, color: context.colors.tertiary),
+      leading: Icon(AppIcons.settings, color: context.colors.tertiary),
       title: Text(
         l10n.advancedSection,
         style: theme.textTheme.titleLarge?.copyWith(
@@ -895,7 +895,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.note_alt,
+                icon: AppIcons.noteAlt,
                 iconColor: context.colors.warning,
                 title: l10n.exerciseNotesTitle,
                 subtitle: l10n.exerciseNotesDescription,
@@ -912,7 +912,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.insights,
+                icon: AppIcons.insights,
                 iconColor: context.colors.secondary,
                 title: l10n.exerciseInsightsTitle,
                 subtitle: l10n.exerciseInsightsDescription,
@@ -929,7 +929,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.lightbulb,
+                icon: AppIcons.lightbulb,
                 iconColor: context.colors.secondary,
                 title: l10n.communitySuggestionsTitle,
                 subtitle: l10n.communitySuggestionsDescription,
@@ -997,7 +997,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.health_and_safety,
+                icon: AppIcons.healthAndSafety,
                 iconColor: context.colors.success,
                 title: l10n.quickPreventionIconTitle,
                 subtitle: l10n.quickPreventionIconDescription,
@@ -1167,7 +1167,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.visibility_off,
+                icon: AppIcons.visibilityOff,
                 iconColor: context.colors.tertiary,
                 title: l10n.collapseCountdownTitle,
                 subtitle: l10n.collapseCountdownDescription,
@@ -1184,7 +1184,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.animation,
+                icon: AppIcons.animation,
                 iconColor: context.colors.warning,
                 title: l10n.simplifiedAnimationsTitle,
                 subtitle: l10n.simplifiedAnimationsDescription,

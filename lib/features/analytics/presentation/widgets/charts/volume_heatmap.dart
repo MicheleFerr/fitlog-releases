@@ -27,7 +27,7 @@ class VolumeHeatmap extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_month,
+                  AppIcons.calendarMonth,
                   color: context.colors.secondary,
                 ),
                 SizedBox(width: 8),

@@ -411,7 +411,7 @@ class StreakTrackerWidget extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.check,
+                                AppIcons.check,
                                 color: context.colors.surface,
                                 size: 16,
                               ),

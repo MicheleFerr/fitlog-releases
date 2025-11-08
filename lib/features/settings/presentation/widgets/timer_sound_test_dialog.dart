@@ -114,7 +114,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
             for (final sound in TimerSound.values) ...[
               ListTile(
                 leading: Icon(
-                  sound == currentSound ? Icons.check_circle : Icons.circle_outlined,
+                  sound == currentSound ? AppIcons.checkCircle : AppIcons.circleOutlined,
                   color: sound == currentSound ? context.colors.success : null,
                 ),
                 title: Text(sound.getLocalizedName()),

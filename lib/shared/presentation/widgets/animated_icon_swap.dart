@@ -9,8 +9,8 @@ import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.
 /// Usage:
 /// ```dart
 /// AnimatedIconSwap(
-///   outlinedIcon: Icons.analytics_outlined,
-///   filledIcon: Icons.analytics,
+///   outlinedIcon: AppIcons.analyticsOutlined,
+///   filledIcon: AppIcons.analytics,
 ///   isPressed: _isPressed,
 ///   color: Colors.purple,
 ///   size: 28,

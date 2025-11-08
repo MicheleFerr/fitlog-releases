@@ -72,7 +72,7 @@ class LockscreenAudioTestScreen extends StatelessWidget {
                   padding: EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Icon(Icons.warning, color: context.colors.surface),
+                      Icon(AppIcons.warning, color: context.colors.surface),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(

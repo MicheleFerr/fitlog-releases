@@ -439,7 +439,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                     ),
                   ),
                   Icon(
-                    isExpanded ? Icons.expand_less : Icons.expand_more,
+                    isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ],

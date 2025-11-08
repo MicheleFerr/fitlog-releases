@@ -90,7 +90,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.refresh,
+                      AppIcons.refresh,
                       color: context.colors.primary,
                       size: 24,
                     ),

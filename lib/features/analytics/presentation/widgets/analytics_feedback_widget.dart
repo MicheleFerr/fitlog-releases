@@ -119,7 +119,7 @@ class _AnalyticsFeedbackWidgetState
       child: Row(
         children: [
           Icon(
-            Icons.check_circle,
+            AppIcons.checkCircle,
             color: context.colors.success,
             size: 24,
           ),
@@ -199,7 +199,7 @@ class _AnalyticsFeedbackWidgetState
               _buildFeedbackButton(
                 context: context,
                 label: context.l10n.analyticsFeedbackHelpful,
-                icon: Icons.thumb_up,
+                icon: AppIcons.thumbUp,
                 isHelpful: true,
                 isSelected: _selectedFeedback == true,
                 onTap: () => _onFeedbackSelected(true),
@@ -211,7 +211,7 @@ class _AnalyticsFeedbackWidgetState
               _buildFeedbackButton(
                 context: context,
                 label: context.l10n.analyticsFeedbackNotHelpful,
-                icon: Icons.thumb_down,
+                icon: AppIcons.thumbDown,
                 isHelpful: false,
                 isSelected: _selectedFeedback == false,
                 onTap: () => _onFeedbackSelected(false),
@@ -277,7 +277,7 @@ class _AnalyticsFeedbackWidgetState
                               strokeWidth: 2,
                             ),
                           )
-                        : Icon(Icons.send),
+                        : Icon(AppIcons.send),
                     label: Text(
                       submissionState.isLoading
                           ? context.l10n.analyticsFeedbackSubmitting

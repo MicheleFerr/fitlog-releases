@@ -292,7 +292,7 @@ class CorrectionReviewCard extends StatelessWidget {
         break;
       case 'approved':
         color = context.colors.success;
-        icon = Icons.check_circle;
+        icon = AppIcons.checkCircle;
         label = AppLocalizations.of(context).approved;
         break;
       case 'rejected':
@@ -302,7 +302,7 @@ class CorrectionReviewCard extends StatelessWidget {
         break;
       default:
         color = context.colors.surfaceContainerHighest;
-        icon = Icons.help;
+        icon = AppIcons.help;
         label = status;
     }
 

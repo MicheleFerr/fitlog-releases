@@ -69,3 +69,5 @@ integration_test/smart_cta_preload_test.dart
 
 # Git worktrees (isolated development workspaces)
 .worktrees/
+.backup_design_fix/
+.localization_backups/

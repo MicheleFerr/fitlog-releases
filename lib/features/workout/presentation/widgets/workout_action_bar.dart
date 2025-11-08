@@ -687,7 +687,7 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
               child: Icon(
                 wakelockState.isEnabled
                   ? AppIcons.mobileScreenShare
-                  : Icons.mobile_off,
+                  : AppIcons.mobileOff,
                 key: ValueKey(wakelockState.isEnabled),
                 size: 20,
                 color: wakelockState.isEnabled

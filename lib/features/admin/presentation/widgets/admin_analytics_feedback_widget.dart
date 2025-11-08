@@ -46,7 +46,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.analytics,
+                  AppIcons.analytics,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -158,28 +158,28 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
             children: [
               _buildStatColumn(
                 context,
-                icon: Icons.feedback,
+                icon: AppIcons.feedback,
                 label: 'Total',
                 value: totalFeedback.toString(),
                 color: colorScheme.primary,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.thumb_up,
+                icon: AppIcons.thumbUp,
                 label: 'Helpful',
                 value: totalHelpful.toString(),
                 color: context.colors.success,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.thumb_down,
+                icon: AppIcons.thumbDown,
                 label: 'Not Helpful',
                 value: totalNotHelpful.toString(),
                 color: context.colors.error,
               ),
               _buildStatColumn(
                 context,
-                icon: Icons.people,
+                icon: AppIcons.people,
                 label: 'Users',
                 value: uniqueUsers.toString(),
                 color: colorScheme.secondary,
@@ -280,7 +280,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       leading: Icon(
-        feedback.isHelpful ? Icons.thumb_up : Icons.thumb_down,
+        feedback.isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
         color: feedback.isHelpful
             ? context.colors.success
             : context.colors.error,

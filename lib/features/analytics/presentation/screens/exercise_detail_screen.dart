@@ -99,7 +99,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Volume progression chart
             _buildChartCard(
               context.l10n.volumeProgression,
-              Icons.analytics,
+              AppIcons.analytics,
               context.colors.secondary,
               _buildVolumeChart(filteredSets),
             ),
@@ -108,7 +108,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Reps progression chart
             _buildChartCard(
               context.l10n.repsProgression,
-              Icons.repeat,
+              AppIcons.repeat,
               context.colors.success,
               _buildRepsChart(filteredSets),
             ),
@@ -118,7 +118,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             if (filteredSets.any((s) => s.rpe != null)) ...[
               _buildChartCard(
                 context.l10n.effortProgression,
-                Icons.speed,
+                AppIcons.speed,
                 context.colors.error,
                 _buildRPEChart(filteredSets),
               ),
@@ -446,9 +446,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       runSpacing: 8,
       children: [
         _buildLegendItem('weight', context.l10n.weight, context.colors.primary, Icons.fitness_center),
-        _buildLegendItem('volume', context.l10n.volume, context.colors.secondary, Icons.analytics),
-        _buildLegendItem('reps', context.l10n.reps, context.colors.success, Icons.repeat),
-        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, context.colors.tertiary, Icons.speed),
+        _buildLegendItem('volume', context.l10n.volume, context.colors.secondary, AppIcons.analytics),
+        _buildLegendItem('reps', context.l10n.reps, context.colors.success, AppIcons.repeat),
+        if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, context.colors.tertiary, AppIcons.speed),
       ],
     );
   }
@@ -557,14 +557,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               _buildStatItem(
                 context.l10n.avgReps,
                 periodAvgReps.toStringAsFixed(0),
-                Icons.repeat,
+                AppIcons.repeat,
                 context.colors.success,
               ),
               if (periodAvgRPE > 0)
                 _buildStatItem(
                   context.l10n.averageRPE,
                   periodAvgRPE.toStringAsFixed(1),
-                  Icons.speed,
+                  AppIcons.speed,
                   context.colors.secondary,
                 ),
             ],

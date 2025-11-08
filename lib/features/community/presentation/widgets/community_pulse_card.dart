@@ -495,7 +495,7 @@ class _AnimatedIconState extends State<_AnimatedIcon>
             ),
           ),
           child: Icon(
-            Icons.people,
+            AppIcons.people,
             color: context.colors.surface,
             size: 24,
           ),
@@ -646,15 +646,15 @@ class _MiniContributionCard extends StatelessWidget {
 
     switch (type) {
       case ContributionType.tip:
-        icon = Icons.lightbulb;
+        icon = AppIcons.lightbulb;
         color = context.colors.warning;
         break;
       case ContributionType.warning:
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = context.colors.secondary;
         break;
       case ContributionType.correction:
-        icon = Icons.edit;
+        icon = AppIcons.edit;
         color = context.colors.primary;
         break;
       case ContributionType.technique:
@@ -662,7 +662,7 @@ class _MiniContributionCard extends StatelessWidget {
         color = context.colors.tertiary;
         break;
       default:
-        icon = Icons.info;
+        icon = AppIcons.info;
         color = context.colors.surfaceContainerHighest;
     }
     

@@ -53,7 +53,7 @@ class StrengthProgressionChart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.bar_chart,
+                    AppIcons.barChart,
                     size: 48,
                     color: context.colors.onSurface.withValues(alpha: 0.3),
                   ),

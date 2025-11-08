@@ -1262,7 +1262,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ],
         ),
         trailing: isSelected
-            ? Icon(Icons.check_circle, color: context.colors.primary)
+            ? Icon(AppIcons.checkCircle, color: context.colors.primary)
             : (widget.selectionMode ? const Icon(Icons.arrow_forward_ios, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
         onTap: () {
           // Selection mode: return exercise and close

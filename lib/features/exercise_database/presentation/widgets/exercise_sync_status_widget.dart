@@ -100,7 +100,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
       case SyncStatus.success:
         text = AppLocalizations.of(context).syncSuccess;
         color = context.colors.success;
-        icon = Icons.check_circle;
+        icon = AppIcons.checkCircle;
         break;
       case SyncStatus.error:
         text = AppLocalizations.of(context).syncError;

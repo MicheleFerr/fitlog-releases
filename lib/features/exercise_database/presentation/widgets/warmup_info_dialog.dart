@@ -109,7 +109,7 @@ class WarmupInfoDialog extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.auto_awesome,
+                            AppIcons.autoAwesome,
                             color: context.colors.success,
                             size: 18,
                           ),

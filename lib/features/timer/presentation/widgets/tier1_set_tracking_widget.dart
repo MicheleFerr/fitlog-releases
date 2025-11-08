@@ -192,7 +192,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.velocity,
             '${metrics.currentVelocityMps.toStringAsFixed(2)} m/s',
-            Icons.speed,
+            AppIcons.speed,
             _getVelocityColor(context, metrics.currentVelocityMps, theme),
           ),
         ),

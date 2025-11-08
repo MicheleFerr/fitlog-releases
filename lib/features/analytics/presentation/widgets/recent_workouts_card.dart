@@ -251,7 +251,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                               IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: Icon(
-                                  Icons.close,
+                                  AppIcons.close,
                                   color: context.colors.onSurface.withValues(alpha: 0.6),
                                 ),
                               ),

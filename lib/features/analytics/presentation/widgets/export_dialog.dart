@@ -63,7 +63,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                     ExportFormat.pdf,
                     'PDF Report',
                     'Complete analytics report with charts and insights',
-                    Icons.picture_as_pdf,
+                    AppIcons.pictureAsPdf,
                   ),
                   const SizedBox(height: 8),
                   _buildFormatOption(

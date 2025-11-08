@@ -144,7 +144,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  Icons.thumb_up_outlined,
+                  AppIcons.thumbUpOutlined,
                   color: context.colors.success,
                   size: 32,
                 ),
@@ -157,7 +157,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  Icons.thumb_down_outlined,
+                  AppIcons.thumbDownOutlined,
                   color: context.colors.error,
                   size: 32,
                 ),

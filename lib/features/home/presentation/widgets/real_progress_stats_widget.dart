@@ -170,7 +170,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.analytics,
+                      AppIcons.analytics,
                       color: context.colors.surface,
                       size: 24,
                     ),
@@ -263,7 +263,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.insights,
+                      AppIcons.insights,
                       color: context.colors.surface,
                       size: 28,
                     ),

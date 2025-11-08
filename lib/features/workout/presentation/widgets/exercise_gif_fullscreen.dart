@@ -122,7 +122,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icon(
-                          Icons.close,
+                          AppIcons.close,
                           color: context.colors.surface,
                           size: 28,
                         ),
@@ -158,7 +158,7 @@ class ExerciseGifFullscreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.touch_app,
+                        AppIcons.touchApp,
                         color: context.colors.surface.withValues(alpha: 0.7),
                         size: 16,
                       ),

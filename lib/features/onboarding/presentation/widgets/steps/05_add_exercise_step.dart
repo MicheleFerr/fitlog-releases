@@ -380,7 +380,7 @@ class _MockSearchBarState extends State<_MockSearchBar> {
         decoration: InputDecoration(
           hintText: widget.l10n.onboardingSearchExercises,
           prefixIcon: Icon(
-            Icons.search,
+            AppIcons.search,
             color: widget.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           suffixIcon: widget.isSearching

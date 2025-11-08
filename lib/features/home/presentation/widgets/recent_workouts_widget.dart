@@ -208,7 +208,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.history,
+                      AppIcons.history,
                       color: context.colors.surface,
                       size: 24,
                     ),
@@ -331,7 +331,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.history,
+                      AppIcons.history,
                       color: context.colors.surface,
                       size: 28,
                     ),

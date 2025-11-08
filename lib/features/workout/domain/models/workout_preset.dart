@@ -91,15 +91,15 @@ class RepRangePreset {
     'bolt': AppIcons.bolt,
     'trending_up': Icons.trending_up,
     'bubble_chart': AppIcons.bubbleChart,
-    'timer': Icons.timer,
-    'all_inclusive': Icons.all_inclusive,
-    'speed': Icons.speed,
-    'flash_on': Icons.flash_on,
-    'schedule': Icons.schedule,
+    'timer': AppIcons.timer,
+    'all_inclusive': AppIcons.allInclusive,
+    'speed': AppIcons.speed,
+    'flash_on': AppIcons.flashOn,
+    'schedule': AppIcons.schedule,
     'access_time': Icons.access_time,
     'hourglass_empty': AppIcons.hourglassEmpty,
-    'timer_off': Icons.timer_off,
-    'repeat': Icons.repeat,
+    'timer_off': AppIcons.timerOff,
+    'repeat': AppIcons.repeat,
   };
 
   /// Convert to JSON

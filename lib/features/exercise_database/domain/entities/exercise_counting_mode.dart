@@ -54,9 +54,9 @@ enum ExerciseCountingMode {
       case ExerciseCountingMode.weighted:
         return Icons.fitness_center; // Dumbbell icon
       case ExerciseCountingMode.reps:
-        return Icons.repeat; // Repeat icon
+        return AppIcons.repeat; // Repeat icon
       case ExerciseCountingMode.time:
-        return Icons.timer; // Timer icon
+        return AppIcons.timer; // Timer icon
     }
   }
 

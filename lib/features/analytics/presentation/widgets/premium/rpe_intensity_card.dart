@@ -379,14 +379,14 @@ class RPEIntensityCard extends StatelessWidget {
         title = l10n.intensityZoneBalanced;
         description = l10n.intensityZoneBalancedDesc;
         advice = l10n.intensityZoneBalancedAdvice;
-        icon = Icons.balance;
+        icon = AppIcons.balance;
         color = context.warningColor;
         break;
       case IntensityZone.tooHard:
         title = l10n.intensityZoneTooHard;
         description = l10n.intensityZoneTooHardDesc;
         advice = l10n.intensityZoneTooHardAdvice;
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = context.errorColor;
         break;
     }

@@ -337,7 +337,7 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
                 ],
               ),
               child: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: context.colors.surface,
                 size: 20,
               ),

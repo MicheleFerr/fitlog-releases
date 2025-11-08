@@ -2361,7 +2361,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: Icon(
-                      Icons.close,
+                      AppIcons.close,
                       color: context.colors.surface,
                       size: 20,
                     ),

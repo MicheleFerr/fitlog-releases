@@ -134,7 +134,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.feedbackStatsResolved,
             value: stats.resolvedCount.toString(),
-            icon: Icons.check_circle,
+            icon: AppIcons.checkCircle,
             color: context.colors.success,
           ),
         ),

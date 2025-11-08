@@ -222,7 +222,7 @@ class _CommunityContributionModalState
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.people_outline,
+                    AppIcons.peopleOutline,
                     color: context.colors.surface,
                     size: 24,
                   ),

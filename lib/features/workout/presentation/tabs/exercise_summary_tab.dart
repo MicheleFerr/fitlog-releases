@@ -120,11 +120,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             children: [
               _buildMetricChip('Peso', Icons.fitness_center),
               const SizedBox(width: 8),
-              _buildMetricChip('Reps', Icons.repeat),
+              _buildMetricChip('Reps', AppIcons.repeat),
               const SizedBox(width: 8),
               _buildMetricChip('RPE', Icons.trending_up),
               const SizedBox(width: 8),
-              _buildMetricChip('TUT', Icons.timer),
+              _buildMetricChip('TUT', AppIcons.timer),
             ],
           ),
         ),
@@ -386,7 +386,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 _buildInteractiveRecordCard(
                   context.l10n.best1RM,
                   '${records.best1RM.value.toStringAsFixed(1)} kg',
-                  Icons.star,
+                  AppIcons.star,
                   context.colors.secondary,
                   records.best1RM,
                 ),
@@ -400,7 +400,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 _buildInteractiveRecordCard(
                   context.l10n.bestSessionVolume,
                   '${records.bestSessionVolume.value.toStringAsFixed(0)} kg',
-                  Icons.workspaces,
+                  AppIcons.workspaces,
                   Colors.orange,
                   records.bestSessionVolume,
                 ),
@@ -992,7 +992,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Dettagli set (se disponibili)
             if (recordData.weight != null && recordData.reps != null) ...[
               _buildDetailRow(
-                Icons.info,
+                AppIcons.info,
                 'Set',
                 '${recordData.weight!.toStringAsFixed(1)} kg × ${recordData.reps} reps',
               ),

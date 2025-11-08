@@ -71,8 +71,8 @@ class _ThemePreviewScreenState extends State<ThemePreviewScreen> {
             IconButton(
               icon: Icon(
                 _themeMode == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode,
+                  ? AppIcons.darkMode
+                  : AppIcons.lightMode,
               ),
               onPressed: _toggleTheme,
               tooltip: 'Toggle theme',
@@ -265,7 +265,7 @@ class _SemanticColorPreview extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.info, color: fg),
+          Icon(AppIcons.info, color: fg),
           const SizedBox(width: AppSpacing.sm),
           Text(
             label,
@@ -368,7 +368,7 @@ class _ButtonsPreview extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.favorite),
+          icon: const Icon(AppIcons.favorite),
         ),
       ],
     );
@@ -411,7 +411,7 @@ class _CardsPreview extends StatelessWidget {
             padding: AppSpacing.card,
             child: Row(
               children: [
-                Icon(Icons.info, color: context.colors.primary),
+                Icon(AppIcons.info, color: context.colors.primary),
                 SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(

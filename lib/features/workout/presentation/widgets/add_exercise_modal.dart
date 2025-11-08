@@ -631,7 +631,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
           child: ExpansionTile(
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             leading: Icon(
-              Icons.add_circle_outline,
+              AppIcons.addCircleOutline,
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
             ),
             title: Text(
@@ -768,7 +768,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   ButtonSegment<int>(
                     value: 3,
                     label: Text('APRE 3'),
-                    icon: Icon(Icons.looks_3),
+                    icon: Icon(AppIcons.looks3),
                   ),
                   ButtonSegment<int>(
                     value: 6,

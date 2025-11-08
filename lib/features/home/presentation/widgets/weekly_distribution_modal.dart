@@ -116,7 +116,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     title: l10n.averageVolume,
                     value: '${(averageVolume / 1000).toStringAsFixed(1)}k',
                     subtitle: l10n.perDay,
-                    icon: Icons.analytics,
+                    icon: AppIcons.analytics,
                     color: context.colors.success,
                   ),
                 ),

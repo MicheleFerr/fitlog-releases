@@ -564,7 +564,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   );
                 },
                 icon: Icon(
-                  Icons.history,
+                  AppIcons.history,
                   color: colorScheme.primary,
                 ),
                 tooltip: l10n.viewMyFeedback,
@@ -730,14 +730,14 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
     // Type-specific icon based on insight type
     final IconData icon = switch (insight.type) {
-      InsightType.muscleGroupBalance => Icons.balance,
+      InsightType.muscleGroupBalance => AppIcons.balance,
       InsightType.progressOverload => Icons.trending_up,
       InsightType.recoveryPattern => AppIcons.bedtime,
       InsightType.volumeOptimization => AppIcons.tune,
-      InsightType.frequencyRecommendation => Icons.schedule,
+      InsightType.frequencyRecommendation => AppIcons.schedule,
       InsightType.plateauBreaker => Icons.trending_flat,
-      InsightType.formWarning => Icons.warning,
-      InsightType.motivational => Icons.celebration,
+      InsightType.formWarning => AppIcons.warning,
+      InsightType.motivational => AppIcons.celebration,
     };
 
     // Extract key metric from data (if available)
@@ -873,7 +873,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.recommend, size: 16, color: cardColor),
+                      Icon(AppIcons.recommend, size: 16, color: cardColor),
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
@@ -989,7 +989,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   const SizedBox(height: AppSpacing.sm),
                   _ExpandableSubsection(
                     title: '📚 ${l10n.aiCoachScientificReferences}',
-                    icon: Icons.menu_book,
+                    icon: AppIcons.menuBook,
                     iconColor: colorScheme.primary,
                     theme: theme,
                     colorScheme: colorScheme,
@@ -1069,7 +1069,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.science, size: 16, color: colorScheme.primary),
+                            Icon(AppIcons.science, size: 16, color: colorScheme.primary),
                             const SizedBox(width: AppSpacing.xs),
                             Expanded(
                               child: Text(
@@ -1081,7 +1081,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                                 ),
                               ),
                             ),
-                            Icon(Icons.open_in_new, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
+                            Icon(AppIcons.openInNew, size: 14, color: colorScheme.primary.withValues(alpha: 0.7)),
                           ],
                         ),
                       ),
@@ -1116,14 +1116,14 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
 
     // Type-specific icon based on insight type
     final IconData icon = switch (insight.type) {
-      InsightType.muscleGroupBalance => Icons.balance,
+      InsightType.muscleGroupBalance => AppIcons.balance,
       InsightType.progressOverload => Icons.trending_up,
       InsightType.recoveryPattern => AppIcons.bedtime,
       InsightType.volumeOptimization => AppIcons.tune,
-      InsightType.frequencyRecommendation => Icons.schedule,
+      InsightType.frequencyRecommendation => AppIcons.schedule,
       InsightType.plateauBreaker => Icons.trending_flat,
-      InsightType.formWarning => Icons.warning,
-      InsightType.motivational => Icons.celebration,
+      InsightType.formWarning => AppIcons.warning,
+      InsightType.motivational => AppIcons.celebration,
     };
 
     // Check if insight has detailed analysis
@@ -1365,7 +1365,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.analytics, size: 18, color: cardColor),
+                    Icon(AppIcons.analytics, size: 18, color: cardColor),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       l10n.whyThisMatters,
@@ -1406,7 +1406,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.bar_chart, size: 18, color: cardColor),
+                    Icon(AppIcons.barChart, size: 18, color: cardColor),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       l10n.yourData,
@@ -1422,7 +1422,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
                   child: Row(
                     children: [
-                      Icon(Icons.fiber_manual_record, size: 8, color: cardColor),
+                      Icon(AppIcons.fiberManualRecord, size: 8, color: cardColor),
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
@@ -1918,7 +1918,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     ref: ref,
                     insight: insight,
                     isHelpful: true,
-                    icon: Icons.thumb_up_outlined,
+                    icon: AppIcons.thumbUpOutlined,
                     label: l10n.feedbackHelpful,
                     theme: theme,
                     colorScheme: colorScheme,
@@ -1930,7 +1930,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                     ref: ref,
                     insight: insight,
                     isHelpful: false,
-                    icon: Icons.thumb_down_outlined,
+                    icon: AppIcons.thumbDownOutlined,
                     label: l10n.feedbackNotHelpful,
                     theme: theme,
                     colorScheme: colorScheme,

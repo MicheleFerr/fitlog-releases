@@ -276,7 +276,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.repeat, size: 16),
+          icon: const Icon(AppIcons.repeat, size: 16),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.time,
@@ -287,7 +287,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.timer, size: 16),
+          icon: const Icon(AppIcons.timer, size: 16),
         ),
       ],
       selected: {customization.countingMode},
@@ -432,7 +432,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             child: _buildPickerButton(
               label: AppLocalizations.of(context).reps,
               value: '${setCustomization.reps}',
-              icon: Icons.repeat,
+              icon: AppIcons.repeat,
               color: Theme.of(context).colorScheme.secondary,
               onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
             ),
@@ -444,7 +444,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             child: _buildPickerButton(
               label: AppLocalizations.of(context).duration,
               value: _formatDuration(setCustomization.seconds ?? 60),
-              icon: Icons.timer,
+              icon: AppIcons.timer,
               color: Theme.of(context).colorScheme.tertiary,
               onTap: () => _showDurationPicker(exerciseIndex, setIndex, setCustomization),
             ),

@@ -120,7 +120,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.reviewedCorrections,
-                Icons.check_circle,
+                AppIcons.checkCircle,
                 context.colors.success,
                 reviewedCorrections.length,
               ),
@@ -158,7 +158,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.approved,
             value: approved.toString(),
-            icon: Icons.check_circle,
+            icon: AppIcons.checkCircle,
             color: context.colors.success,
           ),
         ),

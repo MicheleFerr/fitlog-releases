@@ -269,7 +269,7 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
         Expanded(
           child: _buildActionButton(
             label: 'Annulla',
-            icon: Icons.close,
+            icon: AppIcons.close,
             color: Colors.white.withValues(alpha: 0.2),
             textColor: Colors.white,
             onPressed: _isLoading ? null : _handleCancel,

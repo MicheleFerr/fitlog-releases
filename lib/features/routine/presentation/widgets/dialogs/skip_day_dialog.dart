@@ -258,12 +258,12 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
 
   List<Widget> _buildReasonChips() {
     final reasons = [
-      (SkipReasons.sick, Icons.sick, 'Sick'),
-      (SkipReasons.injury, Icons.healing, 'Injury'),
-      (SkipReasons.busy, Icons.work, 'Busy'),
+      (SkipReasons.sick, AppIcons.sick, 'Sick'),
+      (SkipReasons.injury, AppIcons.healing, 'Injury'),
+      (SkipReasons.busy, AppIcons.work, 'Busy'),
       (SkipReasons.tired, AppIcons.bedtime, 'Tired'),
-      (SkipReasons.travel, Icons.flight, 'Travel'),
-      (SkipReasons.weather, Icons.cloud, 'Weather'),
+      (SkipReasons.travel, AppIcons.flight, 'Travel'),
+      (SkipReasons.weather, AppIcons.cloud, 'Weather'),
       (SkipReasons.other, AppIcons.moreHoriz, 'Other'),
     ];
 

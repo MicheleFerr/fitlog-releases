@@ -789,7 +789,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(Icons.timer, size: 14, color: theme.colorScheme.tertiary),
+            Icon(AppIcons.timer, size: 14, color: theme.colorScheme.tertiary),
             const SizedBox(width: 4),
             Text(
               'Duration',  // TODO: Add localization
@@ -875,7 +875,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       IconButton(
                         onPressed: _confirmManualSeconds,
                         icon: Icon(
-                          Icons.check_circle,
+                          AppIcons.checkCircle,
                           color: theme.colorScheme.tertiary,
                         ),
                         padding: const EdgeInsets.all(4),

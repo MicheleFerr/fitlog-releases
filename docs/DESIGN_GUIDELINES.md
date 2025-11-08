@@ -676,6 +676,526 @@ Curves.elasticOut
 Curves.easeOutBack
 ```
 
+### Unified Animation System (Tier-1)
+
+**Purpose**: Centralized, composable animation system for press feedback interactions.
+
+**Benefits**:
+- ✅ **Consistent**: Same scale/haptic feedback everywhere
+- ✅ **Composable**: Mix & match duration/haptic/visual styles
+- ✅ **Performant**: Single AnimationController, frame-perfect synchronization
+- ✅ **Accessible**: Respects `MediaQuery.disableAnimations`
+- ✅ **Maintainable**: Change feedback globally by editing enums
+
+**Architecture**: Opzione B (Single Controller + Builder Pattern)
+
+```
+InteractiveElement (manages AnimationController)
+    ↓
+    exposes Animation<double> via builder
+    ↓
+ExpandingStripContainer (derives strip animation from parent)
+    ↓
+    synchronizes 2pt → 4pt strip with scale animation
+```
+
+---
+
+#### Core Components
+
+**1. FeedbackTier** (Enum)
+
+Defines 3-tier feedback intensity hierarchy:
+
+```dart
+enum FeedbackTier {
+  high,      // 0.95 scale, 150ms, medium haptic (prominent actions)
+  standard,  // 0.98 scale, 150ms, light haptic (default buttons)
+  minimal,   // 0.98 scale, 100ms, no haptic (subtle interactions)
+}
+```
+
+**Usage**:
+```dart
+FeedbackConfig(baseTier: FeedbackTier.high)      // Primary CTAs
+FeedbackConfig(baseTier: FeedbackTier.standard)  // Secondary buttons
+FeedbackConfig(baseTier: FeedbackTier.minimal)   // Cards, list items
+```
+
+---
+
+**2. HapticFeedbackStyle** (Enum)
+
+Maps haptic intensity to Flutter methods:
+
+```dart
+enum HapticFeedbackStyle {
+  light,   // HapticFeedback.lightImpact()
+  medium,  // HapticFeedback.mediumImpact()
+  heavy,   // HapticFeedback.heavyImpact()
+}
+```
+
+**Trigger**:
+```dart
+HapticFeedbackStyle.medium.trigger()  // Async call
+```
+
+---
+
+**3. VisualFeedbackStyle** (Enum)
+
+Determines widget composition:
+
+```dart
+enum VisualFeedbackStyle {
+  expandingStrip,  // Uses ExpandingStripContainer (cards with strip)
+  scaleOnly,       // Wraps child directly (buttons)
+  none,            // No visual feedback (haptic only)
+}
+```
+
+---
+
+**4. FeedbackConfig** (Model)
+
+Composable configuration with tier defaults + overrides:
+
+```dart
+// Default from tier
+FeedbackConfig(baseTier: FeedbackTier.high)
+
+// Override duration only
+FeedbackConfig(
+  baseTier: FeedbackTier.high,
+  durationOverride: Duration(milliseconds: 100),  // Faster than default 150ms
+)
+
+// Override haptic only
+FeedbackConfig(
+  baseTier: FeedbackTier.standard,
+  hapticOverride: HapticFeedbackStyle.medium,  // Stronger than default light
+)
+
+// Visual-only (disable haptic)
+FeedbackConfig.visualOnly()  // Factory preset
+```
+
+**Factory Presets**:
+```dart
+FeedbackConfig.high()         // Pronounced (CTAs, primary actions)
+FeedbackConfig.standard()     // Default (secondary buttons)
+FeedbackConfig.minimal()      // Subtle (cards, list items)
+FeedbackConfig.highButFast()  // 0.95 scale + 100ms (quick interactions)
+FeedbackConfig.visualOnly()   // No haptic (accessibility, user preference)
+```
+
+---
+
+**5. InteractiveElement** (Widget)
+
+Core stateful widget managing AnimationController:
+
+```dart
+InteractiveElement(
+  feedbackConfig: FeedbackConfig.high(),
+  visualStyle: VisualFeedbackStyle.scaleOnly,
+  onTap: () => _doSomething(),
+  builder: (context, animation) {
+    // animation = AnimationController (source of truth)
+    // Derive your own animations from it
+    return Container(/* Your content */);
+  },
+)
+```
+
+**Responsibilities**:
+- Creates UN AnimationController (source of truth)
+- Manages lifecycle (initState, dispose)
+- Triggers haptic feedback on tap down
+- Exposes animation via builder pattern
+- Handles GestureDetector (onTapDown/Up/Cancel)
+- Respects MediaQuery.disableAnimations
+
+**Builder Pattern**:
+The `builder` receives `Animation<double>` (the controller) so child widgets can derive their own animations from the same source, ensuring frame-perfect synchronization.
+
+---
+
+**6. ExpandingStripContainer** (Widget)
+
+Stateful widget for animated left strip (2pt → 4pt on press):
+
+```dart
+ExpandingStripContainer(
+  animation: animation,  // From InteractiveElement builder
+  stripColor: context.colors.primary,
+  stripWidthCollapsed: 2.0,  // Default
+  stripWidthExpanded: 4.0,   // Default
+  child: Container(/* Card content */),
+)
+```
+
+**Usage**: Wrap card content inside InteractiveElement builder.
+
+**Why StatefulWidget?**
+Creates `_stripAnimation` ONCE in initState() by deriving from parent animation. If this were StatelessWidget, the Tween would recreate on every rebuild, causing stutters.
+
+---
+
+#### Usage Examples
+
+**Example 1: Standard Button (scaleOnly)**
+
+```dart
+InteractiveElement(
+  feedbackConfig: FeedbackConfig(
+    baseTier: FeedbackTier.standard,  // 0.98 scale, 150ms
+    hapticOverride: HapticFeedbackStyle.medium,  // Medium haptic for emphasis
+  ),
+  visualStyle: VisualFeedbackStyle.scaleOnly,
+  onTap: () => _createTemplate(),
+  builder: (context, animation) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        color: context.colors.primary,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(AppIcons.add, color: context.colors.onPrimary),
+          const SizedBox(width: 8),
+          Text(
+            context.l10n.createTemplate,
+            style: context.textTheme.titleMedium?.copyWith(
+              color: context.colors.onPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+)
+```
+
+---
+
+**Example 2: Card with Expanding Strip**
+
+```dart
+InteractiveElement(
+  feedbackConfig: FeedbackConfig.high(),  // Pronounced feedback
+  visualStyle: VisualFeedbackStyle.expandingStrip,
+  onTap: () => _openWorkout(workout.id),
+  builder: (context, animation) {
+    return ExpandingStripContainer(
+      animation: animation,  // From parent
+      stripColor: context.colors.primary.withValues(alpha: 0.8),
+      stripWidthCollapsed: 2.0,
+      stripWidthExpanded: 4.0,
+      child: Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                workout.name,
+                style: context.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                workout.description,
+                style: context.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  },
+)
+```
+
+---
+
+**Example 3: Minimal Card (list item)**
+
+```dart
+InteractiveElement(
+  feedbackConfig: FeedbackConfig.minimal(),  // Subtle
+  visualStyle: VisualFeedbackStyle.scaleOnly,
+  onTap: () => _selectExercise(exercise),
+  builder: (context, animation) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(AppIcons.exercise, size: AppIconSize.medium),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              exercise.name,
+              style: context.textTheme.bodyLarge,
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+)
+```
+
+---
+
+**Example 4: Custom Override (fast & strong)**
+
+```dart
+InteractiveElement(
+  feedbackConfig: FeedbackConfig(
+    baseTier: FeedbackTier.high,                     // Start with high (0.95 scale)
+    durationOverride: Duration(milliseconds: 100),   // Faster than default 150ms
+    hapticOverride: HapticFeedbackStyle.heavy,       // Heavier than default medium
+  ),
+  visualStyle: VisualFeedbackStyle.scaleOnly,
+  onTap: () => _deleteItem(),
+  builder: (context, animation) {
+    return Container(/* Delete button UI */);
+  },
+)
+```
+
+---
+
+#### Migration Pattern
+
+**Before** (Hardcoded AnimatedScale):
+
+```dart
+class _PressableButton extends StatefulWidget {
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  State<_PressableButton> createState() => _PressableButtonState();
+}
+
+class _PressableButtonState extends State<_PressableButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.98).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        HapticFeedback.mediumImpact();
+        _scaleController.forward();
+      },
+      onTapUp: (_) => widget.onPressed(),
+      onTapCancel: () => _scaleController.reverse(),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) => Transform.scale(
+          scale: _scaleAnimation.value,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+```
+
+**After** (Unified System):
+
+```dart
+// Delete the entire _PressableButton class
+
+// Replace usage with:
+InteractiveElement(
+  feedbackConfig: FeedbackConfig(
+    baseTier: FeedbackTier.standard,  // 0.98 scale, 150ms
+    hapticOverride: HapticFeedbackStyle.medium,
+  ),
+  visualStyle: VisualFeedbackStyle.scaleOnly,
+  onTap: onPressed,
+  builder: (context, animation) {
+    return child;  // Your existing widget
+  },
+)
+```
+
+**What Changed**:
+- ✅ ~50 lines → 10 lines
+- ✅ No StatefulWidget/AnimationController management
+- ✅ Composable config (easy to adjust feedback)
+- ✅ Consistent with rest of app
+- ✅ Respects accessibility settings
+
+---
+
+#### Best Practices
+
+**1. Choose Appropriate Tier**
+
+```dart
+// ✅ CORRECT - Tier matches importance
+FeedbackConfig.high()       // Primary CTAs, destructive actions
+FeedbackConfig.standard()   // Secondary buttons, confirmations
+FeedbackConfig.minimal()    // List items, cards, subtle interactions
+
+// ❌ WRONG - Everything is high tier
+FeedbackConfig.high()  // Every button → annoying, loses emphasis
+```
+
+---
+
+**2. Override Sparingly**
+
+```dart
+// ✅ CORRECT - Override only when needed
+FeedbackConfig(
+  baseTier: FeedbackTier.standard,
+  hapticOverride: HapticFeedbackStyle.medium,  // Specific reason (emphasize CTA)
+)
+
+// ❌ WRONG - Override everything (defeats purpose of tiers)
+FeedbackConfig(
+  baseTier: FeedbackTier.high,
+  durationOverride: Duration(milliseconds: 200),
+  hapticOverride: HapticFeedbackStyle.light,
+  scaleOverride: 0.99,
+)
+```
+
+---
+
+**3. Use Expanding Strip for Cards**
+
+```dart
+// ✅ CORRECT - Strip + card = visual hierarchy
+InteractiveElement(
+  visualStyle: VisualFeedbackStyle.expandingStrip,
+  builder: (context, animation) {
+    return ExpandingStripContainer(
+      animation: animation,
+      stripColor: categoryColor,
+      child: CardContent(),
+    );
+  },
+)
+
+// ❌ WRONG - Missing strip on card (inconsistent)
+InteractiveElement(
+  visualStyle: VisualFeedbackStyle.scaleOnly,  // No strip
+  builder: (context, animation) {
+    return CardContent();  // Should have strip
+  },
+)
+```
+
+---
+
+**4. Disable Haptic for Accessibility**
+
+```dart
+// ✅ CORRECT - Respect user preferences
+final disableHaptics = /* User setting from SharedPreferences */;
+
+InteractiveElement(
+  feedbackConfig: disableHaptics
+      ? FeedbackConfig.visualOnly()  // No haptic
+      : FeedbackConfig.standard(),   // Default
+  onTap: _action,
+  builder: (context, animation) => /* ... */,
+)
+```
+
+---
+
+**5. Avoid Nested InteractiveElements**
+
+```dart
+// ❌ WRONG - Nested interactive elements (double feedback)
+InteractiveElement(
+  onTap: _outerAction,
+  builder: (context, animation) {
+    return Container(
+      child: InteractiveElement(  // ← Nested!
+        onTap: _innerAction,
+        builder: (context, animation) => /* ... */,
+      ),
+    );
+  },
+)
+
+// ✅ CORRECT - Single InteractiveElement
+InteractiveElement(
+  onTap: _action,  // Choose one action
+  builder: (context, animation) => /* ... */,
+)
+```
+
+---
+
+#### Files Reference
+
+**Domain Layer** (enums + models):
+- `lib/shared/domain/enums/feedback_tier.dart` - FeedbackTier enum
+- `lib/shared/domain/enums/haptic_feedback_style.dart` - HapticFeedbackStyle enum
+- `lib/shared/domain/enums/visual_feedback_style.dart` - VisualFeedbackStyle enum
+- `lib/shared/domain/models/feedback_config.dart` - FeedbackConfig model
+
+**Presentation Layer** (widgets):
+- `lib/shared/presentation/widgets/interactive_element.dart` - InteractiveElement widget
+- `lib/shared/presentation/widgets/expanding_strip_container.dart` - ExpandingStripContainer widget
+
+**Import Pattern**:
+```dart
+import 'package:gymbro_flutter_new/shared/domain/enums/feedback_tier.dart';
+import 'package:gymbro_flutter_new/shared/domain/enums/haptic_feedback_style.dart';
+import 'package:gymbro_flutter_new/shared/domain/enums/visual_feedback_style.dart';
+import 'package:gymbro_flutter_new/shared/domain/models/feedback_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/interactive_element.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/expanding_strip_container.dart';
+```
+
 ---
 
 ## State Feedback

@@ -35,7 +35,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        questionnaire != null ? Icons.check_circle : Icons.warning,
+                        questionnaire != null ? AppIcons.checkCircle : AppIcons.warning,
                         color: questionnaire != null ? context.colors.success : context.colors.secondary,
                       ),
                       SizedBox(width: 8),
@@ -94,7 +94,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        medicalClearance != null ? Icons.check_circle : Icons.warning,
+                        medicalClearance != null ? AppIcons.checkCircle : AppIcons.warning,
                         color: medicalClearance != null ? context.colors.success : context.colors.secondary,
                       ),
                       SizedBox(width: 8),
@@ -131,7 +131,7 @@ class FitnessProfileDebugScreen extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(
-                        suggestionsEnabled ? Icons.check_circle : Icons.error,
+                        suggestionsEnabled ? AppIcons.checkCircle : AppIcons.error,
                         color: suggestionsEnabled ? context.colors.success : context.colors.error,
                       ),
                       SizedBox(width: 8),

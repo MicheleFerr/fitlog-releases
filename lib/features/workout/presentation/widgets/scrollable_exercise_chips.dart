@@ -86,7 +86,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
         chipItems.add(
           _ChipItem(
             label: 'REP: $rangeRipetizioni',
-            icon: Icons.repeat,
+            icon: AppIcons.repeat,
             backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
             textColor: context.colors.secondary,
           ),

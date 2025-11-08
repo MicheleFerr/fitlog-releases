@@ -397,14 +397,14 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneOptimal;
         explanation = l10n.volumeOptimalExplanation(currentSets, landmarks.mav, landmarks.mrv);
         advice = l10n.volumeOptimalAdvice;
-        icon = Icons.check_circle;
+        icon = AppIcons.checkCircle;
         color = context.colors.success;
         break;
       case VolumeZone.excessive:
         message = l10n.volumeZoneExcessive;
         explanation = l10n.volumeExcessiveExplanation(currentSets, landmarks.mrv);
         advice = l10n.volumeExcessiveAdvice(currentSets - landmarks.mrv);
-        icon = Icons.warning;
+        icon = AppIcons.warning;
         color = context.colors.error;
         break;
     }
@@ -1007,10 +1007,10 @@ class VolumeLandmarksCard extends StatelessWidget {
     final muscleGroups = [
       (MuscleGroup.chest, l10n.chestMuscle, AppIcons.favorite),
       (MuscleGroup.back, l10n.backMuscle, Icons.grid_4x4),
-      (MuscleGroup.shoulders, l10n.shouldersMuscle, Icons.north),
+      (MuscleGroup.shoulders, l10n.shouldersMuscle, AppIcons.north),
       (MuscleGroup.arms, l10n.armsMuscle, AppIcons.sportsMartialArts),
       (MuscleGroup.legs, l10n.legsMuscle, Icons.directions_run),
-      (MuscleGroup.core, l10n.coreMuscle, Icons.favorite_border),
+      (MuscleGroup.core, l10n.coreMuscle, AppIcons.favoriteBorder),
     ];
 
     await showDialog(

@@ -337,10 +337,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     
     if (suggestion.compatibilityScore >= 80) {
       compatibilityColor = context.colors.success;
-      compatibilityIcon = Icons.star;
+      compatibilityIcon = AppIcons.star;
     } else if (suggestion.compatibilityScore >= 60) {
       compatibilityColor = context.colors.secondary;
-      compatibilityIcon = Icons.star_half;
+      compatibilityIcon = AppIcons.starHalf;
     } else if (suggestion.compatibilityScore >= 40) {
       compatibilityColor = context.colors.warning;
       compatibilityIcon = AppIcons.star;

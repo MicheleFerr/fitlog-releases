@@ -90,7 +90,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   '2',
                   context.l10n.warmupPhase2Title,
                   context.l10n.warmupPhase2Description,
-                  Icons.flash_on,
+                  AppIcons.flashOn,
                   Colors.orange,
                 ),
                 const Divider(height: 24),
@@ -108,7 +108,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   '4',
                   context.l10n.warmupPhase4Title,
                   context.l10n.warmupPhase4Description,
-                  Icons.timer,
+                  AppIcons.timer,
                   Colors.green,
                 ),
               ],
@@ -204,7 +204,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
-              Icons.check_circle,
+              AppIcons.checkCircle,
               color: Colors.green,
               size: 20,
             ),

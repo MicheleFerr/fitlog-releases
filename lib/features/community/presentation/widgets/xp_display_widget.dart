@@ -123,7 +123,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.star,
+                                AppIcons.star,
                                 color: context.colors.surface,
                                 size: 28,
                               ),
@@ -378,17 +378,17 @@ class _BadgeChip extends StatelessWidget {
     
     switch (badge) {
       case 'first_contribution':
-        icon = Icons.celebration;
+        icon = AppIcons.celebration;
         color = context.colors.tertiary;
         label = 'Prima Contribuzione';
         break;
       case 'verified_contributor':
-        icon = Icons.verified;
+        icon = AppIcons.verified;
         color = context.colors.primary;
         label = 'Contributore Verificato';
         break;
       case 'top_contributor':
-        icon = Icons.military_tech;
+        icon = AppIcons.militaryTech;
         color = context.colors.secondary;
         label = 'Top Contributor';
         break;

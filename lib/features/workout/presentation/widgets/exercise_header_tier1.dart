@@ -114,7 +114,7 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         color = context.colors.tertiary;
         break;
       case 'cardio':
-        icon = Icons.favorite;
+        icon = AppIcons.favorite;
         color = context.colors.error;
         break;
       default:

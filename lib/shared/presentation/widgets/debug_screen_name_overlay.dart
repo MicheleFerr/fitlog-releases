@@ -62,7 +62,7 @@ class _DebugLabel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.code,
+            AppIcons.code,
             size: 14,
             color: Colors.amber[300],
           ),

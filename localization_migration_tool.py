@@ -32,7 +32,8 @@ class LocalizationMigrator:
 
     def load_quick_wins(self, top_n: int = 50) -> List[Dict]:
         """Load top N entries from quick wins"""
-        with open("localization_quick_wins.json", 'r', encoding='utf-8') as f:
+        # Use presentation layer quick wins (exact strings only)
+        with open("localization_presentation_quick_wins.json", 'r', encoding='utf-8') as f:
             data = json.load(f)
 
         entries = data['entries'][:top_n]
@@ -50,6 +51,18 @@ class LocalizationMigrator:
         for dart_file in lib_dir.rglob("*.dart"):
             # Skip generated files
             if "generated" in str(dart_file) or ".g.dart" in str(dart_file):
+                continue
+
+            # Skip data/domain layer (no BuildContext available)
+            file_str = str(dart_file)
+            skip_patterns = [
+                "/data/repositories/",
+                "/data/services/",
+                "/domain/services/",
+                "/domain/usecases/",
+                "/domain/utils/",
+            ]
+            if any(pattern in file_str for pattern in skip_patterns):
                 continue
 
             try:
@@ -282,10 +295,10 @@ def main():
     print(f"   4. If issues: Use rollback() method")
 
     # DRY RUN (preview only)
-    migrator.apply_migrations(dry_run=True)
+    # migrator.apply_migrations(dry_run=True)
 
-    # Uncomment to actually apply:
-    # migrator.apply_migrations(dry_run=False)
+    # APPLYING CHANGES (Batch 1)
+    migrator.apply_migrations(dry_run=False)
 
 if __name__ == "__main__":
     main()

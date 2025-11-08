@@ -333,7 +333,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _buildStatCard(
           'Effective Volume',
           '${(_currentWeekData!.effectiveVolume / 1000).toStringAsFixed(1)}k kg',
-          Icons.check_circle,
+          AppIcons.checkCircle,
           context.colors.success,
           theme,
         ),

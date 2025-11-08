@@ -465,7 +465,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 onPressed: () => _toggleDropCompletion(index),
                                 icon: Icon(
                                   isCompleted 
-                                      ? Icons.check_circle 
+                                      ? AppIcons.checkCircle 
                                       : AppIcons.radioButtonUnchecked,
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary

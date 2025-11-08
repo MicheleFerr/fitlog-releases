@@ -268,7 +268,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: Center(
                               child: hasWorkout
                                   ? Icon(
-                                      Icons.check,
+                                      AppIcons.check,
                                       color: theme.colorScheme.onPrimary,
                                       size: 18,
                                     )
@@ -397,7 +397,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      Icons.track_changes,
+                      AppIcons.trackChanges,
                       color: theme.colorScheme.onPrimary,
                       size: 28,
                     ),

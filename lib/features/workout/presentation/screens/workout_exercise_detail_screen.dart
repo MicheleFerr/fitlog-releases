@@ -68,7 +68,7 @@ class _WorkoutExerciseDetailScreenState
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.share, color: context.colors.onSurface),
+            icon: Icon(AppIcons.share, color: context.colors.onSurface),
             onPressed: () {
               // TODO: Implementare share esercizio
               HapticFeedback.lightImpact();
@@ -91,11 +91,11 @@ class _WorkoutExerciseDetailScreenState
             ),
             Tab(
               text: context.l10n.exerciseDetailHistory,
-              icon: Icon(Icons.history),
+              icon: Icon(AppIcons.history),
             ),
             Tab(
               text: context.l10n.exerciseDetailInstructions,
-              icon: const Icon(Icons.menu_book_outlined),
+              icon: const Icon(AppIcons.menuBookOutlined),
             ),
           ],
         ),
