@@ -16163,4 +16163,36 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exerciseListUsingDefaultTimer => 'Utilizzo timer predefinito';
+
+  @override
+  String get settingsThemeColor => 'Colore Tema';
+
+  @override
+  String get settingsThemeColorDesc => 'Tocca per cambiare';
+
+  @override
+  String get settingsTextSize => 'Dimensione Testo';
+
+  @override
+  String settingsTextSizePreview(Object size) {
+    return 'Testo di esempio ($size)';
+  }
+
+  @override
+  String get settingsWorkoutEssentials => 'Allenamento';
+
+  @override
+  String get settingsApreAutoAdjustment => 'Auto-Regolazione APRE';
+
+  @override
+  String get settingsApreAutoAdjustmentDesc =>
+      'Progressione automatica del peso';
+
+  @override
+  String get settingsApreProtocol => 'Protocollo APRE';
+
+  @override
+  String settingsApreProtocolDesc(Object number) {
+    return 'Protocollo $number';
+  }
 }

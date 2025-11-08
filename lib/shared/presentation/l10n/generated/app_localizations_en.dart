@@ -15998,4 +15998,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exerciseListUsingDefaultTimer => 'Using default timer';
+
+  @override
+  String get settingsThemeColor => 'Theme Color';
+
+  @override
+  String get settingsThemeColorDesc => 'Tap to change';
+
+  @override
+  String get settingsTextSize => 'Text Size';
+
+  @override
+  String settingsTextSizePreview(Object size) {
+    return 'Sample Text ($size)';
+  }
+
+  @override
+  String get settingsWorkoutEssentials => 'Workout';
+
+  @override
+  String get settingsApreAutoAdjustment => 'APRE Auto-Adjustment';
+
+  @override
+  String get settingsApreAutoAdjustmentDesc => 'Automatic weight progression';
+
+  @override
+  String get settingsApreProtocol => 'APRE Protocol';
+
+  @override
+  String settingsApreProtocolDesc(Object number) {
+    return 'Protocol $number';
+  }
 }

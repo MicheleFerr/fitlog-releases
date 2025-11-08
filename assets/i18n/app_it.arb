@@ -8750,5 +8750,14 @@
   "exerciseListUseDefaultTimer": "Usa timer predefinito",
   "exerciseListUsesGlobalRestTimer": "Usa timer di riposo globale",
   "exerciseListQuickOptions": "Opzioni rapide",
-  "exerciseListUsingDefaultTimer": "Utilizzo timer predefinito"
+  "exerciseListUsingDefaultTimer": "Utilizzo timer predefinito",
+  "settingsThemeColor": "Colore Tema",
+  "settingsThemeColorDesc": "Tocca per cambiare",
+  "settingsTextSize": "Dimensione Testo",
+  "settingsTextSizePreview": "Testo di esempio ({size})",
+  "settingsWorkoutEssentials": "Allenamento",
+  "settingsApreAutoAdjustment": "Auto-Regolazione APRE",
+  "settingsApreAutoAdjustmentDesc": "Progressione automatica del peso",
+  "settingsApreProtocol": "Protocollo APRE",
+  "settingsApreProtocolDesc": "Protocollo {number}"
 }

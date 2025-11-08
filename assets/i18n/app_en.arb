@@ -19350,5 +19350,14 @@
   "exerciseListUseDefaultTimer": "Use default timer",
   "exerciseListUsesGlobalRestTimer": "Uses global rest timer",
   "exerciseListQuickOptions": "Quick options",
-  "exerciseListUsingDefaultTimer": "Using default timer"
+  "exerciseListUsingDefaultTimer": "Using default timer",
+  "settingsThemeColor": "Theme Color",
+  "settingsThemeColorDesc": "Tap to change",
+  "settingsTextSize": "Text Size",
+  "settingsTextSizePreview": "Sample Text ({size})",
+  "settingsWorkoutEssentials": "Workout",
+  "settingsApreAutoAdjustment": "APRE Auto-Adjustment",
+  "settingsApreAutoAdjustmentDesc": "Automatic weight progression",
+  "settingsApreProtocol": "APRE Protocol",
+  "settingsApreProtocolDesc": "Protocol {number}"
 }

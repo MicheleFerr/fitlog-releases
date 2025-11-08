@@ -28601,6 +28601,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Using default timer'**
   String get exerciseListUsingDefaultTimer;
+
+  /// No description provided for @settingsThemeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color'**
+  String get settingsThemeColor;
+
+  /// No description provided for @settingsThemeColorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change'**
+  String get settingsThemeColorDesc;
+
+  /// No description provided for @settingsTextSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Size'**
+  String get settingsTextSize;
+
+  /// No description provided for @settingsTextSizePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample Text ({size})'**
+  String settingsTextSizePreview(Object size);
+
+  /// No description provided for @settingsWorkoutEssentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout'**
+  String get settingsWorkoutEssentials;
+
+  /// No description provided for @settingsApreAutoAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Auto-Adjustment'**
+  String get settingsApreAutoAdjustment;
+
+  /// No description provided for @settingsApreAutoAdjustmentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic weight progression'**
+  String get settingsApreAutoAdjustmentDesc;
+
+  /// No description provided for @settingsApreProtocol.
+  ///
+  /// In en, this message translates to:
+  /// **'APRE Protocol'**
+  String get settingsApreProtocol;
+
+  /// No description provided for @settingsApreProtocolDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Protocol {number}'**
+  String settingsApreProtocolDesc(Object number);
 }
 
 class _AppLocalizationsDelegate
