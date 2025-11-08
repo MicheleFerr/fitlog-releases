@@ -284,44 +284,6 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
     }
   }
 
-  Future<void> setVibrationsEnabled(bool enabled) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(vibrationsEnabled: enabled);
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Vibrations enabled set to: $enabled');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting vibrations enabled: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
-  Future<void> setTimerSound(String timerSound) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(timerSound: timerSound);
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Timer sound set to: $timerSound');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting timer sound: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
   // Workout settings
   Future<void> setDefaultRestTime(int seconds) async {
     try {
@@ -364,64 +326,6 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [AppConfig] Error setting auto start timer: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
-  Future<void> setShowIntensityTechniques(bool show) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(showIntensityTechniques: show);
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Show intensity techniques set to: $show');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting show intensity techniques: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
-  // iOS specific settings
-  Future<void> setEnableLiveActivities(bool enabled) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(enableLiveActivities: enabled);
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Enable Live Activities set to: $enabled');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting enable Live Activities: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
-  Future<void> setSyncWithHealthKit(bool enabled) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(syncWithHealthKit: enabled);
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Sync with HealthKit set to: $enabled');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting sync with HealthKit: $e');
         debugPrint('📍 Stack trace: $stackTrace');
       }
     }
@@ -625,30 +529,7 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
     }
   }
 
-  // DEPRECATED: Legacy onboarding methods - use OnboardingStateProvider instead
-  @Deprecated('Use OnboardingStateProvider.markGlobalOnboardingCompleted() instead')
-  Future<void> setWorkoutOnboardingCompleted({int? version}) async {
-    try {
-      await _ensureInitialized();
-      if (_isDisposed) return;
-
-      state = state.copyWith(
-        hasSeenWorkoutOnboarding: true,
-        onboardingVersion: version ?? state.onboardingVersion,
-      );
-      await _saveConfig();
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Workout onboarding completed (DEPRECATED method)');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error setting workout onboarding completed: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-
+  // DEPRECATED: Legacy onboarding method - use OnboardingStateProvider instead
   @Deprecated('Use OnboardingStateProvider.resetOnboarding() instead')
   Future<void> resetOnboarding() async {
     try {
