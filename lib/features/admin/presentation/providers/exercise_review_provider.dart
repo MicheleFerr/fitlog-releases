@@ -186,7 +186,8 @@ class FlaggedExercise {
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 
 /// Provider to get latest review report (real-time stream)
-final latestReviewProvider = StreamProvider<Map<String, dynamic>?>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final latestReviewProvider = StreamProvider.autoDispose<Map<String, dynamic>?>((ref) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
@@ -201,7 +202,8 @@ final latestReviewProvider = StreamProvider<Map<String, dynamic>?>((ref) {
 });
 
 /// Provider to get all review reports
-final allReviewsProvider = StreamProvider<List<ExerciseReviewReport>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final allReviewsProvider = StreamProvider.autoDispose<List<ExerciseReviewReport>>((ref) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
@@ -217,8 +219,9 @@ final allReviewsProvider = StreamProvider<List<ExerciseReviewReport>>((ref) {
 });
 
 /// Provider to get review report by period (e.g., "2025-10")
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final reviewByPeriodProvider =
-    StreamProvider.family<ExerciseReviewReport?, String>((ref, period) {
+    StreamProvider.autoDispose.family<ExerciseReviewReport?, String>((ref, period) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
@@ -233,8 +236,9 @@ final reviewByPeriodProvider =
 });
 
 /// Provider to get review statistics summary
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final reviewStatsSummaryProvider =
-    StreamProvider<Map<String, dynamic>?>((ref) {
+    StreamProvider.autoDispose<Map<String, dynamic>?>((ref) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
@@ -287,8 +291,9 @@ final criticalIssuesCountProvider = Provider<int>((ref) {
 });
 
 /// Provider to get top stale exercises from latest report
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final topStaleExercisesProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) {
+    StreamProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
@@ -310,8 +315,9 @@ final topStaleExercisesProvider =
 });
 
 /// Provider to get top flagged exercises from latest report
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
 final topFlaggedExercisesProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) {
+    StreamProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
   final firestore = ref.watch(firestoreProvider);
 
   return firestore
