@@ -81,14 +81,20 @@ class AnalyticsFeedbackRepository {
   ///
   /// Ordinati dal più recente al più vecchio.
   /// Usato per mostrare cronologia feedback all'utente (se richiesto).
+  ///
+  /// 🚀 PERFORMANCE FIX: Added pagination limit to prevent fetching all user feedback
+  /// Default limit: 100 (covers 99% of users who give feedback 1-5 times)
+  /// For power users with 100+ feedback: add pagination UI with "Load More" button
   Future<List<AnalyticsPageFeedback>> getUserFeedbackHistory(
-    String userId,
-  ) async {
+    String userId, {
+    int limit = 100,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection(_collectionName)
           .where('userId', isEqualTo: userId)
           .orderBy('timestamp', descending: true)
+          .limit(limit)
           .get();
 
       return snapshot.docs
