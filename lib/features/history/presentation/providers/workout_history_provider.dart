@@ -26,7 +26,9 @@ final workoutHistoryRepositoryProvider = Provider<WorkoutHistoryRepositoryEnhanc
 });
 
 /// Provider for workout history list with real-time updates
-final workoutHistoryProvider = StreamProvider<List<WorkoutHistoryDetail>>((ref) async* {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final workoutHistoryProvider = StreamProvider.autoDispose<List<WorkoutHistoryDetail>>((ref) async* {
   final repository = ref.watch(workoutHistoryRepositoryProvider);
 
   await for (final result in repository.getWorkoutsStream()) {
@@ -48,7 +50,9 @@ final workoutHistoryProvider = StreamProvider<List<WorkoutHistoryDetail>>((ref) 
 });
 
 /// Provider for sync status
-final workoutHistorySyncStatusProvider = StreamProvider<SyncStatus>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels stream listener when widget is disposed
+final workoutHistorySyncStatusProvider = StreamProvider.autoDispose<SyncStatus>((ref) {
   final repository = ref.watch(workoutHistoryRepositoryProvider);
   return repository.syncStatusStream;
 });
