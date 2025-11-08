@@ -15,6 +15,7 @@ library;
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,6 +25,7 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 
 /// State class for workout history management
 class WorkoutHistoryState {
@@ -481,4 +483,94 @@ final workoutHistoryProvider = StateNotifierProvider<WorkoutHistoryNotifier, Asy
 final workoutHistoryStatsProvider = Provider<Map<String, dynamic>>((ref) {
   final notifier = ref.read(workoutHistoryProvider.notifier);
   return notifier.calculateStatistics();
+});
+
+/// Provider to check if user has completed a workout today (after 04:00 cutoff)
+///
+/// Returns the completed workout if found, null otherwise.
+/// Uses 04:00 cutoff: workout after 04:00 today counts as "today".
+final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref) async {
+  final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
+
+  if (kDebugMode) {
+    debugPrint('🔍 [todayCompletedWorkoutProvider] START - userId: $userId');
+  }
+
+  if (userId == null) {
+    if (kDebugMode) {
+      debugPrint('⚠️ [todayCompletedWorkoutProvider] No userId, returning null');
+    }
+    return null;
+  }
+
+  final dataSource = ref.watch(hiveWorkoutDataSourceProvider);
+
+  try {
+    // Get last completed workout with timeout
+    final lastWorkoutModel = await dataSource
+        .getLastCompletedWorkout(userId)
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            if (kDebugMode) {
+              debugPrint('⏱️ [todayCompletedWorkoutProvider] Timeout after 5s');
+            }
+            return null;
+          },
+        );
+
+    if (lastWorkoutModel == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [todayCompletedWorkoutProvider] No last workout found');
+      }
+      return null;
+    }
+
+    // Map WorkoutModel to Workout entity
+    final lastWorkout = Workout(
+      id: lastWorkoutModel.id,
+      name: lastWorkoutModel.name,
+      createdAt: lastWorkoutModel.createdAt,
+      updatedAt: lastWorkoutModel.updatedAt,
+      exercises: lastWorkoutModel.exercises.map((e) => e.toDomain()).toList(),
+      status: WorkoutStatus.values.firstWhere(
+        (s) => s.name == lastWorkoutModel.status,
+        orElse: () => WorkoutStatus.planned,
+      ),
+      startTime: lastWorkoutModel.startTime,
+      endTime: lastWorkoutModel.endTime,
+      notes: lastWorkoutModel.notes,
+    );
+
+    // Check if startTime is null
+    if (lastWorkout.startTime == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [todayCompletedWorkoutProvider] Workout has no startTime');
+      }
+      return null;
+    }
+
+    // Calculate today's 04:00 cutoff
+    final now = DateTime.now();
+    final todayCutoff = DateTime(now.year, now.month, now.day, 4, 0);
+
+    // Check if workout was after cutoff
+    if (lastWorkout.startTime!.isAfter(todayCutoff)) {
+      if (kDebugMode) {
+        debugPrint('✅ [todayCompletedWorkoutProvider] Workout done today: ${lastWorkout.id}');
+      }
+      return lastWorkout;
+    }
+
+    if (kDebugMode) {
+      debugPrint('⚠️ [todayCompletedWorkoutProvider] Last workout was before cutoff');
+    }
+    return null;
+
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('❌ [todayCompletedWorkoutProvider] Error: $e');
+    }
+    return null; // Graceful fallback
+  }
 });
