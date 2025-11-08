@@ -13,7 +13,9 @@
 /// Gestisce operazioni CRUD su Firestore collection 'analytics_page_feedback'.
 library;
 
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 
 /// Repository per feedback Analytics
@@ -24,6 +26,12 @@ class AnalyticsFeedbackRepository {
 
   final FirebaseFirestore _firestore;
   static const String _collectionName = 'analytics_page_feedback';
+
+  // 🔧 PERFORMANCE: Cache for admin stats
+  static const String _statsCacheKey = 'analytics_stats_cache';
+  static const Duration _statsCacheDuration = Duration(hours: 1);
+  Map<String, dynamic>? _cachedStats;
+  DateTime? _statsCacheTimestamp;
 
   // ========================================
   // USER OPERATIONS
@@ -150,12 +158,43 @@ class AnalyticsFeedbackRepository {
   /// - helpfulPercentage: Percentuale feedback positivi
   /// - uniqueUsers: Numero utenti unici che hanno dato feedback
   /// - bySection: Stats suddivise per sezione (overview/progress/insights/routine)
+  ///
+  /// 🚀 PERFORMANCE FIX: Added 1-hour two-tier cache to prevent full collection scan
+  /// Tier 1: Memory cache (fastest, cleared on app restart)
+  /// Tier 2: SharedPreferences (persistent across app restarts)
+  /// Reduces: N reads → 1 read per hour (for admin dashboard)
   Future<Map<String, dynamic>> getOverallStats() async {
     try {
+      // 🔧 TIER 1 CACHE CHECK: Check memory cache first
+      if (_cachedStats != null && _statsCacheTimestamp != null) {
+        final cacheAge = DateTime.now().difference(_statsCacheTimestamp!);
+        if (cacheAge < _statsCacheDuration) {
+          return _cachedStats!;
+        }
+      }
+
+      // 🔧 TIER 2 CACHE CHECK: Check SharedPreferences if memory cache expired/missing
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_statsCacheKey);
+      final cachedTimestamp = prefs.getString('${_statsCacheKey}_timestamp');
+
+      if (cachedJson != null && cachedTimestamp != null) {
+        final timestamp = DateTime.parse(cachedTimestamp);
+        final cacheAge = DateTime.now().difference(timestamp);
+
+        if (cacheAge < _statsCacheDuration) {
+          // Restore to memory cache for faster future access
+          _cachedStats = Map<String, dynamic>.from(jsonDecode(cachedJson) as Map);
+          _statsCacheTimestamp = timestamp;
+          return _cachedStats!;
+        }
+      }
+
+      // 🔧 CACHE MISS: Execute full collection scan (expensive operation)
       final snapshot = await _firestore.collection(_collectionName).get();
 
       if (snapshot.docs.isEmpty) {
-        return {
+        final emptyStats = {
           'totalFeedback': 0,
           'totalHelpful': 0,
           'totalNotHelpful': 0,
@@ -163,6 +202,14 @@ class AnalyticsFeedbackRepository {
           'uniqueUsers': 0,
           'bySection': <String, dynamic>{},
         };
+
+        // Cache empty stats too
+        _cachedStats = emptyStats;
+        _statsCacheTimestamp = DateTime.now();
+        await prefs.setString(_statsCacheKey, jsonEncode(emptyStats));
+        await prefs.setString('${_statsCacheKey}_timestamp', DateTime.now().toIso8601String());
+
+        return emptyStats;
       }
 
       final total = snapshot.docs.length;
@@ -202,7 +249,7 @@ class AnalyticsFeedbackRepository {
         }
       }
 
-      return {
+      final stats = {
         'totalFeedback': total,
         'totalHelpful': helpful,
         'totalNotHelpful': notHelpful,
@@ -210,6 +257,14 @@ class AnalyticsFeedbackRepository {
         'uniqueUsers': uniqueUsers,
         'bySection': bySection,
       };
+
+      // 🔧 SAVE TO BOTH CACHE TIERS
+      _cachedStats = stats;
+      _statsCacheTimestamp = DateTime.now();
+      await prefs.setString(_statsCacheKey, jsonEncode(stats));
+      await prefs.setString('${_statsCacheKey}_timestamp', DateTime.now().toIso8601String());
+
+      return stats;
     } catch (e) {
       throw Exception('Failed to get overall stats: $e');
     }
