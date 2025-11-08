@@ -98,7 +98,9 @@ class FeedbackStats { // severity -> count
 /// 🔴 MASTER STREAM: Single Firestore listener for ALL feedback
 /// 🎯 Consolidates 10+ queries into 1 stream → -90% Firestore reads
 /// ✅ All derived providers filter from this single source in-memory
-final allFeedbackProvider = StreamProvider<List<ExerciseFeedback>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final allFeedbackProvider = StreamProvider.autoDispose<List<ExerciseFeedback>>((ref) {
   if (kDebugMode) {
     debugPrint('🔴 allFeedbackProvider: Starting master stream listener');
   }
