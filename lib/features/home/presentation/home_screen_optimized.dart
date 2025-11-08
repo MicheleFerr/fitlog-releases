@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_target_keys_mixin.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -167,7 +168,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
             },
             child: Text(
               l10n.close,
-              style: TextStyle(
+              style: context.textTheme.labelLarge?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
@@ -470,20 +471,18 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
+                                          Text(
                                             '🔧 Exercise Feedback',
-                                            style: TextStyle(
+                                            style: context.textTheme.titleMedium?.copyWith(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
                                             context.l10n.userReportsAndBugs,
-                                            style: TextStyle(
+                                            style: context.textTheme.bodySmall?.copyWith(
                                               color: Colors.white.withValues(alpha: 0.8),
-                                              fontSize: 12,
                                             ),
                                           ),
                                         ],
@@ -562,7 +561,11 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       WorkoutAnalytics.trackEvent('fab_tapped', properties: {
                         'timestamp': DateTime.now().toIso8601String(),
                       });
-                      context.goNamed('workout');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const WorkoutTemplatesScreen(),
+                        ),
+                      );
                     },
                     icon: AppIcons.add,
                     label: l10n.sessioneLibera,
@@ -578,7 +581,11 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   WorkoutAnalytics.trackEvent('fab_tapped', properties: {
                     'timestamp': DateTime.now().toIso8601String(),
                   });
-                  context.goNamed('workout');
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WorkoutTemplatesScreen(),
+                    ),
+                  );
                 },
                 icon: AppIcons.add,
                 label: l10n.sessioneLibera,
