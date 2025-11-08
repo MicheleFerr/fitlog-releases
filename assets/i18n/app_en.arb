@@ -1,5 +1,5 @@
 {
-  "@@locale": "en",
+  "@locale": "en",
   "appTitle": "FitLog Pro",
   "@appTitle": {
     "description": "Main application title"
@@ -12124,79 +12124,79 @@
     "description": "Error message when routine day completion fails"
   },
   "repPresetStrengthLabel": "1-3",
-  "@repPreset.strength.label": {
+  "@repPresetstrengthlabel": {
     "description": "Strength rep range label"
   },
   "repPresetStrengthDescription": "Maximum Strength",
-  "@repPreset.strength.description": {
+  "@repPresetstrengthdescription": {
     "description": "Strength rep range description"
   },
   "repPresetPowerLabel": "4-6",
-  "@repPreset.power.label": {
+  "@repPresetpowerlabel": {
     "description": "Power rep range label"
   },
   "repPresetPowerDescription": "Power",
-  "@repPreset.power.description": {
+  "@repPresetpowerdescription": {
     "description": "Power rep range description"
   },
   "repPresetStrengthHypertrophyLabel": "6-8",
-  "@repPreset.strengthHypertrophy.label": {
+  "@repPresetstrengthHypertrophylabel": {
     "description": "Strength/Hypertrophy rep range label"
   },
   "repPresetStrengthHypertrophyDescription": "Strength / Hypertrophy",
-  "@repPreset.strengthHypertrophy.description": {
+  "@repPresetstrengthHypertrophydescription": {
     "description": "Strength/Hypertrophy description"
   },
   "repPresetHypertrophyLabel": "8-12",
-  "@repPreset.hypertrophy.label": {
+  "@repPresethypertrophylabel": {
     "description": "Hypertrophy rep range label"
   },
   "repPresetHypertrophyDescription": "Hypertrophy",
-  "@repPreset.hypertrophy.description": {
+  "@repPresethypertrophydescription": {
     "description": "Hypertrophy description"
   },
   "repPresetEnduranceLabel": "12-15",
-  "@repPreset.endurance.label": {
+  "@repPresetendurancelabel": {
     "description": "Endurance rep range label"
   },
   "repPresetEnduranceDescription": "Muscular Endurance",
-  "@repPreset.endurance.description": {
+  "@repPresetendurancedescription": {
     "description": "Endurance description"
   },
   "repPresetHighEnduranceLabel": "15+",
-  "@repPreset.highEndurance.label": {
+  "@repPresethighEndurancelabel": {
     "description": "High endurance label"
   },
   "repPresetHighEnduranceDescription": "High Endurance",
-  "@repPreset.highEndurance.description": {
+  "@repPresethighEndurancedescription": {
     "description": "High endurance description"
   },
   "restPresetNoTimer": "No Timer",
-  "@restPreset.noTimer": {
+  "@restPresetnoTimer": {
     "description": "No rest timer"
   },
   "restPresetThirtySeconds": "30 seconds",
-  "@restPreset.thirtySeconds": {
+  "@restPresetthirtySeconds": {
     "description": "30 second rest"
   },
   "restPresetOneMinute": "1 minute",
-  "@restPreset.oneMinute": {
+  "@restPresetoneMinute": {
     "description": "1 minute rest"
   },
   "restPresetOneMinuteThirty": "1:30 min",
-  "@restPreset.oneMinuteThirty": {
+  "@restPresetoneMinuteThirty": {
     "description": "90 second rest"
   },
   "restPresetTwoMinutes": "2 minutes",
-  "@restPreset.twoMinutes": {
+  "@restPresettwoMinutes": {
     "description": "2 minute rest"
   },
   "restPresetThreeMinutes": "3 minutes",
-  "@restPreset.threeMinutes": {
+  "@restPresetthreeMinutes": {
     "description": "3 minute rest"
   },
   "restPresetFiveMinutes": "5 minutes",
-  "@restPreset.fiveMinutes": {
+  "@restPresetfiveMinutes": {
     "description": "5 minute rest"
   },
   "restTimeDescription": "Set the recovery timer between sets",
@@ -16685,8 +16685,7 @@
   "smartButtonRecoveryTips": "Recovery Tips",
   "@smartButtonRecoveryTips": {
     "description": "Secondary action for rest day"
-  }
-,
+  },
   "smartWorkoutCTAStart": "START WORKOUT",
   "@smartWorkoutCTAStart": {
     "description": "CTA button text to start workout"
@@ -16758,5 +16757,1230 @@
         "type": "int"
       }
     }
+  },
+  "userNotAuthenticated": "User not authenticated",
+  "@userNotAuthenticated": {
+    "description": "From quick wins migration - 11 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/ai_coach_card.dart, lib/features/settings/presentation/providers/cloud_sync_provider.dart"
+  },
+  "noDataAvailable": "No data available",
+  "@noDataAvailable": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/workout_frequency_chart.dart, lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+  },
+  "chooseYourPlan": "Choose Your Plan",
+  "@chooseYourPlan": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/simple_premium_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "aiCoachInsights": "AI Coach Insights",
+  "@aiCoachInsights": {
+    "description": "From quick wins migration - 5 occurrences",
+    "context": "Found in: lib/features/home/domain/models/home_widget_config.dart, lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "syncAlreadyInProgress": "Sync already in progress",
+  "@syncAlreadyInProgress": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: lib/features/exercise_database/data/services/exercise_sync_service.dart, lib/features/premium/services/premium_sync_manager.dart"
+  },
+  "premiumFeatures": "Premium Features",
+  "@premiumFeatures": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/simple_premium_screen.dart, lib/features/workout_templates/presentation/screens/template_export_screen.dart"
+  },
+  "invalidTemplateId": "Invalid template ID",
+  "@invalidTemplateId": {
+    "description": "From quick wins migration - 4 occurrences",
+    "context": "Found in: lib/features/workout_templates/presentation/providers/template_provider.dart"
+  },
+  "pesoKg": "Peso (kg)",
+  "@pesoKg": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/recent_workouts_card.dart, lib/features/workout/presentation/widgets/superset_execution_sheet.dart"
+  },
+  "volumeTotale": "Volume Totale",
+  "@volumeTotale": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/zen_mode_settings_dialog.dart, lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart"
+  },
+  "vediDettagli": "Vedi dettagli",
+  "@vediDettagli": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "yourePremium": "You\\'re Premium!",
+  "@yourePremium": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "manageSubscription": "Manage Subscription",
+  "@manageSubscription": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "creaTemplate": "Crea Template",
+  "@creaTemplate": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/screens/workout_templates_screen.dart, lib/features/workout/presentation/widgets/create_template_modal.dart"
+  },
+  "erroriComuni": "Errori comuni",
+  "@erroriComuni": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/community_contribution_modal.dart, lib/features/community/presentation/providers/exercise_data_provider.dart"
+  },
+  "datiEsercizioNonDisponibili": "Dati esercizio non disponibili",
+  "@datiEsercizioNonDisponibili": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/exercise_options_modal.dart"
+  },
+  "useWheel": "Use wheel",
+  "@useWheel": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+  },
+  "typeManually": "Type manually",
+  "@typeManually": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+  },
+  "templateNameIsRequired": "Template name is required",
+  "@templateNameIsRequired": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/utils/import_error_mapper.dart, lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+  },
+  "livelloLevel": "Livello $level",
+  "@livelloLevel": {
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/unified_stats_card.dart, lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+  },
+  "volumeProgress": "Volume Progress",
+  "@volumeProgress": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_progress_tab.dart, lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+  },
+  "createRoutine": "Create Routine",
+  "@createRoutine": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart, lib/features/routine/presentation/widgets/smart_cta_button/smart_cta_button.dart"
+  },
+  "nessunEsercizioTrovato": "Nessun esercizio trovato",
+  "@nessunEsercizioTrovato": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/exercise_analytics/presentation/screens/exercise_analytics_screen.dart, lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+  },
+  "dMmmYyyy": "d MMM yyyy",
+  "@dMmmYyyy": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart, lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+  },
+  "nessunDatoDisponibile": "Nessun dato disponibile",
+  "@nessunDatoDisponibile": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/interactive_weight_chart.dart, lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart"
+  },
+  "noExerciseDataAvailable": "No exercise data available",
+  "@noExerciseDataAvailable": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_screen.dart, lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+  },
+  "muscleEfficiencyScore": "Muscle Efficiency Score",
+  "@muscleEfficiencyScore": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart, lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+  },
+  "upperBodyPush": "Upper Body • Push",
+  "@upperBodyPush": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "showMe": "Show me",
+  "@showMe": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+  },
+  "benvenutoInGymbro": "Benvenuto in GymBro! 👋",
+  "@benvenutoInGymbro": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "iniziaIlTuoViaggioFitnessToccaLaCampanel": "Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.",
+  "@iniziaIlTuoViaggioFitnessToccaLaCampanel": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "iniziaOra": "Inizia ora",
+  "@iniziaOra": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "vediAchievement": "Vedi achievement",
+  "@vediAchievement": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "milestoneRaggiunto": "Milestone Raggiunto!",
+  "@milestoneRaggiunto": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "aggiornamentoProgressi": "Aggiornamento Progressi",
+  "@aggiornamentoProgressi": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/notifications/presentation/providers/notification_provider_bridge.dart, lib/features/notifications/presentation/providers/notification_provider.dart"
+  },
+  "forcedCleanupCompletedAfterDisposalError": "🔧 Forced cleanup completed after disposal error",
+  "@forcedCleanupCompletedAfterDisposalError": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/timer/domain/services/notification_service.dart, lib/features/notifications/presentation/providers/unified_notification_provider.dart"
+  },
+  "restoringPurchases": "Restoring purchases...",
+  "@restoringPurchases": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "processingPayment": "Processing payment...",
+  "@processingPayment": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "premiumStatus": "Premium Status",
+  "@premiumStatus": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "noPurchasesFoundToRestore": "No purchases found to restore",
+  "@noPurchasesFoundToRestore": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/premium/presentation/screens/premium_purchase_screen.dart, lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+  },
+  "seriePrincipale": "Serie Principale",
+  "@seriePrincipale": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/restpause_execution_sheet.dart, lib/features/workout/presentation/widgets/dropset_execution_sheet.dart"
+  },
+  "weightSuggestions": "Weight Suggestions",
+  "@weightSuggestions": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/strength_standards/presentation/screens/fitness_profile_debug_screen.dart, lib/features/workout/presentation/widgets/create_template_modal.dart"
+  },
+  "erroreNelCaricamento": "Errore nel caricamento",
+  "@erroreNelCaricamento": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/community_advice_modal.dart, lib/features/community/presentation/widgets/buddy_matching_tab.dart"
+  },
+  "errorUnableToEditThisSet": "Error: Unable to edit this set",
+  "@errorUnableToEditThisSet": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/unified_set_input_modal.dart, lib/features/workout/presentation/widgets/edit_set_modal.dart"
+  },
+  "contribuisciAllaCommunity": "Contribuisci alla Community",
+  "@contribuisciAllaCommunity": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/community_contribution_modal.dart, lib/features/community/presentation/widgets/radial_contribution_menu.dart"
+  },
+  "inviaContributo": "Invia Contributo",
+  "@inviaContributo": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/community_contribution_modal.dart, lib/features/community/presentation/widgets/create_contribution_modal.dart"
+  },
+  "segnalaProblema": "Segnala problema",
+  "@segnalaProblema": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/exercise_database/presentation/widgets/exercise_card_feedback.dart, lib/features/workout/presentation/widgets/exercise_options_modal.dart"
+  },
+  "weightToAll": "Weight to All",
+  "@weightToAll": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+  },
+  "repsToAll": "Reps to All",
+  "@repsToAll": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+  },
+  "ddMmmmYyyy": "dd MMMM yyyy",
+  "@ddMmmmYyyy": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/presentation/widgets/workout_history_editor.dart, lib/features/history/presentation/widgets/workout_history_editor_enhanced.dart"
+  },
+  "patternIsEmpty": "Pattern is empty",
+  "@patternIsEmpty": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/domain/models/pattern_result.dart"
+  },
+  "syncAvailableForPremiumUsersOnly": "Sync available for premium users only",
+  "@syncAvailableForPremiumUsersOnly": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout/data/services/workout_sync_service.dart, lib/features/workout/data/repositories/hybrid_exercise_activity_repository.dart"
+  },
+  "adminOnly": "Admin Only",
+  "@adminOnly": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_screen.dart, lib/features/community/presentation/screens/community_discovery_screen.dart"
+  },
+  "nessunContributo": "Nessun Contributo",
+  "@nessunContributo": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/community/presentation/screens/community_hub_screen.dart"
+  },
+  "rifiutaContributo": "Rifiuta Contributo",
+  "@rifiutaContributo": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/community/presentation/widgets/contribution_detail_modal.dart, lib/features/community/presentation/screens/community_hub_screen.dart"
+  },
+  "motivoOpzionale": "Motivo (opzionale)",
+  "@motivoOpzionale": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/missing_exercises_requests_screen.dart, lib/features/community/presentation/screens/community_hub_screen.dart"
+  },
+  "noReasonProvided": "No reason provided",
+  "@noReasonProvided": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/routine/presentation/screens/routine_detail_screen.dart, lib/features/community/presentation/screens/community_hub_screen.dart"
+  },
+  "trovaIlTuoWorkoutBuddy": "Trova il tuo Workout Buddy",
+  "@trovaIlTuoWorkoutBuddy": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/community/presentation/widgets/buddy_matching_tab.dart, lib/features/community/presentation/widgets/buddy_onboarding_screen.dart"
+  },
+  "adminModerationNotImplementedInHybridrep": "Admin moderation not implemented in HybridRepository",
+  "@adminModerationNotImplementedInHybridrep": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/community/data/repositories/hybrid_community_repository_adapter.dart"
+  },
+  "descriviIlProblemaInDettaglio": "Descrivi il problema in dettaglio...",
+  "@descriviIlProblemaInDettaglio": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/exercise_database/presentation/widgets/exercise_card_feedback.dart, lib/features/buddy_matching/presentation/widgets/enhanced/report_user_dialog.dart"
+  },
+  "templateNameCannotBeEmpty": "Template name cannot be empty",
+  "@templateNameCannotBeEmpty": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/presentation/providers/template_provider.dart, lib/features/workout_templates/domain/services/batch_import_service.dart"
+  },
+  "errorLoadingProfile": "Error loading profile",
+  "@errorLoadingProfile": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/presentation/screens/template_export_screen.dart"
+  },
+  "invalidWeight": "invalid weight",
+  "@invalidWeight": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/services/import_error_recovery_service.dart, lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+  },
+  "addSetInformationInFormatSet1X580kg": "Add set information in format: Set1 x 5: 80kg",
+  "@addSetInformationInFormatSet1X580kg": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/services/import_error_recovery_service.dart, lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+  },
+  "templateMustHaveAtLeastOneExercise": "Template must have at least one exercise",
+  "@templateMustHaveAtLeastOneExercise": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/services/batch_import_service.dart, lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+  },
+  "atLeastOne": "at least one",
+  "@atLeastOne": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/utils/import_error_mapper.dart"
+  },
+  "noWorkoutSectionsFoundInText": "No workout sections found in text",
+  "@noWorkoutSectionsFoundInText": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/services/template_parsing_service.dart"
+  },
+  "noSetInformation": "no set information",
+  "@noSetInformation": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/workout_templates/domain/services/import_error_recovery_service.dart"
+  },
+  "fatalErrorInGetusertemplates": "Fatal error in getUserTemplates()",
+  "@fatalErrorInGetusertemplates": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/shared/data/repositories/unified_template_repository.dart, lib/features/workout_templates/data/repositories/hybrid_template_repository.dart"
+  },
+  "noEmail": "No email",
+  "@noEmail": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/settings_screen.dart, lib/features/feedback/presentation/screens/admin_feedback_dashboard_screen.dart"
+  },
+  "adminAccessRequired": "Admin access required",
+  "@adminAccessRequired": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart, lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+  },
+  "analyticsInfo": "Analytics Info",
+  "@analyticsInfo": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+  },
+  "totalEvents": "Total Events",
+  "@totalEvents": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+  },
+  "avgDuration": "Avg Duration",
+  "@avgDuration": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart, lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+  },
+  "userProperties": "User Properties",
+  "@userProperties": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+  },
+  "syncDashboard": "Sync Dashboard",
+  "@syncDashboard": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+  },
+  "featureStatus": "Feature Status",
+  "@featureStatus": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/buddy_matching/presentation/screens/development_screen.dart, lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+  },
+  "segnaComeCompletato": "Segna come Completato",
+  "@segnaComeCompletato": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/missing_exercises_requests_screen.dart"
+  },
+  "changeEquipment": "Change Equipment",
+  "@changeEquipment": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/admin/presentation/screens/database_manager_screen.dart"
+  },
+  "startSync": "Start Sync",
+  "@startSync": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/widgets/premium_sync_card.dart, lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+  },
+  "segnalazioniEBugUtenti": "Segnalazioni e bug utenti",
+  "@segnalazioniEBugUtenti": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/home_screen_optimized.dart, lib/features/admin/presentation/widgets/admin_quick_actions.dart"
+  },
+  "systemSoundTest": "SYSTEM SOUND TEST",
+  "@systemSoundTest": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/timer/domain/services/notification_service.dart"
+  },
+  "cleanhandle": "@$cleanHandle",
+  "@cleanhandle": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/buddy_matching/presentation/widgets/instagram_link_button.dart"
+  },
+  "noTemplate": "No template",
+  "@noTemplate": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/routine/presentation/widgets/skip_recovery_bottom_sheet.dart, lib/features/routine/presentation/widgets/skip_recovery_dialog.dart"
+  },
+  "recoverWorkout": "Recover Workout",
+  "@recoverWorkout": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart"
+  },
+  "adherenceRate": "Adherence Rate",
+  "@adherenceRate": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart, lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart"
+  },
+  "skipWorkout": "Skip Workout",
+  "@skipWorkout": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart"
+  },
+  "gymbroUser": "GymBro User",
+  "@gymbroUser": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/settings_screen.dart, lib/features/auth/presentation/providers/cached_user_provider.dart"
+  },
+  "consigliPersonalizzati": "Consigli Personalizzati",
+  "@consigliPersonalizzati": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "vediAnalytics": "Vedi Analytics",
+  "@vediAnalytics": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "scegliTemplate": "Scegli Template",
+  "@scegliTemplate": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "selezionaUnWorkoutSalvato": "Seleziona un workout salvato",
+  "@selezionaUnWorkoutSalvato": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "allenamentiRecenti": "Allenamenti Recenti",
+  "@allenamentiRecenti": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/domain/models/home_widget_config.dart, lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "esercizioDelGiorno": "Esercizio del Giorno",
+  "@esercizioDelGiorno": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/domain/models/home_widget_config.dart, lib/features/home/presentation/widgets/home_widget_factory.dart"
+  },
+  "progressiAchievement": "🏆 Progressi & Achievement",
+  "@progressiAchievement": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/unified_stats_card.dart, lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+  },
+  "inarrestabile30GiorniDiStreak": "🔥 Inarrestabile! 30+ giorni di streak!",
+  "@inarrestabile30GiorniDiStreak": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/unified_stats_card.dart, lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+  },
+  "modalTesterDebugMode": "🧪 MODAL TESTER - Debug Mode",
+  "@modalTesterDebugMode": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/admin_modal_tester_widget.dart, lib/features/home/presentation/widgets/modal_tester_widget.dart"
+  },
+  "testAllWorkoutModalsToIdentifyDuplicates": "Test all workout modals to identify duplicates and determine which ones to keep",
+  "@testAllWorkoutModalsToIdentifyDuplicates": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/admin_modal_tester_widget.dart, lib/features/home/presentation/widgets/modal_tester_widget.dart"
+  },
+  "providerIsInErrorState": "💥 Provider is in ERROR state",
+  "@providerIsInErrorState": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/template_carousel.dart, lib/features/home/presentation/widgets/progress_dashboard.dart"
+  },
+  "workoutRecenti": "Workout Recenti",
+  "@workoutRecenti": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/recent_workouts_widget.dart, lib/features/home/domain/models/home_widget_config.dart"
+  },
+  "streakAttuale": "Streak Attuale",
+  "@streakAttuale": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/real_progress_stats_widget.dart, lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+  },
+  "allenamentiTotali": "Allenamenti Totali",
+  "@allenamentiTotali": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/real_progress_stats_widget.dart, lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+  },
+  "questoMese": "Questo Mese",
+  "@questoMese": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/real_progress_stats_widget.dart, lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+  },
+  "secondaryActionsPreview": "Secondary Actions Preview",
+  "@secondaryActionsPreview": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/home/presentation/widgets/secondary_actions_example.dart"
+  },
+  "resetTimerPosition": "Reset Timer Position",
+  "@resetTimerPosition": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/settings_screen.dart"
+  },
+  "apreCalculationMethod": "APRE Calculation Method",
+  "@apreCalculationMethod": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/settings_screen.dart"
+  },
+  "errorDetails": "Error Details",
+  "@errorDetails": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/features/settings/presentation/widgets/premium_sync_card.dart, lib/shared/presentation/widgets/error_boundary.dart"
+  },
+  "requestTimeout": "Request timeout",
+  "@requestTimeout": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/shared/data/network/secure_http_client.dart"
+  },
+  "sslHandshakeFailedPossibleMitmAttack": "SSL handshake failed - possible MITM attack",
+  "@sslHandshakeFailedPossibleMitmAttack": {
+    "description": "From quick wins migration - 2 occurrences",
+    "context": "Found in: lib/shared/data/network/secure_http_client.dart"
+  },
+  "errormsg": "❌ $errorMsg",
+  "@errormsg": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/migration/data_migration_script.dart"
+  },
+  "debugLogs": "Debug Logs",
+  "@debugLogs": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/debug/presentation/screens/debug_logs_screen.dart"
+  },
+  "timerDebugLogsAutorefreshEvery2sn": "Timer Debug Logs - Auto-refresh every 2s\\n",
+  "@timerDebugLogsAutorefreshEvery2sn": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/debug/presentation/screens/debug_logs_screen.dart"
+  },
+  "pleaseLogInToViewYourAnalytics": "Please log in to view your analytics",
+  "@pleaseLogInToViewYourAnalytics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+  },
+  "loadingYourAnalytics": "Loading your analytics...",
+  "@loadingYourAnalytics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+  },
+  "noWorkoutDataYet": "No workout data yet",
+  "@noWorkoutDataYet": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+  },
+  "completeSomeWorkoutsToSeeYournanalyticsA": "Complete some workouts to see your\\nanalytics and progress!",
+  "@completeSomeWorkoutsToSeeYournanalyticsA": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+  },
+  "noPersonalRecordsYet": "No personal records yet",
+  "@noPersonalRecordsYet": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_progress_tab.dart"
+  },
+  "newPr": "NEW PR!",
+  "@newPr": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_progress_tab.dart"
+  },
+  "analyticsErrorNoValidWorkoutsFound": "❌ [Analytics] ERROR: No valid workouts found!",
+  "@analyticsErrorNoValidWorkoutsFound": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+  },
+  "noCompletedExercisesFoundInYourWorkouts": "No completed exercises found in your workouts",
+  "@noCompletedExercisesFoundInYourWorkouts": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+  },
+  "analyticsErrorSyntheticactivitiesIsEmpty": "❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!",
+  "@analyticsErrorSyntheticactivitiesIsEmpty": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+  },
+  "unableToLoadExerciseActivities": "Unable to load exercise activities",
+  "@unableToLoadExerciseActivities": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+  },
+  "loadingRoutineAnalytics": "Loading routine analytics...",
+  "@loadingRoutineAnalytics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "noActiveRoutine": "No Active Routine",
+  "@noActiveRoutine": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "createAndActivateARoutineToSeeAnalyticsH": "Create and activate a routine to see analytics here",
+  "@createAndActivateARoutineToSeeAnalyticsH": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "errorLoadingAnalytics2": "Error Loading Analytics",
+  "@errorLoadingAnalytics2": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "activeRoutineAnalytics": "Active Routine Analytics",
+  "@activeRoutineAnalytics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "performanceMetrics": "Performance Metrics",
+  "@performanceMetrics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "skipRate": "Skip Rate",
+  "@skipRate": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "avgGap": "Avg Gap",
+  "@avgGap": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "betweenWorkouts": "between workouts",
+  "@betweenWorkouts": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "bestStreak": "Best Streak",
+  "@bestStreak": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "templateDistribution": "Template Distribution",
+  "@templateDistribution": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "weeklyPattern": "Weekly Pattern",
+  "@weeklyPattern": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "weeklyAdherenceTrend": "Weekly Adherence Trend",
+  "@weeklyAdherenceTrend": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "chartVisualizationComingSoon": "Chart visualization coming soon",
+  "@chartVisualizationComingSoon": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+  },
+  "workoutmetricsBoxNotOpenedCallHiveopenbo": "workoutMetrics box not opened. Call Hive.openBox<Map>(\\'workoutMetrics\\') first.",
+  "@workoutmetricsBoxNotOpenedCallHiveopenbo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/providers/workout_analytics_provider.dart"
+  },
+  "workoutmetricsBoxMustBeOpenedBeforeUsing": "workoutMetrics box must be opened before using analytics",
+  "@workoutmetricsBoxMustBeOpenedBeforeUsing": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/providers/workout_analytics_provider.dart"
+  },
+  "cannotCreateWorkoutFromEmptyActivitiesLi": "Cannot create workout from empty activities list",
+  "@cannotCreateWorkoutFromEmptyActivitiesLi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/providers/activity_to_workout_converter.dart"
+  },
+  "trainingRecommendations": "Training Recommendations",
+  "@trainingRecommendations": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/screens/lazy_analytics_screen.dart"
+  },
+  "loadingAnalytics": "Loading analytics...",
+  "@loadingAnalytics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/screens/enhanced_analytics_screen.dart"
+  },
+  "noExercisesMatch_searchquery": "No exercises match \"$_searchQuery\"",
+  "@noExercisesMatch_searchquery": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/screens/exercise_progress_screen.dart"
+  },
+  "noRpeDataAvailable": "No RPE data available",
+  "@noRpeDataAvailable": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+  },
+  "storicoEsercizi": "Storico Esercizi",
+  "@storicoEsercizi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+  },
+  "cercaUnEsercizio": "Cerca un esercizio...",
+  "@cercaUnEsercizio": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+  },
+  "pesoAttuale": "Peso attuale",
+  "@pesoAttuale": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+  },
+  "iniziaARegistrareIlTuoPeso": "Inizia a registrare il tuo peso",
+  "@iniziaARegistrareIlTuoPeso": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+  },
+  "allExercisesStatistics": "All Exercises Statistics",
+  "@allExercisesStatistics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+  },
+  "attendiQualcheSecondo": "Attendi qualche secondo...",
+  "@attendiQualcheSecondo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+  },
+  "tuttiIDatiSonoStatiSincronizzati": "Tutti i dati sono stati sincronizzati!",
+  "@tuttiIDatiSonoStatiSincronizzati": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+  },
+  "siEVerificatoUnErroreDuranteLaSincronizz": "Si è verificato un errore durante la sincronizzazione.",
+  "@siEVerificatoUnErroreDuranteLaSincronizz": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+  },
+  "mostraTutti": "Mostra tutti",
+  "@mostraTutti": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "periodoDiVisualizzazione": "Periodo di visualizzazione",
+  "@periodoDiVisualizzazione": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "proiezione30Giorni": "Proiezione 30 giorni",
+  "@proiezione30Giorni": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "rmRmeffettivo": "1RM Effettivo",
+  "@rmRmeffettivo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "nessunDato1rmDisponibile": "Nessun dato 1RM disponibile",
+  "@nessunDato1rmDisponibile": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "datiInsufficientiPerAnalisi": "Dati insufficienti per analisi",
+  "@datiInsufficientiPerAnalisi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+  },
+  "howAreYouFeeling": "How are you feeling?",
+  "@howAreYouFeeling": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+  },
+  "rateYourFatigueLevelToImproveRecoveryIns": "Rate your fatigue level to improve recovery insights",
+  "@rateYourFatigueLevelToImproveRecoveryIns": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+  },
+  "anySpecificMuscleSorenessOrObservations": "Any specific muscle soreness or observations?",
+  "@anySpecificMuscleSorenessOrObservations": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+  },
+  "e1rmTrackerTopExercises": "e1RM Tracker - Top Exercises",
+  "@e1rmTrackerTopExercises": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "bestSetOfTheWeek": "Best Set of the Week",
+  "@bestSetOfTheWeek": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "dataSyncedToCloud": "Data synced to cloud",
+  "@dataSyncedToCloud": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "syncToCloud": "Sync to Cloud",
+  "@syncToCloud": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "noWorkoutDataThisWeek": "No workout data this week",
+  "@noWorkoutDataThisWeek": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "completeWorkoutsToSeeYourProgress": "Complete workouts to see your progress",
+  "@completeWorkoutsToSeeYourProgress": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+  },
+  "fullHistoryComingSoon": "Full history coming soon!",
+  "@fullHistoryComingSoon": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/recent_workouts_card.dart"
+  },
+  "trainingInsight": "💡 Training Insight",
+  "@trainingInsight": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "considera23GiorniDiRecuperoCompletoOUnAl": "Considera 2-3 giorni di recupero completo o un allenamento molto leggero.",
+  "@considera23GiorniDiRecuperoCompletoOUnAl": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "sePianificatoOttimoAltrimentiVerificaSeS": "Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.",
+  "@sePianificatoOttimoAltrimentiVerificaSeS": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "puoiMantenereQuestoRitmoMaMonitoraIlRecu": "Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.",
+  "@puoiMantenereQuestoRitmoMaMonitoraIlRecu": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "consideraDiMantenereIlVolumeAttualePerCo": "Considera di mantenere il volume attuale per consolidare i progressi.",
+  "@consideraDiMantenereIlVolumeAttualePerCo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "sonoPassatiDayssincelastworkoutGiorniDal": "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
+  "@sonoPassatiDayssincelastworkoutGiorniDal": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "ripartiConCalmaMagariConUnVolumeRidottoD": "Riparti con calma, magari con un volume ridotto del 20-30%.",
+  "@ripartiConCalmaMagariConUnVolumeRidottoD": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "assicuratiDiBilanciareConGiorniDiRecuper": "Assicurati di bilanciare con giorni di recupero adeguati.",
+  "@assicuratiDiBilanciareConGiorniDiRecuper": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "frequenzaDiAllenamentoElevataConWorkoutc": "Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.",
+  "@frequenzaDiAllenamentoElevataConWorkoutc": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "valutaSeRidurreLaFrequenzaPerMigliorareI": "Valuta se ridurre la frequenza per migliorare il recupero.",
+  "@valutaSeRidurreLaFrequenzaPerMigliorareI": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "continuaCosiAscoltandoSempreISegnaliDelT": "Continua così, ascoltando sempre i segnali del tuo corpo.",
+  "@continuaCosiAscoltandoSempreISegnaliDelT": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "analisiDettagliata": "📊 Analisi Dettagliata",
+  "@analisiDettagliata": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "sbloccaAnalisiAvanzate": "🎯 Sblocca Analisi Avanzate",
+  "@sbloccaAnalisiAvanzate": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "previsioniPersonalizzateBasateSuAin": "• Previsioni personalizzate basate su AI\\n",
+  "@previsioniPersonalizzateBasateSuAin": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+  },
+  "esempiPratici": "Esempi Pratici",
+  "@esempiPratici": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/interactive_metric_widget.dart"
+  },
+  "volumeSetsRepsWeight": "Volume = Sets × Reps × Weight",
+  "@volumeSetsRepsWeight": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart"
+  },
+  "strengthCurrentVolumeMaxVolume100": "Strength % = (Current Volume / Max Volume) × 100",
+  "@strengthCurrentVolumeMaxVolume100": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart"
+  },
+  "loadOlderWorkouts": "Load older workouts",
+  "@loadOlderWorkouts": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/lazy_recent_workouts_card.dart"
+  },
+  "boyle2016": "Boyle (2016)",
+  "@boyle2016": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+  },
+  "croisierEtAl2008": "Croisier et al. (2008)",
+  "@croisierEtAl2008": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+  },
+  "reference": "📚 $reference",
+  "@reference": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+  },
+  "setsCompleted": "Sets Completed",
+  "@setsCompleted": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+  },
+  "streakAttuale2": "Streak attuale",
+  "@streakAttuale2": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+  },
+  "piu": "Più",
+  "@piu": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+  },
+  "giornoDiRiposo": "Giorno di riposo",
+  "@giornoDiRiposo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+  },
+  "optimalBalance17PerMuscleGroupResearchSh": "Optimal balance: ~17% per muscle group. Research shows balanced training prevents injuries and maximizes growth (Baz-Valle 2022)",
+  "@optimalBalance17PerMuscleGroupResearchSh": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/horizontal_muscle_balance_chart.dart"
+  },
+  "cercaEsercizio": "Cerca Esercizio",
+  "@cercaEsercizio": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/animated_search_icon.dart"
+  },
+  "cercaNeiTuoiEsercizi": "Cerca nei tuoi esercizi",
+  "@cercaNeiTuoiEsercizi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/animated_search_icon.dart"
+  },
+  "focusMoreOnNeglected": "Focus more on $neglected",
+  "@focusMoreOnNeglected": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+  },
+  "considerReducingOverdevelopedVolume": "Consider reducing $overdeveloped volume",
+  "@considerReducingOverdevelopedVolume": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+  },
+  "noMuscleGroupDataAvailable": "No muscle group data available",
+  "@noMuscleGroupDataAvailable": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+  },
+  "ricaricaAnimazione": "Ricarica animazione",
+  "@ricaricaAnimazione": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+  },
+  "forzaAttuale": "Forza attuale",
+  "@forzaAttuale": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+  },
+  "vsUltimoMese": "vs ultimo mese",
+  "@vsUltimoMese": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+  },
+  "mmmmYyyy": "MMMM yyyy",
+  "@mmmmYyyy": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "performanceTrends": "Performance Trends",
+  "@performanceTrends": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "trackYourMuscleEfficiency": "Track your muscle efficiency",
+  "@trackYourMuscleEfficiency": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "efficiencyVolumeRecoveryTime": "Efficiency = Volume / Recovery Time",
+  "@efficiencyVolumeRecoveryTime": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "rateTodaysFatigue": "Rate Today\\'s Fatigue",
+  "@rateTodaysFatigue": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "noWorkoutsTodayToRate": "No workouts today to rate",
+  "@noWorkoutsTodayToRate": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "fatigueLevelFatiguelevelRecorded": "Fatigue level $fatigueLevel recorded",
+  "@fatigueLevelFatiguelevelRecorded": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "noDataAvailableYet": "No data available yet",
+  "@noDataAvailableYet": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "currentScore": "Current Score",
+  "@currentScore": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "scoreBreakdown": "Score Breakdown",
+  "@scoreBreakdown": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "statsTemporarilyUnavailable": "Stats temporarily unavailable",
+  "@statsTemporarilyUnavailable": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+  },
+  "heatmapImplementationComingSoon": "Heatmap implementation coming soon",
+  "@heatmapImplementationComingSoon": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/charts/volume_heatmap.dart"
+  },
+  "chartImplementationComingSoon": "Chart implementation coming soon",
+  "@chartImplementationComingSoon": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/charts/strength_progression_chart.dart"
+  },
+  "bernrdezvzquezEtAl2022Healthcare": "Bernárdez-Vázquez et al. (2022) - Healthcare",
+  "@bernrdezvzquezEtAl2022Healthcare": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/premium/volume_landmarks_card.dart"
+  },
+  "schoenfeldEtAl2021JStrengthCondRes": "Schoenfeld et al. (2021) - J Strength Cond Res",
+  "@schoenfeldEtAl2021JStrengthCondRes": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/presentation/widgets/premium/rep_continuum_card.dart"
+  },
+  "doesNotAccountForFatigueOrTrainingState": "Does not account for fatigue or training state",
+  "@doesNotAccountForFatigueOrTrainingState": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/transparent_predictor.dart"
+  },
+  "errorMarginTypically510EvenInBestConditi": "Error margin typically ±5-10% even in best conditions",
+  "@errorMarginTypically510EvenInBestConditi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/transparent_predictor.dart"
+  },
+  "gymbroAnalyticsReport": "GymBro Analytics Report",
+  "@gymbroAnalyticsReport": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/export_service.dart"
+  },
+  "trainingPerformanceAnalysis": "Training Performance Analysis",
+  "@trainingPerformanceAnalysis": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/export_service.dart"
+  },
+  "trainingStatistics": "Training Statistics",
+  "@trainingStatistics": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/export_service.dart"
+  },
+  "bestSet": "Best Set",
+  "@bestSet": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/domain/services/export_service.dart"
+  },
+  "boxNotFound": "Box not found",
+  "@boxNotFound": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/data/repositories/workout_analytics_repository_impl.dart"
+  },
+  "analyticsHiveBoxErrorDetectedRetrying": "🔧 [Analytics] Hive box error detected. Retrying...",
+  "@analyticsHiveBoxErrorDetectedRetrying": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/analytics/data/repositories/workout_analytics_repository_impl.dart"
+  },
+  "pleaseSelectYourDateOfBirth": "Please select your date of birth",
+  "@pleaseSelectYourDateOfBirth": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/age_gate_screen.dart"
+  },
+  "requiredByGdprAndItalianPrivacyLaws": "Required by GDPR and Italian privacy laws",
+  "@requiredByGdprAndItalianPrivacyLaws": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/age_gate_screen.dart"
+  },
+  "toggleAttivi": "Toggle Attivi:",
+  "@toggleAttivi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/02_mode_selection_with_toggles.dart"
+  },
+  "toggleDisattivi": "Toggle Disattivi:",
+  "@toggleDisattivi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/02_mode_selection_with_toggles.dart"
+  },
+  "allenamentoRapido": "Allenamento Rapido",
+  "@allenamentoRapido": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "daTemplate": "Da Template",
+  "@daTemplate": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "fromTemplate": "From Template",
+  "@fromTemplate": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "nuovoAllenamento": "Nuovo Allenamento",
+  "@nuovoAllenamento": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "pettoETricipiti": "Petto e Tricipiti",
+  "@pettoETricipiti": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "chestTriceps": "Chest & Triceps",
+  "@chestTriceps": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "n45Min": "45 min",
+  "@n45Min": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "n4Esercizi": "4 esercizi",
+  "@n4Esercizi": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "n4Exercises": "4 exercises",
+  "@n4Exercises": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+  },
+  "pettoTric": "PETTO, TRIC",
+  "@pettoTric": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+  },
+  "modificaRapida": "Modifica Rapida",
+  "@modificaRapida": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+  },
+  "quickEdit": "Quick Edit",
+  "@quickEdit": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+  },
+  "rpe610": "RPE (6-10)",
+  "@rpe610": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+  },
+  "tapTheButtonToCreateYourFirstWorkout": "Tap the + button to create your first workout",
+  "@tapTheButtonToCreateYourFirstWorkout": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+  },
+  "welcomeLetsCreateYourFirstWorkoutTogethe": "Welcome! Let\\'s create your first workout together. I\\'ll guide you step-by-step.",
+  "@welcomeLetsCreateYourFirstWorkoutTogethe": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+  },
+  "letsGo": "Let\\'s go!",
+  "@letsGo": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+  },
+  "greatNowTapHereToAddYourFirstExercise": "Great! Now tap here to add your first exercise.",
+  "@greatNowTapHereToAddYourFirstExercise": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+  },
+  "searchByNameOrBrowseByMuscleGroupChooseA": "Search by name or browse by muscle group. Choose any exercise to get started!",
+  "@searchByNameOrBrowseByMuscleGroupChooseA": {
+    "description": "From quick wins migration - 1 occurrences",
+    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
   }
 }

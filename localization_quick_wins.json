@@ -1,0 +1,3129 @@
+{
+  "total_entries": 300,
+  "total_occurrences": 485,
+  "by_language": {
+    "EN": 88,
+    "IT": 32,
+    "UNKNOWN": 180
+  },
+  "entries": [
+    {
+      "key": "userNotAuthenticated",
+      "value_en": "User not authenticated",
+      "value_it": "User not authenticated",
+      "occurrences": 11,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/ai_coach_card.dart",
+        "lib/features/settings/presentation/providers/cloud_sync_provider.dart",
+        "lib/features/home/presentation/providers/insight_feedback_provider.dart",
+        "lib/features/analytics/presentation/providers/analytics_feedback_provider.dart",
+        "lib/features/workout/data/services/workout_sync_service.dart"
+      ]
+    },
+    {
+      "key": "noDataAvailable",
+      "value_en": "No data available",
+      "value_it": "No data available",
+      "occurrences": 5,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_frequency_chart.dart",
+        "lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+      ]
+    },
+    {
+      "key": "chooseYourPlan",
+      "value_en": "Choose Your Plan",
+      "value_it": "Choose Your Plan",
+      "occurrences": 5,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_upgrade_screen.dart"
+      ]
+    },
+    {
+      "key": "aiCoachInsights",
+      "value_en": "AI Coach Insights",
+      "value_it": "AI Coach Insights",
+      "occurrences": 5,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/domain/models/home_widget_config.dart",
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "syncAlreadyInProgress",
+      "value_en": "Sync already in progress",
+      "value_it": "Sync already in progress",
+      "occurrences": 4,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/exercise_database/data/services/exercise_sync_service.dart",
+        "lib/features/premium/services/premium_sync_manager.dart",
+        "lib/features/workout/data/services/workout_sync_service.dart"
+      ]
+    },
+    {
+      "key": "premiumFeatures",
+      "value_en": "Premium Features",
+      "value_it": "Premium Features",
+      "occurrences": 4,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+        "lib/features/workout_templates/presentation/screens/template_export_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+        "lib/features/premium/presentation/screens/premium_upgrade_screen.dart"
+      ]
+    },
+    {
+      "key": "invalidTemplateId",
+      "value_en": "Invalid template ID",
+      "value_it": "Invalid template ID",
+      "occurrences": 4,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout_templates/presentation/providers/template_provider.dart"
+      ]
+    },
+    {
+      "key": "pesoKg",
+      "value_en": "Peso (kg)",
+      "value_it": "Peso (kg)",
+      "occurrences": 3,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+        "lib/features/workout/presentation/widgets/superset_execution_sheet.dart",
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "volumeTotale",
+      "value_en": "Volume Totale",
+      "value_it": "Volume Totale",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/zen_mode_settings_dialog.dart",
+        "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart"
+      ]
+    },
+    {
+      "key": "privacyPolicy",
+      "value_en": "Privacy Policy",
+      "value_it": "Privacy Policy",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "termsOfService",
+      "value_en": "Terms of Service",
+      "value_it": "Terms of Service",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "gotIt",
+      "value_en": "Got it",
+      "value_it": "Got it",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "aiCoach",
+      "value_en": "AI Coach",
+      "value_it": "AI Coach",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart",
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "vediDettagli",
+      "value_en": "Vedi dettagli",
+      "value_it": "Vedi dettagli",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart",
+        "lib/features/notifications/domain/services/intelligent_notification_service.dart"
+      ]
+    },
+    {
+      "key": "unknownError",
+      "value_en": "Unknown error",
+      "value_it": "Unknown error",
+      "occurrences": 3,
+      "language": "EN",
+      "contexts": [
+        "lib/features/admin/presentation/providers/firebase_init_provider.dart",
+        "lib/features/notifications/presentation/providers/unified_notification_provider.dart",
+        "lib/shared/presentation/widgets/error_boundary.dart"
+      ]
+    },
+    {
+      "key": "yourePremium",
+      "value_en": "You\\'re Premium!",
+      "value_it": "You\\'re Premium!",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+        "lib/features/premium/presentation/screens/premium_upgrade_screen.dart"
+      ]
+    },
+    {
+      "key": "manageSubscription",
+      "value_en": "Manage Subscription",
+      "value_it": "Manage Subscription",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+        "lib/features/premium/presentation/screens/premium_upgrade_screen.dart"
+      ]
+    },
+    {
+      "key": "creaTemplate",
+      "value_en": "Crea Template",
+      "value_it": "Crea Template",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/screens/workout_templates_screen.dart",
+        "lib/features/workout/presentation/widgets/create_template_modal.dart"
+      ]
+    },
+    {
+      "key": "apre3",
+      "value_en": "APRE 3",
+      "value_it": "APRE 3",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+        "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+        "lib/features/workout/presentation/widgets/add_exercise_modal.dart"
+      ]
+    },
+    {
+      "key": "apre6",
+      "value_en": "APRE 6",
+      "value_it": "APRE 6",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+        "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+        "lib/features/workout/presentation/widgets/add_exercise_modal.dart"
+      ]
+    },
+    {
+      "key": "apre10",
+      "value_en": "APRE 10",
+      "value_it": "APRE 10",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+        "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+        "lib/features/workout/presentation/widgets/add_exercise_modal.dart"
+      ]
+    },
+    {
+      "key": "erroriComuni",
+      "value_en": "Errori comuni",
+      "value_it": "Errori comuni",
+      "occurrences": 3,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/community_contribution_modal.dart",
+        "lib/features/community/presentation/providers/exercise_data_provider.dart"
+      ]
+    },
+    {
+      "key": "datiEsercizioNonDisponibili",
+      "value_en": "Dati esercizio non disponibili",
+      "value_it": "Dati esercizio non disponibili",
+      "occurrences": 3,
+      "language": "IT",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/exercise_options_modal.dart"
+      ]
+    },
+    {
+      "key": "useWheel",
+      "value_en": "Use wheel",
+      "value_it": "Use wheel",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+      ]
+    },
+    {
+      "key": "typeManually",
+      "value_en": "Type manually",
+      "value_it": "Type manually",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+      ]
+    },
+    {
+      "key": "exerciseNameCannotBeEmpty",
+      "value_en": "Exercise name cannot be empty",
+      "value_it": "Exercise name cannot be empty",
+      "occurrences": 3,
+      "language": "EN",
+      "contexts": [
+        "lib/shared/domain/services/input_sanitizer.dart",
+        "lib/features/workout_templates/domain/services/batch_import_service.dart",
+        "lib/features/workout/data/repositories/exercise_chart_repository_impl.dart"
+      ]
+    },
+    {
+      "key": "templateNameIsRequired",
+      "value_en": "Template name is required",
+      "value_it": "Template name is required",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout_templates/domain/utils/import_error_mapper.dart",
+        "lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+      ]
+    },
+    {
+      "key": "goBack",
+      "value_en": "Go Back",
+      "value_it": "Go Back",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart",
+        "lib/features/routine/presentation/screens/routine_detail_screen.dart"
+      ]
+    },
+    {
+      "key": "livelloLevel",
+      "value_en": "Livello $level",
+      "value_it": "Livello $level",
+      "occurrences": 3,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/unified_stats_card.dart",
+        "lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+      ]
+    },
+    {
+      "key": "errorLoadingAnalytics",
+      "value_en": "Error loading analytics",
+      "value_it": "Error loading analytics",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/enhanced_analytics_screen.dart",
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "volumeProgress",
+      "value_en": "Volume Progress",
+      "value_it": "Volume Progress",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart",
+        "lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+      ]
+    },
+    {
+      "key": "personalRecords",
+      "value_en": "Personal Records",
+      "value_it": "Personal Records",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart",
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "createRoutine",
+      "value_en": "Create Routine",
+      "value_it": "Create Routine",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart",
+        "lib/features/routine/presentation/widgets/smart_cta_button/smart_cta_button.dart"
+      ]
+    },
+    {
+      "key": "currentStreak",
+      "value_en": "Current Streak",
+      "value_it": "Current Streak",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart",
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "nessunEsercizioTrovato",
+      "value_en": "Nessun esercizio trovato",
+      "value_it": "Nessun esercizio trovato",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/exercise_analytics/presentation/screens/exercise_analytics_screen.dart",
+        "lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+      ]
+    },
+    {
+      "key": "unlockPremium",
+      "value_en": "Unlock Premium",
+      "value_it": "Unlock Premium",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+        "lib/features/analytics/presentation/widgets/premium_feature_overlay.dart"
+      ]
+    },
+    {
+      "key": "dMmmYyyy",
+      "value_en": "d MMM yyyy",
+      "value_it": "d MMM yyyy",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart",
+        "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+      ]
+    },
+    {
+      "key": "nessunDatoDisponibile",
+      "value_en": "Nessun dato disponibile",
+      "value_it": "Nessun dato disponibile",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart",
+        "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart"
+      ]
+    },
+    {
+      "key": "topExercises",
+      "value_en": "Top Exercises",
+      "value_it": "Top Exercises",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+        "lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+      ]
+    },
+    {
+      "key": "viewAll",
+      "value_en": "View All",
+      "value_it": "View All",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+        "lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+      ]
+    },
+    {
+      "key": "noExerciseDataAvailable",
+      "value_en": "No exercise data available",
+      "value_it": "No exercise data available",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+        "lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+      ]
+    },
+    {
+      "key": "muscleEfficiencyScore",
+      "value_en": "Muscle Efficiency Score",
+      "value_it": "Muscle Efficiency Score",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart",
+        "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+      ]
+    },
+    {
+      "key": "recentWorkouts",
+      "value_en": "Recent Workouts",
+      "value_it": "Recent Workouts",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "upperBodyPush",
+      "value_en": "Upper Body • Push",
+      "value_it": "Upper Body • Push",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "weightKg",
+      "value_en": "Weight (kg)",
+      "value_it": "Weight (kg)",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/warmup_progression_v2.dart",
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "showMe",
+      "value_en": "Show me",
+      "value_it": "Show me",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "benvenutoInGymbro",
+      "value_en": "Benvenuto in GymBro! 👋",
+      "value_it": "Benvenuto in GymBro! 👋",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "iniziaIlTuoViaggioFitnessToccaLaCampanel",
+      "value_en": "Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.",
+      "value_it": "Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "iniziaOra",
+      "value_en": "Inizia ora",
+      "value_it": "Inizia ora",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "vediAchievement",
+      "value_en": "Vedi achievement",
+      "value_it": "Vedi achievement",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "milestoneRaggiunto",
+      "value_en": "Milestone Raggiunto!",
+      "value_it": "Milestone Raggiunto!",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "aggiornamentoProgressi",
+      "value_en": "Aggiornamento Progressi",
+      "value_it": "Aggiornamento Progressi",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+        "lib/features/notifications/presentation/providers/notification_provider.dart"
+      ]
+    },
+    {
+      "key": "forcedCleanupCompletedAfterDisposalError",
+      "value_en": "🔧 Forced cleanup completed after disposal error",
+      "value_it": "🔧 Forced cleanup completed after disposal error",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/timer/domain/services/notification_service.dart",
+        "lib/features/notifications/presentation/providers/unified_notification_provider.dart"
+      ]
+    },
+    {
+      "key": "restoringPurchases",
+      "value_en": "Restoring purchases...",
+      "value_it": "Restoring purchases...",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "processingPayment",
+      "value_en": "Processing payment...",
+      "value_it": "Processing payment...",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "premiumStatus",
+      "value_en": "Premium Status",
+      "value_it": "Premium Status",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "noPurchasesFoundToRestore",
+      "value_en": "No purchases found to restore",
+      "value_it": "No purchases found to restore",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "cloudSync",
+      "value_en": "Cloud Sync",
+      "value_it": "Cloud Sync",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+        "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart"
+      ]
+    },
+    {
+      "key": "error",
+      "value_en": "• $error",
+      "value_it": "• $error",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+        "lib/features/migration/presentation/migration_screen.dart"
+      ]
+    },
+    {
+      "key": "quotaExceeded",
+      "value_en": "quota exceeded",
+      "value_it": "quota exceeded",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/workout_screen.dart",
+        "lib/features/workout/presentation/widgets/workout_actions/template_save_helper.dart"
+      ]
+    },
+    {
+      "key": "deleteSuperset",
+      "value_en": "Delete Superset",
+      "value_it": "Delete Superset",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/superset_card.dart"
+      ]
+    },
+    {
+      "key": "seriePrincipale",
+      "value_en": "Serie Principale",
+      "value_it": "Serie Principale",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/restpause_execution_sheet.dart",
+        "lib/features/workout/presentation/widgets/dropset_execution_sheet.dart"
+      ]
+    },
+    {
+      "key": "weightSuggestions",
+      "value_en": "Weight Suggestions",
+      "value_it": "Weight Suggestions",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/strength_standards/presentation/screens/fitness_profile_debug_screen.dart",
+        "lib/features/workout/presentation/widgets/create_template_modal.dart"
+      ]
+    },
+    {
+      "key": "erroreNelCaricamento",
+      "value_en": "Errore nel caricamento",
+      "value_it": "Errore nel caricamento",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/community_advice_modal.dart",
+        "lib/features/community/presentation/widgets/buddy_matching_tab.dart"
+      ]
+    },
+    {
+      "key": "errorUnableToEditThisSet",
+      "value_en": "Error: Unable to edit this set",
+      "value_it": "Error: Unable to edit this set",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/unified_set_input_modal.dart",
+        "lib/features/workout/presentation/widgets/edit_set_modal.dart"
+      ]
+    },
+    {
+      "key": "contribuisciAllaCommunity",
+      "value_en": "Contribuisci alla Community",
+      "value_it": "Contribuisci alla Community",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/community_contribution_modal.dart",
+        "lib/features/community/presentation/widgets/radial_contribution_menu.dart"
+      ]
+    },
+    {
+      "key": "inviaContributo",
+      "value_en": "Invia Contributo",
+      "value_it": "Invia Contributo",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/community_contribution_modal.dart",
+        "lib/features/community/presentation/widgets/create_contribution_modal.dart"
+      ]
+    },
+    {
+      "key": "segnalaProblema",
+      "value_en": "Segnala problema",
+      "value_it": "Segnala problema",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/exercise_database/presentation/widgets/exercise_card_feedback.dart",
+        "lib/features/workout/presentation/widgets/exercise_options_modal.dart"
+      ]
+    },
+    {
+      "key": "weightToAll",
+      "value_en": "Weight to All",
+      "value_it": "Weight to All",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+      ]
+    },
+    {
+      "key": "repsToAll",
+      "value_en": "Reps to All",
+      "value_it": "Reps to All",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart"
+      ]
+    },
+    {
+      "key": "ddMmmmYyyy",
+      "value_en": "dd MMMM yyyy",
+      "value_it": "dd MMMM yyyy",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/presentation/widgets/workout_history_editor.dart",
+        "lib/features/history/presentation/widgets/workout_history_editor_enhanced.dart"
+      ]
+    },
+    {
+      "key": "patternIsEmpty",
+      "value_en": "Pattern is empty",
+      "value_it": "Pattern is empty",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/domain/models/pattern_result.dart"
+      ]
+    },
+    {
+      "key": "syncAvailableForPremiumUsersOnly",
+      "value_en": "Sync available for premium users only",
+      "value_it": "Sync available for premium users only",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout/data/services/workout_sync_service.dart",
+        "lib/features/workout/data/repositories/hybrid_exercise_activity_repository.dart"
+      ]
+    },
+    {
+      "key": "adminOnly",
+      "value_en": "Admin Only",
+      "value_it": "Admin Only",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+        "lib/features/community/presentation/screens/community_discovery_screen.dart"
+      ]
+    },
+    {
+      "key": "nessunContributo",
+      "value_en": "Nessun Contributo",
+      "value_it": "Nessun Contributo",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/community/presentation/screens/community_hub_screen.dart"
+      ]
+    },
+    {
+      "key": "rifiutaContributo",
+      "value_en": "Rifiuta Contributo",
+      "value_it": "Rifiuta Contributo",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/community/presentation/widgets/contribution_detail_modal.dart",
+        "lib/features/community/presentation/screens/community_hub_screen.dart"
+      ]
+    },
+    {
+      "key": "motivoOpzionale",
+      "value_en": "Motivo (opzionale)",
+      "value_it": "Motivo (opzionale)",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/missing_exercises_requests_screen.dart",
+        "lib/features/community/presentation/screens/community_hub_screen.dart"
+      ]
+    },
+    {
+      "key": "noReasonProvided",
+      "value_en": "No reason provided",
+      "value_it": "No reason provided",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/routine/presentation/screens/routine_detail_screen.dart",
+        "lib/features/community/presentation/screens/community_hub_screen.dart"
+      ]
+    },
+    {
+      "key": "trovaIlTuoWorkoutBuddy",
+      "value_en": "Trova il tuo Workout Buddy",
+      "value_it": "Trova il tuo Workout Buddy",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/community/presentation/widgets/buddy_matching_tab.dart",
+        "lib/features/community/presentation/widgets/buddy_onboarding_screen.dart"
+      ]
+    },
+    {
+      "key": "adminModerationNotImplementedInHybridrep",
+      "value_en": "Admin moderation not implemented in HybridRepository",
+      "value_it": "Admin moderation not implemented in HybridRepository",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/community/data/repositories/hybrid_community_repository_adapter.dart"
+      ]
+    },
+    {
+      "key": "descriviIlProblemaInDettaglio",
+      "value_en": "Descrivi il problema in dettaglio...",
+      "value_it": "Descrivi il problema in dettaglio...",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/exercise_database/presentation/widgets/exercise_card_feedback.dart",
+        "lib/features/buddy_matching/presentation/widgets/enhanced/report_user_dialog.dart"
+      ]
+    },
+    {
+      "key": "templateNameCannotBeEmpty",
+      "value_en": "Template name cannot be empty",
+      "value_it": "Template name cannot be empty",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout_templates/presentation/providers/template_provider.dart",
+        "lib/features/workout_templates/domain/services/batch_import_service.dart"
+      ]
+    },
+    {
+      "key": "errorLoadingProfile",
+      "value_en": "Error loading profile",
+      "value_it": "Error loading profile",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/presentation/screens/template_export_screen.dart"
+      ]
+    },
+    {
+      "key": "invalidWeight",
+      "value_en": "invalid weight",
+      "value_it": "invalid weight",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/domain/services/import_error_recovery_service.dart",
+        "lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+      ]
+    },
+    {
+      "key": "addSetInformationInFormatSet1X580kg",
+      "value_en": "Add set information in format: Set1 x 5: 80kg",
+      "value_it": "Add set information in format: Set1 x 5: 80kg",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/domain/services/import_error_recovery_service.dart",
+        "lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+      ]
+    },
+    {
+      "key": "templateMustHaveAtLeastOneExercise",
+      "value_en": "Template must have at least one exercise",
+      "value_it": "Template must have at least one exercise",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/domain/services/batch_import_service.dart",
+        "lib/features/workout_templates/domain/utils/import_validation_utils.dart"
+      ]
+    },
+    {
+      "key": "atLeastOne",
+      "value_en": "at least one",
+      "value_it": "at least one",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout_templates/domain/utils/import_error_mapper.dart"
+      ]
+    },
+    {
+      "key": "permissionDenied",
+      "value_en": "permission denied",
+      "value_it": "permission denied",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/workout_templates/domain/utils/import_error_mapper.dart"
+      ]
+    },
+    {
+      "key": "noWorkoutSectionsFoundInText",
+      "value_en": "No workout sections found in text",
+      "value_it": "No workout sections found in text",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/domain/services/template_parsing_service.dart"
+      ]
+    },
+    {
+      "key": "noSetInformation",
+      "value_en": "no set information",
+      "value_it": "no set information",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/workout_templates/domain/services/import_error_recovery_service.dart"
+      ]
+    },
+    {
+      "key": "fatalErrorInGetusertemplates",
+      "value_en": "Fatal error in getUserTemplates()",
+      "value_it": "Fatal error in getUserTemplates()",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/shared/data/repositories/unified_template_repository.dart",
+        "lib/features/workout_templates/data/repositories/hybrid_template_repository.dart"
+      ]
+    },
+    {
+      "key": "noEmail",
+      "value_en": "No email",
+      "value_it": "No email",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart",
+        "lib/features/feedback/presentation/screens/admin_feedback_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "adminAccessRequired",
+      "value_en": "Admin access required",
+      "value_it": "Admin access required",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart",
+        "lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "analyticsInfo",
+      "value_en": "Analytics Info",
+      "value_it": "Analytics Info",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "totalEvents",
+      "value_en": "Total Events",
+      "value_it": "Total Events",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "avgDuration",
+      "value_en": "Avg Duration",
+      "value_it": "Avg Duration",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart",
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "totalVolume",
+      "value_en": "Total Volume",
+      "value_it": "Total Volume",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart",
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "userProperties",
+      "value_en": "User Properties",
+      "value_it": "User Properties",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "syncDashboard",
+      "value_en": "Sync Dashboard",
+      "value_it": "Sync Dashboard",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "totalUsers",
+      "value_en": "Total Users",
+      "value_it": "Total Users",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+        "lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "featureStatus",
+      "value_en": "Feature Status",
+      "value_it": "Feature Status",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/buddy_matching/presentation/screens/development_screen.dart",
+        "lib/features/admin/presentation/screens/sync_dashboard_screen.dart"
+      ]
+    },
+    {
+      "key": "segnaComeCompletato",
+      "value_en": "Segna come Completato",
+      "value_it": "Segna come Completato",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/admin/presentation/screens/missing_exercises_requests_screen.dart"
+      ]
+    },
+    {
+      "key": "changeEquipment",
+      "value_en": "Change Equipment",
+      "value_it": "Change Equipment",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/admin/presentation/screens/database_manager_screen.dart"
+      ]
+    },
+    {
+      "key": "startSync",
+      "value_en": "Start Sync",
+      "value_it": "Start Sync",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "syncing",
+      "value_en": "Syncing...",
+      "value_it": "Syncing...",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+        "lib/features/admin/presentation/screens/admin_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "segnalazioniEBugUtenti",
+      "value_en": "Segnalazioni e bug utenti",
+      "value_it": "Segnalazioni e bug utenti",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/home_screen_optimized.dart",
+        "lib/features/admin/presentation/widgets/admin_quick_actions.dart"
+      ]
+    },
+    {
+      "key": "systemSoundTest",
+      "value_en": "SYSTEM SOUND TEST",
+      "value_it": "SYSTEM SOUND TEST",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/timer/domain/services/notification_service.dart"
+      ]
+    },
+    {
+      "key": "cleanhandle",
+      "value_en": "@$cleanHandle",
+      "value_it": "@$cleanHandle",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/buddy_matching/presentation/widgets/instagram_link_button.dart"
+      ]
+    },
+    {
+      "key": "noTemplate",
+      "value_en": "No template",
+      "value_it": "No template",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/routine/presentation/widgets/skip_recovery_bottom_sheet.dart",
+        "lib/features/routine/presentation/widgets/skip_recovery_dialog.dart"
+      ]
+    },
+    {
+      "key": "recoverWorkout",
+      "value_en": "Recover Workout",
+      "value_it": "Recover Workout",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart"
+      ]
+    },
+    {
+      "key": "adherenceRate",
+      "value_en": "Adherence Rate",
+      "value_it": "Adherence Rate",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart",
+        "lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart"
+      ]
+    },
+    {
+      "key": "skipWorkout",
+      "value_en": "Skip Workout",
+      "value_it": "Skip Workout",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart"
+      ]
+    },
+    {
+      "key": "gymbroUser",
+      "value_en": "GymBro User",
+      "value_it": "GymBro User",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart",
+        "lib/features/auth/presentation/providers/cached_user_provider.dart"
+      ]
+    },
+    {
+      "key": "exerciseFeedback",
+      "value_en": "🔧 Exercise Feedback",
+      "value_it": "🔧 Exercise Feedback",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/home/presentation/home_screen_optimized.dart",
+        "lib/features/home/presentation/customizable_home_screen.dart"
+      ]
+    },
+    {
+      "key": "consigliPersonalizzati",
+      "value_en": "Consigli Personalizzati",
+      "value_it": "Consigli Personalizzati",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "vediAnalytics",
+      "value_en": "Vedi Analytics",
+      "value_it": "Vedi Analytics",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "scegliTemplate",
+      "value_en": "Scegli Template",
+      "value_it": "Scegli Template",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "selezionaUnWorkoutSalvato",
+      "value_en": "Seleziona un workout salvato",
+      "value_it": "Seleziona un workout salvato",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "allenamentiRecenti",
+      "value_en": "Allenamenti Recenti",
+      "value_it": "Allenamenti Recenti",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/domain/models/home_widget_config.dart",
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "esercizioDelGiorno",
+      "value_en": "Esercizio del Giorno",
+      "value_it": "Esercizio del Giorno",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/home/domain/models/home_widget_config.dart",
+        "lib/features/home/presentation/widgets/home_widget_factory.dart"
+      ]
+    },
+    {
+      "key": "progressiAchievement",
+      "value_en": "🏆 Progressi & Achievement",
+      "value_it": "🏆 Progressi & Achievement",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/unified_stats_card.dart",
+        "lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+      ]
+    },
+    {
+      "key": "inarrestabile30GiorniDiStreak",
+      "value_en": "🔥 Inarrestabile! 30+ giorni di streak!",
+      "value_it": "🔥 Inarrestabile! 30+ giorni di streak!",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/unified_stats_card.dart",
+        "lib/features/home/presentation/widgets/optimized_unified_stats_card.dart"
+      ]
+    },
+    {
+      "key": "modalTesterDebugMode",
+      "value_en": "🧪 MODAL TESTER - Debug Mode",
+      "value_it": "🧪 MODAL TESTER - Debug Mode",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/admin_modal_tester_widget.dart",
+        "lib/features/home/presentation/widgets/modal_tester_widget.dart"
+      ]
+    },
+    {
+      "key": "testAllWorkoutModalsToIdentifyDuplicates",
+      "value_en": "Test all workout modals to identify duplicates and determine which ones to keep",
+      "value_it": "Test all workout modals to identify duplicates and determine which ones to keep",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/admin_modal_tester_widget.dart",
+        "lib/features/home/presentation/widgets/modal_tester_widget.dart"
+      ]
+    },
+    {
+      "key": "providerIsInErrorState",
+      "value_en": "💥 Provider is in ERROR state",
+      "value_it": "💥 Provider is in ERROR state",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/template_carousel.dart",
+        "lib/features/home/presentation/widgets/progress_dashboard.dart"
+      ]
+    },
+    {
+      "key": "workoutRecenti",
+      "value_en": "Workout Recenti",
+      "value_it": "Workout Recenti",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/recent_workouts_widget.dart",
+        "lib/features/home/domain/models/home_widget_config.dart"
+      ]
+    },
+    {
+      "key": "streakAttuale",
+      "value_en": "Streak Attuale",
+      "value_it": "Streak Attuale",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/real_progress_stats_widget.dart",
+        "lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+      ]
+    },
+    {
+      "key": "allenamentiTotali",
+      "value_en": "Allenamenti Totali",
+      "value_it": "Allenamenti Totali",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/real_progress_stats_widget.dart",
+        "lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+      ]
+    },
+    {
+      "key": "questoMese",
+      "value_en": "Questo Mese",
+      "value_it": "Questo Mese",
+      "occurrences": 2,
+      "language": "IT",
+      "contexts": [
+        "lib/features/home/presentation/widgets/real_progress_stats_widget.dart",
+        "lib/features/home/presentation/widgets/streak_tracker_widget.dart"
+      ]
+    },
+    {
+      "key": "secondaryActionsPreview",
+      "value_en": "Secondary Actions Preview",
+      "value_it": "Secondary Actions Preview",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/home/presentation/widgets/secondary_actions_example.dart"
+      ]
+    },
+    {
+      "key": "loading",
+      "value_en": "Loading...",
+      "value_it": "Loading...",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "accentColor",
+      "value_en": "Accent Color",
+      "value_it": "Accent Color",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "defaultRestTime",
+      "value_en": "Default Rest Time",
+      "value_it": "Default Rest Time",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "weightUnits",
+      "value_en": "Weight Units",
+      "value_it": "Weight Units",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "resetTimerPosition",
+      "value_en": "Reset Timer Position",
+      "value_it": "Reset Timer Position",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "apreCalculationMethod",
+      "value_en": "APRE Calculation Method",
+      "value_it": "APRE Calculation Method",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/settings/presentation/settings_screen.dart"
+      ]
+    },
+    {
+      "key": "errorDetails",
+      "value_en": "Error Details",
+      "value_it": "Error Details",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+        "lib/shared/presentation/widgets/error_boundary.dart"
+      ]
+    },
+    {
+      "key": "requestTimeout",
+      "value_en": "Request timeout",
+      "value_it": "Request timeout",
+      "occurrences": 2,
+      "language": "EN",
+      "contexts": [
+        "lib/shared/data/network/secure_http_client.dart"
+      ]
+    },
+    {
+      "key": "sslHandshakeFailedPossibleMitmAttack",
+      "value_en": "SSL handshake failed - possible MITM attack",
+      "value_it": "SSL handshake failed - possible MITM attack",
+      "occurrences": 2,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/shared/data/network/secure_http_client.dart"
+      ]
+    },
+    {
+      "key": "errormsg",
+      "value_en": "❌ $errorMsg",
+      "value_it": "❌ $errorMsg",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/migration/data_migration_script.dart"
+      ]
+    },
+    {
+      "key": "debugLogs",
+      "value_en": "Debug Logs",
+      "value_it": "Debug Logs",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/debug/presentation/screens/debug_logs_screen.dart"
+      ]
+    },
+    {
+      "key": "timerDebugLogsAutorefreshEvery2sn",
+      "value_en": "Timer Debug Logs - Auto-refresh every 2s\\n",
+      "value_it": "Timer Debug Logs - Auto-refresh every 2s\\n",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/debug/presentation/screens/debug_logs_screen.dart"
+      ]
+    },
+    {
+      "key": "analytics",
+      "value_en": "📊 Analytics",
+      "value_it": "📊 Analytics",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "progressTracking",
+      "value_en": "Progress Tracking",
+      "value_it": "Progress Tracking",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "pleaseLogInToViewYourAnalytics",
+      "value_en": "Please log in to view your analytics",
+      "value_it": "Please log in to view your analytics",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "loadingYourAnalytics",
+      "value_en": "Loading your analytics...",
+      "value_it": "Loading your analytics...",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "noWorkoutDataYet",
+      "value_en": "No workout data yet",
+      "value_it": "No workout data yet",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "completeSomeWorkoutsToSeeYournanalyticsA",
+      "value_en": "Complete some workouts to see your\\nanalytics and progress!",
+      "value_it": "Complete some workouts to see your\\nanalytics and progress!",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "startYourFirstWorkout",
+      "value_en": "Start Your First Workout",
+      "value_it": "Start Your First Workout",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "workoutFrequency",
+      "value_en": "Workout Frequency",
+      "value_it": "Workout Frequency",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart"
+      ]
+    },
+    {
+      "key": "noPersonalRecordsYet",
+      "value_en": "No personal records yet",
+      "value_it": "No personal records yet",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart"
+      ]
+    },
+    {
+      "key": "newPr",
+      "value_en": "NEW PR!",
+      "value_it": "NEW PR!",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart"
+      ]
+    },
+    {
+      "key": "analyticsErrorNoValidWorkoutsFound",
+      "value_en": "❌ [Analytics] ERROR: No valid workouts found!",
+      "value_it": "❌ [Analytics] ERROR: No valid workouts found!",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+      ]
+    },
+    {
+      "key": "noCompletedExercisesFoundInYourWorkouts",
+      "value_en": "No completed exercises found in your workouts",
+      "value_it": "No completed exercises found in your workouts",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+      ]
+    },
+    {
+      "key": "analyticsErrorSyntheticactivitiesIsEmpty",
+      "value_en": "❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!",
+      "value_it": "❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+      ]
+    },
+    {
+      "key": "unableToLoadExerciseActivities",
+      "value_en": "Unable to load exercise activities",
+      "value_it": "Unable to load exercise activities",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_overview_tab.dart"
+      ]
+    },
+    {
+      "key": "loadingRoutineAnalytics",
+      "value_en": "Loading routine analytics...",
+      "value_it": "Loading routine analytics...",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "noActiveRoutine",
+      "value_en": "No Active Routine",
+      "value_it": "No Active Routine",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "createAndActivateARoutineToSeeAnalyticsH",
+      "value_en": "Create and activate a routine to see analytics here",
+      "value_it": "Create and activate a routine to see analytics here",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "errorLoadingAnalytics2",
+      "value_en": "Error Loading Analytics",
+      "value_it": "Error Loading Analytics",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "activeRoutineAnalytics",
+      "value_en": "Active Routine Analytics",
+      "value_it": "Active Routine Analytics",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "performanceMetrics",
+      "value_en": "Performance Metrics",
+      "value_it": "Performance Metrics",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "skipRate",
+      "value_en": "Skip Rate",
+      "value_it": "Skip Rate",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "avgGap",
+      "value_en": "Avg Gap",
+      "value_it": "Avg Gap",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "betweenWorkouts",
+      "value_en": "between workouts",
+      "value_it": "between workouts",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "bestStreak",
+      "value_en": "Best Streak",
+      "value_it": "Best Streak",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "insights",
+      "value_en": "💡 Insights",
+      "value_it": "💡 Insights",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "templateDistribution",
+      "value_en": "Template Distribution",
+      "value_it": "Template Distribution",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "weeklyPattern",
+      "value_en": "Weekly Pattern",
+      "value_it": "Weekly Pattern",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "weeklyAdherenceTrend",
+      "value_en": "Weekly Adherence Trend",
+      "value_it": "Weekly Adherence Trend",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "chartVisualizationComingSoon",
+      "value_en": "Chart visualization coming soon",
+      "value_it": "Chart visualization coming soon",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+      ]
+    },
+    {
+      "key": "workoutmetricsBoxNotOpenedCallHiveopenbo",
+      "value_en": "workoutMetrics box not opened. Call Hive.openBox<Map>(\\'workoutMetrics\\') first.",
+      "value_it": "workoutMetrics box not opened. Call Hive.openBox<Map>(\\'workoutMetrics\\') first.",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/providers/workout_analytics_provider.dart"
+      ]
+    },
+    {
+      "key": "workoutmetricsBoxMustBeOpenedBeforeUsing",
+      "value_en": "workoutMetrics box must be opened before using analytics",
+      "value_it": "workoutMetrics box must be opened before using analytics",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/providers/workout_analytics_provider.dart"
+      ]
+    },
+    {
+      "key": "cannotCreateWorkoutFromEmptyActivitiesLi",
+      "value_en": "Cannot create workout from empty activities list",
+      "value_it": "Cannot create workout from empty activities list",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/providers/activity_to_workout_converter.dart"
+      ]
+    },
+    {
+      "key": "quickStats",
+      "value_en": "Quick Stats",
+      "value_it": "Quick Stats",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/lazy_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "volumeProgression",
+      "value_en": "Volume Progression",
+      "value_it": "Volume Progression",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/lazy_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "trainingRecommendations",
+      "value_en": "Training Recommendations",
+      "value_it": "Training Recommendations",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/lazy_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "loadingAnalytics",
+      "value_en": "Loading analytics...",
+      "value_it": "Loading analytics...",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/enhanced_analytics_screen.dart"
+      ]
+    },
+    {
+      "key": "noExercisesMatch_searchquery",
+      "value_en": "No exercises match \"$_searchQuery\"",
+      "value_it": "No exercises match \"$_searchQuery\"",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/exercise_progress_screen.dart"
+      ]
+    },
+    {
+      "key": "exerciseNotFound",
+      "value_en": "Exercise not found",
+      "value_it": "Exercise not found",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+      ]
+    },
+    {
+      "key": "noRpeDataAvailable",
+      "value_en": "No RPE data available",
+      "value_it": "No RPE data available",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+      ]
+    },
+    {
+      "key": "storicoEsercizi",
+      "value_en": "Storico Esercizi",
+      "value_it": "Storico Esercizi",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+      ]
+    },
+    {
+      "key": "cercaUnEsercizio",
+      "value_en": "Cerca un esercizio...",
+      "value_it": "Cerca un esercizio...",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart"
+      ]
+    },
+    {
+      "key": "premiumFeature",
+      "value_en": "Premium Feature",
+      "value_it": "Premium Feature",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/premium_feature_overlay.dart"
+      ]
+    },
+    {
+      "key": "pesoAttuale",
+      "value_en": "Peso attuale",
+      "value_it": "Peso attuale",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+      ]
+    },
+    {
+      "key": "iniziaARegistrareIlTuoPeso",
+      "value_en": "Inizia a registrare il tuo peso",
+      "value_it": "Inizia a registrare il tuo peso",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart"
+      ]
+    },
+    {
+      "key": "maxWeight",
+      "value_en": "max weight",
+      "value_it": "max weight",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+      ]
+    },
+    {
+      "key": "allExercisesStatistics",
+      "value_en": "All Exercises Statistics",
+      "value_it": "All Exercises Statistics",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/exercise_stats_card.dart"
+      ]
+    },
+    {
+      "key": "attendiQualcheSecondo",
+      "value_en": "Attendi qualche secondo...",
+      "value_it": "Attendi qualche secondo...",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+      ]
+    },
+    {
+      "key": "tuttiIDatiSonoStatiSincronizzati",
+      "value_en": "Tutti i dati sono stati sincronizzati!",
+      "value_it": "Tutti i dati sono stati sincronizzati!",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+      ]
+    },
+    {
+      "key": "siÈVerificatoUnErroreDuranteLaSincronizz",
+      "value_en": "Si è verificato un errore durante la sincronizzazione.",
+      "value_it": "Si è verificato un errore durante la sincronizzazione.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/sync_progress_overlay.dart"
+      ]
+    },
+    {
+      "key": "mostraTutti",
+      "value_en": "Mostra tutti",
+      "value_it": "Mostra tutti",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "periodoDiVisualizzazione",
+      "value_en": "Periodo di visualizzazione",
+      "value_it": "Periodo di visualizzazione",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "proiezione30Giorni",
+      "value_en": "Proiezione 30 giorni",
+      "value_it": "Proiezione 30 giorni",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "1rmEffettivo",
+      "value_en": "1RM Effettivo",
+      "value_it": "1RM Effettivo",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "nessunDato1rmDisponibile",
+      "value_en": "Nessun dato 1RM disponibile",
+      "value_it": "Nessun dato 1RM disponibile",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "datiInsufficientiPerAnalisi",
+      "value_en": "Dati insufficienti per analisi",
+      "value_it": "Dati insufficienti per analisi",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "howAreYouFeeling",
+      "value_en": "How are you feeling?",
+      "value_it": "How are you feeling?",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+      ]
+    },
+    {
+      "key": "rateYourFatigueLevelToImproveRecoveryIns",
+      "value_en": "Rate your fatigue level to improve recovery insights",
+      "value_it": "Rate your fatigue level to improve recovery insights",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+      ]
+    },
+    {
+      "key": "notesOptional",
+      "value_en": "Notes (optional)",
+      "value_it": "Notes (optional)",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+      ]
+    },
+    {
+      "key": "anySpecificMuscleSorenessOrObservations",
+      "value_en": "Any specific muscle soreness or observations?",
+      "value_it": "Any specific muscle soreness or observations?",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart"
+      ]
+    },
+    {
+      "key": "e1rmTrackerTopExercises",
+      "value_en": "e1RM Tracker - Top Exercises",
+      "value_it": "e1RM Tracker - Top Exercises",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "bestSetOfTheWeek",
+      "value_en": "Best Set of the Week",
+      "value_it": "Best Set of the Week",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "dataSyncedToCloud",
+      "value_en": "Data synced to cloud",
+      "value_it": "Data synced to cloud",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "syncToCloud",
+      "value_en": "Sync to Cloud",
+      "value_it": "Sync to Cloud",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "noWorkoutDataThisWeek",
+      "value_en": "No workout data this week",
+      "value_it": "No workout data this week",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "completeWorkoutsToSeeYourProgress",
+      "value_en": "Complete workouts to see your progress",
+      "value_it": "Complete workouts to see your progress",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
+      ]
+    },
+    {
+      "key": "fullHistoryComingSoon",
+      "value_en": "Full history coming soon!",
+      "value_it": "Full history coming soon!",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/recent_workouts_card.dart"
+      ]
+    },
+    {
+      "key": "noRecentWorkouts",
+      "value_en": "No recent workouts",
+      "value_it": "No recent workouts",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/recent_workouts_card.dart"
+      ]
+    },
+    {
+      "key": "trainingInsight",
+      "value_en": "💡 Training Insight",
+      "value_it": "💡 Training Insight",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "tapForDetails",
+      "value_en": "Tap for details",
+      "value_it": "Tap for details",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "considera23GiorniDiRecuperoCompletoOUnAl",
+      "value_en": "Considera 2-3 giorni di recupero completo o un allenamento molto leggero.",
+      "value_it": "Considera 2-3 giorni di recupero completo o un allenamento molto leggero.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "sePianificatoOttimoAltrimentiVerificaSeS",
+      "value_en": "Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.",
+      "value_it": "Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "puoiMantenereQuestoRitmoMaMonitoraIlRecu",
+      "value_en": "Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.",
+      "value_it": "Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "consideraDiMantenereIlVolumeAttualePerCo",
+      "value_en": "Considera di mantenere il volume attuale per consolidare i progressi.",
+      "value_it": "Considera di mantenere il volume attuale per consolidare i progressi.",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "sonoPassatiDayssincelastworkoutGiorniDal",
+      "value_en": "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
+      "value_it": "Sono passati $daysSinceLastWorkout giorni dall'ultimo allenamento.",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "ripartiConCalmaMagariConUnVolumeRidottoD",
+      "value_en": "Riparti con calma, magari con un volume ridotto del 20-30%.",
+      "value_it": "Riparti con calma, magari con un volume ridotto del 20-30%.",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "assicuratiDiBilanciareConGiorniDiRecuper",
+      "value_en": "Assicurati di bilanciare con giorni di recupero adeguati.",
+      "value_it": "Assicurati di bilanciare con giorni di recupero adeguati.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "frequenzaDiAllenamentoElevataConWorkoutc",
+      "value_en": "Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.",
+      "value_it": "Frequenza di allenamento elevata con $workoutCount sessioni questa settimana.",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "valutaSeRidurreLaFrequenzaPerMigliorareI",
+      "value_en": "Valuta se ridurre la frequenza per migliorare il recupero.",
+      "value_it": "Valuta se ridurre la frequenza per migliorare il recupero.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "continuaCosìAscoltandoSempreISegnaliDelT",
+      "value_en": "Continua così, ascoltando sempre i segnali del tuo corpo.",
+      "value_it": "Continua così, ascoltando sempre i segnali del tuo corpo.",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "analisiDettagliata",
+      "value_en": "📊 Analisi Dettagliata",
+      "value_it": "📊 Analisi Dettagliata",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "sbloccaAnalisiAvanzate",
+      "value_en": "🎯 Sblocca Analisi Avanzate",
+      "value_it": "🎯 Sblocca Analisi Avanzate",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "previsioniPersonalizzateBasateSuAin",
+      "value_en": "• Previsioni personalizzate basate su AI\\n",
+      "value_it": "• Previsioni personalizzate basate su AI\\n",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/contextual_training_advisor.dart"
+      ]
+    },
+    {
+      "key": "esempiPratici",
+      "value_en": "Esempi Pratici",
+      "value_it": "Esempi Pratici",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/interactive_metric_widget.dart"
+      ]
+    },
+    {
+      "key": "volumeSetsRepsWeight",
+      "value_en": "Volume = Sets × Reps × Weight",
+      "value_it": "Volume = Sets × Reps × Weight",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart"
+      ]
+    },
+    {
+      "key": "strengthCurrentVolumeMaxVolume100",
+      "value_en": "Strength % = (Current Volume / Max Volume) × 100",
+      "value_it": "Strength % = (Current Volume / Max Volume) × 100",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart"
+      ]
+    },
+    {
+      "key": "thisMonth",
+      "value_en": "This Month",
+      "value_it": "This Month",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_stat_cards.dart"
+      ]
+    },
+    {
+      "key": "loadOlderWorkouts",
+      "value_en": "Load older workouts",
+      "value_it": "Load older workouts",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/lazy_recent_workouts_card.dart"
+      ]
+    },
+    {
+      "key": "boyle2016",
+      "value_en": "Boyle (2016)",
+      "value_it": "Boyle (2016)",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "croisierEtAl2008",
+      "value_en": "Croisier et al. (2008)",
+      "value_it": "Croisier et al. (2008)",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "reference",
+      "value_en": "📚 $reference",
+      "value_it": "📚 $reference",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "setsCompleted",
+      "value_en": "Sets Completed",
+      "value_it": "Sets Completed",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
+      ]
+    },
+    {
+      "key": "streakAttuale2",
+      "value_en": "Streak attuale",
+      "value_it": "Streak attuale",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+      ]
+    },
+    {
+      "key": "più",
+      "value_en": "Più",
+      "value_it": "Più",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+      ]
+    },
+    {
+      "key": "giornoDiRiposo",
+      "value_en": "Giorno di riposo",
+      "value_it": "Giorno di riposo",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_heatmap_calendar.dart"
+      ]
+    },
+    {
+      "key": "optimalBalance17PerMuscleGroupResearchSh",
+      "value_en": "Optimal balance: ~17% per muscle group. Research shows balanced training prevents injuries and maximizes growth (Baz-Valle 2022)",
+      "value_it": "Optimal balance: ~17% per muscle group. Research shows balanced training prevents injuries and maximizes growth (Baz-Valle 2022)",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/horizontal_muscle_balance_chart.dart"
+      ]
+    },
+    {
+      "key": "cercaEsercizio",
+      "value_en": "Cerca Esercizio",
+      "value_it": "Cerca Esercizio",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/animated_search_icon.dart"
+      ]
+    },
+    {
+      "key": "cercaNeiTuoiEsercizi",
+      "value_en": "Cerca nei tuoi esercizi",
+      "value_it": "Cerca nei tuoi esercizi",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/animated_search_icon.dart"
+      ]
+    },
+    {
+      "key": "trendLine",
+      "value_en": "Trend Line",
+      "value_it": "Trend Line",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart"
+      ]
+    },
+    {
+      "key": "focusMoreOnNeglected",
+      "value_en": "Focus more on $neglected",
+      "value_it": "Focus more on $neglected",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "considerReducingOverdevelopedVolume",
+      "value_en": "Consider reducing $overdeveloped volume",
+      "value_it": "Consider reducing $overdeveloped volume",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "noMuscleGroupDataAvailable",
+      "value_en": "No muscle group data available",
+      "value_it": "No muscle group data available",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_balance_widget.dart"
+      ]
+    },
+    {
+      "key": "weeklyFrequency",
+      "value_en": "Weekly Frequency",
+      "value_it": "Weekly Frequency",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_frequency_chart.dart"
+      ]
+    },
+    {
+      "key": "noWorkoutsYet",
+      "value_en": "No workouts yet",
+      "value_it": "No workouts yet",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/workout_frequency_chart.dart"
+      ]
+    },
+    {
+      "key": "ricaricaAnimazione",
+      "value_en": "Ricarica animazione",
+      "value_it": "Ricarica animazione",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+      ]
+    },
+    {
+      "key": "forzaAttuale",
+      "value_en": "Forza attuale",
+      "value_it": "Forza attuale",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+      ]
+    },
+    {
+      "key": "vsUltimoMese",
+      "value_en": "vs ultimo mese",
+      "value_it": "vs ultimo mese",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/muscle_strength_radar_chart.dart"
+      ]
+    },
+    {
+      "key": "localizationslocaleofcontextlanguagecode",
+      "value_en": ", Localizations.localeOf(context).languageCode).format(weekStart)} - ",
+      "value_it": ", Localizations.localeOf(context).languageCode).format(weekStart)} - ",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "mmmmYyyy",
+      "value_en": "MMMM yyyy",
+      "value_it": "MMMM yyyy",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "performanceTrends",
+      "value_en": "Performance Trends",
+      "value_it": "Performance Trends",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "trackYourMuscleEfficiency",
+      "value_en": "Track your muscle efficiency",
+      "value_it": "Track your muscle efficiency",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "efficiencyVolumeRecoveryTime",
+      "value_en": "Efficiency = Volume / Recovery Time",
+      "value_it": "Efficiency = Volume / Recovery Time",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "rateTodaysFatigue",
+      "value_en": "Rate Today\\'s Fatigue",
+      "value_it": "Rate Today\\'s Fatigue",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "noWorkoutsTodayToRate",
+      "value_en": "No workouts today to rate",
+      "value_it": "No workouts today to rate",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "fatigueLevelFatiguelevelRecorded",
+      "value_en": "Fatigue level $fatigueLevel recorded",
+      "value_it": "Fatigue level $fatigueLevel recorded",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "noDataAvailableYet",
+      "value_en": "No data available yet",
+      "value_it": "No data available yet",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "currentScore",
+      "value_en": "Current Score",
+      "value_it": "Current Score",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "scoreBreakdown",
+      "value_en": "Score Breakdown",
+      "value_it": "Score Breakdown",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "statsTemporarilyUnavailable",
+      "value_en": "Stats temporarily unavailable",
+      "value_it": "Stats temporarily unavailable",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+      ]
+    },
+    {
+      "key": "volumeHeatmap",
+      "value_en": "Volume Heatmap",
+      "value_it": "Volume Heatmap",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/charts/volume_heatmap.dart"
+      ]
+    },
+    {
+      "key": "heatmapImplementationComingSoon",
+      "value_en": "Heatmap implementation coming soon",
+      "value_it": "Heatmap implementation coming soon",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/charts/volume_heatmap.dart"
+      ]
+    },
+    {
+      "key": "strengthProgression",
+      "value_en": "Strength Progression",
+      "value_it": "Strength Progression",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/charts/strength_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "chartImplementationComingSoon",
+      "value_en": "Chart implementation coming soon",
+      "value_it": "Chart implementation coming soon",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/charts/strength_progression_chart.dart"
+      ]
+    },
+    {
+      "key": "bernárdezvázquezEtAl2022Healthcare",
+      "value_en": "Bernárdez-Vázquez et al. (2022) - Healthcare",
+      "value_it": "Bernárdez-Vázquez et al. (2022) - Healthcare",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/premium/volume_landmarks_card.dart"
+      ]
+    },
+    {
+      "key": "schoenfeldEtAl2021JStrengthCondRes",
+      "value_en": "Schoenfeld et al. (2021) - J Strength Cond Res",
+      "value_it": "Schoenfeld et al. (2021) - J Strength Cond Res",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/presentation/widgets/premium/rep_continuum_card.dart"
+      ]
+    },
+    {
+      "key": "doesNotAccountForFatigueOrTrainingState",
+      "value_en": "Does not account for fatigue or training state",
+      "value_it": "Does not account for fatigue or training state",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/domain/services/transparent_predictor.dart"
+      ]
+    },
+    {
+      "key": "errorMarginTypically510EvenInBestConditi",
+      "value_en": "Error margin typically ±5-10% even in best conditions",
+      "value_it": "Error margin typically ±5-10% even in best conditions",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/domain/services/transparent_predictor.dart"
+      ]
+    },
+    {
+      "key": "gymbroAnalyticsReport",
+      "value_en": "GymBro Analytics Report",
+      "value_it": "GymBro Analytics Report",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "trainingPerformanceAnalysis",
+      "value_en": "Training Performance Analysis",
+      "value_it": "Training Performance Analysis",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "trainingStatistics",
+      "value_en": "Training Statistics",
+      "value_it": "Training Statistics",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "bestSet",
+      "value_en": "Best Set",
+      "value_it": "Best Set",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "trainingInsights",
+      "value_en": "Training Insights",
+      "value_it": "Training Insights",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/domain/services/export_service.dart"
+      ]
+    },
+    {
+      "key": "boxNotFound",
+      "value_en": "Box not found",
+      "value_it": "Box not found",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/analytics/data/repositories/workout_analytics_repository_impl.dart"
+      ]
+    },
+    {
+      "key": "analyticsHiveBoxErrorDetectedRetrying",
+      "value_en": "🔧 [Analytics] Hive box error detected. Retrying...",
+      "value_it": "🔧 [Analytics] Hive box error detected. Retrying...",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/analytics/data/repositories/workout_analytics_repository_impl.dart"
+      ]
+    },
+    {
+      "key": "pleaseSelectYourDateOfBirth",
+      "value_en": "Please select your date of birth",
+      "value_it": "Please select your date of birth",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/age_gate_screen.dart"
+      ]
+    },
+    {
+      "key": "requiredByGdprAndItalianPrivacyLaws",
+      "value_en": "Required by GDPR and Italian privacy laws",
+      "value_it": "Required by GDPR and Italian privacy laws",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/age_gate_screen.dart"
+      ]
+    },
+    {
+      "key": "toggleAttivi",
+      "value_en": "Toggle Attivi:",
+      "value_it": "Toggle Attivi:",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/02_mode_selection_with_toggles.dart"
+      ]
+    },
+    {
+      "key": "toggleDisattivi",
+      "value_en": "Toggle Disattivi:",
+      "value_it": "Toggle Disattivi:",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/02_mode_selection_with_toggles.dart"
+      ]
+    },
+    {
+      "key": "allenamentoRapido",
+      "value_en": "Allenamento Rapido",
+      "value_it": "Allenamento Rapido",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "quickWorkout",
+      "value_en": "Quick Workout",
+      "value_it": "Quick Workout",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "daTemplate",
+      "value_en": "Da Template",
+      "value_it": "Da Template",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "fromTemplate",
+      "value_en": "From Template",
+      "value_it": "From Template",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "nuovoAllenamento",
+      "value_en": "Nuovo Allenamento",
+      "value_it": "Nuovo Allenamento",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "newWorkout",
+      "value_en": "New Workout",
+      "value_it": "New Workout",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "pettoETricipiti",
+      "value_en": "Petto e Tricipiti",
+      "value_it": "Petto e Tricipiti",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "chestTriceps",
+      "value_en": "Chest & Triceps",
+      "value_it": "Chest & Triceps",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "45Min",
+      "value_en": "45 min",
+      "value_it": "45 min",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "4Esercizi",
+      "value_en": "4 esercizi",
+      "value_it": "4 esercizi",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "4Exercises",
+      "value_en": "4 exercises",
+      "value_it": "4 exercises",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart"
+      ]
+    },
+    {
+      "key": "pettoTric",
+      "value_en": "PETTO, TRIC",
+      "value_it": "PETTO, TRIC",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "modificaRapida",
+      "value_en": "Modifica Rapida",
+      "value_it": "Modifica Rapida",
+      "occurrences": 1,
+      "language": "IT",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "quickEdit",
+      "value_en": "Quick Edit",
+      "value_it": "Quick Edit",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "rpe610",
+      "value_en": "RPE (6-10)",
+      "value_it": "RPE (6-10)",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart"
+      ]
+    },
+    {
+      "key": "complete",
+      "value_en": "Complete!",
+      "value_it": "Complete!",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/presentation/widgets/steps/07_timer_rest_step.dart"
+      ]
+    },
+    {
+      "key": "tapTheButtonToCreateYourFirstWorkout",
+      "value_en": "Tap the + button to create your first workout",
+      "value_it": "Tap the + button to create your first workout",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "welcomeLetsCreateYourFirstWorkoutTogethe",
+      "value_en": "Welcome! Let\\'s create your first workout together. I\\'ll guide you step-by-step.",
+      "value_it": "Welcome! Let\\'s create your first workout together. I\\'ll guide you step-by-step.",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "letsGo",
+      "value_en": "Let\\'s go!",
+      "value_it": "Let\\'s go!",
+      "occurrences": 1,
+      "language": "UNKNOWN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "greatNowTapHereToAddYourFirstExercise",
+      "value_en": "Great! Now tap here to add your first exercise.",
+      "value_it": "Great! Now tap here to add your first exercise.",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    },
+    {
+      "key": "searchByNameOrBrowseByMuscleGroupChooseA",
+      "value_en": "Search by name or browse by muscle group. Choose any exercise to get started!",
+      "value_it": "Search by name or browse by muscle group. Choose any exercise to get started!",
+      "occurrences": 1,
+      "language": "EN",
+      "contexts": [
+        "lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+      ]
+    }
+  ]
+}

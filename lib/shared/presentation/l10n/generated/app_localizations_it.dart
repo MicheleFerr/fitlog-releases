@@ -13997,4 +13997,796 @@ class AppLocalizationsIt extends AppLocalizations {
   String smartWorkoutCTARestModeSets(int sets) {
     return 'Serie: $sets';
   }
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get noDataAvailable => 'No data available';
+
+  @override
+  String get chooseYourPlan => 'Choose Your Plan';
+
+  @override
+  String get aiCoachInsights => 'AI Coach Insights';
+
+  @override
+  String get syncAlreadyInProgress => 'Sync already in progress';
+
+  @override
+  String get premiumFeatures => 'Premium Features';
+
+  @override
+  String get invalidTemplateId => 'Invalid template ID';
+
+  @override
+  String get pesoKg => 'Peso (kg)';
+
+  @override
+  String get volumeTotale => 'Volume Totale';
+
+  @override
+  String get vediDettagli => 'Vedi dettagli';
+
+  @override
+  String get yourePremium => 'You\\\'re Premium!';
+
+  @override
+  String get manageSubscription => 'Manage Subscription';
+
+  @override
+  String get creaTemplate => 'Crea Template';
+
+  @override
+  String get erroriComuni => 'Errori comuni';
+
+  @override
+  String get datiEsercizioNonDisponibili => 'Dati esercizio non disponibili';
+
+  @override
+  String get useWheel => 'Use wheel';
+
+  @override
+  String get typeManually => 'Type manually';
+
+  @override
+  String get templateNameIsRequired => 'Template name is required';
+
+  @override
+  String get livelloLevel => 'Livello \$level';
+
+  @override
+  String get volumeProgress => 'Volume Progress';
+
+  @override
+  String get createRoutine => 'Create Routine';
+
+  @override
+  String get nessunEsercizioTrovato => 'Nessun esercizio trovato';
+
+  @override
+  String get dMmmYyyy => 'd MMM yyyy';
+
+  @override
+  String get nessunDatoDisponibile => 'Nessun dato disponibile';
+
+  @override
+  String get noExerciseDataAvailable => 'No exercise data available';
+
+  @override
+  String get muscleEfficiencyScore => 'Muscle Efficiency Score';
+
+  @override
+  String get upperBodyPush => 'Upper Body • Push';
+
+  @override
+  String get showMe => 'Show me';
+
+  @override
+  String get benvenutoInGymbro => 'Benvenuto in GymBro! 👋';
+
+  @override
+  String get iniziaIlTuoViaggioFitnessToccaLaCampanel =>
+      'Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.';
+
+  @override
+  String get iniziaOra => 'Inizia ora';
+
+  @override
+  String get vediAchievement => 'Vedi achievement';
+
+  @override
+  String get milestoneRaggiunto => 'Milestone Raggiunto!';
+
+  @override
+  String get aggiornamentoProgressi => 'Aggiornamento Progressi';
+
+  @override
+  String get forcedCleanupCompletedAfterDisposalError =>
+      '🔧 Forced cleanup completed after disposal error';
+
+  @override
+  String get restoringPurchases => 'Restoring purchases...';
+
+  @override
+  String get processingPayment => 'Processing payment...';
+
+  @override
+  String get premiumStatus => 'Premium Status';
+
+  @override
+  String get noPurchasesFoundToRestore => 'No purchases found to restore';
+
+  @override
+  String get seriePrincipale => 'Serie Principale';
+
+  @override
+  String get weightSuggestions => 'Weight Suggestions';
+
+  @override
+  String get erroreNelCaricamento => 'Errore nel caricamento';
+
+  @override
+  String get errorUnableToEditThisSet => 'Error: Unable to edit this set';
+
+  @override
+  String get contribuisciAllaCommunity => 'Contribuisci alla Community';
+
+  @override
+  String get inviaContributo => 'Invia Contributo';
+
+  @override
+  String get segnalaProblema => 'Segnala problema';
+
+  @override
+  String get weightToAll => 'Weight to All';
+
+  @override
+  String get repsToAll => 'Reps to All';
+
+  @override
+  String get ddMmmmYyyy => 'dd MMMM yyyy';
+
+  @override
+  String get patternIsEmpty => 'Pattern is empty';
+
+  @override
+  String get syncAvailableForPremiumUsersOnly =>
+      'Sync available for premium users only';
+
+  @override
+  String get adminOnly => 'Admin Only';
+
+  @override
+  String get nessunContributo => 'Nessun Contributo';
+
+  @override
+  String get rifiutaContributo => 'Rifiuta Contributo';
+
+  @override
+  String get motivoOpzionale => 'Motivo (opzionale)';
+
+  @override
+  String get noReasonProvided => 'No reason provided';
+
+  @override
+  String get trovaIlTuoWorkoutBuddy => 'Trova il tuo Workout Buddy';
+
+  @override
+  String get adminModerationNotImplementedInHybridrep =>
+      'Admin moderation not implemented in HybridRepository';
+
+  @override
+  String get descriviIlProblemaInDettaglio =>
+      'Descrivi il problema in dettaglio...';
+
+  @override
+  String get templateNameCannotBeEmpty => 'Template name cannot be empty';
+
+  @override
+  String get errorLoadingProfile => 'Error loading profile';
+
+  @override
+  String get invalidWeight => 'invalid weight';
+
+  @override
+  String get addSetInformationInFormatSet1X580kg =>
+      'Add set information in format: Set1 x 5: 80kg';
+
+  @override
+  String get templateMustHaveAtLeastOneExercise =>
+      'Template must have at least one exercise';
+
+  @override
+  String get atLeastOne => 'at least one';
+
+  @override
+  String get noWorkoutSectionsFoundInText =>
+      'No workout sections found in text';
+
+  @override
+  String get noSetInformation => 'no set information';
+
+  @override
+  String get fatalErrorInGetusertemplates =>
+      'Fatal error in getUserTemplates()';
+
+  @override
+  String get noEmail => 'No email';
+
+  @override
+  String get adminAccessRequired => 'Admin access required';
+
+  @override
+  String get analyticsInfo => 'Analytics Info';
+
+  @override
+  String get totalEvents => 'Total Events';
+
+  @override
+  String get avgDuration => 'Avg Duration';
+
+  @override
+  String get userProperties => 'User Properties';
+
+  @override
+  String get syncDashboard => 'Sync Dashboard';
+
+  @override
+  String get featureStatus => 'Feature Status';
+
+  @override
+  String get segnaComeCompletato => 'Segna come Completato';
+
+  @override
+  String get changeEquipment => 'Change Equipment';
+
+  @override
+  String get startSync => 'Start Sync';
+
+  @override
+  String get segnalazioniEBugUtenti => 'Segnalazioni e bug utenti';
+
+  @override
+  String get systemSoundTest => 'SYSTEM SOUND TEST';
+
+  @override
+  String get cleanhandle => '@\$cleanHandle';
+
+  @override
+  String get noTemplate => 'No template';
+
+  @override
+  String get recoverWorkout => 'Recover Workout';
+
+  @override
+  String get adherenceRate => 'Adherence Rate';
+
+  @override
+  String get skipWorkout => 'Skip Workout';
+
+  @override
+  String get gymbroUser => 'GymBro User';
+
+  @override
+  String get consigliPersonalizzati => 'Consigli Personalizzati';
+
+  @override
+  String get vediAnalytics => 'Vedi Analytics';
+
+  @override
+  String get scegliTemplate => 'Scegli Template';
+
+  @override
+  String get selezionaUnWorkoutSalvato => 'Seleziona un workout salvato';
+
+  @override
+  String get allenamentiRecenti => 'Allenamenti Recenti';
+
+  @override
+  String get esercizioDelGiorno => 'Esercizio del Giorno';
+
+  @override
+  String get progressiAchievement => '🏆 Progressi & Achievement';
+
+  @override
+  String get inarrestabile30GiorniDiStreak =>
+      '🔥 Inarrestabile! 30+ giorni di streak!';
+
+  @override
+  String get modalTesterDebugMode => '🧪 MODAL TESTER - Debug Mode';
+
+  @override
+  String get testAllWorkoutModalsToIdentifyDuplicates =>
+      'Test all workout modals to identify duplicates and determine which ones to keep';
+
+  @override
+  String get providerIsInErrorState => '💥 Provider is in ERROR state';
+
+  @override
+  String get workoutRecenti => 'Workout Recenti';
+
+  @override
+  String get streakAttuale => 'Streak Attuale';
+
+  @override
+  String get allenamentiTotali => 'Allenamenti Totali';
+
+  @override
+  String get questoMese => 'Questo Mese';
+
+  @override
+  String get secondaryActionsPreview => 'Secondary Actions Preview';
+
+  @override
+  String get resetTimerPosition => 'Reset Timer Position';
+
+  @override
+  String get apreCalculationMethod => 'APRE Calculation Method';
+
+  @override
+  String get errorDetails => 'Error Details';
+
+  @override
+  String get requestTimeout => 'Request timeout';
+
+  @override
+  String get sslHandshakeFailedPossibleMitmAttack =>
+      'SSL handshake failed - possible MITM attack';
+
+  @override
+  String get errormsg => '❌ \$errorMsg';
+
+  @override
+  String get debugLogs => 'Debug Logs';
+
+  @override
+  String get timerDebugLogsAutorefreshEvery2sn =>
+      'Timer Debug Logs - Auto-refresh every 2s\\n';
+
+  @override
+  String get pleaseLogInToViewYourAnalytics =>
+      'Please log in to view your analytics';
+
+  @override
+  String get loadingYourAnalytics => 'Loading your analytics...';
+
+  @override
+  String get noWorkoutDataYet => 'No workout data yet';
+
+  @override
+  String get completeSomeWorkoutsToSeeYournanalyticsA =>
+      'Complete some workouts to see your\\nanalytics and progress!';
+
+  @override
+  String get noPersonalRecordsYet => 'No personal records yet';
+
+  @override
+  String get newPr => 'NEW PR!';
+
+  @override
+  String get analyticsErrorNoValidWorkoutsFound =>
+      '❌ [Analytics] ERROR: No valid workouts found!';
+
+  @override
+  String get noCompletedExercisesFoundInYourWorkouts =>
+      'No completed exercises found in your workouts';
+
+  @override
+  String get analyticsErrorSyntheticactivitiesIsEmpty =>
+      '❌ [Analytics] ERROR: syntheticActivities is EMPTY after processing!';
+
+  @override
+  String get unableToLoadExerciseActivities =>
+      'Unable to load exercise activities';
+
+  @override
+  String get loadingRoutineAnalytics => 'Loading routine analytics...';
+
+  @override
+  String get noActiveRoutine => 'No Active Routine';
+
+  @override
+  String get createAndActivateARoutineToSeeAnalyticsH =>
+      'Create and activate a routine to see analytics here';
+
+  @override
+  String get errorLoadingAnalytics2 => 'Error Loading Analytics';
+
+  @override
+  String get activeRoutineAnalytics => 'Active Routine Analytics';
+
+  @override
+  String get performanceMetrics => 'Performance Metrics';
+
+  @override
+  String get skipRate => 'Skip Rate';
+
+  @override
+  String get avgGap => 'Avg Gap';
+
+  @override
+  String get betweenWorkouts => 'between workouts';
+
+  @override
+  String get bestStreak => 'Best Streak';
+
+  @override
+  String get templateDistribution => 'Template Distribution';
+
+  @override
+  String get weeklyPattern => 'Weekly Pattern';
+
+  @override
+  String get weeklyAdherenceTrend => 'Weekly Adherence Trend';
+
+  @override
+  String get chartVisualizationComingSoon => 'Chart visualization coming soon';
+
+  @override
+  String get workoutmetricsBoxNotOpenedCallHiveopenbo =>
+      'workoutMetrics box not opened. Call Hive.openBox<Map>(\\\'workoutMetrics\\\') first.';
+
+  @override
+  String get workoutmetricsBoxMustBeOpenedBeforeUsing =>
+      'workoutMetrics box must be opened before using analytics';
+
+  @override
+  String get cannotCreateWorkoutFromEmptyActivitiesLi =>
+      'Cannot create workout from empty activities list';
+
+  @override
+  String get trainingRecommendations => 'Training Recommendations';
+
+  @override
+  String get loadingAnalytics => 'Loading analytics...';
+
+  @override
+  String get noExercisesMatch_searchquery =>
+      'No exercises match \"\$_searchQuery\"';
+
+  @override
+  String get noRpeDataAvailable => 'No RPE data available';
+
+  @override
+  String get storicoEsercizi => 'Storico Esercizi';
+
+  @override
+  String get cercaUnEsercizio => 'Cerca un esercizio...';
+
+  @override
+  String get pesoAttuale => 'Peso attuale';
+
+  @override
+  String get iniziaARegistrareIlTuoPeso => 'Inizia a registrare il tuo peso';
+
+  @override
+  String get allExercisesStatistics => 'All Exercises Statistics';
+
+  @override
+  String get attendiQualcheSecondo => 'Attendi qualche secondo...';
+
+  @override
+  String get tuttiIDatiSonoStatiSincronizzati =>
+      'Tutti i dati sono stati sincronizzati!';
+
+  @override
+  String get siEVerificatoUnErroreDuranteLaSincronizz =>
+      'Si è verificato un errore durante la sincronizzazione.';
+
+  @override
+  String get mostraTutti => 'Mostra tutti';
+
+  @override
+  String get periodoDiVisualizzazione => 'Periodo di visualizzazione';
+
+  @override
+  String get proiezione30Giorni => 'Proiezione 30 giorni';
+
+  @override
+  String get rmRmeffettivo => '1RM Effettivo';
+
+  @override
+  String get nessunDato1rmDisponibile => 'Nessun dato 1RM disponibile';
+
+  @override
+  String get datiInsufficientiPerAnalisi => 'Dati insufficienti per analisi';
+
+  @override
+  String get howAreYouFeeling => 'How are you feeling?';
+
+  @override
+  String get rateYourFatigueLevelToImproveRecoveryIns =>
+      'Rate your fatigue level to improve recovery insights';
+
+  @override
+  String get anySpecificMuscleSorenessOrObservations =>
+      'Any specific muscle soreness or observations?';
+
+  @override
+  String get e1rmTrackerTopExercises => 'e1RM Tracker - Top Exercises';
+
+  @override
+  String get bestSetOfTheWeek => 'Best Set of the Week';
+
+  @override
+  String get dataSyncedToCloud => 'Data synced to cloud';
+
+  @override
+  String get syncToCloud => 'Sync to Cloud';
+
+  @override
+  String get noWorkoutDataThisWeek => 'No workout data this week';
+
+  @override
+  String get completeWorkoutsToSeeYourProgress =>
+      'Complete workouts to see your progress';
+
+  @override
+  String get fullHistoryComingSoon => 'Full history coming soon!';
+
+  @override
+  String get trainingInsight => '💡 Training Insight';
+
+  @override
+  String get considera23GiorniDiRecuperoCompletoOUnAl =>
+      'Considera 2-3 giorni di recupero completo o un allenamento molto leggero.';
+
+  @override
+  String get sePianificatoOttimoAltrimentiVerificaSeS =>
+      'Se pianificato, ottimo! Altrimenti, verifica se stai recuperando bene.';
+
+  @override
+  String get puoiMantenereQuestoRitmoMaMonitoraIlRecu =>
+      'Puoi mantenere questo ritmo, ma monitora il recupero nei prossimi giorni.';
+
+  @override
+  String get consideraDiMantenereIlVolumeAttualePerCo =>
+      'Considera di mantenere il volume attuale per consolidare i progressi.';
+
+  @override
+  String get sonoPassatiDayssincelastworkoutGiorniDal =>
+      'Sono passati \$daysSinceLastWorkout giorni dall\'ultimo allenamento.';
+
+  @override
+  String get ripartiConCalmaMagariConUnVolumeRidottoD =>
+      'Riparti con calma, magari con un volume ridotto del 20-30%.';
+
+  @override
+  String get assicuratiDiBilanciareConGiorniDiRecuper =>
+      'Assicurati di bilanciare con giorni di recupero adeguati.';
+
+  @override
+  String get frequenzaDiAllenamentoElevataConWorkoutc =>
+      'Frequenza di allenamento elevata con \$workoutCount sessioni questa settimana.';
+
+  @override
+  String get valutaSeRidurreLaFrequenzaPerMigliorareI =>
+      'Valuta se ridurre la frequenza per migliorare il recupero.';
+
+  @override
+  String get continuaCosiAscoltandoSempreISegnaliDelT =>
+      'Continua così, ascoltando sempre i segnali del tuo corpo.';
+
+  @override
+  String get analisiDettagliata => '📊 Analisi Dettagliata';
+
+  @override
+  String get sbloccaAnalisiAvanzate => '🎯 Sblocca Analisi Avanzate';
+
+  @override
+  String get previsioniPersonalizzateBasateSuAin =>
+      '• Previsioni personalizzate basate su AI\\n';
+
+  @override
+  String get esempiPratici => 'Esempi Pratici';
+
+  @override
+  String get volumeSetsRepsWeight => 'Volume = Sets × Reps × Weight';
+
+  @override
+  String get strengthCurrentVolumeMaxVolume100 =>
+      'Strength % = (Current Volume / Max Volume) × 100';
+
+  @override
+  String get loadOlderWorkouts => 'Load older workouts';
+
+  @override
+  String get boyle2016 => 'Boyle (2016)';
+
+  @override
+  String get croisierEtAl2008 => 'Croisier et al. (2008)';
+
+  @override
+  String get reference => '📚 \$reference';
+
+  @override
+  String get setsCompleted => 'Sets Completed';
+
+  @override
+  String get streakAttuale2 => 'Streak attuale';
+
+  @override
+  String get piu => 'Più';
+
+  @override
+  String get giornoDiRiposo => 'Giorno di riposo';
+
+  @override
+  String get optimalBalance17PerMuscleGroupResearchSh =>
+      'Optimal balance: ~17% per muscle group. Research shows balanced training prevents injuries and maximizes growth (Baz-Valle 2022)';
+
+  @override
+  String get cercaEsercizio => 'Cerca Esercizio';
+
+  @override
+  String get cercaNeiTuoiEsercizi => 'Cerca nei tuoi esercizi';
+
+  @override
+  String get focusMoreOnNeglected => 'Focus more on \$neglected';
+
+  @override
+  String get considerReducingOverdevelopedVolume =>
+      'Consider reducing \$overdeveloped volume';
+
+  @override
+  String get noMuscleGroupDataAvailable => 'No muscle group data available';
+
+  @override
+  String get ricaricaAnimazione => 'Ricarica animazione';
+
+  @override
+  String get forzaAttuale => 'Forza attuale';
+
+  @override
+  String get vsUltimoMese => 'vs ultimo mese';
+
+  @override
+  String get mmmmYyyy => 'MMMM yyyy';
+
+  @override
+  String get performanceTrends => 'Performance Trends';
+
+  @override
+  String get trackYourMuscleEfficiency => 'Track your muscle efficiency';
+
+  @override
+  String get efficiencyVolumeRecoveryTime =>
+      'Efficiency = Volume / Recovery Time';
+
+  @override
+  String get rateTodaysFatigue => 'Rate Today\\\'s Fatigue';
+
+  @override
+  String get noWorkoutsTodayToRate => 'No workouts today to rate';
+
+  @override
+  String get fatigueLevelFatiguelevelRecorded =>
+      'Fatigue level \$fatigueLevel recorded';
+
+  @override
+  String get noDataAvailableYet => 'No data available yet';
+
+  @override
+  String get currentScore => 'Current Score';
+
+  @override
+  String get scoreBreakdown => 'Score Breakdown';
+
+  @override
+  String get statsTemporarilyUnavailable => 'Stats temporarily unavailable';
+
+  @override
+  String get heatmapImplementationComingSoon =>
+      'Heatmap implementation coming soon';
+
+  @override
+  String get chartImplementationComingSoon =>
+      'Chart implementation coming soon';
+
+  @override
+  String get bernrdezvzquezEtAl2022Healthcare =>
+      'Bernárdez-Vázquez et al. (2022) - Healthcare';
+
+  @override
+  String get schoenfeldEtAl2021JStrengthCondRes =>
+      'Schoenfeld et al. (2021) - J Strength Cond Res';
+
+  @override
+  String get doesNotAccountForFatigueOrTrainingState =>
+      'Does not account for fatigue or training state';
+
+  @override
+  String get errorMarginTypically510EvenInBestConditi =>
+      'Error margin typically ±5-10% even in best conditions';
+
+  @override
+  String get gymbroAnalyticsReport => 'GymBro Analytics Report';
+
+  @override
+  String get trainingPerformanceAnalysis => 'Training Performance Analysis';
+
+  @override
+  String get trainingStatistics => 'Training Statistics';
+
+  @override
+  String get bestSet => 'Best Set';
+
+  @override
+  String get boxNotFound => 'Box not found';
+
+  @override
+  String get analyticsHiveBoxErrorDetectedRetrying =>
+      '🔧 [Analytics] Hive box error detected. Retrying...';
+
+  @override
+  String get pleaseSelectYourDateOfBirth => 'Please select your date of birth';
+
+  @override
+  String get requiredByGdprAndItalianPrivacyLaws =>
+      'Required by GDPR and Italian privacy laws';
+
+  @override
+  String get toggleAttivi => 'Toggle Attivi:';
+
+  @override
+  String get toggleDisattivi => 'Toggle Disattivi:';
+
+  @override
+  String get allenamentoRapido => 'Allenamento Rapido';
+
+  @override
+  String get daTemplate => 'Da Template';
+
+  @override
+  String get fromTemplate => 'From Template';
+
+  @override
+  String get nuovoAllenamento => 'Nuovo Allenamento';
+
+  @override
+  String get pettoETricipiti => 'Petto e Tricipiti';
+
+  @override
+  String get chestTriceps => 'Chest & Triceps';
+
+  @override
+  String get n45Min => '45 min';
+
+  @override
+  String get n4Esercizi => '4 esercizi';
+
+  @override
+  String get n4Exercises => '4 exercises';
+
+  @override
+  String get pettoTric => 'PETTO, TRIC';
+
+  @override
+  String get modificaRapida => 'Modifica Rapida';
+
+  @override
+  String get quickEdit => 'Modifica Veloce';
+
+  @override
+  String get rpe610 => 'RPE (6-10)';
+
+  @override
+  String get tapTheButtonToCreateYourFirstWorkout =>
+      'Tap the + button to create your first workout';
+
+  @override
+  String get welcomeLetsCreateYourFirstWorkoutTogethe =>
+      'Welcome! Let\\\'s create your first workout together. I\\\'ll guide you step-by-step.';
+
+  @override
+  String get letsGo => 'Let\\\'s go!';
+
+  @override
+  String get greatNowTapHereToAddYourFirstExercise =>
+      'Great! Now tap here to add your first exercise.';
+
+  @override
+  String get searchByNameOrBrowseByMuscleGroupChooseA =>
+      'Search by name or browse by muscle group. Choose any exercise to get started!';
 }

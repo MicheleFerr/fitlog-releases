@@ -1,0 +1,1786 @@
+[
+  {
+    "file_path": "lib/shared/data/repositories/hybrid_app_config_repository.dart",
+    "line_number": 56,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/providers/workout_analytics_provider.dart",
+    "line_number": 230,
+    "old_code": "error: 'User not authenticated',",
+    "new_code": "error: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/providers/workout_analytics_provider.dart",
+    "line_number": 388,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/providers/analytics_feedback_provider.dart",
+    "line_number": 189,
+    "old_code": "Exception('User not authenticated'),",
+    "new_code": "Exception(context.l10n.userNotAuthenticated),",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/legacy_notification_provider.dart",
+    "line_number": 1055,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/providers/workout_history_provider.dart",
+    "line_number": 108,
+    "old_code": "state = AsyncValue.error('User not authenticated', StackTrace.current);",
+    "new_code": "state = AsyncValue.error(context.l10n.userNotAuthenticated, StackTrace.current);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 41,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 67,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 91,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 121,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 149,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 171,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 199,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 226,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 252,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 278,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 301,
+    "old_code": "return Stream.value(left(const AuthenticationFailure('User not authenticated')));",
+    "new_code": "return Stream.value(left(const AuthenticationFailure(context.l10n.userNotAuthenticated)));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/workout_repository_impl.dart",
+    "line_number": 329,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_exercise_activity_repository.dart",
+    "line_number": 80,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_exercise_activity_repository.dart",
+    "line_number": 135,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_exercise_activity_repository.dart",
+    "line_number": 439,
+    "old_code": "message: 'User not authenticated',",
+    "new_code": "message: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 130,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 164,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 197,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 240,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 330,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 361,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 389,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 410,
+    "old_code": "return Stream.value(left(const AuthenticationFailure('User not authenticated')));",
+    "new_code": "return Stream.value(left(const AuthenticationFailure(context.l10n.userNotAuthenticated)));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 434,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 460,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 516,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/hybrid_workout_repository_impl.dart",
+    "line_number": 559,
+    "old_code": "return left(const AuthenticationFailure('User not authenticated'));",
+    "new_code": "return left(const AuthenticationFailure(context.l10n.userNotAuthenticated));",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/services/workout_sync_service.dart",
+    "line_number": 127,
+    "old_code": "message: 'User not authenticated',",
+    "new_code": "message: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/services/workout_sync_service.dart",
+    "line_number": 287,
+    "old_code": "message: 'User not authenticated',",
+    "new_code": "message: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/services/workout_sync_service.dart",
+    "line_number": 356,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout/data/services/workout_sync_service.dart",
+    "line_number": 366,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/admin_moderation_provider.dart",
+    "line_number": 24,
+    "old_code": "if (user == null) throw Exception('User not authenticated');",
+    "new_code": "if (user == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/admin_moderation_provider.dart",
+    "line_number": 46,
+    "old_code": "if (user == null) throw Exception('User not authenticated');",
+    "new_code": "if (user == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/admin_moderation_provider.dart",
+    "line_number": 68,
+    "old_code": "if (user == null) throw Exception('User not authenticated');",
+    "new_code": "if (user == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/buddy_matching_provider.dart",
+    "line_number": 171,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/buddy_matching_provider.dart",
+    "line_number": 198,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/community_provider.dart",
+    "line_number": 118,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/community_provider.dart",
+    "line_number": 174,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/community_provider.dart",
+    "line_number": 187,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/community_provider.dart",
+    "line_number": 303,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/community_provider.dart",
+    "line_number": 322,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/data/repositories/community_repository.dart",
+    "line_number": 219,
+    "old_code": "if (userAsync == null) throw Exception('User not authenticated');",
+    "new_code": "if (userAsync == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/data/repositories/hybrid_community_repository.dart",
+    "line_number": 75,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/data/repositories/hybrid_community_repository.dart",
+    "line_number": 100,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/community/data/repositories/hybrid_community_repository.dart",
+    "line_number": 332,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_import_provider.dart",
+    "line_number": 283,
+    "old_code": "message: 'User not authenticated',",
+    "new_code": "message: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_import_provider.dart",
+    "line_number": 391,
+    "old_code": "message: 'User not authenticated',",
+    "new_code": "message: context.l10n.userNotAuthenticated,",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_export_provider.dart",
+    "line_number": 61,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 46,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 126,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 158,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 188,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 205,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/template_repository.dart",
+    "line_number": 291,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/workout_templates/data/repositories/hybrid_template_repository.dart",
+    "line_number": 137,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/providers/community_corrections_provider.dart",
+    "line_number": 123,
+    "old_code": "if (user == null) throw Exception('User not authenticated');",
+    "new_code": "if (user == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/providers/community_corrections_provider.dart",
+    "line_number": 147,
+    "old_code": "if (user == null) throw Exception('User not authenticated');",
+    "new_code": "if (user == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/providers/flexible_routine_notifier.dart",
+    "line_number": 68,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/home/presentation/providers/insight_feedback_provider.dart",
+    "line_number": 72,
+    "old_code": "Exception('User not authenticated'),",
+    "new_code": "Exception(context.l10n.userNotAuthenticated),",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/ai_coach_card.dart",
+    "line_number": 1830,
+    "old_code": "if (e.toString().contains('User not authenticated')) {",
+    "new_code": "if (e.toString().contains(context.l10n.userNotAuthenticated)) {",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/home/data/repositories/hybrid_achievement_repository.dart",
+    "line_number": 56,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/home/data/repositories/hybrid_achievement_repository.dart",
+    "line_number": 100,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/settings/presentation/providers/cloud_sync_provider.dart",
+    "line_number": 130,
+    "old_code": "errors: ['User not authenticated'],",
+    "new_code": "errors: [context.l10n.userNotAuthenticated],",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/settings/presentation/widgets/premium_sync_card.dart",
+    "line_number": 104,
+    "old_code": "throw Exception('User not authenticated');",
+    "new_code": "throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/core/data/repositories/optimized_base_hybrid_repository.dart",
+    "line_number": 313,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/core/data/repositories/base_hybrid_repository.dart",
+    "line_number": 148,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/core/data/repositories/base_hybrid_repository.dart",
+    "line_number": 188,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/core/data/repositories/base_hybrid_repository.dart",
+    "line_number": 223,
+    "old_code": "if (userId == null) throw Exception('User not authenticated');",
+    "new_code": "if (userId == null) throw Exception(context.l10n.userNotAuthenticated);",
+    "string_value": "User not authenticated",
+    "localization_key": "userNotAuthenticated"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/screens/exercise_detail_screen.dart",
+    "line_number": 264,
+    "old_code": "child: Center(child: Text('No data available')),",
+    "new_code": "child: Center(child: Text(context.l10n.noDataAvailable)),",
+    "string_value": "No data available",
+    "localization_key": "noDataAvailable"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/screens/exercise_detail_screen.dart",
+    "line_number": 632,
+    "old_code": "child: Center(child: Text('No data available')),",
+    "new_code": "child: Center(child: Text(context.l10n.noDataAvailable)),",
+    "string_value": "No data available",
+    "localization_key": "noDataAvailable"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/screens/exercise_detail_screen.dart",
+    "line_number": 687,
+    "old_code": "child: Center(child: Text('No data available')),",
+    "new_code": "child: Center(child: Text(context.l10n.noDataAvailable)),",
+    "string_value": "No data available",
+    "localization_key": "noDataAvailable"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/screens/exercise_detail_screen.dart",
+    "line_number": 741,
+    "old_code": "child: Center(child: Text('No data available')),",
+    "new_code": "child: Center(child: Text(context.l10n.noDataAvailable)),",
+    "string_value": "No data available",
+    "localization_key": "noDataAvailable"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/workout_frequency_chart.dart",
+    "line_number": 51,
+    "old_code": "'No data available',",
+    "new_code": "context.l10n.noDataAvailable,",
+    "string_value": "No data available",
+    "localization_key": "noDataAvailable"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+    "line_number": 138,
+    "old_code": "'Choose Your Plan',",
+    "new_code": "context.l10n.chooseYourPlan,",
+    "string_value": "Choose Your Plan",
+    "localization_key": "chooseYourPlan"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+    "line_number": 273,
+    "old_code": "'Choose Your Plan',",
+    "new_code": "context.l10n.chooseYourPlan,",
+    "string_value": "Choose Your Plan",
+    "localization_key": "chooseYourPlan"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 679,
+    "old_code": "'Choose Your Plan',",
+    "new_code": "context.l10n.chooseYourPlan,",
+    "string_value": "Choose Your Plan",
+    "localization_key": "chooseYourPlan"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 715,
+    "old_code": "'Choose Your Plan',",
+    "new_code": "context.l10n.chooseYourPlan,",
+    "string_value": "Choose Your Plan",
+    "localization_key": "chooseYourPlan"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_upgrade_screen.dart",
+    "line_number": 231,
+    "old_code": "'Choose Your Plan',",
+    "new_code": "context.l10n.chooseYourPlan,",
+    "string_value": "Choose Your Plan",
+    "localization_key": "chooseYourPlan"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/home_widget_factory.dart",
+    "line_number": 587,
+    "old_code": "'AI Coach Insights',",
+    "new_code": "context.l10n.aiCoachInsights,",
+    "string_value": "AI Coach Insights",
+    "localization_key": "aiCoachInsights"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/home_widget_factory.dart",
+    "line_number": 702,
+    "old_code": "'AI Coach Insights',",
+    "new_code": "context.l10n.aiCoachInsights,",
+    "string_value": "AI Coach Insights",
+    "localization_key": "aiCoachInsights"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/home_widget_factory.dart",
+    "line_number": 912,
+    "old_code": "'AI Coach Insights',",
+    "new_code": "context.l10n.aiCoachInsights,",
+    "string_value": "AI Coach Insights",
+    "localization_key": "aiCoachInsights"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/home_widget_factory.dart",
+    "line_number": 1986,
+    "old_code": "'AI Coach Insights',",
+    "new_code": "context.l10n.aiCoachInsights,",
+    "string_value": "AI Coach Insights",
+    "localization_key": "aiCoachInsights"
+  },
+  {
+    "file_path": "lib/features/home/domain/models/home_widget_config.dart",
+    "line_number": 160,
+    "old_code": "title: 'AI Coach Insights',",
+    "new_code": "title: context.l10n.aiCoachInsights,",
+    "string_value": "AI Coach Insights",
+    "localization_key": "aiCoachInsights"
+  },
+  {
+    "file_path": "lib/features/premium/services/premium_sync_manager.dart",
+    "line_number": 143,
+    "old_code": "message: 'Sync already in progress',",
+    "new_code": "message: context.l10n.syncAlreadyInProgress,",
+    "string_value": "Sync already in progress",
+    "localization_key": "syncAlreadyInProgress"
+  },
+  {
+    "file_path": "lib/features/workout/data/services/workout_sync_service.dart",
+    "line_number": 112,
+    "old_code": "message: 'Sync already in progress',",
+    "new_code": "message: context.l10n.syncAlreadyInProgress,",
+    "string_value": "Sync already in progress",
+    "localization_key": "syncAlreadyInProgress"
+  },
+  {
+    "file_path": "lib/features/exercise_database/data/services/exercise_sync_service.dart",
+    "line_number": 79,
+    "old_code": "error: 'Sync already in progress',",
+    "new_code": "error: context.l10n.syncAlreadyInProgress,",
+    "string_value": "Sync already in progress",
+    "localization_key": "syncAlreadyInProgress"
+  },
+  {
+    "file_path": "lib/features/exercise_database/data/services/exercise_sync_service.dart",
+    "line_number": 162,
+    "old_code": "error: 'Sync already in progress',",
+    "new_code": "error: context.l10n.syncAlreadyInProgress,",
+    "string_value": "Sync already in progress",
+    "localization_key": "syncAlreadyInProgress"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+    "line_number": 76,
+    "old_code": "'Premium Features',",
+    "new_code": "context.l10n.premiumFeatures,",
+    "string_value": "Premium Features",
+    "localization_key": "premiumFeatures"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 474,
+    "old_code": "'Premium Features',",
+    "new_code": "context.l10n.premiumFeatures,",
+    "string_value": "Premium Features",
+    "localization_key": "premiumFeatures"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_upgrade_screen.dart",
+    "line_number": 196,
+    "old_code": "'Premium Features',",
+    "new_code": "context.l10n.premiumFeatures,",
+    "string_value": "Premium Features",
+    "localization_key": "premiumFeatures"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/screens/template_export_screen.dart",
+    "line_number": 219,
+    "old_code": "'Premium Features', // TODO: Add l10n.premiumFeatures",
+    "new_code": "context.l10n.premiumFeatures, // TODO: Add l10n.premiumFeatures",
+    "string_value": "Premium Features",
+    "localization_key": "premiumFeatures"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_provider.dart",
+    "line_number": 179,
+    "old_code": "state = state.copyWith(error: 'Invalid template ID');",
+    "new_code": "state = state.copyWith(error: context.l10n.invalidTemplateId);",
+    "string_value": "Invalid template ID",
+    "localization_key": "invalidTemplateId"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_provider.dart",
+    "line_number": 220,
+    "old_code": "state = state.copyWith(error: 'Invalid template ID');",
+    "new_code": "state = state.copyWith(error: context.l10n.invalidTemplateId);",
+    "string_value": "Invalid template ID",
+    "localization_key": "invalidTemplateId"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_provider.dart",
+    "line_number": 277,
+    "old_code": "state = state.copyWith(error: 'Invalid template ID');",
+    "new_code": "state = state.copyWith(error: context.l10n.invalidTemplateId);",
+    "string_value": "Invalid template ID",
+    "localization_key": "invalidTemplateId"
+  },
+  {
+    "file_path": "lib/features/workout_templates/presentation/providers/template_provider.dart",
+    "line_number": 334,
+    "old_code": "state = state.copyWith(error: 'Invalid template ID');",
+    "new_code": "state = state.copyWith(error: context.l10n.invalidTemplateId);",
+    "string_value": "Invalid template ID",
+    "localization_key": "invalidTemplateId"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+    "line_number": 431,
+    "old_code": "'Peso (kg)',",
+    "new_code": "context.l10n.pesoKg,",
+    "string_value": "Peso (kg)",
+    "localization_key": "pesoKg"
+  },
+  {
+    "file_path": "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart",
+    "line_number": 559,
+    "old_code": "isItalian ? 'Peso (kg)' : 'Weight (kg)',",
+    "new_code": "isItalian ? context.l10n.pesoKg : 'Weight (kg)',",
+    "string_value": "Peso (kg)",
+    "localization_key": "pesoKg"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/superset_execution_sheet.dart",
+    "line_number": 294,
+    "old_code": "labelText: 'Peso (kg)',",
+    "new_code": "labelText: context.l10n.pesoKg,",
+    "string_value": "Peso (kg)",
+    "localization_key": "pesoKg"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart",
+    "line_number": 351,
+    "old_code": "label: 'Volume Totale',",
+    "new_code": "label: context.l10n.volumeTotale,",
+    "string_value": "Volume Totale",
+    "localization_key": "volumeTotale"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart",
+    "line_number": 420,
+    "old_code": "label: 'Volume Totale',",
+    "new_code": "label: context.l10n.volumeTotale,",
+    "string_value": "Volume Totale",
+    "localization_key": "volumeTotale"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/zen_mode_settings_dialog.dart",
+    "line_number": 158,
+    "old_code": "title: 'Volume Totale',",
+    "new_code": "title: context.l10n.volumeTotale,",
+    "string_value": "Volume Totale",
+    "localization_key": "volumeTotale"
+  },
+  {
+    "file_path": "lib/features/exercise_analytics/presentation/screens/exercise_analytics_screen.dart",
+    "line_number": 263,
+    "old_code": "'Volume Totale',",
+    "new_code": "context.l10n.volumeTotale,",
+    "string_value": "Volume Totale",
+    "localization_key": "volumeTotale"
+  },
+  {
+    "file_path": "lib/features/exercise_analytics/presentation/screens/exercise_analytics_screen.dart",
+    "line_number": 575,
+    "old_code": "_buildDetailRow('Volume Totale', '${exercise.totalVolume.toInt()} kg'),",
+    "new_code": "_buildDetailRow(context.l10n.volumeTotale, '${exercise.totalVolume.toInt()} kg'),",
+    "string_value": "Volume Totale",
+    "localization_key": "volumeTotale"
+  },
+  {
+    "file_path": "lib/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart",
+    "line_number": 76,
+    "old_code": "'Privacy Policy',",
+    "new_code": "context.l10n.privacyPolicy,",
+    "string_value": "Privacy Policy",
+    "localization_key": "privacyPolicy"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+    "line_number": 462,
+    "old_code": "'Privacy Policy',",
+    "new_code": "context.l10n.privacyPolicy,",
+    "string_value": "Privacy Policy",
+    "localization_key": "privacyPolicy"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 1129,
+    "old_code": "'Privacy Policy',",
+    "new_code": "context.l10n.privacyPolicy,",
+    "string_value": "Privacy Policy",
+    "localization_key": "privacyPolicy"
+  },
+  {
+    "file_path": "lib/features/settings/presentation/screens/legal_document_screen.dart",
+    "line_number": 252,
+    "old_code": "? 'Privacy Policy'",
+    "new_code": "? context.l10n.privacyPolicy",
+    "string_value": "Privacy Policy",
+    "localization_key": "privacyPolicy"
+  },
+  {
+    "file_path": "lib/features/onboarding/presentation/widgets/legal_disclaimer_modal.dart",
+    "line_number": 89,
+    "old_code": "'Terms of Service',",
+    "new_code": "context.l10n.termsOfService,",
+    "string_value": "Terms of Service",
+    "localization_key": "termsOfService"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+    "line_number": 479,
+    "old_code": "'Terms of Service',",
+    "new_code": "context.l10n.termsOfService,",
+    "string_value": "Terms of Service",
+    "localization_key": "termsOfService"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 1147,
+    "old_code": "'Terms of Service',",
+    "new_code": "context.l10n.termsOfService,",
+    "string_value": "Terms of Service",
+    "localization_key": "termsOfService"
+  },
+  {
+    "file_path": "lib/features/settings/presentation/screens/legal_document_screen.dart",
+    "line_number": 253,
+    "old_code": ": 'Terms of Service';",
+    "new_code": ": context.l10n.termsOfService;",
+    "string_value": "Terms of Service",
+    "localization_key": "termsOfService"
+  },
+  {
+    "file_path": "lib/features/onboarding/domain/services/contextual_overlay_manager.dart",
+    "line_number": 104,
+    "old_code": "actionLabel: 'Got it',",
+    "new_code": "actionLabel: context.l10n.gotIt,",
+    "string_value": "Got it",
+    "localization_key": "gotIt"
+  },
+  {
+    "file_path": "lib/features/onboarding/domain/services/contextual_overlay_manager.dart",
+    "line_number": 129,
+    "old_code": "actionLabel: 'Got it',",
+    "new_code": "actionLabel: context.l10n.gotIt,",
+    "string_value": "Got it",
+    "localization_key": "gotIt"
+  },
+  {
+    "file_path": "lib/features/onboarding/domain/services/contextual_overlay_manager.dart",
+    "line_number": 143,
+    "old_code": "actionLabel: 'Got it',",
+    "new_code": "actionLabel: context.l10n.gotIt,",
+    "string_value": "Got it",
+    "localization_key": "gotIt"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 238,
+    "old_code": "title: 'AI Coach',",
+    "new_code": "title: context.l10n.aiCoach,",
+    "string_value": "AI Coach",
+    "localization_key": "aiCoach"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 304,
+    "old_code": "title: 'AI Coach',",
+    "new_code": "title: context.l10n.aiCoach,",
+    "string_value": "AI Coach",
+    "localization_key": "aiCoach"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/home_widget_factory.dart",
+    "line_number": 533,
+    "old_code": "'AI Coach',",
+    "new_code": "context.l10n.aiCoach,",
+    "string_value": "AI Coach",
+    "localization_key": "aiCoach"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 242,
+    "old_code": "label: 'Vedi dettagli',",
+    "new_code": "label: context.l10n.vediDettagli,",
+    "string_value": "Vedi dettagli",
+    "localization_key": "vediDettagli"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 308,
+    "old_code": "label: 'Vedi dettagli',",
+    "new_code": "label: context.l10n.vediDettagli,",
+    "string_value": "Vedi dettagli",
+    "localization_key": "vediDettagli"
+  },
+  {
+    "file_path": "lib/features/notifications/domain/services/intelligent_notification_service.dart",
+    "line_number": 78,
+    "old_code": "label: 'Vedi dettagli',",
+    "new_code": "label: context.l10n.vediDettagli,",
+    "string_value": "Vedi dettagli",
+    "localization_key": "vediDettagli"
+  },
+  {
+    "file_path": "lib/shared/presentation/widgets/error_boundary.dart",
+    "line_number": 94,
+    "old_code": "error?.toString() ?? 'Unknown error',",
+    "new_code": "error?.toString() ?? context.l10n.unknownError,",
+    "string_value": "Unknown error",
+    "localization_key": "unknownError"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/unified_notification_provider.dart",
+    "line_number": 171,
+    "old_code": "result.error ?? 'Unknown error',",
+    "new_code": "result.error ?? context.l10n.unknownError,",
+    "string_value": "Unknown error",
+    "localization_key": "unknownError"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/providers/firebase_init_provider.dart",
+    "line_number": 54,
+    "old_code": "state = FirebaseInitState.error(result.error ?? 'Unknown error');",
+    "new_code": "state = FirebaseInitState.error(result.error ?? context.l10n.unknownError);",
+    "string_value": "Unknown error",
+    "localization_key": "unknownError"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+    "line_number": 633,
+    "old_code": "'You\\'re Premium!',",
+    "new_code": "context.l10n.yourePremium,",
+    "string_value": "You\\'re Premium!",
+    "localization_key": "yourePremium"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 1444,
+    "old_code": "'You\\'re Premium!',",
+    "new_code": "context.l10n.yourePremium,",
+    "string_value": "You\\'re Premium!",
+    "localization_key": "yourePremium"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_upgrade_screen.dart",
+    "line_number": 580,
+    "old_code": "'You\\'re Premium!',",
+    "new_code": "context.l10n.yourePremium,",
+    "string_value": "You\\'re Premium!",
+    "localization_key": "yourePremium"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen.dart",
+    "line_number": 682,
+    "old_code": "'Manage Subscription',",
+    "new_code": "context.l10n.manageSubscription,",
+    "string_value": "Manage Subscription",
+    "localization_key": "manageSubscription"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_purchase_screen_v2.dart",
+    "line_number": 1515,
+    "old_code": "'Manage Subscription',",
+    "new_code": "context.l10n.manageSubscription,",
+    "string_value": "Manage Subscription",
+    "localization_key": "manageSubscription"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/premium_upgrade_screen.dart",
+    "line_number": 612,
+    "old_code": "label: const Text('Manage Subscription'),",
+    "new_code": "label: const Text(context.l10n.manageSubscription),",
+    "string_value": "Manage Subscription",
+    "localization_key": "manageSubscription"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/screens/workout_templates_screen.dart",
+    "line_number": 415,
+    "old_code": "label: const Text('Crea Template'),",
+    "new_code": "label: const Text(context.l10n.creaTemplate),",
+    "string_value": "Crea Template",
+    "localization_key": "creaTemplate"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/create_template_modal.dart",
+    "line_number": 122,
+    "old_code": "localizations.createTemplate ?? 'Crea Template',",
+    "new_code": "localizations.createTemplate ?? context.l10n.creaTemplate,",
+    "string_value": "Crea Template",
+    "localization_key": "creaTemplate"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/create_template_modal.dart",
+    "line_number": 496,
+    "old_code": ": const Text('Crea Template'),",
+    "new_code": ": const Text(context.l10n.creaTemplate),",
+    "string_value": "Crea Template",
+    "localization_key": "creaTemplate"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+    "line_number": 454,
+    "old_code": "label: Text('APRE 3'),",
+    "new_code": "label: Text(context.l10n.apre3),",
+    "string_value": "APRE 3",
+    "localization_key": "apre3"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+    "line_number": 355,
+    "old_code": "label: Text('APRE 3'),",
+    "new_code": "label: Text(context.l10n.apre3),",
+    "string_value": "APRE 3",
+    "localization_key": "apre3"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/add_exercise_modal.dart",
+    "line_number": 770,
+    "old_code": "label: Text('APRE 3'),",
+    "new_code": "label: Text(context.l10n.apre3),",
+    "string_value": "APRE 3",
+    "localization_key": "apre3"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+    "line_number": 459,
+    "old_code": "label: Text('APRE 6'),",
+    "new_code": "label: Text(context.l10n.apre6),",
+    "string_value": "APRE 6",
+    "localization_key": "apre6"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+    "line_number": 360,
+    "old_code": "label: Text('APRE 6'),",
+    "new_code": "label: Text(context.l10n.apre6),",
+    "string_value": "APRE 6",
+    "localization_key": "apre6"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/add_exercise_modal.dart",
+    "line_number": 775,
+    "old_code": "label: Text('APRE 6'),",
+    "new_code": "label: Text(context.l10n.apre6),",
+    "string_value": "APRE 6",
+    "localization_key": "apre6"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/edit_exercise_modal.dart",
+    "line_number": 464,
+    "old_code": "label: Text('APRE 10'),",
+    "new_code": "label: Text(context.l10n.apre10),",
+    "string_value": "APRE 10",
+    "localization_key": "apre10"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/auto_adjustment_modal.dart",
+    "line_number": 365,
+    "old_code": "label: Text('APRE 10'),",
+    "new_code": "label: Text(context.l10n.apre10),",
+    "string_value": "APRE 10",
+    "localization_key": "apre10"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/add_exercise_modal.dart",
+    "line_number": 780,
+    "old_code": "label: Text('APRE 10'),",
+    "new_code": "label: Text(context.l10n.apre10),",
+    "string_value": "APRE 10",
+    "localization_key": "apre10"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/community_contribution_modal.dart",
+    "line_number": 532,
+    "old_code": "'Errori comuni',",
+    "new_code": "context.l10n.erroriComuni,",
+    "string_value": "Errori comuni",
+    "localization_key": "erroriComuni"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/community_contribution_modal.dart",
+    "line_number": 592,
+    "old_code": "case 'Errori comuni':",
+    "new_code": "case context.l10n.erroriComuni:",
+    "string_value": "Errori comuni",
+    "localization_key": "erroriComuni"
+  },
+  {
+    "file_path": "lib/features/community/presentation/providers/exercise_data_provider.dart",
+    "line_number": 144,
+    "old_code": "case 'Errori comuni':",
+    "new_code": "case context.l10n.erroriComuni:",
+    "string_value": "Errori comuni",
+    "localization_key": "erroriComuni"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/exercise_options_modal.dart",
+    "line_number": 187,
+    "old_code": "content: Text('Dati esercizio non disponibili'),",
+    "new_code": "content: Text(context.l10n.datiEsercizioNonDisponibili),",
+    "string_value": "Dati esercizio non disponibili",
+    "localization_key": "datiEsercizioNonDisponibili"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/exercise_options_modal.dart",
+    "line_number": 209,
+    "old_code": "? 'Dati esercizio non disponibili'",
+    "new_code": "? context.l10n.datiEsercizioNonDisponibili",
+    "string_value": "Dati esercizio non disponibili",
+    "localization_key": "datiEsercizioNonDisponibili"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/exercise_options_modal.dart",
+    "line_number": 232,
+    "old_code": "? 'Dati esercizio non disponibili'",
+    "new_code": "? context.l10n.datiEsercizioNonDisponibili",
+    "string_value": "Dati esercizio non disponibili",
+    "localization_key": "datiEsercizioNonDisponibili"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 523,
+    "old_code": "tooltip: _isManualWeightEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualWeightEntry ? context.l10n.useWheel : 'Type manually',",
+    "string_value": "Use wheel",
+    "localization_key": "useWheel"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 678,
+    "old_code": "tooltip: _isManualRepsEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualRepsEntry ? context.l10n.useWheel : 'Type manually',",
+    "string_value": "Use wheel",
+    "localization_key": "useWheel"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 825,
+    "old_code": "tooltip: _isManualSecondsEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualSecondsEntry ? context.l10n.useWheel : 'Type manually',",
+    "string_value": "Use wheel",
+    "localization_key": "useWheel"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 523,
+    "old_code": "tooltip: _isManualWeightEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualWeightEntry ? 'Use wheel' : context.l10n.typeManually,",
+    "string_value": "Type manually",
+    "localization_key": "typeManually"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 678,
+    "old_code": "tooltip: _isManualRepsEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualRepsEntry ? 'Use wheel' : context.l10n.typeManually,",
+    "string_value": "Type manually",
+    "localization_key": "typeManually"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/quick_edit_overlay_v2.dart",
+    "line_number": 825,
+    "old_code": "tooltip: _isManualSecondsEntry ? 'Use wheel' : 'Type manually',",
+    "new_code": "tooltip: _isManualSecondsEntry ? 'Use wheel' : context.l10n.typeManually,",
+    "string_value": "Type manually",
+    "localization_key": "typeManually"
+  },
+  {
+    "file_path": "lib/shared/domain/services/input_sanitizer.dart",
+    "line_number": 152,
+    "old_code": "errors.add('Exercise name cannot be empty');",
+    "new_code": "errors.add(context.l10n.exerciseNameCannotBeEmpty);",
+    "string_value": "Exercise name cannot be empty",
+    "localization_key": "exerciseNameCannotBeEmpty"
+  },
+  {
+    "file_path": "lib/shared/domain/validation/template_validator.dart",
+    "line_number": 208,
+    "old_code": "return 'Exercise name cannot be empty';",
+    "new_code": "return context.l10n.exerciseNameCannotBeEmpty;",
+    "string_value": "Exercise name cannot be empty",
+    "localization_key": "exerciseNameCannotBeEmpty"
+  },
+  {
+    "file_path": "lib/features/workout/domain/usecases/save_workout_usecase.dart",
+    "line_number": 103,
+    "old_code": "'Exercise name cannot be empty',",
+    "new_code": "context.l10n.exerciseNameCannotBeEmpty,",
+    "string_value": "Exercise name cannot be empty",
+    "localization_key": "exerciseNameCannotBeEmpty"
+  },
+  {
+    "file_path": "lib/features/workout/data/repositories/exercise_chart_repository_impl.dart",
+    "line_number": 56,
+    "old_code": "message: 'Exercise name cannot be empty',",
+    "new_code": "message: context.l10n.exerciseNameCannotBeEmpty,",
+    "string_value": "Exercise name cannot be empty",
+    "localization_key": "exerciseNameCannotBeEmpty"
+  },
+  {
+    "file_path": "lib/features/workout_templates/domain/services/batch_import_service.dart",
+    "line_number": 387,
+    "old_code": "errors.add('Exercise name cannot be empty');",
+    "new_code": "errors.add(context.l10n.exerciseNameCannotBeEmpty);",
+    "string_value": "Exercise name cannot be empty",
+    "localization_key": "exerciseNameCannotBeEmpty"
+  },
+  {
+    "file_path": "lib/features/workout_templates/domain/utils/import_validation_utils.dart",
+    "line_number": 112,
+    "old_code": "errors.add('Template name is required');",
+    "new_code": "errors.add(context.l10n.templateNameIsRequired);",
+    "string_value": "Template name is required",
+    "localization_key": "templateNameIsRequired"
+  },
+  {
+    "file_path": "lib/features/workout_templates/domain/utils/import_validation_utils.dart",
+    "line_number": 293,
+    "old_code": "errors.add('Template name is required');",
+    "new_code": "errors.add(context.l10n.templateNameIsRequired);",
+    "string_value": "Template name is required",
+    "localization_key": "templateNameIsRequired"
+  },
+  {
+    "file_path": "lib/features/workout_templates/domain/utils/import_error_mapper.dart",
+    "line_number": 48,
+    "old_code": "if (errorString.contains('Template name is required') ||",
+    "new_code": "if (errorString.contains(context.l10n.templateNameIsRequired) ||",
+    "string_value": "Template name is required",
+    "localization_key": "templateNameIsRequired"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart",
+    "line_number": 90,
+    "old_code": "label: const Text('Go Back'),",
+    "new_code": "label: const Text(context.l10n.goBack),",
+    "string_value": "Go Back",
+    "localization_key": "goBack"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/screens/routine_detail_screen.dart",
+    "line_number": 335,
+    "old_code": "child: const Text('Go Back'),",
+    "new_code": "child: const Text(context.l10n.goBack),",
+    "string_value": "Go Back",
+    "localization_key": "goBack"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/screens/routine_detail_screen.dart",
+    "line_number": 371,
+    "old_code": "child: const Text('Go Back'),",
+    "new_code": "child: const Text(context.l10n.goBack),",
+    "string_value": "Go Back",
+    "localization_key": "goBack"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/optimized_unified_stats_card.dart",
+    "line_number": 349,
+    "old_code": "'Livello $level',",
+    "new_code": "context.l10n.livelloLevel,",
+    "string_value": "Livello $level",
+    "localization_key": "livelloLevel"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/optimized_unified_stats_card.dart",
+    "line_number": 549,
+    "old_code": "Text('Livello $level', style: theme.textTheme.bodySmall),",
+    "new_code": "Text(context.l10n.livelloLevel, style: theme.textTheme.bodySmall),",
+    "string_value": "Livello $level",
+    "localization_key": "livelloLevel"
+  },
+  {
+    "file_path": "lib/features/home/presentation/widgets/unified_stats_card.dart",
+    "line_number": 285,
+    "old_code": "'Livello $level',",
+    "new_code": "context.l10n.livelloLevel,",
+    "string_value": "Livello $level",
+    "localization_key": "livelloLevel"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/analytics_screen.dart",
+    "line_number": 337,
+    "old_code": "'Error loading analytics',",
+    "new_code": "context.l10n.errorLoadingAnalytics,",
+    "string_value": "Error loading analytics",
+    "localization_key": "errorLoadingAnalytics"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/screens/enhanced_analytics_screen.dart",
+    "line_number": 708,
+    "old_code": "'Error loading analytics',",
+    "new_code": "context.l10n.errorLoadingAnalytics,",
+    "string_value": "Error loading analytics",
+    "localization_key": "errorLoadingAnalytics"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart",
+    "line_number": 89,
+    "old_code": "'Volume Progress',",
+    "new_code": "context.l10n.volumeProgress,",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart",
+    "line_number": 127,
+    "old_code": "//   featureName: 'Volume Progress',",
+    "new_code": "//   featureName: context.l10n.volumeProgress,",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/export_dialog.dart",
+    "line_number": 247,
+    "old_code": "return 'Volume Progress';",
+    "new_code": "return context.l10n.volumeProgress;",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart",
+    "line_number": 231,
+    "old_code": "label: 'Volume Progress',",
+    "new_code": "label: context.l10n.volumeProgress,",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart",
+    "line_number": 2150,
+    "old_code": "case 'volume': return 'Volume Progress';",
+    "new_code": "case 'volume': return context.l10n.volumeProgress;",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+    "line_number": 86,
+    "old_code": "'Volume Progress',",
+    "new_code": "context.l10n.volumeProgress,",
+    "string_value": "Volume Progress",
+    "localization_key": "volumeProgress"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/tabs/analytics_progress_tab.dart",
+    "line_number": 167,
+    "old_code": "'Personal Records',",
+    "new_code": "context.l10n.personalRecords,",
+    "string_value": "Personal Records",
+    "localization_key": "personalRecords"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/export_dialog.dart",
+    "line_number": 249,
+    "old_code": "return 'Personal Records';",
+    "new_code": "return context.l10n.personalRecords;",
+    "string_value": "Personal Records",
+    "localization_key": "personalRecords"
+  },
+  {
+    "file_path": "lib/features/analytics/domain/services/export_service.dart",
+    "line_number": 184,
+    "old_code": "_buildTableRow('Personal Records', statistics['totalPRs']?.toString() ?? '0'),",
+    "new_code": "_buildTableRow(context.l10n.personalRecords, statistics['totalPRs']?.toString() ?? '0'),",
+    "string_value": "Personal Records",
+    "localization_key": "personalRecords"
+  },
+  {
+    "file_path": "lib/features/analytics/domain/services/export_service.dart",
+    "line_number": 205,
+    "old_code": "'Personal Records',",
+    "new_code": "context.l10n.personalRecords,",
+    "string_value": "Personal Records",
+    "localization_key": "personalRecords"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart",
+    "line_number": 84,
+    "old_code": "label: const Text('Create Routine'),",
+    "new_code": "label: const Text(context.l10n.createRoutine),",
+    "string_value": "Create Routine",
+    "localization_key": "createRoutine"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/widgets/smart_cta_button/smart_cta_button.dart",
+    "line_number": 300,
+    "old_code": "'Create Routine', // TODO: Add localization key",
+    "new_code": "context.l10n.createRoutine, // TODO: Add localization key",
+    "string_value": "Create Routine",
+    "localization_key": "createRoutine"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/widgets/editor_steps/review_step.dart",
+    "line_number": 162,
+    "old_code": "'Tap \"Create Routine\" to begin your fitness journey',",
+    "new_code": "'Tap context.l10n.createRoutine to begin your fitness journey',",
+    "string_value": "Create Routine",
+    "localization_key": "createRoutine"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/tabs/analytics_routine_tab.dart",
+    "line_number": 362,
+    "old_code": "'Current Streak',",
+    "new_code": "context.l10n.currentStreak,",
+    "string_value": "Current Streak",
+    "localization_key": "currentStreak"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/enhanced_stat_cards.dart",
+    "line_number": 416,
+    "old_code": "'Current Streak',",
+    "new_code": "context.l10n.currentStreak,",
+    "string_value": "Current Streak",
+    "localization_key": "currentStreak"
+  },
+  {
+    "file_path": "lib/features/analytics/domain/services/export_service.dart",
+    "line_number": 182,
+    "old_code": "_buildTableRow('Current Streak', '${statistics['currentStreak'] ?? 0} days'),",
+    "new_code": "_buildTableRow(context.l10n.currentStreak, '${statistics['currentStreak'] ?? 0} days'),",
+    "string_value": "Current Streak",
+    "localization_key": "currentStreak"
+  },
+  {
+    "file_path": "lib/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart",
+    "line_number": 348,
+    "old_code": "label: 'Current Streak',",
+    "new_code": "label: context.l10n.currentStreak,",
+    "string_value": "Current Streak",
+    "localization_key": "currentStreak"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/exercise_history_search_modal.dart",
+    "line_number": 205,
+    "old_code": "'Nessun esercizio trovato',",
+    "new_code": "context.l10n.nessunEsercizioTrovato,",
+    "string_value": "Nessun esercizio trovato",
+    "localization_key": "nessunEsercizioTrovato"
+  },
+  {
+    "file_path": "lib/features/exercise_analytics/presentation/screens/exercise_analytics_screen.dart",
+    "line_number": 331,
+    "old_code": "'Nessun esercizio trovato',",
+    "new_code": "context.l10n.nessunEsercizioTrovato,",
+    "string_value": "Nessun esercizio trovato",
+    "localization_key": "nessunEsercizioTrovato"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/premium_feature_overlay.dart",
+    "line_number": 129,
+    "old_code": "'Unlock Premium',",
+    "new_code": "context.l10n.unlockPremium,",
+    "string_value": "Unlock Premium",
+    "localization_key": "unlockPremium"
+  },
+  {
+    "file_path": "lib/features/premium/presentation/screens/simple_premium_screen.dart",
+    "line_number": 52,
+    "old_code": "isPremium ? 'You are Premium!' : 'Unlock Premium',",
+    "new_code": "isPremium ? 'You are Premium!' : context.l10n.unlockPremium,",
+    "string_value": "Unlock Premium",
+    "localization_key": "unlockPremium"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart",
+    "line_number": 391,
+    "old_code": "value: DateFormat('d MMM yyyy').format(data.date),",
+    "new_code": "value: DateFormat(context.l10n.dMmmYyyy).format(data.date),",
+    "string_value": "d MMM yyyy",
+    "localization_key": "dMmmYyyy"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/one_rm_progression_chart.dart",
+    "line_number": 688,
+    "old_code": "value: DateFormat('d MMM yyyy').format(_selectedDataPoint!.date),",
+    "new_code": "value: DateFormat(context.l10n.dMmmYyyy).format(_selectedDataPoint!.date),",
+    "string_value": "d MMM yyyy",
+    "localization_key": "dMmmYyyy"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/interactive_weight_chart.dart",
+    "line_number": 521,
+    "old_code": "'Nessun dato disponibile',",
+    "new_code": "context.l10n.nessunDatoDisponibile,",
+    "string_value": "Nessun dato disponibile",
+    "localization_key": "nessunDatoDisponibile"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/volume_progress_chart_3d.dart",
+    "line_number": 472,
+    "old_code": "'Nessun dato disponibile',",
+    "new_code": "context.l10n.nessunDatoDisponibile,",
+    "string_value": "Nessun dato disponibile",
+    "localization_key": "nessunDatoDisponibile"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/exercise_stats_card.dart",
+    "line_number": 37,
+    "old_code": "'Top Exercises',",
+    "new_code": "context.l10n.topExercises,",
+    "string_value": "Top Exercises",
+    "localization_key": "topExercises"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+    "line_number": 1041,
+    "old_code": "Text('Top Exercises', style: theme.textTheme.titleMedium),",
+    "new_code": "Text(context.l10n.topExercises, style: theme.textTheme.titleMedium),",
+    "string_value": "Top Exercises",
+    "localization_key": "topExercises"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/exercise_stats_card.dart",
+    "line_number": 46,
+    "old_code": "child: Text('View All'),",
+    "new_code": "child: Text(context.l10n.viewAll),",
+    "string_value": "View All",
+    "localization_key": "viewAll"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+    "line_number": 51,
+    "old_code": "child: const Text('View All'),",
+    "new_code": "child: const Text(context.l10n.viewAll),",
+    "string_value": "View All",
+    "localization_key": "viewAll"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/exercise_stats_card.dart",
+    "line_number": 57,
+    "old_code": "'No exercise data available',",
+    "new_code": "context.l10n.noExerciseDataAvailable,",
+    "string_value": "No exercise data available",
+    "localization_key": "noExerciseDataAvailable"
+  },
+  {
+    "file_path": "lib/features/admin/presentation/screens/admin_analytics_screen.dart",
+    "line_number": 531,
+    "old_code": "child: Text('No exercise data available'),",
+    "new_code": "child: Text(context.l10n.noExerciseDataAvailable),",
+    "string_value": "No exercise data available",
+    "localization_key": "noExerciseDataAvailable"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/fatigue_rating_dialog.dart",
+    "line_number": 228,
+    "old_code": "'Muscle Efficiency Score',",
+    "new_code": "context.l10n.muscleEfficiencyScore,",
+    "string_value": "Muscle Efficiency Score",
+    "localization_key": "muscleEfficiencyScore"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart",
+    "line_number": 1105,
+    "old_code": "'Muscle Efficiency Score',",
+    "new_code": "context.l10n.muscleEfficiencyScore,",
+    "string_value": "Muscle Efficiency Score",
+    "localization_key": "muscleEfficiencyScore"
+  },
+  {
+    "file_path": "lib/features/analytics/presentation/widgets/recent_workouts_card.dart",
+    "line_number": 37,
+    "old_code": "'Recent Workouts',",
+    "new_code": "context.l10n.recentWorkouts,",
+    "string_value": "Recent Workouts",
+    "localization_key": "recentWorkouts"
+  },
+  {
+    "file_path": "lib/features/analytics/domain/services/export_service.dart",
+    "line_number": 279,
+    "old_code": "'Recent Workouts',",
+    "new_code": "context.l10n.recentWorkouts,",
+    "string_value": "Recent Workouts",
+    "localization_key": "recentWorkouts"
+  },
+  {
+    "file_path": "lib/features/onboarding/presentation/widgets/steps/04_create_workout_step.dart",
+    "line_number": 475,
+    "old_code": "isItalian ? 'Upper Body • Push' : 'Upper Body • Push',",
+    "new_code": "isItalian ? context.l10n.upperBodyPush : context.l10n.upperBodyPush,",
+    "string_value": "Upper Body • Push",
+    "localization_key": "upperBodyPush"
+  },
+  {
+    "file_path": "lib/features/onboarding/presentation/widgets/steps/06_execute_set_step.dart",
+    "line_number": 559,
+    "old_code": "isItalian ? 'Peso (kg)' : 'Weight (kg)',",
+    "new_code": "isItalian ? 'Peso (kg)' : context.l10n.weightKg,",
+    "string_value": "Weight (kg)",
+    "localization_key": "weightKg"
+  },
+  {
+    "file_path": "lib/features/workout/presentation/widgets/warmup_progression_v2.dart",
+    "line_number": 110,
+    "old_code": "labelText: 'Weight (kg)',",
+    "new_code": "labelText: context.l10n.weightKg,",
+    "string_value": "Weight (kg)",
+    "localization_key": "weightKg"
+  },
+  {
+    "file_path": "lib/features/onboarding/domain/services/contextual_overlay_manager.dart",
+    "line_number": 122,
+    "old_code": "actionLabel: 'Show me',",
+    "new_code": "actionLabel: context.l10n.showMe,",
+    "string_value": "Show me",
+    "localization_key": "showMe"
+  },
+  {
+    "file_path": "lib/features/onboarding/domain/services/contextual_overlay_manager.dart",
+    "line_number": 179,
+    "old_code": "actionLabel: 'Show me',",
+    "new_code": "actionLabel: context.l10n.showMe,",
+    "string_value": "Show me",
+    "localization_key": "showMe"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 133,
+    "old_code": "title: 'Benvenuto in GymBro! 👋',",
+    "new_code": "title: context.l10n.benvenutoInGymbro,",
+    "string_value": "Benvenuto in GymBro! 👋",
+    "localization_key": "benvenutoInGymbro"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 143,
+    "old_code": "title: 'Benvenuto in GymBro! 👋',",
+    "new_code": "title: context.l10n.benvenutoInGymbro,",
+    "string_value": "Benvenuto in GymBro! 👋",
+    "localization_key": "benvenutoInGymbro"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 134,
+    "old_code": "message: 'Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.',",
+    "new_code": "message: context.l10n.iniziaIlTuoViaggioFitnessToccaLaCampanel,",
+    "string_value": "Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.",
+    "localization_key": "iniziaIlTuoViaggioFitnessToccaLaCampanel"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 144,
+    "old_code": "message: 'Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.',",
+    "new_code": "message: context.l10n.iniziaIlTuoViaggioFitnessToccaLaCampanel,",
+    "string_value": "Inizia il tuo viaggio fitness. Tocca la campanella per vedere i tuoi progressi e ricevere consigli personalizzati.",
+    "localization_key": "iniziaIlTuoViaggioFitnessToccaLaCampanel"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 137,
+    "old_code": "label: 'Inizia ora',",
+    "new_code": "label: context.l10n.iniziaOra,",
+    "string_value": "Inizia ora",
+    "localization_key": "iniziaOra"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 147,
+    "old_code": "label: 'Inizia ora',",
+    "new_code": "label: context.l10n.iniziaOra,",
+    "string_value": "Inizia ora",
+    "localization_key": "iniziaOra"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider_bridge.dart",
+    "line_number": 255,
+    "old_code": "label: 'Vedi achievement',",
+    "new_code": "label: context.l10n.vediAchievement,",
+    "string_value": "Vedi achievement",
+    "localization_key": "vediAchievement"
+  },
+  {
+    "file_path": "lib/features/notifications/presentation/providers/notification_provider.dart",
+    "line_number": 321,
+    "old_code": "label: 'Vedi achievement',",
+    "new_code": "label: context.l10n.vediAchievement,",
+    "string_value": "Vedi achievement",
+    "localization_key": "vediAchievement"
+  }
+]
