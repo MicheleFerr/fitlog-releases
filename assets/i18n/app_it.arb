@@ -7797,7 +7797,7 @@
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: case NotificationType.workoutReminder:\n        return 'Workout Reminder';\n      case NotificationType.achievementUnlocked:, type: NotificationType.workoutReminder,\n      title: 'Workout Reminder',\n      body: 'Time for your $workoutName workout! 💪',"
   },
-  "advancedAnalytics": "Advanced Analytics",
+  "advancedAnalytics": "Analisi Avanzate",
   "@advancedAnalytics": {
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: AppIcons.insights,\n                'Advanced Analytics',\n                'Deep insights into your performance',, icon: AppIcons.analyticsRounded,\n        title: 'Advanced Analytics',\n        description: 'Detailed insights & progress tracking',"
@@ -8513,5 +8513,23 @@
   "faqPaymentSecureAnswer": "Sì, utilizziamo i sistemi di pagamento Apple/Google per la massima sicurezza.",
   "testimonialJohnD": "La funzione di sincronizzazione è rivoluzionaria! Posso iniziare un allenamento sul telefono e finirlo sul tablet.",
   "testimonialSarahM": "I template della community mi hanno fatto risparmiare ore di pianificazione. Ne vale ogni centesimo!",
-  "testimonialMikeR": "Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile."
+  "testimonialMikeR": "Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile.",
+  "gymbroPremium": "GymBro Premium",
+  "enjoyAllPremiumFeatures": "Goditi tutte le funzionalità premium",
+  "getUnlimitedAccess": "Ottieni accesso illimitato a tutte le funzionalità",
+  "trackWorkoutVolume": "Monitora il volume dei tuoi allenamenti nel tempo",
+  "comprehensiveWeeklyAnalytics": "Analisi settimanale completa degli allenamenti",
+  "analyzeMuscleGroupBalance": "Analizza l'equilibrio dei gruppi muscolari",
+  "deepInsights": "Approfondimenti dettagliati sulle tue prestazioni",
+  "detailedHistory": "Cronologia Dettagliata",
+  "completeWorkoutHistory": "Cronologia completa degli allenamenti con dettagli",
+  "syncAcrossDevices": "Sincronizza su tutti i tuoi dispositivi",
+  "noAds": "Nessuna Pubblicità",
+  "enjoyAdFreeExperience": "Goditi un'esperienza senza pubblicità",
+  "inAppPurchasesComingSoon": "Acquisti in-app in arrivo!\nLe funzionalità premium sono attualmente in beta.",
+  "thankYouForBeingPremium": "Grazie per essere Premium!",
+  "youArePremium": "Sei Premium!",
+  "youHaveAccessToAllFeatures": "Hai accesso a tutte le funzionalità",
+  "planWillBeAvailableSoon": "Il piano {plan} sarà presto disponibile!",
+  "saveVsMonthly": "Risparmia 33% rispetto al mensile"
 }

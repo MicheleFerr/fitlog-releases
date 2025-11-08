@@ -27581,6 +27581,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Never lost a workout since going premium. The backup is automatic and reliable.'**
   String get testimonialMikeR;
+
+  /// No description provided for @enjoyAllPremiumFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy all premium features'**
+  String get enjoyAllPremiumFeatures;
+
+  /// No description provided for @getUnlimitedAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Get unlimited access to all features'**
+  String get getUnlimitedAccess;
+
+  /// No description provided for @trackWorkoutVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your workout volume over time'**
+  String get trackWorkoutVolume;
+
+  /// No description provided for @comprehensiveWeeklyAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehensive weekly workout analytics'**
+  String get comprehensiveWeeklyAnalytics;
+
+  /// No description provided for @analyzeMuscleGroupBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze muscle group balance'**
+  String get analyzeMuscleGroupBalance;
+
+  /// No description provided for @deepInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep insights into your performance'**
+  String get deepInsights;
+
+  /// No description provided for @detailedHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed History'**
+  String get detailedHistory;
+
+  /// No description provided for @completeWorkoutHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete workout history with details'**
+  String get completeWorkoutHistory;
+
+  /// No description provided for @syncAcrossDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync across all your devices'**
+  String get syncAcrossDevices;
+
+  /// No description provided for @noAds.
+  ///
+  /// In en, this message translates to:
+  /// **'No Ads'**
+  String get noAds;
+
+  /// No description provided for @enjoyAdFreeExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy ad-free experience'**
+  String get enjoyAdFreeExperience;
+
+  /// No description provided for @inAppPurchasesComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'In-app purchases coming soon!\nPremium features are currently in beta.'**
+  String get inAppPurchasesComingSoon;
+
+  /// No description provided for @thankYouForBeingPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for being Premium!'**
+  String get thankYouForBeingPremium;
+
+  /// No description provided for @gymbroPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'GymBro Premium'**
+  String get gymbroPremium;
+
+  /// No description provided for @youArePremium.
+  ///
+  /// In en, this message translates to:
+  /// **'You are Premium!'**
+  String get youArePremium;
+
+  /// No description provided for @youHaveAccessToAllFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'You have access to all features'**
+  String get youHaveAccessToAllFeatures;
+
+  /// Message shown when plan is not yet available
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} plan will be available soon!'**
+  String planWillBeAvailableSoon(String plan);
+
+  /// No description provided for @saveVsMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Save 33% vs monthly'**
+  String get saveVsMonthly;
 }
 
 class _AppLocalizationsDelegate

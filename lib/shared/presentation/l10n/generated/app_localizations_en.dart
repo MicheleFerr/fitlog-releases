@@ -15439,4 +15439,62 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get testimonialMikeR =>
       'Never lost a workout since going premium. The backup is automatic and reliable.';
+
+  @override
+  String get enjoyAllPremiumFeatures => 'Enjoy all premium features';
+
+  @override
+  String get getUnlimitedAccess => 'Get unlimited access to all features';
+
+  @override
+  String get trackWorkoutVolume => 'Track your workout volume over time';
+
+  @override
+  String get comprehensiveWeeklyAnalytics =>
+      'Comprehensive weekly workout analytics';
+
+  @override
+  String get analyzeMuscleGroupBalance => 'Analyze muscle group balance';
+
+  @override
+  String get deepInsights => 'Deep insights into your performance';
+
+  @override
+  String get detailedHistory => 'Detailed History';
+
+  @override
+  String get completeWorkoutHistory => 'Complete workout history with details';
+
+  @override
+  String get syncAcrossDevices => 'Sync across all your devices';
+
+  @override
+  String get noAds => 'No Ads';
+
+  @override
+  String get enjoyAdFreeExperience => 'Enjoy ad-free experience';
+
+  @override
+  String get inAppPurchasesComingSoon =>
+      'In-app purchases coming soon!\nPremium features are currently in beta.';
+
+  @override
+  String get thankYouForBeingPremium => 'Thank you for being Premium!';
+
+  @override
+  String get gymbroPremium => 'GymBro Premium';
+
+  @override
+  String get youArePremium => 'You are Premium!';
+
+  @override
+  String get youHaveAccessToAllFeatures => 'You have access to all features';
+
+  @override
+  String planWillBeAvailableSoon(String plan) {
+    return '$plan plan will be available soon!';
+  }
+
+  @override
+  String get saveVsMonthly => 'Save 33% vs monthly';
 }

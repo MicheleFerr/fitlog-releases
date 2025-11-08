@@ -15049,7 +15049,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutReminder => 'Workout Reminder';
 
   @override
-  String get advancedAnalytics => 'Advanced Analytics';
+  String get advancedAnalytics => 'Analisi Avanzate';
 
   @override
   String get save33 => 'Save 33%';
@@ -15591,4 +15591,68 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get testimonialMikeR =>
       'Non ho mai perso un allenamento da quando sono premium. Il backup è automatico e affidabile.';
+
+  @override
+  String get enjoyAllPremiumFeatures => 'Goditi tutte le funzionalità premium';
+
+  @override
+  String get getUnlimitedAccess =>
+      'Ottieni accesso illimitato a tutte le funzionalità';
+
+  @override
+  String get trackWorkoutVolume =>
+      'Monitora il volume dei tuoi allenamenti nel tempo';
+
+  @override
+  String get comprehensiveWeeklyAnalytics =>
+      'Analisi settimanale completa degli allenamenti';
+
+  @override
+  String get analyzeMuscleGroupBalance =>
+      'Analizza l\'equilibrio dei gruppi muscolari';
+
+  @override
+  String get deepInsights =>
+      'Approfondimenti dettagliati sulle tue prestazioni';
+
+  @override
+  String get detailedHistory => 'Cronologia Dettagliata';
+
+  @override
+  String get completeWorkoutHistory =>
+      'Cronologia completa degli allenamenti con dettagli';
+
+  @override
+  String get syncAcrossDevices => 'Sincronizza su tutti i tuoi dispositivi';
+
+  @override
+  String get noAds => 'Nessuna Pubblicità';
+
+  @override
+  String get enjoyAdFreeExperience => 'Goditi un\'esperienza senza pubblicità';
+
+  @override
+  String get inAppPurchasesComingSoon =>
+      'Acquisti in-app in arrivo!\nLe funzionalità premium sono attualmente in beta.';
+
+  @override
+  String get thankYouForBeingPremium => 'Grazie per essere Premium!';
+
+  @override
+  String get gymbroPremium => 'GymBro Premium';
+
+  @override
+  String get youArePremium => 'Sei Premium!';
+
+  @override
+  String get youHaveAccessToAllFeatures =>
+      'Hai accesso a tutte le funzionalità';
+
+  @override
+  String planWillBeAvailableSoon(String plan) {
+    return 'Il piano $plan sarà presto disponibile!';
+  }
+
+  @override
+  String get saveVsMonthly => 'Risparmia 33% rispetto al mensile';
 }

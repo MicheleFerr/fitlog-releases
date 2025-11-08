@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Simple premium screen that works without crashes
@@ -16,7 +17,7 @@ class SimplePremiumScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        title: const Text('GymBro Premium'),
+        title: Text(context.l10n.gymbroPremium),
         centerTitle: true,
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
@@ -49,7 +50,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      isPremium ? 'You are Premium!' : 'Unlock Premium',
+                      isPremium ? context.l10n.youArePremium : context.l10n.unlockPremium,
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -57,9 +58,9 @@ class SimplePremiumScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      isPremium 
-                        ? 'Enjoy all premium features'
-                        : 'Get unlimited access to all features',
+                      isPremium
+                        ? context.l10n.enjoyAllPremiumFeatures
+                        : context.l10n.getUnlimitedAccess,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         color: theme.colorScheme.onPrimary.withValues(alpha: 0.9),
                       ),
@@ -73,7 +74,7 @@ class SimplePremiumScreen extends ConsumerWidget {
               
               // Features List
               Text(
-                'Premium Features',
+                context.l10n.premiumFeatures,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -83,50 +84,50 @@ class SimplePremiumScreen extends ConsumerWidget {
               _buildFeatureItem(
                 context,
                 AppIcons.analytics,
-                'Volume Progress',
-                'Track your workout volume over time',
+                context.l10n.volumeProgress,
+                context.l10n.trackWorkoutVolume,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.dashboard,
-                'Weekly Dashboard',
-                'Comprehensive weekly workout analytics',
+                context.l10n.weeklyDashboard,
+                context.l10n.comprehensiveWeeklyAnalytics,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.balance,
-                'Muscle Balance',
-                'Analyze muscle group balance',
+                context.l10n.muscleBalance,
+                context.l10n.analyzeMuscleGroupBalance,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.insights,
-                'Advanced Analytics',
-                'Deep insights into your performance',
+                context.l10n.advancedAnalytics,
+                context.l10n.deepInsights,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.history,
-                'Detailed History',
-                'Complete workout history with details',
+                context.l10n.detailedHistory,
+                context.l10n.completeWorkoutHistory,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.cloudSync,
-                'Cloud Sync',
-                'Sync across all your devices',
+                context.l10n.cloudSync,
+                context.l10n.syncAcrossDevices,
                 theme,
               ),
               _buildFeatureItem(
                 context,
                 AppIcons.block,
-                'No Ads',
-                'Enjoy ad-free experience',
+                context.l10n.noAds,
+                context.l10n.enjoyAdFreeExperience,
                 theme,
               ),
               
@@ -135,7 +136,7 @@ class SimplePremiumScreen extends ConsumerWidget {
               // Pricing Section
               if (!isPremium) ...[
                 Text(
-                  'Choose Your Plan',
+                  context.l10n.chooseYourPlan,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -145,29 +146,29 @@ class SimplePremiumScreen extends ConsumerWidget {
                 // Monthly Plan
                 _buildPricingCard(
                   context,
-                  'Monthly',
+                  context.l10n.monthly,
                   '€4.99',
                   '/month',
                   false,
                   theme,
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Yearly Plan - Best Value
                 _buildPricingCard(
                   context,
-                  'Yearly',
+                  context.l10n.yearly,
                   '€39.99',
                   '/year',
                   true,
                   theme,
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Lifetime Plan
                 _buildPricingCard(
                   context,
-                  'Lifetime',
+                  context.l10n.lifetime,
                   '€99.99',
                   'one time',
                   false,
@@ -192,7 +193,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'In-app purchases coming soon!\nPremium features are currently in beta.',
+                          context.l10n.inAppPurchasesComingSoon,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
@@ -218,7 +219,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Thank you for being Premium!',
+                        context.l10n.thankYouForBeingPremium,
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onPrimaryContainer,
@@ -226,7 +227,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'You have access to all features',
+                        context.l10n.youHaveAccessToAllFeatures,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
@@ -308,7 +309,7 @@ class SimplePremiumScreen extends ConsumerWidget {
         HapticFeedback.lightImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$title plan will be available soon!'),
+            content: Text(context.l10n.planWillBeAvailableSoon(title)),
             backgroundColor: theme.colorScheme.primary,
           ),
         );
@@ -354,7 +355,7 @@ class SimplePremiumScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'BEST VALUE',
+                            context.l10n.bestValue,
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
@@ -365,9 +366,9 @@ class SimplePremiumScreen extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  if (title == 'Yearly')
+                  if (title == context.l10n.yearly)
                     Text(
-                      'Save 33% vs monthly',
+                      context.l10n.saveVsMonthly,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.primary,
                       ),

@@ -19105,5 +19105,31 @@
   "faqPaymentSecureAnswer": "Yes, we use Apple/Google payment systems for maximum security.",
   "testimonialJohnD": "The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.",
   "testimonialSarahM": "Community templates saved me hours of planning. Worth every penny!",
-  "testimonialMikeR": "Never lost a workout since going premium. The backup is automatic and reliable."
+  "testimonialMikeR": "Never lost a workout since going premium. The backup is automatic and reliable.",
+  "enjoyAllPremiumFeatures": "Enjoy all premium features",
+  "getUnlimitedAccess": "Get unlimited access to all features",
+  "trackWorkoutVolume": "Track your workout volume over time",
+  "comprehensiveWeeklyAnalytics": "Comprehensive weekly workout analytics",
+  "analyzeMuscleGroupBalance": "Analyze muscle group balance",
+  "deepInsights": "Deep insights into your performance",
+  "detailedHistory": "Detailed History",
+  "completeWorkoutHistory": "Complete workout history with details",
+  "syncAcrossDevices": "Sync across all your devices",
+  "noAds": "No Ads",
+  "enjoyAdFreeExperience": "Enjoy ad-free experience",
+  "inAppPurchasesComingSoon": "In-app purchases coming soon!\nPremium features are currently in beta.",
+  "thankYouForBeingPremium": "Thank you for being Premium!",
+  "gymbroPremium": "GymBro Premium",
+  "youArePremium": "You are Premium!",
+  "youHaveAccessToAllFeatures": "You have access to all features",
+  "planWillBeAvailableSoon": "{plan} plan will be available soon!",
+  "saveVsMonthly": "Save 33% vs monthly",
+  "@planWillBeAvailableSoon": {
+    "description": "Message shown when plan is not yet available",
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  }
 }
