@@ -103,7 +103,9 @@ final adminStatsProvider = FutureProvider<AdminStatsData>((ref) async {
 });
 
 // Provider per statistiche in tempo reale
-final realtimeAdminStatsProvider = StreamProvider<AdminStatsData>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final realtimeAdminStatsProvider = StreamProvider.autoDispose<AdminStatsData>((ref) {
   final firestore = FirebaseFirestore.instance;
 
   // Stream per le correzioni pending
