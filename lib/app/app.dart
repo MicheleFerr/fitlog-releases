@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/on
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/dynamic_theme_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
@@ -39,6 +40,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.da
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -107,15 +109,15 @@ class FitLogApp extends ConsumerWidget {
     if (authState == AuthState.loading) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
+        theme: ref.watch(dynamicThemeProvider(Brightness.light)),
+        darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const CircularProgressIndicator(),
+                const LoadingIndicator(),
                 const SizedBox(height: 24),
                 Text(
                   'Loading FitLog Pro...',
@@ -139,8 +141,8 @@ class FitLogApp extends ConsumerWidget {
       return _AppLifecycleObserver(
         child: MaterialApp.router(
           title: 'FitLog Pro',
-          theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
-          darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
+          theme: ref.watch(dynamicThemeProvider(Brightness.light)),
+          darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
           themeMode: themeMode,
           locale: locale,
           localizationsDelegates: const [
@@ -166,8 +168,8 @@ class FitLogApp extends ConsumerWidget {
 
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
-        darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
+        theme: ref.watch(dynamicThemeProvider(Brightness.light)),
+        darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
         themeMode: themeMode,
         home: Scaffold(
           body: Center(
@@ -177,7 +179,7 @@ class FitLogApp extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.error_outline,
+                    AppIcons.errorOutlineRounded,
                     size: 64,
                     color: themeMode == ThemeMode.dark
                       ? Colors.red[300]
@@ -215,64 +217,6 @@ class FitLogApp extends ConsumerWidget {
         ),
       );
     }
-  }
-
-  ThemeData _buildThemeWithFontSize(ThemeData baseTheme, double fontSize) {
-    if (fontSize == 1.0) {
-      return baseTheme;
-    }
-    
-    // Create a completely new text theme with scaled font sizes
-    final originalTextTheme = baseTheme.textTheme;
-    final scaledTextTheme = originalTextTheme.copyWith(
-      displayLarge: originalTextTheme.displayLarge?.copyWith(
-        fontSize: (originalTextTheme.displayLarge?.fontSize ?? 57) * fontSize,
-      ),
-      displayMedium: originalTextTheme.displayMedium?.copyWith(
-        fontSize: (originalTextTheme.displayMedium?.fontSize ?? 45) * fontSize,
-      ),
-      displaySmall: originalTextTheme.displaySmall?.copyWith(
-        fontSize: (originalTextTheme.displaySmall?.fontSize ?? 36) * fontSize,
-      ),
-      headlineLarge: originalTextTheme.headlineLarge?.copyWith(
-        fontSize: (originalTextTheme.headlineLarge?.fontSize ?? 32) * fontSize,
-      ),
-      headlineMedium: originalTextTheme.headlineMedium?.copyWith(
-        fontSize: (originalTextTheme.headlineMedium?.fontSize ?? 28) * fontSize,
-      ),
-      headlineSmall: originalTextTheme.headlineSmall?.copyWith(
-        fontSize: (originalTextTheme.headlineSmall?.fontSize ?? 24) * fontSize,
-      ),
-      titleLarge: originalTextTheme.titleLarge?.copyWith(
-        fontSize: (originalTextTheme.titleLarge?.fontSize ?? 22) * fontSize,
-      ),
-      titleMedium: originalTextTheme.titleMedium?.copyWith(
-        fontSize: (originalTextTheme.titleMedium?.fontSize ?? 16) * fontSize,
-      ),
-      titleSmall: originalTextTheme.titleSmall?.copyWith(
-        fontSize: (originalTextTheme.titleSmall?.fontSize ?? 14) * fontSize,
-      ),
-      labelLarge: originalTextTheme.labelLarge?.copyWith(
-        fontSize: (originalTextTheme.labelLarge?.fontSize ?? 14) * fontSize,
-      ),
-      labelMedium: originalTextTheme.labelMedium?.copyWith(
-        fontSize: (originalTextTheme.labelMedium?.fontSize ?? 12) * fontSize,
-      ),
-      labelSmall: originalTextTheme.labelSmall?.copyWith(
-        fontSize: (originalTextTheme.labelSmall?.fontSize ?? 11) * fontSize,
-      ),
-      bodyLarge: originalTextTheme.bodyLarge?.copyWith(
-        fontSize: (originalTextTheme.bodyLarge?.fontSize ?? 16) * fontSize,
-      ),
-      bodyMedium: originalTextTheme.bodyMedium?.copyWith(
-        fontSize: (originalTextTheme.bodyMedium?.fontSize ?? 14) * fontSize,
-      ),
-      bodySmall: originalTextTheme.bodySmall?.copyWith(
-        fontSize: (originalTextTheme.bodySmall?.fontSize ?? 12) * fontSize,
-      ),
-    );
-    
-    return baseTheme.copyWith(textTheme: scaledTextTheme);
   }
 }
 
