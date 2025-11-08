@@ -19167,5 +19167,25 @@
   "alternativesComingSoon": "Alternatives coming soon",
   "checkFirebasePermissions": "Please check Firebase permissions or contact support",
   "errorLoadingRoutines": "Error loading routines",
-  "suggestionLevel": "Suggestion level"
+  "suggestionLevel": "Suggestion level",
+  "noExercises": "No exercises",
+  "@noExercises": {
+    "description": "Shown when a template has no exercises"
+  },
+  "difficultyBeginner": "Beginner",
+  "@difficultyBeginner": {
+    "description": "Beginner difficulty level badge"
+  },
+  "difficultyIntermediate": "Intermediate",
+  "@difficultyIntermediate": {
+    "description": "Intermediate difficulty level badge"
+  },
+  "difficultyAdvanced": "Advanced",
+  "@difficultyAdvanced": {
+    "description": "Advanced difficulty level badge"
+  },
+  "difficultyExpert": "Expert",
+  "@difficultyExpert": {
+    "description": "Expert difficulty level badge"
+  }
 }

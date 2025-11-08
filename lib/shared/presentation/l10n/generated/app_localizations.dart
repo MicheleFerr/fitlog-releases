@@ -22188,19 +22188,19 @@ abstract class AppLocalizations {
   /// **'Technique'**
   String get contributionTypeTechnique;
 
-  /// Difficulty level: beginner
+  /// Beginner difficulty level badge
   ///
   /// In en, this message translates to:
   /// **'Beginner'**
   String get difficultyBeginner;
 
-  /// Difficulty level: intermediate
+  /// Intermediate difficulty level badge
   ///
   /// In en, this message translates to:
   /// **'Intermediate'**
   String get difficultyIntermediate;
 
-  /// Difficulty level: advanced
+  /// Advanced difficulty level badge
   ///
   /// In en, this message translates to:
   /// **'Advanced'**
@@ -27408,7 +27408,7 @@ abstract class AppLocalizations {
   /// **'Hybrid'**
   String get templateCategoryHybrid;
 
-  /// Difficulty level: expert
+  /// Expert difficulty level badge
   ///
   /// In en, this message translates to:
   /// **'Expert'**
@@ -27881,6 +27881,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggestion level'**
   String get suggestionLevel;
+
+  /// Shown when a template has no exercises
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises'**
+  String get noExercises;
 }
 
 class _AppLocalizationsDelegate

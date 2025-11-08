@@ -15596,4 +15596,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get suggestionLevel => 'Suggestion level';
+
+  @override
+  String get noExercises => 'No exercises';
 }
