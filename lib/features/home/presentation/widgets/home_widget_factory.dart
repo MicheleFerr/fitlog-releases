@@ -614,7 +614,7 @@ class HomeWidgetFactory {
                       Row(
                         children: [
                           Icon(
-                            Icons.trending_up,
+                            AppIcons.trendingUp,
                             color: context.successColor,
                             size: 16,
                           ),
@@ -1862,7 +1862,7 @@ class HomeWidgetFactory {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.fitnessCenter,
                   color: context.warningColor,
                   size: 24,
                 ),
@@ -2171,7 +2171,7 @@ class _AICoachDialog extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.trending_up,
+                    AppIcons.trendingUp,
                     color: context.successColor,
                     size: 20,
                   ),
@@ -2277,7 +2277,7 @@ class _AICoachDialog extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.lightbulb_outline,
+                        AppIcons.lightbulbOutline,
                         size: 14,
                         color: context.successColor,
                       ),

@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_metric_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/multi_metric_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
@@ -118,11 +119,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildMetricChip('Peso', Icons.fitness_center),
+              _buildMetricChip('Peso', AppIcons.fitnessCenter),
               const SizedBox(width: 8),
               _buildMetricChip('Reps', AppIcons.repeat),
               const SizedBox(width: 8),
-              _buildMetricChip('RPE', Icons.trending_up),
+              _buildMetricChip('RPE', AppIcons.trendingUp),
               const SizedBox(width: 8),
               _buildMetricChip('TUT', AppIcons.timer),
             ],
@@ -231,7 +232,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.error_outline,
+                AppIcons.errorOutline,
                 size: 48,
                 color: context.colors.error.withValues(alpha: 0.5),
               ),
@@ -309,7 +310,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.error_outline,
+                  AppIcons.errorOutline,
                   size: 48,
                   color: context.colors.error.withValues(alpha: 0.5),
                 ),
@@ -379,7 +380,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 _buildInteractiveRecordCard(
                   context.l10n.maxWeight,
                   '${records.maxWeight.value.toStringAsFixed(1)} kg',
-                  Icons.fitness_center,
+                  AppIcons.fitnessCenter,
                   context.colors.primary,
                   records.maxWeight,
                 ),
@@ -393,7 +394,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 _buildInteractiveRecordCard(
                   context.l10n.bestSetVolume,
                   '${records.bestSetVolume.value.toStringAsFixed(0)} kg',
-                  Icons.trending_up,
+                  AppIcons.trendingUp,
                   context.colors.tertiary,
                   records.bestSetVolume,
                 ),
@@ -463,7 +464,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               ),
               SizedBox(height: 4),
               Icon(
-                Icons.info_outline,
+                AppIcons.infoOutline,
                 size: 16,
                 color: context.colors.onSurface.withValues(alpha: 0.4),
               ),
@@ -494,7 +495,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           children: [
             Row(
               children: [
-                Icon(Icons.emoji_events, color: context.colors.primary),
+                Icon(AppIcons.emojiEvents, color: context.colors.primary),
                 SizedBox(width: 8),
                 Text(
                   context.l10n.strengthLevel,
@@ -576,7 +577,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     return Column(
       children: [
         Icon(
-          Icons.info_outline,
+          AppIcons.infoOutline,
           size: 48,
           color: context.colors.onSurface.withValues(alpha: 0.3),
         ),
@@ -924,7 +925,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Header
             Row(
               children: [
-                Icon(Icons.emoji_events, color: context.colors.primary, size: 32),
+                Icon(AppIcons.emojiEvents, color: context.colors.primary, size: 32),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -972,7 +973,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Data
             if (recordData.date != null) ...[
               _buildDetailRow(
-                Icons.calendar_today,
+                AppIcons.calendarToday,
                 'Data',
                 dateFormatter.format(recordData.date!),
               ),
@@ -982,7 +983,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Workout
             if (recordData.workoutName != null) ...[
               _buildDetailRow(
-                Icons.fitness_center,
+                AppIcons.fitnessCenter,
                 'Allenamento',
                 recordData.workoutName!,
               ),

@@ -28,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Theme Preview Screen - Developer Tool
 class ThemePreviewScreen extends StatefulWidget {

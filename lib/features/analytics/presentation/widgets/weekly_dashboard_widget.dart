@@ -340,7 +340,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _buildStatCard(
           'Avg Intensity',
           '${_currentWeekData!.avgIntensity.toStringAsFixed(1)}/10',
-          Icons.local_fire_department,
+          AppIcons.localFireDepartment,
           context.colors.secondary,
           theme,
         ),

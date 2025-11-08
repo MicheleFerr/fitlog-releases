@@ -265,7 +265,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.fitness_center, size: 16),
+          icon: const Icon(AppIcons.fitnessCenter, size: 16),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.reps,
@@ -411,7 +411,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               value: setCustomization.weight == 0
                   ? '-'
                   : setCustomization.weight.toStringAsFixed(1),
-              icon: Icons.fitness_center,
+              icon: AppIcons.fitnessCenter,
               color: Theme.of(context).colorScheme.primary,
               onTap: () => _showWeightPicker(
                 exerciseIndex,

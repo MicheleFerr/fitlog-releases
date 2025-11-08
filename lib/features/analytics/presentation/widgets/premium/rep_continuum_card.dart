@@ -286,7 +286,7 @@ class RepContinuumCard extends StatelessWidget {
       iconColor = context.colors.success;
     } else if (data.strengthPercentage > 50) {
       recommendation = l10n.repContinuumRecommendationStrength;
-      icon = Icons.fitness_center;
+      icon = AppIcons.fitnessCenter;
       iconColor = context.colors.error;
     } else if (data.endurancePercentage > 50) {
       recommendation = l10n.repContinuumRecommendationEndurance;
@@ -450,7 +450,7 @@ class RepContinuumCard extends StatelessWidget {
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding1,
-                      Icons.fitness_center,
+                      AppIcons.fitnessCenter,
                       context.colors.error,
                     ),
                     SizedBox(height: 8),

@@ -214,7 +214,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.drop,
             '${metrics.velocityDropPercent.toStringAsFixed(1)}%',
-            Icons.trending_down,
+            AppIcons.trendingDown,
             _getDropColor(context, metrics.velocityDropPercent, theme),
           ),
         ),

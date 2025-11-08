@@ -352,7 +352,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 context,
                 localizations.totalWorkouts,
                 activities.length.toString(),
-                Icons.fitness_center,
+                AppIcons.fitnessCenter,
               ),
               _buildStatItem(
                 context,
@@ -377,7 +377,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 context,
                 localizations.totalPRs,
                 personalRecords.length.toString(),
-                Icons.emoji_events,
+                AppIcons.emojiEvents,
                 color: Colors.amber,
               ),
               _buildStatItem(
@@ -385,8 +385,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 localizations.volumeChange,
                 '${volumeProgression.weeklyChange > 0 ? '+' : ''}${volumeProgression.weeklyChange.toStringAsFixed(0)}%',
                 volumeProgression.weeklyChange > 0
-                    ? Icons.trending_up
-                    : Icons.trending_down,
+                    ? AppIcons.trendingUp
+                    : AppIcons.trendingDown,
                 color: volumeProgression.weeklyChange > 0
                     ? Colors.green
                     : Colors.red,

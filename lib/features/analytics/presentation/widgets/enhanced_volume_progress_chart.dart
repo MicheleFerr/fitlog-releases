@@ -2332,7 +2332,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.fitness_center,
+                    AppIcons.fitnessCenter,
                     color: context.colors.surface,
                     size: 20,
                   ),

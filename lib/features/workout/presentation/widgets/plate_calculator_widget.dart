@@ -138,7 +138,7 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
               OutlinedButton.icon(
                 onPressed: () => _showBarbellSelector(context),
                 icon: Icon(
-                  _barbellWeight != null ? Icons.fitness_center : AppIcons.block,
+                  _barbellWeight != null ? AppIcons.fitnessCenter : AppIcons.block,
                   size: 16,
                 ),
                 label: Text(

@@ -9,6 +9,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enum defining the three types of exercise counting modes
 enum ExerciseCountingMode {
@@ -52,7 +53,7 @@ enum ExerciseCountingMode {
   IconData get icon {
     switch (this) {
       case ExerciseCountingMode.weighted:
-        return Icons.fitness_center; // Dumbbell icon
+        return AppIcons.fitnessCenter; // Dumbbell icon
       case ExerciseCountingMode.reps:
         return AppIcons.repeat; // Repeat icon
       case ExerciseCountingMode.time:

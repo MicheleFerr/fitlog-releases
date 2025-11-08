@@ -16,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/shared/data/services/gif_cache_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseGifWidget extends StatefulWidget {
   ExerciseGifWidget({
@@ -131,7 +132,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
                       Icon(
                         is404
                             ? AppIcons.imageNotSupported
-                            : Icons.fitness_center,
+                            : AppIcons.fitnessCenter,
                         color: icColor,
                         size: widget.size * 0.4,
                       ),
@@ -163,7 +164,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-      child: Icon(Icons.fitness_center, color: iconColor, size: widget.size * 0.5),
+      child: Icon(AppIcons.fitnessCenter, color: iconColor, size: widget.size * 0.5),
     );
   }
 

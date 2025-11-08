@@ -402,7 +402,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             label: 'Variazione',
             value: '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} kg',
             subtitle: '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
-            icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
+            icon: change >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
             color: change >= 0 ? context.colors.error : context.colors.success,
             theme: theme,
           ),

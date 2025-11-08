@@ -154,7 +154,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                       icon: Icon(
                         _rating != null && starValue <= _rating!
                             ? AppIcons.star
-                            : Icons.star_border,
+                            : AppIcons.starBorder,
                         color: context.colors.warning,
                         size: 32,
                       ),

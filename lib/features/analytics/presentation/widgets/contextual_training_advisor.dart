@@ -410,7 +410,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Volume Training',
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
-              volumeChange > 0 ? Icons.trending_up : Icons.trending_down,
+              volumeChange > 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
               volumeChange > 0 ? context.successColor : context.warningColor,
             ),
             
@@ -437,7 +437,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Frequenza',
               '$workoutCount allenamenti questa settimana',
               _getFrequencyExplanation(),
-              Icons.calendar_today,
+              AppIcons.calendarToday,
               context.infoColor,
             ),
             

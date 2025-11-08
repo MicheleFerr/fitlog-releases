@@ -527,7 +527,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.emoji_events,
+                                AppIcons.emojiEvents,
                                 color: context.colors.success,
                                 size: 32,
                               ),

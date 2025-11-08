@@ -87,16 +87,16 @@ class RepRangePreset {
 
   /// Icon name to IconData mapping
   static const Map<String, IconData> _iconMap = {
-    'fitness_center': Icons.fitness_center,
+    'fitness_center': AppIcons.fitnessCenter,
     'bolt': AppIcons.bolt,
-    'trending_up': Icons.trending_up,
+    'trending_up': AppIcons.trendingUp,
     'bubble_chart': AppIcons.bubbleChart,
     'timer': AppIcons.timer,
     'all_inclusive': AppIcons.allInclusive,
     'speed': AppIcons.speed,
     'flash_on': AppIcons.flashOn,
     'schedule': AppIcons.schedule,
-    'access_time': Icons.access_time,
+    'access_time': AppIcons.accessTime,
     'hourglass_empty': AppIcons.hourglassEmpty,
     'timer_off': AppIcons.timerOff,
     'repeat': AppIcons.repeat,

@@ -380,7 +380,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           Row(
             children: [
               Icon(
-                widget.isSuperset ? Icons.fitness_center : AppIcons.editNoteRounded,
+                widget.isSuperset ? AppIcons.fitnessCenter : AppIcons.editNoteRounded,
                 size: 20,
                 color: theme.colorScheme.primary,
               ),

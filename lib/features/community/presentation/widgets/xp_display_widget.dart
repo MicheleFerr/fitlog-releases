@@ -393,7 +393,7 @@ class _BadgeChip extends StatelessWidget {
         label = 'Top Contributor';
         break;
       case 'expert':
-        icon = Icons.school;
+        icon = AppIcons.school;
         color = context.colors.success;
         label = 'Esperto';
         break;

@@ -56,7 +56,7 @@ class _WorkoutExerciseDetailScreenState
         backgroundColor: context.colors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.onSurface),
+          icon: Icon(AppIcons.arrowBack, color: context.colors.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(

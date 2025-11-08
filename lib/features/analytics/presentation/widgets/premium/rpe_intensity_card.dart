@@ -358,21 +358,21 @@ class RPEIntensityCard extends StatelessWidget {
         title = l10n.intensityZoneTooEasy;
         description = l10n.intensityZoneTooEasyDesc;
         advice = l10n.intensityZoneTooEasyAdvice;
-        icon = Icons.trending_down;
+        icon = AppIcons.trendingDown;
         color = context.colors.outline;
         break;
       case IntensityZone.optimalHypertrophy:
         title = l10n.intensityZoneOptimalHypertrophy;
         description = l10n.intensityZoneOptimalHypertrophyDesc;
         advice = l10n.intensityZoneOptimalHypertrophyAdvice;
-        icon = Icons.trending_up;
+        icon = AppIcons.trendingUp;
         color = context.successColor;
         break;
       case IntensityZone.optimalStrength:
         title = l10n.intensityZoneOptimalStrength;
         description = l10n.intensityZoneOptimalStrengthDesc;
         advice = l10n.intensityZoneOptimalStrengthAdvice;
-        icon = Icons.fitness_center;
+        icon = AppIcons.fitnessCenter;
         color = context.infoColor;
         break;
       case IntensityZone.balanced:

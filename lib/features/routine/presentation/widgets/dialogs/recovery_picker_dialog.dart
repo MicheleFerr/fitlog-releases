@@ -135,7 +135,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 child: Row(
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      AppIcons.infoOutline,
                       color: context.colors.primary,
                       size: 20,
                     ),

@@ -132,7 +132,7 @@ class AppIconVariants {
 
   /// Pause circle
   static const pauseCircle = AppIconVariant(
-    filled: Icons.pause_circle_filled, // ignore: design-system-infrastructure
+    filled: AppIcons.pauseCircleFilled, // ignore: design-system-infrastructure
     outlined: AppIcons.pauseCircleOutline, // ignore: design-system-infrastructure
   );
 
@@ -143,7 +143,7 @@ class AppIconVariants {
   /// Home
   static const home = AppIconVariant(
     filled: AppIcons.home,
-    outlined: Icons.home_outlined, // ignore: design-system-infrastructure
+    outlined: AppIcons.homeOutlined, // ignore: design-system-infrastructure
   );
 
   /// Settings
@@ -184,10 +184,10 @@ extension IconDataVariants on IconData {
       AppIcons.addCircle.codePoint: AppIcons.addCircleOutline, // ignore: inline-icons
       AppIcons.info.codePoint: AppIcons.info, // ignore: inline-icons
       AppIcons.error.codePoint: AppIcons.error, // ignore: inline-icons
-      AppIcons.home.codePoint: Icons.home_outlined, // ignore: inline-icons
+      AppIcons.home.codePoint: AppIcons.homeOutlined, // ignore: inline-icons
       AppIcons.settings.codePoint: AppIcons.settingsOutlined, // ignore: inline-icons
       AppIcons.playCircleFilled.codePoint: AppIcons.playCircleOutline, // ignore: inline-icons
-      Icons.pause_circle_filled.codePoint: AppIcons.pauseCircleOutline, // ignore: inline-icons
+      AppIcons.pauseCircleFilled.codePoint: AppIcons.pauseCircleOutline, // ignore: inline-icons
       AppIcons.thumbUp.codePoint: AppIcons.thumbUpOutlined, // ignore: inline-icons
       AppIcons.thumbDown.codePoint: AppIcons.thumbDownOutlined, // ignore: inline-icons
     };
@@ -205,10 +205,10 @@ extension IconDataVariants on IconData {
       AppIcons.peopleOutline.codePoint: AppIcons.people,
       AppIcons.deleteOutline.codePoint: AppIcons.delete,
       AppIcons.addCircleOutline.codePoint: AppIcons.addCircle, // ignore: inline-icons
-      Icons.home_outlined.codePoint: AppIcons.home, // ignore: inline-icons
+      AppIcons.homeOutlined.codePoint: AppIcons.home, // ignore: inline-icons
       AppIcons.settingsOutlined.codePoint: AppIcons.settings, // ignore: inline-icons
       AppIcons.playCircleOutline.codePoint: AppIcons.playCircleFilled, // ignore: inline-icons
-      AppIcons.pauseCircleOutline.codePoint: Icons.pause_circle_filled, // ignore: inline-icons
+      AppIcons.pauseCircleOutline.codePoint: AppIcons.pauseCircleFilled, // ignore: inline-icons
       AppIcons.thumbUpOutlined.codePoint: AppIcons.thumbUp, // ignore: inline-icons
       AppIcons.thumbDownOutlined.codePoint: AppIcons.thumbDown, // ignore: inline-icons
     };

@@ -297,7 +297,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isImproving ? Icons.trending_up : Icons.trending_flat,
+            isImproving ? AppIcons.trendingUp : AppIcons.trendingFlat,
             color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),

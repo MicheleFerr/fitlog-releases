@@ -733,11 +733,11 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
     final name = exerciseName.toLowerCase();
     if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatReclineNormal;
     if (name.contains('bench') || name.contains('chest')) return AppIcons.airlineSeatFlat;
-    if (name.contains('deadlift') || name.contains('stacco')) return Icons.fitness_center;
+    if (name.contains('deadlift') || name.contains('stacco')) return AppIcons.fitnessCenter;
     if (name.contains('curl') || name.contains('bicep')) return AppIcons.sportsGymnastics;
-    if (name.contains('shoulder') || name.contains('spalle')) return Icons.accessibility_new;
+    if (name.contains('shoulder') || name.contains('spalle')) return AppIcons.accessibilityNew;
     if (name.contains('back') || name.contains('dorso')) return AppIcons.rowing;
-    return Icons.fitness_center;
+    return AppIcons.fitnessCenter;
   }
   
   Color _getEffortColor(int effort) {

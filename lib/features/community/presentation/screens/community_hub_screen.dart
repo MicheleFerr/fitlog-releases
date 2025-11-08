@@ -936,7 +936,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     : theme.colorScheme.error.withValues(alpha: 0.1),
               ),
               child: Icon(
-                isNetworkError ? AppIcons.wifiOff : Icons.error_outline,
+                isNetworkError ? AppIcons.wifiOff : AppIcons.errorOutline,
                 size: 64,
                 color: isNetworkError ? context.warningColor : theme.colorScheme.error,
               ),

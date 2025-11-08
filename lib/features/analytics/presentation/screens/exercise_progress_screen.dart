@@ -283,12 +283,12 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
 
     switch (trend) {
       case TrendDirection.improving:
-        icon = Icons.trending_up;
+        icon = AppIcons.trendingUp;
         color = context.colors.success;
         label = context.l10n.improving;
         break;
       case TrendDirection.declining:
-        icon = Icons.trending_down;
+        icon = AppIcons.trendingDown;
         color = context.colors.error;
         label = context.l10n.declining;
         break;

@@ -573,7 +573,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                     Icon(
                       _plateauAnalysis!.isInPlateau
                           ? AppIcons.warningAmber
-                          : Icons.trending_up,
+                          : AppIcons.trendingUp,
                       color: _plateauAnalysis!.isInPlateau
                           ? context.colors.secondary
                           : context.colors.success,

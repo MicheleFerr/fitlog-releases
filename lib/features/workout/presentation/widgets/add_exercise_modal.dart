@@ -773,7 +773,7 @@ class _AddExerciseModalState extends ConsumerState<AddExerciseModal> with Ticker
                   ButtonSegment<int>(
                     value: 6,
                     label: Text('APRE 6'),
-                    icon: Icon(Icons.looks_6),
+                    icon: Icon(AppIcons.looks6),
                   ),
                   ButtonSegment<int>(
                     value: 10,

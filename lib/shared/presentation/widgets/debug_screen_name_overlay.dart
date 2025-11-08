@@ -6,6 +6,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Overlay widget che mostra il nome della schermata in alto a sinistra
 /// Solo visibile quando Beta Mode è abilitato nelle impostazioni

@@ -253,7 +253,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
       case InsightType.motivation:
         return AppIcons.streak;
       case InsightType.improvement:
-        return Icons.trending_up;  // Trending up icon for improvements
+        return AppIcons.trendingUp;  // Trending up icon for improvements
     }
   }
 

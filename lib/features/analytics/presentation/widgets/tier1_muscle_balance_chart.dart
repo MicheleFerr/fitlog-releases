@@ -584,7 +584,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               child: Row(
                 children: [
                   Icon(
-                    improvement >= 0 ? Icons.trending_up : Icons.trending_down,
+                    improvement >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
                     color: improvement >= 0 ? context.colors.success : context.colors.error,
                     size: 20,
                   ),

@@ -75,7 +75,7 @@ class VerificationBadges extends ConsumerWidget {
     if (profile.isCurrentlyBoosted) {
       badges.add(_buildBadge(
         context,
-        icon: Icons.rocket_launch,
+        icon: AppIcons.rocketLaunch,
         color: context.warningColor, // Warning
         text: AppLocalizations.of(context).boosted,
         tooltip: 'Profilo in evidenza',

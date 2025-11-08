@@ -38,7 +38,7 @@ class PRTimelineWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.emoji_events,
+                  AppIcons.emojiEvents,
                   color: context.colors.warning,
                   size: 24,
                 ),

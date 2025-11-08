@@ -336,7 +336,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
         );
       case ContributionType.technique:
         return Icon(
-          Icons.fitness_center,
+          AppIcons.fitnessCenter,
           size: 20,
           color: context.colors.success,
         );

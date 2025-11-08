@@ -463,11 +463,11 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
 
     switch (trend) {
       case _Trend.increasing:
-        icon = Icons.trending_up;
+        icon = AppIcons.trendingUp;
         color = context.colors.success;
         break;
       case _Trend.decreasing:
-        icon = Icons.trending_down;
+        icon = AppIcons.trendingDown;
         color = context.colors.error;
         break;
       case _Trend.stable:

@@ -251,7 +251,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
     return Row(
       children: [
         Icon(
-          isPositiveTrend ? Icons.trending_up : Icons.trending_down,
+          isPositiveTrend ? AppIcons.trendingUp : AppIcons.trendingDown,
           color: isPositiveTrend ? context.colors.success : context.colors.error,
           size: 16,
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tab Istruzioni: mostra warmup protocol e tips generici
 class ExerciseInstructionsTab extends ConsumerWidget {
@@ -56,7 +57,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.local_fire_department, color: Colors.orange),
+            Icon(AppIcons.localFireDepartment, color: Colors.orange),
             SizedBox(width: 8),
             Text(
               context.l10n.warmupProtocol,
@@ -81,7 +82,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   '1',
                   context.l10n.warmupPhase1Title,
                   context.l10n.warmupPhase1Description,
-                  Icons.accessibility_new,
+                  AppIcons.accessibilityNew,
                   Colors.blue,
                 ),
                 const Divider(height: 24),
@@ -99,7 +100,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   '3',
                   context.l10n.warmupPhase3Title,
                   context.l10n.warmupPhase3Description,
-                  Icons.fitness_center,
+                  AppIcons.fitnessCenter,
                   Colors.purple,
                 ),
                 const Divider(height: 24),
@@ -176,7 +177,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.lightbulb_outline, color: Colors.amber),
+            Icon(AppIcons.lightbulbOutline, color: Colors.amber),
             SizedBox(width: 8),
             Text(
               context.l10n.tips,

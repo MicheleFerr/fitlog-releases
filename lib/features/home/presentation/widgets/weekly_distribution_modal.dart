@@ -106,7 +106,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     title: l10n.trainingDays,
                     value: trainingDays.toString(),
                     subtitle: l10n.thisWeek,
-                    icon: Icons.calendar_today,
+                    icon: AppIcons.calendarToday,
                     color: context.colors.primary,
                   ),
                 ),

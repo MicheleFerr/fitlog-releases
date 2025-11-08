@@ -288,7 +288,7 @@ class NotificationPanel extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.trending_up,
+                      AppIcons.trendingUp,
                       size: 14,
                       color: context.colors.success,
                     ),

@@ -899,6 +899,89 @@ class AppIcons {
 
   /// ♿ Accessibility icon (alias for accessibility)
   static const IconData accessibilityIcon = Icons.accessibility_new;
+
+  // ========================================
+  // 🆕 Additional Icons (Added for Coverage)
+  // ========================================
+
+  /// 🧠 Psychology/AI
+  static const IconData psychology = Icons.psychology;
+
+  /// 📉 Trending down
+  static const IconData trendingDown = Icons.trending_down;
+
+  /// → Trending flat
+  static const IconData trendingFlat = Icons.trending_flat;
+
+  /// 🔥 Fire/Calories
+  static const IconData localFireDepartment = Icons.local_fire_department;
+
+  /// ❓ Help outline
+  static const IconData helpOutline = Icons.help_outline;
+
+  /// ⏰ Access time/Clock
+  static const IconData accessTime = Icons.access_time;
+
+  /// → Arrow forward iOS
+  static const IconData arrowForwardIos = Icons.arrow_forward_ios;
+
+  /// 🏃 Directions run/Cardio
+  static const IconData directionsRun = Icons.directions_run;
+
+  /// 🏠 Home outlined
+  static const IconData homeOutlined = Icons.home_outlined;
+
+  /// 💡 Lightbulb outline
+  static const IconData lightbulbOutline = Icons.lightbulb_outline;
+
+  /// ⏸️ Pause circle filled
+  static const IconData pauseCircleFilled = Icons.pause_circle_filled;
+
+  /// 🧘 Self improvement/Mindfulness
+  static const IconData selfImprovement = Icons.self_improvement;
+
+  /// 📈 Show chart/Line chart
+  static const IconData showChart = Icons.show_chart;
+
+  /// ☆ Star border/Outline
+  static const IconData starBorder = Icons.star_border;
+
+  /// 🎓 School/Education
+  static const IconData school = Icons.school;
+
+  // ========================================
+  // 🔄 Base Icon Variants (snake_case mappings)
+  // ========================================
+
+  /// 🏋️ Fitness center (base variant)
+  static const IconData fitnessCenter = Icons.fitness_center;
+
+  /// 🏆 Emoji events/Trophy (base variant)
+  static const IconData emojiEvents = Icons.emoji_events;
+
+  /// ⚠️ Error outline (base variant)
+  static const IconData errorOutline = Icons.error_outline;
+
+  /// ℹ️ Info outline (base variant)
+  static const IconData infoOutline = Icons.info_outline;
+
+  /// 📈 Trending up (base variant)
+  static const IconData trendingUp = Icons.trending_up;
+
+  /// ▶️ Play arrow (base variant)
+  static const IconData playArrow = Icons.play_arrow;
+
+  /// 🚀 Rocket launch (base variant)
+  static const IconData rocketLaunch = Icons.rocket_launch;
+
+  /// ♿ Accessibility new (base variant)
+  static const IconData accessibilityNew = Icons.accessibility_new;
+
+  /// ← Arrow back (base variant)
+  static const IconData arrowBack = Icons.arrow_back;
+
+  /// 📅 Calendar today (base variant)
+  static const IconData calendarToday = Icons.calendar_today;
 }
 
 /// 📦 Icon Groups - For when you need multiple related icons

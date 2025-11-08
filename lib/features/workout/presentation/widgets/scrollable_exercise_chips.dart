@@ -70,7 +70,7 @@ class _ScrollableExerciseChipsState extends State<ScrollableExerciseChips> {
             label: tut == 'ISO' ? 'ISOMETRICO' : 
                    tut == 'EXP' ? 'ESPLOSIVO' : 
                    tut.toString(), // Mostra solo i numeri, più pulito
-            icon: Icons.info_outline, // Icona info più chiara per il tap
+            icon: AppIcons.infoOutline, // Icona info più chiara per il tap
             backgroundColor: context.colors.tertiary.withValues(alpha: 0.15), // Più visibile
             textColor: context.colors.tertiary,
             subtitle: 'TUT', // Indica che è TUT nel subtitle

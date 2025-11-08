@@ -200,7 +200,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     child: Row(
                       children: [
                         Icon(
-                          Icons.info_outline,
+                          AppIcons.infoOutline,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
@@ -355,7 +355,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             ),
             IconButton(
               icon: Icon(
-                Icons.help_outline,
+                AppIcons.helpOutline,
                 size: 18,
                 color: theme.colorScheme.primary,
               ),
@@ -387,7 +387,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: Icons.fitness_center,
+          icon: AppIcons.fitnessCenter,
           iconColor: context.colors.tertiary,
           title: l10n.enableApreTitle,
           subtitle: l10n.enableApreDescription,
@@ -444,12 +444,12 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     ButtonSegment<int>(
                       value: 6,
                       label: Text(l10n.apre6),
-                      icon: const Icon(Icons.looks_6, size: 20),
+                      icon: const Icon(AppIcons.looks6, size: 20),
                     ),
                     ButtonSegment<int>(
                       value: 10,
                       label: Text(l10n.apre10),
-                      icon: const Icon(Icons.filter_9_plus, size: 20),
+                      icon: const Icon(AppIcons.filter9Plus, size: 20),
                     ),
                   ],
                   selected: {_defaultApreProtocol},
@@ -495,7 +495,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        Icons.help_outline,
+                        AppIcons.helpOutline,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -606,7 +606,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        Icons.help_outline,
+                        AppIcons.helpOutline,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -665,7 +665,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        Icons.help_outline,
+                        AppIcons.helpOutline,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -722,7 +722,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 Row(
                   children: [
                     Icon(
-                      Icons.info_outline,
+                      AppIcons.infoOutline,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -836,7 +836,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: Icons.fitness_center,
+          icon: AppIcons.fitnessCenter,
           iconColor: context.colors.tertiary,
           title: l10n.enableRpeTitle,
           subtitle: l10n.enableRpeDescription,
@@ -963,7 +963,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.info_outline,
+                icon: AppIcons.infoOutline,
                 iconColor: context.colors.primary,
                 title: l10n.quickInfoIconTitle,
                 subtitle: l10n.quickInfoIconDescription,
@@ -980,7 +980,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.fitness_center,
+                icon: AppIcons.fitnessCenter,
                 iconColor: context.colors.warning,
                 title: l10n.quickWarmupIconTitle,
                 subtitle: l10n.quickWarmupIconDescription,
@@ -1063,7 +1063,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: Icons.fitness_center,
+                icon: AppIcons.fitnessCenter,
                 iconColor: context.colors.warning,
                 title: l10n.autoAdjustWeightRpeTitle,
                 subtitle: l10n.autoAdjustWeightRpeDescription,

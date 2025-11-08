@@ -658,7 +658,7 @@ class _MiniContributionCard extends StatelessWidget {
         color = context.colors.primary;
         break;
       case ContributionType.technique:
-        icon = Icons.fitness_center;
+        icon = AppIcons.fitnessCenter;
         color = context.colors.tertiary;
         break;
       default:

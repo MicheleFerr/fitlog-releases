@@ -90,7 +90,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             // Weight progression chart
             _buildChartCard(
               context.l10n.weightProgression,
-              Icons.fitness_center,
+              AppIcons.fitnessCenter,
               context.colors.primary,
               _buildWeightChart(filteredSets),
             ),
@@ -445,7 +445,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
       spacing: 12,
       runSpacing: 8,
       children: [
-        _buildLegendItem('weight', context.l10n.weight, context.colors.primary, Icons.fitness_center),
+        _buildLegendItem('weight', context.l10n.weight, context.colors.primary, AppIcons.fitnessCenter),
         _buildLegendItem('volume', context.l10n.volume, context.colors.secondary, AppIcons.analytics),
         _buildLegendItem('reps', context.l10n.reps, context.colors.success, AppIcons.repeat),
         if (hasRPE) _buildLegendItem('rpe', context.l10n.effort, context.colors.tertiary, AppIcons.speed),
@@ -545,13 +545,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               _buildStatItem(
                 context.l10n.personalRecord,
                 '${periodMaxWeight.toStringAsFixed(1)} kg',
-                Icons.emoji_events,
+                AppIcons.emojiEvents,
                 context.colors.warning,
               ),
               _buildStatItem(
                 context.l10n.averageWeight,
                 '${periodAvgWeight.toStringAsFixed(1)} kg',
-                Icons.fitness_center,
+                AppIcons.fitnessCenter,
                 context.colors.primary,
               ),
               _buildStatItem(

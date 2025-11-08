@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/data/services/exercise_histo
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tab Cronologia: mostra lo storico delle esecuzioni dell'esercizio raggruppate per data
 class ExerciseHistoryTab extends ConsumerStatefulWidget {
@@ -68,7 +69,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.errorOutline,
               size: 64,
               color: context.colors.error,
             ),
@@ -157,7 +158,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      Icons.calendar_today,
+                      AppIcons.calendarToday,
                       color: context.colors.primary,
                       size: 20,
                     ),
@@ -256,7 +257,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                 Row(
                   children: [
                     Icon(
-                      Icons.fitness_center,
+                      AppIcons.fitnessCenter,
                       size: 16,
                       color: context.colors.primary,
                     ),

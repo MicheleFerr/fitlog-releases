@@ -540,7 +540,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           Row(
             children: [
               Icon(
-                Icons.psychology,
+                AppIcons.psychology,
                 color: colorScheme.primary,
                 size: 28,
               ),
@@ -685,7 +685,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.infoOutline,
                         color: context.errorColor,
                         size: 18,
                       ),
@@ -731,11 +731,11 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     // Type-specific icon based on insight type
     final IconData icon = switch (insight.type) {
       InsightType.muscleGroupBalance => AppIcons.balance,
-      InsightType.progressOverload => Icons.trending_up,
+      InsightType.progressOverload => AppIcons.trendingUp,
       InsightType.recoveryPattern => AppIcons.bedtime,
       InsightType.volumeOptimization => AppIcons.tune,
       InsightType.frequencyRecommendation => AppIcons.schedule,
-      InsightType.plateauBreaker => Icons.trending_flat,
+      InsightType.plateauBreaker => AppIcons.trendingFlat,
       InsightType.formWarning => AppIcons.warning,
       InsightType.motivational => AppIcons.celebration,
     };
@@ -1117,11 +1117,11 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
     // Type-specific icon based on insight type
     final IconData icon = switch (insight.type) {
       InsightType.muscleGroupBalance => AppIcons.balance,
-      InsightType.progressOverload => Icons.trending_up,
+      InsightType.progressOverload => AppIcons.trendingUp,
       InsightType.recoveryPattern => AppIcons.bedtime,
       InsightType.volumeOptimization => AppIcons.tune,
       InsightType.frequencyRecommendation => AppIcons.schedule,
-      InsightType.plateauBreaker => Icons.trending_flat,
+      InsightType.plateauBreaker => AppIcons.trendingFlat,
       InsightType.formWarning => AppIcons.warning,
       InsightType.motivational => AppIcons.celebration,
     };
@@ -1639,7 +1639,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.play_arrow, size: 16, color: cardColor),
+                    Icon(AppIcons.playArrow, size: 16, color: cardColor),
                     const SizedBox(width: AppSpacing.xxs),
                     Text(
                       l10n.howToImplement,

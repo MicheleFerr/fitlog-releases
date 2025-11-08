@@ -47,7 +47,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                   ),
                   child: Icon(
                     workout.isActive
-                        ? Icons.fitness_center
+                        ? AppIcons.fitnessCenter
                         : AppIcons.pauseCircle,
                     color: theme.colorScheme.onPrimary,
                     size: 24,

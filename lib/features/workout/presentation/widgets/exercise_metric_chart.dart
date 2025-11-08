@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget per visualizzare grafico metrica esercizio
 ///
@@ -208,7 +209,7 @@ class ExerciseMetricChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.show_chart,
+              AppIcons.showChart,
               size: 48,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),

@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedbac
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
   const AdminAIInsightsFeedbackWidget({super.key});
@@ -40,7 +41,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.psychology,
                   color: colorScheme.primary,
                   size: 28,
                 ),

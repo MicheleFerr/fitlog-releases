@@ -356,22 +356,22 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
     switch (_selectedLevel) {
       case 0:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
+        levelIcon = AppIcons.rocketLaunch;
         levelColor = context.colors.success;
         break;
       case 1:
         explanation = widget.intermediateExplanation;
-        levelIcon = Icons.fitness_center;
+        levelIcon = AppIcons.fitnessCenter;
         levelColor = context.colors.secondary;
         break;
       case 2:
         explanation = widget.advancedExplanation;
-        levelIcon = Icons.emoji_events;
+        levelIcon = AppIcons.emojiEvents;
         levelColor = context.colors.error;
         break;
       default:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
+        levelIcon = AppIcons.rocketLaunch;
         levelColor = context.colors.success;
     }
     

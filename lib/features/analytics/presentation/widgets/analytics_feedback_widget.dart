@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget feedback per Analytics con eligibility check
 class AnalyticsFeedbackWidget extends ConsumerStatefulWidget {
@@ -301,7 +302,7 @@ class _AnalyticsFeedbackWidgetState
               child: Row(
                 children: [
                   Icon(
-                    Icons.error_outline,
+                    AppIcons.errorOutline,
                     color: context.colors.error,
                     size: 16,
                   ),

@@ -106,11 +106,11 @@ class ExerciseHeaderTier1 extends StatelessWidget {
         color = context.colors.secondary;
         break;
       case 'legs':
-        icon = Icons.directions_run;
+        icon = AppIcons.directionsRun;
         color = context.colors.success;
         break;
       case 'core':
-        icon = Icons.self_improvement;
+        icon = AppIcons.selfImprovement;
         color = context.colors.tertiary;
         break;
       case 'cardio':

@@ -376,7 +376,7 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneBelowMaintenance;
         explanation = l10n.volumeBelowMaintenanceExplanation(currentSets, landmarks.mv);
         advice = l10n.volumeBelowMaintenanceAdvice(landmarks.mv - currentSets);
-        icon = Icons.trending_down;
+        icon = AppIcons.trendingDown;
         color = context.colors.surfaceContainerHighest;
         break;
       case VolumeZone.maintenance:
@@ -390,7 +390,7 @@ class VolumeLandmarksCard extends StatelessWidget {
         message = l10n.volumeZoneEffective;
         explanation = l10n.volumeEffectiveExplanation(currentSets, landmarks.mev, landmarks.mav);
         advice = l10n.volumeEffectiveAdvice(landmarks.mav - currentSets);
-        icon = Icons.trending_up;
+        icon = AppIcons.trendingUp;
         color = context.colors.secondary;
         break;
       case VolumeZone.optimal:
@@ -1006,10 +1006,10 @@ class VolumeLandmarksCard extends StatelessWidget {
 
     final muscleGroups = [
       (MuscleGroup.chest, l10n.chestMuscle, AppIcons.favorite),
-      (MuscleGroup.back, l10n.backMuscle, Icons.grid_4x4),
+      (MuscleGroup.back, l10n.backMuscle, AppIcons.grid4x4),
       (MuscleGroup.shoulders, l10n.shouldersMuscle, AppIcons.north),
       (MuscleGroup.arms, l10n.armsMuscle, AppIcons.sportsMartialArts),
-      (MuscleGroup.legs, l10n.legsMuscle, Icons.directions_run),
+      (MuscleGroup.legs, l10n.legsMuscle, AppIcons.directionsRun),
       (MuscleGroup.core, l10n.coreMuscle, AppIcons.favoriteBorder),
     ];
 

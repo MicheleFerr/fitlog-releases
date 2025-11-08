@@ -452,12 +452,12 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   ButtonSegment<int>(
                     value: 3,
                     label: Text('APRE 3'),
-                    icon: Icon(Icons.looks_3),
+                    icon: Icon(AppIcons.looks3),
                   ),
                   ButtonSegment<int>(
                     value: 6,
                     label: Text('APRE 6'),
-                    icon: Icon(Icons.looks_6),
+                    icon: Icon(AppIcons.looks6),
                   ),
                   ButtonSegment<int>(
                     value: 10,

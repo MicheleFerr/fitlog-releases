@@ -92,7 +92,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.fitness_center,
+                    AppIcons.fitnessCenter,
                     color: context.colors.surface,
                     size: 28,
                   ),
@@ -176,7 +176,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        percentageChange >= 0 ? Icons.trending_up : Icons.trending_down,
+                        percentageChange >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
                         color: percentageChange >= 0 ? context.colors.success : context.colors.error,
                         size: 20,
                       ),
@@ -223,7 +223,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     label: l10n.bestDay,
                     value: '${(settings.convertWeight(maxDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
-                    icon: Icons.emoji_events,
+                    icon: AppIcons.emojiEvents,
                     color: context.colors.secondary,
                   ),
                 ),
