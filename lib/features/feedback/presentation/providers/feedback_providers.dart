@@ -27,13 +27,17 @@ final _currentUserIdProvider = Provider<String?>((ref) {
 });
 
 /// Stream provider for all feedback (admin only)
-final allFeedbackProvider = StreamProvider<List<UserFeedback>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final allFeedbackProvider = StreamProvider.autoDispose<List<UserFeedback>>((ref) {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.watchAllFeedback();
 });
 
 /// Stream provider for new feedback count (admin only)
-final newFeedbackCountProvider = StreamProvider<int>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final newFeedbackCountProvider = StreamProvider.autoDispose<int>((ref) {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.watchNewFeedbackCount();
 });
