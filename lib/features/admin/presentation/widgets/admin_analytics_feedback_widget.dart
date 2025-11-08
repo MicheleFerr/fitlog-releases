@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Widget admin per visualizzare feedback Analytics
 class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
@@ -69,7 +71,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
               loading: () => Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 ),
               ),
               error: (error, _) => Text(
@@ -119,7 +121,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
               loading: () => Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 ),
               ),
               error: (error, _) => Text(
