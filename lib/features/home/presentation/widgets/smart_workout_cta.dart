@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
@@ -213,6 +214,36 @@ class SmartWorkoutCTA extends ConsumerWidget {
     );
   }
 
+  /// Calculate workout statistics from completed workout
+  WorkoutStats _calculateWorkoutStats(dynamic workout) {
+    // Volume: sum of all (weight × reps) across all sets
+    double totalVolume = 0;
+    int totalSets = 0;
+
+    for (final exercise in workout.exercises) {
+      for (final set in exercise.sets) {
+        final weight = set.weight ?? 0;
+        final reps = set.reps ?? 0;
+        totalVolume += weight * reps;
+        totalSets++;
+      }
+    }
+
+    // Duration: endTime - startTime
+    final duration = workout.endTime != null
+        ? workout.endTime!.difference(workout.startTime)
+        : Duration.zero;
+
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+
+    return WorkoutStats(
+      volume: NumberFormat('#,##0', 'it_IT').format(totalVolume.round()),
+      duration: '${minutes}m ${seconds}s',
+      sets: totalSets,
+    );
+  }
+
   Future<void> _onSmartCTATap(
     BuildContext context,
     WidgetRef ref,
@@ -277,3 +308,16 @@ class SmartWorkoutCTA extends ConsumerWidget {
 }
 
 String generateSessionId() => const Uuid().v4();
+
+/// Statistics calculated from completed workout
+class WorkoutStats {
+  final String volume;      // Formatted with thousand separator (e.g., "4.250")
+  final String duration;    // Human-readable format (e.g., "45m 32s")
+  final int sets;           // Total sets completed
+
+  const WorkoutStats({
+    required this.volume,
+    required this.duration,
+    required this.sets,
+  });
+}
