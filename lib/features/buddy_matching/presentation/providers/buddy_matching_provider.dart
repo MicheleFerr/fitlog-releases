@@ -190,37 +190,43 @@ final matchingProvider = StateNotifierProvider<MatchingNotifier, MatchingState>(
 });
 
 // User Matches Provider
-final userMatchesProvider = StreamProvider.family<List<BuddyMatch>, MatchStatus?>((ref, status) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final userMatchesProvider = StreamProvider.autoDispose.family<List<BuddyMatch>, MatchStatus?>((ref, status) {
   final repository = ref.watch(buddyMatchingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
-  
+
   if (userId == null) return Stream.value([]);
-  
+
   return repository.getUserMatches(userId, status: status);
 });
 
 // Active matches (confirmed or partnership)
-final activeMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final activeMatchesProvider = StreamProvider.autoDispose<List<BuddyMatch>>((ref) {
   final repository = ref.watch(buddyMatchingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
-  
+
   if (userId == null) return Stream.value([]);
-  
+
   return repository.getUserMatches(userId).map((matches) =>
-      matches.where((match) => 
-        match.status == MatchStatus.confirmed || 
+      matches.where((match) =>
+        match.status == MatchStatus.confirmed ||
         match.status == MatchStatus.partnership
       ).toList()
   );
 });
 
 // Pending matches (waiting for response)
-final pendingMatchesProvider = StreamProvider<List<BuddyMatch>>((ref) {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
+final pendingMatchesProvider = StreamProvider.autoDispose<List<BuddyMatch>>((ref) {
   final repository = ref.watch(buddyMatchingRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
-  
+
   if (userId == null) return Stream.value([]);
-  
+
   return repository.getUserMatches(userId, status: MatchStatus.pending);
 });
 
