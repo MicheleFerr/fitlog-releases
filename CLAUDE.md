@@ -497,6 +497,159 @@ final results = AppIconMetadata.search('workout');
 
 ---
 
+## 🏗️ iOS BUILD COMPLIANCE (CRITICAL - ENFORCED BY PRE-COMMIT)
+
+> **⚠️ MANDATORY**: These patterns prevent the 998 iOS build errors that were fixed in November 2024.
+> **Pre-commit hook automatically enforces these rules** - violations will block commits.
+> **Reference**: See `BUILD_FIX_SUMMARY.md` for complete fix documentation.
+
+### 🚫 Pattern 1: NEVER `const` with `context.l10n` (CRITICAL - BLOCKS COMMIT)
+
+**iOS Build Error**: "Not a constant expression"
+**Why**: `context.l10n.*` is evaluated at runtime, NOT compile-time → incompatible with `const`
+
+```dart
+// ❌ WRONG - Causes iOS build error
+const Text(context.l10n.title)
+const SnackBar(content: Text(context.l10n.error))
+segments: const [
+  ButtonSegment(label: Text(context.l10n.option))
+]
+
+// ✅ CORRECT - Remove const keyword
+Text(context.l10n.title)
+SnackBar(content: Text(context.l10n.error))
+segments: [
+  ButtonSegment(label: Text(context.l10n.option))
+]
+```
+
+**Pre-commit check**: Automatically detects and BLOCKS commits with this pattern.
+
+---
+
+### 🏛️ Pattern 2: Architecture Boundaries for `context.l10n` (WARNING)
+
+**Presentation Layer** (widgets, screens): ✅ **CAN** use `context.l10n`
+**Provider Layer**: ❌ **SHOULD NOT** use `context.l10n` → use hardcoded strings or parameters
+**Domain/Data Layer**: ❌ **NEVER** use `context.l10n` → hardcoded strings only
+
+```dart
+// ❌ WRONG - context.l10n in provider
+class NotificationProviderBridge {
+  void showWelcome() {
+    final title = context.l10n.benvenutoInGymbro; // NO BuildContext available!
+  }
+}
+
+// ✅ CORRECT - hardcoded strings in provider
+class NotificationProviderBridge {
+  void showWelcome() {
+    final title = "Welcome to GymBro"; // Hardcoded OK in providers
+  }
+}
+
+// ❌ WRONG - context.l10n in domain layer
+class TemplateValidator {
+  String validate(String name) {
+    return context.l10n.exerciseNameCannotBeEmpty; // Architecture violation!
+  }
+}
+
+// ✅ CORRECT - hardcoded strings in domain
+class TemplateValidator {
+  String validate(String name) {
+    return "Exercise name cannot be empty"; // Hardcoded OK in domain
+  }
+}
+```
+
+**Pre-commit check**: Warns about violations but allows commit (not blocking).
+
+---
+
+### 🔧 Pattern 3: BuildContext Parameter Required (CRITICAL)
+
+**Rule**: Any method using `context.l10n` MUST have `BuildContext context` parameter
+
+```dart
+// ❌ WRONG - No BuildContext parameter
+String _formatDayStatus(DayStatus status) {
+  return context.l10n.restDay; // ERROR: context not available!
+}
+
+// ✅ CORRECT - Add BuildContext parameter
+String _formatDayStatus(BuildContext context, DayStatus status) {
+  return context.l10n.restDay; // Now context is available
+}
+
+// Update call sites:
+_formatDayStatus(context, dayInfo.status) // Pass context
+```
+
+**Pre-commit check**: Does not automatically detect (manual review needed).
+
+---
+
+### 📦 Pattern 4: Import Disambiguation (fpdart vs custom Either)
+
+**Problem**: Both `fpdart` and custom `Either` export same class names → type ambiguity
+
+```dart
+// ❌ WRONG - Import conflict
+import 'package:fpdart/fpdart.dart';
+import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
+
+return Right(<Workout>[]); // ERROR: Which Right? fpdart or custom?
+
+// ✅ CORRECT - Use hide keyword
+import 'package:fpdart/fpdart.dart' hide Either, Right, Left;
+import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
+
+return Right(<Workout>[]); // Now unambiguous - custom Either
+```
+
+**Pre-commit check**: Provides info warning but allows commit.
+
+---
+
+### 📚 Quick Reference Table
+
+| Pattern | Severity | Pre-commit | Fix |
+|---------|----------|------------|-----|
+| `const` with `context.l10n` | 🔴 CRITICAL | ❌ BLOCKS | Remove `const` |
+| `context.l10n` in providers | 🟡 WARNING | ⚠️ WARNS | Use hardcoded strings |
+| `context.l10n` in domain/data | 🟡 WARNING | ⚠️ WARNS | Use hardcoded strings |
+| Missing BuildContext param | 🔴 CRITICAL | (manual) | Add `BuildContext context` |
+| Import conflicts | 🔵 INFO | ℹ️ INFO | Add `hide Either, Right, Left` |
+
+---
+
+### 🛠️ Enforcement Details
+
+**Pre-commit hook location**: `.git/hooks/pre-commit` (section 5/5)
+
+**What it checks**:
+1. ✅ Scans all staged `.dart` files (excluding `generated/`)
+2. ✅ Detects `const.*context.l10n` patterns → **BLOCKS commit**
+3. ✅ Detects `context.l10n` in `providers/` → **WARNS**
+4. ✅ Detects `context.l10n` in `domain/` or `data/` → **WARNS**
+5. ✅ Detects fpdart + custom Either imports → **INFO**
+
+**Bypass (NOT RECOMMENDED)**: `git commit --no-verify`
+
+---
+
+### 📊 Historical Context
+
+**Before**: 998 iOS build errors (November 2024)
+**After**: 0 errors (fixed in ~10 minutes with automation)
+**Automation**: `fix_remaining_30.py` script (88% automated, 30/34 fixes)
+**Files modified**: 13 files total
+**Documentation**: `BUILD_FIX_SUMMARY.md`, `DETAILED_FIX_LIST.md`, `QUICK_REFERENCE_FIX.md`, `REPRODUCTION_GUIDE.md`
+
+---
+
 ## 🌍 REGOLA #1: MULTILINGUA OBBLIGATORIO
 
 ✅ **SEMPRE**: `context.l10n.keyName` (BuildContext extensions)
@@ -680,6 +833,13 @@ Prima di ogni modifica, verifica:
 - [ ] ✅ Funzionalità testata su iOS E Android (se applicabile)
 - [ ] ✅ Autenticazione controllata se usa Firebase
 - [ ] ✅ Platform-specific: `Platform.isIOS` check prima di iOS-only code
+
+### 🏗️ iOS Build Compliance (CRITICO - Bloccato da pre-commit hook)
+- [ ] ❌ **NEVER `const` with `context.l10n`** (CRITICAL - blocks commit)
+- [ ] ❌ **NO `context.l10n` in providers** (use hardcoded strings)
+- [ ] ❌ **NO `context.l10n` in domain/data layers** (use hardcoded strings)
+- [ ] ✅ **BuildContext parameter** for methods using `context.l10n`
+- [ ] ✅ **Import disambiguation**: `hide Either, Right, Left` if using fpdart
 
 ---
 
@@ -1043,6 +1203,12 @@ Quando in dubbio:
 - [ ] ✅ Autenticazione controllata (se Firebase)
 - [ ] ✅ Performance ottimizzata (`const`, `select`, `dispose`)
 - [ ] ✅ Named routes usate
+- [ ] ✅ **iOS Build Compliance** (vedi sezione iOS BUILD COMPLIANCE):
+  - [ ] ❌ NEVER `const` with `context.l10n` (CRITICAL - blocks commit)
+  - [ ] ❌ NO `context.l10n` in providers (use hardcoded strings)
+  - [ ] ❌ NO `context.l10n` in domain/data layers (use hardcoded strings)
+  - [ ] ✅ BuildContext parameter for methods using `context.l10n`
+  - [ ] ✅ Import disambiguation: `hide Either, Right, Left` if using fpdart
 
 ### 📝 DOPO l'Implementazione (AUTOMATICO):
 - [ ] ✅ **Claude chiede automaticamente di documentare** ← Claude lo fa SEMPRE
