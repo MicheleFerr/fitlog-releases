@@ -56,7 +56,9 @@ class ChartDataParams {
 /// FASE 1: FutureProvider con use case injection
 /// FASE 2: ✅ Either pattern - converte Left a Exception, Right a data
 /// FASE 3: TODO - Performance optimization (caching, debounce)
-final exerciseChartCleanProvider = FutureProvider.family<List<ChartDataPoint>, ChartDataParams>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseChartCleanProvider = FutureProvider.autoDispose.family<List<ChartDataPoint>, ChartDataParams>(
   (ref, params) async {
     final useCase = ref.watch(getExerciseChartDataProvider);
 
