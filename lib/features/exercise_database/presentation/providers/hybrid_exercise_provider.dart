@@ -63,7 +63,9 @@ final exerciseSyncServiceProvider = Provider<ExerciseSyncService>((ref) {
 // ====================
 
 /// Provider per tutti gli esercizi (con gestione asincrona)
-final allExercisesProvider = FutureProvider<List<Exercise>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final allExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.getAllExercises();
 });
@@ -128,7 +130,9 @@ final exerciseSearchQueryProvider = StateProvider<String>((ref) => '');
 final exerciseFiltersProvider = StateProvider<ExerciseFilters>((ref) => const ExerciseFilters());
 
 /// Provider per esercizi filtrati e ricercati
-final filteredExercisesProvider = FutureProvider<List<Exercise>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final filteredExercisesProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
   final query = ref.watch(exerciseSearchQueryProvider);
   final filters = ref.watch(exerciseFiltersProvider);
   final repository = ref.read(hybridExerciseRepositoryProvider);
@@ -195,19 +199,25 @@ final exerciseSyncActionsProvider = Provider<ExerciseSyncActions>((ref) {
 // ====================
 
 /// Provider per statistiche cache
-final exerciseCacheStatsProvider = FutureProvider<CacheMetadata?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseCacheStatsProvider = FutureProvider.autoDispose<CacheMetadata?>((ref) async {
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.getCacheStats();
 });
 
 /// Provider per informazioni versione locale
-final exerciseVersionInfoProvider = FutureProvider<String>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseVersionInfoProvider = FutureProvider.autoDispose<String>((ref) async {
   final versionService = ref.read(exerciseVersionServiceProvider);
   return versionService.getLocalVersion();
 });
 
 /// Provider per ultimo aggiornamento
-final lastExerciseUpdateProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final lastExerciseUpdateProvider = FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
   final versionService = ref.read(exerciseVersionServiceProvider);
   return versionService.getLastUpdateInfo();
 });
@@ -306,7 +316,9 @@ class ExerciseSyncActions {
 final exerciseDatabaseProvider = allExercisesProvider;
 
 /// Provider per repository JSON (fallback per compatibilità)
-final jsonExerciseRepositoryProvider = FutureProvider<List<Exercise>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final jsonExerciseRepositoryProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
   // Reindirizza al nuovo sistema ibrido
   final repository = ref.read(hybridExerciseRepositoryProvider);
   return repository.getAllExercises();
