@@ -25,7 +25,9 @@ final versionMetadataProvider = StreamProvider.autoDispose<Map<String, dynamic>?
 
 /// Provider per versione corrente (string)
 /// Restituisce '1.0.0' come default per prima pubblicazione
-final currentVersionProvider = FutureProvider<String>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final currentVersionProvider = FutureProvider.autoDispose<String>((ref) async {
   final service = ref.watch(exercisePublishServiceProvider);
   return service.getCurrentVersion();
 });
