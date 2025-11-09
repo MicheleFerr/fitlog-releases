@@ -104,7 +104,9 @@ final exerciseSearchServiceProvider = Provider<ExerciseSearchService>((ref) {
 });
 
 // Improved search results provider using the search service
-final improvedExerciseSearchProvider = FutureProvider<List<ExerciseTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final improvedExerciseSearchProvider = FutureProvider.autoDispose<List<ExerciseTemplate>>((ref) async {
   final searchService = ref.watch(exerciseSearchServiceProvider);
   final query = ref.watch(exerciseSearchQueryProvider);
   final locale = ref.watch(localeProvider);
