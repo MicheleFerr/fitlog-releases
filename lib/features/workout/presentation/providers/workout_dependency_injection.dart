@@ -101,28 +101,32 @@ final activeWorkoutStreamProvider = StreamProvider((ref) {
   return repository.watchActiveWorkout();
 });
 
-final workoutStatsProvider = FutureProvider.family<WorkoutStats?, WorkoutStatsParams>((ref, params) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutStatsProvider = FutureProvider.autoDispose.family<WorkoutStats?, WorkoutStatsParams>((ref, params) async {
   final repository = ref.read(workoutRepositoryProvider);
-  
+
   final result = await repository.getWorkoutStats(
     startDate: params.startDate,
     endDate: params.endDate,
   );
-  
+
   return result.fold(
     (failure) => null, // Could handle error differently
     (stats) => stats,
   );
 });
 
-final workoutHistoryProvider = FutureProvider.family<WorkoutHistory?, WorkoutHistoryParams>((ref, params) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutHistoryProvider = FutureProvider.autoDispose.family<WorkoutHistory?, WorkoutHistoryParams>((ref, params) async {
   final repository = ref.read(workoutRepositoryProvider);
-  
+
   final result = await repository.getWorkoutHistory(
     page: params.page,
     limit: params.limit,
   );
-  
+
   return result.fold(
     (failure) => null,
     (history) => history,
