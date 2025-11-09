@@ -214,7 +214,9 @@ final contributionSubmissionProvider =
 });
 
 // Provider per statistiche exercise-specific
-final exerciseStatsProvider = FutureProvider.family<ExerciseStats, String>((ref, exerciseId) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseStatsProvider = FutureProvider.autoDispose.family<ExerciseStats, String>((ref, exerciseId) async {
   // In futuro questo potrebbe venire da un endpoint dedicato
   // Per ora calcoliamo dalle contributions
   final contributions = await ref.watch(
