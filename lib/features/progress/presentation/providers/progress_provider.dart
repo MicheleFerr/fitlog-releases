@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
@@ -87,7 +88,9 @@ Query _buildQuery({
 }
 
 /// Provider per i dati di progresso reali basati sui workout salvati in Firestore
-final progressDataProvider = FutureProvider<ProgressData?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final progressDataProvider = FutureProvider.autoDispose<ProgressData?>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
   
@@ -102,13 +105,17 @@ final progressDataProvider = FutureProvider<ProgressData?>((ref) async {
 });
 
 /// Provider per le statistiche rapide mostrate nella home
-final quickStatsProvider = FutureProvider<QuickStats?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final quickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref) async {
   final progressData = await ref.watch(progressDataProvider.future);
   return progressData?.quickStats;
 });
 
 /// Provider per l'attività più recente (per streak)
-final recentActivityProvider = FutureProvider<DateTime?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recentActivityProvider = FutureProvider.autoDispose<DateTime?>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -135,7 +142,9 @@ final recentActivityProvider = FutureProvider<DateTime?>((ref) async {
 });
 
 /// Provider per il numero totale di workout completati
-final completedWorkoutsCountProvider = FutureProvider<int>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final completedWorkoutsCountProvider = FutureProvider.autoDispose<int>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -179,11 +188,14 @@ final completedWorkoutsCountProvider = FutureProvider<int>((ref) async {
 });
 
 /// Provider per calcolare lo streak di giorni consecutivi
-final currentStreakProvider = FutureProvider<int>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final currentStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
   if (currentUser?.email == null) {
+    debugPrint('🔥 [STREAK DEBUG] No user email - returning 0');
     return 0;
   }
 
@@ -191,6 +203,11 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
 
   // Prendi gli ultimi 30 giorni di attività per calcolare lo streak
   final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+
+  debugPrint('🔥 [STREAK DEBUG] =====================');
+  debugPrint('🔥 User email: ${currentUser!.email}');
+  debugPrint('🔥 Querying from: $thirtyDaysAgo');
+  debugPrint('🔥 Querying to: ${DateTime.now()}');
 
   // CRITICAL FIX: Use optimized parallel query
   final query = await _queryUserActivitiesOptimized(
@@ -202,7 +219,28 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
     descending: true,
   );
 
-  if (query.docs.isEmpty) return 0;
+  debugPrint('🔥 Query result: ${query.docs.length} documents found');
+
+  if (query.docs.isEmpty) {
+    debugPrint('❌ NO WORKOUT FOUND! Possible reasons:');
+    debugPrint('  1. Email mismatch - check Firestore for correct email field');
+    debugPrint('  2. Timestamp issue - check createdAt field format');
+    debugPrint('  3. Security rules blocking query');
+    debugPrint('  4. User has no workouts in last 30 days');
+    return 0;
+  }
+
+  // Log first few documents for debugging
+  debugPrint('🔥 First 3 workout documents:');
+  for (var i = 0; i < query.docs.length && i < 3; i++) {
+    final doc = query.docs[i];
+    final data = doc.data() as Map<String, dynamic>?;
+    debugPrint('  Doc $i: id=${doc.id}');
+    debugPrint('    email: ${data?['email']}');
+    debugPrint('    userEmail: ${data?['userEmail']}');
+    debugPrint('    createdAt: ${data?['createdAt']}');
+    debugPrint('    exerciseName: ${data?['exerciseName']}');
+  }
 
   // Raggruppa per giorni
   final Map<String, bool> workoutDays = {};
@@ -219,29 +257,39 @@ final currentStreakProvider = FutureProvider<int>((ref) async {
   // Calcola streak partendo da oggi
   int streak = 0;
   final today = DateTime.now();
-  
+
+  debugPrint('🔥 Calculating streak from workout days: ${workoutDays.keys.toList()}');
+
   // Prima controlla se c'è un workout oggi o nei giorni recenti
   for (int i = 0; i < 30; i++) {
     final checkDate = today.subtract(Duration(days: i));
     final dayKey = '${checkDate.year}-${checkDate.month.toString().padLeft(2, '0')}-${checkDate.day.toString().padLeft(2, '0')}';
-    
-    
+
     if (workoutDays.containsKey(dayKey)) {
       streak++;
+      debugPrint('  Day $i ($dayKey): ✅ HAS WORKOUT (streak now: $streak)');
     } else if (i <= 1) {
       // Se non c'è workout oggi o ieri, continua a cercare
+      debugPrint('  Day $i ($dayKey): ❌ NO WORKOUT (but i <= 1, continuing)');
       continue;
     } else {
       // Interrompi solo se c'è già uno streak e manca un giorno
-      if (streak > 0) break;
+      if (streak > 0) {
+        debugPrint('  Day $i ($dayKey): ❌ NO WORKOUT (breaking streak at $streak)');
+        break;
+      }
+      debugPrint('  Day $i ($dayKey): ❌ NO WORKOUT (no streak yet, continuing)');
     }
   }
 
+  debugPrint('✅ Final streak: $streak days');
   return streak;
 });
 
 /// Provider per la frequenza settimanale media
-final weeklyFrequencyProvider = FutureProvider<double>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final weeklyFrequencyProvider = FutureProvider.autoDispose<double>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
