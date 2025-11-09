@@ -16,7 +16,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extens
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Provider per le attività recenti
-final recentActivityProvider = FutureProvider<List<AdminActivity>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recentActivityProvider = FutureProvider.autoDispose<List<AdminActivity>>((ref) async {
   try {
     final firestore = FirebaseFirestore.instance;
 
