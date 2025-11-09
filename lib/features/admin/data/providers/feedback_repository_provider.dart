@@ -47,21 +47,27 @@ final criticalFeedbackProvider = StreamProvider<List<ExerciseFeedback>>((ref) {
 });
 
 /// Get single feedback by ID (one-time read)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final feedbackByIdProvider =
-    FutureProvider.family<ExerciseFeedback?, String>((ref, feedbackId) async {
+    FutureProvider.autoDispose.family<ExerciseFeedback?, String>((ref, feedbackId) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.getFeedbackById(feedbackId);
 });
 
 /// Create new feedback
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final createFeedbackProvider =
-    FutureProvider.family<String, ExerciseFeedback>((ref, feedback) async {
+    FutureProvider.autoDispose.family<String, ExerciseFeedback>((ref, feedback) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.createFeedback(feedback);
 });
 
 /// Update feedback status (admin only)
-final updateFeedbackStatusProvider = FutureProvider.family<void,
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final updateFeedbackStatusProvider = FutureProvider.autoDispose.family<void,
     (String feedbackId, String newStatus)>((ref, params) async {
   final (feedbackId, newStatus) = params;
   final repository = ref.watch(feedbackRepositoryProvider);
@@ -69,15 +75,19 @@ final updateFeedbackStatusProvider = FutureProvider.family<void,
 });
 
 /// Update admin notes (admin only)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final updateAdminNotesProvider =
-    FutureProvider.family<void, (String feedbackId, String notes)>((ref, params) async {
+    FutureProvider.autoDispose.family<void, (String feedbackId, String notes)>((ref, params) async {
   final (feedbackId, notes) = params;
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.updateAdminNotes(feedbackId, notes);
 });
 
 /// Update feedback severity (admin only)
-final updateFeedbackSeverityProvider = FutureProvider.family<void,
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final updateFeedbackSeverityProvider = FutureProvider.autoDispose.family<void,
     (String feedbackId, int severity)>((ref, params) async {
   final (feedbackId, severity) = params;
   final repository = ref.watch(feedbackRepositoryProvider);
@@ -85,8 +95,10 @@ final updateFeedbackSeverityProvider = FutureProvider.family<void,
 });
 
 /// Delete feedback (admin only)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final deleteFeedbackProvider =
-    FutureProvider.family<void, String>((ref, feedbackId) async {
+    FutureProvider.autoDispose.family<void, String>((ref, feedbackId) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.deleteFeedback(feedbackId);
 });
