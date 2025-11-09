@@ -459,7 +459,9 @@ final availableTemplateTagsProvider = FutureProvider<List<String>>((ref) async {
 
 /// Family provider to get a single template by ID
 /// FIX: Use customWorkoutTemplatesProvider to include templates from unified repository
-final templateByIdProvider = FutureProvider.family<WorkoutTemplate?, String>((ref, templateId) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final templateByIdProvider = FutureProvider.autoDispose.family<WorkoutTemplate?, String>((ref, templateId) async {
   // Use customWorkoutTemplatesProvider which includes both legacy and unified repository templates
   final templates = await ref.watch(customWorkoutTemplatesProvider.future);
 
