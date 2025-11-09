@@ -26,7 +26,9 @@ final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
 });
 
 // Tutti i template (predefiniti + personalizzati)
-final allWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final allWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
   if (kDebugMode || kProfileMode) {
     debugPrint('🔍 [ALL_TEMPLATES] Provider called');
   }
@@ -50,7 +52,9 @@ final allWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) 
 });
 
 // Solo template personalizzati
-final customWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final customWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
   debugPrint('🔍 customWorkoutTemplatesProvider: START');
 
   // 1. Prendi i template dal repository legacy (esistenti)
@@ -105,7 +109,9 @@ final customWorkoutTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((re
 });
 
 // Template più utilizzati (per quick start)
-final popularTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final popularTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
   final repository = ref.watch(workoutTemplateRepositoryProvider);
   final templates = await repository.getAllTemplates();
 
@@ -126,7 +132,9 @@ final popularTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) asy
 // Provider per ricerca template
 final templateSearchQueryProvider = StateProvider<String>((ref) => '');
 
-final templateSearchResultsProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final templateSearchResultsProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
   final repository = ref.watch(workoutTemplateRepositoryProvider);
   final query = ref.watch(templateSearchQueryProvider);
   
@@ -140,7 +148,9 @@ final templateSearchResultsProvider = FutureProvider<List<WorkoutTemplate>>((ref
 // Provider per filtri tag
 final templateTagFilterProvider = StateProvider<List<String>>((ref) => []);
 
-final filteredTemplatesProvider = FutureProvider<List<WorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final filteredTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplate>>((ref) async {
   final repository = ref.watch(workoutTemplateRepositoryProvider);
   final selectedTags = ref.watch(templateTagFilterProvider);
   
@@ -444,7 +454,9 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
 }
 
 // Provider per ottenere tutti i tag disponibili
-final availableTemplateTagsProvider = FutureProvider<List<String>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final availableTemplateTagsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final repository = ref.watch(workoutTemplateRepositoryProvider);
   final templates = await repository.getAllTemplates();
 
