@@ -16117,4 +16117,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String workoutCreated(String workoutName) {
     return 'Workout $workoutName created';
   }
+
+  @override
+  String get usePreviousWeights => 'Use Previous Weights';
+
+  @override
+  String get selectWeightIncrease => 'Select how much to increase weights';
+
+  @override
+  String get sameWeights => 'Same weights';
+
+  @override
+  String get sameWeightsInfo => 'Use the same weights from your last workout';
+
+  @override
+  String increaseWeightsInfo(String percentage) {
+    return 'Increase all weights by $percentage%';
+  }
+
+  @override
+  String get morningPrefix => '🌅 Morning';
+
+  @override
+  String get afternoonPrefix => '☀️ Afternoon';
+
+  @override
+  String get eveningPrefix => '🌆 Evening';
+
+  @override
+  String get nightPrefix => '🌙 Night';
 }

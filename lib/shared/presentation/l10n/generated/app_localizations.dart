@@ -5051,7 +5051,7 @@ abstract class AppLocalizations {
   /// **'Use Original Name'**
   String get useOriginalName;
 
-  /// Option to skip this exercise
+  /// Button to skip weight selection and use default values
   ///
   /// In en, this message translates to:
   /// **'Skip'**
@@ -8063,7 +8063,7 @@ abstract class AppLocalizations {
   /// **'New Value'**
   String get newValue;
 
-  /// Apply button text
+  /// Button to apply selected weight increase percentage
   ///
   /// In en, this message translates to:
   /// **'Apply'**
@@ -28823,6 +28823,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workout {workoutName} created'**
   String workoutCreated(String workoutName);
+
+  /// Title for modal to use previous workout weights
+  ///
+  /// In en, this message translates to:
+  /// **'Use Previous Weights'**
+  String get usePreviousWeights;
+
+  /// Subtitle for modal to select weight increase percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Select how much to increase weights'**
+  String get selectWeightIncrease;
+
+  /// Option to use same weights as previous workout (0% increase)
+  ///
+  /// In en, this message translates to:
+  /// **'Same weights'**
+  String get sameWeights;
+
+  /// Info text for using same weights option
+  ///
+  /// In en, this message translates to:
+  /// **'Use the same weights from your last workout'**
+  String get sameWeightsInfo;
+
+  /// Info text for increasing weights by percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Increase all weights by {percentage}%'**
+  String increaseWeightsInfo(String percentage);
+
+  /// Time of day prefix for morning workouts (5:00-11:59)
+  ///
+  /// In en, this message translates to:
+  /// **'🌅 Morning'**
+  String get morningPrefix;
+
+  /// Time of day prefix for afternoon workouts (12:00-17:59)
+  ///
+  /// In en, this message translates to:
+  /// **'☀️ Afternoon'**
+  String get afternoonPrefix;
+
+  /// Time of day prefix for evening workouts (18:00-21:59)
+  ///
+  /// In en, this message translates to:
+  /// **'🌆 Evening'**
+  String get eveningPrefix;
+
+  /// Time of day prefix for night workouts (22:00-4:59)
+  ///
+  /// In en, this message translates to:
+  /// **'🌙 Night'**
+  String get nightPrefix;
 }
 
 class _AppLocalizationsDelegate

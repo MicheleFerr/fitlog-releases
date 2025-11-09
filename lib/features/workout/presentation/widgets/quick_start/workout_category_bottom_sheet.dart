@@ -261,6 +261,25 @@ class _WorkoutCategoryBottomSheetState
     );
   }
 
+  /// Get time-of-day prefix based on current hour
+  /// 🌅 Morning (5:00-11:59)
+  /// ☀️ Afternoon (12:00-17:59)
+  /// 🌆 Evening (18:00-21:59)
+  /// 🌙 Night (22:00-4:59)
+  String _getTimeOfDayPrefix(BuildContext context) {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 12) {
+      return context.l10n.morningPrefix; // 🌅 Morning / Mattutino
+    } else if (hour >= 12 && hour < 18) {
+      return context.l10n.afternoonPrefix; // ☀️ Afternoon / Pomeridiano
+    } else if (hour >= 18 && hour < 22) {
+      return context.l10n.eveningPrefix; // 🌆 Evening / Serale
+    } else {
+      return context.l10n.nightPrefix; // 🌙 Night / Notturno
+    }
+  }
+
   void _toggleCustomMode() {
     setState(() {
       _isCustomMode = true;
@@ -275,14 +294,18 @@ class _WorkoutCategoryBottomSheetState
     // Get WidgetRef from context
     final ref = ProviderScope.containerOf(context);
 
+    // Add time-of-day prefix: "🌅 Morning Chest" / "🌅 Petto Mattutino"
+    final timePrefix = _getTimeOfDayPrefix(context);
+    final fullWorkoutName = '$timePrefix $workoutName';
+
     // Announce to screen reader (BEFORE navigate)
     SemanticsService.announce(
-      context.l10n.workoutCreated(workoutName),
+      context.l10n.workoutCreated(fullWorkoutName),
       TextDirection.ltr,
     );
 
-    // Create workout
-    ref.read(currentWorkoutProvider.notifier).createWorkout(workoutName);
+    // Create workout with time-prefixed name
+    ref.read(currentWorkoutProvider.notifier).createWorkout(fullWorkoutName);
 
     // Start workout
     ref.read(currentWorkoutProvider.notifier).startWorkout();

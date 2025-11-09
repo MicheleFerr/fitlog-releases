@@ -8831,5 +8831,53 @@
         "description": "Name of the created workout"
       }
     }
+  },
+  "usePreviousWeights": "Usa Pesi Precedenti",
+  "@usePreviousWeights": {
+    "description": "Title for modal to use previous workout weights"
+  },
+  "selectWeightIncrease": "Seleziona quanto aumentare i pesi",
+  "@selectWeightIncrease": {
+    "description": "Subtitle for modal to select weight increase percentage"
+  },
+  "sameWeights": "Stessi pesi",
+  "@sameWeights": {
+    "description": "Option to use same weights as previous workout (0% increase)"
+  },
+  "sameWeightsInfo": "Usa gli stessi pesi dell'ultimo allenamento",
+  "@sameWeightsInfo": {
+    "description": "Info text for using same weights option"
+  },
+  "increaseWeightsInfo": "Aumenta tutti i pesi del {percentage}%",
+  "@increaseWeightsInfo": {
+    "description": "Info text for increasing weights by percentage",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "description": "Percentage increase value"
+      }
+    }
+  },
+  "@skip": {
+    "description": "Button to skip weight selection and use default values"
+  },
+  "@apply": {
+    "description": "Button to apply selected weight increase percentage"
+  },
+  "morningPrefix": "🌅 Mattutino",
+  "@morningPrefix": {
+    "description": "Prefisso orario per allenamenti mattutini (5:00-11:59)"
+  },
+  "afternoonPrefix": "☀️ Pomeridiano",
+  "@afternoonPrefix": {
+    "description": "Prefisso orario per allenamenti pomeridiani (12:00-17:59)"
+  },
+  "eveningPrefix": "🌆 Serale",
+  "@eveningPrefix": {
+    "description": "Prefisso orario per allenamenti serali (18:00-21:59)"
+  },
+  "nightPrefix": "🌙 Notturno",
+  "@nightPrefix": {
+    "description": "Prefisso orario per allenamenti notturni (22:00-4:59)"
   }
 }

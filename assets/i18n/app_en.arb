@@ -3545,7 +3545,7 @@
   },
   "skip": "Skip",
   "@skip": {
-    "description": "Option to skip this exercise"
+    "description": "Button to skip weight selection and use default values"
   },
   "selectExerciseFromDatabase": "Select Exercise from Database",
   "@selectExerciseFromDatabase": {
@@ -5703,7 +5703,7 @@
   },
   "apply": "Apply",
   "@apply": {
-    "description": "Apply button text"
+    "description": "Button to apply selected weight increase percentage"
   },
   "confirmDeleteMultiple": "Delete {count} exercises?",
   "@confirmDeleteMultiple": {
@@ -19410,5 +19410,47 @@
         "description": "Name of the created workout"
       }
     }
+  },
+  "usePreviousWeights": "Use Previous Weights",
+  "@usePreviousWeights": {
+    "description": "Title for modal to use previous workout weights"
+  },
+  "selectWeightIncrease": "Select how much to increase weights",
+  "@selectWeightIncrease": {
+    "description": "Subtitle for modal to select weight increase percentage"
+  },
+  "sameWeights": "Same weights",
+  "@sameWeights": {
+    "description": "Option to use same weights as previous workout (0% increase)"
+  },
+  "sameWeightsInfo": "Use the same weights from your last workout",
+  "@sameWeightsInfo": {
+    "description": "Info text for using same weights option"
+  },
+  "increaseWeightsInfo": "Increase all weights by {percentage}%",
+  "@increaseWeightsInfo": {
+    "description": "Info text for increasing weights by percentage",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "description": "Percentage increase value"
+      }
+    }
+  },
+  "morningPrefix": "🌅 Morning",
+  "@morningPrefix": {
+    "description": "Time of day prefix for morning workouts (5:00-11:59)"
+  },
+  "afternoonPrefix": "☀️ Afternoon",
+  "@afternoonPrefix": {
+    "description": "Time of day prefix for afternoon workouts (12:00-17:59)"
+  },
+  "eveningPrefix": "🌆 Evening",
+  "@eveningPrefix": {
+    "description": "Time of day prefix for evening workouts (18:00-21:59)"
+  },
+  "nightPrefix": "🌙 Night",
+  "@nightPrefix": {
+    "description": "Time of day prefix for night workouts (22:00-4:59)"
   }
 }

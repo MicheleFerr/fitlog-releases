@@ -16283,4 +16283,33 @@ class AppLocalizationsIt extends AppLocalizations {
   String workoutCreated(String workoutName) {
     return 'Allenamento $workoutName creato';
   }
+
+  @override
+  String get usePreviousWeights => 'Usa Pesi Precedenti';
+
+  @override
+  String get selectWeightIncrease => 'Seleziona quanto aumentare i pesi';
+
+  @override
+  String get sameWeights => 'Stessi pesi';
+
+  @override
+  String get sameWeightsInfo => 'Usa gli stessi pesi dell\'ultimo allenamento';
+
+  @override
+  String increaseWeightsInfo(String percentage) {
+    return 'Aumenta tutti i pesi del $percentage%';
+  }
+
+  @override
+  String get morningPrefix => '🌅 Mattutino';
+
+  @override
+  String get afternoonPrefix => '☀️ Pomeridiano';
+
+  @override
+  String get eveningPrefix => '🌆 Serale';
+
+  @override
+  String get nightPrefix => '🌙 Notturno';
 }
