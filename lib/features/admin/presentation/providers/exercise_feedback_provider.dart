@@ -231,8 +231,10 @@ final criticalFeedbackProvider = Provider<List<ExerciseFeedback>>((ref) {
 });
 
 /// Provider per aggiornare lo status di un feedback
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final updateFeedbackStatusProvider =
-    FutureProvider.family<void, (String feedbackId, String newStatus)>(
+    FutureProvider.autoDispose.family<void, (String feedbackId, String newStatus)>(
   (ref, params) async {
     final (feedbackId, newStatus) = params;
     await FirebaseFirestore.instance
@@ -245,8 +247,10 @@ final updateFeedbackStatusProvider =
 );
 
 /// Provider per aggiungere note admin a un feedback
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final updateFeedbackNotesProvider =
-    FutureProvider.family<void, (String feedbackId, String notes)>(
+    FutureProvider.autoDispose.family<void, (String feedbackId, String notes)>(
   (ref, params) async {
     final (feedbackId, notes) = params;
     await FirebaseFirestore.instance
