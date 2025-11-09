@@ -74,15 +74,19 @@ final exerciseMappingsProvider =
 });
 
 /// Get strength standard by ID
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final strengthStandardByIdProvider =
-    FutureProvider.family<StrengthStandard?, String>((ref, id) async {
+    FutureProvider.autoDispose.family<StrengthStandard?, String>((ref, id) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getStrengthStandardById(id);
 });
 
 /// Get exercise mapping by exercise ID
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final exerciseMappingByIdProvider =
-    FutureProvider.family<ExerciseMapping?, String>((ref, exerciseId) async {
+    FutureProvider.autoDispose.family<ExerciseMapping?, String>((ref, exerciseId) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getMappingForExercise(exerciseId);
 });
@@ -95,7 +99,9 @@ final highConfidenceMappingsProvider =
 });
 
 /// Get mappings by status
-final mappingsByStatusProvider = FutureProvider.family<List<ExerciseMapping>,
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final mappingsByStatusProvider = FutureProvider.autoDispose.family<List<ExerciseMapping>,
     MappingStatus>((ref, status) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getMappingsByStatus(status);
@@ -267,7 +273,9 @@ class MedicalClearanceQuestionnaireNotifier
 // ============================================================================
 
 /// Get weight suggestion for a specific exercise
-final weightSuggestionProvider = FutureProvider.family<WeightSuggestion?,
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final weightSuggestionProvider = FutureProvider.autoDispose.family<WeightSuggestion?,
     String>((ref, exerciseId) async {
   // Get dependencies
   final service = ref.watch(weightSuggestionServiceProvider);
@@ -301,7 +309,9 @@ final weightSuggestionProvider = FutureProvider.family<WeightSuggestion?,
 });
 
 /// Get weight suggestions for multiple exercises (batch)
-final batchWeightSuggestionsProvider = FutureProvider.family<
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final batchWeightSuggestionsProvider = FutureProvider.autoDispose.family<
     Map<String, WeightSuggestion?>, List<String>>((ref, exerciseIds) async {
   final suggestions = <String, WeightSuggestion?>{};
 
