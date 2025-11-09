@@ -24,7 +24,9 @@ final firebaseInitStateProvider = StateNotifierProvider<FirebaseInitNotifier, Fi
 });
 
 /// Provider per le statistiche della collection
-final collectionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final collectionStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   final service = ref.watch(firebaseInitServiceProvider);
   return service.getCollectionStats();
 });
@@ -150,7 +152,9 @@ class FirebaseInitError extends FirebaseInitState {
 }
 
 /// Provider helper per controllare se Firebase è già inizializzato
-final isFirebaseInitializedProvider = FutureProvider<bool>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final isFirebaseInitializedProvider = FutureProvider.autoDispose<bool>((ref) async {
   try {
     final firestore = FirebaseFirestore.instance;
 
@@ -175,7 +179,9 @@ final isFirebaseInitializedProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Provider per ottenere la versione corrente
-final currentFirebaseVersionProvider = FutureProvider<String?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final currentFirebaseVersionProvider = FutureProvider.autoDispose<String?>((ref) async {
   try {
     final firestore = FirebaseFirestore.instance;
     final versionDoc = await firestore
