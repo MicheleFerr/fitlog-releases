@@ -160,8 +160,13 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
   }
 
   /// Toggle workout reminders
+  ///
+  /// When enabled, schedules daily reminders (handled by DailyWorkoutReminderService).
+  /// When disabled, cancels all scheduled reminders.
   Future<void> toggleWorkoutReminders(bool enabled) async {
     await updateSettings(state.copyWith(enableWorkoutReminders: enabled));
+    // NOTE: Actual scheduling/canceling is handled by DailyWorkoutReminderService
+    // via the notification settings screen
   }
 
   /// Toggle recovery alerts
@@ -190,7 +195,9 @@ final smartNotificationServiceProvider =
 });
 
 /// Future provider for notification initialization
-final notificationInitializationProvider = FutureProvider<bool>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final notificationInitializationProvider = FutureProvider.autoDispose<bool>((ref) async {
   final service = ref.watch(smartNotificationServiceProvider);
   return await service.initialize();
 });
@@ -203,7 +210,9 @@ final pendingNotificationsProvider =
 });
 
 /// Provider for notification permission status
-final notificationPermissionProvider = FutureProvider<bool>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final notificationPermissionProvider = FutureProvider.autoDispose<bool>((ref) async {
   final service = ref.watch(smartNotificationServiceProvider);
   return await service.areNotificationsEnabled();
 });
