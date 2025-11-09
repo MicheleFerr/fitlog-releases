@@ -64,7 +64,9 @@ final _routinePredictionEngineProvider = Provider<RoutinePredictionEngine>((ref)
 /// 4. Day-Based (fallback default)
 ///
 /// Returns: AsyncValue of WorkoutSuggestion
-final workoutSuggestionProvider = FutureProvider<WorkoutSuggestion>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutSuggestionProvider = FutureProvider.autoDispose<WorkoutSuggestion>((ref) async {
   final userId = ref.watch(_currentUserIdProvider);
 
   if (userId == null) {

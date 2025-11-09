@@ -178,7 +178,9 @@ final archivedFlexibleRoutinesProvider =
 });
 
 /// Provider to check if user has any active routines
-final hasActiveFlexibleRoutinesProvider = FutureProvider<bool>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final hasActiveFlexibleRoutinesProvider = FutureProvider.autoDispose<bool>((ref) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (userId == null) {
     return false;
