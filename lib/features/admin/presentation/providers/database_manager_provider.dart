@@ -318,13 +318,17 @@ final databaseManagerProvider =
 });
 
 /// Provider per dropdown values
-final exerciseDropdownValuesProvider = FutureProvider<ExerciseDropdownValues>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseDropdownValuesProvider = FutureProvider.autoDispose<ExerciseDropdownValues>((ref) async {
   final service = ref.watch(databaseManagerServiceProvider);
   return await service.getDropdownValues();
 });
 
 /// Provider per statistiche database
-final databaseStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final databaseStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   final service = ref.watch(databaseManagerServiceProvider);
   return await service.getDatabaseStats();
 });
