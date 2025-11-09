@@ -104,22 +104,30 @@ final deleteFeedbackProvider =
 });
 
 /// Count statistics providers
-final feedbackCountProvider = FutureProvider<int>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final feedbackCountProvider = FutureProvider.autoDispose<int>((ref) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.countTotalFeedback();
 });
 
-final feedbackCountByStatusProvider = FutureProvider<Map<String, int>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final feedbackCountByStatusProvider = FutureProvider.autoDispose<Map<String, int>>((ref) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.countByStatus();
 });
 
-final feedbackCountByTypeProvider = FutureProvider<Map<String, int>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final feedbackCountByTypeProvider = FutureProvider.autoDispose<Map<String, int>>((ref) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.countByType();
 });
 
-final feedbackCountBySeverityProvider = FutureProvider<Map<String, int>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final feedbackCountBySeverityProvider = FutureProvider.autoDispose<Map<String, int>>((ref) async {
   final repository = ref.watch(feedbackRepositoryProvider);
   return repository.countBySeverity();
 });
