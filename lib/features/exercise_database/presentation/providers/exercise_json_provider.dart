@@ -6,7 +6,9 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 
 /// Provider che carica gli esercizi dal file JSON
-final exerciseJsonProvider = FutureProvider<List<Exercise>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseJsonProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
   try {
     // Get current locale
     final locale = ref.watch(localeProvider);
