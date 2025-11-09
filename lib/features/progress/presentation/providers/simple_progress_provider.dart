@@ -44,7 +44,9 @@ class DashboardStats {
 }
 
 /// ULTRA SIMPLE Provider - just counts workouts, no complex calculations
-final ultraSimpleDashboardStatsProvider = FutureProvider<DashboardStats>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final ultraSimpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -80,7 +82,9 @@ final ultraSimpleDashboardStatsProvider = FutureProvider<DashboardStats>((ref) a
 });
 
 /// SIMPLE Provider that directly counts workouts
-final simpleDashboardStatsProvider = FutureProvider<DashboardStats>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
