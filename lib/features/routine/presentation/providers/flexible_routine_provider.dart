@@ -189,8 +189,10 @@ final hasActiveFlexibleRoutinesProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Family provider for routine statistics by ID
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final routineStatisticsProvider =
-    FutureProvider.family<RoutineStatistics?, String>((ref, routineId) async {
+    FutureProvider.autoDispose.family<RoutineStatistics?, String>((ref, routineId) async {
   final repository = ref.watch(flexibleRoutineRepositoryProvider);
   try {
     return await repository.getRoutineStatistics(routineId);
@@ -200,15 +202,19 @@ final routineStatisticsProvider =
 });
 
 /// Family provider for routine by ID (real-time stream)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically cancels Firestore listener when widget is disposed
 final routineByIdProvider =
-    StreamProvider.family<FlexibleRoutine?, String>((ref, routineId) {
+    StreamProvider.autoDispose.family<FlexibleRoutine?, String>((ref, routineId) {
   final repository = ref.watch(flexibleRoutineRepositoryProvider);
   return repository.watchRoutineById(routineId);
 });
 
 /// Provider to get completed workouts for a specific date
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final completedWorkoutsByDateProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, DateTime>((ref, date) async {
+    FutureProvider.autoDispose.family<List<Map<String, dynamic>>, DateTime>((ref, date) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (kDebugMode) {
     debugPrint('🔍 [completedWorkoutsByDateProvider] START - userId: $userId, date: $date');
@@ -259,8 +265,10 @@ final completedWorkoutsByDateProvider =
 });
 
 /// Provider to check if a day should be auto-completed based on workout instances
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final dayAutoCompleteStatusProvider =
-    FutureProvider.family<DayAutoCompleteStatus, DayCheckParams>((ref, params) async {
+    FutureProvider.autoDispose.family<DayAutoCompleteStatus, DayCheckParams>((ref, params) async {
   final completedWorkouts = await ref.watch(completedWorkoutsByDateProvider(params.date).future);
 
   if (completedWorkouts.isEmpty) {
