@@ -11,7 +11,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/workout_sugg
 import 'package:gymbro_flutter_new/features/workout/domain/services/recovery_time_calculator.dart';
 
 /// Intelligent workout suggestion provider that learns from user's local history
-final intelligentWorkoutSuggestionProvider = FutureProvider<WorkoutSuggestion?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final intelligentWorkoutSuggestionProvider = FutureProvider.autoDispose<WorkoutSuggestion?>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return null;
 
