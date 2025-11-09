@@ -641,7 +641,9 @@ final unifiedTemplateRepositoryProvider = Provider<UnifiedTemplateRepository>((r
 });
 
 /// Convenience providers for common operations
-final userTemplatesProvider = FutureProvider<List<UnifiedWorkoutTemplate>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final userTemplatesProvider = FutureProvider.autoDispose<List<UnifiedWorkoutTemplate>>((ref) async {
   _UnifiedTemplateLogger.log('🎯 userTemplatesProvider called');
   _UnifiedTemplateLogger.log('Getting unified template repository...');
 
