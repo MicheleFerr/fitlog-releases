@@ -176,7 +176,9 @@ class ExerciseDatabase {
 }
 
 /// 🚀 TIER-1: Singleton provider for exercise database (loaded once)
-final exerciseDatabaseProvider = FutureProvider<ExerciseDatabase>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseDatabaseProvider = FutureProvider.autoDispose<ExerciseDatabase>((ref) async {
   final config = ref.watch(appConfigProvider);
   return ExerciseDatabase.load(languageCode: config.languageCode);
 });

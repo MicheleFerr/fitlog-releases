@@ -18,7 +18,9 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 
 /// Provider per il caricamento del database esercizi
 /// Carica il file corretto in base alla lingua dell'app
-final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exercisesDatabaseProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   try {
     // Ottieni la lingua dell'app
     final locale = ref.watch(localeProvider);
