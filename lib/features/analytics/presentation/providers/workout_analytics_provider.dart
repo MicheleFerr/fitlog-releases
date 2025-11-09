@@ -383,7 +383,9 @@ final prPredictionsProvider = Provider<List<PRPrediction>>((ref) {
 // =============================================================================
 
 /// Historical workout statistics
-final workoutStatsProvider = FutureProvider<WorkoutAnalyticsStats>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutStatsProvider = FutureProvider.autoDispose<WorkoutAnalyticsStats>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) throw Exception('User not authenticated');
 
@@ -392,7 +394,9 @@ final workoutStatsProvider = FutureProvider<WorkoutAnalyticsStats>((ref) async {
 });
 
 /// Recent PRs (last 30 days)
-final recentPRsProvider = FutureProvider<List<PersonalRecord>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recentPRsProvider = FutureProvider.autoDispose<List<PersonalRecord>>((ref) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   if (userId == null) return [];
 
