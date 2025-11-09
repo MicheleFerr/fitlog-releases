@@ -147,7 +147,9 @@ class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTr
 }
 
 /// Provider for progressive overload analysis
-final progressiveOverloadProvider = FutureProvider.family<ProgressiveOverloadAnalysis?, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final progressiveOverloadProvider = FutureProvider.autoDispose.family<ProgressiveOverloadAnalysis?, String>(
   (ref, exerciseName) async {
     final metricsAsync = ref.watch(smartTrainingMetricsProvider);
     
@@ -231,10 +233,12 @@ final deloadDetectionProvider = FutureProvider<DeloadAnalysis?>(
 );
 
 /// Provider for plateau detection
-final plateauDetectionProvider = FutureProvider.family<PlateauDetection?, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final plateauDetectionProvider = FutureProvider.autoDispose.family<PlateauDetection?, String>(
   (ref, exerciseName) async {
     final metricsAsync = ref.watch(smartTrainingMetricsProvider);
-    
+
     return metricsAsync.when(
       data: (metrics) {
         if (metrics.length < 4) return null;
