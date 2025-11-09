@@ -119,8 +119,10 @@ class JsonExerciseRepository {
 
 // Providers per il nuovo sistema
 // DEPRECATED: Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart instead
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 @Deprecated('Use hybridExerciseRepositoryProvider from hybrid_exercise_provider.dart')
-final jsonExerciseRepositoryProvider = FutureProvider<List<Exercise>>((ref) async {
+final jsonExerciseRepositoryProvider = FutureProvider.autoDispose<List<Exercise>>((ref) async {
   final locale = ref.watch(localeProvider);
   final repository = JsonExerciseRepository(locale: locale);
   return repository.getAllExercises();

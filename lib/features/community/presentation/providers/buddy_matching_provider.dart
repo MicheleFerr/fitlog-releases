@@ -5,20 +5,22 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/community/domain/entities/buddy_preferences.dart';
 
 // Provider per il profilo buddy dell'utente corrente
-final currentUserBuddyProfileProvider = FutureProvider<BuddyProfile?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final currentUserBuddyProfileProvider = FutureProvider.autoDispose<BuddyProfile?>((ref) async {
   try {
     final authService = ref.watch(authServiceProvider);
     final currentUser = authService.currentUser;
-    
+
     if (currentUser?.uid == null) return null;
-    
+
     final doc = await FirebaseFirestore.instance
         .collection('buddy_profiles')
         .doc(currentUser!.uid)
         .get();
-        
+
     if (!doc.exists) return null;
-    
+
     return BuddyProfile.fromFirestore(doc);
   } catch (e) {
     // print('Error loading buddy profile: $e');
@@ -82,16 +84,18 @@ final pendingMatchesProvider = StreamProvider.autoDispose<List<BuddyMatch>>((ref
 });
 
 // Provider per potenziali match
-final potentialMatchesProvider = FutureProvider<List<BuddyProfile>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final potentialMatchesProvider = FutureProvider.autoDispose<List<BuddyProfile>>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
-  
+
   if (currentUser?.uid == null) return [];
-  
+
   // Get current user's preferences
   final userProfile = await ref.read(currentUserBuddyProfileProvider.future);
   if (userProfile == null) return [];
-  
+
   // Query for compatible buddies
   final query = await FirebaseFirestore.instance
       .collection('buddy_profiles')
@@ -99,17 +103,17 @@ final potentialMatchesProvider = FutureProvider<List<BuddyProfile>>((ref) async 
       .where('userId', isNotEqualTo: currentUser!.uid)
       .limit(20)
       .get();
-      
+
   final potentialMatches = query.docs
       .map((doc) => BuddyProfile.fromFirestore(doc))
       .where((profile) => _calculateCompatibility(userProfile, profile) > 0.5)
       .toList();
-      
+
   // Sort by compatibility score
-  potentialMatches.sort((a, b) => 
+  potentialMatches.sort((a, b) =>
     _calculateCompatibility(userProfile, b)
         .compareTo(_calculateCompatibility(userProfile, a)));
-        
+
   return potentialMatches;
 });
 

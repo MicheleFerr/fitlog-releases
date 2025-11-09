@@ -290,7 +290,9 @@ final searchResultsProvider = StreamProvider.autoDispose<List<CommunityContribut
 });
 
 // Provider 4: Saved Contribution IDs
-final savedContributionIdsProvider = FutureProvider<List<String>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final savedContributionIdsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) return [];
 

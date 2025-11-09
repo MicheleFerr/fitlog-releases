@@ -92,7 +92,9 @@ final adminModerationProvider = StateNotifierProvider<AdminModerationNotifier, A
 });
 
 // Provider per verificare se l'utente corrente è admin
-final isAdminProvider = FutureProvider<bool>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final isAdminProvider = FutureProvider.autoDispose<bool>((ref) async {
   final user = await ref.watch(currentUserProvider.future);
   return user?.email == 'ferrara-michele@hotmail.it';
 });
