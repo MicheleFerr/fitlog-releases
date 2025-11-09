@@ -52,7 +52,9 @@ class DashboardStats {
 }
 
 /// Provider for dashboard stats - combines multiple optimized providers
-final optimizedDashboardStatsProvider = FutureProvider<DashboardStats>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final optimizedDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
   final streak = await ref.watch(optimizedStreakProvider.future);
   final quickStats = await ref.watch(optimizedQuickStatsProvider.future);
   final frequency = await ref.watch(optimizedMonthlyFrequencyProvider.future);
@@ -86,7 +88,9 @@ final optimizedDashboardStatsProvider = FutureProvider<DashboardStats>((ref) asy
 
 /// Provider for quick stats using pre-calculated counters
 /// MUCH MORE EFFICIENT than counting all documents
-final optimizedQuickStatsProvider = FutureProvider<QuickStats?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final optimizedQuickStatsProvider = FutureProvider.autoDispose<QuickStats?>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -244,7 +248,9 @@ final optimizedWorkoutCountProvider = Provider<int>((ref) {
 
 /// Optimized streak calculation
 /// Still needs to query recent activities but with strict limit
-final optimizedStreakProvider = FutureProvider<int>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final optimizedStreakProvider = FutureProvider.autoDispose<int>((ref) async {
   final authService = ref.watch(authServiceProvider);
   final currentUser = authService.currentUser;
 
@@ -315,7 +321,9 @@ final optimizedStreakProvider = FutureProvider<int>((ref) async {
 final optimizedCompletedWorkoutsCountProvider = optimizedWorkoutCountProvider;
 final optimizedCurrentStreakProvider = optimizedStreakProvider;
 
-final optimizedMonthlyFrequencyProvider = FutureProvider<double>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((ref) async {
   final userProfile = await ref.watch(cachedUserProfileProvider.future);
 
   if (userProfile == null) {
