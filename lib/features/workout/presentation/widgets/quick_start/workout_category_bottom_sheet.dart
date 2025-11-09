@@ -90,18 +90,43 @@ class _WorkoutCategoryBottomSheetState
   Widget _buildCategoryChips(BuildContext context) {
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 12,
+      child: Column(
         children: [
-          _buildCategoryChip(context, 'chest', '💪', 0),
-          _buildCategoryChip(context, 'legs', '🦵', 1),
-          _buildCategoryChip(context, 'back', '🔙', 2),
-          _buildCategoryChip(context, 'arms', '💪', 3),
-          _buildCategoryChip(context, 'cardio', '❤️', 4),
-          _buildCategoryChip(context, 'fullBody', '🏋️', 5),
-          _buildCategoryChip(context, 'hiit', '🔥', 6),
-          _buildCustomChip(context, 7),
+          // Row 1: Chest + Legs
+          Row(
+            children: [
+              Expanded(child: _buildCategoryChip(context, 'chest', '💪', 0)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildCategoryChip(context, 'legs', '🦵', 1)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Row 2: Back + Arms
+          Row(
+            children: [
+              Expanded(child: _buildCategoryChip(context, 'back', '🔙', 2)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildCategoryChip(context, 'arms', '💪', 3)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Row 3: Cardio + Full Body
+          Row(
+            children: [
+              Expanded(child: _buildCategoryChip(context, 'cardio', '❤️', 4)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildCategoryChip(context, 'fullBody', '🏋️', 5)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Row 4: HIIT + Custom
+          Row(
+            children: [
+              Expanded(child: _buildCategoryChip(context, 'hiit', '🔥', 6)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildCustomChip(context, 7)),
+            ],
+          ),
         ],
       ),
     );
@@ -167,7 +192,7 @@ class _WorkoutCategoryBottomSheetState
         button: true,
         enabled: true,
         child: FilterChip(
-          label: Text('$emoji $label'),
+          label: Center(child: Text('$emoji $label')),
           selected: false,
           onSelected: (selected) => _onCategorySelected(context, workoutName),
           backgroundColor: context.colors.surfaceContainerHighest,
@@ -191,7 +216,7 @@ class _WorkoutCategoryBottomSheetState
         button: true,
         enabled: true,
         child: FilterChip(
-          label: Text('✏️ ${context.l10n.customWorkout}'),
+          label: Center(child: Text('✏️ ${context.l10n.customWorkout}')),
           selected: false,
           onSelected: (selected) => _toggleCustomMode(),
           backgroundColor: context.colors.surfaceContainerHighest,
