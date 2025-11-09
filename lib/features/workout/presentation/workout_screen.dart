@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/pdf_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/previous_workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
@@ -25,8 +26,12 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/workout_category_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
+import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/tier1_minimal_timer_overlay.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
@@ -579,21 +584,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       );
     }
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.85,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
+    // Use vertical ListView with SwipeableTemplateCard (iOS-style swipe actions)
+    return ListView.builder(
       itemCount: templates.length,
+      itemExtent: 216, // 200px card + 16px margin (8px top + 8px bottom)
       itemBuilder: (context, index) {
         final template = templates[index];
-        // ⚡ OPTIMIZATION: Add key for better grid performance
-        return KeyedSubtree(
+        return SwipeableTemplateCard(
           key: ValueKey(template.id),
-          child: _buildGridTemplateCard(context, ref, template),
+          template: template,
+          onTap: () => _startWorkoutFromTemplate(context, ref, template),
+          onShare: () => _shareTemplatePdf(context, template),
+          onDuplicate: () => _duplicateTemplate(context, ref, template),
+          onEdit: () => _editTemplateFromQuickStart(context, template),
+          onDelete: () => _deleteTemplateFromQuickStart(context, ref, template),
         );
       },
     );
@@ -1005,15 +1009,33 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       // Incrementa contatore utilizzo
       await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
 
+      // ✅ PREVIOUS_DATA: Load previous workout data (async with 3-tier caching)
+      Workout? previousWorkout;
+      try {
+        previousWorkout = await ref.read(previousWorkoutFromTemplateProvider(template.id).future);
+
+        if (kDebugMode && previousWorkout != null) {
+          debugPrint('✅ [WorkoutScreen] Loaded previous workout data for template: ${template.id}');
+          debugPrint('   Previous workout: ${previousWorkout.name} (${previousWorkout.exercises.length} exercises)');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [WorkoutScreen] Failed to load previous workout data: $e');
+        }
+        // Continue without previous data - graceful fallback
+      }
+
       // Crea workout dal template
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
       workoutNotifier.createWorkout(template.name);
       workoutNotifier.startWorkout();
 
-      // Aggiungi esercizi dal template
+      // Aggiungi esercizi dal template WITH previous data populated
       final exercises = template.toWorkoutExercises();
       for (final exercise in exercises) {
-        workoutNotifier.addExercise(exercise);
+        // ✅ PREVIOUS_DATA: Match exercise with previous workout by name
+        final enrichedExercise = _enrichExerciseWithPreviousData(exercise, previousWorkout);
+        workoutNotifier.addExercise(enrichedExercise);
       }
 
       // Mostra messaggio di successo
@@ -1027,6 +1049,81 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         context.l10n.workoutStartError(e.toString()),
       );
     }
+  }
+
+  /// ✅ PREVIOUS_DATA: Enrich exercise with previous workout data
+  ///
+  /// Matches exercise by name (case-insensitive) and calculates average weight/reps
+  /// from completed sets in the previous workout.
+  Exercise _enrichExerciseWithPreviousData(Exercise exercise, Workout? previousWorkout) {
+    if (kDebugMode) {
+      debugPrint('🔍 [_enrichExerciseWithPreviousData] Starting for: ${exercise.name}');
+      debugPrint('   previousWorkout: ${previousWorkout != null ? "✅ Found (${previousWorkout.exercises.length} exercises)" : "❌ NULL"}');
+    }
+
+    if (previousWorkout == null) {
+      if (kDebugMode) {
+        debugPrint('   ❌ Returning exercise as-is (no previous workout)');
+      }
+      return exercise;
+    }
+
+    // Find matching exercise by name (case-insensitive)
+    final previousExercise = previousWorkout.exercises
+        .where((e) => e.name.toLowerCase() == exercise.name.toLowerCase())
+        .firstOrNull;
+
+    if (kDebugMode) {
+      debugPrint('   Previous exercise match: ${previousExercise != null ? "✅ Found" : "❌ NOT FOUND"}');
+      if (previousExercise == null) {
+        debugPrint('   Available exercises in previous workout:');
+        for (final e in previousWorkout.exercises) {
+          debugPrint('     - ${e.name}');
+        }
+      }
+    }
+
+    if (previousExercise == null) {
+      if (kDebugMode) {
+        debugPrint('   ❌ Returning exercise as-is (no matching exercise in previous workout)');
+      }
+      return exercise;
+    }
+
+    // Calculate average weight and reps from previous sets
+    final completedSets = previousExercise.sets
+        .where((s) => s.isCompleted)
+        .where((s) => s.weight != null && s.reps != null) // Filter out nulls
+        .toList();
+
+    if (kDebugMode) {
+      debugPrint('   Completed sets with data: ${completedSets.length}/${previousExercise.sets.length}');
+    }
+
+    if (completedSets.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('   ❌ Returning exercise as-is (no completed sets with weight/reps)');
+      }
+      return exercise;
+    }
+
+    // Calculate averages (now safe because we filtered nulls)
+    final avgWeight = completedSets.map((s) => s.weight!).reduce((a, b) => a + b) / completedSets.length;
+    final avgReps = completedSets.map((s) => s.reps!).reduce((a, b) => a + b) / completedSets.length;
+
+    if (kDebugMode) {
+      debugPrint('✅ [WorkoutScreen] Enriched exercise: ${exercise.name}');
+      debugPrint('   Previous: ${avgWeight.toStringAsFixed(1)}kg × ${avgReps.round()} reps');
+      debugPrint('   Date: ${previousWorkout.startTime}');
+      debugPrint('   Source: single');
+    }
+
+    return exercise.copyWith(
+      previousWeight: avgWeight,
+      previousReps: avgReps.round(),
+      previousDataSource: 'single',
+      previousWorkoutDate: previousWorkout.startTime, // ✅ Data del workout precedente
+    );
   }
 
 
@@ -1598,18 +1695,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   }
 
   void _startQuickWorkout(BuildContext context, WidgetRef ref) {
-    // Create workout with today's date
-    final now = DateTime.now();
-    final workoutName = 'Allenamento ${now.day}/${now.month}/${now.year}';
-
-    // Start the workout immediately - no dialogs, no friction
-    ref.read(currentWorkoutProvider.notifier).createWorkout(workoutName);
-    ref.read(currentWorkoutProvider.notifier).startWorkout();
-
-    // Show quick feedback
-    SnackBarService.showSuccess(
-      context,
-      '⚡ ${context.l10n.workoutStartedQuickly}',
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => const WorkoutCategoryBottomSheet(),
     );
   }
 
@@ -2138,6 +2228,40 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         ],
       ),
     );
+  }
+
+  void _duplicateTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
+    try {
+      // Create a duplicate with "(Copia)" suffix
+      final duplicatedTemplate = template.copyWith(
+        name: '${template.name} (Copia)',
+        isCustom: true,
+        updatedAt: DateTime.now(),
+      );
+
+      // Save to unified repository
+      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
+      final unifiedTemplate = TemplateBridge.fromLegacy(duplicatedTemplate);
+      await unifiedRepo.createTemplate(unifiedTemplate);
+
+      // Invalidate providers to refresh list
+      ref.invalidate(customWorkoutTemplatesProvider);
+      ref.invalidate(userTemplatesProvider);
+
+      if (mounted) {
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.workoutTemplateDuplicatedSuccess(duplicatedTemplate.name),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        SnackBarService.showError(
+          context,
+          context.l10n.workoutTemplateDuplicationError(e.toString()),
+        );
+      }
+    }
   }
 }
 
