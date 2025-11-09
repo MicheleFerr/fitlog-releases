@@ -40,7 +40,9 @@ final activeRoutineAnalyticsProvider =
 });
 
 /// Family provider for routine analytics by routine ID
-final routineAnalyticsProvider = FutureProvider.family<RoutineAnalyticsState, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final routineAnalyticsProvider = FutureProvider.autoDispose.family<RoutineAnalyticsState, String>(
   (ref, routineId) async {
     try {
       // Get the routine
