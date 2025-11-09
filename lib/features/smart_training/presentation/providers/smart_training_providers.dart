@@ -217,10 +217,12 @@ double _calculateTrend(List<double> values) {
 }
 
 /// Provider for deload detection
-final deloadDetectionProvider = FutureProvider<DeloadAnalysis?>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final deloadDetectionProvider = FutureProvider.autoDispose<DeloadAnalysis?>(
   (ref) async {
     final metricsAsync = ref.watch(smartTrainingMetricsProvider);
-    
+
     return metricsAsync.when(
       data: (metrics) {
         if (metrics.length < 3) return null;
@@ -251,18 +253,20 @@ final plateauDetectionProvider = FutureProvider.autoDispose.family<PlateauDetect
 );
 
 /// Provider for volume optimization
-final volumeOptimizationProvider = FutureProvider<VolumeOptimization?>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final volumeOptimizationProvider = FutureProvider.autoDispose<VolumeOptimization?>(
   (ref) async {
     final metricsAsync = ref.watch(smartTrainingMetricsProvider);
-    
+
     return metricsAsync.when(
       data: (metrics) {
         if (metrics.isEmpty) return null;
-        
+
         // Calculate current muscle group volumes
         final currentVolumes = <String, MuscleGroupData>{};
         final latest = metrics.first;
-        
+
         for (final entry in latest.muscleGroupVolume.entries) {
           currentVolumes[entry.key] = MuscleGroupData(
             weeklyVolume: entry.value,
@@ -270,7 +274,7 @@ final volumeOptimizationProvider = FutureProvider<VolumeOptimization?>(
             averageIntensity: 75.0, // Could be calculated from metrics
           );
         }
-        
+
         return VolumeOptimizerService.optimizeVolume(
           'current_user',
           TrainingGoal.hypertrophy, // TODO: Get from user preferences
@@ -409,7 +413,9 @@ final templateFilterProvider = StateProvider<TemplateFilter>((ref) {
 });
 
 /// Provider for recommended templates
-final recommendedTemplatesProvider = FutureProvider<List<SmartWorkoutTemplate>>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recommendedTemplatesProvider = FutureProvider.autoDispose<List<SmartWorkoutTemplate>>(
   (ref) async {
     // TODO: Get user preferences from profile
     return SmartWorkoutTemplatesService.getRecommendedTemplates(
