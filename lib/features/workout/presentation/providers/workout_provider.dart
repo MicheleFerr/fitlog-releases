@@ -25,6 +25,8 @@ import 'package:gymbro_flutter_new/features/notifications/domain/services/intell
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/achievement_notification_provider.dart';
 // MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
 // import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart'; // REMOVED: cleanup
+// 🔥 Streak Achievement Notification Service for workout completion triggers
+import 'package:gymbro_flutter_new/features/notifications/presentation/services/streak_achievement_notification_service.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 // Auto-sync for cached progress stats
@@ -556,6 +558,22 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           // 📢 UI Feedback: Show "Workout saved locally" toast
           if (context != null) {
             SyncStatusToast.showWorkoutSavedLocally(context);
+          }
+
+          // 🔥 STREAK ACHIEVEMENT: Check for streak milestones after successful save
+          // This triggers achievement notifications for 3/7/14/30 day streaks
+          try {
+            final streakService = ref.read(streakAchievementNotificationServiceProvider);
+            await streakService.checkAndNotifyStreak();
+
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Streak achievement check completed');
+            }
+          } catch (streakError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check streak achievement: $streakError');
+            }
           }
         }
       } catch (saveError, stackTrace) {
@@ -1875,7 +1893,9 @@ final selectedExerciseTypeProvider = StateProvider<ExerciseType>((ref) {
 /// - startTime is after cutoff date (now - N days)
 ///
 /// Throws: Exception if repository fetch fails
-final recentWorkoutsProvider = FutureProvider.family<List<Workout>, int>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recentWorkoutsProvider = FutureProvider.autoDispose.family<List<Workout>, int>(
   (ref, days) async {
     final repository = ref.watch(workoutRepositoryProvider);
     final cutoffDate = DateTime.now().subtract(Duration(days: days));
