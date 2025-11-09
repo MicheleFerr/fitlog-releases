@@ -18,7 +18,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 /// Provider legacy per ExerciseDatabase (mantiene compatibilità)
 /// Ora utilizza il sistema ibrido sottostante
-final exerciseDatabaseProvider = FutureProvider<List<ExerciseDatabase>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseDatabaseProvider = FutureProvider.autoDispose<List<ExerciseDatabase>>((ref) async {
   try {
     // Carica esercizi dal nuovo sistema ibrido
     final exercises = await ref.read(hybridExerciseRepositoryProvider).getAllExercises();
