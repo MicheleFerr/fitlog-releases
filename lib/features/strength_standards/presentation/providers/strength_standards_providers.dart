@@ -60,15 +60,19 @@ final weightSuggestionServiceProvider = Provider<WeightSuggestionService>((ref) 
 // ============================================================================
 
 /// Strength standards list (async loaded, cached)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final strengthStandardsProvider =
-    FutureProvider<List<StrengthStandard>>((ref) async {
+    FutureProvider.autoDispose<List<StrengthStandard>>((ref) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getStrengthStandards();
 });
 
 /// Exercise mappings list (async loaded, cached)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final exerciseMappingsProvider =
-    FutureProvider<List<ExerciseMapping>>((ref) async {
+    FutureProvider.autoDispose<List<ExerciseMapping>>((ref) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getExerciseMappings();
 });
@@ -92,8 +96,10 @@ final exerciseMappingByIdProvider =
 });
 
 /// Get high confidence mappings (≥80%)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final highConfidenceMappingsProvider =
-    FutureProvider<List<ExerciseMapping>>((ref) async {
+    FutureProvider.autoDispose<List<ExerciseMapping>>((ref) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getHighConfidenceMappings();
 });
@@ -108,8 +114,10 @@ final mappingsByStatusProvider = FutureProvider.autoDispose.family<List<Exercise
 });
 
 /// Get metadata about data sources
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final strengthStandardsMetadataProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
+    FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   final repository = ref.watch(strengthStandardsRepositoryProvider);
   return repository.getMetadata();
 });
@@ -341,7 +349,9 @@ final showWeightSuggestionPromptsProvider = StateProvider<bool>((ref) {
 // ============================================================================
 
 /// Auto-load fitness profile when user is authenticated
-final fitnessProfileAutoLoadProvider = FutureProvider<void>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final fitnessProfileAutoLoadProvider = FutureProvider.autoDispose<void>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
 
   if (userId != null) {
@@ -360,8 +370,10 @@ final fitnessProfileAutoLoadProvider = FutureProvider<void>((ref) async {
 // ============================================================================
 
 /// Get statistics about exercise mappings coverage
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final mappingStatisticsProvider =
-    FutureProvider<MappingStatistics>((ref) async {
+    FutureProvider.autoDispose<MappingStatistics>((ref) async {
   final mappings = await ref.watch(exerciseMappingsProvider.future);
 
   final autoCount = mappings.where((m) => m.status == MappingStatus.auto).length;
@@ -546,15 +558,19 @@ class QuestionnaireAnalyticsNotifier
 }
 
 /// Get aggregated analytics (admin/debug view)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final aggregatedQuestionnaireAnalyticsProvider =
-    FutureProvider<QuestionnaireAnalyticsAggregated>((ref) async {
+    FutureProvider.autoDispose<QuestionnaireAnalyticsAggregated>((ref) async {
   final datasource = ref.watch(questionnaireAnalyticsDataSourceProvider);
   return datasource.getAggregatedAnalytics();
 });
 
 /// Get latest analytics for current user
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final latestQuestionnaireAnalyticsProvider =
-    FutureProvider<QuestionnaireAnalytics?>((ref) async {
+    FutureProvider.autoDispose<QuestionnaireAnalytics?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
 
