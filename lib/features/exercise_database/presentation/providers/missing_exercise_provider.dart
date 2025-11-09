@@ -29,8 +29,10 @@ final userRequestsProvider =
 });
 
 /// Provider for request counts (admin)
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
 final requestCountsProvider =
-    FutureProvider<Map<RequestStatus, int>>((ref) async {
+    FutureProvider.autoDispose<Map<RequestStatus, int>>((ref) async {
   final service = ref.watch(missingExerciseServiceProvider);
   return service.getRequestCounts();
 });
