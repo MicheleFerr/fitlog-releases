@@ -25,7 +25,9 @@ final _currentUserIdProvider = Provider<String?>((ref) {
 });
 
 /// Fetches workout completed on specific date
-final workoutForDateProvider = FutureProvider.family<WorkoutHistoryDetail?, DateTime>((ref, date) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutForDateProvider = FutureProvider.autoDispose.family<WorkoutHistoryDetail?, DateTime>((ref, date) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (userId == null) return null;
 
@@ -64,7 +66,9 @@ final workoutForDateProvider = FutureProvider.family<WorkoutHistoryDetail?, Date
 /// final workoutsMap = ref.watch(workoutsForMonthProvider(DateTime(2025, 1, 1)));
 /// final hasWorkout = workoutsMap.value?['2025-01-15'] != null;
 /// ```
-final workoutsForMonthProvider = FutureProvider.family<Map<String, WorkoutHistoryDetail>, DateTime>((ref, month) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final workoutsForMonthProvider = FutureProvider.autoDispose.family<Map<String, WorkoutHistoryDetail>, DateTime>((ref, month) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (userId == null) return {};
 
@@ -105,7 +109,9 @@ final workoutsForMonthProvider = FutureProvider.family<Map<String, WorkoutHistor
 });
 
 /// Fetches history of workouts with same template
-final templateHistoryProvider = FutureProvider.family<List<WorkoutHistoryDetail>, String>((ref, templateId) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final templateHistoryProvider = FutureProvider.autoDispose.family<List<WorkoutHistoryDetail>, String>((ref, templateId) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (userId == null) return [];
 
@@ -130,7 +136,9 @@ final templateHistoryProvider = FutureProvider.family<List<WorkoutHistoryDetail>
 });
 
 /// Calculates complete statistics for a routine day
-final dayStatsProvider = FutureProvider.family<DayStats, DayStatsParams>((ref, params) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final dayStatsProvider = FutureProvider.autoDispose.family<DayStats, DayStatsParams>((ref, params) async {
   try {
     // Fetch completed workout for this date (ALWAYS check, even if rest day)
     final completedWorkout = await ref.watch(workoutForDateProvider(params.date).future);
@@ -350,7 +358,9 @@ Future<bool> _isAfterRestDay(Ref ref, DateTime date) async {
 }
 
 /// Provider for recovery suggestions
-final recoverySuggestionsProvider = FutureProvider.family<List<String>, DayStats>((ref, stats) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recoverySuggestionsProvider = FutureProvider.autoDispose.family<List<String>, DayStats>((ref, stats) async {
   final suggestions = <String>[];
 
   // High RPE warning
