@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/templat
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// iOS-style swipeable wrapper for TemplateCard
 ///
@@ -54,8 +55,9 @@ class SwipeableTemplateCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.share,
+                SemanticIcon(
+                  icon: AppIcons.share,
+                  semanticLabel: context.l10n.templateActionShare,
                   size: AppIconSize.medium,
                   color: context.colors.onPrimary,
                 ),
@@ -84,8 +86,9 @@ class SwipeableTemplateCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.copy,
+                SemanticIcon(
+                  icon: AppIcons.copy,
+                  semanticLabel: context.l10n.templateActionDuplicate,
                   size: AppIconSize.medium,
                   color: context.colors.onTertiary,
                 ),
@@ -114,8 +117,9 @@ class SwipeableTemplateCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.edit,
+                SemanticIcon(
+                  icon: AppIcons.edit,
+                  semanticLabel: context.l10n.templateActionEdit,
                   size: AppIconSize.medium,
                   color: context.colors.onSecondary,
                 ),
@@ -144,8 +148,9 @@ class SwipeableTemplateCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.delete,
+                SemanticIcon(
+                  icon: AppIcons.delete,
+                  semanticLabel: context.l10n.templateActionDelete,
                   size: AppIconSize.medium,
                   color: context.colors.onError,
                 ),
