@@ -43,7 +43,9 @@ final workoutHistoryServiceProvider = Provider<WorkoutHistoryService>((ref) {
 // NOTE: hybridExerciseActivityRepositoryProvider is already defined in workout_provider.dart
 
 // Recent weights provider
-final recentWeightsProvider = FutureProvider.family<List<double>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final recentWeightsProvider = FutureProvider.autoDispose.family<List<double>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -223,7 +225,9 @@ final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<
 });
 
 // Last exercise data provider
-final lastExerciseDataProvider = FutureProvider.family<({double? weight, DateTime? date}), String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final lastExerciseDataProvider = FutureProvider.autoDispose.family<({double? weight, DateTime? date}), String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -271,7 +275,9 @@ final lastExerciseDataProvider = FutureProvider.family<({double? weight, DateTim
 
 /// ⚠️ MIGRATED: Now reads from 'workouts' collection instead of Hive
 /// Redirects to exerciseHistoryDataGroupedProvider which uses WorkoutHistoryService
-final exerciseHistoryProvider = FutureProvider.family<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseHistoryProvider = FutureProvider.autoDispose.family<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
   try {
     // MIGRATION: Use new workouts-based provider
     final grouped = await ref.watch(exerciseHistoryDataGroupedProvider(exerciseName).future);
@@ -301,7 +307,9 @@ final exerciseHistoryProvider = FutureProvider.family<List<ExerciseHistoryData>,
 
 /// ⚠️ MIGRATED: Now reads from 'workouts' collection instead of Hive
 /// Redirects to exerciseHistoryDataGroupedProvider which uses WorkoutHistoryService
-final exerciseHistoryGroupedProvider = FutureProvider.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseHistoryGroupedProvider = FutureProvider.autoDispose.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
   try {
     // MIGRATION: Direct redirect to new workouts-based provider
     final result = await ref.watch(exerciseHistoryDataGroupedProvider(exerciseName).future);
@@ -321,7 +329,9 @@ final exerciseHistoryGroupedProvider = FutureProvider.family<Map<DateTime, List<
 });
 
 // OLD: Exercise activities provider using only Firestore
-final exerciseActivitiesProvider = FutureProvider.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseActivitiesProvider = FutureProvider.autoDispose.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -371,7 +381,9 @@ final exerciseActivitiesProvider = FutureProvider.family<List<ExerciseActivity>,
 });
 
 // NEW: Exercise activities provider using LOCAL FIRST (hybrid approach)
-final exerciseActivitiesLocalProvider = FutureProvider.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseActivitiesLocalProvider = FutureProvider.autoDispose.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -421,7 +433,9 @@ final exerciseActivitiesLocalProvider = FutureProvider.family<List<ExerciseActiv
 });
 
 // NEW: Exercise activities grouped by date
-final exerciseActivitiesGroupedProvider = FutureProvider.family<Map<DateTime, List<ExerciseActivity>>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseActivitiesGroupedProvider = FutureProvider.autoDispose.family<Map<DateTime, List<ExerciseActivity>>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -461,7 +475,9 @@ final exerciseActivitiesGroupedProvider = FutureProvider.family<Map<DateTime, Li
 });
 
 // NEW: Convert ExerciseActivity to ExerciseHistoryData format (using NEW WORKOUTS collection)
-final exerciseHistoryDataGroupedProvider = FutureProvider.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseHistoryDataGroupedProvider = FutureProvider.autoDispose.family<Map<DateTime, List<ExerciseHistoryData>>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -582,7 +598,9 @@ final exerciseHistoryDataGroupedProvider = FutureProvider.family<Map<DateTime, L
 });
 
 // Exercise stats provider (OLD - uses Hive)
-final exerciseStatsProvider = FutureProvider.family<({
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseStatsProvider = FutureProvider.autoDispose.family<({
   double? maxWeight,
   int totalSets,
   double avgWeight,
@@ -659,7 +677,9 @@ final exerciseStatsProvider = FutureProvider.family<({
 });
 
 // NEW: Exercise stats provider using NEW WORKOUTS collection
-final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseStatsFromActivitiesProvider = FutureProvider.autoDispose.family<({
   double? maxWeight,
   int totalSets,
   double avgWeight,
@@ -850,7 +870,9 @@ final exerciseStatsFromActivitiesProvider = FutureProvider.family<({
 // ============================================================================
 
 /// NEW: Exercise activities provider using workouts collection
-final exerciseActivitiesFromWorkoutsProvider = FutureProvider.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseActivitiesFromWorkoutsProvider = FutureProvider.autoDispose.family<List<ExerciseActivity>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -900,7 +922,9 @@ final exerciseActivitiesFromWorkoutsProvider = FutureProvider.family<List<Exerci
 });
 
 /// NEW: Last exercise data provider using workouts collection
-final lastExerciseDataFromWorkoutsProvider = FutureProvider.family<({double? weight, DateTime? date}), String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final lastExerciseDataFromWorkoutsProvider = FutureProvider.autoDispose.family<({double? weight, DateTime? date}), String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
@@ -947,7 +971,9 @@ final lastExerciseDataFromWorkoutsProvider = FutureProvider.family<({double? wei
 });
 
 /// NEW: Exercise history provider using workouts collection
-final exerciseHistoryFromWorkoutsProvider = FutureProvider.family<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseHistoryFromWorkoutsProvider = FutureProvider.autoDispose.family<List<ExerciseHistoryData>, String>((ref, exerciseName) async {
   try {
     // Input validation
     if (exerciseName.trim().isEmpty) {
