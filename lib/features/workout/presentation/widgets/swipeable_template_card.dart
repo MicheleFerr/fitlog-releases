@@ -55,7 +55,7 @@ class SwipeableTemplateCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  AppAppIcons.share,
+                  AppIcons.share,
                   size: AppIconSize.medium,
                   color: context.colors.onPrimary,
                 ),
@@ -85,7 +85,7 @@ class SwipeableTemplateCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  AppAppIcons.copy,
+                  AppIcons.copy,
                   size: AppIconSize.medium,
                   color: context.colors.onTertiary,
                 ),
@@ -115,7 +115,7 @@ class SwipeableTemplateCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  AppAppIcons.edit,
+                  AppIcons.edit,
                   size: AppIconSize.medium,
                   color: context.colors.onSecondary,
                 ),
@@ -145,7 +145,7 @@ class SwipeableTemplateCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  AppAppIcons.delete,
+                  AppIcons.delete,
                   size: AppIconSize.medium,
                   color: context.colors.onError,
                 ),

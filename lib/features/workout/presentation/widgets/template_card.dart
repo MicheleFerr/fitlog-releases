@@ -95,7 +95,6 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
     final isDark = context.isDarkMode;
     final category = widget.template.effectiveCategory;
     final difficulty = widget.template.effectiveDifficulty;
-    final statsAsync = ref.watch(templateStatsProvider(widget.template.id));
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -177,20 +176,10 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
 
                       const Spacer(),
 
-                      // Footer: Metadata (⏱️ duration, 🕐 last performed)
-                      statsAsync.when(
-                        data: (stats) => _MetadataRow(
-                          template: widget.template,
-                          stats: stats,
-                        ),
-                        loading: () => _MetadataRow(
-                          template: widget.template,
-                          stats: null,
-                        ),
-                        error: (_, __) => _MetadataRow(
-                          template: widget.template,
-                          stats: null,
-                        ),
+                      // Footer: Metadata (⏱️ duration only, no stats yet)
+                      _MetadataRow(
+                        template: widget.template,
+                        stats: null,
                       ),
                     ],
                   ),
