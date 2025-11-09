@@ -140,7 +140,7 @@
   "completeWorkout": "Completa Allenamento",
   "newWorkout": "Nuovo Allenamento",
   "workoutName": "Nome Allenamento",
-  "workoutNameHint": "es. Push Day, Leg Day",
+  "workoutNameHint": "es. Sessione Mattutina",
   "exerciseName": "Nome Esercizio",
   "exerciseNameHint": "es. Panca Piana",
   "importWorkoutTemplate": "Importa Scheda Allenamento",
@@ -866,10 +866,10 @@
   "record": "Record",
   "trend": "Trend",
   "chest": "Petto",
-  "back": "Indietro",
+  "back": "Schiena",
   "shoulders": "Spalle",
-  "arms": "BRACCI",
-  "legs": "GAMBE",
+  "arms": "Braccia",
+  "legs": "Gambe",
   "abs": "Addominali",
   "cardio": "Cardio",
   "other": "Altro",
@@ -1537,7 +1537,7 @@
   "exerciseComplete": "{exercise} completato",
   "effortLevel": "Sforzo",
   "unsavedChangesMessage": "Hai modifiche non salvate. Sei sicuro di volerle scartare?",
-  "enterWorkoutName": "Inserisci nome allenamento",
+  "enterWorkoutName": "Inserisci nome workout",
   "replacementKeepsSetsAndReps": "La sostituzione mantiene serie e ripetizioni",
   "smartSuggestions": "Suggerimenti Intelligenti",
   "confirmReplacement": "Conferma Sostituzione",
@@ -3071,21 +3071,21 @@
   "notesSavedMessage": "Note salvate",
   "exerciseCompletedTapToExpand": "{exerciseName} completato! Tocca per espandere",
   "expandLabel": "Espandi",
-  "settingsNotLoggedIn": "Non connesso",
+  "settingsNotLoggedIn": "Non loggato",
   "settingsLoading": "Caricamento...",
   "settingsErrorLoadingUser": "Errore caricamento utente",
   "settingsGymBroUser": "Utente FitLog Pro",
   "settingsNoEmail": "Nessuna email",
-  "settingsLastUpdated": "Ultimo aggiornamento",
+  "settingsLastUpdated": "Ultimo aggiornamento: {date}",
   "settingsUpdateProfile": "Aggiorna Profilo",
-  "settingsAccentColor": "Colore Principale",
+  "settingsAccentColor": "Colore Accento",
   "settingsFontSize": "Dimensione Carattere",
   "settingsFontSizeSmall": "Piccolo",
   "settingsFontSizeNormal": "Normale",
   "settingsFontSizeLarge": "Grande",
   "settingsWorkoutTitle": "Allenamento",
   "settingsAutoStartTimer": "Timer Automatico",
-  "settingsAutoStartTimerDesc": "Avvia timer riposo dopo serie completata",
+  "settingsAutoStartTimerDesc": "Avvia timer di riposo dopo aver completato una serie",
   "settingsDefaultRestTime": "Tempo Riposo Predefinito",
   "settingsAdvancedTechniques": "Tecniche Avanzate",
   "settingsAdvancedTechniquesDesc": "Mostra drop set, superset, ecc.",
@@ -3094,14 +3094,14 @@
   "settingsWeightUnits": "Unità di Peso",
   "settingsIOSFeatures": "Funzioni iOS",
   "settingsLiveActivities": "Live Activities",
-  "settingsLiveActivitiesDesc": "Mostra timer in lockscreen e Dynamic Island",
-  "settingsHealthAppSync": "Sincronizzazione Salute",
-  "settingsHealthAppSyncDesc": "Sincronizza allenamenti con Apple Salute",
+  "settingsLiveActivitiesDesc": "Mostra timer su schermata di blocco e Dynamic Island",
+  "settingsHealthAppSync": "Sincronizzazione Health",
+  "settingsHealthAppSyncDesc": "Sincronizza allenamenti con Apple Health",
   "settingsAudioFeedback": "Audio e Feedback",
   "settingsSoundEffects": "Effetti Sonori",
   "settingsSoundEffectsDesc": "Riproduci suoni per timer e completamento",
   "settingsVibrations": "Vibrazioni",
-  "settingsVibrationsDesc": "Feedback aptico per interazioni",
+  "settingsVibrationsDesc": "Feedback aptico per le interazioni",
   "settingsTestSounds": "Testa Suoni",
   "settingsAdvancedTitle": "Avanzate",
   "settingsExportSettings": "Esporta Impostazioni",
@@ -3114,8 +3114,8 @@
   "settingsMigrationHasData": "Hai dati da migrare dalla versione precedente",
   "settingsMigrationAvailable": "Disponibile",
   "settingsBetaMode": "Modalità Beta",
-  "settingsBetaModeEnabled": "Tutte le funzionalità premium sbloccate per testing",
-  "settingsBetaModeDisabled": "Abilita accesso temporaneo a tutte le funzionalità premium",
+  "settingsBetaModeEnabled": "Modalità Beta abilitata - Tutte le funzioni premium sbloccate!",
+  "settingsBetaModeDisabled": "Modalità Beta disabilitata",
   "settingsBetaModeLabel": "BETA",
   "settingsBetaModeActivated": "🧪 Modalità Beta attivata - Tutte le funzionalità premium sbloccate!",
   "settingsBetaModeDeactivated": "Modalità Beta disattivata",
@@ -3139,8 +3139,8 @@
   "settingsResetSettingsButton": "Ripristina",
   "settingsSignOutTitle": "Disconnetti",
   "settingsSignOutMessage": "Sei sicuro di voler disconnetterti?",
-  "settingsExportComingSoon": "Funzionalità esportazione in arrivo",
-  "settingsImportComingSoon": "Funzionalità importazione in arrivo",
+  "settingsExportComingSoon": "Funzione di esportazione in arrivo",
+  "settingsImportComingSoon": "Funzione di importazione in arrivo",
   "templateSearchPlaceholder": "Cerca template...",
   "templateDebugNotSeeing": "❌ WorkoutTemplatesScreen - Qui NON VEDO i miei template",
   "templateTemplatesCount": "Template",
@@ -5549,15 +5549,15 @@
   },
   "difficultyBeginner": "Principiante",
   "@difficultyBeginner": {
-    "description": "Difficulty level: beginner"
+    "description": "Badge livello difficoltà principiante"
   },
   "difficultyIntermediate": "Intermedio",
   "@difficultyIntermediate": {
-    "description": "Difficulty level: intermediate"
+    "description": "Badge livello difficoltà intermedio"
   },
   "difficultyAdvanced": "Avanzato",
   "@difficultyAdvanced": {
-    "description": "Difficulty level: advanced"
+    "description": "Badge livello difficoltà avanzato"
   },
   "authorTierCommunity": "Community",
   "@authorTierCommunity": {
@@ -6118,7 +6118,7 @@
   "routineNoTemplatesAvailable": "Nessun template disponibile",
   "routineActiveRoutine": "Routine Attiva",
   "routineOtherRoutines": "Altre Routine",
-  "routineArchived": "Archiviate",
+  "routineArchived": "Routine archiviata",
   "routineGoBack": "Indietro",
   "routineActivateRoutine": "Attiva Routine",
   "routineArchiveRoutine": "Archivia Routine",
@@ -8452,7 +8452,7 @@
   },
   "difficultyExpert": "Esperto",
   "@difficultyExpert": {
-    "description": "Difficulty level: expert"
+    "description": "Badge livello difficoltà esperto"
   },
   "templateStatsNew": "🆕 Nuovo",
   "@templateStatsNew": {
@@ -8545,8 +8545,6 @@
   "small": "Piccolo",
   "large": "Grande",
   "addWidget": "Aggiungi Widget",
-  "routineCenter": "Centro Routine",
-  "back": "Indietro",
   "createNewRoutine": "Crea Nuova Routine",
   "noRoutinesYet": "Nessuna routine ancora",
   "createFirstRoutineDescription": "Crea la tua prima routine di allenamento per iniziare",
@@ -8555,14 +8553,12 @@
   "activateRoutineConfirm": "Attivare questa routine?",
   "archiveRoutineConfirm": "Archiviare questa routine?",
   "deleteRoutineConfirm": "Eliminare questa routine?",
-  "routineArchived": "Routine archiviata",
   "routineUnarchived": "Routine ripristinata",
   "routineDeleted": "Routine eliminata",
   "failedToActivate": "Impossibile attivare la routine",
   "failedToArchive": "Impossibile archiviare la routine",
   "failedToDelete": "Impossibile eliminare la routine",
   "failedToUnarchive": "Impossibile ripristinare la routine",
-  "loadingTemplate": "Caricamento template...",
   "failedToLoadTemplate": "Impossibile caricare il template",
   "alternativesComingSoon": "Alternative in arrivo",
   "checkFirebasePermissions": "Controlla i permessi Firebase o contatta il supporto",
@@ -8572,91 +8568,31 @@
   "@noExercises": {
     "description": "Mostrato quando un template non ha esercizi"
   },
-  "difficultyBeginner": "Principiante",
-  "@difficultyBeginner": {
-    "description": "Badge livello difficoltà principiante"
-  },
-  "difficultyIntermediate": "Intermedio",
-  "@difficultyIntermediate": {
-    "description": "Badge livello difficoltà intermedio"
-  },
-  "difficultyAdvanced": "Avanzato",
-  "@difficultyAdvanced": {
-    "description": "Badge livello difficoltà avanzato"
-  },
-  "difficultyExpert": "Esperto",
-  "@difficultyExpert": {
-    "description": "Badge livello difficoltà esperto"
-  },
-  "settingsNoEmail": "Nessuna email",
-  "settingsNotLoggedIn": "Non loggato",
-  "settingsLoading": "Caricamento...",
-  "settingsErrorLoadingUser": "Errore caricamento utente",
-  "settingsLastUpdated": "Ultimo aggiornamento: {date}",
-  "settingsUpdateProfile": "Aggiorna Profilo",
-  "settingsAccentColor": "Colore Accento",
   "settingsWorkout": "Allenamento",
-  "settingsAutoStartTimer": "Timer Automatico",
-  "settingsAutoStartTimerDesc": "Avvia timer di riposo dopo aver completato una serie",
-  "settingsDefaultRestTime": "Tempo Riposo Predefinito",
-  "settingsAdvancedTechniques": "Tecniche Avanzate",
-  "settingsAdvancedTechniquesDesc": "Mostra drop set, superset, ecc.",
-  "settingsUnitsLanguage": "Unità e Lingua",
-  "settingsLanguage": "Lingua",
   "settingsIosFeatures": "Funzioni iOS",
-  "settingsLiveActivitiesDesc": "Mostra timer su schermata di blocco e Dynamic Island",
-  "settingsHealthAppSync": "Sincronizzazione Health",
-  "settingsHealthAppSyncDesc": "Sincronizza allenamenti con Apple Health",
-  "settingsAudioFeedback": "Audio e Feedback",
-  "settingsSoundEffects": "Effetti Sonori",
-  "settingsSoundEffectsDesc": "Riproduci suoni per timer e completamento",
-  "settingsVibrations": "Vibrazioni",
-  "settingsVibrationsDesc": "Feedback aptico per le interazioni",
-  "settingsTestSounds": "Testa Suoni",
   "settingsAdvanced": "Avanzate",
   "settingsExport": "Esporta Impostazioni",
   "settingsExportDesc": "Salva impostazioni come file JSON",
   "settingsImport": "Importa Impostazioni",
   "settingsImportDesc": "Carica impostazioni da file JSON",
-  "settingsResetTimerPosition": "Ripristina Posizione Timer",
-  "settingsResetTimerPositionDesc": "Ripristina timer trascinabile alla posizione predefinita",
   "settingsDataMigrationAvailable": "Hai dati da migrare dalla versione precedente",
   "settingsDataMigrationComplete": "Migrazione completata o non necessaria",
   "settingsAvailable": "Disponibile",
   "settingsBetaModeEnabledDesc": "Tutte le funzioni premium sbloccate per test",
   "settingsBetaModeDisabledDesc": "Abilita accesso temporaneo a tutte le funzioni premium",
-  "settingsBetaModeEnabled": "Modalità Beta abilitata - Tutte le funzioni premium sbloccate!",
-  "settingsBetaModeDisabled": "Modalità Beta disabilitata",
-  "settingsResetToDefaults": "Ripristina Predefiniti",
   "settingsResetToDefaultsDesc": "Ripristina tutte le impostazioni predefinite",
   "settingsAccountActions": "Azioni Account",
-  "settingsSignOut": "Disconnetti",
   "settingsSignOutDesc": "Disconnetti dal tuo account",
-  "settingsFontSize": "Dimensione Carattere",
-  "settingsChooseLanguage": "Scegli Lingua",
-  "settingsEnglishUS": "Inglese (US)",
   "settingsItaliano": "Italiano",
-  "settingsItalianIT": "Italiano (IT)",
-  "settingsKilogramsKg": "Chilogrammi (kg)",
-  "settingsMetricSystem": "Sistema metrico",
-  "settingsPoundsLbs": "Libbre (lbs)",
-  "settingsImperialSystem": "Sistema imperiale",
   "settingsAccentColorDialog": "Colore Accento",
   "settingsDefaultRestTimeDialog": "Tempo Riposo Predefinito",
   "settingsResetTimerPositionDialog": "Ripristina Posizione Timer",
   "settingsResetTimerPositionDialogDesc": "Questo ripristinerà la posizione del timer trascinabile alla posizione predefinita. Utile se il timer è bloccato fuori schermo.",
   "settingsTimerPositionResetSuccess": "Posizione timer ripristinata a predefinita",
-  "settingsResetPosition": "Ripristina Posizione",
   "settingsFailedToClearCache": "Impossibile svuotare cache: {error}",
   "settingsResetSettingsDialog": "Ripristina Impostazioni",
   "settingsResetSettingsDialogDesc": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
-  "settingsResetSuccess": "Impostazioni ripristinate ai valori predefiniti",
   "settingsSignOutConfirm": "Sei sicuro di volerti disconnettere?",
-  "settingsExportComingSoon": "Funzione di esportazione in arrivo",
-  "settingsImportComingSoon": "Funzione di importazione in arrivo",
-  "settingsFontSizeSmall": "Piccolo",
-  "settingsFontSizeLarge": "Grande",
-  "settingsFontSizeNormal": "Normale",
   "settingsApreCalculationMethodUpdated": "Metodo di calcolo APRE aggiornato a {method}",
   "settingsApreCalculationMethodLoading": "Metodo Calcolo APRE",
   "settingsLoadingGeneric": "Caricamento...",
@@ -8760,5 +8696,140 @@
   "settingsApreAutoAdjustmentDesc": "Progressione automatica del peso",
   "settingsApreProtocol": "Protocollo APRE",
   "settingsApreProtocolDesc": "Protocollo {number}",
-  "settingsApreProtocolUpdated": "Protocollo APRE aggiornato a {protocol}"
+  "settingsApreProtocolUpdated": "Protocollo APRE aggiornato a {protocol}",
+  "daysAgoShort": "g fa",
+  "@daysAgoShort": {
+    "description": "Forma breve per giorni fa (es. '5g fa')"
+  },
+  "weeksAgoShort": "sett fa",
+  "@weeksAgoShort": {
+    "description": "Forma breve per settimane fa (es. '2sett fa')"
+  },
+  "monthsAgoShort": "mesi fa",
+  "@monthsAgoShort": {
+    "description": "Forma breve per mesi fa (es. '2mesi fa')"
+  },
+  "previousDataCopied": "Dati precedenti copiati in tutti i set",
+  "@previousDataCopied": {
+    "description": "Messaggio di successo quando i dati del workout precedente vengono auto-compilati in tutti i set"
+  },
+  "chooseWorkoutCategory": "Scegli categoria workout:",
+  "@chooseWorkoutCategory": {
+    "description": "Title for workout category selection bottom sheet"
+  },
+  "@chest": {
+    "description": "Chest workout category"
+  },
+  "@legs": {
+    "description": "Legs workout category"
+  },
+  "@back": {
+    "description": "Back workout category"
+  },
+  "@arms": {
+    "description": "Arms workout category"
+  },
+  "@cardio": {
+    "description": "Cardio workout category"
+  },
+  "fullBody": "Total Body",
+  "@fullBody": {
+    "description": "Full body workout category"
+  },
+  "hiit": "HIIT",
+  "@hiit": {
+    "description": "HIIT workout category"
+  },
+  "customWorkout": "Personalizza...",
+  "@customWorkout": {
+    "description": "Custom workout name option"
+  },
+  "chestWorkout": "Allenamento Petto",
+  "@chestWorkout": {
+    "description": "Default name for chest workout"
+  },
+  "legsWorkout": "Allenamento Gambe",
+  "@legsWorkout": {
+    "description": "Default name for legs workout"
+  },
+  "backWorkout": "Allenamento Schiena",
+  "@backWorkout": {
+    "description": "Default name for back workout"
+  },
+  "armsWorkout": "Allenamento Braccia",
+  "@armsWorkout": {
+    "description": "Default name for arms workout"
+  },
+  "cardioWorkout": "Allenamento Cardio",
+  "@cardioWorkout": {
+    "description": "Default name for cardio workout"
+  },
+  "fullBodyWorkout": "Allenamento Total Body",
+  "@fullBodyWorkout": {
+    "description": "Default name for full body workout"
+  },
+  "hiitWorkout": "Allenamento HIIT",
+  "@hiitWorkout": {
+    "description": "Default name for HIIT workout"
+  },
+  "@enterWorkoutName": {
+    "description": "Label for custom workout name input"
+  },
+  "@workoutNameHint": {
+    "description": "Hint text for workout name input"
+  },
+  "selectChestWorkout": "Seleziona allenamento petto",
+  "@selectChestWorkout": {
+    "description": "Semantic label for chest workout chip"
+  },
+  "selectLegsWorkout": "Seleziona allenamento gambe",
+  "@selectLegsWorkout": {
+    "description": "Semantic label for legs workout chip"
+  },
+  "selectBackWorkout": "Seleziona allenamento schiena",
+  "@selectBackWorkout": {
+    "description": "Semantic label for back workout chip"
+  },
+  "selectArmsWorkout": "Seleziona allenamento braccia",
+  "@selectArmsWorkout": {
+    "description": "Semantic label for arms workout chip"
+  },
+  "selectCardioWorkout": "Seleziona allenamento cardio",
+  "@selectCardioWorkout": {
+    "description": "Semantic label for cardio workout chip"
+  },
+  "selectFullBodyWorkout": "Seleziona allenamento total body",
+  "@selectFullBodyWorkout": {
+    "description": "Semantic label for full body workout chip"
+  },
+  "selectHiitWorkout": "Seleziona allenamento HIIT",
+  "@selectHiitWorkout": {
+    "description": "Semantic label for HIIT workout chip"
+  },
+  "selectCustomWorkout": "Inserisci nome personalizzato",
+  "@selectCustomWorkout": {
+    "description": "Semantic label for custom workout chip"
+  },
+  "workoutNameRequired": "Inserisci un nome per il workout",
+  "@workoutNameRequired": {
+    "description": "Error message when workout name is empty"
+  },
+  "workoutNameTooShort": "Il nome deve contenere almeno 2 caratteri",
+  "@workoutNameTooShort": {
+    "description": "Error message when workout name is too short"
+  },
+  "workoutNameTooLong": "Il nome può contenere massimo 50 caratteri",
+  "@workoutNameTooLong": {
+    "description": "Error message when workout name is too long"
+  },
+  "workoutCreated": "Allenamento {workoutName} creato",
+  "@workoutCreated": {
+    "description": "Success message when workout is created",
+    "placeholders": {
+      "workoutName": {
+        "type": "String",
+        "description": "Name of the created workout"
+      }
+    }
+  }
 }

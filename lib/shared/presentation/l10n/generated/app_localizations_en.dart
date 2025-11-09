@@ -469,7 +469,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutName => 'Workout Name';
 
   @override
-  String get workoutNameHint => 'e.g., Push Day, Leg Day';
+  String get workoutNameHint => 'e.g. Morning Session';
 
   @override
   String get exerciseName => 'Exercise Name';
@@ -2853,10 +2853,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoulders => 'Shoulders';
 
   @override
-  String get arms => 'BRACCI (Arms)';
+  String get arms => 'Arms';
 
   @override
-  String get legs => 'GAMBE (Legs)';
+  String get legs => 'Legs';
 
   @override
   String get abs => 'Abs';
@@ -16033,5 +16033,88 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String settingsApreProtocolUpdated(Object protocol) {
     return 'APRE protocol updated to $protocol';
+  }
+
+  @override
+  String get daysAgoShort => 'd ago';
+
+  @override
+  String get weeksAgoShort => 'w ago';
+
+  @override
+  String get monthsAgoShort => 'mo ago';
+
+  @override
+  String get previousDataCopied => 'Previous data copied to all sets';
+
+  @override
+  String get chooseWorkoutCategory => 'Choose workout category:';
+
+  @override
+  String get fullBody => 'Full Body';
+
+  @override
+  String get hiit => 'HIIT';
+
+  @override
+  String get customWorkout => 'Custom...';
+
+  @override
+  String get chestWorkout => 'Chest Workout';
+
+  @override
+  String get legsWorkout => 'Legs Workout';
+
+  @override
+  String get backWorkout => 'Back Workout';
+
+  @override
+  String get armsWorkout => 'Arms Workout';
+
+  @override
+  String get cardioWorkout => 'Cardio Workout';
+
+  @override
+  String get fullBodyWorkout => 'Full Body Workout';
+
+  @override
+  String get hiitWorkout => 'HIIT Workout';
+
+  @override
+  String get selectChestWorkout => 'Select chest workout';
+
+  @override
+  String get selectLegsWorkout => 'Select legs workout';
+
+  @override
+  String get selectBackWorkout => 'Select back workout';
+
+  @override
+  String get selectArmsWorkout => 'Select arms workout';
+
+  @override
+  String get selectCardioWorkout => 'Select cardio workout';
+
+  @override
+  String get selectFullBodyWorkout => 'Select full body workout';
+
+  @override
+  String get selectHiitWorkout => 'Select HIIT workout';
+
+  @override
+  String get selectCustomWorkout => 'Enter custom name';
+
+  @override
+  String get workoutNameRequired => 'Please enter a workout name';
+
+  @override
+  String get workoutNameTooShort => 'Name must be at least 2 characters';
+
+  @override
+  String get workoutNameTooLong => 'Name must be at most 50 characters';
+
+  @override
+  String workoutCreated(String workoutName) {
+    return 'Workout $workoutName created';
   }
 }

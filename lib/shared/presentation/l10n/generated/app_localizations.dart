@@ -938,10 +938,10 @@ abstract class AppLocalizations {
   /// **'Workout Name'**
   String get workoutName;
 
-  /// Workout name input hint
+  /// Hint text for workout name input
   ///
   /// In en, this message translates to:
-  /// **'e.g., Push Day, Leg Day'**
+  /// **'e.g. Morning Session'**
   String get workoutNameHint;
 
   /// Exercise name field label
@@ -5315,13 +5315,13 @@ abstract class AppLocalizations {
   /// **'Trend'**
   String get trend;
 
-  /// Chest muscle group
+  /// Chest workout category
   ///
   /// In en, this message translates to:
   /// **'Chest'**
   String get chest;
 
-  /// Back button
+  /// Back workout category
   ///
   /// In en, this message translates to:
   /// **'Back'**
@@ -5333,16 +5333,16 @@ abstract class AppLocalizations {
   /// **'Shoulders'**
   String get shoulders;
 
-  /// Arms muscle group
+  /// Arms workout category
   ///
   /// In en, this message translates to:
-  /// **'BRACCI (Arms)'**
+  /// **'Arms'**
   String get arms;
 
-  /// Legs muscle group
+  /// Legs workout category
   ///
   /// In en, this message translates to:
-  /// **'GAMBE (Legs)'**
+  /// **'Legs'**
   String get legs;
 
   /// Abdominals muscle group
@@ -5351,7 +5351,7 @@ abstract class AppLocalizations {
   /// **'Abs'**
   String get abs;
 
-  /// Cardio exercise category
+  /// Cardio workout category
   ///
   /// In en, this message translates to:
   /// **'Cardio'**
@@ -8435,7 +8435,7 @@ abstract class AppLocalizations {
   /// **'You have unsaved changes. Are you sure you want to discard them?'**
   String get unsavedChangesMessage;
 
-  /// Placeholder for workout name input
+  /// Label for custom workout name input
   ///
   /// In en, this message translates to:
   /// **'Enter workout name'**
@@ -28661,6 +28661,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'APRE protocol updated to {protocol}'**
   String settingsApreProtocolUpdated(Object protocol);
+
+  /// Short form for days ago (e.g., '5d ago')
+  ///
+  /// In en, this message translates to:
+  /// **'d ago'**
+  String get daysAgoShort;
+
+  /// Short form for weeks ago (e.g., '2w ago')
+  ///
+  /// In en, this message translates to:
+  /// **'w ago'**
+  String get weeksAgoShort;
+
+  /// Short form for months ago (e.g., '2mo ago')
+  ///
+  /// In en, this message translates to:
+  /// **'mo ago'**
+  String get monthsAgoShort;
+
+  /// Success message when previous workout data is auto-filled to all sets
+  ///
+  /// In en, this message translates to:
+  /// **'Previous data copied to all sets'**
+  String get previousDataCopied;
+
+  /// Title for workout category selection bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Choose workout category:'**
+  String get chooseWorkoutCategory;
+
+  /// Full body workout category
+  ///
+  /// In en, this message translates to:
+  /// **'Full Body'**
+  String get fullBody;
+
+  /// HIIT workout category
+  ///
+  /// In en, this message translates to:
+  /// **'HIIT'**
+  String get hiit;
+
+  /// Custom workout name option
+  ///
+  /// In en, this message translates to:
+  /// **'Custom...'**
+  String get customWorkout;
+
+  /// Default name for chest workout
+  ///
+  /// In en, this message translates to:
+  /// **'Chest Workout'**
+  String get chestWorkout;
+
+  /// Default name for legs workout
+  ///
+  /// In en, this message translates to:
+  /// **'Legs Workout'**
+  String get legsWorkout;
+
+  /// Default name for back workout
+  ///
+  /// In en, this message translates to:
+  /// **'Back Workout'**
+  String get backWorkout;
+
+  /// Default name for arms workout
+  ///
+  /// In en, this message translates to:
+  /// **'Arms Workout'**
+  String get armsWorkout;
+
+  /// Default name for cardio workout
+  ///
+  /// In en, this message translates to:
+  /// **'Cardio Workout'**
+  String get cardioWorkout;
+
+  /// Default name for full body workout
+  ///
+  /// In en, this message translates to:
+  /// **'Full Body Workout'**
+  String get fullBodyWorkout;
+
+  /// Default name for HIIT workout
+  ///
+  /// In en, this message translates to:
+  /// **'HIIT Workout'**
+  String get hiitWorkout;
+
+  /// Semantic label for chest workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select chest workout'**
+  String get selectChestWorkout;
+
+  /// Semantic label for legs workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select legs workout'**
+  String get selectLegsWorkout;
+
+  /// Semantic label for back workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select back workout'**
+  String get selectBackWorkout;
+
+  /// Semantic label for arms workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select arms workout'**
+  String get selectArmsWorkout;
+
+  /// Semantic label for cardio workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select cardio workout'**
+  String get selectCardioWorkout;
+
+  /// Semantic label for full body workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select full body workout'**
+  String get selectFullBodyWorkout;
+
+  /// Semantic label for HIIT workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Select HIIT workout'**
+  String get selectHiitWorkout;
+
+  /// Semantic label for custom workout chip
+  ///
+  /// In en, this message translates to:
+  /// **'Enter custom name'**
+  String get selectCustomWorkout;
+
+  /// Error message when workout name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a workout name'**
+  String get workoutNameRequired;
+
+  /// Error message when workout name is too short
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 2 characters'**
+  String get workoutNameTooShort;
+
+  /// Error message when workout name is too long
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at most 50 characters'**
+  String get workoutNameTooLong;
+
+  /// Success message when workout is created
+  ///
+  /// In en, this message translates to:
+  /// **'Workout {workoutName} created'**
+  String workoutCreated(String workoutName);
 }
 
 class _AppLocalizationsDelegate

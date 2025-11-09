@@ -19,7 +19,11 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_cards/template_quick_start_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/quick_start_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/workout_category_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class QuickStartList extends ConsumerWidget {
   const QuickStartList({super.key});
@@ -108,7 +112,7 @@ class QuickStartList extends ConsumerWidget {
               loading: () => const Center(
                 child: Padding(
                   padding: EdgeInsets.all(20),
-                  child: CircularProgressIndicator(),
+                  child: LoadingIndicator(),
                 ),
               ),
               error: (error, stack) => _buildFallbackTemplates(context, ref),
@@ -145,10 +149,11 @@ class QuickStartList extends ConsumerWidget {
     return Row(
       children: [
         if (icon != null) ...[
-          Icon(
-            icon,
-            size: 20,
+          SemanticIcon(
+            icon: icon,
+            size: AppIconSize.small,
             color: Theme.of(context).colorScheme.primary,
+            semanticLabel: title,
           ),
           SizedBox(width: 8),
         ],
@@ -167,7 +172,11 @@ class QuickStartList extends ConsumerWidget {
               children: [
                 Text(AppLocalizations.of(context).seeAll),
                 const SizedBox(width: 4),
-                const Icon(AppIcons.forwardIos, size: 12),
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  size: AppIconSize.tiny,
+                  semanticLabel: '',
+                ),
               ],
             ),
           ),
@@ -215,10 +224,12 @@ class QuickStartList extends ConsumerWidget {
   }
 
   void _startNewWorkout(BuildContext context, WidgetRef ref) {
-    // Implementation will be in the main screen
-    // This is just for demonstration - in practice this would be a callback
-    ref.read(currentWorkoutProvider.notifier).createWorkout('Quick Workout');
-    ref.read(currentWorkoutProvider.notifier).startWorkout();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => const WorkoutCategoryBottomSheet(),
+    );
   }
 
   void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref, wt.WorkoutTemplate template) async {
