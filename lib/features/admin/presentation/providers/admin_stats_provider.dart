@@ -36,7 +36,9 @@ class AdminStatsData {
   final DateTime? lastUpdate;
 }
 
-final adminStatsProvider = FutureProvider<AdminStatsData>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final adminStatsProvider = FutureProvider.autoDispose<AdminStatsData>((ref) async {
   try {
     final firestore = FirebaseFirestore.instance;
 
