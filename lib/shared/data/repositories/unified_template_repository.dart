@@ -660,12 +660,16 @@ final userTemplatesProvider = FutureProvider<List<UnifiedWorkoutTemplate>>((ref)
   }
 });
 
-final templateByIdProvider = FutureProvider.family<UnifiedWorkoutTemplate?, String>((ref, templateId) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final templateByIdProvider = FutureProvider.autoDispose.family<UnifiedWorkoutTemplate?, String>((ref, templateId) async {
   final repository = ref.watch(unifiedTemplateRepositoryProvider);
   return await repository.getTemplateById(templateId);
 });
 
-final publicTemplatesProvider = FutureProvider.family<List<UnifiedWorkoutTemplate>, PublicTemplateQuery>((ref, query) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final publicTemplatesProvider = FutureProvider.autoDispose.family<List<UnifiedWorkoutTemplate>, PublicTemplateQuery>((ref, query) async {
   final repository = ref.watch(unifiedTemplateRepositoryProvider);
   return await repository.getPublicTemplates(
     category: query.category,
