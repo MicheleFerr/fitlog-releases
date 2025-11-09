@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart' as unified;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/unified_notification_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
@@ -45,27 +48,189 @@ class NotificationBridgeNotifier extends StateNotifier<List<AppNotification>> {
   final Ref ref;
 
   void _syncFromUnified(UnifiedNotificationState unifiedState) {
-    // For now, keep existing notifications to prevent data loss during migration
-    // Full conversion will be implemented in next phase
+    // 🆕 CRITICAL FIX: Convert unified notifications → legacy format
+
     if (kDebugMode) {
-      debugPrint('Unified notification state updated: ${unifiedState.notifications.length} notifications');
+      debugPrint('🔄 [BRIDGE] Syncing from unified: ${unifiedState.notifications.length} notifications');
+    }
+
+    try {
+      // Convert UnifiedNotification → AppNotification
+      final legacyNotifications = unifiedState.notifications
+          .map((unified) {
+            try {
+              return AppNotification(
+                id: unified.id,
+                type: _mapUnifiedTypeToLegacy(unified.type),
+                title: unified.title,
+                message: unified.body,
+                emoji: unified.payload?['emoji'] as String? ?? _getDefaultEmoji(unified.type),
+                createdAt: unified.createdAt,
+                isRead: unified.readAt != null,
+                data: unified.payload,
+                action: _convertUnifiedAction(unified.actions?.firstOrNull),
+              );
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint('⚠️ [BRIDGE] Error converting unified notification ${unified.id}: $e');
+              }
+              return null;
+            }
+          })
+          .whereType<AppNotification>()
+          .toList();
+
+      // Update state
+      state = legacyNotifications;
+
+      if (kDebugMode) {
+        debugPrint('✅ [BRIDGE] Synced ${legacyNotifications.length} notifications to legacy format');
+        debugPrint('   Read: ${legacyNotifications.where((n) => n.isRead).length}');
+        debugPrint('   Unread: ${legacyNotifications.where((n) => !n.isRead).length}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [BRIDGE] Error syncing unified → legacy: $e');
+      }
+    }
+  }
+
+  /// Map UnifiedNotificationType → Legacy NotificationType
+  NotificationType _mapUnifiedTypeToLegacy(unified.NotificationType unifiedType) {
+    switch (unifiedType) {
+      case unified.NotificationType.achievementUnlocked:
+        return NotificationType.achievement;
+      case unified.NotificationType.progressMilestone:
+        return NotificationType.milestone;
+      case unified.NotificationType.workoutReminder:
+      case unified.NotificationType.restReminder:
+      case unified.NotificationType.streakReminder:
+        return NotificationType.reminder;
+      case unified.NotificationType.workoutSummary:
+        return NotificationType.progress;
+      case unified.NotificationType.coachMessage:
+        return NotificationType.aiTip;
+      case unified.NotificationType.friendActivity:
+        return NotificationType.social;
+      case unified.NotificationType.systemUpdate:
+      case unified.NotificationType.emergency:
+      case unified.NotificationType.timerComplete:
+      case unified.NotificationType.promotional:
+      default:
+        return NotificationType.system;
+    }
+  }
+
+  /// Get default emoji for notification type
+  String _getDefaultEmoji(unified.NotificationType type) {
+    switch (type) {
+      case unified.NotificationType.achievementUnlocked:
+        return '🏆';
+      case unified.NotificationType.progressMilestone:
+        return '🎯';
+      case unified.NotificationType.workoutReminder:
+        return '💪';
+      case unified.NotificationType.restReminder:
+        return '😴';
+      case unified.NotificationType.streakReminder:
+        return '🔥';
+      case unified.NotificationType.workoutSummary:
+        return '📊';
+      case unified.NotificationType.coachMessage:
+        return '🧠';
+      case unified.NotificationType.friendActivity:
+        return '👥';
+      case unified.NotificationType.timerComplete:
+        return '⏰';
+      default:
+        return '🔔';
+    }
+  }
+
+  /// Convert UnifiedNotification action → Legacy NotificationAction
+  NotificationAction? _convertUnifiedAction(unified.NotificationAction? unifiedAction) {
+    if (unifiedAction == null) return null;
+
+    try {
+      // Extract route from payload (if exists) or use default
+      final route = unifiedAction.payload?['route'] as String? ?? '/home';
+
+      return NotificationAction(
+        label: unifiedAction.title,
+        route: route,
+        parameters: unifiedAction.payload,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [BRIDGE] Error converting action: $e');
+      }
+      return null;
     }
   }
 
   Future<void> _loadInitialNotifications() async {
-    // Delegate to unified provider - it will handle loading and sync
     try {
-      final unifiedProvider = ref.read(unifiedNotificationProvider.notifier);
-      // Let unified provider initialize - we'll receive updates via listener
-      
-      // If empty after initialization, create welcome notification
-      if (state.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('🔔 [BRIDGE] Loading initial notifications...');
+      }
+
+      // 🆕 CRITICAL FIX: Load from Firebase directly
+      final authService = ref.read(authServiceProvider);
+      final currentUser = authService.currentUser;
+
+      if (currentUser?.uid != null) {
+        final firestore = FirebaseFirestore.instance;
+
+        final snapshot = await firestore
+            .collection('users')
+            .doc(currentUser!.uid)
+            .collection('notifications')
+            .orderBy('created_at', descending: true)
+            .limit(50)
+            .get();
+
+        final notifications = snapshot.docs
+            .map((doc) {
+              try {
+                return AppNotification.fromJson({
+                  ...doc.data(),
+                  'id': doc.id,
+                });
+              } catch (e) {
+                if (kDebugMode) {
+                  debugPrint('⚠️ [BRIDGE] Error parsing notification ${doc.id}: $e');
+                }
+                return null;
+              }
+            })
+            .whereType<AppNotification>()
+            .toList();
+
+        state = notifications;
+
+        if (kDebugMode) {
+          debugPrint('✅ [BRIDGE] Loaded ${notifications.length} notifications from Firebase');
+        }
+
+        // If empty, create welcome notification
+        if (notifications.isEmpty) {
+          if (kDebugMode) {
+            debugPrint('🎯 [BRIDGE] No notifications found - creating welcome notification');
+          }
+          _createWelcomeNotification();
+        }
+      } else {
+        if (kDebugMode) {
+          debugPrint('⚠️ [BRIDGE] No user logged in - creating welcome notification');
+        }
         _createWelcomeNotification();
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Error during initial notification load: $e');
+        debugPrint('❌ [BRIDGE] Error loading initial notifications: $e');
       }
+      // Fallback: create welcome notification
+      _createWelcomeNotification();
     }
   }
   
@@ -143,18 +308,40 @@ class NotificationBridgeNotifier extends StateNotifier<List<AppNotification>> {
   /// Add notification through legacy system but maintain state
   Future<void> addNotification(AppNotification notification) async {
     try {
-      // For now, just add to local state to maintain functionality
-      // Full unified provider integration will come in next phase
-      state = [notification, ...state];
-      
-      // Log for debugging
-      if (kDebugMode) {
-        debugPrint('Added notification via bridge: ${notification.title}');
+      // 🆕 CRITICAL FIX: Save to Firebase for persistence
+      final authService = ref.read(authServiceProvider);
+      final currentUser = authService.currentUser;
+
+      if (currentUser?.uid != null) {
+        final firestore = FirebaseFirestore.instance;
+
+        await firestore
+            .collection('users')
+            .doc(currentUser!.uid)
+            .collection('notifications')
+            .doc(notification.id)
+            .set(notification.toJson());
+
+        if (kDebugMode) {
+          debugPrint('✅ [BRIDGE] Saved notification to Firebase: ${notification.title}');
+        }
+      } else {
+        if (kDebugMode) {
+          debugPrint('⚠️ [BRIDGE] No user UID - saving only locally');
+        }
       }
-      
+
+      // Update local state
+      state = [notification, ...state];
+
+      if (kDebugMode) {
+        debugPrint('✅ [BRIDGE] Added notification to local state: ${notification.title}');
+        debugPrint('   Total notifications now: ${state.length}');
+      }
+
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Error adding notification through bridge: $e');
+        debugPrint('❌ [BRIDGE] Error adding notification: $e');
       }
       // Still add locally as fallback
       state = [notification, ...state];

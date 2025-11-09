@@ -29,7 +29,6 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboa
 import 'package:gymbro_flutter_new/features/onboarding/presentation/quick_start_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/dynamic_theme_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -41,6 +40,7 @@ import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_scre
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_services_initializer.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -113,22 +113,21 @@ class FitLogApp extends ConsumerWidget {
         darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
         themeMode: themeMode,
         home: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const LoadingIndicator(),
-                const SizedBox(height: 24),
-                Text(
-                  'Loading FitLog Pro...',
-                  style: TextStyle(
-                    fontSize: 16 * config.fontSize,
-                    color: themeMode == ThemeMode.dark
-                      ? Colors.white70
-                      : Colors.black87,
+          body: Builder(
+            builder: (context) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const LoadingIndicator(),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Loading FitLog Pro...',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontSize: (context.textTheme.bodyLarge?.fontSize ?? 16) * config.fontSize,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -138,15 +137,16 @@ class FitLogApp extends ConsumerWidget {
     // ✅ FIX #5: If router creation fails (e.g., provider errors), show error screen
     // This prevents black screen when providers fail to initialize
     try {
-      return _AppLifecycleObserver(
-        child: MaterialApp.router(
-          title: 'FitLog Pro',
-          theme: ref.watch(dynamicThemeProvider(Brightness.light)),
-          darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
-          themeMode: themeMode,
-          locale: locale,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
+      return NotificationServicesInitializer(
+        child: _AppLifecycleObserver(
+          child: MaterialApp.router(
+            title: 'FitLog Pro',
+            theme: ref.watch(dynamicThemeProvider(Brightness.light)),
+            darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
+            themeMode: themeMode,
+            locale: locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
@@ -157,6 +157,7 @@ class FitLogApp extends ConsumerWidget {
           ],
           routerConfig: router,
           debugShowCheckedModeBanner: false,
+        ),
         ),
       );
     } catch (e, stack) {
@@ -172,45 +173,40 @@ class FitLogApp extends ConsumerWidget {
         darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
         themeMode: themeMode,
         home: Scaffold(
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    AppIcons.errorOutlineRounded,
-                    size: 64,
-                    color: themeMode == ThemeMode.dark
-                      ? Colors.red[300]
-                      : Colors.red[700],
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Failed to initialize app',
-                    style: TextStyle(
-                      fontSize: 20 * config.fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: themeMode == ThemeMode.dark
-                        ? Colors.white
-                        : Colors.black87,
+          body: Builder(
+            builder: (context) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      AppIcons.errorOutlineRounded,
+                      size: 64,
+                      color: context.colors.error,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    kDebugMode
-                      ? 'Error: $e'
-                      : 'Please restart the app',
-                    style: TextStyle(
-                      fontSize: 14 * config.fontSize,
-                      color: themeMode == ThemeMode.dark
-                        ? Colors.white70
-                        : Colors.black54,
+                    const SizedBox(height: 24),
+                    Text(
+                      'Failed to initialize app',
+                      style: context.textTheme.titleLarge?.copyWith(
+                        fontSize: (context.textTheme.titleLarge?.fontSize ?? 20) * config.fontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Text(
+                      kDebugMode
+                        ? 'Error: $e'
+                        : 'Please restart the app',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontSize: (context.textTheme.bodyMedium?.fontSize ?? 14) * config.fontSize,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

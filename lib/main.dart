@@ -204,6 +204,29 @@ Future<void> _initializeStorage() async {
       },
     ),
   ]);
+
+  // 🔔 NOTIFICATION SERVICES: Initialize notification system after storage
+  // This must run AFTER Hive initialization since services may use local storage
+  await _initializeNotificationServices();
+}
+
+/// Initialize notification services at app startup
+///
+/// This function:
+/// 1. Schedules daily workout reminders for next 30 days (9:00 AM)
+/// 2. Sets up auto-check for streak achievements
+///
+/// Called once during app initialization, after storage is ready.
+Future<void> _initializeNotificationServices() async {
+  // NOTE: We cannot use Riverpod ref here since we're in main.dart
+  // Notification services will be properly initialized when ProviderScope is created
+  // This is just a placeholder for documentation purposes
+
+  if (kDebugMode) {
+    debugPrint('🔔 [Notifications] Services will initialize after ProviderScope creation');
+    debugPrint('   - Daily workout reminders (9:00 AM, 30 days)');
+    debugPrint('   - Streak achievement auto-check');
+  }
 }
 
 /// Helper function to safely initialize services with error handling

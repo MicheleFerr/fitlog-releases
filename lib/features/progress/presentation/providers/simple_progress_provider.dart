@@ -55,10 +55,10 @@ final ultraSimpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardSt
   }
 
   try {
-    // Just count workouts - nothing fancy
+    // ✅ MIGRATED: Query workouts collection
     final query = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: currentUser!.email!.toLowerCase().trim())
+        .collection('workouts')
+        .where('userId', isEqualTo: currentUser!.uid)
         .get();
 
     final totalWorkouts = query.docs.length;
@@ -101,10 +101,10 @@ final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>(
   }
 
   try {
-    // 1. Count total workouts
+    // ✅ MIGRATED: Count total workouts from workouts collection
     final allWorkoutsQuery = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: userEmail)
+        .collection('workouts')
+        .where('userId', isEqualTo: currentUser.uid)
         .get();
 
     final totalWorkouts = allWorkoutsQuery.docs.length;
@@ -112,19 +112,19 @@ final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>(
       debugPrint('  ✅ Total workouts: $totalWorkouts');
     }
 
-    // 2. Calculate streak (last 7 days)
+    // ✅ MIGRATED: Calculate streak from workouts (last 7 days)
     final sevenDaysAgo = DateTime.now().subtract(const Duration(days: 7));
     final recentWorkoutsQuery = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: userEmail)
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
-        .orderBy('createdAt', descending: true)
+        .collection('workouts')
+        .where('userId', isEqualTo: currentUser.uid)
+        .where('completedAt', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
+        .orderBy('completedAt', descending: true)
         .get();
 
     // Calculate streak from recent workouts
     final workoutDays = <String>{};
     for (final doc in recentWorkoutsQuery.docs) {
-      final timestamp = doc.data()['createdAt'] as Timestamp?;
+      final timestamp = doc.data()['completedAt'] as Timestamp?;
       if (timestamp != null) {
         final date = timestamp.toDate();
         final dayKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -153,20 +153,19 @@ final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>(
       debugPrint('  ✅ Current streak: $streak days');
     }
 
-    // 3. Calculate weekly frequency (last 30 days)
-    // NOTE: exerciseActivities has one document per exercise, not per workout
-    // We need to group by date to count actual workout sessions
+    // ✅ MIGRATED: Calculate weekly frequency from workouts (last 30 days)
+    // NOTE: workouts collection has one document per workout (simpler than exerciseActivities)
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     final monthlyWorkoutsQuery = await FirebaseFirestore.instance
-        .collection('exerciseActivities')
-        .where('email', isEqualTo: userEmail)
-        .where('createdAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
+        .collection('workouts')
+        .where('userId', isEqualTo: currentUser.uid)
+        .where('completedAt', isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
         .get();
 
-    // Group exercises by date to count unique workout days
+    // Group workouts by date to count unique workout days
     final workoutDates = <String>{};
     for (final doc in monthlyWorkoutsQuery.docs) {
-      final timestamp = doc.data()['createdAt'] as Timestamp?;
+      final timestamp = doc.data()['completedAt'] as Timestamp?;
       if (timestamp != null) {
         final date = timestamp.toDate();
         final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
@@ -185,38 +184,36 @@ final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>(
       debugPrint('  ✅ Weekly frequency: ${weeklyFrequency.toStringAsFixed(1)} days/week');
     }
 
-    // 4. Calculate total volume and find max PR
+    // ✅ MIGRATED: Calculate volume and PR from nested workout structure
     double totalVolume = 0;
     double maxPR = 0;
     String prExercise = 'N/A';
 
     for (final doc in allWorkoutsQuery.docs) {
       final data = doc.data();
-      final sets = data['sets'] as List<dynamic>? ?? [];
-      final exerciseName = data['exerciseName'] as String? ?? 'Unknown';
+      final exercises = data['exercises'] as List<dynamic>? ?? [];
 
-      for (final set in sets) {
-        if (set is Map<String, dynamic>) {
-          // Check both 'done' and 'isCompleted' for compatibility
-          final isCompleted = set['done'] == true || set['isCompleted'] == true;
-          if (isCompleted) {
-            // Handle weight as either num or String
-            final weightValue = set['weight'];
-            final weight = weightValue is num
-                ? weightValue.toDouble()
-                : double.tryParse(weightValue?.toString() ?? '0') ?? 0;
+      for (final exercise in exercises) {
+        if (exercise is! Map<String, dynamic>) continue;
 
-            // Handle reps as either num or String
-            final repsValue = set['reps'];
-            final reps = repsValue is num
-                ? repsValue.toInt()
-                : int.tryParse(repsValue?.toString() ?? '0') ?? 0;
-            totalVolume += weight * reps;
+        final exerciseData = exercise['exerciseData'] as Map<String, dynamic>?;
+        final exerciseName = exerciseData?['name'] as String? ?? 'Unknown';
+        final sets = exercise['sets'] as List<dynamic>? ?? [];
 
-            // Track max weight for PR
-            if (weight > maxPR) {
-              maxPR = weight;
-              prExercise = exerciseName;
+        for (final set in sets) {
+          if (set is Map<String, dynamic>) {
+            // Weight and reps are num in new structure
+            final weight = (set['weight'] as num?)?.toDouble() ?? 0;
+            final reps = (set['reps'] as num?)?.toInt() ?? 0;
+
+            if (weight > 0 && reps > 0) {
+              totalVolume += weight * reps;
+
+              // Track max weight for PR
+              if (weight > maxPR) {
+                maxPR = weight;
+                prExercise = exerciseName;
+              }
             }
           }
         }
@@ -229,28 +226,25 @@ final simpleDashboardStatsProvider = FutureProvider.autoDispose<DashboardStats>(
       debugPrint('  ✅ Max PR: ${maxPR.toStringAsFixed(1)} kg on $prExercise');
     }
 
-    // 5. Calculate volume increase (compare last 30 days to average)
+    // ✅ MIGRATED: Calculate volume increase from nested workout structure
     double recentVolume = 0;
     for (final doc in monthlyWorkoutsQuery.docs) {
       final data = doc.data();
-      final sets = data['sets'] as List<dynamic>? ?? [];
+      final exercises = data['exercises'] as List<dynamic>? ?? [];
 
-      for (final set in sets) {
-        if (set is Map<String, dynamic>) {
-          final isCompleted = set['done'] == true || set['isCompleted'] == true;
-          if (isCompleted) {
-            // Handle weight as either num or String
-            final weightValue = set['weight'];
-            final weight = weightValue is num
-                ? weightValue.toDouble()
-                : double.tryParse(weightValue?.toString() ?? '0') ?? 0;
+      for (final exercise in exercises) {
+        if (exercise is! Map<String, dynamic>) continue;
 
-            // Handle reps as either num or String
-            final repsValue = set['reps'];
-            final reps = repsValue is num
-                ? repsValue.toInt()
-                : int.tryParse(repsValue?.toString() ?? '0') ?? 0;
-            recentVolume += weight * reps;
+        final sets = exercise['sets'] as List<dynamic>? ?? [];
+
+        for (final set in sets) {
+          if (set is Map<String, dynamic>) {
+            final weight = (set['weight'] as num?)?.toDouble() ?? 0;
+            final reps = (set['reps'] as num?)?.toInt() ?? 0;
+
+            if (weight > 0 && reps > 0) {
+              recentVolume += weight * reps;
+            }
           }
         }
       }
