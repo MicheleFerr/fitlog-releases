@@ -5,7 +5,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:flutter/foundation.dart';
 
 /// Provider per recuperare l'ultimo workout completato di un template specifico
-final previousWorkoutFromTemplateProvider = FutureProvider.family<Workout?, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final previousWorkoutFromTemplateProvider = FutureProvider.autoDispose.family<Workout?, String>(
   (ref, templateId) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return null;
@@ -70,7 +72,9 @@ class WeightRecoveryData {
 }
 
 /// Provider per ottenere i dati di recupero pesi in formato comodo
-final weightRecoveryDataProvider = FutureProvider.family<WeightRecoveryData, String>(
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final weightRecoveryDataProvider = FutureProvider.autoDispose.family<WeightRecoveryData, String>(
   (ref, templateId) async {
     final previousWorkout = await ref.watch(previousWorkoutFromTemplateProvider(templateId).future);
     return WeightRecoveryData.fromWorkout(previousWorkout);
