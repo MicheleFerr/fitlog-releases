@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider che fornisce i dati degli esercizi con merge delle contribuzioni community
-final exerciseDataProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exerciseDataProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, exerciseName) async {
   // 1. Carica i dati base dal JSON localizzato
   final config = ref.watch(appConfigProvider);
   final isItalian = config.languageCode == 'it';
@@ -179,17 +181,19 @@ final cachedExerciseDataProvider = Provider.family<AsyncValue<Map<String, dynami
 });
 
 /// Provider per verificare se ci sono aggiornamenti community per un esercizio
-final hasCommunityCorrectionProvider = FutureProvider.family<bool, String>((ref, exerciseName) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final hasCommunityCorrectionProvider = FutureProvider.autoDispose.family<bool, String>((ref, exerciseName) async {
   try {
     final corrections = await FirebaseFirestore.instance
         .collection('community_contributions')
         .where('exerciseName', isEqualTo: exerciseName)
         .limit(10)
         .get();
-    
+
     // Filtra in memoria per trovare correzioni approvate
-    return corrections.docs.any((doc) => 
-      doc.data()['type'] == 'correction' && 
+    return corrections.docs.any((doc) =>
+      doc.data()['type'] == 'correction' &&
       doc.data()['status'] == 'approved'
     );
   } catch (e) {
