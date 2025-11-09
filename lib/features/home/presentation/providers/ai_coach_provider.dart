@@ -84,7 +84,9 @@ final aiCoachInsightsProvider = FutureProvider.autoDispose<List<AIInsight>>((ref
 });
 
 /// Provider for primary AI Coach advice (for the main card)
-final primaryAIAdviceProvider = FutureProvider<String>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final primaryAIAdviceProvider = FutureProvider.autoDispose<String>((ref) async {
   final insights = await ref.watch(aiCoachInsightsProvider.future);
   final l10n = ref.watch(appLocalizationsProvider);
 
