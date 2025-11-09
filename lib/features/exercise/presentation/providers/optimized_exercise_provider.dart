@@ -177,7 +177,9 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
 }
 
 /// Provider per il preload degli esercizi all'avvio app
-final exercisePreloadProvider = FutureProvider<void>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final exercisePreloadProvider = FutureProvider.autoDispose<void>((ref) async {
   // Forza il caricamento degli esercizi all'avvio
   await ref.read(optimizedExerciseProviderProvider.notifier)._loadExercises();
 });

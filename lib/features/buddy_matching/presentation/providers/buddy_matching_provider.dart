@@ -41,10 +41,12 @@ final buddyProfileProvider = FutureProvider.autoDispose.family<BuddyProfile?, St
   return repository.getUserProfile(userId);
 });
 
-final currentUserBuddyProfileProvider = FutureProvider<BuddyProfile?>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final currentUserBuddyProfileProvider = FutureProvider.autoDispose<BuddyProfile?>((ref) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return null;
-  
+
   final repository = ref.watch(buddyMatchingRepositoryProvider);
   return repository.getUserProfile(userId);
 });

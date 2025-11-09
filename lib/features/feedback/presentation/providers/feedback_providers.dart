@@ -49,7 +49,9 @@ final feedbackStatisticsProvider = FutureProvider((ref) {
 });
 
 /// Future provider for user's own feedback
-final userFeedbackProvider = FutureProvider<List<UserFeedback>>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final userFeedbackProvider = FutureProvider.autoDispose<List<UserFeedback>>((ref) async {
   final userId = ref.watch(_currentUserIdProvider);
   if (userId == null) return [];
 
