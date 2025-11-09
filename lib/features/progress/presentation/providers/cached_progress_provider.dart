@@ -840,7 +840,9 @@ class _CacheStateManager {
 }
 
 /// MAIN CACHED PROGRESS PROVIDER with race condition protection and detailed debug
-final cachedProgressProvider = FutureProvider<DashboardStats>((ref) async {
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+/// Automatically disposes provider instances when widget is disposed
+final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) async {
   _CacheLogger.step('PROVIDER_START', '🚀 Starting cached progress provider');
 
   final authService = ref.watch(authServiceProvider);
