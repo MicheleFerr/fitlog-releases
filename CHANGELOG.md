@@ -4,6 +4,58 @@
 
 ---
 
+## 🎯 UX Research-Driven Context Gathering - November 2025
+
+### **Feature: Phase 1 - Context Gathering Implementation**
+**Commit**: `d4661e1a` | **Date**: 10/11/2025 01:59:36
+**Tipo**: ✨ Feature
+
+**Cosa abbiamo fatto:**
+- ✅ Implementato 3-step context gathering per sostituire category selection
+  - **Step 1: Time Selection** - 15/30/45/60 min con FilterChip selectable
+  - **Step 2: Experience Level** - Conditional (solo se ≥30 min)
+    - 🌱 Beginner / 💪 Intermediate / 🏆 Advanced
+    - Con badge colorati e descrizioni localizzate
+  - **Step 3: Optional Demographics** - Gender selection skip-friendly
+    - Reassurance message: "We use this data only for personalized workout recommendations"
+- ✅ Nuove domain entities:
+  - `ExperienceLevel` enum con localized names/descriptions
+  - `WorkoutContext` data class con analytics tracking
+- ✅ WorkoutContextProvider con SharedPreferences persistence
+  - Auto-restore context se utente abbandona mid-flow
+  - Completion time tracking per analytics
+- ✅ Supporto bilingue EN/IT (25+ localization keys)
+
+**File creati:**
+- `experience_level.dart` - Domain entity enum (~105 righe)
+- `workout_context.dart` - Context data class (~75 righe)
+- `workout_context_provider.dart` - State management (~129 righe)
+- `context_gathering_bottom_sheet.dart` - 3-step UI (~650 righe)
+
+**File modificati:**
+- `workout_screen.dart` - Integration: WorkoutCategoryBottomSheet → ContextGatheringBottomSheet
+- `app_en.arb` / `app_it.arb` - 25 nuove chiavi localizzazione
+
+**Impact:**
+- **UX Research**: Risolve 4 pain points chiave identificati
+  1. ✅ **Category Confusion**: Eliminato naming ambiguo ("Morning Energy" vs "Evening Recovery")
+  2. ✅ **Decision Fatigue**: Step-by-step invece di overwhelming choice upfront
+  3. ✅ **Quick Workout Missing**: 15-min option per sessioni veloci
+  4. ✅ **Poor Onboarding**: Experience level guida beginners
+- **Metrics**:
+  - Conditional branching: <30 min → skip experience level (faster flow)
+  - Skip-friendly demographics: preserva privacy utente
+  - Analytics tracking: completion time, speed category (turbo/normal/slow)
+- **Code**: 10 files changed, +1676/-12 lines
+
+**Research Findings:**
+> Transition from category-based to context-based approach improves clarity, retention, and user confidence by gathering essential info step-by-step instead of overwhelming with choices upfront.
+
+**Next Steps:**
+> **Phase 2**: AI template generation based on collected context (time, experience, demographics)
+
+---
+
 ## 🏋️ Quick Workout Category Selection & Time-of-Day Naming - November 2025
 
 ### **Feature 1: Workout Category Selection Bottom Sheet**
