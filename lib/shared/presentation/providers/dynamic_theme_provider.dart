@@ -18,9 +18,25 @@ final dynamicThemeProvider = Provider.family<ThemeData, Brightness>((ref, bright
   );
 });
 
-/// Parse hex color string to Color
-/// Accepts both "#RRGGBB" and "RRGGBB" formats
-Color _parseColor(String hexColor) {
+/// Parse color string to Color
+/// Supports hex codes ("#RRGGBB", "RRGGBB") AND color names ("blue", "red", etc.)
+Color _parseColor(String colorString) {
+  // Handle named colors (legacy support for existing databases)
+  final namedColors = {
+    'blue': '2196F3', // Material Blue 500
+    'red': 'F44336',   // Material Red 500
+    'green': '4CAF50', // Material Green 500
+    'purple': '9C27B0', // Material Purple 500
+    'orange': 'FF9800', // Material Orange 500
+    'teal': '009688',   // Material Teal 500
+    'pink': 'E91E63',   // Material Pink 500
+    'indigo': '3F51B5', // Material Indigo 500
+  };
+
+  // Convert named color to hex if needed
+  final hexColor = namedColors[colorString.toLowerCase()] ?? colorString;
+
+  // Parse hex color
   final hex = hexColor.replaceAll('#', '');
   return Color(int.parse('FF$hex', radix: 16));
 }
