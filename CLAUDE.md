@@ -726,4 +726,27 @@ Quando in dubbio:
 
 ---
 
+## 🔧 AUTOMAZIONE PRE-COMMIT
+
+**CLAUDE.md Auto-Staging** (ATTIVO):
+- ✅ CLAUDE.md viene **automaticamente staged** se modificato
+- ✅ Incluso nella commit corrente (no commit separati)
+- ✅ Implementato nel pre-commit hook (check #8/8)
+
+**Workflow**:
+```bash
+# 1. Modifica CLAUDE.md
+vim CLAUDE.md
+
+# 2. Commit normale (hook auto-aggiunge CLAUDE.md)
+git commit -m "feat: add new feature"
+
+# Output del hook:
+# [8/8] Checking CLAUDE.md auto-staging...
+# 📝 Auto-staging CLAUDE.md (modified)...
+# ✅ CLAUDE.md added to commit
+```
+
+---
+
 > **⚠️ TESTING PHASE**: App in sviluppo con solo lo sviluppatore come utente. Breaking changes e migrazioni aggressive sono permesse. Seguire SEMPRE le regole di clean code sopra.

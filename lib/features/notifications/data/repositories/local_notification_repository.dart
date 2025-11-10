@@ -16,6 +16,7 @@ import 'package:flutter/foundation.dart'; // For kDebugMode, debugPrint
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Local implementation of NotificationRepository
@@ -435,8 +436,9 @@ class LocalNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<void> cleanupOldNotifications({Duration? olderThan}) async {
+  Future<int> cleanupOldNotifications() async {
     // TODO: Implement cleanup
+    return 0;
   }
 
   @override
@@ -456,21 +458,13 @@ class LocalNotificationRepository implements NotificationRepository {
   @override
   Future<NotificationMetrics> getMetrics({DateTime? since}) async {
     // TODO: Implement
-    return NotificationMetrics(
-      totalSent: 0,
-      totalDelivered: 0,
-      totalFailed: 0,
-      totalRead: 0,
-    );
+    return NotificationMetrics.empty();
   }
 
   @override
   Future<NotificationPreferences> getPreferences() async {
     // TODO: Implement
-    return NotificationPreferences(
-      enabledTypes: [],
-      quietHours: [],
-    );
+    return NotificationPreferences.defaults();
   }
 
   @override
@@ -525,20 +519,6 @@ class LocalNotificationRepository implements NotificationRepository {
   }
 
   @override
-  Future<List<String>> scheduleMultipleNotifications(
-    List<UnifiedNotification> notifications,
-  ) async {
-    // TODO: Implement
-    return [];
-  }
-
-  @override
-  Future<bool> cancelMultipleNotifications(List<String> notificationIds) async {
-    // TODO: Implement
-    return true;
-  }
-
-  @override
   Future<bool> deleteNotification(String notificationId) async {
     // TODO: Implement
     return true;
@@ -560,6 +540,7 @@ class LocalNotificationRepository implements NotificationRepository {
   Future<List<UnifiedNotification>> getAllNotifications({
     int? limit,
     DateTime? since,
+    List<NotificationType>? types,
   }) async {
     // TODO: Implement
     return [];
@@ -569,5 +550,84 @@ class LocalNotificationRepository implements NotificationRepository {
   Future<bool> updateNotification(UnifiedNotification notification) async {
     // TODO: Implement
     return true;
+  }
+
+  // === MISSING STREAM IMPLEMENTATIONS ===
+
+  @override
+  Stream<UnifiedNotification> get notificationStream => const Stream.empty();
+
+  @override
+  Stream<NotificationDeliveryReceipt> get deliveryReceiptStream => const Stream.empty();
+
+  @override
+  Stream<NotificationMetrics> get metricsStream => const Stream.empty();
+
+  // === MISSING METHOD IMPLEMENTATIONS ===
+
+  @override
+  Future<List<String>> getPendingNotificationIds() async {
+    // TODO: Implement
+    return [];
+  }
+
+  @override
+  Future<Map<NotificationType, int>> getDeliveryStatsByType({DateTime? since}) async {
+    // TODO: Implement
+    return {};
+  }
+
+  @override
+  Future<double> getDeliveryRate({DateTime? since}) async {
+    // TODO: Implement
+    return 0.0;
+  }
+
+  @override
+  Future<bool> syncWithCloud() async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<DateTime?> getLastSyncTime() async {
+    // TODO: Implement
+    return null;
+  }
+
+  @override
+  Future<bool> syncPreferencesWithCloud() async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> isSystemHealthy() async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getSystemStatus() async {
+    // TODO: Implement
+    return {};
+  }
+
+  @override
+  Future<bool> performHealthCheck() async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<bool> optimizeStorage() async {
+    // TODO: Implement
+    return true;
+  }
+
+  @override
+  Future<Map<String, int>> getStorageStats() async {
+    // TODO: Implement
+    return {};
   }
 }
