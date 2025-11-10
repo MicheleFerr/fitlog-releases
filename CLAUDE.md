@@ -728,24 +728,85 @@ Quando in dubbio:
 
 ## 🔧 AUTOMAZIONE PRE-COMMIT
 
-**CLAUDE.md Auto-Staging** (ATTIVO):
+### 1. CLAUDE.md Auto-Staging (ATTIVO)
+
 - ✅ CLAUDE.md viene **automaticamente staged** se modificato
 - ✅ Incluso nella commit corrente (no commit separati)
 - ✅ Implementato nel pre-commit hook (check #8/8)
 
 **Workflow**:
 ```bash
-# 1. Modifica CLAUDE.md
+# Modifica CLAUDE.md
 vim CLAUDE.md
 
-# 2. Commit normale (hook auto-aggiunge CLAUDE.md)
+# Commit normale (hook auto-aggiunge CLAUDE.md)
 git commit -m "feat: add new feature"
 
-# Output del hook:
-# [8/8] Checking CLAUDE.md auto-staging...
-# 📝 Auto-staging CLAUDE.md (modified)...
-# ✅ CLAUDE.md added to commit
+# Output: [8/8] Checking CLAUDE.md auto-staging...
+#         📝 Auto-staging CLAUDE.md (modified)...
+#         ✅ CLAUDE.md added to commit
 ```
+
+### 2. Auto-Checkpoint System (NUOVO - ALTAMENTE RACCOMANDATO)
+
+Sistema intelligente che **auto-committa modifiche significative** per triggerare pre-commit hook checks.
+
+**📋 Soglie Default**:
+- ✅ **50+ righe modificate** in totale
+- ✅ **OPPURE 3+ file .dart modificati**
+
+**🚀 Quick Start**:
+
+```bash
+# Modalità 1: Manual checkpoint (commit immediato se soglie superate)
+./scripts/checkpoint.sh
+
+# Modalità 2: Watch mode (monitora e auto-committa in background)
+./scripts/checkpoint.sh --watch
+
+# Modalità 3: Git alias (super rapido)
+git checkpoint        # Commit immediato
+git watch            # Watch mode background
+```
+
+**⚡ Watch Mode Output**:
+```
+👁️  Watch mode enabled
+   Threshold: 50 lines OR 3 files
+   Interval: 30s
+
+📊 Changes detected: 4 files, ~75 lines
+⚡ Threshold met: 75 lines (>= 50)
+🎯 Significant changes detected!
+
+💾 Creating checkpoint commit...
+🎨 Running Design System Checks...
+✅ Checkpoint created successfully!
+   4 files committed
+   Commit: a1b2c3d
+```
+
+**🎯 Quando Usare**:
+- ✅ **Sessioni sviluppo lunghe** - Watch mode previene perdita lavoro
+- ✅ **Refactoring massicci** - Checkpoint frequenti = rollback facile
+- ✅ **Debug build errors** - Feedback immediato da `flutter analyze`
+- ✅ **Testing phase** - Commit frequenti = cronologia dettagliata
+
+**📚 Documentazione Completa**: `scripts/CHECKPOINT_README.md`
+
+**⚙️ Configurazione Custom**:
+```bash
+# Soglia personalizzata (100 righe)
+./scripts/checkpoint.sh --threshold 100
+
+# Intervallo check (60 secondi invece di 30)
+./scripts/checkpoint.sh --watch --interval 60
+```
+
+**🔧 Best Practice**:
+1. Watch mode in background durante sviluppo attivo
+2. Squash checkpoint commits prima di push: `git rebase -i HEAD~5`
+3. Stoppa watch quando finisci sessione (Ctrl+C)
 
 ---
 
