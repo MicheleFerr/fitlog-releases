@@ -12,15 +12,74 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
+// ✅ FIXED: Hide NotificationType from workout_notification to avoid ambiguity with unified_notification
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
-import 'package:gymbro_flutter_new/features/notifications/data/repositories/simple_notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/data/repositories/local_notification_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/services/smart_notification_service.dart';
+// 🔔 WARM-START: Import for GoRouter navigation
+import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/app/app.dart' show routerProvider;
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:flutter/foundation.dart';
 
 /// Provider for NotificationRepository instance
+/// ✅ FIXED: Now uses LocalNotificationRepository (real implementation)
+/// 🔔 WARM-START: Includes navigation callback for notification taps
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
-  return SimpleNotificationRepository();
+  // 🔔 WARM-START: Get GoRouter for navigation
+  final router = ref.read(routerProvider);
+
+  return LocalNotificationRepository(
+    onNotificationTapped: (payload) {
+      // 🔔 WARM-START: Handle notification tap when app is already running
+      _handleNotificationTap(router, payload);
+    },
+  );
 });
+
+/// Handle notification tap (warm-start)
+/// Navigates to appropriate screen based on notification type
+void _handleNotificationTap(GoRouter router, Map<String, dynamic> payload) {
+  try {
+    final typeString = payload['type'] as String?;
+    if (typeString == null) return;
+
+    // Parse notification type
+    final type = NotificationType.values.firstWhere(
+      (t) => t.toString() == typeString,
+      orElse: () => NotificationType.workoutReminder,
+    );
+
+    // 🔔 WARM-START: Route mapping (same as cold-start in main.dart)
+    final routeMap = {
+      NotificationType.workoutReminder: '/workout',
+      NotificationType.achievementUnlocked: '/analytics',
+      NotificationType.progressMilestone: '/analytics',
+      NotificationType.restReminder: '/routine',
+      NotificationType.workoutSummary: '/analytics',
+      NotificationType.streakReminder: '/analytics',
+      NotificationType.timerComplete: '/workout',
+    };
+
+    final route = routeMap[type] ?? '/';
+
+    // ✅ PRODUCTION-READY: Use go() instead of pushNamed() to avoid stack issues
+    // go() replaces current route, preventing navigation stack bloat
+    router.go(route);
+
+    if (kDebugMode) {
+      debugPrint('🔔 [Warm-start] Navigated to: $route (type: $type)');
+    }
+
+    // TODO: Add Firebase Analytics event (notification_tapped)
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      debugPrint('❌ [Warm-start] Navigation error: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+    }
+  }
+}
 
 /// Provider for NotificationSettings (from SharedPreferences)
 final notificationSettingsProvider =

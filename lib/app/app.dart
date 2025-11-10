@@ -298,7 +298,14 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
   }
 }
 
+/// Provider for initial deep link (set via ProviderScope override in main.dart)
+/// ✅ PRODUCTION-READY: Supports cold-start notification deep linking
+final initialDeepLinkProvider = StateProvider<String?>((ref) => null);
+
 final routerProvider = Provider<GoRouter>((ref) {
+  // 🔔 DEEP LINKING: Read initial deep link from provider (set in main.dart)
+  final initialDeepLink = ref.watch(initialDeepLinkProvider);
+
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
   // 🔒 CRITICAL FIX: Use .select() to ONLY watch hasCompletedQuickStart
@@ -309,7 +316,8 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 
   return GoRouter(
-    initialLocation: '/',
+    // ✅ DEEP LINKING: Use deep link from notification if present, otherwise home
+    initialLocation: initialDeepLink ?? '/',
     redirect: (context, state) {
       final isLoggedIn = authState == AuthState.authenticated;
       final isLoggingIn = state.fullPath == '/login' || state.fullPath == '/register';
