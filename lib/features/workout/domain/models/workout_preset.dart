@@ -75,9 +75,16 @@ class RepRangePreset {
   final int order;
 
   /// Parse color from hex string
+  /// Falls back to Material Blue 500 (#2196F3) if invalid hex
   Color get color {
     final hex = colorHex.replaceAll('#', '');
-    return Color(int.parse('FF$hex', radix: 16));
+    try {
+      return Color(int.parse('FF$hex', radix: 16));
+    } catch (e) {
+      // Fallback to Material Blue 500 if invalid hex
+      // This prevents FormatException crashes like "FFblue"
+      return const Color(0xFF2196F3);
+    }
   }
 
   /// Parse icon from name

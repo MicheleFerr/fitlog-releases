@@ -144,6 +144,38 @@ import 'package:fpdart/fpdart.dart' hide Either, Right, Left; // ✅
 
 ---
 
+## 🛡️ PARSING SAFETY (CRITICAL - ENFORCED BY PRE-COMMIT)
+
+> **⚠️ MANDATORY**: Use `lib/shared/utils/safe_parsing.dart` utilities to prevent FormatException crashes.
+> **Pre-commit hook BLOCKS** commits with unsafe `Color(int.parse()` patterns.
+
+### Pattern da Evitare:
+
+```dart
+// ❌ UNSAFE - Crash se invalid hex
+Color(int.parse('FF$hex', radix: 16))
+
+// ✅ SAFE - Usa utility con fallback
+parseColorSafe(hex, fallback: Colors.blue)
+```
+
+### Safe Parsing Utilities:
+
+```dart
+import 'package:gymbro_flutter_new/shared/utils/safe_parsing.dart';
+
+parseColorSafe('#2196F3', fallback: Colors.blue) // Color + named colors
+parseIntSafe(input, fallback: 0)                  // Integer
+parseDoubleSafe(input, fallback: 0.0)             // Double
+parseDateTimeSafe(jsonDate, fallback: DateTime.now()) // DateTime
+parseBoolSafe(jsonData['enabled'], fallback: false)   // Boolean
+parseEnumSafe('active', Status.values, fallback: Status.pending) // Enum
+```
+
+**Pre-commit hook**: Section 8/9 - Blocca commit con `Color(int.parse()` unsafe
+
+---
+
 ## 🌍 REGOLA #1: MULTILINGUA OBBLIGATORIO
 
 ✅ **SEMPRE**: `context.l10n.keyName` (BuildContext extensions)
