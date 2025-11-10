@@ -20,7 +20,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
     this.hypertrophyRestTime = 90, // 1.5 minutes
     this.enduranceRestTime = 60, // 1 minute
     this.showIntensityTechniques = true,
-    this.primaryColor = 'blue',
+    this.primaryColor = '2196F3', // Material Blue 500
     this.enableLiveActivities = true,
     this.syncWithHealthKit = false,
     this.fontSize = 1.0,
@@ -72,7 +72,7 @@ class AppConfig { // Auto-adjust rest time based on RPE feedback
       hypertrophyRestTime: json['hypertrophyRestTime'] ?? 90,
       enduranceRestTime: json['enduranceRestTime'] ?? 60,
       showIntensityTechniques: json['showIntensityTechniques'] ?? true,
-      primaryColor: json['primaryColor'] ?? 'blue',
+      primaryColor: json['primaryColor'] ?? '2196F3', // Material Blue 500
       enableLiveActivities: json['enableLiveActivities'] ?? true,
       syncWithHealthKit: json['syncWithHealthKit'] ?? false,
       fontSize: json['fontSize']?.toDouble() ?? 1.0,
