@@ -102,3 +102,7 @@ fix_*.py
 temp_*.json
 *.test
 firestore.rules.test
+
+# iOS build directory
+ios/build/
+
