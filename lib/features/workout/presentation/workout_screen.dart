@@ -27,6 +27,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superse
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_quick_start_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
@@ -910,7 +912,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     // Template di fallback hardcoded (come prima)
     return Column(
       children: [
-        _QuickStartCard(
+        QuickStartCard(
           icon: AppIcons.workout,
           title: context.l10n.upperBody,
           subtitle: context.l10n.upperBodySubtitle,
@@ -918,7 +920,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
         SizedBox(height: 12),
-        _QuickStartCard(
+        QuickStartCard(
           icon: AppIcons.cardio,
           title: context.l10n.lowerBody,
           subtitle: context.l10n.lowerBodySubtitle,
@@ -926,7 +928,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
         SizedBox(height: 12),
-        _QuickStartCard(
+        QuickStartCard(
           icon: AppIcons.timer,
           title: context.l10n.hiitTraining,
           subtitle: context.l10n.hiitTrainingSubtitle,
@@ -2260,334 +2262,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       }
     }
   }
-}
-
-class _QuickStartCard extends StatelessWidget {
-
-  const _QuickStartCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 24,
-                ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                AppIcons.forwardIos,
-                color: context.colors.onSurface.withValues(alpha: 0.3),
-                size: 16,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Card speciale per template nei Quick Start
-class _TemplateQuickStartCard extends StatelessWidget {
-
-  const _TemplateQuickStartCard({
-    required this.template,
-    required this.onTap,
-    this.onEdit,
-    this.onDelete,
-  });
-  final wt.WorkoutTemplate template;
-  final VoidCallback onTap;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: template.isCustom ? () => _showContextMenu(context) : null,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              // Icona template
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: template.isCustom 
-                      ? context.colors.primary.withValues(alpha: 0.1)
-                      : context.colors.secondary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  template.isCustom ? AppIcons.person : AppIcons.star,
-                  color: template.isCustom 
-                      ? context.colors.primary
-                      : context.colors.secondary,
-                  size: 24,
-                ),
-              ),
-              SizedBox(width: 16),
-              
-              // Info template
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      template.name,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      template.description,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4),
-                    
-                    // Statistiche mini
-                    Row(
-                      children: [
-                        Icon(
-                          AppIcons.workout,
-                          size: 12,
-                          color: context.colors.onSurface.withValues(alpha: 0.5),
-                        ),
-                        SizedBox(width: 2),
-                        Text(
-                          '${template.exercises.length}',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            // fontSize handled by labelSmall
-                            color: context.colors.onSurface.withValues(alpha: 0.7),
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Icon(
-                          AppIcons.schedule,
-                          size: 12,
-                          color: context.colors.onSurface.withValues(alpha: 0.5),
-                        ),
-                        SizedBox(width: 2),
-                        Text(
-                          '${template.estimatedDuration}min',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            // fontSize handled by labelSmall
-                            color: context.colors.onSurface.withValues(alpha: 0.7),
-                          ),
-                        ),
-                        if (template.usageCount > 0) ...[
-                          SizedBox(width: 12),
-                          Icon(
-                            AppIcons.trendUp,
-                            size: 12,
-                            color: context.colors.onSurface.withValues(alpha: 0.5),
-                          ),
-                          SizedBox(width: 2),
-                          Text(
-                            '${template.usageCount}',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              // fontSize handled by labelSmall
-                              color: context.colors.onSurface.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Freccia
-              Icon(
-                AppIcons.forwardIos,
-                color: context.colors.onSurface.withValues(alpha: 0.3),
-                size: 16,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showContextMenu(BuildContext context) {
-    // Haptic feedback per il long press
-    HapticFeedback.mediumImpact();
-    
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.colors.outline.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            SizedBox(height: 16),
-            
-            // Titolo
-            Row(
-              children: [
-                Icon(
-                  template.isCustom ? AppIcons.person : AppIcons.star,
-                  color: context.colors.primary,
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    template.name,
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            
-            // Opzioni menu
-            ListTile(
-              leading: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: context.colors.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  AppIcons.play,
-                  color: context.colors.primary,
-                ),
-              ),
-              title: Text(context.l10n.startWorkoutAction),
-              subtitle: Text(context.l10n.startWorkoutDescription),
-              onTap: () {
-                Navigator.of(context).pop();
-                onTap();
-              },
-            ),
-            
-            if (onEdit != null)
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: context.colors.secondary.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    AppIcons.edit,
-                    color: context.colors.secondary,
-                  ),
-                ),
-                title: Text(context.l10n.modifyTemplate),
-                subtitle: Text(context.l10n.addOrRemoveExercises),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  onEdit!();
-                },
-              ),
-            
-            if (onDelete != null)
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: context.errorContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    AppIcons.delete,
-                    color: context.errorColor,
-                  ),
-                ),
-                title: Text(context.l10n.deleteTemplate),
-                subtitle: Text(context.l10n.removePermanentlyAction),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  onDelete!();
-                },
-              ),
-            
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-
 }
 
 // Helper class for template saving
