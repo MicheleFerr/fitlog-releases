@@ -3,18 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider that creates ThemeData dynamically based on user's color and font preferences
-/// Rebuilds whenever AppConfig changes (primaryColor or fontSize)
+/// Rebuilds ONLY when primaryColor or fontSize changes (optimized with select)
 final dynamicThemeProvider = Provider.family<ThemeData, Brightness>((ref, brightness) {
-  final config = ref.watch(appConfigProvider);
+  // ⚡ PERFORMANCE: Use select() to avoid rebuilds when other config fields change
+  final primaryColor = ref.watch(appConfigProvider.select((c) => c.primaryColor));
+  final fontSize = ref.watch(appConfigProvider.select((c) => c.fontSize));
 
   return ThemeData(
     useMaterial3: true,
     brightness: brightness,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: _parseColor(config.primaryColor),
+      seedColor: _parseColor(primaryColor),
       brightness: brightness,
     ),
-    textTheme: _getScaledTextTheme(brightness, config.fontSize),
+    textTheme: _getScaledTextTheme(brightness, fontSize),
   );
 });
 
