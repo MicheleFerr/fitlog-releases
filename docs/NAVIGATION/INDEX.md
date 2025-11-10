@@ -65,6 +65,26 @@ open docs/QUICK_REFERENCE.md
 - Documentazione feature-specific (Workout, Exercise Card, Exercise Insertion)
 - Git & versioning rules
 
+### 📈 PRODUCT STRATEGY & MARKET ANALYSIS
+**Critical Reference Documents for Product Direction**
+
+| Document | Purpose | Audience | Read Time |
+|----------|---------|----------|----------|
+| [`../STRATEGY/MARKET_AND_RETENTION_STRATEGY.md`](../STRATEGY/MARKET_AND_RETENTION_STRATEGY.md) | **Complete market analysis, retention strategy, UX principles, GDPR compliance, conversion funnel design** | All (especially PM/Product), Dev Leads | 45 min |
+
+**Key Topics**:
+- Market sizing (USD 10.59B → USD 33.58B by 2033, 25% CAGR)
+- Retention crisis: 77% churn by Day 3, only 25% reach Day 30
+- 4 user personas with retention rates and messaging strategies
+- Push notification ROI: 820% higher retention with daily+ notifications
+- Freemium-to-Premium conversion (14-day trial, 25-35% conversion target)
+- GDPR compliance checklist (Critical for EU launch)
+- First 90 days implementation plan
+- Competitive differentiation vs MyFitnessPal, Strava, Strong
+- Success metric: **20% Day 30 retention** (vs 10% industry average)
+
+---
+
 ### 🔒 SECURITY & AUDITS
 
 | Document | Purpose | Audience | Last Audit |

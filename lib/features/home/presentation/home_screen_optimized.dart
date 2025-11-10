@@ -26,6 +26,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/debug_notification_scheduler.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -550,6 +551,25 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                     }
                   },
                   child: Icon(AppIcons.refresh, size: AppIconSize.small),
+                ),
+                SizedBox(height: 8),
+                // Debug: Notification Scheduler
+                FloatingActionButton.small(
+                  heroTag: 'notificationScheduler',
+                  backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => const DebugNotificationScheduler(),
+                    );
+                  },
+                  child: Icon(
+                    AppIcons.notifications,
+                    size: AppIconSize.small,
+                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+                  ),
                 ),
                 SizedBox(height: 8),
                 // Regular Quick Start
