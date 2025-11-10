@@ -26064,10 +26064,10 @@ abstract class AppLocalizations {
   /// **'Welcome! Let\\\'s create your first workout together. I\\\'ll guide you step-by-step.'**
   String get welcomeLetsCreateYourFirstWorkoutTogethe;
 
-  /// From quick wins migration - 1 occurrences
+  /// Button to proceed in confirmation dialog
   ///
   /// In en, this message translates to:
-  /// **'Let\\\'s go!'**
+  /// **'Let\'s go!'**
   String get letsGo;
 
   /// From quick wins migration - 1 occurrences
@@ -28877,6 +28877,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'🌙 Night'**
   String get nightPrefix;
+
+  /// Title for context gathering time selection step
+  ///
+  /// In en, this message translates to:
+  /// **'How much time do you have today?'**
+  String get contextTimeTitle;
+
+  /// Subtitle for context gathering time selection step
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll help you choose the perfect workout'**
+  String get contextTimeSubtitle;
+
+  /// Help text for confused users on time selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how many minutes you can train today'**
+  String get contextTimeHelp;
+
+  /// Time display in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String timeMinutes(int minutes);
+
+  /// Semantic label for time chip selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select {minutes} minutes'**
+  String selectTimeMinutes(int minutes);
+
+  /// Title for context gathering experience level step
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your level?'**
+  String get contextExperienceTitle;
+
+  /// Subtitle for context gathering experience level step
+  ///
+  /// In en, this message translates to:
+  /// **'To suggest the right weights and reps'**
+  String get contextExperienceSubtitle;
+
+  /// Beginner experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get experienceBeginner;
+
+  /// Beginner experience level description
+  ///
+  /// In en, this message translates to:
+  /// **'< 6 months training'**
+  String get experienceBeginnerDesc;
+
+  /// Intermediate experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get experienceIntermediate;
+
+  /// Intermediate experience level description
+  ///
+  /// In en, this message translates to:
+  /// **'6-24 months'**
+  String get experienceIntermediateDesc;
+
+  /// Advanced experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get experienceAdvanced;
+
+  /// Advanced experience level description
+  ///
+  /// In en, this message translates to:
+  /// **'2+ years'**
+  String get experienceAdvancedDesc;
+
+  /// Semantic label for experience level chip selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select {level}'**
+  String selectExperienceLevel(String level);
+
+  /// Title for demographics step (value-first messaging)
+  ///
+  /// In en, this message translates to:
+  /// **'Personalize your workout'**
+  String get contextDemographicsTitle;
+
+  /// Subtitle for demographics step (explain value)
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll suggest weights and exercises more suited to you'**
+  String get contextDemographicsSubtitle;
+
+  /// Reassurance text for demographics step
+  ///
+  /// In en, this message translates to:
+  /// **'You can always change this in settings'**
+  String get contextDemographicsReassurance;
+
+  /// Skip button for optional demographics step
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get contextSkipForNow;
+
+  /// Male gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// Female gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// Other gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get genderOther;
+
+  /// Semantic label for gender chip selection
+  ///
+  /// In en, this message translates to:
+  /// **'Select {gender}'**
+  String selectGender(String gender);
+
+  /// Title for turbo user confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Quick confirmation'**
+  String get quickConfirmation;
+
+  /// Message for turbo user confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'You selected:\n⏱️ {minutes} min\n💪 {level}\n\nConfirm?'**
+  String quickConfirmationMessage(int minutes, String level);
+
+  /// Button to change answers in confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Change answers'**
+  String get changeAnswers;
 }
 
 class _AppLocalizationsDelegate

@@ -26,7 +26,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/workout_category_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
@@ -1118,12 +1118,9 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       debugPrint('   Source: single');
     }
 
-    return exercise.copyWith(
-      previousWeight: avgWeight,
-      previousReps: avgReps.round(),
-      previousDataSource: 'single',
-      previousWorkoutDate: previousWorkout.startTime, // ✅ Data del workout precedente
-    );
+    // TODO(previous-data): Add previousWeight/previousReps fields to Exercise entity
+    // For now, just return exercise as-is until Exercise entity supports these fields
+    return exercise;
   }
 
 
@@ -1699,7 +1696,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) => const WorkoutCategoryBottomSheet(),
+      builder: (context) => const ContextGatheringBottomSheet(),
     );
   }
 

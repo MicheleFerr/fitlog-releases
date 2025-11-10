@@ -14630,7 +14630,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Welcome! Let\\\'s create your first workout together. I\\\'ll guide you step-by-step.';
 
   @override
-  String get letsGo => 'Let\\\'s go!';
+  String get letsGo => 'Let\'s go!';
 
   @override
   String get greatNowTapHereToAddYourFirstExercise =>
@@ -16146,4 +16146,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nightPrefix => '🌙 Night';
+
+  @override
+  String get contextTimeTitle => 'How much time do you have today?';
+
+  @override
+  String get contextTimeSubtitle =>
+      'We\'ll help you choose the perfect workout';
+
+  @override
+  String get contextTimeHelp => 'Choose how many minutes you can train today';
+
+  @override
+  String timeMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String selectTimeMinutes(int minutes) {
+    return 'Select $minutes minutes';
+  }
+
+  @override
+  String get contextExperienceTitle => 'What\'s your level?';
+
+  @override
+  String get contextExperienceSubtitle =>
+      'To suggest the right weights and reps';
+
+  @override
+  String get experienceBeginner => 'Beginner';
+
+  @override
+  String get experienceBeginnerDesc => '< 6 months training';
+
+  @override
+  String get experienceIntermediate => 'Intermediate';
+
+  @override
+  String get experienceIntermediateDesc => '6-24 months';
+
+  @override
+  String get experienceAdvanced => 'Advanced';
+
+  @override
+  String get experienceAdvancedDesc => '2+ years';
+
+  @override
+  String selectExperienceLevel(String level) {
+    return 'Select $level';
+  }
+
+  @override
+  String get contextDemographicsTitle => 'Personalize your workout';
+
+  @override
+  String get contextDemographicsSubtitle =>
+      'We\'ll suggest weights and exercises more suited to you';
+
+  @override
+  String get contextDemographicsReassurance =>
+      'You can always change this in settings';
+
+  @override
+  String get contextSkipForNow => 'Skip for now';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String selectGender(String gender) {
+    return 'Select $gender';
+  }
+
+  @override
+  String get quickConfirmation => 'Quick confirmation';
+
+  @override
+  String quickConfirmationMessage(int minutes, String level) {
+    return 'You selected:\n⏱️ $minutes min\n💪 $level\n\nConfirm?';
+  }
+
+  @override
+  String get changeAnswers => 'Change answers';
 }

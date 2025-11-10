@@ -19452,5 +19452,143 @@
   "nightPrefix": "🌙 Night",
   "@nightPrefix": {
     "description": "Time of day prefix for night workouts (22:00-4:59)"
+  },
+  "contextTimeTitle": "How much time do you have today?",
+  "@contextTimeTitle": {
+    "description": "Title for context gathering time selection step"
+  },
+  "contextTimeSubtitle": "We'll help you choose the perfect workout",
+  "@contextTimeSubtitle": {
+    "description": "Subtitle for context gathering time selection step"
+  },
+  "contextTimeHelp": "Choose how many minutes you can train today",
+  "@contextTimeHelp": {
+    "description": "Help text for confused users on time selection"
+  },
+  "timeMinutes": "{minutes} min",
+  "@timeMinutes": {
+    "description": "Time display in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
+      }
+    }
+  },
+  "selectTimeMinutes": "Select {minutes} minutes",
+  "@selectTimeMinutes": {
+    "description": "Semantic label for time chip selection",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Number of minutes"
+      }
+    }
+  },
+  "contextExperienceTitle": "What's your level?",
+  "@contextExperienceTitle": {
+    "description": "Title for context gathering experience level step"
+  },
+  "contextExperienceSubtitle": "To suggest the right weights and reps",
+  "@contextExperienceSubtitle": {
+    "description": "Subtitle for context gathering experience level step"
+  },
+  "experienceBeginner": "Beginner",
+  "@experienceBeginner": {
+    "description": "Beginner experience level"
+  },
+  "experienceBeginnerDesc": "< 6 months training",
+  "@experienceBeginnerDesc": {
+    "description": "Beginner experience level description"
+  },
+  "experienceIntermediate": "Intermediate",
+  "@experienceIntermediate": {
+    "description": "Intermediate experience level"
+  },
+  "experienceIntermediateDesc": "6-24 months",
+  "@experienceIntermediateDesc": {
+    "description": "Intermediate experience level description"
+  },
+  "experienceAdvanced": "Advanced",
+  "@experienceAdvanced": {
+    "description": "Advanced experience level"
+  },
+  "experienceAdvancedDesc": "2+ years",
+  "@experienceAdvancedDesc": {
+    "description": "Advanced experience level description"
+  },
+  "selectExperienceLevel": "Select {level}",
+  "@selectExperienceLevel": {
+    "description": "Semantic label for experience level chip selection",
+    "placeholders": {
+      "level": {
+        "type": "String",
+        "description": "Experience level name"
+      }
+    }
+  },
+  "contextDemographicsTitle": "Personalize your workout",
+  "@contextDemographicsTitle": {
+    "description": "Title for demographics step (value-first messaging)"
+  },
+  "contextDemographicsSubtitle": "We'll suggest weights and exercises more suited to you",
+  "@contextDemographicsSubtitle": {
+    "description": "Subtitle for demographics step (explain value)"
+  },
+  "contextDemographicsReassurance": "You can always change this in settings",
+  "@contextDemographicsReassurance": {
+    "description": "Reassurance text for demographics step"
+  },
+  "contextSkipForNow": "Skip for now",
+  "@contextSkipForNow": {
+    "description": "Skip button for optional demographics step"
+  },
+  "genderMale": "Male",
+  "@genderMale": {
+    "description": "Male gender option"
+  },
+  "genderFemale": "Female",
+  "@genderFemale": {
+    "description": "Female gender option"
+  },
+  "genderOther": "Other",
+  "@genderOther": {
+    "description": "Other gender option"
+  },
+  "selectGender": "Select {gender}",
+  "@selectGender": {
+    "description": "Semantic label for gender chip selection",
+    "placeholders": {
+      "gender": {
+        "type": "String",
+        "description": "Gender option"
+      }
+    }
+  },
+  "quickConfirmation": "Quick confirmation",
+  "@quickConfirmation": {
+    "description": "Title for turbo user confirmation dialog"
+  },
+  "quickConfirmationMessage": "You selected:\n⏱️ {minutes} min\n💪 {level}\n\nConfirm?",
+  "@quickConfirmationMessage": {
+    "description": "Message for turbo user confirmation dialog",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "description": "Selected minutes"
+      },
+      "level": {
+        "type": "String",
+        "description": "Selected experience level"
+      }
+    }
+  },
+  "changeAnswers": "Change answers",
+  "@changeAnswers": {
+    "description": "Button to change answers in confirmation dialog"
+  },
+  "letsGo": "Let's go!",
+  "@letsGo": {
+    "description": "Button to proceed in confirmation dialog"
   }
 }
