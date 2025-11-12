@@ -399,12 +399,21 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Calculate expected completed days based on elapsed time
+  /// ✅ FIX Bug #22: Normalize dates to midnight for correct comparison
+  /// ✅ FIX Bug #25: Simplify date logic (>= startDate, < today)
   int _getExpectedCompletedDays(int elapsedDays) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(startDate.year, startDate.month, startDate.day);
+
     final scheduledDays = schedule.values
-        .where((day) =>
-            !day.isRestDay &&
-            day.date.isBefore(DateTime.now()) &&
-            day.date.isAfter(startDate.subtract(const Duration(days: 1))))
+        .where((day) {
+          if (day.isRestDay) return false;
+
+          final dayDate = DateTime(day.date.year, day.date.month, day.date.day);
+          // ✅ FIX Bug #25: Clearer logic - day must be >= start AND < today
+          return !dayDate.isBefore(start) && dayDate.isBefore(today);
+        })
         .length;
     return scheduledDays;
   }
@@ -536,10 +545,14 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Mark a day as completed
+  /// ✅ FIX Bug #18: Check if already completed (idempotency)
   FlexibleRoutine completeDay(DateTime date, String workoutId) {
     final key = _dateKey(date);
     final day = schedule[key];
     if (day == null) return this;
+
+    // ✅ FIX Bug #18: Check if already completed - don't increment twice
+    final alreadyCompleted = day.status.countsAsCompleted;
 
     final updatedDay = day.complete(workoutId);
     final newSchedule = Map<String, ScheduledDay>.from(schedule);
@@ -547,7 +560,8 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
 
     return copyWith(
       schedule: newSchedule,
-      completedDays: completedDays + 1,
+      // ✅ FIX Bug #18: Only increment if not already completed
+      completedDays: alreadyCompleted ? completedDays : completedDays + 1,
       lastWorkoutDate: date,
       updatedAt: DateTime.now(),
       isSyncPending: true,
@@ -555,17 +569,23 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Mark a day as skipped
+  /// ✅ FIX Bug #24: Check if already skipped (idempotency)
   FlexibleRoutine skipDay(DateTime date, String? reason) {
     final key = _dateKey(date);
     final day = schedule[key];
     if (day == null) return this;
 
+    // ✅ FIX Bug #24: Check if already skipped - don't add to tracker twice
+    final alreadySkipped = day.status == DayStatus.skipped;
+
     final updatedDay = day.skip(reason);
     final newSchedule = Map<String, ScheduledDay>.from(schedule);
     newSchedule[key] = updatedDay;
 
-    // Update skip tracker
-    final newSkipTracker = skipTracker.addSkip(date, reason);
+    // Update skip tracker only if not already skipped
+    final newSkipTracker = alreadySkipped
+        ? skipTracker
+        : skipTracker.addSkip(date, reason);
 
     return copyWith(
       schedule: newSchedule,
@@ -576,12 +596,17 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Recover a skipped day on another date
+  /// ✅ FIX Bug #19: Increment completedDays (recovered counts as completed)
   FlexibleRoutine recoverDay(DateTime originalDate, DateTime recoveryDate) {
     final originalKey = _dateKey(originalDate);
     final recoveryKey = _dateKey(recoveryDate);
 
     final originalDay = schedule[originalKey];
     if (originalDay == null || !originalDay.canBeRecovered) return this;
+
+    // Check if recovery day is already completed
+    final recoveryDay = schedule[recoveryKey];
+    final recoveryAlreadyCompleted = recoveryDay?.status.countsAsCompleted ?? false;
 
     // Mark recovery date
     final recoveredDay = ScheduledDay.scheduled(
@@ -598,6 +623,8 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     return copyWith(
       schedule: newSchedule,
       skipTracker: newSkipTracker,
+      // ✅ FIX Bug #19: Increment completedDays (recovered = completed)
+      completedDays: recoveryAlreadyCompleted ? completedDays : completedDays + 1,
       updatedAt: DateTime.now(),
       isSyncPending: true,
     );
@@ -714,35 +741,25 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Convert date to string key for map
+  /// ✅ FIX Bug #17: Unified date key format (always normalized to midnight)
   String _dateKey(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-  }
-
-  /// Parse date from string key
-  static DateTime _parseKey(String key) {
-    final parts = key.split('-');
-    return DateTime(
-      int.parse(parts[0]),
-      int.parse(parts[1]),
-      int.parse(parts[2]),
-    );
+    // Normalizza a mezzanotte per consistency
+    final normalized = DateTime(date.year, date.month, date.day);
+    return '${normalized.year}-${normalized.month.toString().padLeft(2, '0')}-${normalized.day.toString().padLeft(2, '0')}';
   }
 
   // ✅ NEW: Missed Workout Recovery Methods
 
   /// Check if should show recovery CTA
   /// Returns true if: yesterday had scheduled workout, and today has no completed workout
+  /// ✅ FIX Bug #21: Simplified timezone logic (no more UTC conversions)
   bool shouldShowRecoveryCTA() {
     final now = DateTime.now();
-    final nowUtc = now.toUtc();
-    final todayNormalized = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
-    final yesterdayNormalized = todayNormalized.subtract(const Duration(days: 1));
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
 
-    // Don't show if it's before today (happens before midnight)
-    if (nowUtc.isBefore(todayNormalized)) return false;
-
-    final yesterdayKey = _dateKeyUtc(yesterdayNormalized);
-    final todayKey = _dateKeyUtc(todayNormalized);
+    final yesterdayKey = _dateKey(yesterday);
+    final todayKey = _dateKey(today);
 
     final yesterdayDay = schedule[yesterdayKey];
     final todayDay = schedule[todayKey];
@@ -761,10 +778,12 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Get yesterday's missed workout (if any)
+  /// ✅ FIX Bug #21: Use unified _dateKey instead of _dateKeyUtc
   ScheduledDay? getYesterdayMissedWorkout() {
     final now = DateTime.now();
-    final yesterday = now.subtract(const Duration(days: 1));
-    final yesterdayKey = _dateKeyUtc(yesterday.toUtc());
+    final yesterday = DateTime(now.year, now.month, now.day)
+        .subtract(const Duration(days: 1));
+    final yesterdayKey = _dateKey(yesterday);
 
     final yesterdayDay = schedule[yesterdayKey];
     if (yesterdayDay?.status == DayStatus.scheduled &&
@@ -775,21 +794,31 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Check if a workout was completed today
+  /// ✅ FIX Bug #21: Use unified _dateKey instead of _dateKeyUtc
   bool hasCompletedWorkoutToday() {
-    final todayKey = _dateKeyUtc(DateTime.now().toUtc());
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final todayKey = _dateKey(today);
     final todayDay = schedule[todayKey];
     return todayDay?.status == DayStatus.completed;
   }
 
   /// Apply missed workout recovery: skip yesterday, mark today as completed recovery
+  /// ✅ FIX Bug #20: Check if today already completed (idempotency)
+  /// ✅ FIX Bug #21: Use unified _dateKey instead of _dateKeyUtc
   FlexibleRoutine performMissedWorkoutRecovery(String workoutId) {
     final now = DateTime.now();
-    final yesterday = now.subtract(const Duration(days: 1));
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
 
-    final yesterdayKey = _dateKeyUtc(yesterday.toUtc());
-    final todayKey = _dateKeyUtc(now.toUtc());
+    final yesterdayKey = _dateKey(yesterday);
+    final todayKey = _dateKey(today);
 
     final updatedSchedule = Map<String, ScheduledDay>.from(schedule);
+
+    // ✅ FIX Bug #20: Check idempotency - if today already completed, don't increment again
+    final todayDay = updatedSchedule[todayKey];
+    final alreadyCompleted = todayDay?.status == DayStatus.completed;
 
     // Update yesterday: mark as skipped
     if (updatedSchedule.containsKey(yesterdayKey)) {
@@ -801,13 +830,13 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     }
 
     // Update today: mark as completed recovery
-    final today = updatedSchedule[todayKey] ??
+    final todayScheduledDay = updatedSchedule[todayKey] ??
         ScheduledDay(
-          date: now,
+          date: today,
           status: DayStatus.completed,
         );
 
-    updatedSchedule[todayKey] = today.copyWith(
+    updatedSchedule[todayKey] = todayScheduledDay.copyWith(
       status: DayStatus.completed,
       workoutId: workoutId,
       isRecovery: true,
@@ -817,14 +846,9 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     // Return updated routine
     return copyWith(
       schedule: updatedSchedule,
-      completedDays: completedDays + 1,
-      lastWorkoutDate: DateTime.now(),
+      // ✅ FIX Bug #20: Only increment if not already completed
+      completedDays: alreadyCompleted ? completedDays : completedDays + 1,
+      lastWorkoutDate: today,
     );
-  }
-
-  /// Generate UTC-normalized date key for Firestore
-  String _dateKeyUtc(DateTime date) {
-    final normalized = DateTime.utc(date.year, date.month, date.day);
-    return normalized.toIso8601String().split('T')[0];
   }
 }
