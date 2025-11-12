@@ -195,11 +195,12 @@ final todayCompletionStatusProvider =
     data: (routine) {
       if (routine == null) return null;
 
-      // Get today's date (UTC normalized)
-      final nowUtc = DateTime.now().toUtc();
-      final todayUtc = DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
+      // ✅ FIX Bug #37: Get today's date (local normalized) per consistency con entity _dateKey()
+      // Normalizza a mezzanotte locale (stesso formato di flexible_routine.dart)
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
       final todayKey =
-          '${todayUtc.year}-${todayUtc.month.toString().padLeft(2, '0')}-${todayUtc.day.toString().padLeft(2, '0')}';
+          '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
       // Check if today's workout is completed
       final todayDay = routine.schedule[todayKey];
