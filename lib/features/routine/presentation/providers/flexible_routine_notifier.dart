@@ -301,6 +301,7 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
   }
 
   /// Complete a day manually (without workout)
+  /// ✅ FIX Bug #32: Usa entity.completeDay() per includere counter increment
   Future<bool> completeDayManual({
     required String routineId,
     required DateTime date,
@@ -314,19 +315,12 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
         throw Exception('Routine not found');
       }
 
-      // Update day status to completed
-      final dateKey = _dateToString(date);
-      final currentDay = routine.schedule[dateKey];
-
-      if (currentDay == null) {
-        throw Exception('Day not found in schedule');
-      }
-
-      final updatedDay = currentDay.copyWith(status: DayStatus.completed);
-      final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
-      updatedSchedule[dateKey] = updatedDay;
-
-      final updatedRoutine = routine.copyWith(schedule: updatedSchedule);
+      // ✅ FIX Bug #32: Use entity's completeDay() method instead of bypassing it
+      // This ensures:
+      // - completedDays counter is incremented (idempotent)
+      // - Business logic is centralized in entity
+      // - Consistency with other completion methods
+      final updatedRoutine = routine.completeDay(date, 'manual');
       await _repository.updateRoutine(updatedRoutine);
 
       state = state.copyWith(
@@ -467,25 +461,22 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
       final routine = await _repository.getRoutineById(routineId);
       if (routine == null) return false;
 
-      // Normalize dates to UTC for consistency
-      final completionDateUtc = completionDate.toUtc();
-      final completionDateNormalized = DateTime.utc(
-        completionDateUtc.year,
-        completionDateUtc.month,
-        completionDateUtc.day,
+      // ✅ FIX Bug #31: Usa local dates (no UTC) per consistency con entity _dateKey()
+      // Normalizza a mezzanotte locale (stesso formato di flexible_routine.dart)
+      final completionDateNormalized = DateTime(
+        completionDate.year,
+        completionDate.month,
+        completionDate.day,
       );
-      final yesterdayUtc =
+      final yesterday =
           completionDateNormalized.subtract(const Duration(days: 1));
 
-      // Format dates as keys
-      final completionDateKey =
-          '${completionDateNormalized.year}-${completionDateNormalized.month.toString().padLeft(2, '0')}-${completionDateNormalized.day.toString().padLeft(2, '0')}';
+      // Format yesterday date as key - stesso formato di entity
       final yesterdayDateKey =
-          '${yesterdayUtc.year}-${yesterdayUtc.month.toString().padLeft(2, '0')}-${yesterdayUtc.day.toString().padLeft(2, '0')}';
+          '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
 
       // Get scheduled days
       final yesterdayDay = routine.schedule[yesterdayDateKey];
-      final todayDay = routine.schedule[completionDateKey];
 
       // Check if this is an auto-recovery scenario:
       // 1. Yesterday had a workout (not null, not a rest day)
@@ -515,7 +506,7 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
       updatedSchedule[yesterdayDateKey] = yesterdayDay.copyWith(
         status: DayStatus.completed,
         isRecovery: true,
-        originalMissedDate: yesterdayUtc,
+        originalMissedDate: yesterday, // ✅ FIX Bug #31: usa 'yesterday' locale
       );
 
       // Update the routine
