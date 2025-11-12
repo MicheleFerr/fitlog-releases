@@ -402,7 +402,7 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
   /// ✅ NEW: Perform missed workout recovery with atomic batch write
   ///
   /// Completes today's workout as recovery and marks yesterday as skipped
-  /// in a single atomic operation. Uses UTC-normalized dates for timezone safety.
+  /// in a single atomic operation.
   @override
   Future<bool> performMissedWorkoutRecovery({
     required String routineId,
@@ -416,18 +416,17 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
         throw Exception('Routine not found: $routineId');
       }
 
-      // Get today's date (UTC normalized)
+      // ✅ FIX Bug #26: Usa local dates (no UTC) per consistency con entity _dateKey()
+      // Normalizza a mezzanotte locale (stesso formato di flexible_routine.dart)
       final now = DateTime.now();
-      final nowUtc = now.toUtc();
-      final todayUtc =
-          DateTime.utc(nowUtc.year, nowUtc.month, nowUtc.day);
-      final yesterdayUtc = todayUtc.subtract(const Duration(days: 1));
+      final today = DateTime(now.year, now.month, now.day);
+      final yesterday = today.subtract(const Duration(days: 1));
 
-      // Format dates as Firestore keys (YYYY-MM-DD)
+      // Format dates as Firestore keys (YYYY-MM-DD) - stesso formato di entity
       final todayKey =
-          '${todayUtc.year}-${todayUtc.month.toString().padLeft(2, '0')}-${todayUtc.day.toString().padLeft(2, '0')}';
+          '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
       final yesterdayKey =
-          '${yesterdayUtc.year}-${yesterdayUtc.month.toString().padLeft(2, '0')}-${yesterdayUtc.day.toString().padLeft(2, '0')}';
+          '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
 
       // Get today's and yesterday's scheduled days
       final todayDay = routine.schedule[todayKey];
@@ -436,6 +435,12 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
       // Validate: Yesterday must have been scheduled
       if (yesterdayDay == null || yesterdayDay.templateId == null) {
         return false; // No scheduled workout yesterday
+      }
+
+      // ✅ FIX Bug #28: Idempotency check - se yesterday è già recovery, non riscrivere
+      if (yesterdayDay.status == DayStatus.completed &&
+          (yesterdayDay.isRecovery ?? false)) {
+        return false; // Already marked as recovery
       }
 
       // Validate: Today must not already be completed
@@ -455,7 +460,7 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
       updatedSchedule[yesterdayKey] = yesterdayDay.copyWith(
         status: DayStatus.completed,
         isRecovery: true,
-        originalMissedDate: yesterdayUtc,
+        originalMissedDate: yesterday, // ✅ FIX Bug #26: usa local date, no UTC
       );
 
       // Create updated routine with new schedule
@@ -491,9 +496,16 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
       // Get all user routines and filter by date range
       final allRoutines = await getUserRoutines(userId);
 
+      // ✅ FIX Bug #27: Normalizza date a mezzanotte per confronto consistency
+      final startDateNormalized = DateTime(startDate.year, startDate.month, startDate.day);
+      final endDateNormalized = DateTime(endDate.year, endDate.month, endDate.day);
+
       return allRoutines.where((routine) {
-        return routine.startDate.isBefore(endDate.add(const Duration(days: 1))) &&
-            routine.endDate.isAfter(startDate.subtract(const Duration(days: 1)));
+        final routineStart = DateTime(routine.startDate.year, routine.startDate.month, routine.startDate.day);
+        final routineEnd = DateTime(routine.endDate.year, routine.endDate.month, routine.endDate.day);
+
+        return routineStart.isBefore(endDateNormalized.add(const Duration(days: 1))) &&
+            routineEnd.isAfter(startDateNormalized.subtract(const Duration(days: 1)));
       }).toList();
     } catch (e) {
       throw _handleError(e, 'getRoutinesInDateRange');
