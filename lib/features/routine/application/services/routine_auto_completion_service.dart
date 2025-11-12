@@ -37,6 +37,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_swap_flow.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_notification_service.dart';
+import 'package:gymbro_flutter_new/features/routine/application/services/routine_reminder_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
@@ -176,6 +177,39 @@ class RoutineAutoCompletionService {
             workoutName: completedWorkout.name,
           );
 
+          // 🆕 Check for past unfinished days and mark as skipped
+          try {
+            // ✅ FIX: Re-fetch routine aggiornata DOPO completeDayWorkout
+            // per evitare di marcare il giorno appena completato come skipped
+            final updatedRoutine = await _repository.getRoutineById(activeRoutine.id);
+            if (updatedRoutine == null) {
+              throw Exception('Routine not found after completion');
+            }
+
+            final reminderService = RoutineReminderService(repository: _repository);
+            final skipSummary = await reminderService.markPastDaysAsSkipped(
+              routine: updatedRoutine, // ✅ Usa routine aggiornata
+            );
+
+            // If new skipped days detected, send skip reminder notification
+            if (skipSummary.notificationNeeded && skipSummary.skippedDays.isNotEmpty) {
+              if (kDebugMode) {
+                debugPrint(
+                  '📌 [RoutineAutoCompletion] Sending skip reminder for ${skipSummary.skippedDays.length} days',
+                );
+              }
+              await _notificationService.sendSkippedDayReminder(
+                routineName: activeRoutine.name,
+                skippedCount: skipSummary.skippedDays.length,
+              );
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [RoutineAutoCompletion] Error marking past days as skipped: $e');
+            }
+            // Don't rethrow - this is non-critical
+          }
+
           // Show success toast if context available
           if (context != null && context.mounted) {
             SnackBarService.showSuccess(
@@ -288,6 +322,36 @@ class RoutineAutoCompletionService {
             workoutName: completedWorkout.name,
           );
 
+          // 🆕 Check for past unfinished days and mark as skipped (same as simpleMatch)
+          try {
+            // ✅ FIX: Re-fetch routine aggiornata DOPO completeDayWorkout
+            final updatedRoutine = await _repository.getRoutineById(activeRoutine.id);
+            if (updatedRoutine == null) {
+              throw Exception('Routine not found after completion');
+            }
+
+            final reminderService = RoutineReminderService(repository: _repository);
+            final skipSummary = await reminderService.markPastDaysAsSkipped(
+              routine: updatedRoutine, // ✅ Usa routine aggiornata
+            );
+
+            if (skipSummary.notificationNeeded && skipSummary.skippedDays.isNotEmpty) {
+              if (kDebugMode) {
+                debugPrint(
+                  '📌 [RoutineAutoCompletion] Sending skip reminder for ${skipSummary.skippedDays.length} days (after swap)',
+                );
+              }
+              await _notificationService.sendSkippedDayReminder(
+                routineName: activeRoutine.name,
+                skippedCount: skipSummary.skippedDays.length,
+              );
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [RoutineAutoCompletion] Error marking past days as skipped (swap): $e');
+            }
+          }
+
           if (kDebugMode) {
             debugPrint(
               '✅ [RoutineAutoCompletion] Routine day completed after swap: $dayToComplete',
@@ -380,36 +444,6 @@ class RoutineAutoCompletionService {
     return dateFormat.format(date);
   }
 
-  String _monthName(int month) {
-    switch (month) {
-      case 1:
-        return 'Jan';
-      case 2:
-        return 'Feb';
-      case 3:
-        return 'Mar';
-      case 4:
-        return 'Apr';
-      case 5:
-        return 'May';
-      case 6:
-        return 'Jun';
-      case 7:
-        return 'Jul';
-      case 8:
-        return 'Aug';
-      case 9:
-        return 'Sep';
-      case 10:
-        return 'Oct';
-      case 11:
-        return 'Nov';
-      case 12:
-        return 'Dec';
-      default:
-        return '';
-    }
-  }
 }
 
 /// Provider for RoutineAutoCompletionService

@@ -108,8 +108,21 @@ class RoutineMatchingService {
       }
 
       // Filtro 3: Finestra temporale ±14 giorni
-      final daysDifference =
-          scheduledDay.date.difference(completionTime).inDays.abs();
+      // ✅ FIX: Normalizza entrambe le date a mezzanotte per confronto corretto
+      final scheduledDateNormalized = DateTime(
+        scheduledDay.date.year,
+        scheduledDay.date.month,
+        scheduledDay.date.day,
+      );
+      final completionDateNormalized = DateTime(
+        completionTime.year,
+        completionTime.month,
+        completionTime.day,
+      );
+      final daysDifference = scheduledDateNormalized
+          .difference(completionDateNormalized)
+          .inDays
+          .abs();
       if (daysDifference > 14) {
         continue;
       }
@@ -194,21 +207,29 @@ class RoutineMatchingService {
     }
 
     // Retrieve lo ScheduledDay futuro
-    final futureScheduledDay = routine.schedule.entries
-        .firstWhere((e) {
-          final eDate = DateTime(
-            e.value.date.year,
-            e.value.date.month,
-            e.value.date.day,
-          );
-          final fDate = DateTime(
-            futureSwapDay.year,
-            futureSwapDay.month,
-            futureSwapDay.day,
-          );
-          return eDate == fDate;
-        })
-        .value;
+    // ✅ FIX: Usa firstWhereOrNull invece di firstWhere per evitare StateError crash
+    final futureScheduledDayEntry = routine.schedule.entries.firstWhereOrNull((e) {
+      final eDate = DateTime(
+        e.value.date.year,
+        e.value.date.month,
+        e.value.date.day,
+      );
+      final fDate = DateTime(
+        futureSwapDay.year,
+        futureSwapDay.month,
+        futureSwapDay.day,
+      );
+      return eDate == fDate;
+    });
+
+    if (futureScheduledDayEntry == null) {
+      if (kDebugMode) {
+        debugPrint('❌ [Swap Detection] Future scheduled day not found in schedule');
+      }
+      return null;
+    }
+
+    final futureScheduledDay = futureScheduledDayEntry.value;
 
     if (kDebugMode) {
       debugPrint(

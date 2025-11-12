@@ -17,12 +17,6 @@ class RoutineReminderService {
     final now = checkTime ?? DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
-    if (kDebugMode) {
-      debugPrint(
-        '⏰ [RoutineReminder] Checking for past unfinished days at $today',
-      );
-    }
-
     final skippedDays = <DateTime>[];
     final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
 
@@ -39,33 +33,18 @@ class RoutineReminderService {
       );
 
       // Se il giorno è nel passato e non completato/saltato/riposo
-      if (dayDate.isBefore(today)) {
-        if (scheduledDay.status == DayStatus.scheduled) {
-          if (kDebugMode) {
-            debugPrint(
-              '📝 [RoutineReminder] Marking past day as skipped: $dayDate',
-            );
-          }
-
-          // Marca come saltato
-          updatedSchedule[key] = scheduledDay.copyWith(
-            status: DayStatus.skipped,
-            skipReason: 'Auto-marked as skipped (not completed)',
-          );
-
-          skippedDays.add(dayDate);
-        }
+      if (dayDate.isBefore(today) && scheduledDay.status == DayStatus.scheduled) {
+        // Marca come saltato
+        updatedSchedule[key] = scheduledDay.copyWith(
+          status: DayStatus.skipped,
+          skipReason: 'Auto-marked as skipped (not completed)',
+        );
+        skippedDays.add(dayDate);
       }
     }
 
     // Se ci sono giorni marcati come saltati, salva su Firestore
     if (skippedDays.isNotEmpty) {
-      if (kDebugMode) {
-        debugPrint(
-          '💾 [RoutineReminder] Saving ${skippedDays.length} skipped days to Firestore',
-        );
-      }
-
       try {
         await repository.updateRoutine(
           routine.copyWith(
@@ -73,10 +52,6 @@ class RoutineReminderService {
             updatedAt: DateTime.now(),
           ),
         );
-
-        if (kDebugMode) {
-          debugPrint('✅ [RoutineReminder] Skipped days saved successfully');
-        }
 
         return SkippedDaysSummary(
           skippedDays: skippedDays,
@@ -88,16 +63,14 @@ class RoutineReminderService {
           debugPrintStack(stackTrace: stackTrace);
         }
 
+        // ✅ FIX: Se save fallisce, ritorna lista VUOTA
+        // perché i giorni NON sono stati effettivamente marcati come skipped
         return SkippedDaysSummary(
-          skippedDays: skippedDays,
+          skippedDays: [], // ✅ Vuoto = nessun giorno salvato
           notificationNeeded: false,
           error: e.toString(),
         );
       }
-    }
-
-    if (kDebugMode) {
-      debugPrint('ℹ️ [RoutineReminder] No past unfinished days found');
     }
 
     return const SkippedDaysSummary(
@@ -112,21 +85,19 @@ class RoutineReminderService {
     required FlexibleRoutine routine,
     DateTime? referenceDate,
   }) async {
-    final now = referenceDate ?? DateTime.now();
+    final nowRaw = referenceDate ?? DateTime.now();
+    // ✅ FIX: Normalizza "now" a mezzanotte per confronto corretto con dayDate
+    final now = DateTime(nowRaw.year, nowRaw.month, nowRaw.day);
     final recoverableDays = <SkippableDay>[];
-
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 [RoutineReminder] Finding recoverable skipped days as of $now',
-      );
-    }
 
     // Scorri tutti i giorni saltati
     for (final entry in routine.schedule.entries) {
       final scheduledDay = entry.value;
 
-      // Solo giorni saltati
+      // Solo giorni saltati CON workout (templateId non null)
+      // ✅ FIX: Escludi rest days (templateId null) - non c'è workout da recuperare
       if (scheduledDay.status != DayStatus.skipped) continue;
+      if (scheduledDay.templateId == null) continue; // ✅ Skip rest days
 
       // Il giorno deve essere nel passato (per poterlo recuperare)
       final dayDate = DateTime(
@@ -154,82 +125,45 @@ class RoutineReminderService {
       );
     }
 
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 [RoutineReminder] Found ${recoverableDays.length} recoverable days',
-      );
-    }
-
     return recoverableDays;
   }
 
-  /// Ottiene i giorni liberi (riposo) dove recuperare un skip
-  /// Filtro per: status = rest, nel futuro
+  /// Ottiene i giorni futuri disponibili per il recovery (rest days)
+  /// Ritorna giorni liberi nei prossimi 30 giorni dove si possono recuperare workout
   Future<List<RecoveryDay>> getAvailableRecoveryDays({
     required FlexibleRoutine routine,
-    DateTime? startFrom,
+    DateTime? referenceDate,
   }) async {
-    final now = startFrom ?? DateTime.now();
-    final recoveryDays = <RecoveryDay>[];
+    final now = referenceDate ?? DateTime.now();
+    final availableDays = <RecoveryDay>[];
 
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 [RoutineReminder] Finding available recovery days starting from $now',
-      );
-    }
-
-    // Scorri i prossimi 30 giorni
-    for (int i = 0; i < 30; i++) {
+    // Cerca nei prossimi 30 giorni
+    for (var i = 0; i < 30; i++) {
       final checkDate = now.add(Duration(days: i));
-      final checkDateNorm = DateTime(
-        checkDate.year,
-        checkDate.month,
-        checkDate.day,
-      );
+      final dateOnly = DateTime(checkDate.year, checkDate.month, checkDate.day);
+      final dateKey = '${dateOnly.year}-${dateOnly.month.toString().padLeft(2, '0')}-${dateOnly.day.toString().padLeft(2, '0')}';
 
-      // Cerca questo giorno nella routine
-      final scheduledDay = routine.schedule.entries
-          .firstWhere(
-            (e) {
-              final eDate = DateTime(e.value.date.year, e.value.date.month,
-                  e.value.date.day);
-              return eDate == checkDateNorm;
-            },
-            orElse: () => throw Exception('Not found'),
-          )
-          .value;
+      final scheduledDay = routine.schedule[dateKey];
 
-      // Se è un giorno di riposo, è disponibile per recovery
-      if (scheduledDay.status == DayStatus.rest) {
-        recoveryDays.add(
+      // Il giorno è disponibile se:
+      // 1. Non è schedulato (null) - giorno non definito nella routine
+      // 2. OPPURE è un rest day esplicito (status == DayStatus.rest)
+      // 3. OPPURE è scheduled ma senza workout (templateId == null && status == scheduled)
+      //    (giorno in attesa di assignment, può essere usato per recovery)
+      if (scheduledDay == null ||
+          scheduledDay.status == DayStatus.rest ||
+          (scheduledDay.status == DayStatus.scheduled &&
+              scheduledDay.templateId == null)) {
+        availableDays.add(
           RecoveryDay(
-            date: checkDateNorm,
+            date: dateOnly,
             daysFromNow: i,
           ),
         );
       }
-
-      // Se non c'è niente schedulato, è disponibile
-      if (scheduledDay.status == DayStatus.rest ||
-          (scheduledDay.templateId == null)) {
-        if (!recoveryDays.any((d) => d.date == checkDateNorm)) {
-          recoveryDays.add(
-            RecoveryDay(
-              date: checkDateNorm,
-              daysFromNow: i,
-            ),
-          );
-        }
-      }
     }
 
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 [RoutineReminder] Found ${recoveryDays.length} available recovery days',
-      );
-    }
-
-    return recoveryDays;
+    return availableDays;
   }
 
   /// Recupera un giorno saltato spostando il workout in un giorno libero
@@ -238,37 +172,21 @@ class RoutineReminderService {
     required DateTime skippedDate,
     required DateTime recoveryDate,
   }) async {
-    if (kDebugMode) {
-      debugPrint(
-        '🔄 [RoutineReminder] Recovering skipped day $skippedDate → $recoveryDate',
-      );
-    }
-
     try {
       final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
 
-      // Trova i due giorni
-      String? skippedKey;
-      String? recoveryKey;
+      // ✅ FIX: Genera chiavi direttamente invece di loop O(n)
+      // Usa stesso formato di flexible_routine.dart:718
+      final skippedKey = '${skippedDate.year}-${skippedDate.month.toString().padLeft(2, '0')}-${skippedDate.day.toString().padLeft(2, '0')}';
+      final recoveryKey = '${recoveryDate.year}-${recoveryDate.month.toString().padLeft(2, '0')}-${recoveryDate.day.toString().padLeft(2, '0')}';
 
-      for (final entry in routine.schedule.entries) {
-        final eDate = DateTime(
-          entry.value.date.year,
-          entry.value.date.month,
-          entry.value.date.day,
-        );
-
-        if (eDate == DateTime(skippedDate.year, skippedDate.month, skippedDate.day)) {
-          skippedKey = entry.key;
-        }
-        if (eDate == DateTime(recoveryDate.year, recoveryDate.month, recoveryDate.day)) {
-          recoveryKey = entry.key;
-        }
-      }
-
-      if (skippedKey == null || recoveryKey == null) {
+      // Verifica che entrambi i giorni esistano nel schedule
+      if (!routine.schedule.containsKey(skippedKey) ||
+          !routine.schedule.containsKey(recoveryKey)) {
         if (kDebugMode) {
           debugPrint('❌ [RoutineReminder] Could not find days for recovery');
+          debugPrint('   Skipped key: $skippedKey (exists: ${routine.schedule.containsKey(skippedKey)})');
+          debugPrint('   Recovery key: $recoveryKey (exists: ${routine.schedule.containsKey(recoveryKey)})');
         }
         return false;
       }
@@ -287,6 +205,7 @@ class RoutineReminderService {
         status: DayStatus.scheduled,
         templateId: skippedDay.templateId,
         notes: 'Recovered from $skippedDate',
+        originalDate: skippedDay.date, // Salva la data originale del workout skippato
       );
 
       // Salva su Firestore
@@ -296,10 +215,6 @@ class RoutineReminderService {
           updatedAt: DateTime.now(),
         ),
       );
-
-      if (kDebugMode) {
-        debugPrint('✅ [RoutineReminder] Skip recovered successfully');
-      }
 
       return true;
     } catch (e, stackTrace) {

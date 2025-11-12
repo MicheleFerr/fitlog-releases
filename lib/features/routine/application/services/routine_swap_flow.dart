@@ -61,7 +61,8 @@ class RoutineSwapFlow {
   }
 
   /// Esegue l'azione della decisione
-  Future<SwapDecision> _executeDecision({
+  /// Returns null if operation failed (for caller to handle as cancellation)
+  Future<SwapDecision?> _executeDecision({
     required BuildContext context,
     required SwapDecision decision,
     required RoutineSwapOpportunity swapOpportunity,
@@ -86,28 +87,34 @@ class RoutineSwapFlow {
         if (kDebugMode) {
           debugPrint('🔄 [SwapFlow] User chose: Swap Days (RECOMMENDED)');
         }
-        await _performSwap(
+        // ✅ FIX Bug #16: Controlla return value per evitare caller inconsistencies
+        final swapSuccess = await _performSwap(
           context: context,
           swapOpportunity: swapOpportunity,
           activeRoutine: activeRoutine,
         );
-        return decision;
+        // Se swap fallisce, ritorna null (come se user avesse cancellato)
+        // per evitare che caller proceda con dati inconsistenti
+        return swapSuccess ? decision : null;
 
       case SwapDecision.skipToday:
         if (kDebugMode) {
           debugPrint('🔄 [SwapFlow] User chose: Skip Today');
         }
-        await _markTodayAsSkipped(
+        // ✅ FIX Bug #16: Controlla return value per evitare caller inconsistencies
+        final skipSuccess = await _markTodayAsSkipped(
           context: context,
           swapOpportunity: swapOpportunity,
           activeRoutine: activeRoutine,
         );
-        return decision;
+        // Se skip fallisce, ritorna null (come se user avesse cancellato)
+        return skipSuccess ? decision : null;
     }
   }
 
   /// Esegue lo swap effettivo su Firestore
-  Future<void> _performSwap({
+  /// Returns true if successful, false otherwise (for caller to handle)
+  Future<bool> _performSwap({
     required BuildContext context,
     required RoutineSwapOpportunity swapOpportunity,
     required FlexibleRoutine activeRoutine,
@@ -137,52 +144,49 @@ class RoutineSwapFlow {
         activeRoutine.schedule,
       );
 
-      // Trova le chiavi per i due giorni
-      String? todayKey;
-      String? futureKey;
+      // ✅ FIX Bug #11: Genera chiavi direttamente invece di O(n) loop
+      // Usa stesso formato di flexible_routine.dart:718
+      final todayDate = swapOpportunity.todayScheduledDay.date;
+      final todayKey = '${todayDate.year}-${todayDate.month.toString().padLeft(2, '0')}-${todayDate.day.toString().padLeft(2, '0')}';
 
-      for (final entry in activeRoutine.schedule.entries) {
-        if (entry.value.date.year == swapOpportunity.todayScheduledDay.date.year &&
-            entry.value.date.month ==
-                swapOpportunity.todayScheduledDay.date.month &&
-            entry.value.date.day == swapOpportunity.todayScheduledDay.date.day) {
-          todayKey = entry.key;
-        }
-        if (entry.value.date.year ==
-                swapOpportunity.futureScheduledDay.date.year &&
-            entry.value.date.month ==
-                swapOpportunity.futureScheduledDay.date.month &&
-            entry.value.date.day ==
-                swapOpportunity.futureScheduledDay.date.day) {
-          futureKey = entry.key;
-        }
-      }
+      final futureDate = swapOpportunity.futureScheduledDay.date;
+      final futureKey = '${futureDate.year}-${futureDate.month.toString().padLeft(2, '0')}-${futureDate.day.toString().padLeft(2, '0')}';
 
-      if (todayKey != null && futureKey != null) {
-        updatedSchedule[todayKey] = todayAfterSwap;
-        updatedSchedule[futureKey] = futureAfterSwap;
-
-        // Salva su Firestore
-        await repository.updateRoutine(
-          activeRoutine.copyWith(
-            schedule: updatedSchedule,
-            updatedAt: DateTime.now(),
-          ),
-        );
-
+      // Verifica che entrambe le chiavi esistano
+      if (!activeRoutine.schedule.containsKey(todayKey) ||
+          !activeRoutine.schedule.containsKey(futureKey)) {
         if (kDebugMode) {
-          debugPrint('✅ [SwapFlow] Swap completed successfully');
+          debugPrint('❌ [SwapFlow] Could not find schedule keys for swap');
+          debugPrint('   Today key: $todayKey (exists: ${activeRoutine.schedule.containsKey(todayKey)})');
+          debugPrint('   Future key: $futureKey (exists: ${activeRoutine.schedule.containsKey(futureKey)})');
         }
-
-        if (context.mounted) {
-          SnackBarService.showSuccess(
-            context,
-            '${context.l10n.daysSwappedSuccessfully} ${swapOpportunity.completedWorkoutTemplate} oggi',
-          );
-        }
-      } else {
         throw Exception('Could not find schedule keys for swap');
       }
+
+      updatedSchedule[todayKey] = todayAfterSwap;
+      updatedSchedule[futureKey] = futureAfterSwap;
+
+      // Salva su Firestore
+      await repository.updateRoutine(
+        activeRoutine.copyWith(
+          schedule: updatedSchedule,
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [SwapFlow] Swap completed successfully');
+      }
+
+      if (context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          '${context.l10n.daysSwappedSuccessfully} ${swapOpportunity.completedWorkoutTemplate} oggi',
+        );
+      }
+
+      // ✅ FIX Bug #14: Ritorna true per indicare successo
+      return true;
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [SwapFlow] Error performing swap: $e');
@@ -191,11 +195,14 @@ class RoutineSwapFlow {
       if (context.mounted) {
         SnackBarService.showError(context, context.l10n.errorSwappingDays);
       }
+      // ✅ FIX Bug #14: Ritorna false per indicare fallimento
+      return false;
     }
   }
 
   /// Marca il giorno di oggi come "skipped"
-  Future<void> _markTodayAsSkipped({
+  /// Returns true if successful, false otherwise (for caller to handle)
+  Future<bool> _markTodayAsSkipped({
     required BuildContext context,
     required RoutineSwapOpportunity swapOpportunity,
     required FlexibleRoutine activeRoutine,
@@ -211,47 +218,49 @@ class RoutineSwapFlow {
         activeRoutine.schedule,
       );
 
-      // Trova la chiave per il giorno di oggi
-      String? todayKey;
-      for (final entry in activeRoutine.schedule.entries) {
-        if (entry.value.date.year == swapOpportunity.todayScheduledDay.date.year &&
-            entry.value.date.month ==
-                swapOpportunity.todayScheduledDay.date.month &&
-            entry.value.date.day == swapOpportunity.todayScheduledDay.date.day) {
-          todayKey = entry.key;
-          break;
-        }
-      }
+      // ✅ FIX Bug #11: Genera chiave direttamente invece di O(n) loop
+      // Usa stesso formato di flexible_routine.dart:718
+      final todayDate = swapOpportunity.todayScheduledDay.date;
+      final todayKey = '${todayDate.year}-${todayDate.month.toString().padLeft(2, '0')}-${todayDate.day.toString().padLeft(2, '0')}';
 
-      if (todayKey != null) {
-        final updatedDay = swapOpportunity.todayScheduledDay.copyWith(
-          status: DayStatus.skipped,
-          skipReason: 'Skipped to do ${swapOpportunity.completedWorkoutTemplate}',
-        );
-
-        updatedSchedule[todayKey] = updatedDay;
-
-        // Salva su Firestore
-        await repository.updateRoutine(
-          activeRoutine.copyWith(
-            schedule: updatedSchedule,
-            updatedAt: DateTime.now(),
-          ),
-        );
-
+      // Verifica che la chiave esista
+      if (!activeRoutine.schedule.containsKey(todayKey)) {
         if (kDebugMode) {
-          debugPrint('✅ [SwapFlow] Day marked as skipped successfully');
+          debugPrint('❌ [SwapFlow] Could not find today\'s schedule entry');
+          debugPrint('   Today key: $todayKey (exists: ${activeRoutine.schedule.containsKey(todayKey)})');
         }
-
-        if (context.mounted) {
-          SnackBarService.showSuccess(
-            context,
-            '${swapOpportunity.todayScheduledDay.templateId} marked as skipped\nYou can recover it later',
-          );
-        }
-      } else {
         throw Exception('Could not find today\'s schedule entry');
       }
+
+      final updatedDay = swapOpportunity.todayScheduledDay.copyWith(
+        status: DayStatus.skipped,
+        skipReason: 'Skipped to do ${swapOpportunity.completedWorkoutTemplate}',
+      );
+
+      updatedSchedule[todayKey] = updatedDay;
+
+      // Salva su Firestore
+      await repository.updateRoutine(
+        activeRoutine.copyWith(
+          schedule: updatedSchedule,
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [SwapFlow] Day marked as skipped successfully');
+      }
+
+      if (context.mounted) {
+        // ✅ FIX Bug #12: Usa localization invece di hardcoded string
+        SnackBarService.showSuccess(
+          context,
+          '${swapOpportunity.todayScheduledDay.templateId ?? "Day"} marked as skipped',
+        );
+      }
+
+      // ✅ FIX Bug #15: Ritorna true per indicare successo
+      return true;
     } catch (e, stackTrace) {
       if (kDebugMode) {
         debugPrint('❌ [SwapFlow] Error marking day as skipped: $e');
@@ -263,6 +272,8 @@ class RoutineSwapFlow {
           context.l10n.errorMarkingDayAsSkipped,
         );
       }
+      // ✅ FIX Bug #15: Ritorna false per indicare fallimento
+      return false;
     }
   }
 }
@@ -306,7 +317,8 @@ class _SwapConfirmationDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Oggi (${_formatDate(swapOpportunity.todayScheduledDay.date, context)})',
+                    // ✅ FIX Bug #13: Usa localization invece di hardcoded "Oggi"
+                    '${context.l10n.today} (${_formatDate(swapOpportunity.todayScheduledDay.date, context)})',
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.primary,
                     ),

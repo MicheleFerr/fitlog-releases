@@ -134,7 +134,9 @@ class _SkipRecoveryBottomSheetState
 
       if (success && mounted) {
         // Success haptic feedback
-        HapticFeedback.mediumImpact();
+        await HapticFeedback.mediumImpact();
+
+        if (!mounted) return;
 
         SnackBarService.showSuccess(
           context,
@@ -187,7 +189,7 @@ class _SkipRecoveryBottomSheetState
               height: 4,
               decoration: BoxDecoration(
                 color: context.colors.onSurface.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
@@ -510,14 +512,9 @@ class _SkipRecoveryBottomSheetState
     if (diff == 1) return context.l10n.tomorrow;
     if (diff == -2) return context.l10n.daysAgo(2);
 
-    // For future dates beyond tomorrow
-    if (diff > 1 && diff <= 7) {
-      // Format as "In 2 days", "In 3 days", etc.
-      return context.l10n.daysAgo(diff.abs()).replaceFirst('ago', 'from now');
-    }
-
-    // Use locale-aware date formatting for other dates
-    // Format: "Mon 15 Jan" (locale-aware)
+    // ✅ FIX: Per altri giorni (passato o futuro), usa DateFormat locale-aware
+    // invece di hacky string replace che funziona solo in inglese
+    // Format: "Mon 15 Jan" (funziona in tutte le lingue)
     final locale = Localizations.localeOf(context).languageCode;
     final formatter = DateFormat.MMMEd(locale);
     return formatter.format(date);

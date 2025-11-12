@@ -16,7 +16,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class RoutineNotificationIds {
   static const int skippedDayReminder = 7000;
   static const int routineDayCompleted = 7001;
-  static const int recoveryOpportunity = 7002;
 }
 
 /// Service for routine skip notifications
@@ -49,10 +48,7 @@ class RoutineNotificationService {
         iOS: iosSettings,
       );
 
-      await _notifications.initialize(
-        initSettings,
-        onDidReceiveNotificationResponse: _onNotificationTapped,
-      );
+      await _notifications.initialize(initSettings);
 
       _isInitialized = true;
 
@@ -63,56 +59,6 @@ class RoutineNotificationService {
       if (kDebugMode) {
         debugPrint('❌ [RoutineNotificationService] Initialization error: $e');
       }
-    }
-  }
-
-  /// Handle notification tap
-  void _onNotificationTapped(NotificationResponse response) {
-    if (kDebugMode) {
-      debugPrint(
-        '🔔 [RoutineNotificationService] Notification tapped: ${response.payload}',
-      );
-    }
-    // TODO: Navigate to skip recovery screen or routine details
-  }
-
-  /// Request notification permissions
-  Future<bool> requestPermissions() async {
-    if (!_isInitialized) {
-      await _initialize();
-    }
-
-    try {
-      // Request Android 13+ permissions
-      final androidPlugin =
-          _notifications.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-
-      if (androidPlugin != null) {
-        final granted = await androidPlugin.requestNotificationsPermission();
-        return granted ?? false;
-      }
-
-      // Request iOS permissions
-      final iosPlugin =
-          _notifications.resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>();
-
-      if (iosPlugin != null) {
-        final granted = await iosPlugin.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-        return granted ?? false;
-      }
-
-      return true; // Assume granted for other platforms
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ [RoutineNotificationService] Permission error: $e');
-      }
-      return false;
     }
   }
 
@@ -224,60 +170,6 @@ class RoutineNotificationService {
     }
   }
 
-  /// Send notification about recovery opportunity
-  Future<void> sendRecoveryOpportunityNotification({
-    required String routineName,
-    required int recoverableDays,
-  }) async {
-    if (!_isInitialized) {
-      await _initialize();
-    }
-
-    try {
-      const androidDetails = AndroidNotificationDetails(
-        'routine_recovery',
-        'Routine Recovery',
-        channelDescription: 'Notifications about recovery opportunities',
-        importance: Importance.high,
-        priority: Priority.high,
-        icon: '@mipmap/ic_launcher',
-      );
-
-      const iosDetails = DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      );
-
-      const notificationDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      );
-
-      final title = recoverableDays == 1
-          ? '💪 1 skipped day can be recovered'
-          : '💪 $recoverableDays skipped days can be recovered';
-
-      await _notifications.show(
-        RoutineNotificationIds.recoveryOpportunity,
-        title,
-        'Tap to schedule recovery workouts in $routineName',
-        notificationDetails,
-        payload: 'recovery_opportunity:$recoverableDays',
-      );
-
-      if (kDebugMode) {
-        debugPrint(
-          '🔔 [RoutineNotificationService] Sent recovery opportunity: $recoverableDays days',
-        );
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ [RoutineNotificationService] Error sending recovery: $e');
-      }
-    }
-  }
-
   /// Cancel all routine notifications
   Future<void> cancelAllNotifications() async {
     if (!_isInitialized) {
@@ -287,7 +179,6 @@ class RoutineNotificationService {
     try {
       await _notifications.cancel(RoutineNotificationIds.skippedDayReminder);
       await _notifications.cancel(RoutineNotificationIds.routineDayCompleted);
-      await _notifications.cancel(RoutineNotificationIds.recoveryOpportunity);
 
       if (kDebugMode) {
         debugPrint('🔕 [RoutineNotificationService] Cancelled all notifications');
