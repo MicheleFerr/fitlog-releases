@@ -596,7 +596,7 @@ abstract class AppLocalizations {
   /// **'Customize Workout'**
   String get onboardingToggleSettingsChangePart2;
 
-  /// Quick start section title
+  /// Title for exercise template quick selection
   ///
   /// In en, this message translates to:
   /// **'Quick Start'**

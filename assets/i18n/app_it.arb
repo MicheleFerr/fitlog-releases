@@ -9053,5 +9053,9 @@
   "alternativeExercises": "Esercizi Alternativi",
   "@alternativeExercises": {
     "description": "Titolo tab per esercizi alternativi"
+  },
+  "quickStart": "Avvio Rapido",
+  "@quickStart": {
+    "description": "Titolo per selezione rapida template esercizi"
   }
 }

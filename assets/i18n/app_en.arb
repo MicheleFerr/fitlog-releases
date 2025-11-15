@@ -19680,5 +19680,9 @@
   "alternativeExercises": "Alternative Exercises",
   "@alternativeExercises": {
     "description": "Tab title for alternative exercises"
+  },
+  "quickStart": "Quick Start",
+  "@quickStart": {
+    "description": "Title for exercise template quick selection"
   }
 }
