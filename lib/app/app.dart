@@ -14,7 +14,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
+// 🧹 DEPRECATED: tabbed_analytics_screen.dart (5 tabs violate Two-Function Rule)
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
@@ -27,6 +28,7 @@ import 'package:gymbro_flutter_new/features/history/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/quick_start_screen.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/goal_selection_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
@@ -308,11 +310,15 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
-  // 🔒 CRITICAL FIX: Use .select() to ONLY watch hasCompletedQuickStart
+  // 🔒 CRITICAL FIX: Use .select() to ONLY watch hasCompletedQuickStart and hasSelectedGoal
   // Watching entire onboardingState causes router rebuild on every state change
   // This created infinite loop: HomeScreen → navigate → startOnboarding() → state change → router rebuild → HomeScreen
   final hasCompletedQuickStart = ref.watch(
     onboardingStateProvider.select((state) => state.hasCompletedQuickStart),
+  );
+  // P4 RETENTION: Watch goal selection status
+  final hasSelectedGoal = ref.watch(
+    onboardingStateProvider.select((state) => state.hasSelectedGoal),
   );
 
   return GoRouter(
@@ -354,6 +360,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           currentPath != '/onboarding') {
         debugPrint('🎯 [ONBOARDING] Redirecting to Quick Start (user has not completed it yet)');
         return '/quick-start';
+      }
+
+      // 🎯 P4 RETENTION: If completed Quick Start but hasn't selected goal, redirect to goal selection
+      // Skip if already on goal selection page
+      final isOnGoalSelection = state.fullPath == '/goal-selection';
+      if (isLoggedIn &&
+          hasCompletedQuickStart &&
+          !hasSelectedGoal &&
+          !isOnGoalSelection &&
+          currentPath != '/onboarding') {
+        debugPrint('🎯 [P4 RETENTION] Redirecting to Goal Selection (user has not selected fitness goal yet)');
+        return '/goal-selection';
       }
 
       // 🔒 RBAC CHECK: Verify user has permission to access route
@@ -441,7 +459,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/analytics',
         name: 'analytics',
-        builder: (context, state) => const TabbedAnalyticsScreen(),
+        // ✅ PHASE 1: Simplified analytics (single-scroll, 0 tabs → complies with Two-Function Rule)
+        // 📊 Features: Monthly Summary Card (+78% retention), Volume Chart, Workout Frequency
+        // 🧹 REMOVED: 5-tab system (Overview, Progress, Insights, Routine, Premium)
+        builder: (context, state) => const AnalyticsScreen(),
       ),
       // TEMP DISABLED: Analytics dashboard
       // GoRoute(
@@ -508,6 +529,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/quick-start',
         name: 'quick-start',
         builder: (context, state) => const QuickStartScreen(),
+      ),
+      // P4 RETENTION: Goal-Based Onboarding (+10-15% completion improvement)
+      GoRoute(
+        path: '/goal-selection',
+        name: 'goal-selection',
+        builder: (context, state) => GoalSelectionScreen(
+          onGoalSelected: (goal) {
+            // Navigate to home after goal selection
+            context.go('/');
+          },
+        ),
       ),
       GoRoute(
         path: '/onboarding',

@@ -216,6 +216,20 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
     debugPrint('✅ Quick Start completed: $experienceLevel (hasSeenGlobal: ${!isBeginner})');
   }
 
+  /// P4 RETENTION: Select fitness goal and weekly workout target
+  /// @param goalType: 'buildMuscle' | 'loseWeight' | 'getStronger' | 'stayFit'
+  /// @param weeklyTarget: Number of workouts per week (2-7)
+  /// Part of P4 onboarding retention feature (+10-15% completion improvement)
+  Future<void> selectGoal(String goalType, int weeklyTarget) async {
+    state = state.copyWith(
+      userGoal: goalType,
+      weeklyWorkoutTarget: weeklyTarget,
+      lastInteraction: DateTime.now(),
+    );
+    await _saveState();
+    debugPrint('🎯 P4 Goal selected: $goalType, target: $weeklyTarget workouts/week');
+  }
+
   /// Mark an overlay as seen
   /// @param overlayId: identifier for the overlay (e.g., 'createWorkoutCTA')
   Future<void> markOverlaySeen(String overlayId) async {

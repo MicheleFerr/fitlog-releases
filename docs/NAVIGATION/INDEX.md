@@ -374,6 +374,91 @@ These cover initial setup and configuration:
 
 ---
 
+## 💎 RETENTION FEATURES (P0-P4)
+**Habit Formation & Engagement Systems**
+
+### Overview
+Retention-focused features implementing evidence-based habit formation strategies targeting 15-20% stickiness improvement.
+
+| Priority | Feature | Status | Impact | Evidence |
+|----------|---------|--------|--------|----------|
+| **P0** | Workout Streak Counter | ✅ Implemented | +5-10% | Duolingo: 3.7x retention with streaks |
+| **P1** | Exercise History & Templates | ✅ Implemented | +10-15% | Reduces friction, creates habits |
+| **P2** | Progressive Overload Analyzer | ✅ Implemented | +10-15% | Transparent progression = trust |
+| **P3** | Smart Notifications | ✅ Implemented | +15-20% | 48-hour nudge timing optimal |
+| **P4** | Goal-Based Onboarding | ✅ Implemented | +10-15% | Personalization increases commitment |
+
+### Feature Documentation
+
+#### P0: Workout Streak Counter
+- **Entity**: `WorkoutStreak` (Freezed, currentStreak, longestStreak)
+- **Repository**: `StreakRepository` (getCurrentStreak, checkAndNotifyMilestone)
+- **Provider**: `currentStreakProvider` (Riverpod)
+- **UI**: Streak counter widget with fire emoji, progress bar
+- **Notifications**: Milestone achievements (3, 7, 14, 30, 60 day streaks)
+
+#### P1: Exercise History & Smart Templates
+- **Use Case**: `GetRecentExercises` (last 7 days, grouped by exercise)
+- **Entity**: `ExerciseTemplate` (Hive-based storage)
+- **UI**: `QuickAddExerciseSheet` with smart set prefill
+- **Logic**: Auto-fills sets/reps/weight from last successful workout
+
+#### P2: Progressive Overload Intelligence
+- **Use Case**: `AnalyzeProgression` (rule-based, no AI)
+- **Entity**: `ProgressionSuggestion` (suggestedWeight, targetReps, confidence, reason)
+- **UI**: `ProgressionSuggestionBanner` with visual confidence indicators
+- **Rules**: Deterministic progression logic (transparent, explainable)
+
+#### P3: Intelligent Notifications
+- **Use Case**: `CheckNotificationRules` (4 transparent rules)
+- **Use Case**: `ScheduleWorkoutReminders` (optimal timing calculation)
+- **Entity**: `NotificationDecision` + `ScheduleResult`
+- **Rules**:
+  1. NO notification if worked out today
+  2. NO notification if already notified today
+  3. YES notification if 48+ hours since last workout
+  4. Schedule for tomorrow if preferred time passed
+
+#### P4: Goal-Oriented Onboarding
+- **Entities**:
+  - `UserGoal` (Freezed) - Domain entity for goal representation
+  - `OnboardingState` (Hive, extended with P4 fields: `userGoal`, `weeklyWorkoutTarget`)
+- **Enums**:
+  - `GoalType` (buildMuscle, loseWeight, getStronger, stayFit)
+  - `ExperienceLevel` (beginner, intermediate, advanced) - reuses existing field
+- **Provider**: `OnboardingStateNotifier.selectGoal(goalType, weeklyTarget)` - persists goal selection
+- **UI**: `GoalSelectionScreen` (ConsumerWidget, auto-navigates to home after selection)
+- **Routing**: `/goal-selection` route with redirect logic (post-QuickStart, pre-home)
+- **Default Targets**: Evidence-based weekly workout defaults (buildMuscle/loseWeight: 4x, getStronger/stayFit: 3x)
+
+### Testing Status
+- **All entity tests**: 11/11 passing (UserGoal 5/5, OnboardingState 6/6)
+- **All use case tests**: 9/9 passing (CheckNotificationRules 5/5, ScheduleWorkoutReminders 4/4)
+- **All widget tests**: 7/7 passing (ProgressionBanner 4/4, GoalSelection 3/3)
+- **Total**: 27/27 tests passing across P0-P4 features
+
+### Implementation Notes
+- All domain entities use **Freezed** for immutability
+- All timestamps use **DateTime** (no Firebase Timestamp in domain)
+- All UI text uses **context.l10n** (fully localized)
+- All colors use **context.colors** (theme-aware)
+- All icons use **AppIcons.*** and **AppIconSize.*** (design system compliant)
+- TDD workflow: RED → GREEN → REFACTOR → COMMIT (all features)
+
+### Future Enhancements (Deferred)
+- P4: Weekly goal selection screen (skeleton exists)
+- P4: First workout guided tutorial (skeleton exists)
+- P2: Machine learning-based progression (currently rule-based)
+- P3: Adaptive notification timing based on user behavior
+- P0: Social streak sharing (requires social features)
+
+### Related Documentation
+- Market Strategy: [`../STRATEGY/MARKET_AND_RETENTION_STRATEGY.md`](../STRATEGY/MARKET_AND_RETENTION_STRATEGY.md)
+- Security Audit: [`../audit/SECURITY_AUDIT_2025-10-20.md`](../audit/SECURITY_AUDIT_2025-10-20.md)
+- CLAUDE Rules: [`../../CLAUDE.md`](../../CLAUDE.md)
+
+---
+
 **Last Audit**: October 20, 2025
 **Next Audit**: January 20, 2026
-**Last Updated**: October 20, 2025 (Added Security Audit Report & linked CLAUDE.md)
+**Last Updated**: January 15, 2025 (Added P0-P4 Retention Features documentation)

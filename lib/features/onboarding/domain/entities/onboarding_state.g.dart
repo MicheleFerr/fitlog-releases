@@ -32,13 +32,15 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       firstExerciseAddedAt: fields[15] as DateTime?,
       firstSetCompletedAt: fields[16] as DateTime?,
       hasSeenRestTimerExplanation: fields[17] as bool,
+      userGoal: fields[18] as String?,
+      weeklyWorkoutTarget: fields[19] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, OnboardingState obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.hasSeenGlobalOnboarding)
       ..writeByte(1)
@@ -68,7 +70,11 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       ..writeByte(16)
       ..write(obj.firstSetCompletedAt)
       ..writeByte(17)
-      ..write(obj.hasSeenRestTimerExplanation);
+      ..write(obj.hasSeenRestTimerExplanation)
+      ..writeByte(18)
+      ..write(obj.userGoal)
+      ..writeByte(19)
+      ..write(obj.weeklyWorkoutTarget);
   }
 
   @override
