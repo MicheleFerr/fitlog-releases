@@ -717,7 +717,7 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   }
 
   /// Get next uncompleted workout starting from today
-  /// Returns the first scheduled workout that is not completed, skipping completed days
+  /// Returns the first scheduled workout that is not completed, with correct template cycling
   ScheduledDay? getNextUncompletedWorkout() {
     final today = DateTime.now();
 
@@ -726,7 +726,68 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     final daysToEnd = endDate.difference(today).inDays;
     final maxDays = daysToEnd.clamp(0, 90);
 
-    // Check up to maxDays in the future for next uncompleted workout
+    // If we have a repeating pattern, we need to determine the next template in the cycle
+    if (pattern.type == PatternType.repeating && pattern.sequence.isNotEmpty) {
+      // Find the last completed workout to determine where we are in the cycle
+      String? lastCompletedTemplate;
+
+      // Search backwards from today to find the last completed workout
+      for (int i = 0; i <= 30; i++) {
+        final checkDate = today.subtract(Duration(days: i));
+        final day = getScheduledDay(checkDate);
+
+        if (day != null && !day.isRestDay && day.status == DayStatus.completed) {
+          lastCompletedTemplate = day.templateId;
+          break;
+        }
+      }
+
+      // If we found a last completed workout, determine the next template in the cycle
+      if (lastCompletedTemplate != null) {
+        // Get workout templates only (exclude rest days)
+        final workoutTemplates = pattern.sequence
+            .where((item) => item != RoutinePatternExtensions.restKeyword)
+            .toList();
+
+        if (workoutTemplates.isNotEmpty) {
+          // Find the index of the last completed template
+          final lastIndex = workoutTemplates.indexOf(lastCompletedTemplate);
+
+          if (lastIndex != -1) {
+            // Calculate the next template index (cycle back to 0 if at the end)
+            final nextIndex = (lastIndex + 1) % workoutTemplates.length;
+            final nextTemplateId = workoutTemplates[nextIndex];
+
+            // Now find the next scheduled day and update its template
+            for (int i = 0; i < maxDays; i++) {
+              final checkDate = today.add(Duration(days: i));
+              final scheduledDay = getScheduledDay(checkDate);
+
+              // Find next non-rest, non-completed day
+              if (scheduledDay != null &&
+                  !scheduledDay.isRestDay &&
+                  scheduledDay.status != DayStatus.completed) {
+
+                // Return with the correct template from the cycle
+                return ScheduledDay(
+                  date: scheduledDay.date,
+                  templateId: nextTemplateId,
+                  status: scheduledDay.status,
+                  workoutId: scheduledDay.workoutId,
+                  skipReason: scheduledDay.skipReason,
+                  originalDate: scheduledDay.originalDate,
+                  notes: scheduledDay.notes,
+                  isRecovery: scheduledDay.isRecovery,
+                  originalMissedDate: scheduledDay.originalMissedDate,
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Fallback to the original logic for non-repeating patterns or if cycle detection fails
     for (int i = 0; i < maxDays; i++) {
       final checkDate = today.add(Duration(days: i));
       final scheduledDay = getScheduledDay(checkDate);
