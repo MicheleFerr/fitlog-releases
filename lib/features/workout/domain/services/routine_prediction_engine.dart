@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 
 /// Prediction engine with 2-level fallback hierarchy
 ///
@@ -37,9 +38,7 @@ class RoutinePredictionEngine {
   /// Predict next workout using 2-level fallback hierarchy
   ///
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
-  /// [activeRoutineTemplateId]: Optional active routine ID for Level 1
-  /// [nextWorkoutTemplateId]: Optional next uncompleted workout template ID from routine
-  /// [nextWorkoutScheduledDate]: Optional scheduled date for next workout from routine
+  /// [activeRoutine]: Optional active FlexibleRoutine for Level 1
   /// [availableTemplateNames]: Optional list of existing template names for validation
   /// [availableTemplates]: Optional list of full templates for ID->Name mapping
   /// [useCache]: Whether to use cached suggestion (default: true)
@@ -50,9 +49,7 @@ class RoutinePredictionEngine {
   /// against existing templates and fallback to generic "Workout" if template not found.
   Future<WorkoutSuggestion> predictNextWorkout({
     required List<Workout> workoutHistory,
-    String? activeRoutineTemplateId,
-    String? nextWorkoutTemplateId,
-    DateTime? nextWorkoutScheduledDate,
+    FlexibleRoutine? activeRoutine,
     List<String>? availableTemplateNames,
     List<dynamic>? availableTemplates, // WorkoutTemplate objects
     bool useCache = true,
@@ -63,14 +60,10 @@ class RoutinePredictionEngine {
     }
 
     // Try Level 1: Routine-Based
-    if (activeRoutineTemplateId != null && nextWorkoutTemplateId != null) {
+    if (activeRoutine != null) {
       final routineSuggestion = await _tryRoutineBased(
-        workoutHistory,
-        activeRoutineTemplateId,
-        nextWorkoutTemplateId,
-        nextWorkoutScheduledDate,
-        availableTemplateNames,
-        availableTemplates,
+        activeRoutine: activeRoutine,
+        availableTemplates: availableTemplates,
       );
       if (routineSuggestion != null) {
         return _cacheAndReturn(routineSuggestion);
@@ -108,103 +101,51 @@ class RoutinePredictionEngine {
 
   // ========== LEVEL 1: ROUTINE-BASED ==========
 
-  /// Try routine-based suggestion (active routine template)
+  /// Try routine-based suggestion using FlexibleRoutine.getNextWorkoutName()
+  ///
+  /// Delegates rotation logic to FlexibleRoutine entity (single source of truth).
   ///
   /// Requirements:
   /// - Active routine exists
-  /// - Routine has defined schedule
-  /// - Not yet implemented (placeholder)
-  Future<WorkoutSuggestion?> _tryRoutineBased(
-    List<Workout> workoutHistory,
-    String routineTemplateId,
-    String nextWorkoutTemplateId,
-    DateTime? scheduledDate,
-    List<String>? availableTemplateNames,
-    List<dynamic>? availableTemplates, // Full template objects
-  ) async {
-    // ✅ IMPLEMENTED: Use next uncompleted workout from active routine
-
-    // Find template name from template ID using templates list
+  /// - Routine has repeating pattern
+  /// - Available templates provided for name mapping
+  Future<WorkoutSuggestion?> _tryRoutineBased({
+    required FlexibleRoutine activeRoutine,
+    required List<dynamic>? availableTemplates,
+  }) async {
+    // Validate templates available
     if (availableTemplates == null || availableTemplates.isEmpty) {
-      return null; // Cannot find template without templates list
+      return null; // Cannot map template ID→Name without templates
     }
 
-    // ✅ FIX: Find template by ID and get its name directly
-    // Handle dynamic template objects safely
-    String? workoutName;
+    // ✅ SIMPLIFIED: Delegate to FlexibleRoutine.getNextWorkoutName()
+    // This is the single source of truth for workout rotation logic
+    try {
+      final workoutName = activeRoutine.getNextWorkoutName(
+        availableTemplates: availableTemplates,
+      );
 
-    // Try to find matching template and extract name
-    for (final template in availableTemplates) {
-      try {
-        // Safely access ID property (could be string or method)
-        String? templateId;
-        if (template is Map) {
-          templateId = template['id']?.toString();
-        } else {
-          // Try accessing as object property
-          try {
-            templateId = (template as dynamic).id?.toString();
-          } catch (_) {
-            // Skip if can't access id
-            continue;
-          }
-        }
-
-        // Check if this is the template we're looking for
-        if (templateId == nextWorkoutTemplateId) {
-          // Extract name safely
-          if (template is Map) {
-            workoutName = template['name']?.toString();
-          } else {
-            try {
-              workoutName = (template as dynamic).name?.toString();
-            } catch (_) {
-              // Use fallback name
-              workoutName = 'Workout';
-            }
-          }
-          break;
-        }
-      } catch (e) {
-        // Skip this template if we can't access its properties
-        continue;
+      if (workoutName == null) {
+        return null; // Non-repeating pattern, fallback to frequency-based
       }
-    }
 
-    // If we couldn't find the template name, use a reasonable default
-    // based on the template ID pattern (e.g., "template-a" → "Giorno A")
-    if (workoutName == null || workoutName.isEmpty) {
-      // Extract letter from template ID if it follows pattern "template-X"
-      final letterMatch = RegExp(r'template-([a-d])', caseSensitive: false)
-          .firstMatch(nextWorkoutTemplateId);
-      if (letterMatch != null) {
-        final letter = letterMatch.group(1)!.toUpperCase();
-        workoutName = 'Giorno $letter';
-      } else {
-        // Last resort: use the template ID directly
-        workoutName = nextWorkoutTemplateId;
+      // Get next uncompleted workout for scheduled date (optional)
+      final nextUncompletedWorkout = activeRoutine.getNextUncompletedWorkout();
+
+      return WorkoutSuggestion(
+        level: SuggestionLevel.routine,
+        workoutName: workoutName,
+        confidence: 0.95, // High confidence (routine-based + rotation logic)
+        reason: 'Da routine ${activeRoutine.name}',
+        scheduledDate: nextUncompletedWorkout?.date,
+        generatedAt: DateTime.now(),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [ROUTINE_PREDICTION] Error: $e');
       }
+      return null; // Fallback to frequency-based
     }
-
-    // Validate that this template name exists in available names
-    if (availableTemplateNames != null &&
-        !availableTemplateNames.contains(workoutName)) {
-      // Template name doesn't exist in available names
-      return null;
-    }
-
-    // Calculate confidence based on routine adherence
-    // High confidence if user follows routine consistently
-    const confidence = 0.80; // High confidence for routine-based suggestions
-
-    return WorkoutSuggestion(
-      level: SuggestionLevel.routine,
-      workoutName: workoutName,
-      confidence: confidence,
-      reason: 'Next in your active routine',
-      scheduledDate: scheduledDate, // ✅ NEW: Pass scheduled date to UI
-      generatedAt: DateTime.now(),
-    );
   }
 
   // ========== LEVEL 2: FREQUENCY-BASED ==========

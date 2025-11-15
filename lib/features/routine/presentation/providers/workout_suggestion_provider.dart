@@ -21,11 +21,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/routine_prediction_engine.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_detection_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viability_checker.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart'; // ✅ Explicit import for extension
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 
 /// Provider for current user ID from Firebase Auth
@@ -34,25 +32,9 @@ final _currentUserIdProvider = Provider<String?>((ref) {
   return user?.uid;
 });
 
-/// Provider for PatternDetectionService instance
-final _patternDetectionServiceProvider = Provider<PatternDetectionService>((ref) {
-  return PatternDetectionService();
-});
-
-/// Provider for PatternViabilityChecker instance
-final _patternViabilityCheckerProvider = Provider<PatternViabilityChecker>((ref) {
-  return PatternViabilityChecker();
-});
-
-/// Provider for RoutinePredictionEngine instance
+/// Provider for RoutinePredictionEngine instance (simplified - no dependencies)
 final _routinePredictionEngineProvider = Provider<RoutinePredictionEngine>((ref) {
-  final patternService = ref.watch(_patternDetectionServiceProvider);
-  final viabilityChecker = ref.watch(_patternViabilityCheckerProvider);
-
-  return RoutinePredictionEngine(
-    patternService: patternService,
-    viabilityChecker: viabilityChecker,
-  );
+  return RoutinePredictionEngine();
 });
 
 /// Provider for workout suggestion (auto-refreshes when history changes)
@@ -92,26 +74,18 @@ final workoutSuggestionProvider = FutureProvider.autoDispose<WorkoutSuggestion>(
     }
   }
 
-  // Get active routine and next uncompleted workout (if any)
+  // Get active routine (FlexibleRoutine object)
   final activeRoutineAsync = ref.watch(activeFlexibleRoutineProvider);
-  final activeRoutineTemplateId = activeRoutineAsync.maybeWhen(
-    data: (routine) => routine?.id,
+  final activeRoutine = activeRoutineAsync.maybeWhen(
+    data: (routine) => routine,
     orElse: () => null,
   );
-
-  // ✅ NEW: Get next uncompleted workout from active routine
-  final nextUncompletedWorkout = activeRoutineAsync.maybeWhen(
-    data: (routine) => routine?.getNextUncompletedWorkout(),
-    orElse: () => null,
-  );
-
-  final nextWorkoutTemplateId = nextUncompletedWorkout?.templateId;
-  final nextWorkoutScheduledDate = nextUncompletedWorkout?.date;
 
   if (kDebugMode || kProfileMode) {
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine template ID: $activeRoutineTemplateId');
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Next uncompleted workout template ID: $nextWorkoutTemplateId');
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Next workout scheduled date: $nextWorkoutScheduledDate');
+    debugPrint('🔍 [WORKOUT_SUGGESTION] Active routine: ${activeRoutine?.name ?? 'None'}');
+    if (activeRoutine != null) {
+      debugPrint('🔍 [WORKOUT_SUGGESTION] Routine pattern: ${activeRoutine.pattern.type}, sequence: ${activeRoutine.pattern.sequence}');
+    }
   }
 
   // Get available template names for validation
@@ -120,25 +94,34 @@ final workoutSuggestionProvider = FutureProvider.autoDispose<WorkoutSuggestion>(
   // 🔧 FIX: Await template provider to ensure we have loaded templates
   // BEFORE predicting workout. This prevents validation from being skipped
   // when template list is empty due to loading/error state.
-  final templates = await ref.watch(customWorkoutTemplatesProvider.future);
-  final availableTemplateNames = templates.map((t) => t.name).toList();
+  List<dynamic> templates = [];
+  List<String> availableTemplateNames = [];
 
-  if (kDebugMode || kProfileMode) {
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Available template names: $availableTemplateNames');
-    debugPrint('🔍 [WORKOUT_SUGGESTION] Template count: ${availableTemplateNames.length}');
+  try {
+    templates = await ref.watch(customWorkoutTemplatesProvider.future);
+    availableTemplateNames = templates.map((t) => t.name?.toString() ?? '').where((name) => name.isNotEmpty).toList();
+
+    if (kDebugMode || kProfileMode) {
+      debugPrint('🔍 [WORKOUT_SUGGESTION] Successfully loaded ${templates.length} templates');
+      debugPrint('🔍 [WORKOUT_SUGGESTION] Available template names: $availableTemplateNames');
+      debugPrint('🔍 [WORKOUT_SUGGESTION] Template count: ${availableTemplateNames.length}');
+    }
+  } catch (e) {
+    if (kDebugMode || kProfileMode) {
+      debugPrint('❌ [WORKOUT_SUGGESTION] Error loading templates: $e');
+    }
+    // Continue with empty templates list, will fallback to other prediction methods
   }
 
   // Get prediction engine
   final predictionEngine = ref.watch(_routinePredictionEngineProvider);
 
-  // Predict next workout (with template validation)
+  // Predict next workout using simplified 2-level fallback
   final suggestion = await predictionEngine.predictNextWorkout(
     workoutHistory: workouts,
-    activeRoutineTemplateId: activeRoutineTemplateId,
-    nextWorkoutTemplateId: nextWorkoutTemplateId, // ✅ NEW: Pass next workout from routine
-    nextWorkoutScheduledDate: nextWorkoutScheduledDate, // ✅ NEW: Pass scheduled date
+    activeRoutine: activeRoutine, // ✅ SIMPLIFIED: Pass FlexibleRoutine object
     availableTemplateNames: availableTemplateNames,
-    availableTemplates: templates, // ✅ PASS FULL TEMPLATES for ID->Name mapping
+    availableTemplates: templates, // For template ID→Name mapping
     useCache: true,
   );
 
