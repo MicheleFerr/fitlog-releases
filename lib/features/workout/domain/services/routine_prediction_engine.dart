@@ -2,26 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_detection_service.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viability_checker.dart';
 
-/// Prediction engine with 4-level fallback hierarchy
+/// Prediction engine with 2-level fallback hierarchy
 ///
-/// Provides workout suggestions using a hierarchical fallback system:
-/// 1. **Pattern-Based** (highest priority): Detected repeating patterns
-/// 2. **Routine-Based**: Active routine template schedule
-/// 3. **Frequency-Based**: Most frequent workouts
-/// 4. **Day-Based** (fallback): Default by day of week
+/// Provides workout suggestions using a simplified fallback system:
+/// 1. **Routine-Based** (highest priority): Active routine template schedule
+/// 2. **Frequency-Based** (fallback): Most frequent workouts in last 30 days
 ///
 /// Each level has specific requirements. If a level fails, the engine
 /// automatically falls back to the next level.
 ///
 /// Example:
 /// ```dart
-/// final engine = RoutinePredictionEngine(
-///   patternService: PatternDetectionService(),
-///   viabilityChecker: PatternViabilityChecker(),
-/// );
+/// final engine = RoutinePredictionEngine();
 ///
 /// final suggestion = await engine.predictNextWorkout(
 ///   workoutHistory: workouts,
@@ -34,23 +27,17 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/pattern_viab
 /// ```
 class RoutinePredictionEngine {
 
-  RoutinePredictionEngine({
-    required PatternDetectionService patternService,
-    required PatternViabilityChecker viabilityChecker,
-  })  : _patternService = patternService,
-        _viabilityChecker = viabilityChecker;
-  final PatternDetectionService _patternService;
-  final PatternViabilityChecker _viabilityChecker;
+  RoutinePredictionEngine();
 
   // Cache for performance (5-minute TTL)
   WorkoutSuggestion? _cachedSuggestion;
   DateTime? _cacheTimestamp;
   static const _cacheDuration = Duration(minutes: 5);
 
-  /// Predict next workout using 4-level fallback hierarchy
+  /// Predict next workout using 2-level fallback hierarchy
   ///
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
-  /// [activeRoutineTemplateId]: Optional active routine ID for Level 2
+  /// [activeRoutineTemplateId]: Optional active routine ID for Level 1
   /// [nextWorkoutTemplateId]: Optional next uncompleted workout template ID from routine
   /// [nextWorkoutScheduledDate]: Optional scheduled date for next workout from routine
   /// [availableTemplateNames]: Optional list of existing template names for validation
@@ -75,13 +62,7 @@ class RoutinePredictionEngine {
       return _cachedSuggestion!;
     }
 
-    // Try Level 1: Pattern-Based
-    final patternSuggestion = await _tryPatternBased(workoutHistory);
-    if (patternSuggestion != null) {
-      return _cacheAndReturn(patternSuggestion);
-    }
-
-    // Try Level 2: Routine-Based
+    // Try Level 1: Routine-Based
     if (activeRoutineTemplateId != null && nextWorkoutTemplateId != null) {
       final routineSuggestion = await _tryRoutineBased(
         workoutHistory,
@@ -96,7 +77,7 @@ class RoutinePredictionEngine {
       }
     }
 
-    // Try Level 3: Frequency-Based
+    // Fallback Level 2: Frequency-Based (always succeeds)
     final frequencySuggestion = await _tryFrequencyBased(workoutHistory);
     if (frequencySuggestion != null) {
       final validatedSuggestion = _validateTemplateExists(
@@ -107,14 +88,16 @@ class RoutinePredictionEngine {
       return _cacheAndReturn(validatedSuggestion);
     }
 
-    // Fallback Level 4: Day-Based (always succeeds)
-    final dayBasedSuggestion = await _tryDayBased(workoutHistory);
-    final validatedSuggestion = _validateTemplateExists(
-      dayBasedSuggestion,
-      availableTemplateNames,
-      workoutHistory,
+    // Final fallback: Generic "Workout" suggestion
+    return _cacheAndReturn(
+      WorkoutSuggestion(
+        level: SuggestionLevel.frequency,
+        workoutName: 'Workout',
+        confidence: 0.20,
+        reason: 'Start with any workout',
+        generatedAt: DateTime.now(),
+      ),
     );
-    return _cacheAndReturn(validatedSuggestion);
   }
 
   /// Clear cached suggestion (force recalculation next time)
@@ -123,52 +106,7 @@ class RoutinePredictionEngine {
     _cacheTimestamp = null;
   }
 
-  // ========== LEVEL 1: PATTERN-BASED ==========
-
-  /// Try pattern-based suggestion (franco→ciccio→paolo)
-  ///
-  /// Requirements:
-  /// - ≥6 workouts
-  /// - ≥18 days of data
-  /// - ≥3 complete cycles
-  /// - Confidence ≥0.70
-  /// - Coverage >50%
-  Future<WorkoutSuggestion?> _tryPatternBased(
-    List<Workout> workoutHistory,
-  ) async {
-    // Detect pattern
-    final pattern = await _patternService.detectPattern(
-      recentWorkouts: workoutHistory,
-    );
-
-    if (pattern == null) return null;
-
-    // Check viability
-    final viability = _viabilityChecker.isViable(
-      pattern: pattern,
-      workoutHistory: workoutHistory,
-    );
-
-    if (!viability.isViable) return null;
-
-    // Generate suggestion
-    final nextWorkout = pattern.predictNext();
-    final lastWorkout = _getLastWorkoutName(workoutHistory);
-
-    return WorkoutSuggestion(
-      level: SuggestionLevel.pattern,
-      workoutName: nextWorkout,
-      confidence: pattern.confidence,
-      reason: 'Detected pattern: ${pattern.displayPattern} '
-          '(${pattern.displayConfidence} confidence)',
-      patternInfo: lastWorkout != null
-          ? 'You completed $lastWorkout last time'
-          : null,
-      generatedAt: DateTime.now(),
-    );
-  }
-
-  // ========== LEVEL 2: ROUTINE-BASED ==========
+  // ========== LEVEL 1: ROUTINE-BASED ==========
 
   /// Try routine-based suggestion (active routine template)
   ///
@@ -192,17 +130,61 @@ class RoutinePredictionEngine {
     }
 
     // ✅ FIX: Find template by ID and get its name directly
-    final matchingTemplate = availableTemplates.firstWhere(
-      (template) => template.id == nextWorkoutTemplateId,
-      orElse: () => null,
-    );
+    // Handle dynamic template objects safely
+    String? workoutName;
 
-    if (matchingTemplate == null) {
-      // Template not found by ID, return null to fallback
-      return null;
+    // Try to find matching template and extract name
+    for (final template in availableTemplates) {
+      try {
+        // Safely access ID property (could be string or method)
+        String? templateId;
+        if (template is Map) {
+          templateId = template['id']?.toString();
+        } else {
+          // Try accessing as object property
+          try {
+            templateId = (template as dynamic).id?.toString();
+          } catch (_) {
+            // Skip if can't access id
+            continue;
+          }
+        }
+
+        // Check if this is the template we're looking for
+        if (templateId == nextWorkoutTemplateId) {
+          // Extract name safely
+          if (template is Map) {
+            workoutName = template['name']?.toString();
+          } else {
+            try {
+              workoutName = (template as dynamic).name?.toString();
+            } catch (_) {
+              // Use fallback name
+              workoutName = 'Workout';
+            }
+          }
+          break;
+        }
+      } catch (e) {
+        // Skip this template if we can't access its properties
+        continue;
+      }
     }
 
-    final workoutName = matchingTemplate.name as String;
+    // If we couldn't find the template name, use a reasonable default
+    // based on the template ID pattern (e.g., "template-a" → "Giorno A")
+    if (workoutName == null || workoutName.isEmpty) {
+      // Extract letter from template ID if it follows pattern "template-X"
+      final letterMatch = RegExp(r'template-([a-d])', caseSensitive: false)
+          .firstMatch(nextWorkoutTemplateId);
+      if (letterMatch != null) {
+        final letter = letterMatch.group(1)!.toUpperCase();
+        workoutName = 'Giorno $letter';
+      } else {
+        // Last resort: use the template ID directly
+        workoutName = nextWorkoutTemplateId;
+      }
+    }
 
     // Validate that this template name exists in available names
     if (availableTemplateNames != null &&
@@ -225,9 +207,11 @@ class RoutinePredictionEngine {
     );
   }
 
-  // ========== LEVEL 3: FREQUENCY-BASED ==========
+  // ========== LEVEL 2: FREQUENCY-BASED ==========
 
-  /// Try frequency-based suggestion (most frequent workout)
+  /// Try frequency-based suggestion (most frequent workout in last 30 days)
+  ///
+  /// Returns the least recently done workout to encourage balanced training.
   ///
   /// Requirements:
   /// - ≥3 workouts in last 30 days
@@ -287,73 +271,6 @@ class RoutinePredictionEngine {
       confidence: confidence,
       reason: 'You do $mostFrequentOriginal most often',
       frequencyData: '${mostFrequentNormalized.value} times in last 30 days',
-      generatedAt: DateTime.now(),
-    );
-  }
-
-  // ========== LEVEL 4: DAY-BASED (FALLBACK) ==========
-
-  /// Try day-based suggestion (default by weekday)
-  ///
-  /// Always succeeds - uses historical data to find default workout for today
-  Future<WorkoutSuggestion> _tryDayBased(
-    List<Workout> workoutHistory,
-  ) async {
-    final today = DateTime.now().weekday; // 1=Monday, 7=Sunday
-
-    // Find most common workout for this weekday
-    final workoutsOnThisDay = workoutHistory.where((w) {
-      return w.startTime?.weekday == today;
-    }).toList();
-
-    String defaultWorkout;
-    String reason;
-    double confidence;
-
-    if (workoutsOnThisDay.isNotEmpty) {
-      // Count frequencies for this day
-      final frequencies = <String, int>{};
-      for (final workout in workoutsOnThisDay) {
-        final name = _normalizeWorkoutName(workout.name ?? 'Unknown');
-        frequencies[name] = (frequencies[name] ?? 0) + 1;
-      }
-
-      // Get most common
-      final mostCommon = frequencies.entries.reduce((a, b) {
-        return a.value > b.value ? a : b;
-      });
-
-      defaultWorkout = mostCommon.key;
-      final dayName = _getDayName(today);
-      reason = 'On $dayName, you usually do $defaultWorkout';
-      confidence = 0.30 + (mostCommon.value / workoutsOnThisDay.length) * 0.20;
-    } else {
-      // No historical data for this day - use overall most frequent
-      final frequencies = <String, int>{};
-      for (final workout in workoutHistory) {
-        final name = _normalizeWorkoutName(workout.name ?? 'Unknown');
-        frequencies[name] = (frequencies[name] ?? 0) + 1;
-      }
-
-      if (frequencies.isNotEmpty) {
-        final mostCommon = frequencies.entries.reduce((a, b) {
-          return a.value > b.value ? a : b;
-        });
-        defaultWorkout = mostCommon.key;
-      } else {
-        // No data at all - generic fallback
-        defaultWorkout = 'Workout';
-      }
-
-      reason = 'Start with any workout';
-      confidence = 0.30;
-    }
-
-    return WorkoutSuggestion(
-      level: SuggestionLevel.dayBased,
-      workoutName: defaultWorkout,
-      confidence: confidence,
-      reason: reason,
       generatedAt: DateTime.now(),
     );
   }
@@ -482,26 +399,6 @@ class RoutinePredictionEngine {
           'Template "${suggestion.workoutName}" not found. Start with any workout',
       generatedAt: DateTime.now(),
     );
-  }
-
-  /// Get last workout name from history
-  String? _getLastWorkoutName(List<Workout> workoutHistory) {
-    if (workoutHistory.isEmpty) return null;
-    return workoutHistory.first.name; // Already newest first
-  }
-
-  /// Get day name from weekday number
-  String _getDayName(int weekday) {
-    const days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-    return days[weekday - 1]; // weekday is 1-based
   }
 
   /// Check if cache is valid (not expired)

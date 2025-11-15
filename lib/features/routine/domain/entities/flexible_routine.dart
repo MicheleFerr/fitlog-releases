@@ -806,6 +806,105 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     return null; // No uncompleted workout found in scan period
   }
 
+  /// Get the name of the next workout in the rotation
+  ///
+  /// This is the SINGLE SOURCE OF TRUTH for workout rotation logic.
+  ///
+  /// Logic:
+  /// 1. Find last completed workout in history (30-day window)
+  /// 2. Calculate next index in sequence with rotation
+  /// 3. Map template ID → template name via availableTemplates
+  ///
+  /// Returns null if:
+  /// - Pattern is not repeating
+  /// - No matching template found
+  /// - Sequence is empty
+  String? getNextWorkoutName({
+    required List<dynamic> availableTemplates, // CustomWorkoutTemplate objects
+  }) {
+    // Pattern must be repeating
+    if (pattern.type != PatternType.repeating || pattern.sequence.isEmpty) {
+      return null;
+    }
+
+    final today = DateTime.now();
+    String? lastCompletedTemplateId;
+
+    // 1. Find last completed workout (30-day window)
+    for (int i = 0; i <= 30; i++) {
+      final checkDate = today.subtract(Duration(days: i));
+      final day = getScheduledDay(checkDate);
+
+      if (day != null &&
+          !day.isRestDay &&
+          day.status == DayStatus.completed) {
+        lastCompletedTemplateId = day.templateId;
+        break;
+      }
+    }
+
+    // 2. Calculate next index with rotation
+    final workoutTemplates = pattern.sequence
+        .where((item) => item != RoutinePatternExtensions.restKeyword)
+        .toList();
+
+    if (workoutTemplates.isEmpty) {
+      return null;
+    }
+
+    String nextTemplateId;
+    if (lastCompletedTemplateId != null) {
+      final lastIndex = workoutTemplates.indexOf(lastCompletedTemplateId);
+      if (lastIndex == -1) {
+        // Fallback: start from beginning
+        nextTemplateId = workoutTemplates.first;
+      } else {
+        // Rotate: (lastIndex + 1) % length
+        final nextIndex = (lastIndex + 1) % workoutTemplates.length;
+        nextTemplateId = workoutTemplates[nextIndex];
+      }
+    } else {
+      // No history: start from first workout
+      nextTemplateId = workoutTemplates.first;
+    }
+
+    // 3. Map template ID → name
+    for (final template in availableTemplates) {
+      try {
+        // Safely access ID property
+        String? templateId;
+        if (template is Map) {
+          templateId = template['id']?.toString();
+        } else {
+          try {
+            templateId = (template as dynamic).id?.toString();
+          } catch (_) {
+            continue;
+          }
+        }
+
+        // Check if this is the template we're looking for
+        if (templateId == nextTemplateId) {
+          // Extract name safely
+          if (template is Map) {
+            return template['name']?.toString();
+          } else {
+            try {
+              return (template as dynamic).name?.toString();
+            } catch (_) {
+              return 'Workout';
+            }
+          }
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+
+    // Template not found - return null to trigger fallback
+    return null;
+  }
+
   /// Convert date to string key for map
   /// ✅ FIX Bug #17: Unified date key format (always normalized to midnight)
   String _dateKey(DateTime date) {
