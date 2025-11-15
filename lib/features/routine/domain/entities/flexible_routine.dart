@@ -721,8 +721,13 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
   ScheduledDay? getNextUncompletedWorkout() {
     final today = DateTime.now();
 
-    // Check up to 30 days in the future for next uncompleted workout
-    for (int i = 0; i < 30; i++) {
+    // Calculate dynamic scan limit based on routine endDate
+    // Cap at 90 days for performance (long semester routines)
+    final daysToEnd = endDate.difference(today).inDays;
+    final maxDays = daysToEnd.clamp(0, 90);
+
+    // Check up to maxDays in the future for next uncompleted workout
+    for (int i = 0; i < maxDays; i++) {
       final checkDate = today.add(Duration(days: i));
       final scheduledDay = getScheduledDay(checkDate);
 
@@ -737,7 +742,7 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
       }
     }
 
-    return null; // No uncompleted workout found in next 30 days
+    return null; // No uncompleted workout found in scan period
   }
 
   /// Convert date to string key for map

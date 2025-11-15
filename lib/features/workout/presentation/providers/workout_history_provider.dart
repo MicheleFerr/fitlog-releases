@@ -24,6 +24,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 
@@ -485,10 +486,11 @@ final workoutHistoryStatsProvider = Provider<Map<String, dynamic>>((ref) {
   return notifier.calculateStatistics();
 });
 
-/// Provider to check if user has completed a workout today (after 04:00 cutoff)
+/// Provider to check if user has completed a workout today (after user's day cutoff)
 ///
 /// Returns the completed workout if found, null otherwise.
-/// Uses 04:00 cutoff: workout after 04:00 today counts as "today".
+/// Uses configurable cutoff (default 04:00): workout after cutoff counts as "today".
+/// Cutoff can be customized in user preferences (useful for shift workers).
 final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref) async {
   final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
 
@@ -501,6 +503,14 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
       debugPrint('⚠️ [todayCompletedWorkoutProvider] No userId, returning null');
     }
     return null;
+  }
+
+  // Get user's day cutoff preference (default: 4 = 04:00)
+  final userProfile = ref.watch(userProfileProvider).valueOrNull;
+  final cutoffHour = userProfile?.dayCutoffHour ?? 4;
+
+  if (kDebugMode) {
+    debugPrint('⚙️ [todayCompletedWorkoutProvider] Using cutoff hour: $cutoffHour:00');
   }
 
   final dataSource = ref.watch(hiveWorkoutDataSourceProvider);
@@ -550,11 +560,11 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
       return null;
     }
 
-    // Calculate today's 04:00 cutoff
+    // Calculate today's cutoff using user preference
     final now = DateTime.now();
-    final todayCutoff = DateTime(now.year, now.month, now.day, 4, 0);
+    final todayCutoff = DateTime(now.year, now.month, now.day, cutoffHour, 0);
 
-    // Check if workout was at or after cutoff (04:00:00 inclusive)
+    // Check if workout was at or after cutoff (inclusive)
     if (lastWorkout.startTime!.compareTo(todayCutoff) >= 0) {
       if (kDebugMode) {
         debugPrint('✅ [todayCompletedWorkoutProvider] Workout done today: ${lastWorkout.id}');

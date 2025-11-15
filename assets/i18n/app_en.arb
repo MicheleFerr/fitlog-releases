@@ -16723,6 +16723,10 @@
   "@smartWorkoutCTATemplateNotFound": {
     "description": "Error message when template doesn't exist"
   },
+  "smartWorkoutCTARoutineUpdated": "Routine updated ✓",
+  "@smartWorkoutCTARoutineUpdated": {
+    "description": "Smart Workout CTA disabled state - routine auto-cleaned after template deletion"
+  },
   "smartWorkoutCTARestModeTitle": "💪 Enjoy your well-deserved rest",
   "@smartWorkoutCTARestModeTitle": {
     "description": "Title for rest mode when user already worked out today"
@@ -19297,6 +19301,45 @@
   "settingsApreProtocol": "APRE Protocol",
   "settingsApreProtocolDesc": "Protocol {number}",
   "settingsApreProtocolUpdated": "APRE protocol updated to {protocol}",
+  "settingsDayCutoffHour": "Day Cutoff Hour",
+  "@settingsDayCutoffHour": {
+    "description": "Title for day cutoff hour setting"
+  },
+  "settingsDayCutoffHourDesc": "Workouts after {hour}:00 count as 'today'",
+  "@settingsDayCutoffHourDesc": {
+    "description": "Subtitle for day cutoff hour setting",
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDayCutoffHourDialog": "Day Cutoff Hour",
+  "@settingsDayCutoffHourDialog": {
+    "description": "Title for day cutoff hour dialog"
+  },
+  "settingsDayCutoffHourValue": "{hour}:00",
+  "@settingsDayCutoffHourValue": {
+    "description": "Display value for selected hour",
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDayCutoffHourHint": "Workouts completed after this hour will count as 'today'. Useful for shift workers or late-night gym sessions.",
+  "@settingsDayCutoffHourHint": {
+    "description": "Hint text explaining day cutoff hour"
+  },
+  "settingsDayCutoffHourUpdated": "Day cutoff updated to {hour}:00",
+  "@settingsDayCutoffHourUpdated": {
+    "description": "Success message after updating day cutoff hour",
+    "placeholders": {
+      "hour": {
+        "type": "int"
+      }
+    }
+  },
   "daysAgoShort": "d ago",
   "@daysAgoShort": {
     "description": "Short form for days ago (e.g., '5d ago')"

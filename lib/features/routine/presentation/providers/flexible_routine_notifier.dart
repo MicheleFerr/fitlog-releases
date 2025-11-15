@@ -620,6 +620,89 @@ class FlexibleRoutineNotifier extends StateNotifier<FlexibleRoutineState> {
     return scheduleWithTemplates.copyWith(schedule: updatedDays);
   }
 
+  /// Remove invalid template ID from routine schedule
+  ///
+  /// When a template is deleted by user, this method cleans up the routine:
+  /// - Scheduled days with deleted template → Convert to rest days
+  /// - Completed days → Keep unchanged (workout already done)
+  ///
+  /// Returns true if cleanup successful, false otherwise
+  Future<bool> removeInvalidTemplateId({
+    required FlexibleRoutine routine,
+    required String invalidTemplateId,
+  }) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🧹 [removeInvalidTemplateId] Cleaning routine ${routine.id} from template $invalidTemplateId');
+      }
+
+      state = state.copyWith(isLoading: true, error: null);
+
+      // Create updated schedule without invalid template
+      final Map<String, ScheduledDay> updatedSchedule = {};
+      int cleanedCount = 0;
+
+      for (final entry in routine.schedule.entries) {
+        final dateKey = entry.key;
+        final day = entry.value;
+
+        // Check if this day uses the invalid template
+        if (day.templateId == invalidTemplateId) {
+          // Keep completed days unchanged (workout already done with that template)
+          if (day.status == DayStatus.completed) {
+            updatedSchedule[dateKey] = day;
+            if (kDebugMode) {
+              debugPrint('  ✓ Keeping completed day $dateKey (workout already done)');
+            }
+          } else {
+            // Convert scheduled/skipped days to rest days
+            updatedSchedule[dateKey] = day.copyWith(
+              templateId: null,
+              status: DayStatus.rest,
+            );
+            cleanedCount++;
+            if (kDebugMode) {
+              debugPrint('  🧹 Converted $dateKey to rest day (was ${day.status})');
+            }
+          }
+        } else {
+          // Keep other days unchanged
+          updatedSchedule[dateKey] = day;
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('  📊 Cleaned $cleanedCount days from routine');
+      }
+
+      // Update routine with cleaned schedule
+      final updatedRoutine = routine.copyWith(
+        schedule: updatedSchedule,
+        updatedAt: DateTime.now(),
+      );
+
+      await _repository.updateRoutine(updatedRoutine);
+
+      state = state.copyWith(
+        isLoading: false,
+        successMessage: 'Routine updated ($cleanedCount days cleaned)',
+      );
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [removeInvalidTemplateId] Error: $e');
+      }
+
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to clean routine: ${e.toString()}',
+      );
+
+      return false;
+    }
+  }
+
   /// Convert DateTime to string key for schedule map
   String _dateToString(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

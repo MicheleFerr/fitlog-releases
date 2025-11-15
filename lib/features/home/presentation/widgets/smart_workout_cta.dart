@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
@@ -33,7 +35,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
       data: (todayWorkout) {
         if (todayWorkout != null) {
           // ✅ Workout done today → REST MODE
-          return _buildRestModeState(context, todayWorkout);
+          return _buildRestModeState(context, ref, todayWorkout);
         }
 
         // No workout today → check routine (existing logic)
@@ -70,6 +72,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
               ref,
               theme,
               nextWorkout.templateId!,
+              routine, // Pass routine for cleanup if template deleted
             );
           },
         );
@@ -130,6 +133,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
     WidgetRef ref,
     ThemeData theme,
     String templateId,
+    FlexibleRoutine routine, // For cleanup if template deleted
   ) {
     // Watch templates to get the name
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
@@ -145,10 +149,16 @@ class SmartWorkoutCTA extends ConsumerWidget {
         // Find the template
         final template = templates.where((t) => t.id == templateId).firstOrNull;
         if (template == null) {
+          // Template deleted by user → auto-cleanup routine
+          ref.read(flexibleRoutineNotifierProvider.notifier).removeInvalidTemplateId(
+            routine: routine,
+            invalidTemplateId: templateId,
+          );
+
           return _buildDisabledState(
             context,
             theme,
-            context.l10n.smartWorkoutCTATemplateNotFound,
+            context.l10n.smartWorkoutCTARoutineUpdated,
           );
         }
 
@@ -231,9 +241,26 @@ class SmartWorkoutCTA extends ConsumerWidget {
   }
 
   /// Rest mode state - Shows congratulatory message and workout statistics
-  Widget _buildRestModeState(BuildContext context, Workout workout) {
+  Widget _buildRestModeState(BuildContext context, WidgetRef ref, Workout workout) {
     final theme = Theme.of(context);
     final stats = _calculateWorkoutStats(workout);
+
+    // 🎯 Track rest mode analytics (adherence insights, streak tracking)
+    final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
+    if (userId != null) {
+      // Track analytics event (async, fire-and-forget)
+      WorkoutAnalytics.trackEvent(
+        'rest_mode_shown',
+        properties: {
+          'workoutId': workout.id,
+          'workoutName': workout.name,
+          'volumeKg': stats.volume,
+          'duration': stats.duration,
+          'sets': stats.sets,
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+    }
 
     return Container(
       decoration: BoxDecoration(

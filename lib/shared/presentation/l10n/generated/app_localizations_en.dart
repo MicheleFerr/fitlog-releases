@@ -13827,6 +13827,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get smartWorkoutCTATemplateNotFound => 'Template not found';
 
   @override
+  String get smartWorkoutCTARoutineUpdated => 'Routine updated ✓';
+
+  @override
   String get smartWorkoutCTARestModeTitle => '💪 Enjoy your well-deserved rest';
 
   @override
@@ -16033,6 +16036,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String settingsApreProtocolUpdated(Object protocol) {
     return 'APRE protocol updated to $protocol';
+  }
+
+  @override
+  String get settingsDayCutoffHour => 'Day Cutoff Hour';
+
+  @override
+  String settingsDayCutoffHourDesc(int hour) {
+    return 'Workouts after $hour:00 count as \'today\'';
+  }
+
+  @override
+  String get settingsDayCutoffHourDialog => 'Day Cutoff Hour';
+
+  @override
+  String settingsDayCutoffHourValue(int hour) {
+    return '$hour:00';
+  }
+
+  @override
+  String get settingsDayCutoffHourHint =>
+      'Workouts completed after this hour will count as \'today\'. Useful for shift workers or late-night gym sessions.';
+
+  @override
+  String settingsDayCutoffHourUpdated(int hour) {
+    return 'Day cutoff updated to $hour:00';
   }
 
   @override

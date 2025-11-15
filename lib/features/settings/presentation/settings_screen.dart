@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
@@ -364,6 +365,19 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => _showApreProtocolDialog(context, ref, config.defaultApreProtocol ?? 3),
               ),
             ],
+
+            const Divider(),
+
+            // Day Cutoff Hour (configurable workout "today" cutoff)
+            _buildSettingTile(
+              context,
+              title: context.l10n.settingsDayCutoffHour,
+              subtitle: context.l10n.settingsDayCutoffHourDesc(
+                ref.watch(userProfileProvider).valueOrNull?.dayCutoffHour ?? 4,
+              ),
+              leading: const Icon(AppIcons.schedule),
+              onTap: () => _showDayCutoffDialog(context, ref),
+            ),
           ],
         ),
       ),
@@ -719,6 +733,79 @@ class SettingsScreen extends ConsumerWidget {
       default:
         return 'Protocol $protocol';
     }
+  }
+
+  void _showDayCutoffDialog(BuildContext context, WidgetRef ref) {
+    final currentProfile = ref.read(userProfileProvider).valueOrNull;
+    int selectedHour = currentProfile?.dayCutoffHour ?? 4;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(context.l10n.settingsDayCutoffHourDialog),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                context.l10n.settingsDayCutoffHourValue(selectedHour),
+                style: context.textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 16),
+              Slider(
+                value: selectedHour.toDouble(),
+                min: 0,
+                max: 23,
+                divisions: 23,
+                label: '$selectedHour:00',
+                onChanged: (value) {
+                  setState(() {
+                    selectedHour = value.round();
+                  });
+                },
+              ),
+              const SizedBox(height: 8),
+              Text(
+                context.l10n.settingsDayCutoffHourHint,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                if (currentProfile != null) {
+                  // Update preferences map with new cutoff hour
+                  final updatedPreferences = Map<String, dynamic>.from(currentProfile.preferences);
+                  updatedPreferences['dayCutoffHour'] = selectedHour;
+
+                  // Update profile in Firestore
+                  await ref.read(userProfileNotifierProvider.notifier).updateProfile({
+                    'preferences': updatedPreferences,
+                  });
+
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    SnackBarService.showSuccess(
+                      context,
+                      context.l10n.settingsDayCutoffHourUpdated(selectedHour),
+                    );
+                  }
+                }
+              },
+              child: Text(context.l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showSignOutDialog(BuildContext context, WidgetRef ref) {

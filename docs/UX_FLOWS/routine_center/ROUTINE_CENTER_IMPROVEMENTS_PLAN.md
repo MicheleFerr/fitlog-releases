@@ -1295,8 +1295,9 @@ If user tap "Re-detect":
 
 ### Documentation Links
 
-- [ROUTINE_CENTER_SYSTEM_REPORT.md](./ROUTINE_CENTER_SYSTEM_REPORT.md) - Sistema attuale
-- [WORKOUT_SUGGESTION_SYSTEM_REPORT.md](./WORKOUT_SUGGESTION_SYSTEM_REPORT.md) - Suggestion algorithm V1
+- [ROUTINE_CENTER_SYSTEM_REPORT.md](./ROUTINE_CENTER_SYSTEM_REPORT.md) - Routine system architecture
+- [SMART_WORKOUT_CTA_SYSTEM_REPORT.md](./SMART_WORKOUT_CTA_SYSTEM_REPORT.md) - **Current Smart CTA system** (FlexibleRoutine-based, Nov 2025)
+- [WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md](./WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD suggestion algorithm (deprecated Oct 2025)
 - [DESIGN_GUIDELINES.md](../../DESIGN_GUIDELINES.md) - UI/UX standards
 - [CLAUDE.md](../../../CLAUDE.md) - Development rules
 

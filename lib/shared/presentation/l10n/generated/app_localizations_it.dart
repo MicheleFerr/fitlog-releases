@@ -13978,6 +13978,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get smartWorkoutCTATemplateNotFound => 'Template non trovato';
 
   @override
+  String get smartWorkoutCTARoutineUpdated => 'Routine aggiornata ✓';
+
+  @override
   String get smartWorkoutCTARestModeTitle => '💪 Goditi il meritato riposo';
 
   @override
@@ -16199,6 +16202,31 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String settingsApreProtocolUpdated(Object protocol) {
     return 'Protocollo APRE aggiornato a $protocol';
+  }
+
+  @override
+  String get settingsDayCutoffHour => 'Orario Limite Giornata';
+
+  @override
+  String settingsDayCutoffHourDesc(int hour) {
+    return 'Allenamenti dopo le $hour:00 contano come \'oggi\'';
+  }
+
+  @override
+  String get settingsDayCutoffHourDialog => 'Orario Limite Giornata';
+
+  @override
+  String settingsDayCutoffHourValue(int hour) {
+    return '$hour:00';
+  }
+
+  @override
+  String get settingsDayCutoffHourHint =>
+      'Gli allenamenti completati dopo quest\'orario conteranno come \'oggi\'. Utile per lavoratori a turni o sessioni notturne.';
+
+  @override
+  String settingsDayCutoffHourUpdated(int hour) {
+    return 'Orario limite aggiornato alle $hour:00';
   }
 
   @override

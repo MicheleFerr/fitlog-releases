@@ -212,10 +212,11 @@ These cover initial setup and configuration:
 4. Implement: [`APRE_ACTION_ITEMS.md`](../APRE/APRE_ACTION_ITEMS.md) - Roadmap with code
 5. Test: [`APRE_CASI_USO.md`](../APRE/APRE_CASI_USO.md) - Scenarios & test cases
 
-**Routine Center Improvements (Pattern Detection & Smart Suggestions)**:
-1. Read: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md)
-2. Reference: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md) (current system)
-3. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) (architecture)
+**Routine Center & Smart Workout CTA**:
+1. Read: [`UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md) - **Current system** (FlexibleRoutine-based, Nov 2025)
+2. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) - Routine architecture
+3. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
+4. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD system (deprecated Oct 2025)
 
 ### "I'm hitting an error..."
 
@@ -282,12 +283,14 @@ These cover initial setup and configuration:
 - `ERROR_KB.md`
 
 ### UX Flows & System Reports
-- `UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md` 🚀 **NEW!** (Complete improvement plan: Pattern detection, multi-level suggestions, UI/UX redesign)
-- `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT.md` 🎯 (Workout suggestion algorithm analysis)
+- `UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md` 🎯 **UPDATED!** (Smart Workout CTA - FlexibleRoutine-based system, Nov 2025)
+- `UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` 📋 (Routine Center architecture & complete system)
+- `UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md` 🚀 (Future improvements: Pattern detection, multi-level suggestions)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_REPORT.md` 📋 (Templates screen architecture & flow analysis)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_IMPROVEMENT_REPORT.md` 🔧 (Improvement plan for AI consultants)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_COMPLIANCE_SECURITY_REPORT.md` 🔒 (Compliance & security audit: WCAG 2.2, OWASP, GDPR)
 - `UX_FLOWS/routine_center/UNUSED_TEMPLATE_SCREENS_AUDIT.md` 🔍 (Dead code audit: 3 unused template screens - COMPLETED)
+- `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md` ⚠️ **DEPRECATED** (Old frequency-based system, Oct 2025 - historical reference only)
 
 ### Architecture & Design
 - `EXERCISE_DATABASE_SYNC_ARCHITECTURE.md`

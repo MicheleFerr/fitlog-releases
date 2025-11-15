@@ -6151,6 +6151,7 @@
   "smartWorkoutCTAErrorTemplate": "Errore caricamento template",
   "smartWorkoutCTAIncompleteRoutine": "Routine incompleta",
   "smartWorkoutCTATemplateNotFound": "Template non trovato",
+  "smartWorkoutCTARoutineUpdated": "Routine aggiornata ✓",
   "smartWorkoutCTARestModeTitle": "💪 Goditi il meritato riposo",
   "smartWorkoutCTARestModeSubtitle": "Hai fatto un allenamento pazzesco!",
   "smartWorkoutCTARestModeVolume": "Volume: {volume} kg",
@@ -8697,6 +8698,12 @@
   "settingsApreProtocol": "Protocollo APRE",
   "settingsApreProtocolDesc": "Protocollo {number}",
   "settingsApreProtocolUpdated": "Protocollo APRE aggiornato a {protocol}",
+  "settingsDayCutoffHour": "Orario Limite Giornata",
+  "settingsDayCutoffHourDesc": "Allenamenti dopo le {hour}:00 contano come 'oggi'",
+  "settingsDayCutoffHourDialog": "Orario Limite Giornata",
+  "settingsDayCutoffHourValue": "{hour}:00",
+  "settingsDayCutoffHourHint": "Gli allenamenti completati dopo quest'orario conteranno come 'oggi'. Utile per lavoratori a turni o sessioni notturne.",
+  "settingsDayCutoffHourUpdated": "Orario limite aggiornato alle {hour}:00",
   "daysAgoShort": "g fa",
   "@daysAgoShort": {
     "description": "Forma breve per giorni fa (es. '5g fa')"

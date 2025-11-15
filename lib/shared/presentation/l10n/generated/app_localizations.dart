@@ -24582,6 +24582,12 @@ abstract class AppLocalizations {
   /// **'Template not found'**
   String get smartWorkoutCTATemplateNotFound;
 
+  /// Smart Workout CTA disabled state - routine auto-cleaned after template deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Routine updated ✓'**
+  String get smartWorkoutCTARoutineUpdated;
+
   /// Title for rest mode when user already worked out today
   ///
   /// In en, this message translates to:
@@ -28661,6 +28667,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'APRE protocol updated to {protocol}'**
   String settingsApreProtocolUpdated(Object protocol);
+
+  /// Title for day cutoff hour setting
+  ///
+  /// In en, this message translates to:
+  /// **'Day Cutoff Hour'**
+  String get settingsDayCutoffHour;
+
+  /// Subtitle for day cutoff hour setting
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts after {hour}:00 count as \'today\''**
+  String settingsDayCutoffHourDesc(int hour);
+
+  /// Title for day cutoff hour dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Day Cutoff Hour'**
+  String get settingsDayCutoffHourDialog;
+
+  /// Display value for selected hour
+  ///
+  /// In en, this message translates to:
+  /// **'{hour}:00'**
+  String settingsDayCutoffHourValue(int hour);
+
+  /// Hint text explaining day cutoff hour
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts completed after this hour will count as \'today\'. Useful for shift workers or late-night gym sessions.'**
+  String get settingsDayCutoffHourHint;
+
+  /// Success message after updating day cutoff hour
+  ///
+  /// In en, this message translates to:
+  /// **'Day cutoff updated to {hour}:00'**
+  String settingsDayCutoffHourUpdated(int hour);
 
   /// Short form for days ago (e.g., '5d ago')
   ///

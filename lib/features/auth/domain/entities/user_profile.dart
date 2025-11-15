@@ -304,4 +304,20 @@ class UserProfile {
 
   /// Check if user has premium account
   bool get isPremium => accountTier == AccountTier.premium || accountTier == AccountTier.pro;
+
+  /// Get day cutoff hour for workout tracking (default: 4 = 04:00)
+  /// Used to determine when "today" starts for workout completion
+  /// Example: cutoffHour = 4 → workouts before 04:00 count as "yesterday"
+  int get dayCutoffHour => preferences['dayCutoffHour'] as int? ?? 4;
+
+  /// Update day cutoff hour preference
+  /// [cutoffHour] must be in range 0-23 (hour of day)
+  UserProfile updateDayCutoffHour(int cutoffHour) {
+    assert(cutoffHour >= 0 && cutoffHour <= 23, 'Cutoff hour must be 0-23');
+
+    final updatedPreferences = Map<String, dynamic>.from(preferences);
+    updatedPreferences['dayCutoffHour'] = cutoffHour;
+
+    return copyWith(preferences: updatedPreferences);
+  }
 }
