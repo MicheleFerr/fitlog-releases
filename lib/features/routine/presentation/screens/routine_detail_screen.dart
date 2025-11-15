@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -496,6 +497,10 @@ class RoutineDetailScreen extends ConsumerWidget {
     WidgetRef ref,
     FlexibleRoutine routine,
   ) {
+    // Check if current user is admin
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isAdmin = currentUser?.email == 'ferrara-michele@hotmail.it';
+
     showModalBottomSheet(
       context: context,
       builder: (modalContext) => SafeArea(
@@ -516,6 +521,24 @@ class RoutineDetailScreen extends ConsumerWidget {
             //   },
             // ),
             // const Divider(),
+
+            // Admin-only: Regenerate Schedule button
+            if (isAdmin) ...[
+              ListTile(
+                leading: Icon(
+                  AppIcons.refresh,
+                  color: context.colors.primary,
+                ),
+                title: Text('Rigenera Schedule'),
+                subtitle: Text('Rigenera lo schedule con la logica di rotazione corretta'),
+                onTap: () {
+                  Navigator.pop(modalContext);
+                  _regenerateSchedule(context, ref, routine);
+                },
+              ),
+              const Divider(),
+            ],
+
             ListTile(
               leading: Icon(AppIcons.archive),
               title: Text('Archive'),
@@ -528,7 +551,9 @@ class RoutineDetailScreen extends ConsumerWidget {
               leading: Icon(AppIcons.delete, color: context.colors.error),
               title: Text(
                 'Delete',
-                style: TextStyle(color: context.colors.error),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
               ),
               onTap: () {
                 Navigator.pop(modalContext);
@@ -552,6 +577,49 @@ class RoutineDetailScreen extends ConsumerWidget {
       'Edit Schedule feature coming soon! You\'ll be able to change workout templates for each day.',
     );
     // TODO: Implement full edit schedule screen
+  }
+
+  /// Admin-only: Regenerate schedule with correct rotation logic
+  /// This is useful when the routine was created before the rotation fix was implemented
+  Future<void> _regenerateSchedule(
+    BuildContext context,
+    WidgetRef ref,
+    FlexibleRoutine routine,
+  ) async {
+    try {
+      // Show loading indicator
+      SnackBarService.showInfo(
+        context,
+        'Rigenerazione schedule in corso...',
+      );
+
+      // Regenerate schedule with correct rotation logic
+      final updatedRoutine = routine.generateSchedule();
+
+      // Save to Firestore via notifier
+      await ref.read(flexibleRoutineNotifierProvider.notifier).updateRoutine(updatedRoutine);
+
+      // Show success message
+      if (context.mounted) {
+        SnackBarService.showSuccess(
+          context,
+          'Schedule rigenerato con successo! 🎉',
+        );
+      }
+
+      // Invalidate providers to refresh UI
+      ref.invalidate(routineByIdProvider(routine.id));
+      ref.invalidate(userFlexibleRoutinesProvider);
+      ref.invalidate(activeFlexibleRoutineProvider);
+    } catch (e) {
+      // Show error message
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          'Errore durante la rigenerazione dello schedule: $e',
+        );
+      }
+    }
   }
 
   String _formatDate(BuildContext context, DateTime date) {

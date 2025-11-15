@@ -18,6 +18,7 @@
 /// - Empty state for new users
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -342,7 +343,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
               icon: Icon(AppIcons.add, color: context.colors.onPrimary),
               label: Text(
                 context.l10n.createFirstRoutineButton,
-                style: TextStyle(
+                style: context.textTheme.labelLarge?.copyWith(
                   color: context.colors.onPrimary,
                   fontWeight: FontWeight.bold,
                 ),
@@ -739,8 +740,45 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             );
           }
 
-          // For other errors, don't show card at all
-          return const SizedBox.shrink();
+          // For other errors, log and show error state
+          if (kDebugMode || kProfileMode) {
+            debugPrint('❌ [WORKOUT_SUGGESTION_CARD] Error: $error');
+            debugPrint('❌ [WORKOUT_SUGGESTION_CARD] Stack: $stack');
+          }
+
+          // Show a simple error card instead of hiding completely
+          return Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    AppIcons.errorOutline,
+                    size: 32,
+                    color: context.colors.error,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Errore nel caricamento suggerimenti',
+                    style: context.textTheme.titleMedium,
+                  ),
+                  if (kDebugMode || kProfileMode) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      error.toString(),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          );
         },
       ),
     );
@@ -801,7 +839,7 @@ class _RoutineCenterScreenState extends ConsumerState<RoutineCenterScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: context.colors.success.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),

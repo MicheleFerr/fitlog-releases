@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Custom pattern builder widget
 class CustomPatternBuilder extends ConsumerStatefulWidget {
@@ -288,13 +289,15 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                     final templatesAsync = ref.watch(allWorkoutTemplatesProvider);
 
                     return templatesAsync.when(
-                      loading: () => Center(
-                        child: CircularProgressIndicator(),
+                      loading: () => const Center(
+                        child: LoadingIndicator(),
                       ),
                       error: (error, stack) => Center(
                         child: Text(
                           'Error: $error',
-                          style: TextStyle(color: context.colors.error),
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            color: context.colors.error,
+                          ),
                         ),
                       ),
                       data: (templates) {
@@ -331,6 +334,8 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                               template,
                               onTap: () {
                                 Navigator.pop(sheetContext);
+                                // Pattern.sequence contains display names for UI
+                                // The actual template IDs are managed in the schedule
                                 _addWorkoutDay(template.name);
                               },
                             );
@@ -365,12 +370,12 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             children: [
               // Icon
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: template.isCustom
                       ? context.colors.primaryContainer
                       : context.colors.secondaryContainer,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   template.isCustom ? AppIcons.person : AppIcons.star,

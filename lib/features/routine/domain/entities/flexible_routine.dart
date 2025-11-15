@@ -828,9 +828,10 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     }
 
     final today = DateTime.now();
-    String? lastCompletedTemplateId;
 
-    // 1. Find last completed workout (30-day window)
+    // 2. Calculate next template by counting completed workouts
+    // ✅ FIX: Count completed workouts to determine position in cycle
+    int completedWorkoutCount = 0;
     for (int i = 0; i <= 30; i++) {
       final checkDate = today.subtract(Duration(days: i));
       final day = getScheduledDay(checkDate);
@@ -838,35 +839,34 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
       if (day != null &&
           !day.isRestDay &&
           day.status == DayStatus.completed) {
-        lastCompletedTemplateId = day.templateId;
-        break;
+        completedWorkoutCount++;
       }
     }
 
-    // 2. Calculate next index with rotation
-    final workoutTemplates = pattern.sequence
-        .where((item) => item != RoutinePatternExtensions.restKeyword)
-        .toList();
+    // Get unique template IDs from schedule (in order)
+    final Set<String> uniqueTemplateIds = {};
+    final List<String> orderedTemplateIds = [];
 
-    if (workoutTemplates.isEmpty) {
+    // Collect template IDs from first weeks to establish pattern
+    for (int i = 0; i < 14; i++) { // Check first 2 weeks
+      final checkDate = startDate.add(Duration(days: i));
+      final day = getScheduledDay(checkDate);
+
+      if (day != null && !day.isRestDay && day.templateId != null) {
+        if (!uniqueTemplateIds.contains(day.templateId)) {
+          uniqueTemplateIds.add(day.templateId!);
+          orderedTemplateIds.add(day.templateId!);
+        }
+      }
+    }
+
+    if (orderedTemplateIds.isEmpty) {
       return null;
     }
 
-    String nextTemplateId;
-    if (lastCompletedTemplateId != null) {
-      final lastIndex = workoutTemplates.indexOf(lastCompletedTemplateId);
-      if (lastIndex == -1) {
-        // Fallback: start from beginning
-        nextTemplateId = workoutTemplates.first;
-      } else {
-        // Rotate: (lastIndex + 1) % length
-        final nextIndex = (lastIndex + 1) % workoutTemplates.length;
-        nextTemplateId = workoutTemplates[nextIndex];
-      }
-    } else {
-      // No history: start from first workout
-      nextTemplateId = workoutTemplates.first;
-    }
+    // Calculate next template in rotation
+    final nextIndex = completedWorkoutCount % orderedTemplateIds.length;
+    final nextTemplateId = orderedTemplateIds[nextIndex];
 
     // 3. Map template ID → name
     for (final template in availableTemplates) {
