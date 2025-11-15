@@ -842,4 +842,717 @@ git watch            # Watch mode background
 
 ---
 
+## 🎯 REGOLA #14: TASKMASTER.DEV INTEGRATION - FASE 1 (AUTOMATIC)
+
+> **⚠️ COMPORTAMENTO OBBLIGATORIO**: Claude automaticamente rileva richieste complesse e propone task-master.dev planning.
+
+### 🧠 Smart Detection Logic (Automatic Trigger)
+
+**Quando ricevi una richiesta dell'utente, ANALIZZA automaticamente la complessità:**
+
+```
+Richiesta utente ricevuta
+         ↓
+Analizza complessità:
+1. ✓ Lunghezza > 50 parole?
+2. ✓ Keyword presente? ("implement", "refactor", "migrate", "create system", "add feature")
+3. ✓ Multi-layer mention? ("domain + data + presentation", "full stack", "end-to-end")
+4. ✓ Milestone mention? ("fase 1", "milestone 2", "step by step")
+         ↓
+Se 2+ condizioni soddisfatte → TRIGGER task-master.dev proposal
+```
+
+**Trigger Keywords** (case-insensitive):
+- `implement`, `implementa`, `create`, `crea`
+- `refactor`, `migrate`, `migra`
+- `system`, `sistema`, `feature`
+- `add`, `aggiungi`, `build`, `costruisci`
+- `milestone`, `fase`, `phase`, `step`
+
+**Example Triggers**:
+- ✅ "Implement analytics system with charts" (keyword + system + >50 words)
+- ✅ "Refactor workout timer to use background tasks" (keyword + refactor)
+- ✅ "Create onboarding flow with 5 screens" (keyword + multi-component)
+- ❌ "Fix typo in button text" (too simple, <50 words)
+- ❌ "Update color to blue" (trivial task)
+
+### 💬 Automatic Proposal (When Triggered)
+
+**Quando triggered, SEMPRE proponi task-master.dev PRIMA di implementare:**
+
+```dart
+"🤖 Ho rilevato una richiesta complessa:
+   - Lunghezza: {word_count} parole
+   - Keyword rilevata: '{keyword}'
+   - Stima complessità: {HIGH/MEDIUM}
+
+   Vuoi che usi task-master.dev per decomporre questo progetto
+   in task gestibili?
+
+   [Sì] → Genero piano dettagliato con task-master.dev
+   [No, procedi diretto] → Implemento direttamente
+   [Mostra preview] → Ti mostro cosa farebbe task-master.dev"
+```
+
+**User Response Handling**:
+- **Sì**: Procedi con WebFetch call
+- **No**: Implementa direttamente (crea TodoWrite basico 3-5 task)
+- **Mostra preview**: Spiega cosa farebbe task-master.dev (non chiamarlo ancora)
+
+### 🌐 WebFetch Integration (Core Workflow)
+
+**Step 1: Prepare WebFetch Prompt**
+
+```
+User request: "{original_request}"
+         ↓
+Enriched prompt for task-master.dev:
+"Break down the following Flutter/Dart development task into
+ manageable, atomic tasks following Clean Architecture pattern:
+
+ Task: {original_request}
+
+ Context:
+ - Framework: Flutter
+ - Architecture: Clean Architecture (Domain/Data/Presentation)
+ - State Management: Riverpod 2.x
+ - Platforms: iOS 14+, Android 8+
+ - Key requirements: Localization (EN/IT), Theme support (dark/light)
+
+ Output format:
+ - Task list with category grouping
+ - Estimated time per task (15min - 1.5h max)
+ - Dependencies between tasks
+ - Verification criteria per task
+
+ Provide 8-15 tasks total."
+```
+
+**Step 2: Execute WebFetch Call**
+
+```dart
+WebFetch(
+  url: "https://www.task-master.dev/",
+  prompt: enriched_prompt
+)
+```
+
+**Step 3: Handle WebFetch Response**
+
+```
+WebFetch returns task list
+         ↓
+Parse response (markdown/structured text)
+         ↓
+Enrich with Flutter/FitLog Pro specifics:
+- Add "Localization" task if missing
+- Add "Theme compliance" task if missing
+- Add "flutter analyze" task if missing
+- Add file paths (lib/features/{feature}/)
+- Add test tasks if missing
+         ↓
+Generate plan document (next section)
+```
+
+**Fallback Strategy** (if WebFetch fails):
+
+```
+WebFetch timeout/error
+         ↓
+Claude: "⚠️ task-master.dev non disponibile.
+
+         Opzioni:
+         A) Riprovo tra 30 secondi
+         B) Genero piano manualmente (Claude autonomo)
+         C) Procedo diretto senza planning"
+         ↓
+User sceglie B
+         ↓
+Claude genera task breakdown autonomamente usando:
+- Analisi della richiesta
+- Conoscenza architettura Flutter + FitLog Pro
+- Pattern da docs/NAVIGATION/INDEX.md
+         ↓
+Plan salvato con nota:
+  **Source**: Claude Code (task-master.dev unavailable)
+  **Fallback**: Manual task breakdown
+```
+
+### 📄 Plan Template Generator (Automatic)
+
+**Quando task-master.dev (o fallback) ha generato task list, AUTOMATICAMENTE:**
+
+**Step 1: Read Current Flutter/Project Context**
+
+```bash
+# Leggi automaticamente per metadata:
+cat pubspec.yaml | grep "version:" # Flutter version
+cat pubspec.yaml | grep "riverpod:" # Riverpod version
+git log -1 --format="%h %s" # Last commit
+git status --short # Modified files
+```
+
+**Step 2: Fill Plan Template**
+
+Usa template da `docs/plans/2025-01-15-taskmaster-integration-design.md` (sezione "Plan Document Template v2.0").
+
+**Required Placeholders**:
+- `{Topic Title}`: Estratto da user request (es. "Analytics System")
+- `{YYYY-MM-DD HH:mm}`: Current timestamp
+- `{Complexity Score}`: HIGH (16+ tasks) / MEDIUM (6-15) / LOW (1-5)
+- `{Total Tasks}`: Count from task-master.dev response
+- `{Estimated Time}`: Sum of individual task estimates
+- `{Flutter Version}`: From pubspec.yaml
+- `{User's original request verbatim}`: Full user message
+
+**Step 3: Auto-categorize Tasks**
+
+```
+task-master.dev tasks → Group by category:
+1. Domain Layer (entities, repositories interfaces)
+2. Data Layer (repository impl, data sources)
+3. Presentation Layer (providers, screens, widgets)
+4. Testing (unit, widget, integration tests)
+5. Localization & Theme (strings, theme compliance)
+6. Documentation (update INDEX.md, CLAUDE.md)
+```
+
+**Step 4: Validate Plan Quality**
+
+```
+Before saving, auto-validate:
+
+✓ All tasks have:
+  - Description (not empty)
+  - Layer specified
+  - Files path (lib/features/{feature}/...)
+  - Estimated time (15min - 1.5h)
+
+✓ FitLog Pro requirements included:
+  - Localization task present
+  - Theme compliance task present
+  - flutter analyze task present
+  - Test tasks present (unit + widget)
+
+✓ Dependencies are valid:
+  - No circular dependencies (Task A → B → A)
+  - Blocking tasks come first
+
+If validation fails → Auto-fix:
+- Add missing FitLog Pro tasks
+- Fix circular dependencies
+- Fill missing file paths
+```
+
+### 📝 Example Generated Plan (Preview)
+
+```markdown
+# Analytics System - Task Plan
+
+**Generated**: 2025-01-15 16:30
+**Source**: task-master.dev (WebFetch)
+**Complexity Score**: HIGH
+**Reason**: New feature + Multi-system integration + 12 tasks
+**Total Tasks**: 12
+**Estimated Time**: ~5.5h
+**Plan Version**: 1.0
+
+**Context Snapshot**:
+- Flutter Version: 3.16.0
+- Key Packages: riverpod ^2.4.9, firebase_core ^2.24.2
+- Target Platforms: iOS 14+, Android 8+
+- Related PRs/Issues: None
+- Parent Milestone: None
+
+---
+
+## 📋 Original Request
+
+> Implement analytics system with charts and metrics for workout tracking
+
+---
+
+## 🎯 Task Breakdown
+
+### 1. Domain Layer
+
+- [ ] **Task 1.1**: Create AnalyticsData entity
+  - **Layer**: Domain
+  - **Files**: `lib/features/analytics/domain/entities/analytics_data.dart`
+  - **Dependencies**: None
+  - **Est. Time**: 30 min
+  - **Blocking**: Yes (blocks Task 1.2, 2.1)
+  - **Verification**: Entity compiles + freezed code generated
+  - **Code Prompt**:
+    ```
+    Create AnalyticsData entity with freezed + json_serializable
+    Fields: userId, workoutMetrics, dateRange, totalVolume
+    ```
+
+... (11 more tasks)
+
+---
+
+## 📊 Implementation Order
+
+**MUST DO FIRST** (blocking tasks):
+→ Task 1.1, 1.2 (domain foundation) - ~50 min
+
+**THEN** (parallel workable):
+→ Task 2.1, 2.2 (data layer) - ~1.5h
+
+**FINALLY**:
+→ Task 4.1-4.3 (UI) - ~2h
+→ Task 5.1 (testing) - ~1h
+
+**Total Critical Path**: ~5.5h
+```
+
+### 💾 Plan Document Save Workflow
+
+**Dopo plan generation e validation, SEMPRE salva in docs/plans/:**
+
+**Step 1: Generate Filename**
+
+```
+Topic extracted from user request → filename slug
+
+Example:
+"Implement analytics system" → "analytics-system"
+"Refactor workout timer" → "workout-timer-refactor"
+"Migrate to Riverpod 2" → "migrate-riverpod-2"
+
+Filename format: YYYY-MM-DD-{topic-slug}-plan.md
+Example: 2025-01-15-analytics-system-plan.md
+```
+
+**Step 2: Save to Local docs/plans/**
+
+```dart
+// Note: docs/plans/ is in .gitignore (local only)
+Write plan to: /Users/michele/gymbro_flutter_new/docs/plans/{filename}
+```
+
+**Step 3: Confirm Save**
+
+```
+Claude: "✅ Piano salvato localmente:
+         docs/plans/{filename}
+
+         📊 Riepilogo:
+         - Total Tasks: {count}
+         - Estimated Time: {hours}
+         - Complexity: {HIGH/MEDIUM/LOW}
+
+         Vuoi che crei TodoWrite basato su questo piano?"
+```
+
+### 📝 TodoWrite Conversion (Basic - Fase 1)
+
+**Quando user conferma, converti plan → TodoWrite:**
+
+**Smart Grouping Logic**:
+
+```
+Plan task count → TodoWrite strategy:
+
+<10 tasks: Direct mapping (1:1)
+→ TodoWrite shows all tasks individually
+
+10-20 tasks: Category grouping
+→ TodoWrite shows categories as items:
+  - [ ] Complete Domain layer (5 sub-tasks)
+  - [ ] Complete Data layer (6 sub-tasks)
+  - [ ] Complete Presentation layer (4 sub-tasks)
+
+>20 tasks: Milestone grouping
+→ Claude asks user:
+  "Piano complesso con {count} task. TodoWrite:
+   A) Tutti i task (verbose)
+   B) Milestone aggregate (recommended)
+   C) Solo fasi MUST DO FIRST/THEN/FINALLY"
+```
+
+**TodoWrite Format Mapping**:
+
+```dart
+Plan task:
+- [ ] **Task 1.1**: Create AnalyticsData entity
+  - **Layer**: Domain
+  - **Est. Time**: 30 min
+
+TodoWrite item:
+{
+  content: "Create AnalyticsData entity (Domain layer)",
+  activeForm: "Creating AnalyticsData entity",
+  status: "pending"
+}
+```
+
+**Two-Way Sync**:
+
+```
+User marks task complete in TodoWrite
+         ↓
+Claude automatically:
+1. Updates plan document (checkbox ✓)
+2. Adds timestamp to "Notes & Decisions"
+3. Offers to auto-commit plan update (if Task 7 implemented)
+
+Example update in plan.md:
+- [x] **Task 1.1**: Create AnalyticsData entity ← Auto-updated
+  **Completed**: 2025-01-15 14:30
+
+Notes & Decisions:
+- **2025-01-15 14:30**: Task 1.1 completed. Entity created
+  with freezed + json_serializable as planned.
+```
+
+### 🎯 Golden Rules - Task-Master.dev Integration
+
+1. **SEMPRE rileva complessità** prima di implementare
+2. **SEMPRE proponi** task-master.dev se triggered (non assumere "no")
+3. **SEMPRE arricchisci** con Flutter/FitLog Pro requirements
+4. **SEMPRE valida** plan quality prima di salvare
+5. **SEMPRE salva** plan in docs/plans/ (local)
+6. **SEMPRE crea** TodoWrite dopo plan save
+7. **MAI skip** proposal step (anche se sei sicuro)
+
+**Quando in dubbio**: Proponi task-master.dev. È SEMPRE meglio over-plan che under-plan.
+
+**Note**: docs/plans/ è in .gitignore → file restano locali (no git tracking).
+
+### 🚫 Auto-Commit (Disabled in Fase 1)
+
+**Status**: Feature disponibile ma DISABILITATO per default
+
+**Perché disabilitato**:
+- docs/plans/ è in .gitignore (scelta deliberata dell'utente)
+- Plan documents sono per uso locale / session tracking
+- Git tracking non necessario per Fase 1
+
+**Se abilitato in futuro** (Fase 2/3):
+1. Rimuovi docs/plans/ da .gitignore
+2. Auto-commit workflow:
+   ```bash
+   git add docs/plans/{filename}
+   git commit -m "docs: add {topic} task plan
+
+   Generated by task-master.dev integration
+   - Total tasks: {count}
+   - Estimated time: {hours}
+   - Complexity: {score}
+
+   Plan: docs/plans/{filename}
+   ```
+
+**Alternative** (già attivo):
+- ✅ CONTEXT.md e LEARNINGS.md già creati (committable se necessario)
+- ✅ Plan documents salvati localmente per reference
+- ✅ TodoWrite tracking per execution
+
+### 📦 CONTEXT.md Auto-Update (For 5+ Milestones)
+
+**File**: `docs/plans/CONTEXT.md` (already created)
+
+**When to Update** (Claude detects automatically):
+
+```
+User completes Milestone 1
+         ↓
+Claude detects: Feature with 5+ total milestones planned
+         ↓
+Claude automatically offers:
+"🎯 Feature complessa rilevata (5+ milestones).
+   Vuoi che aggiorni CONTEXT.md per tracciare dependencies?"
+         ↓
+User: "Sì"
+         ↓
+Claude updates CONTEXT.md automatically
+```
+
+**Auto-Update Triggers**:
+1. ✅ Milestone completion (from retrospective)
+2. ✅ New plan created with "Parent Milestone: M{X}" metadata
+3. ✅ User mentions "milestone {X} done" in chat
+4. ✅ Tech debt discovered during implementation
+
+**What Claude Updates**:
+
+```markdown
+## 📦 Milestone {X}: {Feature Name} (✅ Complete)
+
+**Plan**: [YYYY-MM-DD-{topic}-plan.md](./YYYY-MM-DD-{topic}-plan.md)
+**Completed**: {timestamp}
+**Actual Time**: {hours}h (estimated: {est_hours}h)
+
+**Key Decisions** (inherited by M{X+1}):
+- ✅ {Decision 1 from retrospective}
+- ✅ {Decision 2 from "Notes & Decisions"}
+
+**Artifacts Created**:
+- `lib/features/{feature}/{layer}/{file}.dart`
+- ...
+
+**Tech Debt Introduced**:
+- {Debt description} ({SEVERITY} severity) → Cleanup in M{X+1}
+
+**Blocks**: M{X+1} ({Next milestone name})
+```
+
+**Cross-Milestone Dependency Tracking**:
+
+Claude automatically populates next milestone plan with:
+
+```markdown
+## 🔗 Cross-Milestone Dependencies
+
+**Inherited from Milestone {X}**:
+- [ ] **Design Decision**: {from CONTEXT.md}
+- [ ] **Code Artifacts**: {files from M{X}}
+- [ ] **Tech Debt**: {known issues to address}
+
+**Important**: If Milestone {X} not completed, this plan will fail.
+**Dependency chain**: M{X}.{Y} → M{X}.{Z} → M{current}.{1}
+```
+
+### 📚 LEARNINGS.md Auto-Population (Post-Retrospective)
+
+**File**: `docs/plans/LEARNINGS.md` (already created)
+
+**When to Update** (Claude automatic):
+
+```
+Milestone retrospective completed in plan.md
+         ↓
+Claude extracts learnings automatically:
+- Estimation patterns
+- Common pitfalls
+- Successful patterns
+- Tech stack insights
+         ↓
+Updates LEARNINGS.md
+         ↓
+Applies adjustments to FUTURE estimates
+```
+
+**What Claude Extracts**:
+
+**1. Estimation Patterns** (from "Execution" section):
+
+```
+Milestone plan said: "Task 1.1: 30 min"
+Actual: 45 min
+         ↓
+Claude updates LEARNINGS.md:
+
+| Task Type | Initial Estimate | Actual Average | Adjustment Factor |
+|-----------|------------------|----------------|-------------------|
+| Entity creation | 30 min | 45 min | +50% (+15 min) |
+         ↓
+Next time Claude estimates "Entity creation" → auto-adds 15 min buffer
+```
+
+**2. Common Pitfalls** (from "Learnings" section):
+
+```
+Retrospective says:
+"Firebase security rules always take longer (estimated 30, took 45)"
+         ↓
+Claude adds to LEARNINGS.md:
+
+### Firebase Security Rules Always Take Longer
+- **Origin**: M1 Analytics (2025-01-15)
+- **Issue**: Estimated 30 min, took 45 min
+- **Solution**: Always add +15 min buffer to Firebase tasks
+         ↓
+Next Firebase task → Claude suggests adjusted estimate
+```
+
+**3. Successful Patterns** (from "Carry-forward" section):
+
+```
+Retrospective says:
+"Good: Task ordering by layer worked perfectly"
+         ↓
+Claude adds to LEARNINGS.md:
+
+### Task Ordering by Layer (Domain → Data → Presentation)
+- **Origin**: M1-M3 Analytics (all milestones)
+- **Keep doing**: Always order tasks by architectural layer
+         ↓
+Future plans → Claude auto-orders tasks by layer
+```
+
+**Auto-Application to Future Plans**:
+
+```
+User: "Implement user profile system"
+         ↓
+Claude generates plan
+         ↓
+Before saving, Claude applies LEARNINGS.md adjustments:
+
+Original estimate (task-master.dev): "Entity creation - 30 min"
+Adjusted (from LEARNINGS.md): "Entity creation - 45 min (+50% buffer)"
+
+Note added to plan:
+"⚙️ Estimate adjusted based on pattern from {X} previous milestones"
+```
+
+**🔧 Script-Based Extraction** (Optional, Manual):
+
+For bulk extraction from git history (when you have many completed milestones):
+
+```bash
+# Extract learnings from git commits (last 6 months)
+./scripts/extract_learnings.sh
+
+# Extract from specific date
+./scripts/extract_learnings.sh --since "2024-01-01"
+
+# Dry-run (preview without updating)
+./scripts/extract_learnings.sh --dry-run --verbose
+```
+
+**What the script extracts**:
+- ✅ Estimation patterns from plan retrospectives (avg estimated vs actual)
+- ✅ Common pitfalls from "fix:", "bug:", "issue:" commits (recurring themes)
+- ✅ Successful patterns from "feat:", "improve:" commits (what works)
+- ✅ Tech stack insights (Firebase, Localization, Theme, iOS, etc.)
+
+**When to use**:
+- 📅 Monthly review: Extract patterns from completed work
+- 🚀 After 3+ milestone completions: Enough data for meaningful patterns
+- 🔄 Before major refactor: Learn from past mistakes
+- 📊 Quarterly planning: Adjust future estimates based on history
+
+**Output**: Updates `docs/plans/LEARNINGS.md` with discovered patterns
+
+---
+
+### 📦 Plan Versioning Automation (AUTOMATIC)
+
+**Auto-Versioning Behavior** (Claude automatic):
+
+```
+User requests modification to existing plan
+         ↓
+Claude detects: "docs/plans/YYYY-MM-DD-{topic}-plan.md already exists"
+         ↓
+AUTOMATIC WORKFLOW:
+1. Read current plan version (e.g., v1.0)
+2. Increment version (v1.0 → v1.1)
+3. Log version history with delta
+4. Update plan document
+5. Preserve old version in history section
+```
+
+**Version Detection Logic**:
+
+```markdown
+# Plan document header check
+**Plan Version**: 1.0
+
+         ↓ (modification requested)
+
+**Plan Version**: 1.1
+```
+
+**Version History Section** (auto-appended to plan):
+
+```markdown
+---
+
+## 📝 Version History
+
+### v1.1 - {YYYY-MM-DD HH:MM}
+
+**Changes**:
+- ✏️ Modified task 3.2: Added Firebase security rules validation
+- ➕ Added new task 4.1: Integration testing
+- 🔄 Reordered tasks: 2.3 now blocks 3.1 (dependency added)
+- 📊 Updated time estimate: 4.5h → 5.5h (+1h)
+
+**Reason**: User feedback after M1 completion
+
+**Modified by**: Claude Code (automatic)
+
+---
+
+### v1.0 - {YYYY-MM-DD HH:MM}
+
+**Initial plan generation** via task-master.dev API
+
+**Total Tasks**: 12
+**Estimated Time**: ~4.5h
+
+---
+```
+
+**Delta Tracking** (Claude computes automatically):
+
+```
+Old plan (v1.0):
+- [ ] Task 3.2: Implement workout analytics (30 min)
+
+New plan (v1.1):
+- [ ] Task 3.2: Implement workout analytics with Firebase security (45 min)
+         ↓
+Delta computed:
+"✏️ Modified task 3.2: Added Firebase security rules validation (+15 min)"
+```
+
+**When to Create New Version** (auto-detect):
+
+| Scenario | Version Increment | Example |
+|----------|-------------------|---------|
+| ✅ Task added/removed | MINOR (1.0 → 1.1) | Added task 4.1 |
+| ✅ Task modified (scope change) | MINOR (1.0 → 1.1) | Task 3.2 now includes security |
+| ✅ Dependencies changed | MINOR (1.0 → 1.1) | Task 2.3 now blocks 3.1 |
+| ✅ Time estimate changed >30% | MINOR (1.0 → 1.1) | 4.5h → 5.5h |
+| ✅ Complexity upgraded (MEDIUM→HIGH) | MAJOR (1.0 → 2.0) | Architecture changed |
+| ❌ Typo fixes, formatting | NO INCREMENT | Fixed typo in task 2.1 |
+| ❌ Completion status update | NO INCREMENT | Marked task 1.1 complete |
+
+**Automatic Version Commit Message**:
+
+```bash
+git commit -m "docs: update {topic} plan to v1.1
+
+Changes:
+- Modified task 3.2 (added security rules)
+- Added task 4.1 (integration testing)
+- Updated time estimate 4.5h → 5.5h
+
+Plan version: 1.0 → 1.1"
+```
+
+**Version Rollback Support**:
+
+Claude can restore previous version from history:
+
+```
+User: "Rollback plan to v1.0"
+         ↓
+Claude extracts v1.0 from Version History section
+         ↓
+Creates new v1.2 with v1.0 content
+         ↓
+Note: "⏮️ Restored from v1.0 (rolled back v1.1 changes)"
+```
+
+**Cross-Reference with CONTEXT.md**:
+
+Version changes auto-update CONTEXT.md milestone table:
+
+```markdown
+| Milestone | Feature | Status | Plan Version | Last Updated |
+|-----------|---------|--------|--------------|--------------|
+| M1 | Analytics | ✅ Complete | v1.2 | 2025-01-15 |
+| M2 | Dashboard | 🔄 In Progress | v1.1 | 2025-01-15 |
+```
+
+---
+
 > **⚠️ TESTING PHASE**: App in sviluppo con solo lo sviluppatore come utente. Breaking changes e migrazioni aggressive sono permesse. Seguire SEMPRE le regole di clean code sopra.
