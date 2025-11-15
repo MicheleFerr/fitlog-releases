@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/workout_anal
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_workout_banner.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/smart_workout_cta.dart';
+import 'package:gymbro_flutter_new/features/streak/presentation/widgets/streak_counter_widget.dart';
 // import 'package:gymbro_flutter_new/features/home/presentation/widgets/progress_dashboard.dart'; // Widget rimosso
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_actions.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_greeting.dart';
@@ -233,6 +234,10 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   EnhancedWorkoutBanner(workout: currentWorkout),
                   const SizedBox(height: 24),
                 ],
+
+                // 🔥 STREAK COUNTER (P0 Feature - +35-40% retention evidence)
+                const StreakCounterWidget(),
+                const SizedBox(height: 24),
 
                 // DISABLED: Stale profile banner
                 // Reason: GDPR compliance - medical questionnaire data
