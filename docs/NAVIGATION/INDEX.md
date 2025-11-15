@@ -215,8 +215,9 @@ These cover initial setup and configuration:
 **Routine Center & Smart Workout CTA**:
 1. Read: [`UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md) - **Current system** (FlexibleRoutine-based, Nov 2025)
 2. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) - Routine architecture
-3. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
-4. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD system (deprecated Oct 2025)
+3. **NEW**: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md) - ✅ **Simplified 2-level system** (Nov 2024, -211 lines, zero dependencies)
+4. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
+5. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD 4-level system (deprecated Oct 2025)
 
 ### "I'm hitting an error..."
 
@@ -285,6 +286,7 @@ These cover initial setup and configuration:
 ### UX Flows & System Reports
 - `UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md` 🎯 **UPDATED!** (Smart Workout CTA - FlexibleRoutine-based system, Nov 2025)
 - `UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` 📋 (Routine Center architecture & complete system)
+- `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md` ✅ **NEW!** (Simplified 2-level prediction system, Nov 2024, -211 lines, zero deps)
 - `UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md` 🚀 (Future improvements: Pattern detection, multi-level suggestions)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_REPORT.md` 📋 (Templates screen architecture & flow analysis)
 - `UX_FLOWS/routine_center/WORKOUT_TEMPLATES_SCREEN_IMPROVEMENT_REPORT.md` 🔧 (Improvement plan for AI consultants)
