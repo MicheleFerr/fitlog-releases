@@ -439,6 +439,12 @@
   "bodyPartDistribution": "Distribuzione Gruppi Muscolari",
   "topExercises": "Esercizi Principali",
   "workoutStreak": "Serie di Allenamenti",
+  "dayStreak": "Serie di Giorni",
+  "nextMilestone": "Prossimo Traguardo",
+  "longestStreak": "Serie Più Lunga",
+  "totalDays": "Giorni Totali",
+  "days": "giorni",
+  "errorLoadingData": "Errore nel caricamento dei dati",
   "exportData": "Esporta Dati",
   "viewDetails": "Visualizza Dettagli",
   "noVolumeData": "Nessun dato sul volume disponibile",
@@ -7383,10 +7389,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
   },
-  "letsGo": "Let\\'s go!",
+  "letsGo": "Andiamo!",
   "@letsGo": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+    "description": "Pulsante per procedere in dialog conferma"
   },
   "greatNowTapHereToAddYourFirstExercise": "Great! Now tap here to add your first exercise.",
   "@greatNowTapHereToAddYourFirstExercise": {
@@ -9021,8 +9026,32 @@
   "@changeAnswers": {
     "description": "Pulsante per cambiare risposte in dialog conferma"
   },
-  "letsGo": "Andiamo!",
-  "@letsGo": {
-    "description": "Pulsante per procedere in dialog conferma"
+  "monthlyProgress": "Progresso Mensile",
+  "@monthlyProgress": {
+    "description": "Titolo per card analytics progresso mensile"
+  },
+  "thisMonthVsLast": "Questo mese vs scorso mese",
+  "@thisMonthVsLast": {
+    "description": "Sottotitolo che mostra periodo confronto"
+  },
+  "bestImprovement": "Miglior Progresso",
+  "@bestImprovement": {
+    "description": "Label per evidenziare metrica con miglior progresso"
+  },
+  "peak": "Picco",
+  "@peak": {
+    "description": "Label per valore massimo/picco"
+  },
+  "newPersonalRecord": "Nuovo Record Personale",
+  "@newPersonalRecord": {
+    "description": "Titolo celebrazione PR"
+  },
+  "awesome": "Fantastico",
+  "@awesome": {
+    "description": "Testo pulsante celebrazione"
+  },
+  "alternativeExercises": "Esercizi Alternativi",
+  "@alternativeExercises": {
+    "description": "Titolo tab per esercizi alternativi"
   }
 }

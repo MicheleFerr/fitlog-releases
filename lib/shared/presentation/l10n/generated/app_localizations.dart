@@ -2701,6 +2701,42 @@ abstract class AppLocalizations {
   /// **'Workout Streak'**
   String get workoutStreak;
 
+  /// Label for day streak stat
+  ///
+  /// In en, this message translates to:
+  /// **'Day Streak'**
+  String get dayStreak;
+
+  /// Next milestone label
+  ///
+  /// In en, this message translates to:
+  /// **'Next Milestone'**
+  String get nextMilestone;
+
+  /// Longest consecutive workout streak
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get longestStreak;
+
+  /// Label for total workout days stat
+  ///
+  /// In en, this message translates to:
+  /// **'Total Days'**
+  String get totalDays;
+
+  /// Days unit (lowercase)
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// Error message when data fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data'**
+  String get errorLoadingData;
+
   /// Export data menu option
   ///
   /// In en, this message translates to:
@@ -4379,12 +4415,6 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get muscleGroupOther;
 
-  /// Days unit (lowercase)
-  ///
-  /// In en, this message translates to:
-  /// **'days'**
-  String get days;
-
   /// Per week suffix
   ///
   /// In en, this message translates to:
@@ -4432,12 +4462,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Day'**
   String get day;
-
-  /// Error message when data fails to load
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading data'**
-  String get errorLoadingData;
 
   /// Pull to refresh instruction
   ///
@@ -6310,12 +6334,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Zoom In'**
   String get zoomIn;
-
-  /// Longest consecutive workout streak
-  ///
-  /// In en, this message translates to:
-  /// **'Longest Streak'**
-  String get longestStreak;
 
   /// Workout name with exercise count
   ///
@@ -10282,12 +10300,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All time'**
   String get allTime;
-
-  /// Label for day streak stat
-  ///
-  /// In en, this message translates to:
-  /// **'Day Streak'**
-  String get dayStreak;
 
   /// Encouragement message for active streak
   ///
@@ -21708,12 +21720,6 @@ abstract class AppLocalizations {
   /// **'Example: Training chest 3× per week but back only 1× creates imbalance'**
   String get muscleBalanceExample;
 
-  /// Next milestone label
-  ///
-  /// In en, this message translates to:
-  /// **'Next Milestone'**
-  String get nextMilestone;
-
   /// Days remaining suffix
   ///
   /// In en, this message translates to:
@@ -29069,6 +29075,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change answers'**
   String get changeAnswers;
+
+  /// Title for monthly progress analytics card
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Progress'**
+  String get monthlyProgress;
+
+  /// Subtitle showing comparison period
+  ///
+  /// In en, this message translates to:
+  /// **'This month vs last month'**
+  String get thisMonthVsLast;
+
+  /// Label for best improvement metric highlight
+  ///
+  /// In en, this message translates to:
+  /// **'Best Improvement'**
+  String get bestImprovement;
+
+  /// Label for peak/maximum value
+  ///
+  /// In en, this message translates to:
+  /// **'Peak'**
+  String get peak;
+
+  /// Title for PR celebration
+  ///
+  /// In en, this message translates to:
+  /// **'New Personal Record'**
+  String get newPersonalRecord;
+
+  /// Celebration button text
+  ///
+  /// In en, this message translates to:
+  /// **'Awesome'**
+  String get awesome;
+
+  /// Tab title for alternative exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative Exercises'**
+  String get alternativeExercises;
 }
 
 class _AppLocalizationsDelegate

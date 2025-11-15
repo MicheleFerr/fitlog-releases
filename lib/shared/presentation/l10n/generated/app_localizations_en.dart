@@ -1399,6 +1399,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutStreak => 'Workout Streak';
 
   @override
+  String get dayStreak => 'Day Streak';
+
+  @override
+  String get nextMilestone => 'Next Milestone';
+
+  @override
+  String get longestStreak => 'Longest Streak';
+
+  @override
+  String get totalDays => 'Total Days';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get errorLoadingData => 'Error loading data';
+
+  @override
   String get exportData => 'Export Data';
 
   @override
@@ -2326,9 +2344,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get muscleGroupOther => 'Other';
 
   @override
-  String get days => 'days';
-
-  @override
   String get perWeek => '/week';
 
   @override
@@ -2351,9 +2366,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get day => 'Day';
-
-  @override
-  String get errorLoadingData => 'Error loading data';
 
   @override
   String get pullToRefresh => 'Pull to refresh';
@@ -3381,9 +3393,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get zoomIn => 'Zoom In';
-
-  @override
-  String get longestStreak => 'Longest Streak';
 
   @override
   String workoutWithExercises(Object workoutName, Object exerciseCount) {
@@ -5642,9 +5651,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allTime => 'All time';
-
-  @override
-  String get dayStreak => 'Day Streak';
 
   @override
   String get keepItUp => 'Keep it up!';
@@ -12300,9 +12306,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Example: Training chest 3× per week but back only 1× creates imbalance';
 
   @override
-  String get nextMilestone => 'Next Milestone';
-
-  @override
   String get daysToGo => 'days to go';
 
   @override
@@ -16263,4 +16266,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeAnswers => 'Change answers';
+
+  @override
+  String get monthlyProgress => 'Monthly Progress';
+
+  @override
+  String get thisMonthVsLast => 'This month vs last month';
+
+  @override
+  String get bestImprovement => 'Best Improvement';
+
+  @override
+  String get peak => 'Peak';
+
+  @override
+  String get newPersonalRecord => 'New Personal Record';
+
+  @override
+  String get awesome => 'Awesome';
+
+  @override
+  String get alternativeExercises => 'Alternative Exercises';
 }

@@ -1787,6 +1787,30 @@
   "@workoutStreak": {
     "description": "Workout streak card title"
   },
+  "dayStreak": "Day Streak",
+  "@dayStreak": {
+    "description": "Label for day streak counter"
+  },
+  "nextMilestone": "Next Milestone",
+  "@nextMilestone": {
+    "description": "Label for next milestone progress"
+  },
+  "longestStreak": "Longest Streak",
+  "@longestStreak": {
+    "description": "Label for longest streak stat"
+  },
+  "totalDays": "Total Days",
+  "@totalDays": {
+    "description": "Label for total workout days stat"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Generic days label (lowercase)"
+  },
+  "errorLoadingData": "Error loading data",
+  "@errorLoadingData": {
+    "description": "Generic error message for data loading failures"
+  },
   "exportData": "Export Data",
   "@exportData": {
     "description": "Export data menu option"
@@ -17972,10 +17996,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
   },
-  "letsGo": "Let\\'s go!",
+  "letsGo": "Let's go!",
   "@letsGo": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/onboarding/domain/services/contextual_overlay_manager.dart"
+    "description": "Button to proceed in confirmation dialog"
   },
   "greatNowTapHereToAddYourFirstExercise": "Great! Now tap here to add your first exercise.",
   "@greatNowTapHereToAddYourFirstExercise": {
@@ -19630,8 +19653,32 @@
   "@changeAnswers": {
     "description": "Button to change answers in confirmation dialog"
   },
-  "letsGo": "Let's go!",
-  "@letsGo": {
-    "description": "Button to proceed in confirmation dialog"
+  "monthlyProgress": "Monthly Progress",
+  "@monthlyProgress": {
+    "description": "Title for monthly progress analytics card"
+  },
+  "thisMonthVsLast": "This month vs last month",
+  "@thisMonthVsLast": {
+    "description": "Subtitle showing comparison period"
+  },
+  "bestImprovement": "Best Improvement",
+  "@bestImprovement": {
+    "description": "Label for best improvement metric highlight"
+  },
+  "peak": "Peak",
+  "@peak": {
+    "description": "Label for peak/maximum value"
+  },
+  "newPersonalRecord": "New Personal Record",
+  "@newPersonalRecord": {
+    "description": "Title for PR celebration"
+  },
+  "awesome": "Awesome",
+  "@awesome": {
+    "description": "Celebration button text"
+  },
+  "alternativeExercises": "Alternative Exercises",
+  "@alternativeExercises": {
+    "description": "Tab title for alternative exercises"
   }
 }

@@ -1414,6 +1414,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutStreak => 'Serie di Allenamenti';
 
   @override
+  String get dayStreak => 'Serie Giorni';
+
+  @override
+  String get nextMilestone => 'Prossimo Traguardo';
+
+  @override
+  String get longestStreak => 'Serie più Lunga';
+
+  @override
+  String get totalDays => 'Giorni Totali';
+
+  @override
+  String get days => 'giorni';
+
+  @override
+  String get errorLoadingData => 'Errore nel caricamento dei dati';
+
+  @override
   String get exportData => 'Esporta Dati';
 
   @override
@@ -2341,9 +2359,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get muscleGroupOther => 'Altro';
 
   @override
-  String get days => 'giorni';
-
-  @override
   String get perWeek => '/settimana';
 
   @override
@@ -2366,9 +2381,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get day => 'Giorno';
-
-  @override
-  String get errorLoadingData => 'Errore nel caricamento dei dati';
 
   @override
   String get pullToRefresh => 'Trascina per aggiornare';
@@ -3407,9 +3419,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get zoomIn => 'Zoom In';
-
-  @override
-  String get longestStreak => 'Serie più Lunga';
 
   @override
   String workoutWithExercises(Object workoutName, Object exerciseCount) {
@@ -5691,9 +5700,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get allTime => 'Da sempre';
-
-  @override
-  String get dayStreak => 'Serie Giorni';
 
   @override
   String get keepItUp => 'Continua così!';
@@ -12440,9 +12446,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Esempio: Allenare petto 3 volte a settimana ma schiena solo 1 volta crea squilibrio';
 
   @override
-  String get nextMilestone => 'Prossimo Traguardo';
-
-  @override
   String get daysToGo => 'giorni rimanenti';
 
   @override
@@ -16429,4 +16432,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get changeAnswers => 'Cambia risposte';
+
+  @override
+  String get monthlyProgress => 'Progresso Mensile';
+
+  @override
+  String get thisMonthVsLast => 'Questo mese vs scorso mese';
+
+  @override
+  String get bestImprovement => 'Miglior Progresso';
+
+  @override
+  String get peak => 'Picco';
+
+  @override
+  String get newPersonalRecord => 'Nuovo Record Personale';
+
+  @override
+  String get awesome => 'Fantastico';
+
+  @override
+  String get alternativeExercises => 'Esercizi Alternativi';
 }
