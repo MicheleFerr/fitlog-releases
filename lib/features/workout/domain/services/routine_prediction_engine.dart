@@ -54,6 +54,7 @@ class RoutinePredictionEngine {
   /// [nextWorkoutTemplateId]: Optional next uncompleted workout template ID from routine
   /// [nextWorkoutScheduledDate]: Optional scheduled date for next workout from routine
   /// [availableTemplateNames]: Optional list of existing template names for validation
+  /// [availableTemplates]: Optional list of full templates for ID->Name mapping
   /// [useCache]: Whether to use cached suggestion (default: true)
   ///
   /// Returns: [WorkoutSuggestion] with predicted workout and confidence
@@ -66,6 +67,7 @@ class RoutinePredictionEngine {
     String? nextWorkoutTemplateId,
     DateTime? nextWorkoutScheduledDate,
     List<String>? availableTemplateNames,
+    List<dynamic>? availableTemplates, // WorkoutTemplate objects
     bool useCache = true,
   }) async {
     // Check cache first
@@ -87,6 +89,7 @@ class RoutinePredictionEngine {
         nextWorkoutTemplateId,
         nextWorkoutScheduledDate,
         availableTemplateNames,
+        availableTemplates,
       );
       if (routineSuggestion != null) {
         return _cacheAndReturn(routineSuggestion);
@@ -179,36 +182,38 @@ class RoutinePredictionEngine {
     String nextWorkoutTemplateId,
     DateTime? scheduledDate,
     List<String>? availableTemplateNames,
+    List<dynamic>? availableTemplates, // Full template objects
   ) async {
     // ✅ IMPLEMENTED: Use next uncompleted workout from active routine
 
-    // Find template name from template ID
-    if (availableTemplateNames == null || availableTemplateNames.isEmpty) {
-      return null; // Cannot validate without template names
+    // Find template name from template ID using templates list
+    if (availableTemplates == null || availableTemplates.isEmpty) {
+      return null; // Cannot find template without templates list
     }
 
-    // Search for template name matching this template ID
-    // Note: Templates are indexed by name, we need to find the template by ID
-    // For now, we'll use the template ID as fallback if we can't find the name
-    String? workoutName;
-
-    // Try to find workout name from recent history that matches this template ID
-    final matchingWorkout = workoutHistory.firstWhere(
-      (w) => w.templateId == nextWorkoutTemplateId,
-      orElse: () => workoutHistory.first, // Fallback
+    // ✅ FIX: Find template by ID and get its name directly
+    final matchingTemplate = availableTemplates.firstWhere(
+      (template) => template.id == nextWorkoutTemplateId,
+      orElse: () => null,
     );
 
-    workoutName = matchingWorkout.name ?? 'Workout';
+    if (matchingTemplate == null) {
+      // Template not found by ID, return null to fallback
+      return null;
+    }
 
-    // Validate that this template name exists
-    if (!availableTemplateNames.contains(workoutName)) {
-      // Template doesn't exist, return null to fallback to frequency-based
+    final workoutName = matchingTemplate.name as String;
+
+    // Validate that this template name exists in available names
+    if (availableTemplateNames != null &&
+        !availableTemplateNames.contains(workoutName)) {
+      // Template name doesn't exist in available names
       return null;
     }
 
     // Calculate confidence based on routine adherence
     // High confidence if user follows routine consistently
-    final confidence = 0.80; // High confidence for routine-based suggestions
+    const confidence = 0.80; // High confidence for routine-based suggestions
 
     return WorkoutSuggestion(
       level: SuggestionLevel.routine,

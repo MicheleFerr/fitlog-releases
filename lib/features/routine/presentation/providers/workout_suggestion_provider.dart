@@ -138,6 +138,7 @@ final workoutSuggestionProvider = FutureProvider.autoDispose<WorkoutSuggestion>(
     nextWorkoutTemplateId: nextWorkoutTemplateId, // ✅ NEW: Pass next workout from routine
     nextWorkoutScheduledDate: nextWorkoutScheduledDate, // ✅ NEW: Pass scheduled date
     availableTemplateNames: availableTemplateNames,
+    availableTemplates: templates, // ✅ PASS FULL TEMPLATES for ID->Name mapping
     useCache: true,
   );
 
