@@ -7637,6 +7637,22 @@
   "@low": {
     "description": "Low priority filter option"
   },
+  "criticalSeverity": "Critical severity - immediate action required",
+  "@criticalSeverity": {
+    "description": "Semantic label for critical severity indicator (accessibility)"
+  },
+  "highSeverity": "High severity - action recommended",
+  "@highSeverity": {
+    "description": "Semantic label for high severity indicator (accessibility)"
+  },
+  "mediumSeverity": "Medium severity - consider action",
+  "@mediumSeverity": {
+    "description": "Semantic label for medium severity indicator (accessibility)"
+  },
+  "lowSeverity": "Low severity - informational",
+  "@lowSeverity": {
+    "description": "Semantic label for low severity indicator (accessibility)"
+  },
   "filterRecommendations": "Filter Recommendations",
   "@filterRecommendations": {
     "description": "Filter section title for recommendations"

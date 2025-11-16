@@ -6432,6 +6432,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get low => 'Low';
 
   @override
+  String get criticalSeverity =>
+      'Critical severity - immediate action required';
+
+  @override
+  String get highSeverity => 'High severity - action recommended';
+
+  @override
+  String get mediumSeverity => 'Medium severity - consider action';
+
+  @override
+  String get lowSeverity => 'Low severity - informational';
+
+  @override
   String get filterRecommendations => 'Filter Recommendations';
 
   @override

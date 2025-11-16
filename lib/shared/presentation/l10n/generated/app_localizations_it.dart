@@ -6497,6 +6497,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get low => 'Bassa';
 
   @override
+  String get criticalSeverity => 'Gravità critica - azione immediata richiesta';
+
+  @override
+  String get highSeverity => 'Gravità alta - azione consigliata';
+
+  @override
+  String get mediumSeverity => 'Gravità media - considera l\'azione';
+
+  @override
+  String get lowSeverity => 'Gravità bassa - informativo';
+
+  @override
   String get filterRecommendations => 'Filtra Raccomandazioni';
 
   @override

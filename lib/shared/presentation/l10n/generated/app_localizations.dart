@@ -11501,6 +11501,30 @@ abstract class AppLocalizations {
   /// **'Low'**
   String get low;
 
+  /// Semantic label for critical severity indicator (accessibility)
+  ///
+  /// In en, this message translates to:
+  /// **'Critical severity - immediate action required'**
+  String get criticalSeverity;
+
+  /// Semantic label for high severity indicator (accessibility)
+  ///
+  /// In en, this message translates to:
+  /// **'High severity - action recommended'**
+  String get highSeverity;
+
+  /// Semantic label for medium severity indicator (accessibility)
+  ///
+  /// In en, this message translates to:
+  /// **'Medium severity - consider action'**
+  String get mediumSeverity;
+
+  /// Semantic label for low severity indicator (accessibility)
+  ///
+  /// In en, this message translates to:
+  /// **'Low severity - informational'**
+  String get lowSeverity;
+
   /// Filter section title for recommendations
   ///
   /// In en, this message translates to:
