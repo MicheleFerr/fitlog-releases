@@ -1565,7 +1565,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get nextMilestone => 'Prossimo Traguardo';
 
   @override
-  String get longestStreak => 'Serie più Lunga';
+  String get longestStreak => 'Serie Più Lunga';
 
   @override
   String get totalDays => 'Giorni Totali';
@@ -1973,7 +1973,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get quickStats => 'I tuoi progressi';
 
   @override
-  String get streak => 'Streak';
+  String get streak => 'Serie';
 
   @override
   String get achievements => 'Obiettivi';
@@ -12183,9 +12183,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String daysRemaining(int count) {
-    return '$count giorni rimanenti';
-  }
+  String get daysRemaining => 'giorni rimanenti';
 
   @override
   String get resumeRoutine => 'Riprendi Routine';
@@ -16631,4 +16629,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get alternativeExercises => 'Esercizi Alternativi';
+
+  @override
+  String get streakMessageNone => 'Inizia la tua serie oggi!';
+
+  @override
+  String get streakMessagePersonalRecord => 'Nuovo record personale!';
+
+  @override
+  String get streakMessageActive => 'Continua così!';
+
+  @override
+  String get streakMessageAtRisk => 'Non rompere la serie! Allenati oggi';
+
+  @override
+  String get streakMessageBroken => 'Serie interrotta. Ricomincia oggi!';
+
+  @override
+  String get milestoneWeek => 'Guerriero Settimanale';
+
+  @override
+  String get milestoneTwoWeeks => 'Campione Bisettimanale';
+
+  @override
+  String get milestoneMonth => 'Maestro Mensile';
+
+  @override
+  String get milestoneTwoMonths => 'Eroe Bimestrale';
+
+  @override
+  String get milestoneQuarter => 'Bestia Trimestrale';
+
+  @override
+  String get milestoneSixMonths => 'Leggenda Semestrale';
+
+  @override
+  String get milestoneYear => 'Titano Annuale';
+
+  @override
+  String milestoneCustom(int days) {
+    return '$days giorni';
+  }
 }

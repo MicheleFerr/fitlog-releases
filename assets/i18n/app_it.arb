@@ -9259,5 +9259,87 @@
   "quickStart": "Avvio Rapido",
   "@quickStart": {
     "description": "Titolo per selezione rapida template esercizi"
+  },
+  "streak": "Serie",
+  "@streak": {
+    "description": "Etichetta per serie di allenamenti consecutivi"
+  },
+  "personalRecord": "Record Personale",
+  "@personalRecord": {
+    "description": "Etichetta che indica che la serie attuale è un record personale"
+  },
+  "days": "giorni",
+  "@days": {
+    "description": "Unità per conteggio giorni"
+  },
+  "nextMilestone": "Prossimo Traguardo",
+  "@nextMilestone": {
+    "description": "Etichetta per prossimo traguardo serie"
+  },
+  "daysRemaining": "giorni rimanenti",
+  "@daysRemaining": {
+    "description": "Etichetta per giorni fino al prossimo traguardo"
+  },
+  "longestStreak": "Serie Più Lunga",
+  "@longestStreak": {
+    "description": "Etichetta per serie più lunga di sempre"
+  },
+  "streakMessageNone": "Inizia la tua serie oggi!",
+  "@streakMessageNone": {
+    "description": "Messaggio quando l'utente non ha serie attiva"
+  },
+  "streakMessagePersonalRecord": "Nuovo record personale!",
+  "@streakMessagePersonalRecord": {
+    "description": "Messaggio quando la serie attuale è un record personale"
+  },
+  "streakMessageActive": "Continua così!",
+  "@streakMessageActive": {
+    "description": "Messaggio quando l'utente ha una serie attiva"
+  },
+  "streakMessageAtRisk": "Non rompere la serie! Allenati oggi",
+  "@streakMessageAtRisk": {
+    "description": "Messaggio quando la serie è a rischio (deve allenarsi oggi)"
+  },
+  "streakMessageBroken": "Serie interrotta. Ricomincia oggi!",
+  "@streakMessageBroken": {
+    "description": "Messaggio quando la serie è stata interrotta"
+  },
+  "milestoneWeek": "Guerriero Settimanale",
+  "@milestoneWeek": {
+    "description": "Nome per traguardo 7 giorni"
+  },
+  "milestoneTwoWeeks": "Campione Bisettimanale",
+  "@milestoneTwoWeeks": {
+    "description": "Nome per traguardo 14 giorni"
+  },
+  "milestoneMonth": "Maestro Mensile",
+  "@milestoneMonth": {
+    "description": "Nome per traguardo 30 giorni"
+  },
+  "milestoneTwoMonths": "Eroe Bimestrale",
+  "@milestoneTwoMonths": {
+    "description": "Nome per traguardo 60 giorni"
+  },
+  "milestoneQuarter": "Bestia Trimestrale",
+  "@milestoneQuarter": {
+    "description": "Nome per traguardo 90 giorni"
+  },
+  "milestoneSixMonths": "Leggenda Semestrale",
+  "@milestoneSixMonths": {
+    "description": "Nome per traguardo 180 giorni"
+  },
+  "milestoneYear": "Titano Annuale",
+  "@milestoneYear": {
+    "description": "Nome per traguardo 365 giorni"
+  },
+  "milestoneCustom": "{days} giorni",
+  "@milestoneCustom": {
+    "description": "Nome traguardo personalizzato",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Numero di giorni"
+      }
+    }
   }
 }

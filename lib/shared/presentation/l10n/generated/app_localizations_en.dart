@@ -12047,9 +12047,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String daysRemaining(int count) {
-    return '$count days remaining';
-  }
+  String get daysRemaining => 'days remaining';
 
   @override
   String get resumeRoutine => 'Resume Routine';
@@ -16465,4 +16463,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alternativeExercises => 'Alternative Exercises';
+
+  @override
+  String get streakMessageNone => 'Start your streak today!';
+
+  @override
+  String get streakMessagePersonalRecord => 'New personal record!';
+
+  @override
+  String get streakMessageActive => 'Keep going strong!';
+
+  @override
+  String get streakMessageAtRisk => 'Don\'t break the streak! Workout today';
+
+  @override
+  String get streakMessageBroken => 'Streak broken. Start fresh today!';
+
+  @override
+  String get milestoneWeek => 'Week Warrior';
+
+  @override
+  String get milestoneTwoWeeks => 'Two-Week Champion';
+
+  @override
+  String get milestoneMonth => 'Monthly Master';
+
+  @override
+  String get milestoneTwoMonths => 'Two-Month Hero';
+
+  @override
+  String get milestoneQuarter => 'Quarterly Beast';
+
+  @override
+  String get milestoneSixMonths => 'Half-Year Legend';
+
+  @override
+  String get milestoneYear => 'Yearly Titan';
+
+  @override
+  String milestoneCustom(int days) {
+    return '$days days';
+  }
 }

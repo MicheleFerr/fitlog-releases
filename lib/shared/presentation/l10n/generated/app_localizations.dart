@@ -2965,13 +2965,13 @@ abstract class AppLocalizations {
   /// **'Day Streak'**
   String get dayStreak;
 
-  /// Next milestone label
+  /// Label for next streak milestone
   ///
   /// In en, this message translates to:
   /// **'Next Milestone'**
   String get nextMilestone;
 
-  /// Longest consecutive workout streak
+  /// Label for all-time longest streak
   ///
   /// In en, this message translates to:
   /// **'Longest Streak'**
@@ -2983,7 +2983,7 @@ abstract class AppLocalizations {
   /// **'Total Days'**
   String get totalDays;
 
-  /// Days unit (lowercase)
+  /// Unit for day count
   ///
   /// In en, this message translates to:
   /// **'days'**
@@ -3739,7 +3739,7 @@ abstract class AppLocalizations {
   /// **'Your Progress'**
   String get quickStats;
 
-  /// Streak metric label
+  /// Label for workout consistency streak
   ///
   /// In en, this message translates to:
   /// **'Streak'**
@@ -17394,7 +17394,7 @@ abstract class AppLocalizations {
   /// **'Effort Progression'**
   String get effortProgression;
 
-  /// Personal record label
+  /// Label indicating current streak is a personal best
   ///
   /// In en, this message translates to:
   /// **'Personal Record'**
@@ -21240,11 +21240,11 @@ abstract class AppLocalizations {
   /// **'Paused until {date}'**
   String pausedUntil(String date);
 
-  /// Shows days remaining in pause
+  /// Label for days until next milestone
   ///
   /// In en, this message translates to:
-  /// **'{count} days remaining'**
-  String daysRemaining(int count);
+  /// **'days remaining'**
+  String get daysRemaining;
 
   /// Button to manually resume a paused routine
   ///
@@ -29435,6 +29435,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Alternative Exercises'**
   String get alternativeExercises;
+
+  /// Message when user has no active streak
+  ///
+  /// In en, this message translates to:
+  /// **'Start your streak today!'**
+  String get streakMessageNone;
+
+  /// Message when current streak is a personal record
+  ///
+  /// In en, this message translates to:
+  /// **'New personal record!'**
+  String get streakMessagePersonalRecord;
+
+  /// Message when user has active streak
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going strong!'**
+  String get streakMessageActive;
+
+  /// Message when streak is at risk (need to workout today)
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t break the streak! Workout today'**
+  String get streakMessageAtRisk;
+
+  /// Message when streak was broken
+  ///
+  /// In en, this message translates to:
+  /// **'Streak broken. Start fresh today!'**
+  String get streakMessageBroken;
+
+  /// Name for 7-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Week Warrior'**
+  String get milestoneWeek;
+
+  /// Name for 14-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Two-Week Champion'**
+  String get milestoneTwoWeeks;
+
+  /// Name for 30-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Master'**
+  String get milestoneMonth;
+
+  /// Name for 60-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Two-Month Hero'**
+  String get milestoneTwoMonths;
+
+  /// Name for 90-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Quarterly Beast'**
+  String get milestoneQuarter;
+
+  /// Name for 180-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Half-Year Legend'**
+  String get milestoneSixMonths;
+
+  /// Name for 365-day milestone
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly Titan'**
+  String get milestoneYear;
+
+  /// Custom milestone name
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String milestoneCustom(int days);
 }
 
 class _AppLocalizationsDelegate

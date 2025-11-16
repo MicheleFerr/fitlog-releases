@@ -19910,5 +19910,87 @@
   "quickStart": "Quick Start",
   "@quickStart": {
     "description": "Title for exercise template quick selection"
+  },
+  "streak": "Streak",
+  "@streak": {
+    "description": "Label for workout consistency streak"
+  },
+  "personalRecord": "Personal Record",
+  "@personalRecord": {
+    "description": "Label indicating current streak is a personal best"
+  },
+  "days": "days",
+  "@days": {
+    "description": "Unit for day count"
+  },
+  "nextMilestone": "Next Milestone",
+  "@nextMilestone": {
+    "description": "Label for next streak milestone"
+  },
+  "daysRemaining": "days remaining",
+  "@daysRemaining": {
+    "description": "Label for days until next milestone"
+  },
+  "longestStreak": "Longest Streak",
+  "@longestStreak": {
+    "description": "Label for all-time longest streak"
+  },
+  "streakMessageNone": "Start your streak today!",
+  "@streakMessageNone": {
+    "description": "Message when user has no active streak"
+  },
+  "streakMessagePersonalRecord": "New personal record!",
+  "@streakMessagePersonalRecord": {
+    "description": "Message when current streak is a personal record"
+  },
+  "streakMessageActive": "Keep going strong!",
+  "@streakMessageActive": {
+    "description": "Message when user has active streak"
+  },
+  "streakMessageAtRisk": "Don't break the streak! Workout today",
+  "@streakMessageAtRisk": {
+    "description": "Message when streak is at risk (need to workout today)"
+  },
+  "streakMessageBroken": "Streak broken. Start fresh today!",
+  "@streakMessageBroken": {
+    "description": "Message when streak was broken"
+  },
+  "milestoneWeek": "Week Warrior",
+  "@milestoneWeek": {
+    "description": "Name for 7-day milestone"
+  },
+  "milestoneTwoWeeks": "Two-Week Champion",
+  "@milestoneTwoWeeks": {
+    "description": "Name for 14-day milestone"
+  },
+  "milestoneMonth": "Monthly Master",
+  "@milestoneMonth": {
+    "description": "Name for 30-day milestone"
+  },
+  "milestoneTwoMonths": "Two-Month Hero",
+  "@milestoneTwoMonths": {
+    "description": "Name for 60-day milestone"
+  },
+  "milestoneQuarter": "Quarterly Beast",
+  "@milestoneQuarter": {
+    "description": "Name for 90-day milestone"
+  },
+  "milestoneSixMonths": "Half-Year Legend",
+  "@milestoneSixMonths": {
+    "description": "Name for 180-day milestone"
+  },
+  "milestoneYear": "Yearly Titan",
+  "@milestoneYear": {
+    "description": "Name for 365-day milestone"
+  },
+  "milestoneCustom": "{days} days",
+  "@milestoneCustom": {
+    "description": "Custom milestone name",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "description": "Number of days"
+      }
+    }
   }
 }
