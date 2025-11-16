@@ -152,6 +152,72 @@ abstract class AppLocalizations {
   /// **'Start!'**
   String get onboardingStart;
 
+  /// AI Coach onboarding title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach Setup'**
+  String get onboardingTitle;
+
+  /// Experience level selection title
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your training experience?'**
+  String get onboardingExperienceTitle;
+
+  /// Experience level selection subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Help us personalize your insights'**
+  String get onboardingExperienceSubtitle;
+
+  /// Beginner experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get beginnerLevel;
+
+  /// Beginner level description
+  ///
+  /// In en, this message translates to:
+  /// **'0-6 months of training'**
+  String get beginnerLevelDescription;
+
+  /// Intermediate experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get intermediateLevel;
+
+  /// Intermediate level description
+  ///
+  /// In en, this message translates to:
+  /// **'6-24 months of training'**
+  String get intermediateLevelDescription;
+
+  /// Advanced experience level
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advancedLevel;
+
+  /// Advanced level description
+  ///
+  /// In en, this message translates to:
+  /// **'2+ years of training'**
+  String get advancedLevelDescription;
+
+  /// Exit confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Onboarding?'**
+  String get onboardingExitTitle;
+
+  /// Exit confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'You can always set up AI Coach later in Settings'**
+  String get onboardingExitMessage;
+
   /// Step indicator in onboarding
   ///
   /// In en, this message translates to:

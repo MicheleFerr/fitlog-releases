@@ -38,6 +38,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingStart => 'Start!';
 
   @override
+  String get onboardingTitle => 'AI Coach Setup';
+
+  @override
+  String get onboardingExperienceTitle => 'What\'s your training experience?';
+
+  @override
+  String get onboardingExperienceSubtitle =>
+      'Help us personalize your insights';
+
+  @override
+  String get beginnerLevel => 'Beginner';
+
+  @override
+  String get beginnerLevelDescription => '0-6 months of training';
+
+  @override
+  String get intermediateLevel => 'Intermediate';
+
+  @override
+  String get intermediateLevelDescription => '6-24 months of training';
+
+  @override
+  String get advancedLevel => 'Advanced';
+
+  @override
+  String get advancedLevelDescription => '2+ years of training';
+
+  @override
+  String get onboardingExitTitle => 'Exit Onboarding?';
+
+  @override
+  String get onboardingExitMessage =>
+      'You can always set up AI Coach later in Settings';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Step $current of $total';
   }

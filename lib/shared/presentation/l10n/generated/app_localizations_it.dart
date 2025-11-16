@@ -38,6 +38,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get onboardingStart => 'Inizia!';
 
   @override
+  String get onboardingTitle => 'Configurazione AI Coach';
+
+  @override
+  String get onboardingExperienceTitle =>
+      'Qual è la tua esperienza di allenamento?';
+
+  @override
+  String get onboardingExperienceSubtitle =>
+      'Aiutaci a personalizzare i tuoi insights';
+
+  @override
+  String get beginnerLevel => 'Principiante';
+
+  @override
+  String get beginnerLevelDescription => '0-6 mesi di allenamento';
+
+  @override
+  String get intermediateLevel => 'Intermedio';
+
+  @override
+  String get intermediateLevelDescription => '6-24 mesi di allenamento';
+
+  @override
+  String get advancedLevel => 'Avanzato';
+
+  @override
+  String get advancedLevelDescription => '2+ anni di allenamento';
+
+  @override
+  String get onboardingExitTitle => 'Uscire dall\'Onboarding?';
+
+  @override
+  String get onboardingExitMessage =>
+      'Puoi sempre configurare l\'AI Coach successivamente nelle Impostazioni';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Passo $current di $total';
   }

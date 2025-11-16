@@ -9,6 +9,50 @@
   "onboardingBack": "Indietro",
   "onboardingNext": "Avanti",
   "onboardingStart": "Inizia!",
+  "onboardingTitle": "Configurazione AI Coach",
+  "@onboardingTitle": {
+    "description": "Titolo onboarding AI Coach"
+  },
+  "onboardingExperienceTitle": "Qual è la tua esperienza di allenamento?",
+  "@onboardingExperienceTitle": {
+    "description": "Titolo selezione livello esperienza"
+  },
+  "onboardingExperienceSubtitle": "Aiutaci a personalizzare i tuoi insights",
+  "@onboardingExperienceSubtitle": {
+    "description": "Sottotitolo selezione livello esperienza"
+  },
+  "beginnerLevel": "Principiante",
+  "@beginnerLevel": {
+    "description": "Livello esperienza principiante"
+  },
+  "beginnerLevelDescription": "0-6 mesi di allenamento",
+  "@beginnerLevelDescription": {
+    "description": "Descrizione livello principiante"
+  },
+  "intermediateLevel": "Intermedio",
+  "@intermediateLevel": {
+    "description": "Livello esperienza intermedio"
+  },
+  "intermediateLevelDescription": "6-24 mesi di allenamento",
+  "@intermediateLevelDescription": {
+    "description": "Descrizione livello intermedio"
+  },
+  "advancedLevel": "Avanzato",
+  "@advancedLevel": {
+    "description": "Livello esperienza avanzato"
+  },
+  "advancedLevelDescription": "2+ anni di allenamento",
+  "@advancedLevelDescription": {
+    "description": "Descrizione livello avanzato"
+  },
+  "onboardingExitTitle": "Uscire dall'Onboarding?",
+  "@onboardingExitTitle": {
+    "description": "Titolo dialog conferma uscita"
+  },
+  "onboardingExitMessage": "Puoi sempre configurare l'AI Coach successivamente nelle Impostazioni",
+  "@onboardingExitMessage": {
+    "description": "Messaggio dialog conferma uscita"
+  },
   "onboardingStepOf": "Passo {current} di {total}",
   "onboardingWhatToExpect": "Cosa puoi aspettarti:",
   "onboardingModeTitle": "Scegli la Tua Esperienza",

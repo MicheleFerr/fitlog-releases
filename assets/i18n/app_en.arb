@@ -36,6 +36,50 @@
   "@onboardingStart": {
     "description": "Start button in onboarding final step"
   },
+  "onboardingTitle": "AI Coach Setup",
+  "@onboardingTitle": {
+    "description": "AI Coach onboarding title"
+  },
+  "onboardingExperienceTitle": "What's your training experience?",
+  "@onboardingExperienceTitle": {
+    "description": "Experience level selection title"
+  },
+  "onboardingExperienceSubtitle": "Help us personalize your insights",
+  "@onboardingExperienceSubtitle": {
+    "description": "Experience level selection subtitle"
+  },
+  "beginnerLevel": "Beginner",
+  "@beginnerLevel": {
+    "description": "Beginner experience level"
+  },
+  "beginnerLevelDescription": "0-6 months of training",
+  "@beginnerLevelDescription": {
+    "description": "Beginner level description"
+  },
+  "intermediateLevel": "Intermediate",
+  "@intermediateLevel": {
+    "description": "Intermediate experience level"
+  },
+  "intermediateLevelDescription": "6-24 months of training",
+  "@intermediateLevelDescription": {
+    "description": "Intermediate level description"
+  },
+  "advancedLevel": "Advanced",
+  "@advancedLevel": {
+    "description": "Advanced experience level"
+  },
+  "advancedLevelDescription": "2+ years of training",
+  "@advancedLevelDescription": {
+    "description": "Advanced level description"
+  },
+  "onboardingExitTitle": "Exit Onboarding?",
+  "@onboardingExitTitle": {
+    "description": "Exit confirmation dialog title"
+  },
+  "onboardingExitMessage": "You can always set up AI Coach later in Settings",
+  "@onboardingExitMessage": {
+    "description": "Exit confirmation dialog message"
+  },
   "onboardingStepOf": "Step {current} of {total}",
   "@onboardingStepOf": {
     "description": "Step indicator in onboarding",
