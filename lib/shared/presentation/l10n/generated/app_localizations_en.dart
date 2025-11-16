@@ -2986,6 +2986,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recommendation => 'Recommendation';
 
   @override
+  String get expand => 'Expand';
+
+  @override
+  String get collapse => 'Collapse';
+
+  @override
+  String get scientificStrategies => 'Scientific Strategies';
+
+  @override
+  String get dataPoints => 'Data Points';
+
+  @override
   String get aboutStrengthProgression => 'About Strength Progression';
 
   @override

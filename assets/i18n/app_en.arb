@@ -3971,6 +3971,22 @@
   "@recommendation": {
     "description": "Recommendation label"
   },
+  "expand": "Expand",
+  "@expand": {
+    "description": "Expand button label"
+  },
+  "collapse": "Collapse",
+  "@collapse": {
+    "description": "Collapse button label"
+  },
+  "scientificStrategies": "Scientific Strategies",
+  "@scientificStrategies": {
+    "description": "Scientific strategies section title"
+  },
+  "dataPoints": "Data Points",
+  "@dataPoints": {
+    "description": "Data points section title"
+  },
   "aboutStrengthProgression": "About Strength Progression",
   "@aboutStrengthProgression": {
     "description": "About strength progression dialog title"

@@ -5597,6 +5597,30 @@ abstract class AppLocalizations {
   /// **'Recommendation'**
   String get recommendation;
 
+  /// Expand button label
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// Collapse button label
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get collapse;
+
+  /// Scientific strategies section title
+  ///
+  /// In en, this message translates to:
+  /// **'Scientific Strategies'**
+  String get scientificStrategies;
+
+  /// Data points section title
+  ///
+  /// In en, this message translates to:
+  /// **'Data Points'**
+  String get dataPoints;
+
   /// About strength progression dialog title
   ///
   /// In en, this message translates to:

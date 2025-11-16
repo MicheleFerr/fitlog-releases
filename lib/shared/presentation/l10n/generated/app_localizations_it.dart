@@ -3004,6 +3004,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recommendation => 'Raccomandazione';
 
   @override
+  String get expand => 'Espandi';
+
+  @override
+  String get collapse => 'Comprimi';
+
+  @override
+  String get scientificStrategies => 'Strategie Scientifiche';
+
+  @override
+  String get dataPoints => 'Dati Chiave';
+
+  @override
   String get aboutStrengthProgression =>
       'Informazioni sulla Progressione Forza';
 
