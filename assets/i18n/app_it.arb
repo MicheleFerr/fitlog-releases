@@ -9341,5 +9341,29 @@
         "description": "Numero di giorni"
       }
     }
+  },
+  "achievementUnlocked": "Obiettivo Sbloccato!",
+  "@achievementUnlocked": {
+    "description": "Titolo per animazione sblocco obiettivo"
+  },
+  "rarityCommon": "Comune",
+  "@rarityCommon": {
+    "description": "Livello rarità comune"
+  },
+  "rarityUncommon": "Non Comune",
+  "@rarityUncommon": {
+    "description": "Livello rarità non comune"
+  },
+  "rarityRare": "Raro",
+  "@rarityRare": {
+    "description": "Livello rarità raro"
+  },
+  "rarityEpic": "Epico",
+  "@rarityEpic": {
+    "description": "Livello rarità epico"
+  },
+  "rarityLegendary": "Leggendario",
+  "@rarityLegendary": {
+    "description": "Livello rarità leggendario"
   }
 }

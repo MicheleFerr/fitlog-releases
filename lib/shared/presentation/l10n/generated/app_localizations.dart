@@ -29513,6 +29513,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{days} days'**
   String milestoneCustom(int days);
+
+  /// Title for achievement unlock animation
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocked!'**
+  String get achievementUnlocked;
+
+  /// Common rarity level
+  ///
+  /// In en, this message translates to:
+  /// **'Common'**
+  String get rarityCommon;
+
+  /// Uncommon rarity level
+  ///
+  /// In en, this message translates to:
+  /// **'Uncommon'**
+  String get rarityUncommon;
+
+  /// Rare rarity level
+  ///
+  /// In en, this message translates to:
+  /// **'Rare'**
+  String get rarityRare;
+
+  /// Epic rarity level
+  ///
+  /// In en, this message translates to:
+  /// **'Epic'**
+  String get rarityEpic;
+
+  /// Legendary rarity level
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary'**
+  String get rarityLegendary;
 }
 
 class _AppLocalizationsDelegate

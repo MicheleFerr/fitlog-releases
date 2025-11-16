@@ -16670,4 +16670,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String milestoneCustom(int days) {
     return '$days giorni';
   }
+
+  @override
+  String get achievementUnlocked => 'Obiettivo Sbloccato!';
+
+  @override
+  String get rarityCommon => 'Comune';
+
+  @override
+  String get rarityUncommon => 'Non Comune';
+
+  @override
+  String get rarityRare => 'Raro';
+
+  @override
+  String get rarityEpic => 'Epico';
+
+  @override
+  String get rarityLegendary => 'Leggendario';
 }

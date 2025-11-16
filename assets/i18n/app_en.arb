@@ -19992,5 +19992,29 @@
         "description": "Number of days"
       }
     }
+  },
+  "achievementUnlocked": "Achievement Unlocked!",
+  "@achievementUnlocked": {
+    "description": "Title for achievement unlock animation"
+  },
+  "rarityCommon": "Common",
+  "@rarityCommon": {
+    "description": "Common rarity level"
+  },
+  "rarityUncommon": "Uncommon",
+  "@rarityUncommon": {
+    "description": "Uncommon rarity level"
+  },
+  "rarityRare": "Rare",
+  "@rarityRare": {
+    "description": "Rare rarity level"
+  },
+  "rarityEpic": "Epic",
+  "@rarityEpic": {
+    "description": "Epic rarity level"
+  },
+  "rarityLegendary": "Legendary",
+  "@rarityLegendary": {
+    "description": "Legendary rarity level"
   }
 }
