@@ -9365,5 +9365,61 @@
   "rarityLegendary": "Leggendario",
   "@rarityLegendary": {
     "description": "Livello rarità leggendario"
+  },
+  "submit": "Invia",
+  "@submit": {
+    "description": "Testo pulsante invia"
+  },
+  "feedbackHelpful": "Utile",
+  "@feedbackHelpful": {
+    "description": "Pulsante feedback utile"
+  },
+  "feedbackNotHelpful": "Non Utile",
+  "@feedbackNotHelpful": {
+    "description": "Pulsante feedback non utile"
+  },
+  "feedbackThankYou": "Grazie per il tuo feedback!",
+  "@feedbackThankYou": {
+    "description": "Messaggio di ringraziamento dopo invio feedback"
+  },
+  "feedbackWhyNotHelpful": "Perché non è stato utile?",
+  "@feedbackWhyNotHelpful": {
+    "description": "Titolo dialog motivo dismissione"
+  },
+  "dismissReasonAlreadyKnow": "Lo sapevo già",
+  "@dismissReasonAlreadyKnow": {
+    "description": "Motivo dismissione: già noto"
+  },
+  "dismissReasonNotRelevant": "Non rilevante per i miei obiettivi",
+  "@dismissReasonNotRelevant": {
+    "description": "Motivo dismissione: non rilevante"
+  },
+  "dismissReasonIncorrect": "Sembra incorretto",
+  "@dismissReasonIncorrect": {
+    "description": "Motivo dismissione: incorretto"
+  },
+  "dismissReasonTooAdvanced": "Troppo avanzato per me",
+  "@dismissReasonTooAdvanced": {
+    "description": "Motivo dismissione: troppo avanzato"
+  },
+  "dismissReasonTooBasic": "Troppo basilare per me",
+  "@dismissReasonTooBasic": {
+    "description": "Motivo dismissione: troppo basilare"
+  },
+  "dismissReasonNotInterested": "Non interessato a questo argomento",
+  "@dismissReasonNotInterested": {
+    "description": "Motivo dismissione: non interessato"
+  },
+  "dismissReasonOther": "Altro motivo",
+  "@dismissReasonOther": {
+    "description": "Motivo dismissione: altro"
+  },
+  "feedbackCommentOptional": "Commenti aggiuntivi (opzionale)",
+  "@feedbackCommentOptional": {
+    "description": "Etichetta campo commento nel dialog dismissione"
+  },
+  "feedbackCommentHint": "Raccontaci di più sul perché non è stato utile...",
+  "@feedbackCommentHint": {
+    "description": "Testo suggerimento campo commento"
   }
 }

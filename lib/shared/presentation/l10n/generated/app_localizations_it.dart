@@ -9087,7 +9087,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get feedbackHelpful => 'Utile';
 
   @override
-  String get feedbackNotHelpful => 'Non utile';
+  String get feedbackNotHelpful => 'Non Utile';
 
   @override
   String get feedbackThankYou => 'Grazie per il tuo feedback!';
@@ -16688,4 +16688,38 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get rarityLegendary => 'Leggendario';
+
+  @override
+  String get submit => 'Invia';
+
+  @override
+  String get feedbackWhyNotHelpful => 'Perché non è stato utile?';
+
+  @override
+  String get dismissReasonAlreadyKnow => 'Lo sapevo già';
+
+  @override
+  String get dismissReasonNotRelevant => 'Non rilevante per i miei obiettivi';
+
+  @override
+  String get dismissReasonIncorrect => 'Sembra incorretto';
+
+  @override
+  String get dismissReasonTooAdvanced => 'Troppo avanzato per me';
+
+  @override
+  String get dismissReasonTooBasic => 'Troppo basilare per me';
+
+  @override
+  String get dismissReasonNotInterested => 'Non interessato a questo argomento';
+
+  @override
+  String get dismissReasonOther => 'Altro motivo';
+
+  @override
+  String get feedbackCommentOptional => 'Commenti aggiuntivi (opzionale)';
+
+  @override
+  String get feedbackCommentHint =>
+      'Raccontaci di più sul perché non è stato utile...';
 }

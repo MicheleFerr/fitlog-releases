@@ -16056,19 +16056,19 @@ abstract class AppLocalizations {
   /// **'Rate your experience with this step'**
   String get feedbackQuestion;
 
-  /// Button to mark insight as helpful
+  /// Helpful feedback button
   ///
   /// In en, this message translates to:
   /// **'Helpful'**
   String get feedbackHelpful;
 
-  /// Button to mark insight as not helpful
+  /// Not helpful feedback button
   ///
   /// In en, this message translates to:
-  /// **'Not helpful'**
+  /// **'Not Helpful'**
   String get feedbackNotHelpful;
 
-  /// Thank you message after user rates a questionnaire step
+  /// Thank you message after feedback submission
   ///
   /// In en, this message translates to:
   /// **'Thanks for your feedback!'**
@@ -29549,6 +29549,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Legendary'**
   String get rarityLegendary;
+
+  /// Submit button text
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// Dialog title for dismiss reason
+  ///
+  /// In en, this message translates to:
+  /// **'Why wasn\'t this helpful?'**
+  String get feedbackWhyNotHelpful;
+
+  /// Dismiss reason: already know
+  ///
+  /// In en, this message translates to:
+  /// **'I already know this'**
+  String get dismissReasonAlreadyKnow;
+
+  /// Dismiss reason: not relevant
+  ///
+  /// In en, this message translates to:
+  /// **'Not relevant to my goals'**
+  String get dismissReasonNotRelevant;
+
+  /// Dismiss reason: incorrect
+  ///
+  /// In en, this message translates to:
+  /// **'This seems incorrect'**
+  String get dismissReasonIncorrect;
+
+  /// Dismiss reason: too advanced
+  ///
+  /// In en, this message translates to:
+  /// **'Too advanced for me'**
+  String get dismissReasonTooAdvanced;
+
+  /// Dismiss reason: too basic
+  ///
+  /// In en, this message translates to:
+  /// **'Too basic for me'**
+  String get dismissReasonTooBasic;
+
+  /// Dismiss reason: not interested
+  ///
+  /// In en, this message translates to:
+  /// **'Not interested in this topic'**
+  String get dismissReasonNotInterested;
+
+  /// Dismiss reason: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other reason'**
+  String get dismissReasonOther;
+
+  /// Comment field label in dismiss dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Additional comments (optional)'**
+  String get feedbackCommentOptional;
+
+  /// Comment field hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us more about why this wasn\'t helpful...'**
+  String get feedbackCommentHint;
 }
 
 class _AppLocalizationsDelegate

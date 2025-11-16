@@ -20016,5 +20016,61 @@
   "rarityLegendary": "Legendary",
   "@rarityLegendary": {
     "description": "Legendary rarity level"
+  },
+  "submit": "Submit",
+  "@submit": {
+    "description": "Submit button text"
+  },
+  "feedbackHelpful": "Helpful",
+  "@feedbackHelpful": {
+    "description": "Helpful feedback button"
+  },
+  "feedbackNotHelpful": "Not Helpful",
+  "@feedbackNotHelpful": {
+    "description": "Not helpful feedback button"
+  },
+  "feedbackThankYou": "Thanks for your feedback!",
+  "@feedbackThankYou": {
+    "description": "Thank you message after feedback submission"
+  },
+  "feedbackWhyNotHelpful": "Why wasn't this helpful?",
+  "@feedbackWhyNotHelpful": {
+    "description": "Dialog title for dismiss reason"
+  },
+  "dismissReasonAlreadyKnow": "I already know this",
+  "@dismissReasonAlreadyKnow": {
+    "description": "Dismiss reason: already know"
+  },
+  "dismissReasonNotRelevant": "Not relevant to my goals",
+  "@dismissReasonNotRelevant": {
+    "description": "Dismiss reason: not relevant"
+  },
+  "dismissReasonIncorrect": "This seems incorrect",
+  "@dismissReasonIncorrect": {
+    "description": "Dismiss reason: incorrect"
+  },
+  "dismissReasonTooAdvanced": "Too advanced for me",
+  "@dismissReasonTooAdvanced": {
+    "description": "Dismiss reason: too advanced"
+  },
+  "dismissReasonTooBasic": "Too basic for me",
+  "@dismissReasonTooBasic": {
+    "description": "Dismiss reason: too basic"
+  },
+  "dismissReasonNotInterested": "Not interested in this topic",
+  "@dismissReasonNotInterested": {
+    "description": "Dismiss reason: not interested"
+  },
+  "dismissReasonOther": "Other reason",
+  "@dismissReasonOther": {
+    "description": "Dismiss reason: other"
+  },
+  "feedbackCommentOptional": "Additional comments (optional)",
+  "@feedbackCommentOptional": {
+    "description": "Comment field label in dismiss dialog"
+  },
+  "feedbackCommentHint": "Tell us more about why this wasn't helpful...",
+  "@feedbackCommentHint": {
+    "description": "Comment field hint text"
   }
 }
