@@ -150,7 +150,8 @@ Use these to understand specific systems:
 |----------|---------|----------|
 | [`TIMER_AUDIO_KB.md`](./TIMER_AUDIO_KB.md) | Timer system & audio playback | Debugging timer/audio issues |
 | [`LIVE_ACTIVITY_KB.md`](./LIVE_ACTIVITY_KB.md) | iOS Live Activities system | Implementing/fixing Live Activities |
-| [`NOTIFICATION_SYSTEM_KB.md`](./NOTIFICATION_SYSTEM_KB.md) | Notification flows & triggers | Debugging notification issues |
+| [`NOTIFICATION_SYSTEM_KB.md`](./NOTIFICATION_SYSTEM_KB.md) | Notification flows & triggers (v1.0) | Debugging notification issues |
+| [`../features/notifications/NOTIFICATION_SYSTEM_V2_COMPLETE_DOCUMENTATION.md`](../features/notifications/NOTIFICATION_SYSTEM_V2_COMPLETE_DOCUMENTATION.md) | **Notification System v2.0** (GDPR, cross-device sync, frequency caps) | Implementing v2.0 features |
 | [`ERROR_KB.md`](./ERROR_KB.md) | Common errors & solutions | When you hit a build/runtime error |
 
 ### 🔧 SETUP & CONFIGURATION
@@ -232,6 +233,13 @@ These cover initial setup and configuration:
    - 5 detailed use cases with UI mockups
    - 2 complete user journeys (90-day progression)
    - Edge cases, metrics, consultant review questions
+3. **Critical**: [`AI_COACH_CRITICAL_IMPLEMENTATION_GUIDE.md`](../AI_COACH_CRITICAL_IMPLEMENTATION_GUIDE.md) - **Implementation priorities & GDPR compliance** (1,000+ lines, Jan 2025)
+   - Top 3 priorities with ROI impact (unlock timing, persistence, error handling)
+   - Health data integration analysis (HealthKit vs Health Connect, +61% D30 retention)
+   - GDPR compliance requirements (Articles 9, 17, 20, 32) with code examples
+   - 6-week implementation roadmap
+   - Expected results table (+60% D7, +61% D30, +153% D90 retention)
+   - 30+ references to market research and compliance docs
 
 ### "I'm hitting an error..."
 
