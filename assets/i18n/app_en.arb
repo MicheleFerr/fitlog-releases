@@ -80,6 +80,38 @@
   "@onboardingExitMessage": {
     "description": "Exit confirmation dialog message"
   },
+  "onboardingGoalTitle": "What's your primary goal?",
+  "@onboardingGoalTitle": {
+    "description": "Goal selection title"
+  },
+  "onboardingGoalSubtitle": "We'll tailor insights to your training focus",
+  "@onboardingGoalSubtitle": {
+    "description": "Goal selection subtitle"
+  },
+  "hypertrophyGoal": "Muscle Growth",
+  "@hypertrophyGoal": {
+    "description": "Hypertrophy goal"
+  },
+  "hypertrophyGoalDescription": "8-12 reps, 60-90s rest",
+  "@hypertrophyGoalDescription": {
+    "description": "Hypertrophy goal description"
+  },
+  "strengthGoal": "Max Strength",
+  "@strengthGoal": {
+    "description": "Strength goal"
+  },
+  "strengthGoalDescription": "1-5 reps, 3-5min rest",
+  "@strengthGoalDescription": {
+    "description": "Strength goal description"
+  },
+  "enduranceGoal": "Endurance",
+  "@enduranceGoal": {
+    "description": "Endurance goal"
+  },
+  "enduranceGoalDescription": "15+ reps, <30s rest",
+  "@enduranceGoalDescription": {
+    "description": "Endurance goal description"
+  },
   "onboardingStepOf": "Step {current} of {total}",
   "@onboardingStepOf": {
     "description": "Step indicator in onboarding",

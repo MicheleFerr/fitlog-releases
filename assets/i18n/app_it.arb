@@ -53,6 +53,38 @@
   "@onboardingExitMessage": {
     "description": "Messaggio dialog conferma uscita"
   },
+  "onboardingGoalTitle": "Qual è il tuo obiettivo principale?",
+  "@onboardingGoalTitle": {
+    "description": "Titolo selezione obiettivo"
+  },
+  "onboardingGoalSubtitle": "Personalizzeremo gli insights in base al tuo focus",
+  "@onboardingGoalSubtitle": {
+    "description": "Sottotitolo selezione obiettivo"
+  },
+  "hypertrophyGoal": "Crescita Muscolare",
+  "@hypertrophyGoal": {
+    "description": "Obiettivo ipertrofia"
+  },
+  "hypertrophyGoalDescription": "8-12 rip, 60-90s recupero",
+  "@hypertrophyGoalDescription": {
+    "description": "Descrizione obiettivo ipertrofia"
+  },
+  "strengthGoal": "Forza Massima",
+  "@strengthGoal": {
+    "description": "Obiettivo forza"
+  },
+  "strengthGoalDescription": "1-5 rip, 3-5min recupero",
+  "@strengthGoalDescription": {
+    "description": "Descrizione obiettivo forza"
+  },
+  "enduranceGoal": "Resistenza",
+  "@enduranceGoal": {
+    "description": "Obiettivo resistenza"
+  },
+  "enduranceGoalDescription": "15+ rip, <30s recupero",
+  "@enduranceGoalDescription": {
+    "description": "Descrizione obiettivo resistenza"
+  },
   "onboardingStepOf": "Passo {current} di {total}",
   "onboardingWhatToExpect": "Cosa puoi aspettarti:",
   "onboardingModeTitle": "Scegli la Tua Esperienza",

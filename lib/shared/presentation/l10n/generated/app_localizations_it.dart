@@ -74,6 +74,31 @@ class AppLocalizationsIt extends AppLocalizations {
       'Puoi sempre configurare l\'AI Coach successivamente nelle Impostazioni';
 
   @override
+  String get onboardingGoalTitle => 'Qual è il tuo obiettivo principale?';
+
+  @override
+  String get onboardingGoalSubtitle =>
+      'Personalizzeremo gli insights in base al tuo focus';
+
+  @override
+  String get hypertrophyGoal => 'Crescita Muscolare';
+
+  @override
+  String get hypertrophyGoalDescription => '8-12 rip, 60-90s recupero';
+
+  @override
+  String get strengthGoal => 'Forza Massima';
+
+  @override
+  String get strengthGoalDescription => '1-5 rip, 3-5min recupero';
+
+  @override
+  String get enduranceGoal => 'Resistenza';
+
+  @override
+  String get enduranceGoalDescription => '15+ rip, <30s recupero';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Passo $current di $total';
   }

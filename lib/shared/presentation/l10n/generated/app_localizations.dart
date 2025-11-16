@@ -218,6 +218,54 @@ abstract class AppLocalizations {
   /// **'You can always set up AI Coach later in Settings'**
   String get onboardingExitMessage;
 
+  /// Goal selection title
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s your primary goal?'**
+  String get onboardingGoalTitle;
+
+  /// Goal selection subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll tailor insights to your training focus'**
+  String get onboardingGoalSubtitle;
+
+  /// Hypertrophy goal
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Growth'**
+  String get hypertrophyGoal;
+
+  /// Hypertrophy goal description
+  ///
+  /// In en, this message translates to:
+  /// **'8-12 reps, 60-90s rest'**
+  String get hypertrophyGoalDescription;
+
+  /// Strength goal
+  ///
+  /// In en, this message translates to:
+  /// **'Max Strength'**
+  String get strengthGoal;
+
+  /// Strength goal description
+  ///
+  /// In en, this message translates to:
+  /// **'1-5 reps, 3-5min rest'**
+  String get strengthGoalDescription;
+
+  /// Endurance goal
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance'**
+  String get enduranceGoal;
+
+  /// Endurance goal description
+  ///
+  /// In en, this message translates to:
+  /// **'15+ reps, <30s rest'**
+  String get enduranceGoalDescription;
+
   /// Step indicator in onboarding
   ///
   /// In en, this message translates to:
