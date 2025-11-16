@@ -3821,6 +3821,30 @@ abstract class AppLocalizations {
   /// **'AI Coach'**
   String get aiCoach;
 
+  /// Critical insights count badge
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Critical'**
+  String criticalInsights(int count);
+
+  /// No insights empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'Great Work!'**
+  String get noInsights;
+
+  /// No insights empty state description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re training optimally. Keep up the excellent work!'**
+  String get noInsightsDescription;
+
+  /// Error message when insights fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading insights'**
+  String get errorLoadingInsights;
+
   /// Label for volume calculation
   ///
   /// In en, this message translates to:

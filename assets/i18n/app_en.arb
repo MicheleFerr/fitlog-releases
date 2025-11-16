@@ -2601,6 +2601,28 @@
   "@aiCoach": {
     "description": "AI Coach section title"
   },
+  "criticalInsights": "{count} Critical",
+  "@criticalInsights": {
+    "description": "Critical insights count badge",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "description": "Number of critical insights"
+      }
+    }
+  },
+  "noInsights": "Great Work!",
+  "@noInsights": {
+    "description": "No insights empty state title"
+  },
+  "noInsightsDescription": "You're training optimally. Keep up the excellent work!",
+  "@noInsightsDescription": {
+    "description": "No insights empty state description"
+  },
+  "errorLoadingInsights": "Error loading insights",
+  "@errorLoadingInsights": {
+    "description": "Error message when insights fail to load"
+  },
   "volume": "Volume",
   "@volume": {
     "description": "Label for volume calculation"

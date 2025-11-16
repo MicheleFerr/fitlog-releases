@@ -1993,6 +1993,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiCoach => 'AI Coach';
 
   @override
+  String criticalInsights(int count) {
+    return '$count Critical';
+  }
+
+  @override
+  String get noInsights => 'Great Work!';
+
+  @override
+  String get noInsightsDescription =>
+      'You\'re training optimally. Keep up the excellent work!';
+
+  @override
+  String get errorLoadingInsights => 'Error loading insights';
+
+  @override
   String get volume => 'Volume';
 
   @override
