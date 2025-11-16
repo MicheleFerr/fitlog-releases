@@ -99,6 +99,56 @@ class AppLocalizationsIt extends AppLocalizations {
   String get enduranceGoalDescription => '15+ rip, <30s recupero';
 
   @override
+  String get onboardingQuickWinTitle => 'Il Tuo Quick Win';
+
+  @override
+  String get onboardingQuickWinSubtitle =>
+      'Abbiamo analizzato i tuoi allenamenti. Ecco il tuo primo insight!';
+
+  @override
+  String get analyzingWorkouts => 'Analisi degli allenamenti in corso...';
+
+  @override
+  String get noWorkoutsYet => 'Nessun allenamento ancora';
+
+  @override
+  String get noWorkoutsYetDescription =>
+      'Inizia ad allenarti e l\'AI Coach ti fornirà insights personalizzati!';
+
+  @override
+  String get beginnerQuickWinTitle => 'Ottimo Inizio!';
+
+  @override
+  String get beginnerQuickWinDescription =>
+      'Stai costruendo solide fondamenta di allenamento. La costanza è la chiave!';
+
+  @override
+  String get beginnerQuickWinRecommendation =>
+      'Concentrati sulla tecnica corretta prima di aumentare i carichi';
+
+  @override
+  String get intermediateQuickWinTitle => 'Bilancia il Volume';
+
+  @override
+  String get intermediateQuickWinDescription =>
+      'Abbiamo rilevato potenziali squilibri tra gruppi muscolari nel tuo training';
+
+  @override
+  String get intermediateQuickWinRecommendation =>
+      'Aggiungi 2-3 serie in più per i gruppi muscolari indietro ogni settimana';
+
+  @override
+  String get advancedQuickWinTitle => 'Rompi lo Stallo';
+
+  @override
+  String get advancedQuickWinDescription =>
+      'I tuoi progressi sono fermi. È ora di implementare la periodizzazione!';
+
+  @override
+  String get advancedQuickWinRecommendation =>
+      'Prova settimane di deload (40-50% volume) ogni 4-6 settimane per recuperare';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Passo $current di $total';
   }
@@ -3066,9 +3116,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get recentWorkouts => 'Allenamenti Recenti';
-
-  @override
-  String get noWorkoutsYet => 'Nessun allenamento ancora';
 
   @override
   String get highPriority => 'Alta Priorità';

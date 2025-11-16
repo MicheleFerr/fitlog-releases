@@ -266,6 +266,90 @@ abstract class AppLocalizations {
   /// **'15+ reps, <30s rest'**
   String get enduranceGoalDescription;
 
+  /// Quick win onboarding title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Quick Win'**
+  String get onboardingQuickWinTitle;
+
+  /// Quick win onboarding subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'We analyzed your workouts. Here\'s your first insight!'**
+  String get onboardingQuickWinSubtitle;
+
+  /// Analyzing workouts loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your workouts...'**
+  String get analyzingWorkouts;
+
+  /// No workouts message
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts yet'**
+  String get noWorkoutsYet;
+
+  /// No workouts empty state description
+  ///
+  /// In en, this message translates to:
+  /// **'Start training and AI Coach will provide personalized insights!'**
+  String get noWorkoutsYetDescription;
+
+  /// Beginner quick win insight title
+  ///
+  /// In en, this message translates to:
+  /// **'Great Start!'**
+  String get beginnerQuickWinTitle;
+
+  /// Beginner quick win insight description
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building solid training foundations. Consistency is key!'**
+  String get beginnerQuickWinDescription;
+
+  /// Beginner quick win recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on mastering proper form before increasing weight'**
+  String get beginnerQuickWinRecommendation;
+
+  /// Intermediate quick win insight title
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Your Volume'**
+  String get intermediateQuickWinTitle;
+
+  /// Intermediate quick win insight description
+  ///
+  /// In en, this message translates to:
+  /// **'We detected potential muscle group imbalances in your training'**
+  String get intermediateQuickWinDescription;
+
+  /// Intermediate quick win recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Add 2-3 more sets for lagging muscle groups each week'**
+  String get intermediateQuickWinRecommendation;
+
+  /// Advanced quick win insight title
+  ///
+  /// In en, this message translates to:
+  /// **'Break the Plateau'**
+  String get advancedQuickWinTitle;
+
+  /// Advanced quick win insight description
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress has stalled. Time to implement periodization!'**
+  String get advancedQuickWinDescription;
+
+  /// Advanced quick win recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Try deload weeks (40-50% volume) every 4-6 weeks for recovery'**
+  String get advancedQuickWinRecommendation;
+
   /// Step indicator in onboarding
   ///
   /// In en, this message translates to:
@@ -5710,12 +5794,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Workouts'**
   String get recentWorkouts;
-
-  /// No workouts message
-  ///
-  /// In en, this message translates to:
-  /// **'No workouts yet'**
-  String get noWorkoutsYet;
 
   /// Label for high priority recommendation
   ///

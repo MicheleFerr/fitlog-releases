@@ -85,6 +85,62 @@
   "@enduranceGoalDescription": {
     "description": "Descrizione obiettivo resistenza"
   },
+  "onboardingQuickWinTitle": "Il Tuo Quick Win",
+  "@onboardingQuickWinTitle": {
+    "description": "Titolo onboarding quick win"
+  },
+  "onboardingQuickWinSubtitle": "Abbiamo analizzato i tuoi allenamenti. Ecco il tuo primo insight!",
+  "@onboardingQuickWinSubtitle": {
+    "description": "Sottotitolo onboarding quick win"
+  },
+  "analyzingWorkouts": "Analisi degli allenamenti in corso...",
+  "@analyzingWorkouts": {
+    "description": "Messaggio caricamento analisi"
+  },
+  "noWorkoutsYet": "Nessun Allenamento",
+  "@noWorkoutsYet": {
+    "description": "Titolo stato vuoto senza allenamenti"
+  },
+  "noWorkoutsYetDescription": "Inizia ad allenarti e l'AI Coach ti fornirà insights personalizzati!",
+  "@noWorkoutsYetDescription": {
+    "description": "Descrizione stato vuoto senza allenamenti"
+  },
+  "beginnerQuickWinTitle": "Ottimo Inizio!",
+  "@beginnerQuickWinTitle": {
+    "description": "Titolo insight quick win principiante"
+  },
+  "beginnerQuickWinDescription": "Stai costruendo solide fondamenta di allenamento. La costanza è la chiave!",
+  "@beginnerQuickWinDescription": {
+    "description": "Descrizione insight quick win principiante"
+  },
+  "beginnerQuickWinRecommendation": "Concentrati sulla tecnica corretta prima di aumentare i carichi",
+  "@beginnerQuickWinRecommendation": {
+    "description": "Raccomandazione quick win principiante"
+  },
+  "intermediateQuickWinTitle": "Bilancia il Volume",
+  "@intermediateQuickWinTitle": {
+    "description": "Titolo insight quick win intermedio"
+  },
+  "intermediateQuickWinDescription": "Abbiamo rilevato potenziali squilibri tra gruppi muscolari nel tuo training",
+  "@intermediateQuickWinDescription": {
+    "description": "Descrizione insight quick win intermedio"
+  },
+  "intermediateQuickWinRecommendation": "Aggiungi 2-3 serie in più per i gruppi muscolari indietro ogni settimana",
+  "@intermediateQuickWinRecommendation": {
+    "description": "Raccomandazione quick win intermedio"
+  },
+  "advancedQuickWinTitle": "Rompi lo Stallo",
+  "@advancedQuickWinTitle": {
+    "description": "Titolo insight quick win avanzato"
+  },
+  "advancedQuickWinDescription": "I tuoi progressi sono fermi. È ora di implementare la periodizzazione!",
+  "@advancedQuickWinDescription": {
+    "description": "Descrizione insight quick win avanzato"
+  },
+  "advancedQuickWinRecommendation": "Prova settimane di deload (40-50% volume) ogni 4-6 settimane per recuperare",
+  "@advancedQuickWinRecommendation": {
+    "description": "Raccomandazione quick win avanzato"
+  },
   "onboardingStepOf": "Passo {current} di {total}",
   "onboardingWhatToExpect": "Cosa puoi aspettarti:",
   "onboardingModeTitle": "Scegli la Tua Esperienza",

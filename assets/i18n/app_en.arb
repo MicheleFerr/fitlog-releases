@@ -112,6 +112,62 @@
   "@enduranceGoalDescription": {
     "description": "Endurance goal description"
   },
+  "onboardingQuickWinTitle": "Your Quick Win",
+  "@onboardingQuickWinTitle": {
+    "description": "Quick win onboarding title"
+  },
+  "onboardingQuickWinSubtitle": "We analyzed your workouts. Here's your first insight!",
+  "@onboardingQuickWinSubtitle": {
+    "description": "Quick win onboarding subtitle"
+  },
+  "analyzingWorkouts": "Analyzing your workouts...",
+  "@analyzingWorkouts": {
+    "description": "Analyzing workouts loading message"
+  },
+  "noWorkoutsYet": "No Workouts Yet",
+  "@noWorkoutsYet": {
+    "description": "No workouts empty state title"
+  },
+  "noWorkoutsYetDescription": "Start training and AI Coach will provide personalized insights!",
+  "@noWorkoutsYetDescription": {
+    "description": "No workouts empty state description"
+  },
+  "beginnerQuickWinTitle": "Great Start!",
+  "@beginnerQuickWinTitle": {
+    "description": "Beginner quick win insight title"
+  },
+  "beginnerQuickWinDescription": "You're building solid training foundations. Consistency is key!",
+  "@beginnerQuickWinDescription": {
+    "description": "Beginner quick win insight description"
+  },
+  "beginnerQuickWinRecommendation": "Focus on mastering proper form before increasing weight",
+  "@beginnerQuickWinRecommendation": {
+    "description": "Beginner quick win recommendation"
+  },
+  "intermediateQuickWinTitle": "Balance Your Volume",
+  "@intermediateQuickWinTitle": {
+    "description": "Intermediate quick win insight title"
+  },
+  "intermediateQuickWinDescription": "We detected potential muscle group imbalances in your training",
+  "@intermediateQuickWinDescription": {
+    "description": "Intermediate quick win insight description"
+  },
+  "intermediateQuickWinRecommendation": "Add 2-3 more sets for lagging muscle groups each week",
+  "@intermediateQuickWinRecommendation": {
+    "description": "Intermediate quick win recommendation"
+  },
+  "advancedQuickWinTitle": "Break the Plateau",
+  "@advancedQuickWinTitle": {
+    "description": "Advanced quick win insight title"
+  },
+  "advancedQuickWinDescription": "Your progress has stalled. Time to implement periodization!",
+  "@advancedQuickWinDescription": {
+    "description": "Advanced quick win insight description"
+  },
+  "advancedQuickWinRecommendation": "Try deload weeks (40-50% volume) every 4-6 weeks for recovery",
+  "@advancedQuickWinRecommendation": {
+    "description": "Advanced quick win recommendation"
+  },
   "onboardingStepOf": "Step {current} of {total}",
   "@onboardingStepOf": {
     "description": "Step indicator in onboarding",

@@ -98,6 +98,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enduranceGoalDescription => '15+ reps, <30s rest';
 
   @override
+  String get onboardingQuickWinTitle => 'Your Quick Win';
+
+  @override
+  String get onboardingQuickWinSubtitle =>
+      'We analyzed your workouts. Here\'s your first insight!';
+
+  @override
+  String get analyzingWorkouts => 'Analyzing your workouts...';
+
+  @override
+  String get noWorkoutsYet => 'No workouts yet';
+
+  @override
+  String get noWorkoutsYetDescription =>
+      'Start training and AI Coach will provide personalized insights!';
+
+  @override
+  String get beginnerQuickWinTitle => 'Great Start!';
+
+  @override
+  String get beginnerQuickWinDescription =>
+      'You\'re building solid training foundations. Consistency is key!';
+
+  @override
+  String get beginnerQuickWinRecommendation =>
+      'Focus on mastering proper form before increasing weight';
+
+  @override
+  String get intermediateQuickWinTitle => 'Balance Your Volume';
+
+  @override
+  String get intermediateQuickWinDescription =>
+      'We detected potential muscle group imbalances in your training';
+
+  @override
+  String get intermediateQuickWinRecommendation =>
+      'Add 2-3 more sets for lagging muscle groups each week';
+
+  @override
+  String get advancedQuickWinTitle => 'Break the Plateau';
+
+  @override
+  String get advancedQuickWinDescription =>
+      'Your progress has stalled. Time to implement periodization!';
+
+  @override
+  String get advancedQuickWinRecommendation =>
+      'Try deload weeks (40-50% volume) every 4-6 weeks for recovery';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Step $current of $total';
   }
@@ -3047,9 +3097,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentWorkouts => 'Recent Workouts';
-
-  @override
-  String get noWorkoutsYet => 'No workouts yet';
 
   @override
   String get highPriority => 'High Priority';
