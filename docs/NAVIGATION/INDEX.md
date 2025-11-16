@@ -227,6 +227,11 @@ These cover initial setup and configuration:
    - Providers: FeatureGateProvider (Riverpod state management)
    - Testing: 40 unit tests (21 entity + 19 repository)
    - Features: Progressive unlock (beginner → intermediate → advanced)
+2. Reference: [`AI_COACH_USER_SCENARIOS.md`](../AI_COACH_USER_SCENARIOS.md) - **User scenarios & use cases** (1,000+ lines, Jan 2025)
+   - 3 user personas (Marco/Sofia/Luca: beginner/intermediate/advanced)
+   - 5 detailed use cases with UI mockups
+   - 2 complete user journeys (90-day progression)
+   - Edge cases, metrics, consultant review questions
 
 ### "I'm hitting an error..."
 
