@@ -219,6 +219,15 @@ These cover initial setup and configuration:
 4. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
 5. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD 4-level system (deprecated Oct 2025)
 
+**AI Coach Feature (Feature Gating System)**:
+1. Read: [`AI_COACH_COMPREHENSIVE_DOCUMENTATION.md`](../AI_COACH_COMPREHENSIVE_DOCUMENTATION.md) - **Complete system** (800+ lines, Jan 2025)
+   - Architecture: Clean Architecture with Domain/Data/Presentation layers
+   - Entities: FeatureGateConfig, UserContext, FeatureGateStatus (8 features)
+   - Repositories: FeatureGateRepository with AND rule logic
+   - Providers: FeatureGateProvider (Riverpod state management)
+   - Testing: 40 unit tests (21 entity + 19 repository)
+   - Features: Progressive unlock (beginner → intermediate → advanced)
+
 ### "I'm hitting an error..."
 
 1. Check: [`ERROR_KB.md`](./ERROR_KB.md) - Common solutions
