@@ -148,6 +148,40 @@ class AppLocalizationsEn extends AppLocalizations {
       'Try deload weeks (40-50% volume) every 4-6 weeks for recovery';
 
   @override
+  String get onboardingNotificationsTitle => 'Stay on Track';
+
+  @override
+  String get onboardingNotificationsSubtitle =>
+      'Get timely insights to optimize your training';
+
+  @override
+  String get notificationBenefit1Title => 'Smart Insights';
+
+  @override
+  String get notificationBenefit1Description =>
+      'Receive AI-powered coaching tips when you need them most';
+
+  @override
+  String get notificationBenefit2Title => 'Progress Updates';
+
+  @override
+  String get notificationBenefit2Description =>
+      'Get notified when you break personal records or hit milestones';
+
+  @override
+  String get notificationBenefit3Title => 'Recovery Reminders';
+
+  @override
+  String get notificationBenefit3Description =>
+      'Avoid overtraining with smart rest day recommendations';
+
+  @override
+  String get enableNotifications => 'Enable Notifications';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Step $current of $total';
   }
@@ -15358,9 +15392,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get increaseTrainingFrequency => 'Increase Training Frequency';
-
-  @override
-  String get skipForNow => 'Skip for now';
 
   @override
   String get estimated1rm => 'Estimated 1RM';

@@ -350,6 +350,66 @@ abstract class AppLocalizations {
   /// **'Try deload weeks (40-50% volume) every 4-6 weeks for recovery'**
   String get advancedQuickWinRecommendation;
 
+  /// Notifications onboarding title
+  ///
+  /// In en, this message translates to:
+  /// **'Stay on Track'**
+  String get onboardingNotificationsTitle;
+
+  /// Notifications onboarding subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Get timely insights to optimize your training'**
+  String get onboardingNotificationsSubtitle;
+
+  /// First notification benefit title
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Insights'**
+  String get notificationBenefit1Title;
+
+  /// First notification benefit description
+  ///
+  /// In en, this message translates to:
+  /// **'Receive AI-powered coaching tips when you need them most'**
+  String get notificationBenefit1Description;
+
+  /// Second notification benefit title
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Updates'**
+  String get notificationBenefit2Title;
+
+  /// Second notification benefit description
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when you break personal records or hit milestones'**
+  String get notificationBenefit2Description;
+
+  /// Third notification benefit title
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Reminders'**
+  String get notificationBenefit3Title;
+
+  /// Third notification benefit description
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid overtraining with smart rest day recommendations'**
+  String get notificationBenefit3Description;
+
+  /// Enable notifications button
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notifications'**
+  String get enableNotifications;
+
+  /// From quick wins migration - 3 occurrences
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get skipForNow;
+
   /// Step indicator in onboarding
   ///
   /// In en, this message translates to:
@@ -27431,12 +27491,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Increase Training Frequency'**
   String get increaseTrainingFrequency;
-
-  /// From quick wins migration - 3 occurrences
-  ///
-  /// In en, this message translates to:
-  /// **'Skip for now'**
-  String get skipForNow;
 
   /// From quick wins migration - 3 occurrences
   ///

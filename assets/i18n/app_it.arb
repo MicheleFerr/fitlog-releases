@@ -141,6 +141,46 @@
   "@advancedQuickWinRecommendation": {
     "description": "Raccomandazione quick win avanzato"
   },
+  "onboardingNotificationsTitle": "Resta in Carreggiata",
+  "@onboardingNotificationsTitle": {
+    "description": "Titolo onboarding notifiche"
+  },
+  "onboardingNotificationsSubtitle": "Ricevi insights tempestivi per ottimizzare il tuo allenamento",
+  "@onboardingNotificationsSubtitle": {
+    "description": "Sottotitolo onboarding notifiche"
+  },
+  "notificationBenefit1Title": "Insights Intelligenti",
+  "@notificationBenefit1Title": {
+    "description": "Titolo primo beneficio notifiche"
+  },
+  "notificationBenefit1Description": "Ricevi consigli AI quando ne hai più bisogno",
+  "@notificationBenefit1Description": {
+    "description": "Descrizione primo beneficio notifiche"
+  },
+  "notificationBenefit2Title": "Aggiornamenti Progressi",
+  "@notificationBenefit2Title": {
+    "description": "Titolo secondo beneficio notifiche"
+  },
+  "notificationBenefit2Description": "Vieni notificato quando batti record personali o raggiungi traguardi",
+  "@notificationBenefit2Description": {
+    "description": "Descrizione secondo beneficio notifiche"
+  },
+  "notificationBenefit3Title": "Promemoria Recupero",
+  "@notificationBenefit3Title": {
+    "description": "Titolo terzo beneficio notifiche"
+  },
+  "notificationBenefit3Description": "Evita il sovrallenamento con raccomandazioni intelligenti di riposo",
+  "@notificationBenefit3Description": {
+    "description": "Descrizione terzo beneficio notifiche"
+  },
+  "enableNotifications": "Abilita Notifiche",
+  "@enableNotifications": {
+    "description": "Pulsante abilita notifiche"
+  },
+  "skipForNow": "Salta per Ora",
+  "@skipForNow": {
+    "description": "Pulsante salta notifiche"
+  },
   "onboardingStepOf": "Passo {current} di {total}",
   "onboardingWhatToExpect": "Cosa puoi aspettarti:",
   "onboardingModeTitle": "Scegli la Tua Esperienza",

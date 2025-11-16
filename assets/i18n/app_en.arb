@@ -168,6 +168,46 @@
   "@advancedQuickWinRecommendation": {
     "description": "Advanced quick win recommendation"
   },
+  "onboardingNotificationsTitle": "Stay on Track",
+  "@onboardingNotificationsTitle": {
+    "description": "Notifications onboarding title"
+  },
+  "onboardingNotificationsSubtitle": "Get timely insights to optimize your training",
+  "@onboardingNotificationsSubtitle": {
+    "description": "Notifications onboarding subtitle"
+  },
+  "notificationBenefit1Title": "Smart Insights",
+  "@notificationBenefit1Title": {
+    "description": "First notification benefit title"
+  },
+  "notificationBenefit1Description": "Receive AI-powered coaching tips when you need them most",
+  "@notificationBenefit1Description": {
+    "description": "First notification benefit description"
+  },
+  "notificationBenefit2Title": "Progress Updates",
+  "@notificationBenefit2Title": {
+    "description": "Second notification benefit title"
+  },
+  "notificationBenefit2Description": "Get notified when you break personal records or hit milestones",
+  "@notificationBenefit2Description": {
+    "description": "Second notification benefit description"
+  },
+  "notificationBenefit3Title": "Recovery Reminders",
+  "@notificationBenefit3Title": {
+    "description": "Third notification benefit title"
+  },
+  "notificationBenefit3Description": "Avoid overtraining with smart rest day recommendations",
+  "@notificationBenefit3Description": {
+    "description": "Third notification benefit description"
+  },
+  "enableNotifications": "Enable Notifications",
+  "@enableNotifications": {
+    "description": "Enable notifications button"
+  },
+  "skipForNow": "Skip for Now",
+  "@skipForNow": {
+    "description": "Skip notifications button"
+  },
   "onboardingStepOf": "Step {current} of {total}",
   "@onboardingStepOf": {
     "description": "Step indicator in onboarding",

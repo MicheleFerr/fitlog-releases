@@ -149,6 +149,40 @@ class AppLocalizationsIt extends AppLocalizations {
       'Prova settimane di deload (40-50% volume) ogni 4-6 settimane per recuperare';
 
   @override
+  String get onboardingNotificationsTitle => 'Resta in Carreggiata';
+
+  @override
+  String get onboardingNotificationsSubtitle =>
+      'Ricevi insights tempestivi per ottimizzare il tuo allenamento';
+
+  @override
+  String get notificationBenefit1Title => 'Insights Intelligenti';
+
+  @override
+  String get notificationBenefit1Description =>
+      'Ricevi consigli AI quando ne hai più bisogno';
+
+  @override
+  String get notificationBenefit2Title => 'Aggiornamenti Progressi';
+
+  @override
+  String get notificationBenefit2Description =>
+      'Vieni notificato quando batti record personali o raggiungi traguardi';
+
+  @override
+  String get notificationBenefit3Title => 'Promemoria Recupero';
+
+  @override
+  String get notificationBenefit3Description =>
+      'Evita il sovrallenamento con raccomandazioni intelligenti di riposo';
+
+  @override
+  String get enableNotifications => 'Abilita Notifiche';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
   String onboardingStepOf(int current, int total) {
     return 'Passo $current di $total';
   }
@@ -15509,9 +15543,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get increaseTrainingFrequency => 'Increase Training Frequency';
-
-  @override
-  String get skipForNow => 'Skip for now';
 
   @override
   String get estimated1rm => 'Estimated 1RM';
