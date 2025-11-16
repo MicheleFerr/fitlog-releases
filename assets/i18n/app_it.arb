@@ -9421,5 +9421,105 @@
   "feedbackCommentHint": "Raccontaci di più sul perché non è stato utile...",
   "@feedbackCommentHint": {
     "description": "Testo suggerimento campo commento"
+  },
+  "featureInsightsName": "Consigli AI",
+  "@featureInsightsName": {
+    "description": "Nome della funzionalità consigli AI"
+  },
+  "featureInsightsDescription": "Ricevi suggerimenti intelligenti durante gli allenamenti",
+  "@featureInsightsDescription": {
+    "description": "Descrizione della funzionalità consigli AI"
+  },
+  "featureNotificationsName": "Notifiche Intelligenti",
+  "@featureNotificationsName": {
+    "description": "Nome della funzionalità notifiche"
+  },
+  "featureNotificationsDescription": "Promemoria personalizzati per restare motivato",
+  "@featureNotificationsDescription": {
+    "description": "Descrizione della funzionalità notifiche"
+  },
+  "featureAchievementsName": "Obiettivi",
+  "@featureAchievementsName": {
+    "description": "Nome della funzionalità obiettivi"
+  },
+  "featureAchievementsDescription": "Sblocca traguardi e celebra i tuoi progressi",
+  "@featureAchievementsDescription": {
+    "description": "Descrizione della funzionalità obiettivi"
+  },
+  "featureStreakTrackingName": "Serie di Allenamenti",
+  "@featureStreakTrackingName": {
+    "description": "Nome della funzionalità tracciamento serie"
+  },
+  "featureStreakTrackingDescription": "Mantieni la tua striscia di allenamenti consecutivi",
+  "@featureStreakTrackingDescription": {
+    "description": "Descrizione della funzionalità tracciamento serie"
+  },
+  "featureAdvancedAnalyticsName": "Analisi Avanzate",
+  "@featureAdvancedAnalyticsName": {
+    "description": "Nome della funzionalità analisi avanzate"
+  },
+  "featureAdvancedAnalyticsDescription": "Grafici dettagliati e tendenze dei tuoi progressi",
+  "@featureAdvancedAnalyticsDescription": {
+    "description": "Descrizione della funzionalità analisi avanzate"
+  },
+  "featureWorkoutSuggestionsName": "Suggerimenti Allenamento",
+  "@featureWorkoutSuggestionsName": {
+    "description": "Nome della funzionalità suggerimenti allenamento"
+  },
+  "featureWorkoutSuggestionsDescription": "Consigli personalizzati per i tuoi prossimi allenamenti",
+  "@featureWorkoutSuggestionsDescription": {
+    "description": "Descrizione della funzionalità suggerimenti allenamento"
+  },
+  "featureRecoveryInsightsName": "Consigli Recupero",
+  "@featureRecoveryInsightsName": {
+    "description": "Nome della funzionalità consigli recupero"
+  },
+  "featureRecoveryInsightsDescription": "Raccomandazioni per ottimizzare il tuo recupero",
+  "@featureRecoveryInsightsDescription": {
+    "description": "Descrizione della funzionalità consigli recupero"
+  },
+  "featureFormCorrectionsName": "Correzioni Tecnica",
+  "@featureFormCorrectionsName": {
+    "description": "Nome della funzionalità correzioni tecnica"
+  },
+  "featureFormCorrectionsDescription": "Suggerimenti per migliorare la tua esecuzione",
+  "@featureFormCorrectionsDescription": {
+    "description": "Descrizione della funzionalità correzioni tecnica"
+  },
+  "featureGateReasonGloballyDisabled": "Funzionalità non ancora disponibile",
+  "@featureGateReasonGloballyDisabled": {
+    "description": "Motivo gate: disabilitata globalmente"
+  },
+  "featureGateReasonUserDisabled": "Hai disabilitato questa funzionalità nelle impostazioni",
+  "@featureGateReasonUserDisabled": {
+    "description": "Motivo gate: disabilitata dall'utente"
+  },
+  "featureGateReasonDefaultEnabled": "Funzionalità abilitata di default",
+  "@featureGateReasonDefaultEnabled": {
+    "description": "Motivo gate: abilitata di default"
+  },
+  "featureGateReasonAllRulesPassed": "Tutti i requisiti soddisfatti",
+  "@featureGateReasonAllRulesPassed": {
+    "description": "Motivo gate: tutte le regole passate"
+  },
+  "featureGateReasonInsufficientExperience": "Livello di esperienza insufficiente",
+  "@featureGateReasonInsufficientExperience": {
+    "description": "Motivo gate: esperienza insufficiente"
+  },
+  "featureGateReasonInsufficientWorkouts": "Completa più allenamenti per sbloccare questa funzionalità",
+  "@featureGateReasonInsufficientWorkouts": {
+    "description": "Motivo gate: allenamenti insufficienti"
+  },
+  "featureGateReasonAccountTooNew": "Account troppo recente",
+  "@featureGateReasonAccountTooNew": {
+    "description": "Motivo gate: account nuovo"
+  },
+  "featureGateReasonLowEffectiveness": "Funzionalità non abbastanza efficace per te",
+  "@featureGateReasonLowEffectiveness": {
+    "description": "Motivo gate: efficacia bassa"
+  },
+  "featureGateReasonUnknown": "Motivo sconosciuto",
+  "@featureGateReasonUnknown": {
+    "description": "Motivo gate: sconosciuto"
   }
 }

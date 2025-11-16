@@ -29615,6 +29615,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tell us more about why this wasn\'t helpful...'**
   String get feedbackCommentHint;
+
+  /// Feature name: AI insights
+  ///
+  /// In en, this message translates to:
+  /// **'AI Insights'**
+  String get featureInsightsName;
+
+  /// Feature description: AI insights
+  ///
+  /// In en, this message translates to:
+  /// **'Get personalized training insights'**
+  String get featureInsightsDescription;
+
+  /// Feature name: notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Notifications'**
+  String get featureNotificationsName;
+
+  /// Feature description: notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Receive timely workout reminders'**
+  String get featureNotificationsDescription;
+
+  /// Feature name: achievements
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get featureAchievementsName;
+
+  /// Feature description: achievements
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock achievements as you progress'**
+  String get featureAchievementsDescription;
+
+  /// Feature name: streak tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Tracking'**
+  String get featureStreakTrackingName;
+
+  /// Feature description: streak tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Track your consistency streaks'**
+  String get featureStreakTrackingDescription;
+
+  /// Feature name: advanced analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Analytics'**
+  String get featureAdvancedAnalyticsName;
+
+  /// Feature description: advanced analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Deep insights into your progress'**
+  String get featureAdvancedAnalyticsDescription;
+
+  /// Feature name: workout suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Suggestions'**
+  String get featureWorkoutSuggestionsName;
+
+  /// Feature description: workout suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized workout recommendations'**
+  String get featureWorkoutSuggestionsDescription;
+
+  /// Feature name: recovery insights
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Insights'**
+  String get featureRecoveryInsightsName;
+
+  /// Feature description: recovery insights
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize your recovery and rest days'**
+  String get featureRecoveryInsightsDescription;
+
+  /// Feature name: form corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Form Corrections'**
+  String get featureFormCorrectionsName;
+
+  /// Feature description: form corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Get suggestions to improve exercise form'**
+  String get featureFormCorrectionsDescription;
+
+  /// Feature disabled globally
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is temporarily unavailable'**
+  String get featureGateReasonGloballyDisabled;
+
+  /// Feature disabled by user preference
+  ///
+  /// In en, this message translates to:
+  /// **'You have disabled this feature'**
+  String get featureGateReasonUserDisabled;
+
+  /// Feature enabled without special requirements
+  ///
+  /// In en, this message translates to:
+  /// **'Feature enabled by default'**
+  String get featureGateReasonDefaultEnabled;
+
+  /// All feature gate rules passed
+  ///
+  /// In en, this message translates to:
+  /// **'You meet all requirements for this feature'**
+  String get featureGateReasonAllRulesPassed;
+
+  /// Not enough experience for feature
+  ///
+  /// In en, this message translates to:
+  /// **'Requires higher experience level'**
+  String get featureGateReasonInsufficientExperience;
+
+  /// Not enough workouts for feature
+  ///
+  /// In en, this message translates to:
+  /// **'Complete more workouts to unlock'**
+  String get featureGateReasonInsufficientWorkouts;
+
+  /// Account too new for feature
+  ///
+  /// In en, this message translates to:
+  /// **'Available after using the app longer'**
+  String get featureGateReasonAccountTooNew;
+
+  /// Feature has low effectiveness rating
+  ///
+  /// In en, this message translates to:
+  /// **'This feature needs improvement'**
+  String get featureGateReasonLowEffectiveness;
+
+  /// Unknown reason for feature being disabled
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is unavailable'**
+  String get featureGateReasonUnknown;
 }
 
 class _AppLocalizationsDelegate

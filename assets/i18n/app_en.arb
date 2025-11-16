@@ -20072,5 +20072,105 @@
   "feedbackCommentHint": "Tell us more about why this wasn't helpful...",
   "@feedbackCommentHint": {
     "description": "Comment field hint text"
+  },
+  "featureInsightsName": "AI Insights",
+  "@featureInsightsName": {
+    "description": "Feature name: AI insights"
+  },
+  "featureInsightsDescription": "Get personalized training insights",
+  "@featureInsightsDescription": {
+    "description": "Feature description: AI insights"
+  },
+  "featureNotificationsName": "Smart Notifications",
+  "@featureNotificationsName": {
+    "description": "Feature name: notifications"
+  },
+  "featureNotificationsDescription": "Receive timely workout reminders",
+  "@featureNotificationsDescription": {
+    "description": "Feature description: notifications"
+  },
+  "featureAchievementsName": "Achievements",
+  "@featureAchievementsName": {
+    "description": "Feature name: achievements"
+  },
+  "featureAchievementsDescription": "Unlock achievements as you progress",
+  "@featureAchievementsDescription": {
+    "description": "Feature description: achievements"
+  },
+  "featureStreakTrackingName": "Streak Tracking",
+  "@featureStreakTrackingName": {
+    "description": "Feature name: streak tracking"
+  },
+  "featureStreakTrackingDescription": "Track your consistency streaks",
+  "@featureStreakTrackingDescription": {
+    "description": "Feature description: streak tracking"
+  },
+  "featureAdvancedAnalyticsName": "Advanced Analytics",
+  "@featureAdvancedAnalyticsName": {
+    "description": "Feature name: advanced analytics"
+  },
+  "featureAdvancedAnalyticsDescription": "Deep insights into your progress",
+  "@featureAdvancedAnalyticsDescription": {
+    "description": "Feature description: advanced analytics"
+  },
+  "featureWorkoutSuggestionsName": "Workout Suggestions",
+  "@featureWorkoutSuggestionsName": {
+    "description": "Feature name: workout suggestions"
+  },
+  "featureWorkoutSuggestionsDescription": "Personalized workout recommendations",
+  "@featureWorkoutSuggestionsDescription": {
+    "description": "Feature description: workout suggestions"
+  },
+  "featureRecoveryInsightsName": "Recovery Insights",
+  "@featureRecoveryInsightsName": {
+    "description": "Feature name: recovery insights"
+  },
+  "featureRecoveryInsightsDescription": "Optimize your recovery and rest days",
+  "@featureRecoveryInsightsDescription": {
+    "description": "Feature description: recovery insights"
+  },
+  "featureFormCorrectionsName": "Form Corrections",
+  "@featureFormCorrectionsName": {
+    "description": "Feature name: form corrections"
+  },
+  "featureFormCorrectionsDescription": "Get suggestions to improve exercise form",
+  "@featureFormCorrectionsDescription": {
+    "description": "Feature description: form corrections"
+  },
+  "featureGateReasonGloballyDisabled": "This feature is temporarily unavailable",
+  "@featureGateReasonGloballyDisabled": {
+    "description": "Feature disabled globally"
+  },
+  "featureGateReasonUserDisabled": "You have disabled this feature",
+  "@featureGateReasonUserDisabled": {
+    "description": "Feature disabled by user preference"
+  },
+  "featureGateReasonDefaultEnabled": "Feature enabled by default",
+  "@featureGateReasonDefaultEnabled": {
+    "description": "Feature enabled without special requirements"
+  },
+  "featureGateReasonAllRulesPassed": "You meet all requirements for this feature",
+  "@featureGateReasonAllRulesPassed": {
+    "description": "All feature gate rules passed"
+  },
+  "featureGateReasonInsufficientExperience": "Requires higher experience level",
+  "@featureGateReasonInsufficientExperience": {
+    "description": "Not enough experience for feature"
+  },
+  "featureGateReasonInsufficientWorkouts": "Complete more workouts to unlock",
+  "@featureGateReasonInsufficientWorkouts": {
+    "description": "Not enough workouts for feature"
+  },
+  "featureGateReasonAccountTooNew": "Available after using the app longer",
+  "@featureGateReasonAccountTooNew": {
+    "description": "Account too new for feature"
+  },
+  "featureGateReasonLowEffectiveness": "This feature needs improvement",
+  "@featureGateReasonLowEffectiveness": {
+    "description": "Feature has low effectiveness rating"
+  },
+  "featureGateReasonUnknown": "This feature is unavailable",
+  "@featureGateReasonUnknown": {
+    "description": "Unknown reason for feature being disabled"
   }
 }

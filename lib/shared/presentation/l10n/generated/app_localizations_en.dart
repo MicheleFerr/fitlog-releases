@@ -16556,4 +16556,92 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get feedbackCommentHint =>
       'Tell us more about why this wasn\'t helpful...';
+
+  @override
+  String get featureInsightsName => 'AI Insights';
+
+  @override
+  String get featureInsightsDescription => 'Get personalized training insights';
+
+  @override
+  String get featureNotificationsName => 'Smart Notifications';
+
+  @override
+  String get featureNotificationsDescription =>
+      'Receive timely workout reminders';
+
+  @override
+  String get featureAchievementsName => 'Achievements';
+
+  @override
+  String get featureAchievementsDescription =>
+      'Unlock achievements as you progress';
+
+  @override
+  String get featureStreakTrackingName => 'Streak Tracking';
+
+  @override
+  String get featureStreakTrackingDescription =>
+      'Track your consistency streaks';
+
+  @override
+  String get featureAdvancedAnalyticsName => 'Advanced Analytics';
+
+  @override
+  String get featureAdvancedAnalyticsDescription =>
+      'Deep insights into your progress';
+
+  @override
+  String get featureWorkoutSuggestionsName => 'Workout Suggestions';
+
+  @override
+  String get featureWorkoutSuggestionsDescription =>
+      'Personalized workout recommendations';
+
+  @override
+  String get featureRecoveryInsightsName => 'Recovery Insights';
+
+  @override
+  String get featureRecoveryInsightsDescription =>
+      'Optimize your recovery and rest days';
+
+  @override
+  String get featureFormCorrectionsName => 'Form Corrections';
+
+  @override
+  String get featureFormCorrectionsDescription =>
+      'Get suggestions to improve exercise form';
+
+  @override
+  String get featureGateReasonGloballyDisabled =>
+      'This feature is temporarily unavailable';
+
+  @override
+  String get featureGateReasonUserDisabled => 'You have disabled this feature';
+
+  @override
+  String get featureGateReasonDefaultEnabled => 'Feature enabled by default';
+
+  @override
+  String get featureGateReasonAllRulesPassed =>
+      'You meet all requirements for this feature';
+
+  @override
+  String get featureGateReasonInsufficientExperience =>
+      'Requires higher experience level';
+
+  @override
+  String get featureGateReasonInsufficientWorkouts =>
+      'Complete more workouts to unlock';
+
+  @override
+  String get featureGateReasonAccountTooNew =>
+      'Available after using the app longer';
+
+  @override
+  String get featureGateReasonLowEffectiveness =>
+      'This feature needs improvement';
+
+  @override
+  String get featureGateReasonUnknown => 'This feature is unavailable';
 }

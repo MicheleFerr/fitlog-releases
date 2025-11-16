@@ -16722,4 +16722,93 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get feedbackCommentHint =>
       'Raccontaci di più sul perché non è stato utile...';
+
+  @override
+  String get featureInsightsName => 'Consigli AI';
+
+  @override
+  String get featureInsightsDescription =>
+      'Ricevi suggerimenti intelligenti durante gli allenamenti';
+
+  @override
+  String get featureNotificationsName => 'Notifiche Intelligenti';
+
+  @override
+  String get featureNotificationsDescription =>
+      'Promemoria personalizzati per restare motivato';
+
+  @override
+  String get featureAchievementsName => 'Obiettivi';
+
+  @override
+  String get featureAchievementsDescription =>
+      'Sblocca traguardi e celebra i tuoi progressi';
+
+  @override
+  String get featureStreakTrackingName => 'Serie di Allenamenti';
+
+  @override
+  String get featureStreakTrackingDescription =>
+      'Mantieni la tua striscia di allenamenti consecutivi';
+
+  @override
+  String get featureAdvancedAnalyticsName => 'Analisi Avanzate';
+
+  @override
+  String get featureAdvancedAnalyticsDescription =>
+      'Grafici dettagliati e tendenze dei tuoi progressi';
+
+  @override
+  String get featureWorkoutSuggestionsName => 'Suggerimenti Allenamento';
+
+  @override
+  String get featureWorkoutSuggestionsDescription =>
+      'Consigli personalizzati per i tuoi prossimi allenamenti';
+
+  @override
+  String get featureRecoveryInsightsName => 'Consigli Recupero';
+
+  @override
+  String get featureRecoveryInsightsDescription =>
+      'Raccomandazioni per ottimizzare il tuo recupero';
+
+  @override
+  String get featureFormCorrectionsName => 'Correzioni Tecnica';
+
+  @override
+  String get featureFormCorrectionsDescription =>
+      'Suggerimenti per migliorare la tua esecuzione';
+
+  @override
+  String get featureGateReasonGloballyDisabled =>
+      'Funzionalità non ancora disponibile';
+
+  @override
+  String get featureGateReasonUserDisabled =>
+      'Hai disabilitato questa funzionalità nelle impostazioni';
+
+  @override
+  String get featureGateReasonDefaultEnabled =>
+      'Funzionalità abilitata di default';
+
+  @override
+  String get featureGateReasonAllRulesPassed => 'Tutti i requisiti soddisfatti';
+
+  @override
+  String get featureGateReasonInsufficientExperience =>
+      'Livello di esperienza insufficiente';
+
+  @override
+  String get featureGateReasonInsufficientWorkouts =>
+      'Completa più allenamenti per sbloccare questa funzionalità';
+
+  @override
+  String get featureGateReasonAccountTooNew => 'Account troppo recente';
+
+  @override
+  String get featureGateReasonLowEffectiveness =>
+      'Funzionalità non abbastanza efficace per te';
+
+  @override
+  String get featureGateReasonUnknown => 'Motivo sconosciuto';
 }
