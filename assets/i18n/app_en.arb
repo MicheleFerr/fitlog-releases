@@ -20511,5 +20511,165 @@
   "near_pr_to_go": "to go",
   "@near_pr_to_go": {
     "description": "Label for remaining weight/reps to reach PR"
+  },
+  "recovery_tier_basic": "Basic",
+  "@recovery_tier_basic": {
+    "description": "Basic recovery tier name"
+  },
+  "recovery_tier_intermediate": "Intermediate",
+  "@recovery_tier_intermediate": {
+    "description": "Intermediate recovery tier name"
+  },
+  "recovery_tier_advanced": "Advanced",
+  "@recovery_tier_advanced": {
+    "description": "Advanced recovery tier name"
+  },
+  "recovery_tier_basic_desc": "Overall readiness score based on workout frequency",
+  "@recovery_tier_basic_desc": {
+    "description": "Basic tier description"
+  },
+  "recovery_tier_intermediate_desc": "Per-muscle recovery status with volume tracking",
+  "@recovery_tier_intermediate_desc": {
+    "description": "Intermediate tier description"
+  },
+  "recovery_tier_advanced_desc": "Overtraining detection using HRV + TSB metrics",
+  "@recovery_tier_advanced_desc": {
+    "description": "Advanced tier description"
+  },
+  "readiness_optimal": "Optimal",
+  "@readiness_optimal": {
+    "description": "Optimal readiness category (90-100)"
+  },
+  "readiness_good": "Good",
+  "@readiness_good": {
+    "description": "Good readiness category (75-89)"
+  },
+  "readiness_moderate": "Moderate",
+  "@readiness_moderate": {
+    "description": "Moderate readiness category (60-74)"
+  },
+  "readiness_low": "Low",
+  "@readiness_low": {
+    "description": "Low readiness category (40-59)"
+  },
+  "readiness_very_low": "Very Low",
+  "@readiness_very_low": {
+    "description": "Very low readiness category (0-39)"
+  },
+  "readiness_locked": "Locked",
+  "@readiness_locked": {
+    "description": "Locked readiness category (tier not unlocked)"
+  },
+  "muscle_group_chest": "Chest",
+  "@muscle_group_chest": {
+    "description": "Chest muscle group"
+  },
+  "muscle_group_back": "Back",
+  "@muscle_group_back": {
+    "description": "Back muscle group"
+  },
+  "muscle_group_shoulders": "Shoulders",
+  "@muscle_group_shoulders": {
+    "description": "Shoulders muscle group"
+  },
+  "muscle_group_biceps": "Biceps",
+  "@muscle_group_biceps": {
+    "description": "Biceps muscle group"
+  },
+  "muscle_group_triceps": "Triceps",
+  "@muscle_group_triceps": {
+    "description": "Triceps muscle group"
+  },
+  "muscle_group_legs": "Legs",
+  "@muscle_group_legs": {
+    "description": "Legs muscle group"
+  },
+  "muscle_group_core": "Core",
+  "@muscle_group_core": {
+    "description": "Core muscle group"
+  },
+  "recovery_fully_recovered": "Fully Recovered",
+  "@recovery_fully_recovered": {
+    "description": "Fully recovered status (72h+ rest)"
+  },
+  "recovery_recovered": "Recovered",
+  "@recovery_recovered": {
+    "description": "Recovered status (48-72h rest)"
+  },
+  "recovery_partially_recovered": "Partially Recovered",
+  "@recovery_partially_recovered": {
+    "description": "Partially recovered status (24-48h rest)"
+  },
+  "recovery_fatigued": "Fatigued",
+  "@recovery_fatigued": {
+    "description": "Fatigued status (<24h rest)"
+  },
+  "risk_level_low": "Low Risk",
+  "@risk_level_low": {
+    "description": "Low overtraining risk"
+  },
+  "risk_level_moderate": "Moderate Risk",
+  "@risk_level_moderate": {
+    "description": "Moderate overtraining risk"
+  },
+  "risk_level_high": "High Risk",
+  "@risk_level_high": {
+    "description": "High overtraining risk"
+  },
+  "risk_level_very_high": "Very High Risk",
+  "@risk_level_very_high": {
+    "description": "Very high overtraining risk"
+  },
+  "training_load_very_fresh": "Very Fresh",
+  "@training_load_very_fresh": {
+    "description": "TSB > +5"
+  },
+  "training_load_optimal": "Optimal",
+  "@training_load_optimal": {
+    "description": "TSB 0 to +5"
+  },
+  "training_load_normal": "Normal Load",
+  "@training_load_normal": {
+    "description": "TSB -5 to 0"
+  },
+  "training_load_moderate_fatigue": "Moderate Fatigue",
+  "@training_load_moderate_fatigue": {
+    "description": "TSB -10 to -5"
+  },
+  "training_load_high_fatigue": "High Fatigue",
+  "@training_load_high_fatigue": {
+    "description": "TSB -15 to -10"
+  },
+  "training_load_very_high_fatigue": "Very High Fatigue",
+  "@training_load_very_high_fatigue": {
+    "description": "TSB < -15"
+  },
+  "tier_workouts_label": "Workouts",
+  "@tier_workouts_label": {
+    "description": "Label for workouts progress"
+  },
+  "tier_days_label": "Days of Data",
+  "@tier_days_label": {
+    "description": "Label for days of data progress"
+  },
+  "tier_unlocked": "Unlocked!",
+  "@tier_unlocked": {
+    "description": "Tier unlocked status"
+  },
+  "tier_unlock_message": "This tier is now available",
+  "@tier_unlock_message": {
+    "description": "Message when tier is unlocked"
+  },
+  "tier_unlock_requirement": "Complete {workouts} workouts over {days} days to unlock",
+  "@tier_unlock_requirement": {
+    "description": "Generic unlock requirement message",
+    "placeholders": {
+      "workouts": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
   }
 }

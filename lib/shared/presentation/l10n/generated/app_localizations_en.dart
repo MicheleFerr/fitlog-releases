@@ -16962,4 +16962,123 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get near_pr_to_go => 'to go';
+
+  @override
+  String get recovery_tier_basic => 'Basic';
+
+  @override
+  String get recovery_tier_intermediate => 'Intermediate';
+
+  @override
+  String get recovery_tier_advanced => 'Advanced';
+
+  @override
+  String get recovery_tier_basic_desc =>
+      'Overall readiness score based on workout frequency';
+
+  @override
+  String get recovery_tier_intermediate_desc =>
+      'Per-muscle recovery status with volume tracking';
+
+  @override
+  String get recovery_tier_advanced_desc =>
+      'Overtraining detection using HRV + TSB metrics';
+
+  @override
+  String get readiness_optimal => 'Optimal';
+
+  @override
+  String get readiness_good => 'Good';
+
+  @override
+  String get readiness_moderate => 'Moderate';
+
+  @override
+  String get readiness_low => 'Low';
+
+  @override
+  String get readiness_very_low => 'Very Low';
+
+  @override
+  String get readiness_locked => 'Locked';
+
+  @override
+  String get muscle_group_chest => 'Chest';
+
+  @override
+  String get muscle_group_back => 'Back';
+
+  @override
+  String get muscle_group_shoulders => 'Shoulders';
+
+  @override
+  String get muscle_group_biceps => 'Biceps';
+
+  @override
+  String get muscle_group_triceps => 'Triceps';
+
+  @override
+  String get muscle_group_legs => 'Legs';
+
+  @override
+  String get muscle_group_core => 'Core';
+
+  @override
+  String get recovery_fully_recovered => 'Fully Recovered';
+
+  @override
+  String get recovery_recovered => 'Recovered';
+
+  @override
+  String get recovery_partially_recovered => 'Partially Recovered';
+
+  @override
+  String get recovery_fatigued => 'Fatigued';
+
+  @override
+  String get risk_level_low => 'Low Risk';
+
+  @override
+  String get risk_level_moderate => 'Moderate Risk';
+
+  @override
+  String get risk_level_high => 'High Risk';
+
+  @override
+  String get risk_level_very_high => 'Very High Risk';
+
+  @override
+  String get training_load_very_fresh => 'Very Fresh';
+
+  @override
+  String get training_load_optimal => 'Optimal';
+
+  @override
+  String get training_load_normal => 'Normal Load';
+
+  @override
+  String get training_load_moderate_fatigue => 'Moderate Fatigue';
+
+  @override
+  String get training_load_high_fatigue => 'High Fatigue';
+
+  @override
+  String get training_load_very_high_fatigue => 'Very High Fatigue';
+
+  @override
+  String get tier_workouts_label => 'Workouts';
+
+  @override
+  String get tier_days_label => 'Days of Data';
+
+  @override
+  String get tier_unlocked => 'Unlocked!';
+
+  @override
+  String get tier_unlock_message => 'This tier is now available';
+
+  @override
+  String tier_unlock_requirement(int workouts, int days) {
+    return 'Complete $workouts workouts over $days days to unlock';
+  }
 }

@@ -9935,5 +9935,165 @@
   "near_pr_to_go": "per arrivare",
   "@near_pr_to_go": {
     "description": "Etichetta per peso/ripetizioni rimanenti per raggiungere PR"
+  },
+  "recovery_tier_basic": "Base",
+  "@recovery_tier_basic": {
+    "description": "Nome tier recupero base"
+  },
+  "recovery_tier_intermediate": "Intermedio",
+  "@recovery_tier_intermediate": {
+    "description": "Nome tier recupero intermedio"
+  },
+  "recovery_tier_advanced": "Avanzato",
+  "@recovery_tier_advanced": {
+    "description": "Nome tier recupero avanzato"
+  },
+  "recovery_tier_basic_desc": "Punteggio prontezza basato su frequenza allenamenti",
+  "@recovery_tier_basic_desc": {
+    "description": "Descrizione tier base"
+  },
+  "recovery_tier_intermediate_desc": "Stato recupero per muscolo con tracking volume",
+  "@recovery_tier_intermediate_desc": {
+    "description": "Descrizione tier intermedio"
+  },
+  "recovery_tier_advanced_desc": "Rilevamento sovrallenamento con metriche HRV + TSB",
+  "@recovery_tier_advanced_desc": {
+    "description": "Descrizione tier avanzato"
+  },
+  "readiness_optimal": "Ottimale",
+  "@readiness_optimal": {
+    "description": "Categoria prontezza ottimale (90-100)"
+  },
+  "readiness_good": "Buona",
+  "@readiness_good": {
+    "description": "Categoria prontezza buona (75-89)"
+  },
+  "readiness_moderate": "Moderata",
+  "@readiness_moderate": {
+    "description": "Categoria prontezza moderata (60-74)"
+  },
+  "readiness_low": "Bassa",
+  "@readiness_low": {
+    "description": "Categoria prontezza bassa (40-59)"
+  },
+  "readiness_very_low": "Molto Bassa",
+  "@readiness_very_low": {
+    "description": "Categoria prontezza molto bassa (0-39)"
+  },
+  "readiness_locked": "Bloccato",
+  "@readiness_locked": {
+    "description": "Categoria prontezza bloccata (tier non sbloccato)"
+  },
+  "muscle_group_chest": "Petto",
+  "@muscle_group_chest": {
+    "description": "Gruppo muscolare petto"
+  },
+  "muscle_group_back": "Schiena",
+  "@muscle_group_back": {
+    "description": "Gruppo muscolare schiena"
+  },
+  "muscle_group_shoulders": "Spalle",
+  "@muscle_group_shoulders": {
+    "description": "Gruppo muscolare spalle"
+  },
+  "muscle_group_biceps": "Bicipiti",
+  "@muscle_group_biceps": {
+    "description": "Gruppo muscolare bicipiti"
+  },
+  "muscle_group_triceps": "Tricipiti",
+  "@muscle_group_triceps": {
+    "description": "Gruppo muscolare tricipiti"
+  },
+  "muscle_group_legs": "Gambe",
+  "@muscle_group_legs": {
+    "description": "Gruppo muscolare gambe"
+  },
+  "muscle_group_core": "Core",
+  "@muscle_group_core": {
+    "description": "Gruppo muscolare core"
+  },
+  "recovery_fully_recovered": "Completamente Recuperato",
+  "@recovery_fully_recovered": {
+    "description": "Stato completamente recuperato (72h+ riposo)"
+  },
+  "recovery_recovered": "Recuperato",
+  "@recovery_recovered": {
+    "description": "Stato recuperato (48-72h riposo)"
+  },
+  "recovery_partially_recovered": "Parzialmente Recuperato",
+  "@recovery_partially_recovered": {
+    "description": "Stato parzialmente recuperato (24-48h riposo)"
+  },
+  "recovery_fatigued": "Affaticato",
+  "@recovery_fatigued": {
+    "description": "Stato affaticato (<24h riposo)"
+  },
+  "risk_level_low": "Rischio Basso",
+  "@risk_level_low": {
+    "description": "Rischio sovrallenamento basso"
+  },
+  "risk_level_moderate": "Rischio Moderato",
+  "@risk_level_moderate": {
+    "description": "Rischio sovrallenamento moderato"
+  },
+  "risk_level_high": "Rischio Alto",
+  "@risk_level_high": {
+    "description": "Rischio sovrallenamento alto"
+  },
+  "risk_level_very_high": "Rischio Molto Alto",
+  "@risk_level_very_high": {
+    "description": "Rischio sovrallenamento molto alto"
+  },
+  "training_load_very_fresh": "Molto Fresco",
+  "@training_load_very_fresh": {
+    "description": "TSB > +5"
+  },
+  "training_load_optimal": "Ottimale",
+  "@training_load_optimal": {
+    "description": "TSB 0 a +5"
+  },
+  "training_load_normal": "Carico Normale",
+  "@training_load_normal": {
+    "description": "TSB -5 a 0"
+  },
+  "training_load_moderate_fatigue": "Affaticamento Moderato",
+  "@training_load_moderate_fatigue": {
+    "description": "TSB -10 a -5"
+  },
+  "training_load_high_fatigue": "Affaticamento Elevato",
+  "@training_load_high_fatigue": {
+    "description": "TSB -15 a -10"
+  },
+  "training_load_very_high_fatigue": "Affaticamento Molto Elevato",
+  "@training_load_very_high_fatigue": {
+    "description": "TSB < -15"
+  },
+  "tier_workouts_label": "Allenamenti",
+  "@tier_workouts_label": {
+    "description": "Etichetta per progresso allenamenti"
+  },
+  "tier_days_label": "Giorni di Dati",
+  "@tier_days_label": {
+    "description": "Etichetta per progresso giorni dati"
+  },
+  "tier_unlocked": "Sbloccato!",
+  "@tier_unlocked": {
+    "description": "Stato tier sbloccato"
+  },
+  "tier_unlock_message": "Questo tier è ora disponibile",
+  "@tier_unlock_message": {
+    "description": "Messaggio quando tier è sbloccato"
+  },
+  "tier_unlock_requirement": "Completa {workouts} allenamenti in {days} giorni per sbloccare",
+  "@tier_unlock_requirement": {
+    "description": "Messaggio requisito generico sblocco",
+    "placeholders": {
+      "workouts": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
   }
 }

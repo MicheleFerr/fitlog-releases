@@ -50,6 +50,10 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/on
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextual_overlay_manager.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:uuid/uuid.dart';
+// 🏆 PR Celebration imports
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_modal.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   /// Optional template ID to pre-load when opening the screen
@@ -1936,6 +1940,16 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       // Check if workout is still completed (not undone)
       final currentWorkout = ref.read(currentWorkoutProvider);
       if (currentWorkout != null && currentWorkout.isCompleted) {
+        // 🏆 Check for newly detected PRs and show celebration modal
+        final newPRs = ref.read(newlyDetectedPRsProvider);
+        if (newPRs.isNotEmpty && context.mounted) {
+          // Show PR celebration modal for the first PR
+          await _showPRCelebrationModal(context, ref, newPRs.first);
+
+          // Clear the PRs from state after showing modal
+          ref.read(newlyDetectedPRsProvider.notifier).state = [];
+        }
+
         // Completion is final - show ad and navigate
         // 📱 Show interstitial ad after workout completion
         await Future.delayed(const Duration(milliseconds: 500));
@@ -1962,6 +1976,75 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         });
       }
     });
+  }
+
+  /// Show PR celebration modal with engagement tracking
+  ///
+  /// Displays modal for the given PR and tracks user engagement
+  /// (viewed, shared, or dismissed). Analytics tracked to Firestore.
+  Future<void> _showPRCelebrationModal(
+    BuildContext context,
+    WidgetRef ref,
+    PRCelebration celebration,
+  ) async {
+    if (!context.mounted) return;
+
+    final celebrationRepo = ref.read(prCelebrationRepositoryProvider);
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [WorkoutScreen] Cannot show PR modal: user not authenticated');
+      }
+      return;
+    }
+
+    // Track that user viewed the modal
+    await celebrationRepo.trackEngagement(
+      userId,
+      celebration.prId,
+      CelebrationEngagement.viewed,
+    );
+
+    if (!context.mounted) return;
+
+    // Show the celebration modal
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // Require user action
+      builder: (_) => PRCelebrationModal(
+        celebration: celebration,
+        onShare: () async {
+          // Track share engagement
+          await celebrationRepo.trackEngagement(
+            userId,
+            celebration.prId,
+            CelebrationEngagement.shared,
+          );
+
+          // TODO: Implement actual sharing (Task 3.6 or later)
+          if (context.mounted) {
+            SnackBarService.showSuccess(
+              context,
+              'PR shared! 🎉', // TODO: Localize
+            );
+            Navigator.of(context).pop();
+          }
+        },
+        onDismiss: () async {
+          // Track dismiss engagement
+          await celebrationRepo.trackEngagement(
+            userId,
+            celebration.prId,
+            CelebrationEngagement.dismissed,
+          );
+
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
+        },
+      ),
+    );
   }
 
   void _showSettingsMenu(BuildContext context, WidgetRef ref) {

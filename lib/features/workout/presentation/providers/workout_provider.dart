@@ -70,6 +70,13 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_provide
 // 🐛 Debug Log Manager for categorized logging
 import 'package:gymbro_flutter_new/shared/data/services/debug_log_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/log_category.dart';
+// 🏆 PR Celebration for workout completion achievements
+import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart' as service_pr show PersonalRecord;
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart' as domain_pr;
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
+import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 
 // Hive datasource provider
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -573,6 +580,106 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             // Non-critical error - log but don't fail workout save
             if (kDebugMode) {
               debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check streak achievement: $streakError');
+            }
+          }
+
+          // 🏆 PR CELEBRATION: Check for new personal records after successful save
+          // Records PRs to repository for future celebration and tracking
+          try {
+            final prTracker = ref.read(prTrackerProvider);
+            final prCelebrationRepo = ref.read(prCelebrationRepositoryProvider);
+            final allNewPRs = <service_pr.PersonalRecord>[];
+
+            // Check each exercise for new PRs
+            for (final exercise in workout.exercises) {
+              // Skip exercises with no completed sets
+              if (!exercise.sets.any((s) => s.isCompleted)) continue;
+
+              // Convert Exercise to ExerciseActivity
+              final activity = ExerciseActivity.fromExercise(
+                exercise: exercise,
+                userEmail: currentUser.email ?? userId,
+                workoutName: workout.name,
+                workoutDate: workout.endTime ?? DateTime.now(),
+              );
+
+              // Check for PRs in this exercise
+              final exercisePRs = await prTracker.checkAndUpdatePRs(activity);
+              allNewPRs.addAll(exercisePRs);
+            }
+
+            if (allNewPRs.isNotEmpty) {
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '🎉 [WorkoutProvider] ${allNewPRs.length} new PR(s) detected!');
+                for (final pr in allNewPRs) {
+                  debugLog(LogCategory.workout, '   - ${pr.exerciseName}: ${pr.type.name} = ${pr.value}');
+                }
+              }
+
+              // Record celebrations for all PRs and prepare for UI display
+              final celebrations = <PRCelebration>[];
+
+              for (final pr in allNewPRs) {
+                // Convert service PR to domain PR for repository
+                final domainPR = domain_pr.PersonalRecord(
+                  id: pr.id,
+                  exerciseName: pr.exerciseName,
+                  exerciseId: pr.exerciseId,
+                  type: _mapSharedPRTypeToDomain(pr.type),
+                  value: pr.value,
+                  reps: null,
+                  weight: null,
+                  achievedAt: pr.achievedAt,
+                  workoutId: workout.id,
+                );
+
+                // Record celebration to Firestore
+                await prCelebrationRepo.recordCelebration(userId, domainPR);
+
+                // Create PRCelebration object for UI display
+                // Note: previousValue will be fetched from repository in recordCelebration
+                final celebration = PRCelebration(
+                  id: '${userId}_${pr.id}_${DateTime.now().millisecondsSinceEpoch}',
+                  userId: userId,
+                  prId: pr.id,
+                  prType: pr.type, // Already shared PRType
+                  celebratedAt: DateTime.now(),
+                  engagement: CelebrationEngagement.viewed, // Default to viewed
+                  previousValue: pr.previousValue ?? 0.0,
+                  newValue: pr.value,
+                  exerciseName: pr.exerciseName,
+                );
+
+                celebrations.add(celebration);
+              }
+
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '✅ [WorkoutProvider] ${celebrations.length} PR celebrations recorded to Firestore');
+              }
+
+              // 🎉 Populate newly detected PRs for UI to display celebration modal
+              ref.read(newlyDetectedPRsProvider.notifier).state = celebrations;
+
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '✅ [WorkoutProvider] PR celebrations ready for UI display');
+              }
+
+              // 📬 Schedule delayed notification (5 minutes after workout)
+              final prNotificationService = ref.read(prNotificationServiceProvider);
+              for (final celebration in celebrations) {
+                await prNotificationService.scheduleDelayedPRNotification(
+                  userId: userId,
+                  celebration: celebration,
+                  workoutEndTime: workout.endTime ?? DateTime.now(),
+                );
+              }
+            } else if (kDebugMode) {
+              debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] No new PRs detected');
+            }
+          } catch (prError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check PR achievements: $prError');
             }
           }
         }
@@ -1814,6 +1921,28 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       }
     } catch (e) {
       debugLog(LogCategory.workout, '❌ [APRE] Error calculating base weight for ${exercise.name}: $e');
+    }
+  }
+
+  /// Maps shared PRType to domain-layer PRType
+  ///
+  /// Service layer (pr_tracker.dart) PersonalRecord uses shared PRType enum,
+  /// while domain layer personal_record.dart uses its own PRType with different values.
+  /// This method bridges the two type systems.
+  domain_pr.PRType _mapSharedPRTypeToDomain(PRType sharedType) {
+    switch (sharedType) {
+      case PRType.weight:
+        return domain_pr.PRType.weight;
+      case PRType.volume:
+        return domain_pr.PRType.volume;
+      case PRType.reps:
+        return domain_pr.PRType.reps;
+      case PRType.oneRM:
+        return domain_pr.PRType.oneRM;
+      case PRType.totalSets:
+        return domain_pr.PRType.totalSets;
+      case PRType.duration:
+        return domain_pr.PRType.time; // Map duration → time
     }
   }
 

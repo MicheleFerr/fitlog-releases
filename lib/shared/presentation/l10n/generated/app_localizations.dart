@@ -30359,6 +30359,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to go'**
   String get near_pr_to_go;
+
+  /// Basic recovery tier name
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get recovery_tier_basic;
+
+  /// Intermediate recovery tier name
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get recovery_tier_intermediate;
+
+  /// Advanced recovery tier name
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get recovery_tier_advanced;
+
+  /// Basic tier description
+  ///
+  /// In en, this message translates to:
+  /// **'Overall readiness score based on workout frequency'**
+  String get recovery_tier_basic_desc;
+
+  /// Intermediate tier description
+  ///
+  /// In en, this message translates to:
+  /// **'Per-muscle recovery status with volume tracking'**
+  String get recovery_tier_intermediate_desc;
+
+  /// Advanced tier description
+  ///
+  /// In en, this message translates to:
+  /// **'Overtraining detection using HRV + TSB metrics'**
+  String get recovery_tier_advanced_desc;
+
+  /// Optimal readiness category (90-100)
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get readiness_optimal;
+
+  /// Good readiness category (75-89)
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get readiness_good;
+
+  /// Moderate readiness category (60-74)
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get readiness_moderate;
+
+  /// Low readiness category (40-59)
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get readiness_low;
+
+  /// Very low readiness category (0-39)
+  ///
+  /// In en, this message translates to:
+  /// **'Very Low'**
+  String get readiness_very_low;
+
+  /// Locked readiness category (tier not unlocked)
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get readiness_locked;
+
+  /// Chest muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get muscle_group_chest;
+
+  /// Back muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get muscle_group_back;
+
+  /// Shoulders muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulders'**
+  String get muscle_group_shoulders;
+
+  /// Biceps muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Biceps'**
+  String get muscle_group_biceps;
+
+  /// Triceps muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Triceps'**
+  String get muscle_group_triceps;
+
+  /// Legs muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get muscle_group_legs;
+
+  /// Core muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get muscle_group_core;
+
+  /// Fully recovered status (72h+ rest)
+  ///
+  /// In en, this message translates to:
+  /// **'Fully Recovered'**
+  String get recovery_fully_recovered;
+
+  /// Recovered status (48-72h rest)
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered'**
+  String get recovery_recovered;
+
+  /// Partially recovered status (24-48h rest)
+  ///
+  /// In en, this message translates to:
+  /// **'Partially Recovered'**
+  String get recovery_partially_recovered;
+
+  /// Fatigued status (<24h rest)
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigued'**
+  String get recovery_fatigued;
+
+  /// Low overtraining risk
+  ///
+  /// In en, this message translates to:
+  /// **'Low Risk'**
+  String get risk_level_low;
+
+  /// Moderate overtraining risk
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Risk'**
+  String get risk_level_moderate;
+
+  /// High overtraining risk
+  ///
+  /// In en, this message translates to:
+  /// **'High Risk'**
+  String get risk_level_high;
+
+  /// Very high overtraining risk
+  ///
+  /// In en, this message translates to:
+  /// **'Very High Risk'**
+  String get risk_level_very_high;
+
+  /// TSB > +5
+  ///
+  /// In en, this message translates to:
+  /// **'Very Fresh'**
+  String get training_load_very_fresh;
+
+  /// TSB 0 to +5
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get training_load_optimal;
+
+  /// TSB -5 to 0
+  ///
+  /// In en, this message translates to:
+  /// **'Normal Load'**
+  String get training_load_normal;
+
+  /// TSB -10 to -5
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Fatigue'**
+  String get training_load_moderate_fatigue;
+
+  /// TSB -15 to -10
+  ///
+  /// In en, this message translates to:
+  /// **'High Fatigue'**
+  String get training_load_high_fatigue;
+
+  /// TSB < -15
+  ///
+  /// In en, this message translates to:
+  /// **'Very High Fatigue'**
+  String get training_load_very_high_fatigue;
+
+  /// Label for workouts progress
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get tier_workouts_label;
+
+  /// Label for days of data progress
+  ///
+  /// In en, this message translates to:
+  /// **'Days of Data'**
+  String get tier_days_label;
+
+  /// Tier unlocked status
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked!'**
+  String get tier_unlocked;
+
+  /// Message when tier is unlocked
+  ///
+  /// In en, this message translates to:
+  /// **'This tier is now available'**
+  String get tier_unlock_message;
+
+  /// Generic unlock requirement message
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {workouts} workouts over {days} days to unlock'**
+  String tier_unlock_requirement(int workouts, int days);
 }
 
 class _AppLocalizationsDelegate
