@@ -944,17 +944,17 @@ abstract class AppLocalizations {
   /// **'Syncing...'**
   String get syncSyncing;
 
-  /// Sync status when successful
+  /// Success message after sync completes
   ///
   /// In en, this message translates to:
-  /// **'Up to date'**
+  /// **'Sync successful'**
   String get syncSuccess;
 
-  /// Sync status when error occurs
+  /// Error message when sync fails
   ///
   /// In en, this message translates to:
-  /// **'Error'**
-  String get syncError;
+  /// **'Sync failed: {error}'**
+  String syncError(String error);
 
   /// Message when checking sync status
   ///
@@ -2497,11 +2497,11 @@ abstract class AppLocalizations {
   /// **'Load settings from JSON file'**
   String get importSettingsDesc;
 
-  /// Button text to reset to mode defaults
+  /// Button to restore default notification settings
   ///
   /// In en, this message translates to:
-  /// **'Reset to {mode} Defaults'**
-  String resetToDefaults(String mode);
+  /// **'Reset to Defaults'**
+  String get resetToDefaults;
 
   /// Reset to defaults description
   ///
@@ -3526,13 +3526,13 @@ abstract class AppLocalizations {
   /// Button to mark all notifications as read
   ///
   /// In en, this message translates to:
-  /// **'Mark all as read'**
+  /// **'Mark All as Read'**
   String get markAllAsRead;
 
-  /// Empty state for notifications
+  /// Empty state message when no notifications exist
   ///
   /// In en, this message translates to:
-  /// **'No notifications'**
+  /// **'No notifications yet'**
   String get noNotifications;
 
   /// Description for empty notifications state
@@ -3655,10 +3655,10 @@ abstract class AppLocalizations {
   /// **'Evening (7:00 PM)'**
   String get eveningTime;
 
-  /// Custom time option for notifications
+  /// Label for custom notification time
   ///
   /// In en, this message translates to:
-  /// **'Custom Time'**
+  /// **'Custom time'**
   String get customTime;
 
   /// Title for new weight personal record notification
@@ -4775,10 +4775,10 @@ abstract class AppLocalizations {
   /// **'Let\'s Get Started!'**
   String get getStarted;
 
-  /// Motivation for users with good streaks
+  /// Category label for streak motivation notifications
   ///
   /// In en, this message translates to:
-  /// **'Amazing streak! You\'re building a strong habit.'**
+  /// **'Streak Motivation'**
   String get streakMotivation;
 
   /// Motivation for consistent users
@@ -11759,10 +11759,10 @@ abstract class AppLocalizations {
   /// **'Better recovery between sessions and higher quality sets'**
   String get strategyHighvolumeincreasefreqOutcome;
 
-  /// Filter label for contribution type
+  /// Label for notification type filter
   ///
   /// In en, this message translates to:
-  /// **'Type'**
+  /// **'Filter by Type'**
   String get filterByType;
 
   /// Filter label for recommendation priority filter
@@ -19056,7 +19056,7 @@ abstract class AppLocalizations {
   /// **'Open form to create a new workout template'**
   String get createTemplateHint;
 
-  /// Sync status button label
+  /// Section title for cross-device sync status
   ///
   /// In en, this message translates to:
   /// **'Sync Status'**
@@ -24048,10 +24048,10 @@ abstract class AppLocalizations {
   /// **'Sync workouts'**
   String get syncWorkouts;
 
-  /// Auto-generated for syncing
+  /// Status text shown while syncing
   ///
   /// In en, this message translates to:
-  /// **'Syncing'**
+  /// **'Syncing...'**
   String get syncing;
 
   /// Auto-generated for tapPlusToAddExercise
@@ -26652,7 +26652,7 @@ abstract class AppLocalizations {
   /// **'EZ Bar'**
   String get ezBar;
 
-  /// From quick wins migration - 4 occurrences
+  /// Category label for workout reminder notifications
   ///
   /// In en, this message translates to:
   /// **'Workout Reminders'**
@@ -29765,6 +29765,600 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This feature is unavailable'**
   String get featureGateReasonUnknown;
+
+  /// Title for notification settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get notificationSettings;
+
+  /// Description for notification settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Manage workout reminders, streak alerts, and more'**
+  String get notificationSettingsDesc;
+
+  /// Section title for frequency cap settings
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Caps'**
+  String get frequencyCaps;
+
+  /// Description for frequency caps feature
+  ///
+  /// In en, this message translates to:
+  /// **'Limit notifications to prevent fatigue'**
+  String get frequencyCapsDescription;
+
+  /// Label for maximum notifications per day setting
+  ///
+  /// In en, this message translates to:
+  /// **'Max Per Day'**
+  String get maxPerDay;
+
+  /// Label for maximum notifications per week setting
+  ///
+  /// In en, this message translates to:
+  /// **'Max Per Week'**
+  String get maxPerWeek;
+
+  /// Research-backed explanation for weekly limit
+  ///
+  /// In en, this message translates to:
+  /// **'Research shows >5/week increases quit risk by 64%'**
+  String get maxPerWeekDescription;
+
+  /// Label for minimum time between notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Interval (hours)'**
+  String get minIntervalHours;
+
+  /// Description for minimum interval hours setting
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum time between notifications (prevents spam)'**
+  String get minIntervalHoursDescription;
+
+  /// Label for notifications per day unit
+  ///
+  /// In en, this message translates to:
+  /// **'notifications/day'**
+  String get notificationsPerDay;
+
+  /// Label for notifications per week unit
+  ///
+  /// In en, this message translates to:
+  /// **'notifications/week'**
+  String get notificationsPerWeek;
+
+  /// Warning when frequency cap exceeds research-backed optimal limit
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ >5/week increases quit risk by 64% (research-backed)'**
+  String get exceedsResearchLimit;
+
+  /// Section title for Do Not Disturb settings
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Hours'**
+  String get quietHours;
+
+  /// Description for quiet hours feature
+  ///
+  /// In en, this message translates to:
+  /// **'Set Do Not Disturb windows per category'**
+  String get quietHoursDescription;
+
+  /// Label for quiet hours start time
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get quietHoursStart;
+
+  /// Label for quiet hours end time
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get quietHoursEnd;
+
+  /// Toggle to allow high-priority notifications during quiet hours
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Priority Bypass'**
+  String get allowPriorityBypass;
+
+  /// Section title for privacy and GDPR settings
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & GDPR'**
+  String get privacyAndGDPR;
+
+  /// Label showing current GDPR consent status
+  ///
+  /// In en, this message translates to:
+  /// **'Consent Status'**
+  String get consentStatus;
+
+  /// Status when user has given consent
+  ///
+  /// In en, this message translates to:
+  /// **'Consent Given'**
+  String get consentGiven;
+
+  /// Status when user has not given consent
+  ///
+  /// In en, this message translates to:
+  /// **'Consent Not Given'**
+  String get consentNotGiven;
+
+  /// Button to open consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Give Consent'**
+  String get giveConsent;
+
+  /// Button to revoke previously given consent
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke Consent'**
+  String get revokeConsent;
+
+  /// Toggle for analytics data collection
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Analytics'**
+  String get enableAnalytics;
+
+  /// Description for analytics toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Help improve the app by sharing usage data'**
+  String get analyticsDescription;
+
+  /// Label for data retention period setting
+  ///
+  /// In en, this message translates to:
+  /// **'Data Retention'**
+  String get dataRetention;
+
+  /// Format for data retention period
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days'**
+  String dataRetentionDays(int days);
+
+  /// Button to delete all notification data (GDPR Article 17)
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// Warning shown before deleting all data
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all notification data. This action CANNOT be undone!'**
+  String get deleteAllDataWarning;
+
+  /// Confirmation prompt for data deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Type DELETE to confirm'**
+  String get deleteAllDataConfirm;
+
+  /// Label showing when settings were last synced to cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced: {time}'**
+  String lastSyncedAt(String time);
+
+  /// Button to manually trigger sync to cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get syncNow;
+
+  /// Confirmation dialog for resetting settings
+  ///
+  /// In en, this message translates to:
+  /// **'Reset all notification settings to defaults?'**
+  String get resetToDefaultsConfirm;
+
+  /// Label for frequency cap preset options
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get frequencyCapPresets;
+
+  /// Conservative frequency cap preset
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative (2/day, 3/week)'**
+  String get presetConservative;
+
+  /// Balanced frequency cap preset (default)
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced (3/day, 5/week)'**
+  String get presetBalanced;
+
+  /// Aggressive frequency cap preset
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive (5/day, 10/week)'**
+  String get presetAggressive;
+
+  /// Minimal frequency cap preset
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal (1/day, 2/week)'**
+  String get presetMinimal;
+
+  /// Label for quiet hours preset options
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get quietHoursPresets;
+
+  /// Overnight quiet hours preset
+  ///
+  /// In en, this message translates to:
+  /// **'Overnight (10pm - 8am)'**
+  String get presetOvernight;
+
+  /// Work hours quiet hours preset
+  ///
+  /// In en, this message translates to:
+  /// **'Work Hours (9am - 5pm)'**
+  String get presetWorkHours;
+
+  /// Weekend morning quiet hours preset
+  ///
+  /// In en, this message translates to:
+  /// **'Weekend Morning (Sat-Sun 8am - 12pm)'**
+  String get presetWeekendMorning;
+
+  /// Siesta quiet hours preset
+  ///
+  /// In en, this message translates to:
+  /// **'Siesta (2pm - 4pm)'**
+  String get presetSiesta;
+
+  /// Section for per-category notification settings
+  ///
+  /// In en, this message translates to:
+  /// **'Category-Specific Settings'**
+  String get categorySpecificSettings;
+
+  /// Category label for recovery alert notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Alerts'**
+  String get recoveryAlerts;
+
+  /// Title for GDPR consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data Collection'**
+  String get privacyConsentDialogTitle;
+
+  /// Body text for GDPR consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'We collect notification delivery times, types, and read status to improve the app. Your workout data stays on your device.\n\nYou can revoke consent anytime in Settings.'**
+  String get privacyConsentDialogBody;
+
+  /// Checkbox label for consent
+  ///
+  /// In en, this message translates to:
+  /// **'I consent to data collection'**
+  String get iConsentToDataCollection;
+
+  /// Button to accept consent
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get acceptConsent;
+
+  /// Button to decline consent
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get declineConsent;
+
+  /// Status message when syncing settings to cloud
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing settings...'**
+  String get syncingSettings;
+
+  /// Section title for notification type toggles
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Types'**
+  String get notificationTypes;
+
+  /// Description for daily workout reminders toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Get reminded to complete your daily workouts'**
+  String get dailyWorkoutRemindersDescription;
+
+  /// Description for recovery alerts toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications when you have days to recover'**
+  String get recoveryAlertsDescription;
+
+  /// Description for streak motivation toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Stay motivated with your active workout streak'**
+  String get streakMotivationDescription;
+
+  /// Section title for notification timing settings
+  ///
+  /// In en, this message translates to:
+  /// **'Timing Preferences'**
+  String get timingPreferences;
+
+  /// Label for preferred notification time setting
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred Time'**
+  String get preferredTime;
+
+  /// Toggle for AI-powered notification scheduling
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Scheduling'**
+  String get smartScheduling;
+
+  /// Description for smart scheduling feature
+  ///
+  /// In en, this message translates to:
+  /// **'AI learns your habits and schedules notifications optimally'**
+  String get smartSchedulingDescription;
+
+  /// Description for max per day setting
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum notifications per day'**
+  String get maxPerDayDescription;
+
+  /// Label for quiet hours time window setting
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Hours Window'**
+  String get quietHoursWindow;
+
+  /// Toggle to enable quiet hours feature
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Do Not Disturb'**
+  String get enableDoNotDisturb;
+
+  /// Description for Do Not Disturb feature
+  ///
+  /// In en, this message translates to:
+  /// **'Silence notifications during specific hours'**
+  String get doNotDisturbDescription;
+
+  /// Button to view GDPR consent details
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get viewConsent;
+
+  /// Label for data retention period setting
+  ///
+  /// In en, this message translates to:
+  /// **'Data Retention Period'**
+  String get dataRetentionPeriod;
+
+  /// Label for last sync timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Last Synced'**
+  String get lastSynced;
+
+  /// Status when settings have never been synced
+  ///
+  /// In en, this message translates to:
+  /// **'Never synced'**
+  String get neverSynced;
+
+  /// Warning when local and cloud settings differ
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Sync'**
+  String get outOfSync;
+
+  /// Description of out-of-sync status
+  ///
+  /// In en, this message translates to:
+  /// **'Local and cloud settings are different'**
+  String get outOfSyncDescription;
+
+  /// Description for reset to defaults button
+  ///
+  /// In en, this message translates to:
+  /// **'Restore all settings to factory defaults'**
+  String get resetToDefaultsDescription;
+
+  /// Description for delete all data button
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete all notification data'**
+  String get deleteAllDataDescription;
+
+  /// Label for custom time preference option
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get custom;
+
+  /// Success message after deleting all notification data
+  ///
+  /// In en, this message translates to:
+  /// **'All notification data deleted'**
+  String get allDataDeleted;
+
+  /// Title for privacy consent dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Consent'**
+  String get privacyConsent;
+
+  /// Description of privacy consent for notifications
+  ///
+  /// In en, this message translates to:
+  /// **'By enabling notifications, you consent to receive personalized workout reminders, recovery alerts, and streak motivation. Your notification preferences and history are stored locally and synced to the cloud for cross-device access. You can revoke consent at any time by disabling notifications or deleting all data.'**
+  String get consentDescription;
+
+  /// Label for consent version number
+  ///
+  /// In en, this message translates to:
+  /// **'Consent Version'**
+  String get consentVersion;
+
+  /// Label for quiet hours start time
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get startTime;
+
+  /// Label for quiet hours end time
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get endTime;
+
+  /// Title for supplement reminder notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Supplement Reminders'**
+  String get supplementReminders;
+
+  /// Description for supplement reminder toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Get reminded to take your supplements (pre-workout, protein, etc.)'**
+  String get supplementRemindersDescription;
+
+  /// Title for notification history screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notification History'**
+  String get notificationHistory;
+
+  /// Placeholder for notification history search
+  ///
+  /// In en, this message translates to:
+  /// **'Search history...'**
+  String get searchHistory;
+
+  /// Option to show all notification types
+  ///
+  /// In en, this message translates to:
+  /// **'Show All'**
+  String get showAll;
+
+  /// Filter option to show only unread notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Unread Only'**
+  String get unreadOnly;
+
+  /// Button to clear notification history
+  ///
+  /// In en, this message translates to:
+  /// **'Clear History'**
+  String get clearHistory;
+
+  /// Label showing current settings schema version
+  ///
+  /// In en, this message translates to:
+  /// **'Settings Version'**
+  String get settingsVersion;
+
+  /// Warning when settings need migration to v2.0
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Required'**
+  String get migrationRequired;
+
+  /// Button to trigger v1.0 → v2.0 migration
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate Now'**
+  String get migrateNow;
+
+  /// Status text during migration
+  ///
+  /// In en, this message translates to:
+  /// **'Migrating settings...'**
+  String get migrationInProgress;
+
+  /// Success message after migration
+  ///
+  /// In en, this message translates to:
+  /// **'Migration complete!'**
+  String get migrationComplete;
+
+  /// Label indicating default time will be used
+  ///
+  /// In en, this message translates to:
+  /// **'Use default time'**
+  String get useDefaultTime;
+
+  /// Title of PR celebration modal
+  ///
+  /// In en, this message translates to:
+  /// **'New Personal Record!'**
+  String get pr_celebration_title;
+
+  /// Label for previous PR value in celebration modal
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get pr_previous_value;
+
+  /// Label for new PR value in celebration modal
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get pr_new_value;
+
+  /// Continue button text in PR celebration modal
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_text;
+
+  /// Motivational message when very close to PR (95%+)
+  ///
+  /// In en, this message translates to:
+  /// **'So close to a PR!'**
+  String get near_pr_so_close;
+
+  /// Motivational message when close to PR (90-95%)
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re almost there!'**
+  String get near_pr_almost_there;
+
+  /// Motivational message when approaching PR (85-90%)
+  ///
+  /// In en, this message translates to:
+  /// **'Keep pushing!'**
+  String get near_pr_keep_pushing;
+
+  /// Label for remaining weight/reps to reach PR
+  ///
+  /// In en, this message translates to:
+  /// **'to go'**
+  String get near_pr_to_go;
 }
 
 class _AppLocalizationsDelegate

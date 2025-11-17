@@ -483,10 +483,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncSyncing => 'Syncing...';
 
   @override
-  String get syncSuccess => 'Up to date';
+  String get syncSuccess => 'Sync successful';
 
   @override
-  String get syncError => 'Error';
+  String syncError(String error) {
+    return 'Sync failed: $error';
+  }
 
   @override
   String get checkingStatus => 'Checking status...';
@@ -1304,9 +1306,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importSettingsDesc => 'Load settings from JSON file';
 
   @override
-  String resetToDefaults(String mode) {
-    return 'Reset to $mode Defaults';
-  }
+  String get resetToDefaults => 'Reset to Defaults';
 
   @override
   String get resetToDefaultsDesc => 'Restore all settings to default';
@@ -1839,10 +1839,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get markAllAsRead => 'Mark all as read';
+  String get markAllAsRead => 'Mark All as Read';
 
   @override
-  String get noNotifications => 'No notifications';
+  String get noNotifications => 'No notifications yet';
 
   @override
   String get notificationsDescription =>
@@ -1915,7 +1915,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eveningTime => 'Evening (7:00 PM)';
 
   @override
-  String get customTime => 'Custom Time';
+  String get customTime => 'Custom time';
 
   @override
   String get newWeightPR => 'New Weight PR!';
@@ -2542,8 +2542,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Let\'s Get Started!';
 
   @override
-  String get streakMotivation =>
-      'Amazing streak! You\'re building a strong habit.';
+  String get streakMotivation => 'Streak Motivation';
 
   @override
   String get consistencyMotivation =>
@@ -6579,7 +6578,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Better recovery between sessions and higher quality sets';
 
   @override
-  String get filterByType => 'Type';
+  String get filterByType => 'Filter by Type';
 
   @override
   String get filterByPriority => 'Filter by Priority';
@@ -13538,7 +13537,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncWorkouts => 'Sync workouts';
 
   @override
-  String get syncing => 'Syncing';
+  String get syncing => 'Syncing...';
 
   @override
   String get tapPlusToAddExercise => 'Tap plus to add exercise';
@@ -16644,4 +16643,323 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get featureGateReasonUnknown => 'This feature is unavailable';
+
+  @override
+  String get notificationSettings => 'Notification Settings';
+
+  @override
+  String get notificationSettingsDesc =>
+      'Manage workout reminders, streak alerts, and more';
+
+  @override
+  String get frequencyCaps => 'Frequency Caps';
+
+  @override
+  String get frequencyCapsDescription =>
+      'Limit notifications to prevent fatigue';
+
+  @override
+  String get maxPerDay => 'Max Per Day';
+
+  @override
+  String get maxPerWeek => 'Max Per Week';
+
+  @override
+  String get maxPerWeekDescription =>
+      'Research shows >5/week increases quit risk by 64%';
+
+  @override
+  String get minIntervalHours => 'Minimum Interval (hours)';
+
+  @override
+  String get minIntervalHoursDescription =>
+      'Minimum time between notifications (prevents spam)';
+
+  @override
+  String get notificationsPerDay => 'notifications/day';
+
+  @override
+  String get notificationsPerWeek => 'notifications/week';
+
+  @override
+  String get exceedsResearchLimit =>
+      '⚠️ >5/week increases quit risk by 64% (research-backed)';
+
+  @override
+  String get quietHours => 'Quiet Hours';
+
+  @override
+  String get quietHoursDescription => 'Set Do Not Disturb windows per category';
+
+  @override
+  String get quietHoursStart => 'Start Time';
+
+  @override
+  String get quietHoursEnd => 'End Time';
+
+  @override
+  String get allowPriorityBypass => 'Allow Priority Bypass';
+
+  @override
+  String get privacyAndGDPR => 'Privacy & GDPR';
+
+  @override
+  String get consentStatus => 'Consent Status';
+
+  @override
+  String get consentGiven => 'Consent Given';
+
+  @override
+  String get consentNotGiven => 'Consent Not Given';
+
+  @override
+  String get giveConsent => 'Give Consent';
+
+  @override
+  String get revokeConsent => 'Revoke Consent';
+
+  @override
+  String get enableAnalytics => 'Enable Analytics';
+
+  @override
+  String get analyticsDescription =>
+      'Help improve the app by sharing usage data';
+
+  @override
+  String get dataRetention => 'Data Retention';
+
+  @override
+  String dataRetentionDays(int days) {
+    return '$days days';
+  }
+
+  @override
+  String get deleteAllData => 'Delete All Data';
+
+  @override
+  String get deleteAllDataWarning =>
+      'This will permanently delete all notification data. This action CANNOT be undone!';
+
+  @override
+  String get deleteAllDataConfirm => 'Type DELETE to confirm';
+
+  @override
+  String lastSyncedAt(String time) {
+    return 'Last synced: $time';
+  }
+
+  @override
+  String get syncNow => 'Sync Now';
+
+  @override
+  String get resetToDefaultsConfirm =>
+      'Reset all notification settings to defaults?';
+
+  @override
+  String get frequencyCapPresets => 'Presets';
+
+  @override
+  String get presetConservative => 'Conservative (2/day, 3/week)';
+
+  @override
+  String get presetBalanced => 'Balanced (3/day, 5/week)';
+
+  @override
+  String get presetAggressive => 'Aggressive (5/day, 10/week)';
+
+  @override
+  String get presetMinimal => 'Minimal (1/day, 2/week)';
+
+  @override
+  String get quietHoursPresets => 'Presets';
+
+  @override
+  String get presetOvernight => 'Overnight (10pm - 8am)';
+
+  @override
+  String get presetWorkHours => 'Work Hours (9am - 5pm)';
+
+  @override
+  String get presetWeekendMorning => 'Weekend Morning (Sat-Sun 8am - 12pm)';
+
+  @override
+  String get presetSiesta => 'Siesta (2pm - 4pm)';
+
+  @override
+  String get categorySpecificSettings => 'Category-Specific Settings';
+
+  @override
+  String get recoveryAlerts => 'Recovery Alerts';
+
+  @override
+  String get privacyConsentDialogTitle => 'Privacy & Data Collection';
+
+  @override
+  String get privacyConsentDialogBody =>
+      'We collect notification delivery times, types, and read status to improve the app. Your workout data stays on your device.\n\nYou can revoke consent anytime in Settings.';
+
+  @override
+  String get iConsentToDataCollection => 'I consent to data collection';
+
+  @override
+  String get acceptConsent => 'Accept';
+
+  @override
+  String get declineConsent => 'Decline';
+
+  @override
+  String get syncingSettings => 'Syncing settings...';
+
+  @override
+  String get notificationTypes => 'Notification Types';
+
+  @override
+  String get dailyWorkoutRemindersDescription =>
+      'Get reminded to complete your daily workouts';
+
+  @override
+  String get recoveryAlertsDescription =>
+      'Notifications when you have days to recover';
+
+  @override
+  String get streakMotivationDescription =>
+      'Stay motivated with your active workout streak';
+
+  @override
+  String get timingPreferences => 'Timing Preferences';
+
+  @override
+  String get preferredTime => 'Preferred Time';
+
+  @override
+  String get smartScheduling => 'Smart Scheduling';
+
+  @override
+  String get smartSchedulingDescription =>
+      'AI learns your habits and schedules notifications optimally';
+
+  @override
+  String get maxPerDayDescription => 'Maximum notifications per day';
+
+  @override
+  String get quietHoursWindow => 'Quiet Hours Window';
+
+  @override
+  String get enableDoNotDisturb => 'Enable Do Not Disturb';
+
+  @override
+  String get doNotDisturbDescription =>
+      'Silence notifications during specific hours';
+
+  @override
+  String get viewConsent => 'View';
+
+  @override
+  String get dataRetentionPeriod => 'Data Retention Period';
+
+  @override
+  String get lastSynced => 'Last Synced';
+
+  @override
+  String get neverSynced => 'Never synced';
+
+  @override
+  String get outOfSync => 'Out of Sync';
+
+  @override
+  String get outOfSyncDescription => 'Local and cloud settings are different';
+
+  @override
+  String get resetToDefaultsDescription =>
+      'Restore all settings to factory defaults';
+
+  @override
+  String get deleteAllDataDescription =>
+      'Permanently delete all notification data';
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get allDataDeleted => 'All notification data deleted';
+
+  @override
+  String get privacyConsent => 'Privacy Consent';
+
+  @override
+  String get consentDescription =>
+      'By enabling notifications, you consent to receive personalized workout reminders, recovery alerts, and streak motivation. Your notification preferences and history are stored locally and synced to the cloud for cross-device access. You can revoke consent at any time by disabling notifications or deleting all data.';
+
+  @override
+  String get consentVersion => 'Consent Version';
+
+  @override
+  String get startTime => 'Start Time';
+
+  @override
+  String get endTime => 'End Time';
+
+  @override
+  String get supplementReminders => 'Supplement Reminders';
+
+  @override
+  String get supplementRemindersDescription =>
+      'Get reminded to take your supplements (pre-workout, protein, etc.)';
+
+  @override
+  String get notificationHistory => 'Notification History';
+
+  @override
+  String get searchHistory => 'Search history...';
+
+  @override
+  String get showAll => 'Show All';
+
+  @override
+  String get unreadOnly => 'Unread Only';
+
+  @override
+  String get clearHistory => 'Clear History';
+
+  @override
+  String get settingsVersion => 'Settings Version';
+
+  @override
+  String get migrationRequired => 'Migration Required';
+
+  @override
+  String get migrateNow => 'Migrate Now';
+
+  @override
+  String get migrationInProgress => 'Migrating settings...';
+
+  @override
+  String get migrationComplete => 'Migration complete!';
+
+  @override
+  String get useDefaultTime => 'Use default time';
+
+  @override
+  String get pr_celebration_title => 'New Personal Record!';
+
+  @override
+  String get pr_previous_value => 'Previous';
+
+  @override
+  String get pr_new_value => 'New';
+
+  @override
+  String get continue_text => 'Continue';
+
+  @override
+  String get near_pr_so_close => 'So close to a PR!';
+
+  @override
+  String get near_pr_almost_there => 'You\'re almost there!';
+
+  @override
+  String get near_pr_keep_pushing => 'Keep pushing!';
+
+  @override
+  String get near_pr_to_go => 'to go';
 }

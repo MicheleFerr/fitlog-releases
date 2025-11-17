@@ -485,10 +485,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get syncSyncing => 'Sincronizzazione...';
 
   @override
-  String get syncSuccess => 'Aggiornato';
+  String get syncSuccess => 'Sincronizzazione riuscita';
 
   @override
-  String get syncError => 'Errore';
+  String syncError(String error) {
+    return 'Sincronizzazione fallita: $error';
+  }
 
   @override
   String get checkingStatus => 'Controllo stato...';
@@ -1315,9 +1317,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSettingsDesc => 'Carica le impostazioni da file JSON';
 
   @override
-  String resetToDefaults(String mode) {
-    return 'Resetta a Default $mode';
-  }
+  String get resetToDefaults => 'Ripristina Predefiniti';
 
   @override
   String get resetToDefaultsDesc =>
@@ -1855,10 +1855,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get notifications => 'Notifiche';
 
   @override
-  String get markAllAsRead => 'Segna tutte come lette';
+  String get markAllAsRead => 'Segna Tutto Come Letto';
 
   @override
-  String get noNotifications => 'Nessuna notifica';
+  String get noNotifications => 'Nessuna notifica ancora';
 
   @override
   String get notificationsDescription =>
@@ -1931,7 +1931,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get eveningTime => 'Sera (19:00)';
 
   @override
-  String get customTime => 'Orario Personalizzato';
+  String get customTime => 'Ora personalizzata';
 
   @override
   String get newWeightPR => 'Nuovo Record di Peso!';
@@ -2558,8 +2558,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get getStarted => 'Iniziamo!';
 
   @override
-  String get streakMotivation =>
-      'Serie fantastica! Stai costruendo una buona abitudine.';
+  String get streakMotivation => 'Motivazione Streak';
 
   @override
   String get consistencyMotivation =>
@@ -6645,7 +6644,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Miglior recupero tra sessioni e serie di qualità superiore';
 
   @override
-  String get filterByType => 'Tipo';
+  String get filterByType => 'Filtra per Tipo';
 
   @override
   String get filterByPriority => 'Filtra per Priorità';
@@ -13685,7 +13684,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get syncWorkouts => 'Sync workouts';
 
   @override
-  String get syncing => 'Syncing';
+  String get syncing => 'Sincronizzazione...';
 
   @override
   String get tapPlusToAddExercise => 'Tap plus a aggiungi esercizio';
@@ -15101,7 +15100,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ezBar => 'EZ Bar';
 
   @override
-  String get workoutReminders => 'Workout Reminders';
+  String get workoutReminders => 'Promemoria Allenamento';
 
   @override
   String get questaAzioneNonPuEssereAnnullata =>
@@ -16811,4 +16810,324 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get featureGateReasonUnknown => 'Motivo sconosciuto';
+
+  @override
+  String get notificationSettings => 'Impostazioni Notifiche';
+
+  @override
+  String get notificationSettingsDesc =>
+      'Gestisci promemoria allenamenti, streak e altro';
+
+  @override
+  String get frequencyCaps => 'Limiti di Frequenza';
+
+  @override
+  String get frequencyCapsDescription =>
+      'Limita le notifiche per prevenire l\'affaticamento';
+
+  @override
+  String get maxPerDay => 'Massimo Giornaliero';
+
+  @override
+  String get maxPerWeek => 'Massimo Settimanale';
+
+  @override
+  String get maxPerWeekDescription =>
+      'Ricerche mostrano che >5/settimana aumenta il rischio abbandono del 64%';
+
+  @override
+  String get minIntervalHours => 'Intervallo Minimo (ore)';
+
+  @override
+  String get minIntervalHoursDescription =>
+      'Tempo minimo tra notifiche (previene spam)';
+
+  @override
+  String get notificationsPerDay => 'notifiche/giorno';
+
+  @override
+  String get notificationsPerWeek => 'notifiche/settimana';
+
+  @override
+  String get exceedsResearchLimit =>
+      '⚠️ >5/settimana aumenta rischio abbandono del 64% (ricerca scientifica)';
+
+  @override
+  String get quietHours => 'Ore Silenziose';
+
+  @override
+  String get quietHoursDescription =>
+      'Imposta finestre Non Disturbare per categoria';
+
+  @override
+  String get quietHoursStart => 'Ora Inizio';
+
+  @override
+  String get quietHoursEnd => 'Ora Fine';
+
+  @override
+  String get allowPriorityBypass => 'Consenti Priorità Bypass';
+
+  @override
+  String get privacyAndGDPR => 'Privacy e GDPR';
+
+  @override
+  String get consentStatus => 'Stato Consenso';
+
+  @override
+  String get consentGiven => 'Consenso Dato';
+
+  @override
+  String get consentNotGiven => 'Consenso Non Dato';
+
+  @override
+  String get giveConsent => 'Dai Consenso';
+
+  @override
+  String get revokeConsent => 'Revoca Consenso';
+
+  @override
+  String get enableAnalytics => 'Abilita Analytics';
+
+  @override
+  String get analyticsDescription =>
+      'Aiuta a migliorare l\'app condividendo dati di utilizzo';
+
+  @override
+  String get dataRetention => 'Conservazione Dati';
+
+  @override
+  String dataRetentionDays(int days) {
+    return '$days giorni';
+  }
+
+  @override
+  String get deleteAllData => 'Elimina Tutti i Dati';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Questo eliminerà permanentemente tutti i dati delle notifiche. Questa azione NON PUÒ essere annullata!';
+
+  @override
+  String get deleteAllDataConfirm => 'Scrivi ELIMINA per confermare';
+
+  @override
+  String lastSyncedAt(String time) {
+    return 'Ultima sincronizzazione: $time';
+  }
+
+  @override
+  String get syncNow => 'Sincronizza Ora';
+
+  @override
+  String get resetToDefaultsConfirm =>
+      'Ripristinare tutte le impostazioni notifiche ai valori predefiniti?';
+
+  @override
+  String get frequencyCapPresets => 'Preset';
+
+  @override
+  String get presetConservative => 'Conservativo (2/giorno, 3/settimana)';
+
+  @override
+  String get presetBalanced => 'Bilanciato (3/giorno, 5/settimana)';
+
+  @override
+  String get presetAggressive => 'Aggressivo (5/giorno, 10/settimana)';
+
+  @override
+  String get presetMinimal => 'Minimale (1/giorno, 2/settimana)';
+
+  @override
+  String get quietHoursPresets => 'Preset';
+
+  @override
+  String get presetOvernight => 'Notturno (22:00 - 08:00)';
+
+  @override
+  String get presetWorkHours => 'Ore Lavorative (09:00 - 17:00)';
+
+  @override
+  String get presetWeekendMorning => 'Weekend Mattina (Sab-Dom 08:00 - 12:00)';
+
+  @override
+  String get presetSiesta => 'Siesta (14:00 - 16:00)';
+
+  @override
+  String get categorySpecificSettings => 'Impostazioni per Categoria';
+
+  @override
+  String get recoveryAlerts => 'Avvisi Recupero';
+
+  @override
+  String get privacyConsentDialogTitle => 'Privacy e Raccolta Dati';
+
+  @override
+  String get privacyConsentDialogBody =>
+      'Raccogliamo tempi di consegna notifiche, tipi e stato lettura per migliorare l\'app. I tuoi dati allenamento rimangono sul dispositivo.\n\nPuoi revocare il consenso in qualsiasi momento in Impostazioni.';
+
+  @override
+  String get iConsentToDataCollection => 'Acconsento alla raccolta dati';
+
+  @override
+  String get acceptConsent => 'Accetta';
+
+  @override
+  String get declineConsent => 'Rifiuta';
+
+  @override
+  String get syncingSettings => 'Sincronizzazione impostazioni...';
+
+  @override
+  String get notificationTypes => 'Tipi di Notifiche';
+
+  @override
+  String get dailyWorkoutRemindersDescription =>
+      'Ricevi promemoria per completare i tuoi allenamenti giornalieri';
+
+  @override
+  String get recoveryAlertsDescription =>
+      'Notifiche quando hai giorni da recuperare';
+
+  @override
+  String get streakMotivationDescription =>
+      'Rimani motivato con la tua serie di allenamenti attiva';
+
+  @override
+  String get timingPreferences => 'Preferenze Orario';
+
+  @override
+  String get preferredTime => 'Orario Preferito';
+
+  @override
+  String get smartScheduling => 'Pianificazione Intelligente';
+
+  @override
+  String get smartSchedulingDescription =>
+      'L\'IA impara le tue abitudini e pianifica le notifiche in modo ottimale';
+
+  @override
+  String get maxPerDayDescription => 'Notifiche massime al giorno';
+
+  @override
+  String get quietHoursWindow => 'Finestra Ore Silenziose';
+
+  @override
+  String get enableDoNotDisturb => 'Abilita Non Disturbare';
+
+  @override
+  String get doNotDisturbDescription =>
+      'Silenzia notifiche durante ore specifiche';
+
+  @override
+  String get viewConsent => 'Visualizza';
+
+  @override
+  String get dataRetentionPeriod => 'Periodo di Conservazione Dati';
+
+  @override
+  String get lastSynced => 'Ultima Sincronizzazione';
+
+  @override
+  String get neverSynced => 'Mai sincronizzato';
+
+  @override
+  String get outOfSync => 'Non Sincronizzato';
+
+  @override
+  String get outOfSyncDescription => 'Impostazioni locali e cloud sono diverse';
+
+  @override
+  String get resetToDefaultsDescription =>
+      'Ripristina tutte le impostazioni ai valori predefiniti';
+
+  @override
+  String get deleteAllDataDescription =>
+      'Elimina permanentemente tutti i dati delle notifiche';
+
+  @override
+  String get custom => 'Personalizzato';
+
+  @override
+  String get allDataDeleted => 'Tutti i dati delle notifiche eliminati';
+
+  @override
+  String get privacyConsent => 'Consenso Privacy';
+
+  @override
+  String get consentDescription =>
+      'Attivando le notifiche, acconsenti a ricevere promemoria allenamento personalizzati, avvisi recupero e motivazione serie. Le tue preferenze notifiche e cronologia sono archiviate localmente e sincronizzate su cloud per accesso multi-dispositivo. Puoi revocare il consenso in qualsiasi momento disabilitando le notifiche o eliminando tutti i dati.';
+
+  @override
+  String get consentVersion => 'Versione Consenso';
+
+  @override
+  String get startTime => 'Ora Inizio';
+
+  @override
+  String get endTime => 'Ora Fine';
+
+  @override
+  String get supplementReminders => 'Promemoria Integratori';
+
+  @override
+  String get supplementRemindersDescription =>
+      'Ricevi promemoria per assumere i tuoi integratori (pre-workout, proteine, ecc.)';
+
+  @override
+  String get notificationHistory => 'Cronologia Notifiche';
+
+  @override
+  String get searchHistory => 'Cerca cronologia...';
+
+  @override
+  String get showAll => 'Mostra Tutto';
+
+  @override
+  String get unreadOnly => 'Solo Non Lette';
+
+  @override
+  String get clearHistory => 'Pulisci Cronologia';
+
+  @override
+  String get settingsVersion => 'Versione Impostazioni';
+
+  @override
+  String get migrationRequired => 'Migrazione Richiesta';
+
+  @override
+  String get migrateNow => 'Migra Ora';
+
+  @override
+  String get migrationInProgress => 'Migrazione impostazioni...';
+
+  @override
+  String get migrationComplete => 'Migrazione completata!';
+
+  @override
+  String get useDefaultTime => 'Usa ora predefinita';
+
+  @override
+  String get pr_celebration_title => 'Nuovo Record Personale!';
+
+  @override
+  String get pr_previous_value => 'Precedente';
+
+  @override
+  String get pr_new_value => 'Nuovo';
+
+  @override
+  String get continue_text => 'Continua';
+
+  @override
+  String get near_pr_so_close => 'Sei vicinissimo a un PR!';
+
+  @override
+  String get near_pr_almost_there => 'Quasi ci sei!';
+
+  @override
+  String get near_pr_keep_pushing => 'Continua così!';
+
+  @override
+  String get near_pr_to_go => 'per arrivare';
 }

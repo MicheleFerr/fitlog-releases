@@ -124,9 +124,9 @@
   "@analyzingWorkouts": {
     "description": "Analyzing workouts loading message"
   },
-  "noWorkoutsYet": "No Workouts Yet",
+  "noWorkoutsYet": "No workouts yet",
   "@noWorkoutsYet": {
-    "description": "No workouts empty state title"
+    "description": "No workouts message"
   },
   "noWorkoutsYetDescription": "Start training and AI Coach will provide personalized insights!",
   "@noWorkoutsYetDescription": {
@@ -204,9 +204,10 @@
   "@enableNotifications": {
     "description": "Enable notifications button"
   },
-  "skipForNow": "Skip for Now",
+  "skipForNow": "Skip for now",
   "@skipForNow": {
-    "description": "Skip notifications button"
+    "description": "From quick wins migration - 3 occurrences",
+    "context": "Found in: @override\n  String get fitnessQuestionnaireWelcomeSkip => 'Skip for now';, @override\n  String get equipmentProfileSkipForNow => 'Skip for now';"
   },
   "onboardingStepOf": "Step {current} of {total}",
   "@onboardingStepOf": {
@@ -529,7 +530,7 @@
   },
   "quickStart": "Quick Start",
   "@quickStart": {
-    "description": "Quick start section title"
+    "description": "Title for exercise template quick selection"
   },
   "quickWorkout": "Quick Workout",
   "@quickWorkout": {
@@ -587,13 +588,19 @@
   "@syncSyncing": {
     "description": "Sync status when syncing"
   },
-  "syncSuccess": "Up to date",
+  "syncSuccess": "Sync successful",
   "@syncSuccess": {
-    "description": "Sync status when successful"
+    "description": "Success message after sync completes"
   },
-  "syncError": "Error",
+  "syncError": "Sync failed: {error}",
   "@syncError": {
-    "description": "Sync status when error occurs"
+    "description": "Error message when sync fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
   },
   "checkingStatus": "Checking status...",
   "@checkingStatus": {
@@ -1639,15 +1646,9 @@
   "@importSettingsDesc": {
     "description": "Import settings description"
   },
-  "resetToDefaults": "Reset to {mode} Defaults",
+  "resetToDefaults": "Reset to Defaults",
   "@resetToDefaults": {
-    "description": "Button text to reset to mode defaults",
-    "placeholders": {
-      "mode": {
-        "type": "String",
-        "description": "Mode name (Base or Pro)"
-      }
-    }
+    "description": "Button to restore default notification settings"
   },
   "resetToDefaultsDesc": "Restore all settings to default",
   "@resetToDefaultsDesc": {
@@ -1961,15 +1962,15 @@
   },
   "dayStreak": "Day Streak",
   "@dayStreak": {
-    "description": "Label for day streak counter"
+    "description": "Label for day streak stat"
   },
   "nextMilestone": "Next Milestone",
   "@nextMilestone": {
-    "description": "Label for next milestone progress"
+    "description": "Label for next streak milestone"
   },
   "longestStreak": "Longest Streak",
   "@longestStreak": {
-    "description": "Label for longest streak stat"
+    "description": "Label for all-time longest streak"
   },
   "totalDays": "Total Days",
   "@totalDays": {
@@ -1977,11 +1978,11 @@
   },
   "days": "days",
   "@days": {
-    "description": "Generic days label (lowercase)"
+    "description": "Unit for day count"
   },
   "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
-    "description": "Generic error message for data loading failures"
+    "description": "Error message when data fails to load"
   },
   "exportData": "Export Data",
   "@exportData": {
@@ -2364,13 +2365,13 @@
   "@notifications": {
     "description": "Notifications title"
   },
-  "markAllAsRead": "Mark all as read",
+  "markAllAsRead": "Mark All as Read",
   "@markAllAsRead": {
     "description": "Button to mark all notifications as read"
   },
-  "noNotifications": "No notifications",
+  "noNotifications": "No notifications yet",
   "@noNotifications": {
-    "description": "Empty state for notifications"
+    "description": "Empty state message when no notifications exist"
   },
   "notificationsDescription": "We'll keep you updated on your progress!",
   "@notificationsDescription": {
@@ -2530,7 +2531,7 @@
   },
   "streak": "Streak",
   "@streak": {
-    "description": "Streak metric label"
+    "description": "Label for workout consistency streak"
   },
   "achievements": "Achievements",
   "@achievements": {
@@ -3290,10 +3291,6 @@
   "@muscleGroupOther": {
     "description": "Muscle group name for other"
   },
-  "days": "days",
-  "@days": {
-    "description": "Days unit (lowercase)"
-  },
   "perWeek": "/week",
   "@perWeek": {
     "description": "Per week suffix"
@@ -3326,10 +3323,6 @@
   "@day": {
     "description": "Generic day label"
   },
-  "errorLoadingData": "Error loading data",
-  "@errorLoadingData": {
-    "description": "Error message when data fails to load"
-  },
   "pullToRefresh": "Pull to refresh",
   "@pullToRefresh": {
     "description": "Pull to refresh instruction"
@@ -3350,9 +3343,9 @@
   "@getStarted": {
     "description": "Get started encouragement"
   },
-  "streakMotivation": "Amazing streak! You're building a strong habit.",
+  "streakMotivation": "Streak Motivation",
   "@streakMotivation": {
-    "description": "Motivation for users with good streaks"
+    "description": "Category label for streak motivation notifications"
   },
   "consistencyMotivation": "Great consistency! Keep building your momentum.",
   "@consistencyMotivation": {
@@ -4149,10 +4142,6 @@
   "@recentWorkouts": {
     "description": "Recent workouts section title"
   },
-  "noWorkoutsYet": "No workouts yet",
-  "@noWorkoutsYet": {
-    "description": "No workouts message"
-  },
   "highPriority": "High Priority",
   "@highPriority": {
     "description": "Label for high priority recommendation"
@@ -4678,10 +4667,6 @@
   "zoomIn": "Zoom In",
   "@zoomIn": {
     "description": "Zoom in button"
-  },
-  "longestStreak": "Longest Streak",
-  "@longestStreak": {
-    "description": "Longest consecutive workout streak"
   },
   "workoutWithExercises": "{workoutName} with {exerciseCount} exercises",
   "@workoutWithExercises": {
@@ -7534,10 +7519,6 @@
   "@allTime": {
     "description": "Subtitle for all time period"
   },
-  "dayStreak": "Day Streak",
-  "@dayStreak": {
-    "description": "Label for day streak stat"
-  },
   "keepItUp": "Keep it up!",
   "@keepItUp": {
     "description": "Encouragement message for active streak"
@@ -7819,9 +7800,9 @@
   "strategyHighvolumeincreasefreqDesc": "Same volume spread across more sessions reduces per-session fatigue",
   "strategyHighvolumeincreasefreqImpl": "Split current volume across more days. Example: 28 sets/week → 7 sets × 4 days instead of 14 sets × 2 days",
   "strategyHighvolumeincreasefreqOutcome": "Better recovery between sessions and higher quality sets",
-  "filterByType": "Type",
+  "filterByType": "Filter by Type",
   "@filterByType": {
-    "description": "Filter label for contribution type"
+    "description": "Label for notification type filter"
   },
   "filterByPriority": "Filter by Priority",
   "@filterByPriority": {
@@ -10676,15 +10657,15 @@
   },
   "feedbackHelpful": "Helpful",
   "@feedbackHelpful": {
-    "description": "Button to mark insight as helpful"
+    "description": "Helpful feedback button"
   },
-  "feedbackNotHelpful": "Not helpful",
+  "feedbackNotHelpful": "Not Helpful",
   "@feedbackNotHelpful": {
-    "description": "Button to mark insight as not helpful"
+    "description": "Not helpful feedback button"
   },
   "feedbackThankYou": "Thanks for your feedback!",
   "@feedbackThankYou": {
-    "description": "Thank you message after user rates a questionnaire step"
+    "description": "Thank you message after feedback submission"
   },
   "feedbackSubmitted": "Feedback submitted",
   "@feedbackSubmitted": {
@@ -11681,7 +11662,7 @@
   },
   "personalRecord": "Personal Record",
   "@personalRecord": {
-    "description": "Personal record label"
+    "description": "Label indicating current streak is a personal best"
   },
   "averageWeight": "Avg Weight",
   "@averageWeight": {
@@ -12905,7 +12886,7 @@
   },
   "syncStatus": "Sync Status",
   "@syncStatus": {
-    "description": "Sync status button label"
+    "description": "Section title for cross-device sync status"
   },
   "syncStatusHint": "View cloud synchronization status and offline changes",
   "@syncStatusHint": {
@@ -14347,15 +14328,9 @@
       }
     }
   },
-  "daysRemaining": "{count} days remaining",
+  "daysRemaining": "days remaining",
   "@daysRemaining": {
-    "description": "Shows days remaining in pause",
-    "placeholders": {
-      "count": {
-        "type": "int",
-        "example": "7"
-      }
-    }
+    "description": "Label for days until next milestone"
   },
   "resumeRoutine": "Resume Routine",
   "@resumeRoutine": {
@@ -14911,10 +14886,6 @@
   "muscleBalanceExample": "Example: Training chest 3× per week but back only 1× creates imbalance",
   "@muscleBalanceExample": {
     "description": "Muscle balance example"
-  },
-  "nextMilestone": "Next Milestone",
-  "@nextMilestone": {
-    "description": "Next milestone label"
   },
   "daysToGo": "days to go",
   "@daysToGo": {
@@ -16306,9 +16277,9 @@
   "@syncWorkouts": {
     "description": "Auto-generated for syncWorkouts"
   },
-  "syncing": "Syncing",
+  "syncing": "Syncing...",
   "@syncing": {
-    "description": "Auto-generated for syncing"
+    "description": "Status text shown while syncing"
   },
   "tapPlusToAddExercise": "Tap plus to add exercise",
   "@tapPlusToAddExercise": {
@@ -18433,7 +18404,7 @@
   },
   "workoutReminders": "Workout Reminders",
   "@workoutReminders": {
-    "description": "From quick wins migration - 4 occurrences",
+    "description": "Category label for workout reminder notifications",
     "context": "Found in: 'reminders',\n          'Workout Reminders',\n          description: 'Reminders to workout and stay active',, ref,\n            title: 'Workout Reminders',\n            subtitle: 'Get reminded before your scheduled workouts',"
   },
   "questaAzioneNonPuEssereAnnullata": "Questa azione non può essere annullata.",
@@ -19130,11 +19101,6 @@
   "@increaseTrainingFrequency": {
     "description": "From quick wins migration - 3 occurrences",
     "context": "Found in: @override\n  String get strategyIncreaseFrequencyTitle => 'Increase Training Frequency';, String get strategyBalanceincreasefrequencyTitle =>\n      'Increase Training Frequency';"
-  },
-  "skipForNow": "Skip for now",
-  "@skipForNow": {
-    "description": "From quick wins migration - 3 occurrences",
-    "context": "Found in: @override\n  String get fitnessQuestionnaireWelcomeSkip => 'Skip for now';, @override\n  String get equipmentProfileSkipForNow => 'Skip for now';"
   },
   "estimated1rm": "Estimated 1RM",
   "@estimated1rm": {
@@ -19907,34 +19873,6 @@
   "@alternativeExercises": {
     "description": "Tab title for alternative exercises"
   },
-  "quickStart": "Quick Start",
-  "@quickStart": {
-    "description": "Title for exercise template quick selection"
-  },
-  "streak": "Streak",
-  "@streak": {
-    "description": "Label for workout consistency streak"
-  },
-  "personalRecord": "Personal Record",
-  "@personalRecord": {
-    "description": "Label indicating current streak is a personal best"
-  },
-  "days": "days",
-  "@days": {
-    "description": "Unit for day count"
-  },
-  "nextMilestone": "Next Milestone",
-  "@nextMilestone": {
-    "description": "Label for next streak milestone"
-  },
-  "daysRemaining": "days remaining",
-  "@daysRemaining": {
-    "description": "Label for days until next milestone"
-  },
-  "longestStreak": "Longest Streak",
-  "@longestStreak": {
-    "description": "Label for all-time longest streak"
-  },
   "streakMessageNone": "Start your streak today!",
   "@streakMessageNone": {
     "description": "Message when user has no active streak"
@@ -20020,18 +19958,6 @@
   "submit": "Submit",
   "@submit": {
     "description": "Submit button text"
-  },
-  "feedbackHelpful": "Helpful",
-  "@feedbackHelpful": {
-    "description": "Helpful feedback button"
-  },
-  "feedbackNotHelpful": "Not Helpful",
-  "@feedbackNotHelpful": {
-    "description": "Not helpful feedback button"
-  },
-  "feedbackThankYou": "Thanks for your feedback!",
-  "@feedbackThankYou": {
-    "description": "Thank you message after feedback submission"
   },
   "feedbackWhyNotHelpful": "Why wasn't this helpful?",
   "@feedbackWhyNotHelpful": {
@@ -20172,5 +20098,418 @@
   "featureGateReasonUnknown": "This feature is unavailable",
   "@featureGateReasonUnknown": {
     "description": "Unknown reason for feature being disabled"
+  },
+  "@_NOTIFICATION_SETTINGS_V2_STRINGS": "=== NOTIFICATION SYSTEM V2.0 ADDITIONS ===",
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Title for notification settings screen"
+  },
+  "notificationSettingsDesc": "Manage workout reminders, streak alerts, and more",
+  "@notificationSettingsDesc": {
+    "description": "Description for notification settings menu item"
+  },
+  "frequencyCaps": "Frequency Caps",
+  "@frequencyCaps": {
+    "description": "Section title for frequency cap settings"
+  },
+  "frequencyCapsDescription": "Limit notifications to prevent fatigue",
+  "@frequencyCapsDescription": {
+    "description": "Description for frequency caps feature"
+  },
+  "maxPerDay": "Max Per Day",
+  "@maxPerDay": {
+    "description": "Label for maximum notifications per day setting"
+  },
+  "maxPerWeek": "Max Per Week",
+  "@maxPerWeek": {
+    "description": "Label for maximum notifications per week setting"
+  },
+  "maxPerWeekDescription": "Research shows >5/week increases quit risk by 64%",
+  "@maxPerWeekDescription": {
+    "description": "Research-backed explanation for weekly limit"
+  },
+  "minIntervalHours": "Minimum Interval (hours)",
+  "@minIntervalHours": {
+    "description": "Label for minimum time between notifications"
+  },
+  "minIntervalHoursDescription": "Minimum time between notifications (prevents spam)",
+  "@minIntervalHoursDescription": {
+    "description": "Description for minimum interval hours setting"
+  },
+  "notificationsPerDay": "notifications/day",
+  "@notificationsPerDay": {
+    "description": "Label for notifications per day unit"
+  },
+  "notificationsPerWeek": "notifications/week",
+  "@notificationsPerWeek": {
+    "description": "Label for notifications per week unit"
+  },
+  "exceedsResearchLimit": "⚠️ >5/week increases quit risk by 64% (research-backed)",
+  "@exceedsResearchLimit": {
+    "description": "Warning when frequency cap exceeds research-backed optimal limit"
+  },
+  "quietHours": "Quiet Hours",
+  "@quietHours": {
+    "description": "Section title for Do Not Disturb settings"
+  },
+  "quietHoursDescription": "Set Do Not Disturb windows per category",
+  "@quietHoursDescription": {
+    "description": "Description for quiet hours feature"
+  },
+  "quietHoursStart": "Start Time",
+  "@quietHoursStart": {
+    "description": "Label for quiet hours start time"
+  },
+  "quietHoursEnd": "End Time",
+  "@quietHoursEnd": {
+    "description": "Label for quiet hours end time"
+  },
+  "allowPriorityBypass": "Allow Priority Bypass",
+  "@allowPriorityBypass": {
+    "description": "Toggle to allow high-priority notifications during quiet hours"
+  },
+  "privacyAndGDPR": "Privacy & GDPR",
+  "@privacyAndGDPR": {
+    "description": "Section title for privacy and GDPR settings"
+  },
+  "consentStatus": "Consent Status",
+  "@consentStatus": {
+    "description": "Label showing current GDPR consent status"
+  },
+  "consentGiven": "Consent Given",
+  "@consentGiven": {
+    "description": "Status when user has given consent"
+  },
+  "consentNotGiven": "Consent Not Given",
+  "@consentNotGiven": {
+    "description": "Status when user has not given consent"
+  },
+  "giveConsent": "Give Consent",
+  "@giveConsent": {
+    "description": "Button to open consent dialog"
+  },
+  "revokeConsent": "Revoke Consent",
+  "@revokeConsent": {
+    "description": "Button to revoke previously given consent"
+  },
+  "enableAnalytics": "Enable Analytics",
+  "@enableAnalytics": {
+    "description": "Toggle for analytics data collection"
+  },
+  "analyticsDescription": "Help improve the app by sharing usage data",
+  "@analyticsDescription": {
+    "description": "Description for analytics toggle"
+  },
+  "dataRetention": "Data Retention",
+  "@dataRetention": {
+    "description": "Label for data retention period setting"
+  },
+  "dataRetentionDays": "{days} days",
+  "@dataRetentionDays": {
+    "description": "Format for data retention period",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "90"
+      }
+    }
+  },
+  "deleteAllData": "Delete All Data",
+  "@deleteAllData": {
+    "description": "Button to delete all notification data (GDPR Article 17)"
+  },
+  "deleteAllDataWarning": "This will permanently delete all notification data. This action CANNOT be undone!",
+  "@deleteAllDataWarning": {
+    "description": "Warning shown before deleting all data"
+  },
+  "deleteAllDataConfirm": "Type DELETE to confirm",
+  "@deleteAllDataConfirm": {
+    "description": "Confirmation prompt for data deletion"
+  },
+  "lastSyncedAt": "Last synced: {time}",
+  "@lastSyncedAt": {
+    "description": "Label showing when settings were last synced to cloud",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2 minutes ago"
+      }
+    }
+  },
+  "syncNow": "Sync Now",
+  "@syncNow": {
+    "description": "Button to manually trigger sync to cloud"
+  },
+  "resetToDefaultsConfirm": "Reset all notification settings to defaults?",
+  "@resetToDefaultsConfirm": {
+    "description": "Confirmation dialog for resetting settings"
+  },
+  "frequencyCapPresets": "Presets",
+  "@frequencyCapPresets": {
+    "description": "Label for frequency cap preset options"
+  },
+  "presetConservative": "Conservative (2/day, 3/week)",
+  "@presetConservative": {
+    "description": "Conservative frequency cap preset"
+  },
+  "presetBalanced": "Balanced (3/day, 5/week)",
+  "@presetBalanced": {
+    "description": "Balanced frequency cap preset (default)"
+  },
+  "presetAggressive": "Aggressive (5/day, 10/week)",
+  "@presetAggressive": {
+    "description": "Aggressive frequency cap preset"
+  },
+  "presetMinimal": "Minimal (1/day, 2/week)",
+  "@presetMinimal": {
+    "description": "Minimal frequency cap preset"
+  },
+  "quietHoursPresets": "Presets",
+  "@quietHoursPresets": {
+    "description": "Label for quiet hours preset options"
+  },
+  "presetOvernight": "Overnight (10pm - 8am)",
+  "@presetOvernight": {
+    "description": "Overnight quiet hours preset"
+  },
+  "presetWorkHours": "Work Hours (9am - 5pm)",
+  "@presetWorkHours": {
+    "description": "Work hours quiet hours preset"
+  },
+  "presetWeekendMorning": "Weekend Morning (Sat-Sun 8am - 12pm)",
+  "@presetWeekendMorning": {
+    "description": "Weekend morning quiet hours preset"
+  },
+  "presetSiesta": "Siesta (2pm - 4pm)",
+  "@presetSiesta": {
+    "description": "Siesta quiet hours preset"
+  },
+  "categorySpecificSettings": "Category-Specific Settings",
+  "@categorySpecificSettings": {
+    "description": "Section for per-category notification settings"
+  },
+  "recoveryAlerts": "Recovery Alerts",
+  "@recoveryAlerts": {
+    "description": "Category label for recovery alert notifications"
+  },
+  "privacyConsentDialogTitle": "Privacy & Data Collection",
+  "@privacyConsentDialogTitle": {
+    "description": "Title for GDPR consent dialog"
+  },
+  "privacyConsentDialogBody": "We collect notification delivery times, types, and read status to improve the app. Your workout data stays on your device.\n\nYou can revoke consent anytime in Settings.",
+  "@privacyConsentDialogBody": {
+    "description": "Body text for GDPR consent dialog"
+  },
+  "iConsentToDataCollection": "I consent to data collection",
+  "@iConsentToDataCollection": {
+    "description": "Checkbox label for consent"
+  },
+  "acceptConsent": "Accept",
+  "@acceptConsent": {
+    "description": "Button to accept consent"
+  },
+  "declineConsent": "Decline",
+  "@declineConsent": {
+    "description": "Button to decline consent"
+  },
+  "syncingSettings": "Syncing settings...",
+  "@syncingSettings": {
+    "description": "Status message when syncing settings to cloud"
+  },
+  "notificationTypes": "Notification Types",
+  "@notificationTypes": {
+    "description": "Section title for notification type toggles"
+  },
+  "dailyWorkoutRemindersDescription": "Get reminded to complete your daily workouts",
+  "@dailyWorkoutRemindersDescription": {
+    "description": "Description for daily workout reminders toggle"
+  },
+  "recoveryAlertsDescription": "Notifications when you have days to recover",
+  "@recoveryAlertsDescription": {
+    "description": "Description for recovery alerts toggle"
+  },
+  "streakMotivationDescription": "Stay motivated with your active workout streak",
+  "@streakMotivationDescription": {
+    "description": "Description for streak motivation toggle"
+  },
+  "timingPreferences": "Timing Preferences",
+  "@timingPreferences": {
+    "description": "Section title for notification timing settings"
+  },
+  "preferredTime": "Preferred Time",
+  "@preferredTime": {
+    "description": "Label for preferred notification time setting"
+  },
+  "smartScheduling": "Smart Scheduling",
+  "@smartScheduling": {
+    "description": "Toggle for AI-powered notification scheduling"
+  },
+  "smartSchedulingDescription": "AI learns your habits and schedules notifications optimally",
+  "@smartSchedulingDescription": {
+    "description": "Description for smart scheduling feature"
+  },
+  "maxPerDayDescription": "Maximum notifications per day",
+  "@maxPerDayDescription": {
+    "description": "Description for max per day setting"
+  },
+  "quietHoursWindow": "Quiet Hours Window",
+  "@quietHoursWindow": {
+    "description": "Label for quiet hours time window setting"
+  },
+  "enableDoNotDisturb": "Enable Do Not Disturb",
+  "@enableDoNotDisturb": {
+    "description": "Toggle to enable quiet hours feature"
+  },
+  "doNotDisturbDescription": "Silence notifications during specific hours",
+  "@doNotDisturbDescription": {
+    "description": "Description for Do Not Disturb feature"
+  },
+  "viewConsent": "View",
+  "@viewConsent": {
+    "description": "Button to view GDPR consent details"
+  },
+  "dataRetentionPeriod": "Data Retention Period",
+  "@dataRetentionPeriod": {
+    "description": "Label for data retention period setting"
+  },
+  "lastSynced": "Last Synced",
+  "@lastSynced": {
+    "description": "Label for last sync timestamp"
+  },
+  "neverSynced": "Never synced",
+  "@neverSynced": {
+    "description": "Status when settings have never been synced"
+  },
+  "outOfSync": "Out of Sync",
+  "@outOfSync": {
+    "description": "Warning when local and cloud settings differ"
+  },
+  "outOfSyncDescription": "Local and cloud settings are different",
+  "@outOfSyncDescription": {
+    "description": "Description of out-of-sync status"
+  },
+  "resetToDefaultsDescription": "Restore all settings to factory defaults",
+  "@resetToDefaultsDescription": {
+    "description": "Description for reset to defaults button"
+  },
+  "deleteAllDataDescription": "Permanently delete all notification data",
+  "@deleteAllDataDescription": {
+    "description": "Description for delete all data button"
+  },
+  "custom": "Custom",
+  "@custom": {
+    "description": "Label for custom time preference option"
+  },
+  "allDataDeleted": "All notification data deleted",
+  "@allDataDeleted": {
+    "description": "Success message after deleting all notification data"
+  },
+  "privacyConsent": "Privacy Consent",
+  "@privacyConsent": {
+    "description": "Title for privacy consent dialog"
+  },
+  "consentDescription": "By enabling notifications, you consent to receive personalized workout reminders, recovery alerts, and streak motivation. Your notification preferences and history are stored locally and synced to the cloud for cross-device access. You can revoke consent at any time by disabling notifications or deleting all data.",
+  "@consentDescription": {
+    "description": "Description of privacy consent for notifications"
+  },
+  "consentVersion": "Consent Version",
+  "@consentVersion": {
+    "description": "Label for consent version number"
+  },
+  "startTime": "Start Time",
+  "@startTime": {
+    "description": "Label for quiet hours start time"
+  },
+  "endTime": "End Time",
+  "@endTime": {
+    "description": "Label for quiet hours end time"
+  },
+  "supplementReminders": "Supplement Reminders",
+  "@supplementReminders": {
+    "description": "Title for supplement reminder notifications"
+  },
+  "supplementRemindersDescription": "Get reminded to take your supplements (pre-workout, protein, etc.)",
+  "@supplementRemindersDescription": {
+    "description": "Description for supplement reminder toggle"
+  },
+  "notificationHistory": "Notification History",
+  "@notificationHistory": {
+    "description": "Title for notification history screen"
+  },
+  "searchHistory": "Search history...",
+  "@searchHistory": {
+    "description": "Placeholder for notification history search"
+  },
+  "showAll": "Show All",
+  "@showAll": {
+    "description": "Option to show all notification types"
+  },
+  "unreadOnly": "Unread Only",
+  "@unreadOnly": {
+    "description": "Filter option to show only unread notifications"
+  },
+  "clearHistory": "Clear History",
+  "@clearHistory": {
+    "description": "Button to clear notification history"
+  },
+  "settingsVersion": "Settings Version",
+  "@settingsVersion": {
+    "description": "Label showing current settings schema version"
+  },
+  "migrationRequired": "Migration Required",
+  "@migrationRequired": {
+    "description": "Warning when settings need migration to v2.0"
+  },
+  "migrateNow": "Migrate Now",
+  "@migrateNow": {
+    "description": "Button to trigger v1.0 → v2.0 migration"
+  },
+  "migrationInProgress": "Migrating settings...",
+  "@migrationInProgress": {
+    "description": "Status text during migration"
+  },
+  "migrationComplete": "Migration complete!",
+  "@migrationComplete": {
+    "description": "Success message after migration"
+  },
+  "customTime": "Custom time",
+  "@customTime": {
+    "description": "Label for custom notification time"
+  },
+  "useDefaultTime": "Use default time",
+  "@useDefaultTime": {
+    "description": "Label indicating default time will be used"
+  },
+  "pr_celebration_title": "New Personal Record!",
+  "@pr_celebration_title": {
+    "description": "Title of PR celebration modal"
+  },
+  "pr_previous_value": "Previous",
+  "@pr_previous_value": {
+    "description": "Label for previous PR value in celebration modal"
+  },
+  "pr_new_value": "New",
+  "@pr_new_value": {
+    "description": "Label for new PR value in celebration modal"
+  },
+  "continue_text": "Continue",
+  "@continue_text": {
+    "description": "Continue button text in PR celebration modal"
+  },
+  "near_pr_so_close": "So close to a PR!",
+  "@near_pr_so_close": {
+    "description": "Motivational message when very close to PR (95%+)"
+  },
+  "near_pr_almost_there": "You're almost there!",
+  "@near_pr_almost_there": {
+    "description": "Motivational message when close to PR (90-95%)"
+  },
+  "near_pr_keep_pushing": "Keep pushing!",
+  "@near_pr_keep_pushing": {
+    "description": "Motivational message when approaching PR (85-90%)"
+  },
+  "near_pr_to_go": "to go",
+  "@near_pr_to_go": {
+    "description": "Label for remaining weight/reps to reach PR"
   }
 }
