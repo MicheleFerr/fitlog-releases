@@ -9,9 +9,13 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_insight.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/ai_insights_provider.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/recovery_insights_provider.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/expandable_insight_card.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/tier_progress_indicator.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/recovery_tier.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -64,6 +68,10 @@ class AICoachCard extends ConsumerWidget {
             loading: () => _buildLoading(),
             error: (error, stack) => _buildError(context, ref),
           ),
+
+          // Recovery Insights Preview
+          const Divider(height: 1),
+          _buildRecoveryPreview(context, ref),
         ],
       ),
     );
@@ -232,6 +240,141 @@ class AICoachCard extends ConsumerWidget {
             label: Text(context.l10n.retry),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Build recovery insights preview section
+  Widget _buildRecoveryPreview(BuildContext context, WidgetRef ref) {
+    final basicTierAsync = ref.watch(tierStatusProvider(RecoveryTier.basic));
+
+    return basicTierAsync.when(
+      data: (status) {
+        if (!status.isUnlocked) {
+          return _buildLockedPreview(context, status);
+        }
+
+        // Show compact tier progress for unlocked Basic tier
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: InkWell(
+            onTap: () => context.pushNamed('ai-coach'),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.insights,
+                        semanticLabel: context.l10n.recovery,
+                        size: AppIconSize.medium,
+                        color: context.colors.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        context.l10n.recovery,
+                        style: context.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Spacer(),
+                      Icon(
+                        AppIcons.chevronRight,
+                        size: AppIconSize.small,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  CompactTierProgress(
+                    status: status,
+                    onTap: () => context.pushNamed('ai-coach'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  /// Build locked preview for recovery insights
+  Widget _buildLockedPreview(BuildContext context, RecoveryTierStatus status) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: () => context.pushNamed('ai-coach'),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: context.colors.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.lock,
+                    semanticLabel: context.l10n.readiness_locked,
+                    size: AppIconSize.medium,
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.aiCoach,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                  const Spacer(),
+                  Icon(
+                    AppIcons.chevronRight,
+                    size: AppIconSize.small,
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Complete ${status.config.minWorkouts} workouts over ${status.config.minDays} days to unlock',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(
+                value: status.overallProgress,
+                backgroundColor: context.colors.surfaceContainerHighest,
+                color: context.colors.primary,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${(status.overallProgress * 100).toInt()}% ${context.l10n.complete}',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -15,12 +15,14 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
 // 🧹 DEPRECATED: tabbed_analytics_screen.dart (5 tabs violate Two-Function Rule)
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/screens/notification_settings_screen_v2.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/equipment_profiles_screen.dart';
@@ -464,6 +466,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         // 🧹 REMOVED: 5-tab system (Overview, Progress, Insights, Routine, Premium)
         builder: (context, state) => const AnalyticsScreen(),
       ),
+      GoRoute(
+        path: '/ai-coach',
+        name: 'ai-coach',
+        // 🧠 AI Coach: 3-Tier Recovery Insights System
+        // 📊 Features: Readiness Score, Muscle Recovery, Overtraining Risk
+        // 🔓 Progressive Unlock: Basic (6 workouts), Intermediate (12), Advanced (20)
+        builder: (context, state) => const AICoachScreen(),
+      ),
       // TEMP DISABLED: Analytics dashboard
       // GoRoute(
       //   path: '/analytics-dashboard',
@@ -497,6 +507,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/settings/debug-log-settings',
         name: 'debug-log-settings',
         builder: (context, state) => const DebugLogSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/settings/notifications-v2',
+        name: 'notifications-v2',
+        builder: (context, state) => const NotificationSettingsScreenV2(),
       ),
       GoRoute(
         path: '/import-exercises',
