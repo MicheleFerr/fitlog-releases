@@ -289,13 +289,29 @@ class FlexibleRoutine with _$FlexibleRoutine {
     required DateTime endDate,
 
     // === PATTERN & SCHEDULING ===
+    @JsonKey(
+      fromJson: _patternFromJson,
+      toJson: _patternToJson,
+    )
     required RoutinePattern pattern,
 
     /// Map of date → scheduled day details
+    @JsonKey(
+      fromJson: _scheduleFromJson,
+      toJson: _scheduleToJson,
+    )
     required Map<String, ScheduledDay> schedule, // String key for JSON serialization
 
     // === SKIP & RECOVERY TRACKING ===
+    @JsonKey(
+      fromJson: _skipTrackerFromJson,
+      toJson: _skipTrackerToJson,
+    )
     required SkipTracker skipTracker,
+    @JsonKey(
+      fromJson: _recoverySettingsFromJson,
+      toJson: _recoverySettingsToJson,
+    )
     required RecoverySettings recoverySettings,
 
     // === ROUTINE STATE ===
@@ -1017,3 +1033,72 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     );
   }
 }
+
+// ============================================================================
+// Safe JSON Parsing Helpers (Added 2025-01-18 - Task 5.1)
+// ============================================================================
+
+/// Safe RoutinePattern parsing with fallback to empty pattern
+RoutinePattern _patternFromJson(dynamic json) {
+  if (json == null) return RoutinePattern.empty();
+  try {
+    return RoutinePattern.fromJson(json as Map<String, dynamic>);
+  } catch (e) {
+    return RoutinePattern.empty();
+  }
+}
+
+Map<String, dynamic> _patternToJson(RoutinePattern pattern) => pattern.toJson();
+
+/// Safe schedule Map parsing with fallback to empty map
+Map<String, ScheduledDay> _scheduleFromJson(dynamic json) {
+  if (json == null) return {};
+  try {
+    return (json as Map<String, dynamic>).map(
+      (k, e) => MapEntry(k, ScheduledDay.fromJson(e as Map<String, dynamic>)),
+    );
+  } catch (e) {
+    return {};
+  }
+}
+
+Map<String, dynamic> _scheduleToJson(Map<String, ScheduledDay> schedule) =>
+    schedule.map((k, e) => MapEntry(k, e.toJson()));
+
+/// Safe SkipTracker parsing with fallback to empty tracker
+SkipTracker _skipTrackerFromJson(dynamic json) {
+  if (json == null) return SkipTracker.empty();
+  try {
+    return SkipTracker.fromJson(json as Map<String, dynamic>);
+  } catch (e) {
+    return SkipTracker.empty();
+  }
+}
+
+Map<String, dynamic> _skipTrackerToJson(SkipTracker skipTracker) =>
+    skipTracker.toJson();
+
+/// Safe RecoverySettings parsing with fallback to defaults
+RecoverySettings _recoverySettingsFromJson(dynamic json) {
+  if (json == null) {
+    return const RecoverySettings(
+      suggestRecovery: true,
+      allowRecoveryOnRestDays: true,
+      maxRecoveryDays: 7,
+      notifyOnSkip: true,
+    );
+  }
+  try {
+    return RecoverySettings.fromJson(json as Map<String, dynamic>);
+  } catch (e) {
+    return const RecoverySettings(
+      suggestRecovery: true,
+      allowRecoveryOnRestDays: true,
+      maxRecoveryDays: 7,
+      notifyOnSkip: true,
+    );
+  }
+}
+
+Map<String, dynamic> _recoverySettingsToJson(RecoverySettings settings) =>
+    settings.toJson();

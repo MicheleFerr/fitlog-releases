@@ -339,10 +339,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                       // This isolates rebuilds to this section when exercise data changes
                       final currentWorkout = ref.watch(currentWorkoutProvider);
 
-                      // 🐛 DEBUG: Log exercise counting modes on rebuild (SENZA kDebugMode per profile mode)
-                      if (currentWorkout != null) {
+                      // 🐛 DEBUG: Log exercise counting modes on rebuild (now with kDebugMode guard for production safety)
+                      if (kDebugMode && currentWorkout != null) {
                         for (final ex in currentWorkout.exercises) {
-                          print('🔍 [WorkoutScreen Consumer] Exercise: ${ex.name}, CountingMode: ${ex.countingMode.name}');
+                          debugPrint('🔍 [WorkoutScreen Consumer] Exercise: ${ex.name}, CountingMode: ${ex.countingMode.name}');
                         }
                       }
 
@@ -1507,10 +1507,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
   }
 
   Widget _buildWorkoutView(BuildContext context, WidgetRef ref, Workout workout) {
-    // 🐛 DEBUG: Log exercises in _buildWorkoutView (SENZA kDebugMode per profile mode)
-    print('🏗️ [_buildWorkoutView] Building view with ${workout.exercises.length} exercises');
-    for (final ex in workout.exercises) {
-      print('   - ${ex.name}: countingMode=${ex.countingMode.name}');
+    // 🐛 DEBUG: Log exercises in _buildWorkoutView (now with kDebugMode guard for production safety)
+    if (kDebugMode) {
+      debugPrint('🏗️ [_buildWorkoutView] Building view with ${workout.exercises.length} exercises');
+      for (final ex in workout.exercises) {
+        debugPrint('   - ${ex.name}: countingMode=${ex.countingMode.name}');
+      }
     }
 
     return SafeArea(
@@ -1619,8 +1621,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         itemBuilder: (context, index) {
                           final exercise = workout.exercises[index];
 
-                          // 🐛 DEBUG: Log exercise being passed to ExerciseListItem (SENZA kDebugMode per profile mode)
-                          print('📋 [ListView.builder] Creating ExerciseListItem for: ${exercise.name}, countingMode=${exercise.countingMode.name}');
+                          // 🐛 DEBUG: Log exercise being passed to ExerciseListItem (now with kDebugMode guard for production safety)
+                          if (kDebugMode) {
+                            debugPrint('📋 [ListView.builder] Creating ExerciseListItem for: ${exercise.name}, countingMode=${exercise.countingMode.name}');
+                          }
 
                           return Padding(
                             key: ValueKey(exercise.id), // ⚡ OPTIMIZATION: Key for better performance on list changes

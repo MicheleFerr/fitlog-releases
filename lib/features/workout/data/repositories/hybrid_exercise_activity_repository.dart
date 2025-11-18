@@ -25,6 +25,16 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 /// Hybrid repository per gestire le attività degli esercizi
 /// - Free users: Solo storage locale
 /// - Premium users: Storage locale + sync Firebase
+///
+/// ⚠️ **DEPRECATED**: This repository queries the old 'exerciseActivities' collection
+/// which no longer exists. Use WorkoutHistoryRepositoryEnhanced instead.
+///
+/// **Migration Plan**:
+/// - Old structure: exerciseActivities/{activityId} (flat, one doc per exercise)
+/// - New structure: workouts/{workoutId} with nested exercises[] array
+///
+/// **Status**: Temporarily fixed to query 'workouts' but this is NOT the correct
+/// architecture. This repository should be replaced with workout_history_repository_enhanced.dart
 class HybridExerciseActivityRepository {
 
   HybridExerciseActivityRepository({
@@ -37,11 +47,13 @@ class HybridExerciseActivityRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final HiveWorkoutDataSource _localDataSource;
   final FirebaseAuth _auth;
-  
+
   // Cache user profile
   UserProfile? _userProfile;
-  
-  static const String _collectionName = 'exerciseActivities';
+
+  // ⚠️ CHANGED: exerciseActivities → workouts (2025-01-18)
+  // Old: static const String _collectionName = 'exerciseActivities';
+  static const String _collectionName = 'workouts';
   
   /// Load user profile to check premium status
   Future<void> _loadUserProfile() async {
@@ -262,7 +274,7 @@ class HybridExerciseActivityRepository {
       if (_isPremiumUser) {
         try {
           final cloudActivities = await _getCloudActivities(
-            userEmail: userEmail,
+            userId: userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
             limit: limit,
             startDate: startDate,
             endDate: endDate,
@@ -288,25 +300,29 @@ class HybridExerciseActivityRepository {
   }
   
   /// Get activities from cloud
+  ///
+  /// ⚠️ DEPRECATED: Queries 'workouts' but expects flat ExerciseActivity structure
+  /// ⚠️ Will fail to parse nested workout.exercises[] correctly
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced instead')
   Future<List<ExerciseActivity>> _getCloudActivities({
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final normalizedEmail = userEmail.toLowerCase().trim();
-    
+    debugPrint('⚠️ DEPRECATED: HybridExerciseActivityRepository._getCloudActivities() is deprecated');
+
     Query query = _firestore
         .collection(_collectionName)
-        .where('email', isEqualTo: normalizedEmail)
-        .orderBy('createdAt', descending: true);
+        .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
+        .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
     if (startDate != null) {
-      query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      query = query.where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate)); // ⚠️ CHANGED
     }
-    
+
     if (endDate != null) {
-      query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      query = query.where('completedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate)); // ⚠️ CHANGED
     }
     
     if (limit != null) {

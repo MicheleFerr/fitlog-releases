@@ -22,26 +22,27 @@ class Achievement {
   });
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
+    // Safe parsing with defaults (Task 6.1)
     return Achievement(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      emoji: json['emoji'],
-      xpReward: json['xpReward'],
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? 'Unknown',
+      description: json['description'] as String? ?? '',
+      emoji: json['emoji'] as String? ?? '🏆',
+      xpReward: (json['xpReward'] as num?)?.toInt() ?? 0,
       color: _getColorFromType(AchievementType.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => AchievementType.general,
       )),
-      isUnlocked: json['isUnlocked'] ?? false,
-      unlockedAt: json['unlockedAt'] != null 
-        ? DateTime.parse(json['unlockedAt'])
+      isUnlocked: json['isUnlocked'] as bool? ?? false,
+      unlockedAt: json['unlockedAt'] != null
+        ? DateTime.parse(json['unlockedAt'] as String)
         : null,
       isNew: false,
       type: AchievementType.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => AchievementType.general,
       ),
-      metadata: json['metadata'],
+      metadata: json['metadata'] as Map<String, dynamic>?,
     );
   }
   final String id;
@@ -359,9 +360,12 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       if (userAchievementsDoc.exists) {
         final data = userAchievementsDoc.data() ?? {};
         final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
-        
+
+        // Safe Map casting (Task 6.1)
         for (final entry in achievements.entries) {
-          unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+          if (entry.value is Map<String, dynamic>) {
+            unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+          }
         }
       }
       
@@ -369,12 +373,16 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       final updatedAchievements = _allAchievements.map((achievement) {
         if (unlockedIds.containsKey(achievement.id)) {
           final unlockedData = unlockedIds[achievement.id]!;
+          // Safe Timestamp parsing (Task 6.1)
+          final unlockedAtTimestamp = unlockedData['unlockedAt'];
+          final unlockedAtDate = unlockedAtTimestamp is Timestamp
+              ? unlockedAtTimestamp.toDate()
+              : null;
+
           return achievement.copyWith(
             isUnlocked: true,
-            unlockedAt: unlockedData['unlockedAt'] != null
-                ? (unlockedData['unlockedAt'] as Timestamp).toDate()
-                : null,
-            isNew: _isNew(unlockedData['unlockedAt']),
+            unlockedAt: unlockedAtDate,
+            isNew: _isNew(unlockedAtTimestamp),
           );
         }
         return achievement;

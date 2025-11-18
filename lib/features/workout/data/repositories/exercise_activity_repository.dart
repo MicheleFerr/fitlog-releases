@@ -6,18 +6,35 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/shared/data/repositories/rate_limited_firestore_mixin.dart';
 
 /// 🔒 RATE LIMITING: All Firestore operations are rate-limited to prevent quota exhaustion
+///
+/// ⚠️ **DEPRECATED**: This repository queries the old 'exerciseActivities' collection
+/// which no longer exists. Use HybridExerciseActivityRepository instead.
+///
+/// **Migration Plan**:
+/// - Old structure: exerciseActivities/{activityId} (flat, one doc per exercise)
+/// - New structure: workouts/{workoutId} with nested exercises[] array
+///
+/// **Status**: Temporarily fixed to query 'workouts' but this is NOT the correct
+/// architecture. This repository should be replaced with workout_history_repository_enhanced.dart
+///
 /// Repository per gestire le attività degli esercizi in Firestore
-/// Salva nella collezione /exerciseActivities come nella vecchia app
+/// ⚠️ TEMPORARY FIX: Now queries 'workouts' collection instead of non-existent 'exerciseActivities'
 class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
-  static const String _collectionName = 'exerciseActivities';
+
+  // ⚠️ CHANGED: exerciseActivities → workouts (2025-01-18)
+  // Old: static const String _collectionName = 'exerciseActivities';
+  static const String _collectionName = 'workouts';
 
   /// Salva un allenamento completato salvando ogni esercizio come ExerciseActivity
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.saveWorkout() instead')
   Future<List<String>> saveCompletedWorkout({
     required Workout workout,
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
   }) async {
+    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.saveCompletedWorkout() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.');
     
     if (!workout.isCompleted) {
       throw Exception('Il workout deve essere completato per essere salvato');
@@ -42,7 +59,7 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
           
           final activityId = await saveExerciseActivity(
             exercise: exercise,
-            userEmail: userEmail,
+            userId: userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
             workoutName: workout.name,
           );
           
@@ -62,20 +79,24 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }
 
   /// Salva una singola attività di esercizio
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.saveWorkout() instead')
   Future<String?> saveExerciseActivity({
     required Exercise exercise,
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     required String workoutName,
     String? exerciseImageUrl,
   }) async {
+    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.saveExerciseActivity() is deprecated. Use WorkoutHistoryRepositoryEnhanced instead.');
     try {
-      // Normalizza email per consistency
-      final normalizedEmail = userEmail.toLowerCase().trim();
-      
+      // ⚠️ NOTE: This saves to 'workouts' collection but structure is wrong
+      // Should use workout_history_repository_enhanced.dart for proper nested structure
+
       // Crea ExerciseActivity dal Exercise
       final exerciseActivity = ExerciseActivity.fromExercise(
         exercise: exercise,
-        userEmail: normalizedEmail,
+        userEmail: userId, // ⚠️ Parameter name is userEmail (expects email string)
         workoutName: workoutName,
         exerciseImageUrl: exerciseImageUrl,
       );
@@ -94,31 +115,33 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }
 
   /// Ottiene tutte le attività di un utente
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  /// ⚠️ WARNING: This queries 'workouts' but expects flat ExerciseActivity structure.
+  /// Will fail to parse nested workout.exercises[] correctly.
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead')
   Future<List<ExerciseActivity>> getUserActivities({
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     int? limit,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    // Normalizza email per consistency
-    final normalizedEmail = userEmail.toLowerCase().trim();
-    
-
+    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getUserActivities() is deprecated');
 
     try {
       return await rateLimitedQuery(() async {
         Query query = _firestore
             .collection(_collectionName)
-            .where('email', isEqualTo: normalizedEmail)
-            .orderBy('createdAt', descending: true);
+            .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
+            .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
         // Applica filtri opzionali
         if (startDate != null) {
-          query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          query = query.where('completedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate)); // ⚠️ CHANGED
         }
 
         if (endDate != null) {
-          query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+          query = query.where('completedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate)); // ⚠️ CHANGED
         }
 
         if (limit != null) {
@@ -143,21 +166,24 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }
 
   /// Ottiene attività per nome esercizio
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  /// ⚠️ WARNING: This queries 'workouts' but expects flat ExerciseActivity structure.
+  /// Will fail to parse nested workout.exercises[] correctly.
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.getWorkoutHistory() instead')
   Future<List<ExerciseActivity>> getActivitiesByExercise({
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     required String exerciseName,
     int? limit,
   }) async {
+    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getActivitiesByExercise() is deprecated');
     try {
-      // Normalizza email per consistency
-      final normalizedEmail = userEmail.toLowerCase().trim();
-
       return await rateLimitedQuery(() async {
         Query query = _firestore
             .collection(_collectionName)
-            .where('email', isEqualTo: normalizedEmail)
+            .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
             .where('exerciseName', isEqualTo: exerciseName)
-            .orderBy('createdAt', descending: true);
+            .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
 
         if (limit != null) {
           query = query.limit(limit);
@@ -178,18 +204,19 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }
 
   /// Ottiene statistiche di un esercizio (es: massimo peso, volume totale)
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced for exercise stats')
   Future<ExerciseStats?> getExerciseStats({
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     required String exerciseName,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
+    debugPrint('⚠️ DEPRECATED: ExerciseActivityRepository.getExerciseStats() is deprecated');
     try {
-      // Normalizza email per consistency
-      final normalizedEmail = userEmail.toLowerCase().trim();
-      
       final activities = await getActivitiesByExercise(
-        userEmail: normalizedEmail,
+        userId: userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
         exerciseName: exerciseName,
       );
 
@@ -251,17 +278,17 @@ class ExerciseActivityRepository with RateLimitedFirestoreMixin {
   }
 
   /// Stream di attività utente in tempo reale
+  ///
+  /// ⚠️ DEPRECATED: Use workout_history_repository_enhanced.dart instead
+  @Deprecated('Use WorkoutHistoryRepositoryEnhanced.workoutsStream instead')
   Stream<List<ExerciseActivity>> getUserActivitiesStream({
-    required String userEmail,
+    required String userId, // ⚠️ CHANGED: userEmail → userId (2025-01-18)
     int? limit,
   }) {
-    // Normalizza email per consistency
-    final normalizedEmail = userEmail.toLowerCase().trim();
-    
     Query query = _firestore
         .collection(_collectionName)
-        .where('email', isEqualTo: normalizedEmail)
-        .orderBy('createdAt', descending: true);
+        .where('userId', isEqualTo: userId) // ⚠️ CHANGED: email → userId (2025-01-18)
+        .orderBy('completedAt', descending: true); // ⚠️ CHANGED: createdAt → completedAt (2025-01-18)
     
     if (limit != null) {
       query = query.limit(limit);

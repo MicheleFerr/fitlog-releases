@@ -353,7 +353,7 @@ final exerciseActivitiesProvider = FutureProvider.autoDispose.family<List<Exerci
     }
 
     final activities = await repository.getActivitiesByExercise(
-      userEmail: userEmail,
+      userId: userEmail, // ⚠️ Parameter name is userId (expects user ID/email string)
       exerciseName: exerciseName,
       limit: 50,
     ).timeout(
@@ -405,7 +405,7 @@ final exerciseActivitiesLocalProvider = FutureProvider.autoDispose.family<List<E
     }
 
     final activities = await repository.getActivitiesByExercise(
-      userEmail: userEmail,
+      userEmail: userEmail, // HybridExerciseActivityRepository uses userEmail parameter
       exerciseName: exerciseName,
       limit: 50,
     ).timeout(

@@ -622,13 +622,17 @@ mixin _$FlexibleRoutine {
   DateTime get startDate => throw _privateConstructorUsedError;
   DateTime get endDate =>
       throw _privateConstructorUsedError; // === PATTERN & SCHEDULING ===
+  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
   RoutinePattern get pattern => throw _privateConstructorUsedError;
 
   /// Map of date → scheduled day details
+  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
   Map<String, ScheduledDay> get schedule =>
       throw _privateConstructorUsedError; // String key for JSON serialization
 // === SKIP & RECOVERY TRACKING ===
+  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
   SkipTracker get skipTracker => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
   RecoverySettings get recoverySettings =>
       throw _privateConstructorUsedError; // === ROUTINE STATE ===
   bool get isActive =>
@@ -669,9 +673,14 @@ abstract class $FlexibleRoutineCopyWith<$Res> {
       RoutineType type,
       DateTime startDate,
       DateTime endDate,
+      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
       RoutinePattern pattern,
+      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
       Map<String, ScheduledDay> schedule,
+      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
       SkipTracker skipTracker,
+      @JsonKey(
+          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
       RecoverySettings recoverySettings,
       bool isActive,
       bool isArchived,
@@ -847,9 +856,14 @@ abstract class _$$FlexibleRoutineImplCopyWith<$Res>
       RoutineType type,
       DateTime startDate,
       DateTime endDate,
+      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
       RoutinePattern pattern,
+      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
       Map<String, ScheduledDay> schedule,
+      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
       SkipTracker skipTracker,
+      @JsonKey(
+          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
       RecoverySettings recoverySettings,
       bool isActive,
       bool isArchived,
@@ -997,9 +1011,14 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
       required this.type,
       required this.startDate,
       required this.endDate,
+      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
       required this.pattern,
+      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
       required final Map<String, ScheduledDay> schedule,
+      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
       required this.skipTracker,
+      @JsonKey(
+          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
       required this.recoverySettings,
       this.isActive = true,
       this.isArchived = false,
@@ -1036,6 +1055,7 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
   final DateTime endDate;
 // === PATTERN & SCHEDULING ===
   @override
+  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
   final RoutinePattern pattern;
 
   /// Map of date → scheduled day details
@@ -1043,6 +1063,7 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
 
   /// Map of date → scheduled day details
   @override
+  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
   Map<String, ScheduledDay> get schedule {
     if (_schedule is EqualUnmodifiableMapView) return _schedule;
     // ignore: implicit_dynamic_type
@@ -1052,8 +1073,10 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
 // String key for JSON serialization
 // === SKIP & RECOVERY TRACKING ===
   @override
+  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
   final SkipTracker skipTracker;
   @override
+  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
   final RecoverySettings recoverySettings;
 // === ROUTINE STATE ===
   @override
@@ -1185,9 +1208,14 @@ abstract class _FlexibleRoutine implements FlexibleRoutine {
       required final RoutineType type,
       required final DateTime startDate,
       required final DateTime endDate,
+      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
       required final RoutinePattern pattern,
+      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
       required final Map<String, ScheduledDay> schedule,
+      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
       required final SkipTracker skipTracker,
+      @JsonKey(
+          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
       required final RecoverySettings recoverySettings,
       final bool isActive,
       final bool isArchived,
@@ -1217,15 +1245,19 @@ abstract class _FlexibleRoutine implements FlexibleRoutine {
   @override
   DateTime get endDate;
   @override // === PATTERN & SCHEDULING ===
+  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
   RoutinePattern get pattern;
   @override
 
   /// Map of date → scheduled day details
+  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
   Map<String, ScheduledDay> get schedule;
   @override // String key for JSON serialization
 // === SKIP & RECOVERY TRACKING ===
+  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
   SkipTracker get skipTracker;
   @override
+  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
   RecoverySettings get recoverySettings;
   @override // === ROUTINE STATE ===
   bool get isActive;

@@ -484,7 +484,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     if (currentUser?.email != null) {
       final repository = ExerciseActivityRepository();
       final activities = await repository.getActivitiesByExercise(
-        userEmail: currentUser!.email!,
+        userId: currentUser!.email!, // ⚠️ Parameter name is userId (expects user ID/email string)
         exerciseName: widget.exercise.name,
         limit: 1,
       );
@@ -737,7 +737,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               },
                             );
                           },
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Row(
@@ -803,8 +803,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         SizedBox(width: 4),
                                         Text(
                                           'APRE ${widget.exercise.apreProtocol ?? 6}',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
                                             color: context.colors.primary,
                                           ),
@@ -862,8 +861,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                                   widget.exercise.restTime!,
                                                 )
                                               : 'Default',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
                                             color:
                                                 widget.exercise.restTime != null
@@ -923,8 +921,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         SizedBox(width: 4),
                                         Text(
                                           '${_autoCollapseState.countdown}',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
                                             color: context.colors.tertiary,
                                           ),
@@ -1065,7 +1062,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 context.l10n.autoAdjustment,
                                 style:
                                     widget.exercise.autoAdjustmentType != null
-                                    ? TextStyle(
+                                    ? context.textTheme.bodyMedium?.copyWith(
                                         color: context.colors.primary,
                                         fontWeight: FontWeight.w600,
                                       )
@@ -1081,15 +1078,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: context.colors.primaryContainer,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                                   ),
                                   child: Text(
                                     widget.exercise.autoAdjustmentType ==
                                             AutoAdjustmentType.apre
                                         ? 'APRE'
                                         : 'RPE',
-                                    style: TextStyle(
-                                      fontSize: 10,
+                                    style: context.textTheme.labelSmall?.copyWith(
                                       color: context.colors.onPrimaryContainer,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -1110,7 +1106,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               SizedBox(width: 8),
                               Text(
                                 'Delete',
-                                style: TextStyle(color: context.errorColor),
+                                style: context.textTheme.bodyMedium?.copyWith(color: context.errorColor),
                               ),
                             ],
                           ),
@@ -1590,8 +1586,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             SizedBox(width: 4),
             Text(
               _formatTutDisplay(tutText),
-              style: TextStyle(
-                fontSize: 11,
+              style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isDefault
                     ? context.colors.onSurfaceVariant
@@ -2113,12 +2108,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                   decoration: BoxDecoration(
                     color: context.warningContainer,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                   ),
                   child: Text(
                     'W',
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.warningColor,
                     ),
@@ -2146,7 +2140,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           color: _getRpeIndicatorColor(
                             set.rpe!,
                           ).withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                           border: Border.all(
                             color: _getRpeIndicatorColor(
                               set.rpe!,
@@ -2173,12 +2167,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                       decoration: BoxDecoration(
                         color: context.colors.outline.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                       ),
                       child: Text(
                         '✏️',
-                        style: TextStyle(
-                          fontSize: 10,
+                        style: context.textTheme.labelSmall?.copyWith(
                           color: context.colors.onSurfaceVariant.withOpacity(
                             0.6,
                           ),
@@ -2361,17 +2354,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       onDuplicate: () => _duplicateExercise(),
       onDelete: () => _showDeleteConfirmation(context),
       onChangeCountingMode: () {
-        // 🐛 DEBUG: SENZA kDebugMode per profile mode
-        print('🔘 [onChangeCountingMode] CALLBACK TRIGGERED!');
+        // 🐛 DEBUG: Now with kDebugMode guard for production safety
+        if (kDebugMode) {
+          debugPrint('🔘 [onChangeCountingMode] CALLBACK TRIGGERED!');
+        }
         _handleCountingModeChange(context);
       },
     );
   }
 
   Future<void> _handleCountingModeChange(BuildContext context) async {
-    // 🐛 DEBUG: Entry point (SENZA kDebugMode per profile mode)
-    print('🚀 [_handleCountingModeChange] METHOD CALLED for ${widget.exercise.name}');
-    print('   Current mode: ${widget.exercise.countingMode.name}');
+    // 🐛 DEBUG: Entry point (now with kDebugMode guard for production safety)
+    if (kDebugMode) {
+      debugPrint('🚀 [_handleCountingModeChange] METHOD CALLED for ${widget.exercise.name}');
+      debugPrint('   Current mode: ${widget.exercise.countingMode.name}');
+    }
 
     // Show counting mode picker
     final newMode = await CountingModePickerModal.show(
@@ -2379,8 +2376,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       currentMode: widget.exercise.countingMode,
     );
 
-    // 🐛 DEBUG: After modal (SENZA kDebugMode per profile mode)
-    print('📱 [_handleCountingModeChange] Modal returned: ${newMode?.name ?? "NULL (cancelled)"}');
+    // 🐛 DEBUG: After modal (now with kDebugMode guard for production safety)
+    if (kDebugMode) {
+      debugPrint('📱 [_handleCountingModeChange] Modal returned: ${newMode?.name ?? "NULL (cancelled)"}');
+    }
 
     // User cancelled
     if (newMode == null || !mounted) return;
@@ -2406,16 +2405,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     // Change counting mode in provider
     if (mounted) {
-      // 🐛 DEBUG: SENZA kDebugMode per profile mode
-      print('🔄 [_handleCountingModeChange] CALLING changeExerciseCountingMode: ${widget.exercise.countingMode.name} → ${newMode.name}');
+      // 🐛 DEBUG: Now with kDebugMode guard for production safety
+      if (kDebugMode) {
+        debugPrint('🔄 [_handleCountingModeChange] CALLING changeExerciseCountingMode: ${widget.exercise.countingMode.name} → ${newMode.name}');
+      }
 
       ref.read(currentWorkoutProvider.notifier).changeExerciseCountingMode(
         widget.exercise.id,
         newMode,
       );
 
-      // 🐛 DEBUG: SENZA kDebugMode per profile mode
-      print('✅ [_handleCountingModeChange] changeExerciseCountingMode CALLED');
+      // 🐛 DEBUG: Now with kDebugMode guard for production safety
+      if (kDebugMode) {
+        debugPrint('✅ [_handleCountingModeChange] changeExerciseCountingMode CALLED');
+      }
 
       // Show success feedback
       if (context.mounted) {
@@ -2709,7 +2712,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             children: [
                               Text(
                                 context.l10n.exerciseListUseDefaultTimer,
-                                style: TextStyle(
+                                style: context.textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: selectedTime == null
                                       ? context.colors.primary
@@ -2718,8 +2721,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               ),
                               Text(
                                 context.l10n.exerciseListUsesGlobalRestTimer,
-                                style: TextStyle(
-                                  fontSize: 12,
+                                style: context.textTheme.bodySmall?.copyWith(
                                   color: context.colors.onSurfaceVariant,
                                 ),
                               ),
@@ -2834,7 +2836,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               Text(
                 context.l10n.exerciseListSetRestTimer,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
@@ -2952,7 +2954,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(context.l10n.exerciseListMinutes, style: const TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListMinutes, style: context.textTheme.bodySmall),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -2972,13 +2974,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ],
             ),
             const SizedBox(width: 16),
-            const Text(':', style: TextStyle(fontSize: 24)),
+            Text(':', style: context.textTheme.headlineSmall),
             const SizedBox(width: 16),
             // Seconds picker
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(context.l10n.exerciseListSeconds, style: const TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListSeconds, style: context.textTheme.bodySmall),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -3160,15 +3162,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 16,
+            style: context.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.8)),
+            style: context.textTheme.labelSmall?.copyWith(color: color.withValues(alpha: 0.8)),
           ),
         ],
       ),
@@ -3191,9 +3192,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Exercise Notes',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                'Exercise Notes', // TODO: Add localization
+                style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -3992,7 +3993,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       if (currentUser?.email != null) {
         final repository = ExerciseActivityRepository();
         activities = await repository.getActivitiesByExercise(
-          userEmail: currentUser!.email!,
+          userId: currentUser!.email!, // ⚠️ Parameter name is userId (expects user ID/email string)
           exerciseName: widget.exercise.name,
           limit: 10,
         );
@@ -4233,7 +4234,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             color: _getEffortColorByNumber(
                               set.effort,
                             ).withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                           ),
                           child: Text(
                             'RPE ${set.effort}',
@@ -4451,8 +4452,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
+                style: context.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: color,
                 ),

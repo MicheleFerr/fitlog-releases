@@ -87,14 +87,18 @@ service cloud.firestore {
     }
 
     // ============= USERS =============
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
+    // ⚠️ REMOVED 2025-01-18 (Task 2.2): Duplicate overly-permissive rule
+    // Proper field-validated rule exists at line ~421 with completedMin protection
+    // match /users/{userId} {
+    //   allow read, write: if request.auth != null && request.auth.uid == userId;
+    // }
 
     // ============= WORKOUTS =============
-    match /workouts/{workoutId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
+    // ⚠️ REMOVED 2025-01-18 (Task 2.2): Duplicate overly-permissive rule
+    // Proper rule exists at line ~782 with separate read/create/update/delete + email backward compat
+    // match /workouts/{workoutId} {
+    //   allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    // }
 
     // ============= COMMUNITY REPORTS SYSTEM ================
     match /exercise_reports/{reportId} {
@@ -259,40 +263,6 @@ service cloud.firestore {
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.uid);
-    }
-    
-    // ============= EXERCISE ACTIVITIES - MODIFICATO PER PERMETTERE UPDATE =============
-    match /exerciseActivities/{activityId} {
-      // Permetti list/query per utenti autenticati
-      allow list: if request.auth != null;
-      
-      allow read: if request.auth != null && (
-        // Proprietario
-        request.auth.token.email == resource.data.email ||
-        request.auth.uid == resource.data.userId ||
-        request.auth.uid == resource.data.uid ||
-        // Coach con delega
-        (request.auth.token.email != null &&
-         resource.data.email != null &&
-         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
-         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
-      );
-      
-      allow create: if request.auth != null && 
-        (request.auth.token.email == request.resource.data.email ||
-         request.auth.uid == request.resource.data.userId ||
-         request.auth.uid == request.resource.data.uid);
-      
-      // MODIFICATO: ora permette update
-      allow update: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
-         request.auth.uid == resource.data.uid ||
-         request.auth.uid == resource.data.userId);
-      
-      allow delete: if request.auth != null && 
-        (request.auth.token.email == resource.data.email ||
-         request.auth.uid == resource.data.uid ||
-         request.auth.uid == resource.data.userId);
     }
 
     // ============= DROP SET ACTIVITY - MODIFICATO PER PERMETTERE UPDATE =============
@@ -893,6 +863,287 @@ service cloud.firestore {
       
       // Nessuno può eliminare i download (per mantenere le statistiche)
       allow delete: if false;
+    }
+
+    // ==========================================
+    // ⚠️ ADDED 2025-01-18: SECURITY RULES FOR PREVIOUSLY UNPROTECTED COLLECTIONS
+    // ==========================================
+
+    // ============= USER SUBCOLLECTIONS (HIGH PRIORITY - SENSITIVE DATA) =============
+
+    // PR Celebrations - Personal records celebrations
+    match /users/{userId}/pr_celebrations/{celebrationId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // Recovery History - Recovery tracking data
+    match /users/{userId}/recovery_history/{historyId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // HRV Readings - Heart Rate Variability health data
+    match /users/{userId}/hrv_readings/{readingId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // ============= TOP-LEVEL COLLECTIONS WITH USERID (HIGH PRIORITY) =============
+
+    // Achievements - AI Coach achievements
+    match /achievements/{achievementId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Workout Metrics - Aggregated workout statistics
+    match /workoutMetrics/{metricId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // ============= BUDDY MATCHING SYSTEM (MEDIUM PRIORITY) =============
+
+    // Buddy Profiles - User profiles for buddy matching
+    match /buddy_profiles/{profileId} {
+      // Users can read all profiles (for matching)
+      allow read: if isAuthenticated();
+
+      // Users can only create/update their own profile
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Buddy Matches - Matched buddy pairs
+    match /buddy_matches/{matchId} {
+      // Users can read matches they're part of
+      allow read: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+
+      // System creates matches (both users must exist)
+      allow create: if isAuthenticated();
+
+      // Users can update matches they're part of (for status changes)
+      allow update: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+
+      // Users can delete matches they're part of
+      allow delete: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+    }
+
+    // Buddy Actions - Actions/interactions between buddies
+    match /buddy_actions/{actionId} {
+      // Users can read actions involving them
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.targetUserId == request.auth.uid
+      );
+
+      // Users can create actions for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // No updates/deletes (audit trail)
+      allow update, delete: if false;
+    }
+
+    // Buddy Reports - Reports of inappropriate behavior
+    match /buddy_reports/{reportId} {
+      // Only reporters and system can read reports
+      allow read: if isAuthenticated() && resource.data.reporterId == request.auth.uid;
+
+      // Users can create reports
+      allow create: if isAuthenticated() && request.resource.data.reporterId == request.auth.uid;
+
+      // No updates/deletes after creation (integrity)
+      allow update, delete: if false;
+    }
+
+    // Workouts Together - Shared workout sessions
+    match /workouts_together/{workoutId} {
+      // Users can read workouts they're part of
+      allow read: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+
+      // Users can create workouts they're part of
+      allow create: if isAuthenticated() && (
+        request.resource.data.userId1 == request.auth.uid ||
+        request.resource.data.userId2 == request.auth.uid
+      );
+
+      // Users can update workouts they're part of
+      allow update: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+
+      // Users can delete workouts they're part of
+      allow delete: if isAuthenticated() && (
+        resource.data.userId1 == request.auth.uid ||
+        resource.data.userId2 == request.auth.uid
+      );
+    }
+
+    // ============= COMMUNITY FEATURES (MEDIUM PRIORITY) =============
+
+    // User Saved Contributions - Saved community contributions
+    match /user_saved_contributions/{savedId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Contribution Reports - Reports of inappropriate contributions
+    match /contribution_reports/{reportId} {
+      // Only reporters can read their own reports
+      allow read: if isAuthenticated() && resource.data.reporterId == request.auth.uid;
+
+      // Users can create reports
+      allow create: if isAuthenticated() && request.resource.data.reporterId == request.auth.uid;
+
+      // No updates/deletes after creation (integrity)
+      allow update, delete: if false;
+    }
+
+    // ============= SEARCH & FILTERS (MEDIUM PRIORITY) =============
+
+    // User Search Filters - Saved search preferences
+    match /user_search_filters/{filterId} {
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ============= VERIFICATION SYSTEM (MEDIUM PRIORITY) =============
+
+    // Verification Requests - Identity verification requests
+    match /verification_requests/{requestId} {
+      // Users can read their own requests
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Users can create verification requests for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // No updates/deletes (system handles state)
+      allow update, delete: if false;
+    }
+
+    // Photo Verification Requests - Photo verification for profiles
+    match /photo_verification_requests/{requestId} {
+      // Users can read their own requests
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Users can create photo verification requests for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // No updates/deletes (system handles state)
+      allow update, delete: if false;
+    }
+
+    // ============= TEMPLATE SYSTEM (MEDIUM PRIORITY) =============
+
+    // Template Reviews - Reviews of workout templates
+    match /template_reviews/{reviewId} {
+      // Everyone can read reviews (public)
+      allow read: if isAuthenticated();
+
+      // Users can create reviews for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own reviews
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Users can delete their own reviews
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Template Comments - Comments on workout templates
+    match /template_comments/{commentId} {
+      // Everyone can read comments (public)
+      allow read: if isAuthenticated();
+
+      // Users can create comments for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own comments
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Users can delete their own comments
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // ============= PUBLIC DATA (LOW PRIORITY) =============
+
+    // Italian Cities - Public list of Italian cities (for location selection)
+    match /italian_cities/{cityId} {
+      // Everyone can read (public data)
+      allow read: if true;
+
+      // Only system/admin can write
+      allow write: if isAuthenticated();
+    }
+
+    // Ice Breakers - Public ice breaker questions for chat
+    match /ice_breakers/{iceBreakerId} {
+      // Everyone can read (public data)
+      allow read: if isAuthenticated();
+
+      // Users can update usage stats
+      allow update: if isAuthenticated() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['timesUsed', 'lastUsed']);
+
+      // Only system/admin can create/delete
+      allow create, delete: if isAuthenticated();
+    }
+
+    // ==========================================
+    // ⚠️ ADDED 2025-01-18 (Phase 2 - Task 2.1): ADDITIONAL MISSING COLLECTIONS
+    // ==========================================
+
+    // Routine Pauses - User routine pause/resume tracking
+    match /routine_pauses/{pauseId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // User Feedback - User feedback submissions
+    match /userFeedback/{feedbackId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Exercise Feedback - User feedback for exercises (admin access too)
+    match /exercise_feedback/{feedbackId} {
+      // Users can read their own feedback
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Users can create feedback for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own feedback
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Only users can delete their own feedback
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Analytics Page Feedback - User feedback on analytics page
+    match /analytics_page_feedback/{feedbackId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
   }

@@ -61,8 +61,14 @@ class Exercise {         // Target RIR if using RIR-based
     return Exercise(
       id: json['id'],
       name: json['name'],
-      type: ExerciseType.values.firstWhere((e) => e.name == json['type']),
-      category: ExerciseCategory.values.firstWhere((e) => e.name == json['category']),
+      type: ExerciseType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => ExerciseType.single, // Safe default
+      ),
+      category: ExerciseCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => ExerciseCategory.other, // Safe default
+      ),
       sets: (json['sets'] as List?)
           ?.map((setJson) => ExerciseSet.fromJson(setJson))
           .toList() ?? [],
@@ -72,7 +78,10 @@ class Exercise {         // Target RIR if using RIR-based
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       autoAdjustmentType: json['autoAdjustmentType'] != null
-          ? AutoAdjustmentType.values.firstWhere((e) => e.name == json['autoAdjustmentType'])
+          ? AutoAdjustmentType.values.firstWhere(
+              (e) => e.name == json['autoAdjustmentType'],
+              orElse: () => AutoAdjustmentType.rpe, // Safe default
+            )
           : null,
       useAPRE: json['useAPRE'] ?? false,
       apreProtocol: json['apreProtocol'],

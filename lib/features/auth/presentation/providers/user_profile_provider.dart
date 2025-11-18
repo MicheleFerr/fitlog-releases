@@ -201,7 +201,8 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
       
       for (final doc in templatesSnapshot.docs) {
         final data = doc.data();
-        if (data['isPublic'] == true) {
+        // Safe field access with null check (Task 6.1)
+        if (data['isPublic'] as bool? ?? false) {
           publicCount++;
         } else {
           privateCount++;

@@ -606,21 +606,21 @@ class WorkoutStatsCalculator {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Calculate stats from Firebase with detailed debug logging
-  Future<CachedDashboardStats> calculateFromFirebase(String userEmail) async {
-    _CacheLogger.step('FIREBASE_CALC', 'Starting Firebase calculation for: $userEmail');
+  Future<CachedDashboardStats> calculateFromFirebase(String userId) async {
+    _CacheLogger.step('FIREBASE_CALC', 'Starting Firebase calculation for userId: $userId');
 
     try {
-      // Performance optimization: Only load last year + limit docs
-      final oneYearAgo = DateTime.now().subtract(const Duration(days: 365));
-      _CacheLogger.firebase('Query range: ${oneYearAgo.toIso8601String()} to ${DateTime.now().toIso8601String()}');
+      // Performance optimization: Only load last 90 days
+      final ninetyDaysAgo = DateTime.now().subtract(const Duration(days: 90));
+      _CacheLogger.firebase('Query range: ${ninetyDaysAgo.toIso8601String()} to ${DateTime.now().toIso8601String()}');
 
       _CacheLogger.firebase('Building Firestore query...');
       final query = _firestore
-          .collection('exerciseActivities')
-          .where('email', isEqualTo: userEmail.toLowerCase().trim())
-          .where('createdAt', isGreaterThan: Timestamp.fromDate(oneYearAgo))
-          .orderBy('createdAt', descending: true)
-          .limit(5000); // Max 5000 esercizi (~1000 workout stimati)
+          .collection('workouts')
+          .where('userId', isEqualTo: userId)
+          .where('completedAt', isGreaterThan: Timestamp.fromDate(ninetyDaysAgo))
+          .orderBy('completedAt', descending: true)
+          .limit(500); // Max 500 workouts
 
       _CacheLogger.firebase('Executing Firebase query...');
       final startTime = DateTime.now();
@@ -639,45 +639,17 @@ class WorkoutStatsCalculator {
       _CacheLogger.firebase('Found ${docs.length} documents');
 
       if (docs.isEmpty) {
-        _CacheLogger.firebase('No exercise activities found - returning empty stats');
+        _CacheLogger.firebase('No workouts found - returning empty stats');
         return CachedDashboardStats.empty();
       }
 
-      // Group exercises by date to count unique workout days
+      // Process workout documents
       _CacheLogger.step('AGGREGATION', 'Starting data aggregation...');
       final workoutDates = <String, bool>{};
-      final exercisesByDate = <String, List<Map<String, dynamic>>>{};
       int validDocs = 0;
       int invalidDocs = 0;
+      int totalExercises = 0;
 
-      for (final doc in docs) {
-        final data = doc.data();
-        final timestamp = data['createdAt'] as Timestamp?;
-
-        if (timestamp != null) {
-          validDocs++;
-          final date = timestamp.toDate();
-          final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-
-          workoutDates[dateKey] = true;
-          exercisesByDate.putIfAbsent(dateKey, () => []).add(data);
-        } else {
-          invalidDocs++;
-          _CacheLogger.firebase('Invalid document found (no createdAt): ${doc.id}');
-        }
-      }
-
-      // Count unique workout days (not individual exercises!)
-      final totalWorkouts = workoutDates.length;
-      final totalExercises = docs.length;
-
-      _CacheLogger.step('AGGREGATION_RESULT', 'Valid docs: $validDocs, Invalid docs: $invalidDocs');
-      _CacheLogger.step('AGGREGATION_RESULT', 'Unique workout days: $totalWorkouts');
-      _CacheLogger.step('AGGREGATION_RESULT', 'Total exercises: $totalExercises');
-      _CacheLogger.step('AGGREGATION_RESULT', 'Sample workout dates: ${workoutDates.keys.take(5).toList()}');
-
-      // Calculate additional stats
-      _CacheLogger.step('STATS_CALC', 'Calculating volume and PR stats...');
       double totalVolume = 0;
       double maxPR = 0;
       String prExercise = 'N/A';
@@ -686,35 +658,62 @@ class WorkoutStatsCalculator {
 
       for (final doc in docs) {
         final data = doc.data();
-        final sets = data['sets'] as List<dynamic>? ?? [];
-        final exerciseName = data['exerciseName'] as String? ?? 'Unknown';
+        final timestamp = data['completedAt'] as Timestamp?;
 
-        for (final set in sets) {
-          totalSets++;
-          if (set is Map<String, dynamic>) {
-            final isCompleted = set['done'] == true || set['isCompleted'] == true;
-            if (isCompleted) {
-              completedSets++;
-              final weightValue = set['weight'];
-              final weight = weightValue is num
-                  ? weightValue.toDouble()
-                  : double.tryParse(weightValue?.toString() ?? '0') ?? 0;
+        if (timestamp != null) {
+          validDocs++;
+          final date = timestamp.toDate();
+          final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+          workoutDates[dateKey] = true;
 
-              final repsValue = set['reps'];
-              final reps = repsValue is num
-                  ? repsValue.toInt()
-                  : int.tryParse(repsValue?.toString() ?? '0') ?? 0;
+          // Process exercises in this workout
+          final exercises = data['exercises'] as List<dynamic>? ?? [];
+          totalExercises += exercises.length;
 
-              totalVolume += weight * reps;
+          for (final exercise in exercises) {
+            if (exercise is Map<String, dynamic>) {
+              final exerciseName = exercise['name'] as String? ?? 'Unknown';
+              final sets = exercise['sets'] as List<dynamic>? ?? [];
 
-              if (weight > maxPR) {
-                maxPR = weight;
-                prExercise = exerciseName;
+              for (final set in sets) {
+                totalSets++;
+                if (set is Map<String, dynamic>) {
+                  final isCompleted = set['completed'] == true || set['done'] == true;
+                  if (isCompleted) {
+                    completedSets++;
+                    final weightValue = set['weight'];
+                    final weight = weightValue is num
+                        ? weightValue.toDouble()
+                        : double.tryParse(weightValue?.toString() ?? '0') ?? 0;
+
+                    final repsValue = set['reps'];
+                    final reps = repsValue is num
+                        ? repsValue.toInt()
+                        : int.tryParse(repsValue?.toString() ?? '0') ?? 0;
+
+                    totalVolume += weight * reps;
+
+                    if (weight > maxPR) {
+                      maxPR = weight;
+                      prExercise = exerciseName;
+                    }
+                  }
+                }
               }
             }
           }
+        } else {
+          invalidDocs++;
+          _CacheLogger.firebase('Invalid document found (no completedAt): ${doc.id}');
         }
       }
+
+      final totalWorkouts = workoutDates.length;
+
+      _CacheLogger.step('AGGREGATION_RESULT', 'Valid docs: $validDocs, Invalid docs: $invalidDocs');
+      _CacheLogger.step('AGGREGATION_RESULT', 'Total workouts: $totalWorkouts');
+      _CacheLogger.step('AGGREGATION_RESULT', 'Total exercises: $totalExercises');
+      _CacheLogger.step('AGGREGATION_RESULT', 'Sample workout dates: ${workoutDates.keys.take(5).toList()}');
 
       _CacheLogger.step('STATS_CALC', 'Completed sets: $completedSets/$totalSets');
       _CacheLogger.step('STATS_CALC', 'Total volume: ${totalVolume.toStringAsFixed(1)} kg');
@@ -896,7 +895,7 @@ final cachedProgressProvider = FutureProvider.autoDispose<DashboardStats>((ref) 
 
       // 2. Calculate from Firebase (first time or cache expired)
       _CacheLogger.step('FIREBASE_START', 'Starting Firebase calculation...');
-      final freshStats = await calculator.calculateFromFirebase(userEmail);
+      final freshStats = await calculator.calculateFromFirebase(currentUser.uid);
       _CacheLogger.step('FIREBASE_COMPLETE', '✅ Firebase calculation completed');
 
       // 3. Save to cache for next time
