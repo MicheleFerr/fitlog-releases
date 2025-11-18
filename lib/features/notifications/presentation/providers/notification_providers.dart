@@ -31,6 +31,7 @@ final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   final router = ref.read(routerProvider);
 
   return LocalNotificationRepository(
+    ref: ref, // 🔔 FIX: Pass ref to read NotificationSettings v2.0
     onNotificationTapped: (payload) {
       // 🔔 WARM-START: Handle notification tap when app is already running
       _handleNotificationTap(router, payload);
