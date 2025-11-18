@@ -35,7 +35,6 @@ import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_mi
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
-import 'package:gymbro_flutter_new/features/user_profile/presentation/providers/user_provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 // ============================================================================
@@ -153,7 +152,7 @@ final exerciseHistoryStreamProvider = StreamProvider.family
 /// );
 ///
 /// benchPress.when(
-///   loading: () => CircularProgressIndicator(),
+///   loading: () => LoadingIndicator(),
 ///   error: (error, stack) => Text('Not found'),
 ///   data: (history) => Text('PR: ${history.personalRecord} kg'),
 /// );
