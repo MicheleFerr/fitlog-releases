@@ -75,8 +75,12 @@ class Exercise {         // Target RIR if using RIR-based
       notes: json['notes'],
       restTime: json['restTime'],
       tut: json['tut'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
       autoAdjustmentType: json['autoAdjustmentType'] != null
           ? AutoAdjustmentType.values.firstWhere(
               (e) => e.name == json['autoAdjustmentType'],
