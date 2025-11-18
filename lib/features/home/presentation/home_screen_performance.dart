@@ -27,6 +27,8 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboardin
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_providers.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_state.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/memory_monitor.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/cache_warm_tracker.dart';
 
 /// Performance-optimized homepage that maintains IDENTICAL UI to HomeScreenOptimized
 /// Uses MVVM pattern with lazy loading for <3s cold start while preserving all existing widgets
@@ -64,6 +66,16 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
     // Start exercise update check with 30-second delay
     // PRESERVED EXACTLY from HomeScreenOptimized
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Start performance monitoring
+      final memoryMonitor = ref.read(memoryMonitorProvider);
+      final cacheTracker = ref.read(cacheWarmTrackerProvider);
+
+      memoryMonitor.startMonitoring();
+      cacheTracker.startSession();
+
+      // Record initial snapshot
+      memoryMonitor.recordSnapshot('homepage_init');
+
       ref
           .read(exerciseUpdateProvider.notifier)
           .checkForUpdatesOnAppStart(context);
@@ -73,8 +85,22 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
         ref.read(onboardingStateProvider.notifier).debugOnboardingState();
       }
 
-      // Initialize data loading with new state management
-      _loadInitialData();
+      // Initialize data loading with new state management and track performance
+      _loadInitialData().then((_) {
+        memoryMonitor.recordSnapshot('homepage_loaded');
+
+        // Generate reports in debug mode
+        if (kDebugMode) {
+          final memoryReport = memoryMonitor.generateReport();
+          final cacheReport = cacheTracker.generateReport();
+
+          debugPrint('📊 [PERFORMANCE] Memory Report: $memoryReport');
+          debugPrint('📊 [PERFORMANCE] Cache Report: $cacheReport');
+
+          // Log to Firebase Analytics or Crashlytics in production
+          // FirebaseAnalytics.instance.logEvent(...)
+        }
+      });
 
       // AUTO-START TOUR: If user is beginner and hasn't seen global onboarding
       // PRESERVED EXACTLY from HomeScreenOptimized

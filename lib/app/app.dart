@@ -10,7 +10,7 @@ import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/home_screen_optimized.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/home_screen_performance.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_completion_summary_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_exercise_detail_screen.dart';
@@ -431,7 +431,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         name: 'home',
-        builder: (context, state) => const HomeScreenOptimized(),
+        builder: (context, state) {
+          // Initialize monitoring on first load
+          // Monitoring hooks integrated directly in HomeScreenPerformance
+          return const HomeScreenPerformance();
+        },
       ),
       GoRoute(
         path: '/workout',
