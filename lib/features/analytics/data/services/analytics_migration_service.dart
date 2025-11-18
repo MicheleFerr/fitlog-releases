@@ -94,15 +94,20 @@ class AnalyticsMigrationService {
     required String userId,
   }) async {
     try {
-      // Step 1: Fetch all completed workouts for user
+      // Step 1: Fetch all workouts for user (filter completed in-memory)
       final workoutsSnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
-          .where('status', isEqualTo: 'completed') // Only completed workouts
           .orderBy('startTime', descending: false) // Oldest first
           .get();
 
-      if (workoutsSnapshot.docs.isEmpty) {
+      // Filter only completed workouts (with completedAt timestamp)
+      final completedWorkoutDocs = workoutsSnapshot.docs.where((doc) {
+        final data = doc.data();
+        return data['completedAt'] != null; // Only workouts with completedAt
+      }).toList();
+
+      if (completedWorkoutDocs.isEmpty) {
         return Right(
           MigrationStats(
             totalWorkouts: 0,
@@ -120,7 +125,7 @@ class AnalyticsMigrationService {
       int totalSets = 0;
       final List<String> skippedExercises = [];
 
-      for (final workoutDoc in workoutsSnapshot.docs) {
+      for (final workoutDoc in completedWorkoutDocs) {
         try {
           final workoutData = workoutDoc.data();
           final workout = Workout.fromJson(workoutData);
