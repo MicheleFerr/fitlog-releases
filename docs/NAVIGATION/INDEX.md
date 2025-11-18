@@ -240,6 +240,12 @@ These cover initial setup and configuration:
    - 6-week implementation roadmap
    - Expected results table (+60% D7, +61% D30, +153% D90 retention)
    - 30+ references to market research and compliance docs
+4. **Implementation Plan** 🆕: [`../plans/2025-11-16-ai-coach-optimizations-plan.md`](../plans/2025-11-16-ai-coach-optimizations-plan.md) - **53 atomic tasks for P0-P1 optimizations** (Jan 2025)
+   - P0 Quick Wins: 12 tasks, ~12h (Firebase optimization, polling strategy, unlock timing)
+   - P1 Strategic: 20 tasks, ~40h (HealthKit + Health Connect integration)
+   - P1 Polish: 21 tasks, ~24h (Recovery insights, GDPR breach plan, consent separation)
+   - Total: 53 tasks, ~76h (9.5 days)
+   - Generated via task-master.dev with verified ROI metrics
 
 ### "I'm hitting an error..."
 

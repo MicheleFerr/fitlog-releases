@@ -1,0 +1,1036 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============= HELPER FUNCTIONS =============
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA AUTENTICATA =============
+    match /exercises/{exerciseId} {
+      allow read: if true; // Tutti possono leggere gli esercizi
+      allow write: if request.auth != null; // Solo utenti autenticati possono scrivere
+    }
+
+    // ============= COMMUNITY CONTRIBUTIONS =============
+    match /community_contributions/{contributionId} {
+      // Tutti possono leggere (per mostrare contributi pubblici)
+      allow read: if true;
+      
+      // Creazione con validazione
+      allow create: if isAuthenticated() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending';
+      
+      // Update per votazioni e status
+      allow update: if isAuthenticated() && (
+        // Il proprietario può modificare
+        isOwner(resource.data.userId) ||
+        // Altri possono solo votare o il sistema può aggiornare status
+        (request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['upvotedBy', 'downvotedBy', 'upvotes', 'downvotes', 'updatedAt', 'status', 'trustScore']))
+      );
+      
+      // Solo il proprietario può eliminare
+      allow delete: if isOwner(resource.data.userId);
+    }
+    
+    // ============= USER CONTRIBUTION STATS =============
+    match /user_contribution_stats/{userId} {
+      // Tutti possono leggere per la classifica
+      allow read: if true;
+      
+      // L'utente può creare/aggiornare le proprie statistiche
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        isOwner(userId) ||
+        // Permettiamo aggiornamenti di sistema per stats
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['totalContributions', 'approvedContributions', 'totalUpvotes', 'totalDownvotes', 'badges', 'lastActivity'])
+      );
+      
+      // Nessuno può eliminare
+      allow delete: if false;
+    }
+    
+    // ============= CONTRIBUTION REPORTS =============
+    match /contribution_reports/{reportId} {
+      // Solo admin possono leggere i report
+      allow read: if isAuthenticated() && 
+        request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it'];
+      
+      // Tutti gli autenticati possono segnalare
+      allow create: if isAuthenticated()
+        && request.resource.data.reportedBy == request.auth.uid;
+      
+      // Nessuno può modificare o eliminare
+      allow update, delete: if false;
+    }
+
+    // ============= WORKOUT TEMPLATES =============
+    match /workout_templates/{templateId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    match /workoutTemplates/{templateId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow write: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+    }
+
+    // ============= USERS =============
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ============= WORKOUTS =============
+    match /workouts/{workoutId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // ============= COMMUNITY REPORTS SYSTEM ================
+    match /exercise_reports/{reportId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
+'status'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name'];
+      allow update: if request.auth != null
+        && request.auth.uid != null
+        && (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
+          || (request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it']
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
+        );
+
+      match /suggestions/{suggestionId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.userId
+          && request.resource.data.keys().hasAll(['reportId', 'userId', 'userName', 'suggestedValue', 'votes', 'voters',
+'timestamp'])
+          && request.resource.data.votes == 0
+          && request.resource.data.voters.size() == 0;
+        allow update: if request.auth != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'voters']);
+      }
+    }
+
+    // ============= COACH DELEGATIONS =============
+    match /coach_delegations/{delegationId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+    }
+
+    // ============= COACH NOTIFICATIONS =============
+    match /coachNotifications/{notificationId} {
+      // Il coach può leggere le proprie notifiche usando l'email
+      allow read: if request.auth != null && 
+        request.auth.token.email == resource.data.coachEmail;
+      
+      // Permettere list/query per le proprie notifiche
+      allow list: if request.auth != null && 
+        request.auth.token.email != null;
+      
+      // Qualsiasi utente autenticato può creare notifiche
+      allow create: if request.auth != null;
+      
+      // Solo il coach destinatario può aggiornare (per marcare come letta)
+      allow update: if request.auth != null && 
+        request.auth.token.email == resource.data.coachEmail;
+      
+      // Solo il coach può eliminare le proprie notifiche
+      allow delete: if request.auth != null && 
+        request.auth.token.email == resource.data.coachEmail;
+    }
+
+    // ============= ATHLETE NOTIFICATIONS =============
+    match /athleteNotifications/{notificationId} {
+      // L'atleta può leggere le proprie notifiche usando l'email
+      allow read: if request.auth != null && 
+        request.auth.token.email == resource.data.athleteEmail;
+      
+      // Permettere list/query per le proprie notifiche
+      allow list: if request.auth != null && 
+        request.auth.token.email != null;
+      
+      // Qualsiasi utente autenticato può creare notifiche
+      allow create: if request.auth != null;
+      
+      // Solo l'atleta destinatario può aggiornare (per marcare come letta)
+      allow update: if request.auth != null && 
+        request.auth.token.email == resource.data.athleteEmail;
+      
+      // Solo l'atleta può eliminare le proprie notifiche
+      allow delete: if request.auth != null && 
+        request.auth.token.email == resource.data.athleteEmail;
+    }
+
+    // ============= WORKOUT TEMPLATES =============
+    match /workoutTemplates/{templateId} {
+      // Il coach può leggere i propri template o quelli pubblici
+      allow read: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
+         resource.data.isPublic == true);
+      
+      // Solo il coach proprietario può creare template
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.coachId;
+      
+      // Solo il coach proprietario può aggiornare
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+      
+      // Solo il coach proprietario può eliminare
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+    }
+
+    // ============= TEMPLATE ASSIGNMENTS =============
+    match /templateAssignments/{assignmentId} {
+      // Coach e atleta possono leggere
+      allow read: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
+         resource.data.athleteId == request.auth.uid);
+      
+      // Solo il coach può creare assegnazioni
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.coachId;
+      
+      // Solo il coach può aggiornare
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+      
+      // Coach o atleta possono eliminare
+      allow delete: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
+         resource.data.athleteId == request.auth.uid);
+    }
+
+    // ============= SESSION WORKOUTS - FIXED =============
+    match /sessionWorkouts/{workoutId} {
+      // Permetti list/query basate su email o userId
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario - AGGIUNTO IL CHECK SULL'EMAIL
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega - supporta sia userId che email
+        (request.auth.token.email != null && (
+          // Check con userId
+          (resource.data.userId != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.userId)).data.permissions.canViewDashboard == true) ||
+          // Check con email dell'utente cercando nel documento settings
+          (resource.data.userId != null &&
+           exists(/databases/$(database)/documents/settings/$(resource.data.userId)) &&
+           get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)).data.permissions.canViewDashboard == true)
+        ))
+      );
+      
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+         
+      allow update, delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.userId ||
+         request.auth.uid == resource.data.uid);
+    }
+    
+    // ============= EXERCISE ACTIVITIES - MODIFICATO PER PERMETTERE UPDATE =============
+    match /exerciseActivities/{activityId} {
+      // Permetti list/query per utenti autenticati
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega
+        (request.auth.token.email != null &&
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+      );
+      
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      
+      // MODIFICATO: ora permette update
+      allow update: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+      
+      allow delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+    }
+
+    // ============= DROP SET ACTIVITY - MODIFICATO PER PERMETTERE UPDATE =============
+    match /dropSetActivity/{activityId} {
+      // Permetti list/query per utenti autenticati
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega
+        (request.auth.token.email != null &&
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+      );
+
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      
+      // MODIFICATO: ora permette update
+      allow update: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+      
+      allow delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+    }
+
+    // ============= SUPERSET ACTIVITY =============
+    match /supersetActivity/{activityId} {
+      // Permetti list/query per utenti autenticati
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega
+        (request.auth.token.email != null &&
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+      );
+
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      allow update, delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+    }
+
+    // ============= REST PAUSE ACTIVITY - MODIFICATO PER PERMETTERE UPDATE =============
+    match /restPauseActivity/{activityId} {
+      // Permetti list/query per utenti autenticati
+      allow list: if request.auth != null;
+      
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.token.email == resource.data.email ||
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == resource.data.uid ||
+        // Coach con delega
+        (request.auth.token.email != null &&
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
+      );
+
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      
+      // MODIFICATO: ora permette update
+      allow update: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+      
+      allow delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid ||
+         request.auth.uid == resource.data.userId);
+    }
+
+    // ============= USER MASSIMALI =============
+    match /userMassimali/{userId} {
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.uid == userId ||
+        // Coach con delega - cerca l'email dell'utente nel documento settings
+        (request.auth.token.email != null &&
+         exists(/databases/$(database)/documents/settings/$(userId)) &&
+         get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+      );
+
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      // Sottocollezione exercises
+      match /exercises/{exerciseId} {
+        allow read: if request.auth != null && (
+          // Proprietario
+          request.auth.uid == userId ||
+          // Coach con delega
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+
+        allow create, update: if request.auth != null && request.auth.uid == userId;
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // ============= SCHEDE (WORKOUT PLANS) =============
+    match /schede/{schedaId} {
+      allow read: if request.auth != null && (
+        request.auth.token.email == resource.data.utente ||
+        request.auth.uid == resource.data.userId ||
+        (request.auth.token.email != null &&
+         resource.data.utente != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)))
+      );
+      
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.utente ||
+         request.auth.uid == request.resource.data.userId);
+      
+      allow update: if request.auth != null && (
+        request.auth.token.email == resource.data.utente ||
+        request.auth.uid == resource.data.userId ||
+        (request.auth.token.email != null &&
+         resource.data.utente != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)) &&
+         get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)).data.permissions.canEditWorkout == true)
+      );
+      
+      allow delete: if request.auth != null && 
+        (request.auth.token.email == resource.data.utente ||
+         request.auth.uid == resource.data.userId);
+    }
+
+    // ============= USERS =============
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && (!('completedMin' in request.resource.data) ||
+            request.resource.data.completedMin >= resource.data.completedMin);
+      allow delete: if false;
+
+      // ============= BODY MEASUREMENTS SUBCOLLECTION =============
+      match /bodyMeasurements/{measurementId} {
+        allow read: if request.auth != null && (
+          // Proprietario
+          request.auth.uid == userId ||
+          // Coach con delega
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create: if request.auth != null && 
+          request.auth.uid == userId &&
+          request.resource.data.userId == userId;
+          
+        allow update: if request.auth != null && 
+          request.auth.uid == userId &&
+          resource.data.userId == userId;
+          
+        allow delete: if request.auth != null && 
+          request.auth.uid == userId;
+      }
+
+      // ============= PROGRESS PHOTOS SUBCOLLECTION =============
+      match /progress-photos/{photoId} {
+        allow read: if request.auth != null && (
+          // Proprietario
+          request.auth.uid == userId ||
+          // Coach con delega
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create: if request.auth != null && 
+          request.auth.uid == userId;
+          
+        allow update: if request.auth != null && 
+          request.auth.uid == userId;
+          
+        allow delete: if request.auth != null && 
+          request.auth.uid == userId;
+      }
+    }
+
+    // ============= SETTINGS =============
+    match /settings/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        // Permetti lettura per cercare coach tramite coachCode
+        true ||
+        (request.auth.token.email != null && 
+         resource.data.email != null &&
+         exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
+      );
+      
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      // Subcollections
+      match /userSettings/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /weightHistory/{entryId} {
+        allow read: if request.auth != null && (
+          request.auth.uid == userId ||
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create, update, delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /weightGoalHistory/{entryId} {
+        allow read: if request.auth != null && (
+          request.auth.uid == userId ||
+          (request.auth.token.email != null &&
+           exists(/databases/$(database)/documents/settings/$(userId)) &&
+           get(/databases/$(database)/documents/settings/$(userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
+        );
+        
+        allow create, update, delete: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // ============= RESTO DELLE REGOLE ESISTENTI =============
+    match /userPreferences/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(['showNotes', 'showOptimization', 'showPercentRM']);
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /userSettings/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /rpeHistory/{rpeId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['userId', 'schedaId', 'exerciseId', 'timestamp']);
+      allow update: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow delete: if false;
+    }
+    
+    match /weeklyCheckIns/{checkInId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId &&
+        request.resource.data.keys().hasAll(['userId', 'schedaId', 'week', 'timestamp']);
+      allow update: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow delete: if false;
+    }
+
+    match /cardioSessions/{sessionId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.uid ||
+         request.auth.token.email == resource.data.email);
+
+      allow create: if request.auth != null
+        && (request.auth.uid == request.resource.data.uid ||
+            request.auth.token.email == request.resource.data.email)
+        && request.resource.data.type in ['walk','run','hiit']
+        && request.resource.data.duration is number
+        && request.resource.data.mode in ['outdoor','indoor'];
+
+      allow update, delete: if false;
+    }
+    
+    match /programmingState/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.data.keys().hasAll(['userId', 'currentWeek', 'lastProcessedWeek']);
+      allow update: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /timings/{timingId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+        (request.auth.token.email == request.resource.data.userEmail ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      allow update, delete: if false;
+    }
+
+    match /esercizi/{esercizioId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    // ============= EXERCISE FEEDBACK SYSTEM =============
+    match /exerciseFeedback/{feedbackId} {
+      // Tutti gli utenti autenticati possono leggere
+      allow read: if request.auth != null;
+      
+      // Creazione con controlli
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.reportedBy.userId &&
+        request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'feedbackType', 'currentValue', 'proposedValue', 'reportedBy', 'deviceInfo']) &&
+        request.resource.data.feedbackType in ['nome', 'immagine', 'focus'];
+      
+      // Update solo per aggiungere approvazioni
+      allow update: if request.auth != null &&
+        // Non può approvare le proprie segnalazioni
+        request.auth.uid != resource.data.reportedBy.userId &&
+        // Solo modifiche al campo approvals e approvalCount
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approvals', 'approvalCount', 'firstApprovalAt']) &&
+        // L'utente non ha già approvato
+        !resource.data.approvals.hasAny([request.auth.uid]);
+      
+      // Solo admin può eliminare
+      allow delete: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // ============= USER FEEDBACK STATS =============
+    match /userFeedbackStats/{statsId} {
+      // L'utente può leggere le proprie statistiche
+      allow read: if request.auth != null && 
+        (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
+      
+      // Sistema può creare/aggiornare (gestito dal service)
+      allow create: if request.auth != null;
+      allow update: if request.auth != null &&
+        (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
+      
+      // Solo admin può eliminare
+      allow delete: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // ============= EXERCISES DATABASE =============
+    match /exercises/{exerciseId} {
+      // Permetti lettura a tutti gli utenti autenticati
+      allow read: if request.auth != null;
+      
+      // Solo admin può creare, modificare o eliminare
+      allow create, update, delete: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    match /attivitaEsercizi/{activityId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.userId ||
+         request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid);
+      allow create: if request.auth != null && 
+        (request.auth.uid == request.resource.data.userId ||
+         request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.uid);
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.userId ||
+         request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.uid);
+    }
+
+    // ============= WORKOUT FEEDBACK =============
+    match /workoutFeedback/{feedbackId} {
+      // Permetti list/query a tutti gli utenti autenticati
+      // I documenti saranno filtrati dalla query stessa
+      allow read: if request.auth != null;
+      
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.athleteId &&
+        request.resource.data.keys().hasAll(['athleteId', 'athleteEmail', 'athleteName', 'overallRPE', 'overallDifficulty']);
+      
+      allow update: if request.auth != null && 
+        resource != null &&
+        (request.auth.uid == resource.data.athleteId || 
+         request.auth.uid == resource.data.coachId);
+      
+      allow delete: if false; // Non permettiamo eliminazione di feedback
+    }
+
+    // ============= OCR USAGE - GLOBAL SETTINGS =============
+    match /settings/ocr_usage {
+      // Tutti gli utenti autenticati possono leggere per verificare limiti
+      allow read: if request.auth != null;
+      
+      // Solo il sistema può scrivere (tramite Cloud Functions o Admin SDK)
+      allow create, update: if request.auth != null;
+      
+      // Non permettiamo eliminazione
+      allow delete: if false;
+    }
+
+    // ============= OCR USAGE - USER STATS =============
+    match /users/{userId}/ocr_usage/stats {
+      // L'utente può leggere le proprie statistiche
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Sistema può creare/aggiornare
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      
+      // Non permettiamo eliminazione
+      allow delete: if false;
+    }
+
+    // ============= WORKOUT TEMPLATES =============
+    match /workoutTemplates/{templateId} {
+      // Il coach proprietario può leggere/scrivere i propri template
+      allow read: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+      
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.coachId &&
+        request.resource.data.keys().hasAll(['coachId', 'name', 'giorni', 'createdAt']);
+      
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+      
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.coachId;
+    }
+
+    // ============= COMPLETED WORKOUTS =============
+    match /completedWorkouts/{workoutId} {
+      allow read: if request.auth != null && (
+        // Proprietario
+        request.auth.uid == resource.data.userId ||
+        request.auth.token.email == resource.data.email ||
+        // Coach con delega
+        (request.auth.token.email != null && (
+          // Check con email dell'utente
+          (resource.data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true) ||
+          // Check con userId cercando email in settings
+          (resource.data.userId != null &&
+           exists(/databases/$(database)/documents/settings/$(resource.data.userId)) &&
+           get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email != null &&
+           exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)) &&
+           get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(resource.data.userId)).data.email)).data.permissions.canViewDashboard == true)
+        ))
+      );
+      
+      allow create: if request.auth != null && 
+        (request.auth.uid == request.resource.data.userId ||
+         request.auth.token.email == request.resource.data.email);
+        
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.userId ||
+         request.auth.token.email == resource.data.email);
+    }
+
+    // ============= WORKOUTS - MODIFICATO PER SUPPORTARE EMAIL =============
+    match /workouts/{workoutId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.userId ||
+        request.auth.token.email == resource.data.email  // AGGIUNTO per supportare dati vecchi
+      );
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+    }
+
+    match /workoutHistory/{historyId} {
+      allow read: if request.auth != null && 
+        (request.auth.token.email == resource.data.email ||
+         request.auth.uid == resource.data.userId ||
+         request.auth.uid == resource.data.uid);
+      allow create: if request.auth != null && 
+        (request.auth.token.email == request.resource.data.email ||
+         request.auth.uid == request.resource.data.userId ||
+         request.auth.uid == request.resource.data.uid);
+      allow update: if false;
+      allow delete: if false;
+    }
+    // ============= COLLEZIONI LEGACY (con 's') =============
+  match /dropSetsActivity/{activityId} {
+    allow read: if request.auth != null && (
+      request.auth.token.email == resource.data.email ||
+      request.auth.uid == resource.data.userId ||
+      request.auth.uid == resource.data.uid
+    );
+    allow write: if false; // Solo lettura per dati legacy
+  }
+
+  match /supersetsActivity/{activityId} {
+    allow read: if request.auth != null && (
+      request.auth.token.email == resource.data.email ||
+      request.auth.uid == resource.data.userId ||
+      request.auth.uid == resource.data.uid
+    );
+    allow write: if false; // Solo lettura per dati legacy
+  }
+
+    // ============= COMMUNITY PROGRAMS =============
+    match /communityPrograms/{programId} {
+      // Lettura permessa per tutti gli utenti autenticati
+      // I programmi privati saranno filtrati lato client
+      allow read: if request.auth != null;
+      
+      // Creazione solo per utenti autenticati
+      allow create: if request.auth != null && 
+        request.resource.data.authorId == request.auth.uid &&
+        request.resource.data.keys().hasAll(['authorId', 'authorName', 'authorEmail', 'title', 'description', 'category', 'difficulty', 'duration', 'daysPerWeek', 'giorni', 'tags', 'isPublic', 'stats']);
+      
+      // Update permesso per:
+      // 1. L'autore può modificare tutto
+      // 2. Altri utenti possono solo modificare stats (per likes, views, downloads)
+      allow update: if request.auth != null && (
+        // Autore può modificare tutto
+        resource.data.authorId == request.auth.uid ||
+        // Altri utenti possono solo modificare stats
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats', 'updatedAt']))
+      );
+      
+      // Eliminazione solo per l'autore
+      allow delete: if request.auth != null && 
+        resource.data.authorId == request.auth.uid;
+      
+      // ============= PROGRAM REVIEWS (subcollection) =============
+      match /reviews/{reviewId} {
+        // Lettura permessa per tutti
+        allow read: if request.auth != null;
+        
+        // Creazione solo per utenti che hanno scaricato il programma
+        allow create: if request.auth != null && 
+          request.resource.data.userId == request.auth.uid &&
+          request.resource.data.keys().hasAll(['userId', 'userName', 'rating', 'review', 'timestamp']);
+        
+        // Update solo per l'autore della recensione
+        allow update: if request.auth != null && 
+          resource.data.userId == request.auth.uid;
+        
+        // Eliminazione solo per l'autore della recensione
+        allow delete: if request.auth != null && 
+          resource.data.userId == request.auth.uid;
+      }
+    }
+    
+    // ============= PROGRAM DOWNLOADS =============
+    match /programDownloads/{downloadId} {
+      // Gli utenti possono vedere:
+      // 1. I propri download (sempre)
+      // 2. Download con recensioni (rating > 0) di qualsiasi utente (per mostrare recensioni pubbliche)
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid ||
+        (resource.data.rating != null && resource.data.rating > 0)
+      );
+      
+      // Gli utenti possono creare download per se stessi
+      allow create: if request.auth != null && 
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.keys().hasAll(['programId', 'programTitle', 'authorName', 'userId', 'userName', 'downloadedAt', 'appliedToScheda']);
+      
+      // Gli utenti possono aggiornare i propri download (per recensioni)
+      allow update: if request.auth != null && 
+        resource.data.userId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'review', 'reviewedAt', 'appliedToScheda', 'schedaId']);
+      
+      // Nessuno può eliminare i download (per mantenere le statistiche)
+      allow delete: if false;
+    }
+
+    // ==========================================
+    // NOTIFICATION SETTINGS V2.0 SECURITY RULES
+    // ==========================================
+
+    // User notification settings collection
+    match /users/{userId}/notificationSettings {
+
+      // Users can only read/write their own notification settings
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Validate NotificationSettings v2.0 schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationSettings(request.resource.data);
+    }
+
+    // User notification history collection
+    match /users/{userId}/notificationHistory/{notificationId} {
+
+      // Users can only read/write their own notification history
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Validate NotificationHistoryEntry schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationHistoryEntry(request.resource.data);
+
+      // Allow deletion for GDPR compliance (Article 17: Right to Erasure)
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ==========================================
+    // NOTIFICATION V2.0 VALIDATION FUNCTIONS
+    // ==========================================
+
+    function validateNotificationSettings(data) {
+      return data.keys().hasAll([
+        'enableWorkoutReminders',
+        'enableRecoveryAlerts',
+        'settingsVersion'
+      ])
+      && data.settingsVersion is int
+      && data.settingsVersion >= 2
+      && (data.enableWorkoutReminders is bool)
+      && (data.enableRecoveryAlerts is bool)
+      && (data.enableStreakMotivation is bool)
+      && (data.enableRestDayReminders is bool)
+      && (data.enableSmartScheduling is bool)
+      && (data.doNotDisturbEnabled is bool)
+      && (data.reminderMinutesBefore is int)
+      && (data.reminderMinutesBefore >= 0 && data.reminderMinutesBefore <= 1440)
+      // v2.0 specific validations
+      && validateFrequencyCap(data)
+      && validateDataRetention(data)
+      && validateConsent(data);
+    }
+
+    function validateFrequencyCap(data) {
+      return !data.keys().hasAny(['frequencyCapPreferences'])
+        || (
+          data.frequencyCapPreferences.maxPerDay is int
+          && data.frequencyCapPreferences.maxPerDay >= 1
+          && data.frequencyCapPreferences.maxPerDay <= 10
+          && data.frequencyCapPreferences.maxPerWeek is int
+          && data.frequencyCapPreferences.maxPerWeek >= 1
+          && data.frequencyCapPreferences.maxPerWeek <= 20
+          && data.frequencyCapPreferences.minIntervalHours is int
+          && data.frequencyCapPreferences.minIntervalHours >= 0
+          && data.frequencyCapPreferences.minIntervalHours <= 24
+        );
+    }
+
+    function validateDataRetention(data) {
+      return data.dataRetentionDays is int
+        && data.dataRetentionDays >= 30
+        && data.dataRetentionDays <= 365;
+    }
+
+    function validateConsent(data) {
+      // GDPR: If enableAnalytics is true, consentTimestamp must exist
+      return !data.enableAnalytics
+        || (data.enableAnalytics && data.keys().hasAny(['consentTimestamp']));
+    }
+
+    function validateNotificationHistoryEntry(data) {
+      return data.keys().hasAll([
+        'type',
+        'title',
+        'body',
+        'timestamp',
+        'isRead'
+      ])
+      && data.type is string
+      && data.type in ['workout_reminder', 'recovery_alert', 'streak_motivation', 'rest_day_reminder', 'achievement']
+      && data.title is string
+      && data.body is string
+      && data.timestamp is timestamp
+      && data.isRead is bool;
+    }
+
+
+    // ==========================================
+    // FLEXIBLE ROUTINES
+    // ==========================================
+    match /flexibleRoutines/{routineId} {
+      // Users can read/write their own routines
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // Users can create routines for themselves
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ==========================================
+    // EXERCISES METADATA (VERSION INFO)
+    // ==========================================
+    match /exercises_metadata/version_info {
+      // Everyone can read version info (for update checks)
+      allow read: if true;
+      
+      // Only authenticated users can write (admin/system)
+      allow write: if request.auth != null;
+    }
+
+    // ==========================================
+    // INSIGHT FEEDBACK
+    // ==========================================
+    match /insight_feedback/{feedbackId} {
+      // Users can read their own feedback
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // Users can create feedback for themselves
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own feedback
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+  }
+}

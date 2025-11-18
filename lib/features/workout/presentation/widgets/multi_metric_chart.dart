@@ -69,11 +69,20 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
       return _buildEmptyState(context);
     }
 
+    // ✅ NEW: Generate insights
+    final insight = _generateInsight(context);
+
     return RepaintBoundary(
       child: Column(
         children: [
           // Legend
           _buildLegend(context),
+
+          // ✅ NEW: Insights Card
+          if (insight != null) ...[
+            const SizedBox(height: 12),
+            _buildInsightCard(context, insight),
+          ],
 
           // ✅ Hint: Valori normalizzati + tooltip
           Padding(
@@ -86,7 +95,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
                   size: 14,
                   color: context.colors.onSurface.withValues(alpha: 0.5),
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   context.l10n.chartTapToSeeRealValues,
                   style: context.textTheme.labelSmall?.copyWith(
@@ -417,6 +426,164 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
     }
   }
 
+  /// ✅ NEW: Genera insight intelligente analizzando trend ultimo vs precedente workout
+  ///
+  /// Pattern riconosciuti:
+  /// - Peso ↑, Reps ↓ → Progressive overload
+  /// - Peso ↑, Reps ↓↓ (>30%) → Warning: riduci peso
+  /// - Peso =, Reps ↑ → Volume increase (buono)
+  /// - RPE sempre alto (>9) → Suggerimento recupero
+  _InsightData? _generateInsight(BuildContext context) {
+    final allDates = _getAllUniqueDates();
+    if (allDates.length < 2) return null; // Serve almeno 2 workout
+
+    final lastDate = allDates.last;
+    final prevDate = allDates[allDates.length - 2];
+
+    // Get data for Peso e Reps
+    final pesoData = widget.dataByMetric['Peso'] ?? [];
+    final repsData = widget.dataByMetric['Reps'] ?? [];
+    final rpeData = widget.dataByMetric['RPE'] ?? [];
+
+    final lastPeso = pesoData.firstWhere(
+      (p) => _sameDay(p.date, lastDate),
+      orElse: () => pesoData.last,
+    ).value;
+    final prevPeso = pesoData.firstWhere(
+      (p) => _sameDay(p.date, prevDate),
+      orElse: () => pesoData.first,
+    ).value;
+
+    final lastReps = repsData.firstWhere(
+      (p) => _sameDay(p.date, lastDate),
+      orElse: () => repsData.last,
+    ).value;
+    final prevReps = repsData.firstWhere(
+      (p) => _sameDay(p.date, prevDate),
+      orElse: () => repsData.first,
+    ).value;
+
+    final pesoDiff = lastPeso - prevPeso;
+    final repsDiff = lastReps - prevReps;
+    final repsChangePercent = prevReps > 0 ? (repsDiff / prevReps) * 100 : 0;
+
+    // ✅ Pattern 1: Peso ↑, Reps ↓↓ (>30%) → Warning
+    if (pesoDiff > 0 && repsChangePercent < -30) {
+      return _InsightData(
+        icon: AppIcons.warning,
+        color: context.colors.error,
+        title: 'Peso troppo alto',
+        message:
+            'Hai aumentato il peso di ${pesoDiff.toStringAsFixed(1)}kg ma le reps sono calate del ${repsChangePercent.abs().toStringAsFixed(0)}%. Considera di ridurre il peso e mantenere le reps.',
+      );
+    }
+
+    // ✅ Pattern 2: Peso ↑, Reps ↓ (10-30%) → Progressive overload
+    if (pesoDiff > 0 && repsDiff < 0 && repsChangePercent >= -30) {
+      return _InsightData(
+        icon: AppIcons.trendUp,
+        color: Colors.green,
+        title: 'Progressive Overload',
+        message:
+            'Peso +${pesoDiff.toStringAsFixed(1)}kg, Reps ${repsDiff.toStringAsFixed(0)}. Ottimo! Prossimo step: mantieni questo peso e recupera le reps.',
+      );
+    }
+
+    // ✅ Pattern 3: Peso =, Reps ↑ → Volume increase
+    if (pesoDiff.abs() < 2.5 && repsDiff > 0) {
+      return _InsightData(
+        icon: AppIcons.trendUp,
+        color: context.colors.tertiary,
+        title: 'Aumento Volume',
+        message:
+            'Reps +${repsDiff.toStringAsFixed(0)} mantenendo il peso. Ottimo! Quando raggiungi +3 reps, considera di aumentare il peso.',
+      );
+    }
+
+    // ✅ Pattern 4: RPE sempre alto (media >9) → Recupero
+    if (rpeData.length >= 3) {
+      final lastThreeRPE = rpeData.reversed.take(3).map((p) => p.value).toList();
+      final avgRPE = lastThreeRPE.reduce((a, b) => a + b) / lastThreeRPE.length;
+      if (avgRPE > 9) {
+        return _InsightData(
+          icon: AppIcons.warning,
+          color: context.colors.error,
+          title: 'RPE Troppo Alto',
+          message:
+              'Media RPE ultimi 3 workout: ${avgRPE.toStringAsFixed(1)}/10. Considera un deload (riduzione peso 10-20%) per recuperare.',
+        );
+      }
+    }
+
+    return null;
+  }
+
+  bool _sameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  /// ✅ NEW: Widget card per visualizzare insight
+  Widget _buildInsightCard(BuildContext context, _InsightData insight) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            insight.color.withValues(alpha: 0.15),
+            insight.color.withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: insight.color.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: insight.color.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              insight.icon,
+              size: 20,
+              color: insight.color,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  insight.title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: insight.color,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  insight.message,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurface.withValues(alpha: 0.7),
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Widget empty state quando nessun dato disponibile
   Widget _buildEmptyState(BuildContext context) {
     return Container(
@@ -437,7 +604,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
               size: 48,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.noDataForChart,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -449,4 +616,19 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
       ),
     );
   }
+}
+
+/// ✅ NEW: Data class per insight
+class _InsightData {
+  const _InsightData({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.message,
+  });
+
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String message;
 }

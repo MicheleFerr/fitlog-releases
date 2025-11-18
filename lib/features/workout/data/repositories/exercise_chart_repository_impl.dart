@@ -178,7 +178,8 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
             : null;
 
       case 'RPE':
-        // ✅ RPE: Average Rate of Perceived Exertion (5-10 scale)
+        // ✅ RPE: Average Rate of Perceived Exertion (6-10 scale)
+        // ⚠️ FIX: Exclude rpe=0 (warmup sets and skipped RPE)
         if (kDebugMode) {
           debugPrint('         🔍 RPE Metric Analysis:');
           debugPrint('            Total sets: ${sets.length}');
@@ -188,15 +189,18 @@ class ExerciseChartRepositoryImpl implements ExerciseChartRepository {
           }
         }
 
-        final rpeValues = sets.where((s) => s.rpe != null).map((s) => s.rpe!.toDouble());
+        // ✅ FIX: Filter out rpe=0 (RPE scale is 6-10, 0 = warmup or skipped)
+        final rpeValues = sets
+            .where((s) => s.rpe != null && s.rpe! > 0)
+            .map((s) => s.rpe!.toDouble());
 
         if (kDebugMode) {
           if (rpeValues.isNotEmpty) {
-            debugPrint('            ✅ RPE values found: ${rpeValues.toList()}');
+            debugPrint('            ✅ Valid RPE values found: ${rpeValues.toList()}');
             final avg = rpeValues.reduce((a, b) => a + b) / rpeValues.length;
             debugPrint('            → Average RPE: ${avg.toStringAsFixed(2)}');
           } else {
-            debugPrint('            ❌ NO RPE VALUES - all sets have null RPE');
+            debugPrint('            ❌ NO VALID RPE VALUES (all rpe=0 or null)');
           }
         }
 

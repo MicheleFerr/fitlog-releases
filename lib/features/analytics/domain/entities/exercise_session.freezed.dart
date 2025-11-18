@@ -27,7 +27,7 @@ mixin _$ExerciseSession {
   String get muscleGroup => throw _privateConstructorUsedError;
 
   /// All sets performed in this session
-  List<ExerciseSet> get sets => throw _privateConstructorUsedError;
+  List<AnalyticsSet> get sets => throw _privateConstructorUsedError;
 
   /// When the session was performed
   DateTime get date => throw _privateConstructorUsedError;
@@ -47,7 +47,7 @@ abstract class $ExerciseSessionCopyWith<$Res> {
   $Res call(
       {String exerciseName,
       String muscleGroup,
-      List<ExerciseSet> sets,
+      List<AnalyticsSet> sets,
       DateTime date});
 }
 
@@ -81,7 +81,7 @@ class _$ExerciseSessionCopyWithImpl<$Res, $Val extends ExerciseSession>
       sets: null == sets
           ? _value.sets
           : sets // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSet>,
+              as List<AnalyticsSet>,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -101,7 +101,7 @@ abstract class _$$ExerciseSessionImplCopyWith<$Res>
   $Res call(
       {String exerciseName,
       String muscleGroup,
-      List<ExerciseSet> sets,
+      List<AnalyticsSet> sets,
       DateTime date});
 }
 
@@ -133,7 +133,7 @@ class __$$ExerciseSessionImplCopyWithImpl<$Res>
       sets: null == sets
           ? _value._sets
           : sets // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSet>,
+              as List<AnalyticsSet>,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -148,7 +148,7 @@ class _$ExerciseSessionImpl extends _ExerciseSession {
   const _$ExerciseSessionImpl(
       {required this.exerciseName,
       required this.muscleGroup,
-      required final List<ExerciseSet> sets,
+      required final List<AnalyticsSet> sets,
       required this.date})
       : _sets = sets,
         super._();
@@ -165,11 +165,11 @@ class _$ExerciseSessionImpl extends _ExerciseSession {
   final String muscleGroup;
 
   /// All sets performed in this session
-  final List<ExerciseSet> _sets;
+  final List<AnalyticsSet> _sets;
 
   /// All sets performed in this session
   @override
-  List<ExerciseSet> get sets {
+  List<AnalyticsSet> get sets {
     if (_sets is EqualUnmodifiableListView) return _sets;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_sets);
@@ -221,7 +221,7 @@ abstract class _ExerciseSession extends ExerciseSession {
   const factory _ExerciseSession(
       {required final String exerciseName,
       required final String muscleGroup,
-      required final List<ExerciseSet> sets,
+      required final List<AnalyticsSet> sets,
       required final DateTime date}) = _$ExerciseSessionImpl;
   const _ExerciseSession._() : super._();
 
@@ -239,7 +239,7 @@ abstract class _ExerciseSession extends ExerciseSession {
   @override
 
   /// All sets performed in this session
-  List<ExerciseSet> get sets;
+  List<AnalyticsSet> get sets;
   @override
 
   /// When the session was performed

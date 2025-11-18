@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================
+    // NOTIFICATION SETTINGS V2.0 SECURITY RULES
+    // ==========================================
+
+    // User notification settings collection
+    match /users/{userId}/notificationSettings {
+
+      // Users can only read/write their own notification settings
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Validate NotificationSettings v2.0 schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationSettings(request.resource.data);
+    }
+
+    // User notification history collection
+    match /users/{userId}/notificationHistory/{notificationId} {
+
+      // Users can only read/write their own notification history
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Validate NotificationHistoryEntry schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationHistoryEntry(request.resource.data);
+
+      // Allow deletion for GDPR compliance (Article 17: Right to Erasure)
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ==========================================
+    // VALIDATION FUNCTIONS
+    // ==========================================
+
+    function validateNotificationSettings(data) {
+      return data.keys().hasAll([
+        'enableWorkoutReminders',
+        'enableRecoveryAlerts',
+        'settingsVersion'
+      ])
+      && data.settingsVersion is int
+      && data.settingsVersion >= 2
+      && (data.enableWorkoutReminders is bool)
+      && (data.enableRecoveryAlerts is bool)
+      && (data.enableStreakMotivation is bool)
+      && (data.enableRestDayReminders is bool)
+      && (data.enableSmartScheduling is bool)
+      && (data.doNotDisturbEnabled is bool)
+      && (data.reminderMinutesBefore is int)
+      && (data.reminderMinutesBefore >= 0 && data.reminderMinutesBefore <= 1440)
+      // v2.0 specific validations
+      && validateFrequencyCap(data)
+      && validateDataRetention(data)
+      && validateConsent(data);
+    }
+
+    function validateFrequencyCap(data) {
+      return !data.keys().hasAny(['frequencyCapPreferences'])
+        || (
+          data.frequencyCapPreferences.maxPerDay is int
+          && data.frequencyCapPreferences.maxPerDay >= 1
+          && data.frequencyCapPreferences.maxPerDay <= 10
+          && data.frequencyCapPreferences.maxPerWeek is int
+          && data.frequencyCapPreferences.maxPerWeek >= 1
+          && data.frequencyCapPreferences.maxPerWeek <= 20
+          && data.frequencyCapPreferences.minIntervalHours is int
+          && data.frequencyCapPreferences.minIntervalHours >= 0
+          && data.frequencyCapPreferences.minIntervalHours <= 24
+        );
+    }
+
+    function validateDataRetention(data) {
+      return data.dataRetentionDays is int
+        && data.dataRetentionDays >= 30
+        && data.dataRetentionDays <= 365;
+    }
+
+    function validateConsent(data) {
+      // GDPR: If enableAnalytics is true, consentTimestamp must exist
+      return !data.enableAnalytics
+        || (data.enableAnalytics && data.keys().hasAny(['consentTimestamp']));
+    }
+
+    function validateNotificationHistoryEntry(data) {
+      return data.keys().hasAll([
+        'type',
+        'title',
+        'body',
+        'timestamp',
+        'isRead'
+      ])
+      && data.type is string
+      && data.type in ['workout_reminder', 'recovery_alert', 'streak_motivation', 'rest_day_reminder', 'achievement']
+      && data.title is string
+      && data.body is string
+      && data.timestamp is timestamp
+      && data.isRead is bool;
+    }
+
+    // ==========================================
+    // EXISTING RULES (DO NOT MODIFY)
+    // ==========================================
+
+    // ... (other existing rules for workouts, routines, etc.)
+  }
+}

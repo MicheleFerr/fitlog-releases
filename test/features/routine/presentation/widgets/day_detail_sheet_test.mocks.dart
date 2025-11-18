@@ -358,6 +358,23 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
       );
 
   @override
+  _i5.Future<bool> removeInvalidTemplateId({
+    required _i6.FlexibleRoutine? routine,
+    required String? invalidTemplateId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeInvalidTemplateId,
+          [],
+          {
+            #routine: routine,
+            #invalidTemplateId: invalidTemplateId,
+          },
+        ),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+
+  @override
   bool updateShouldNotify(
     _i2.FlexibleRoutineState? old,
     _i2.FlexibleRoutineState? current,

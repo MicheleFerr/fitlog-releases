@@ -13,7 +13,15 @@
     
     <!-- Internet permission for Firebase -->
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
+    <!-- Health Connect Permissions (Android 12+ / API 28+) -->
+    <!-- Read permissions for health data -->
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+
     <application
         android:label="GymBro TrackLog"
         android:name="${applicationName}"
@@ -99,5 +107,8 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+
+        <!-- Health Connect package query (required for Android 14+ / API 34+) -->
+        <package android:name="com.google.android.apps.healthdata" />
     </queries>
 </manifest>

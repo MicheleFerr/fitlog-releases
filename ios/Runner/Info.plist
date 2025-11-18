@@ -360,6 +360,13 @@
             <string>97r2b46745.skadnetwork</string>
         </dict>
     </array>
+    <!-- HealthKit Permissions (Task 4.2: AI Coach health data integration) -->
+    <!-- GDPR Article 9 compliant descriptions for biometric/health data -->
+    <key>NSHealthShareUsageDescription</key>
+    <string>FitLog Pro integrates with Apple Health to provide AI-powered workout insights based on your heart rate, steps, and workout data. Your health data is processed securely and never shared with third parties.</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>FitLog Pro writes your completed workouts to Apple Health so you can track all your fitness activity in one place. You can disable this at any time in Settings.</string>
+
     <!-- Export Compliance: App uses only standard encryption (HTTPS/TLS) -->
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
@@ -28,11 +29,11 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
 }
 
 class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
-  // Chip selezionato per il grafico: Peso, Reps, RPE, TUT
+  // Chip selezionato per il grafico: Peso, Reps, RPE
   String _selectedChip = 'Peso';
 
   // Metriche selezionate per il grafico multi-metrica (default: tutte)
-  final List<String> _selectedMultiMetrics = ['Peso', 'Reps', 'RPE', 'TUT'];
+  final List<String> _selectedMultiMetrics = ['Peso', 'Reps', 'RPE'];
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +125,6 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
               _buildMetricChip('Reps', AppIcons.repeat),
               const SizedBox(width: 8),
               _buildMetricChip('RPE', AppIcons.trendingUp),
-              const SizedBox(width: 8),
-              _buildMetricChip('TUT', AppIcons.timer),
             ],
           ),
         ),
@@ -511,12 +510,20 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Calcola e mostra livello di forza
             mappingAsync.when(
               data: (mapping) {
+                if (kDebugMode) {
+                  debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping');
+                  debugPrint('   Exercise: ${widget.exerciseName}');
+                  debugPrint('   Mapping standardId: ${mapping?.standardId}');
+                }
+
                 if (mapping == null) {
+                  if (kDebugMode) debugPrint('   ❌ Mapping is null');
                   return _buildStrengthLevelPlaceholder();
                 }
 
                 // Check if standardId is null (happens with fallback mappings)
                 if (mapping.standardId == null) {
+                  if (kDebugMode) debugPrint('   ❌ StandardId is null in mapping');
                   return _buildStrengthLevelPlaceholder();
                 }
 
@@ -525,7 +532,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
                 return standardAsync.when(
                   data: (standard) {
+                    if (kDebugMode) {
+                      debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 2 - Standard received: $standard');
+                      debugPrint('   StandardId: ${mapping.standardId}');
+                      debugPrint('   Standard name: ${standard?.name}');
+                    }
+
                     if (standard == null) {
+                      if (kDebugMode) debugPrint('   ❌ Standard is null');
                       return _buildStrengthLevelPlaceholder();
                     }
 
@@ -535,7 +549,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         final allSets = <ExerciseHistoryData>[];
                         historyMap.forEach((date, sets) => allSets.addAll(sets));
 
+                        if (kDebugMode) {
+                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 3 - History received');
+                          debugPrint('   Total sets: ${allSets.length}');
+                        }
+
                         if (allSets.isEmpty) {
+                          if (kDebugMode) debugPrint('   ❌ No sets in history');
                           return _buildStrengthLevelPlaceholder();
                         }
 
@@ -550,6 +570,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           }
                         }
 
+                        if (kDebugMode) {
+                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Calculated 1RM: ${best1RM.toStringAsFixed(1)} kg');
+                          debugPrint('   User bodyweight: ${standardBodyweight.toStringAsFixed(1)} kg');
+                        }
+
                         return _buildStrengthLevelContent(
                           standard: standard,
                           userBodyweight: standardBodyweight,
@@ -557,15 +582,24 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         );
                       },
                       loading: () => const LoadingIndicator(),
-                      error: (_, __) => _buildStrengthLevelPlaceholder(),
+                      error: (error, stack) {
+                        if (kDebugMode) debugPrint('   ❌ History error: $error');
+                        return _buildStrengthLevelPlaceholder();
+                      },
                     );
                   },
                   loading: () => const LoadingIndicator(),
-                  error: (_, __) => _buildStrengthLevelPlaceholder(),
+                  error: (error, stack) {
+                    if (kDebugMode) debugPrint('   ❌ Standard error: $error');
+                    return _buildStrengthLevelPlaceholder();
+                  },
                 );
               },
               loading: () => const LoadingIndicator(),
-              error: (_, __) => _buildStrengthLevelPlaceholder(),
+              error: (error, stack) {
+                if (kDebugMode) debugPrint('   ❌ Mapping error: $error');
+                return _buildStrengthLevelPlaceholder();
+              },
             ),
           ],
         ),

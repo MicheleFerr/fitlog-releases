@@ -5,8 +5,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/app/app.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 // 🔄 AppLifecycleManager per flush batch queue quando app va in background
 import 'package:gymbro_flutter_new/shared/presentation/widgets/app_lifecycle_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/theme_mode_adapter.dart';
@@ -226,6 +228,9 @@ void main() async {
   // Initialize secure storage boxes
   await _initializeStorage();
 
+  // Initialize SharedPreferences for notification settings v2.0
+  final sharedPreferences = await SharedPreferences.getInstance();
+
   // ========================================
   // 🔔 DEEP LINKING: Pass initial deep link to app via ProviderScope override
   // ========================================
@@ -236,6 +241,9 @@ void main() async {
       overrides: [
         // Override initialDeepLinkProvider with detected deep link (or null if normal launch)
         initialDeepLinkProvider.overrideWith((ref) => initialDeepLink),
+
+        // Override sharedPreferencesProvider with initialized instance
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
       child: const AppLifecycleManager(
         child: FitLogApp(),

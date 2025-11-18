@@ -12,7 +12,7 @@ _$ExerciseSessionImpl _$$ExerciseSessionImplFromJson(
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sets: (json['sets'] as List<dynamic>)
-          .map((e) => ExerciseSet.fromJson(e as Map<String, dynamic>))
+          .map((e) => AnalyticsSet.fromJson(e as Map<String, dynamic>))
           .toList(),
       date: DateTime.parse(json['date'] as String),
     );

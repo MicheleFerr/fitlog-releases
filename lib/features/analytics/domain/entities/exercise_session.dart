@@ -24,9 +24,9 @@
 ///   exerciseName: 'Bench Press',
 ///   muscleGroup: 'chest',
 ///   sets: [
-///     ExerciseSet(weight: 80, reps: 10, date: DateTime.now()),
-///     ExerciseSet(weight: 90, reps: 8, date: DateTime.now()),
-///     ExerciseSet(weight: 100, reps: 6, date: DateTime.now()),
+///     AnalyticsSet(weight: 80, reps: 10, date: DateTime.now()),
+///     AnalyticsSet(weight: 90, reps: 8, date: DateTime.now()),
+///     AnalyticsSet(weight: 100, reps: 6, date: DateTime.now()),
 ///   ],
 ///   date: DateTime.now(),
 /// );
@@ -38,7 +38,7 @@
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_set.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
 
 part 'exercise_session.freezed.dart';
 part 'exercise_session.g.dart';
@@ -55,7 +55,7 @@ class ExerciseSession with _$ExerciseSession {
     required String muscleGroup,
 
     /// All sets performed in this session
-    required List<ExerciseSet> sets,
+    required List<AnalyticsSet> sets,
 
     /// When the session was performed
     required DateTime date,

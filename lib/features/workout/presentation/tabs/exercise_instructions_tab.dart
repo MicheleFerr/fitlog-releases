@@ -2,8 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 
-/// Tab Istruzioni: mostra warmup protocol e tips generici
+/// Provider per filtrare esercizi alternativi basati sulla categoria
+final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
+  // Get all exercises from hybrid repository
+  final allExercises = await ref.read(allExercisesProvider.future);
+
+  // Find the current exercise to get its category
+  final currentExercise = allExercises.where((ex) => ex.nome == currentExerciseName).firstOrNull;
+
+  if (currentExercise == null || currentExercise.focus.isEmpty) {
+    // If current exercise not found or no focus, return empty list
+    return [];
+  }
+
+  // Get category from focus using the converter
+  final category = ExerciseConverter.mapFocusToCategory(currentExercise.focus);
+
+  // Filter exercises by same category, excluding current exercise
+  final alternatives = allExercises.where((ex) {
+    if (ex.nome == currentExerciseName) return false; // Exclude current exercise
+    if (ex.focus.isEmpty) return false; // Skip exercises without focus
+
+    final exCategory = ExerciseConverter.mapFocusToCategory(ex.focus);
+    return exCategory == category;
+  }).toList();
+
+  // Sort by difficulty and limit to top 8 alternatives
+  alternatives.sort((a, b) {
+    final diffOrder = ['Principiante', 'Intermedio', 'Avanzato'];
+    final aIndex = diffOrder.indexOf(a.difficolta);
+    final bIndex = diffOrder.indexOf(b.difficolta);
+    if (aIndex != bIndex) return aIndex.compareTo(bIndex);
+    return a.nome.compareTo(b.nome);
+  });
+
+  return alternatives.take(8).toList();
+});
+
+/// Tab Esercizi Alternativi: mostra esercizi simili nella stessa categoria
 class ExerciseInstructionsTab extends ConsumerWidget {
 
   const ExerciseInstructionsTab({
@@ -14,210 +55,191 @@ class ExerciseInstructionsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Nome esercizio
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                exerciseName,
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
+    final alternativesAsync = ref.watch(alternativeExercisesProvider(exerciseName));
+
+    return alternativesAsync.when(
+      data: (alternatives) {
+        if (alternatives.isEmpty) {
+          return _buildEmptyState(context);
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header section
+              Row(
+                children: [
+                  Icon(
+                    AppIcons.swapHoriz,
+                    color: context.colors.primary,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n.alternativeExercises,
+                          style: context.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: context.colors.onSurface,
+                          ),
+                        ),
+                        Text(
+                          '${alternatives.length} esercizi simili',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.outline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+
+              const SizedBox(height: 24),
+
+              // Alternative exercises list
+              ...alternatives.map((exercise) => _buildAlternativeCard(context, exercise)),
+
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: LoadingIndicator()),
+      error: (error, stack) => _buildEmptyState(context),
+    );
+  }
+
+  /// Build alternative exercise card
+  Widget _buildAlternativeCard(BuildContext context, Exercise exercise) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Exercise name
+            Row(
+              children: [
+                Icon(
+                  AppIcons.fitnessCenter,
+                  color: context.colors.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    exercise.nome,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Metadata chips row
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Difficulty
+                _buildMetadataChip(
+                  context,
+                  _getDifficultyIcon(exercise.difficolta),
+                  exercise.difficolta,
+                  _getDifficultyColor(exercise.difficolta),
+                ),
+
+                // Equipment
+                if (exercise.attrezzatura.isNotEmpty)
+                  _buildMetadataChip(
+                    context,
+                    AppIcons.construction,
+                    exercise.attrezzatura,
+                    context.colors.tertiary,
+                  ),
+
+                // Primary muscles
+                if (exercise.focus.isNotEmpty)
+                  _buildMetadataChip(
+                    context,
+                    AppIcons.accessibility,
+                    exercise.focus.join(', '),
+                    context.colors.secondary,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build metadata chip
+  Widget _buildMetadataChip(BuildContext context, IconData icon, String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
             ),
           ),
-
-          const SizedBox(height: 24),
-
-          // Warmup Protocol
-          _buildWarmupSection(context),
-
-          const SizedBox(height: 24),
-
-          // Tips generici
-          _buildTipsSection(context),
-
-          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  Widget _buildWarmupSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(AppIcons.localFireDepartment, color: Colors.orange),
-            SizedBox(width: 8),
-            Text(
-              context.l10n.warmupProtocol,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colors.onSurface,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildWarmupPhase(
-                  context,
-                  '1',
-                  context.l10n.warmupPhase1Title,
-                  context.l10n.warmupPhase1Description,
-                  AppIcons.accessibilityNew,
-                  Colors.blue,
-                ),
-                const Divider(height: 24),
-                _buildWarmupPhase(
-                  context,
-                  '2',
-                  context.l10n.warmupPhase2Title,
-                  context.l10n.warmupPhase2Description,
-                  AppIcons.flashOn,
-                  Colors.orange,
-                ),
-                const Divider(height: 24),
-                _buildWarmupPhase(
-                  context,
-                  '3',
-                  context.l10n.warmupPhase3Title,
-                  context.l10n.warmupPhase3Description,
-                  AppIcons.fitnessCenter,
-                  Colors.purple,
-                ),
-                const Divider(height: 24),
-                _buildWarmupPhase(
-                  context,
-                  '4',
-                  context.l10n.warmupPhase4Title,
-                  context.l10n.warmupPhase4Description,
-                  AppIcons.timer,
-                  Colors.green,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildWarmupPhase(
-    BuildContext context,
-    String number,
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-  ) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Icon(icon, color: color, size: 20),
-          ),
-        ),
-        SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.onSurface,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                description,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTipsSection(BuildContext context) {
-    final tips = _getGeneralTips();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(AppIcons.lightbulbOutline, color: Colors.amber),
-            SizedBox(width: 8),
-            Text(
-              context.l10n.tips,
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colors.onSurface,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ...tips.map((tip) => _buildTipCard(context, tip)),
-      ],
-    );
-  }
-
-  Widget _buildTipCard(BuildContext context, String tip) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  /// Build empty state when no alternatives found
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
       child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.checkCircle,
-              color: Colors.green,
-              size: 20,
+              AppIcons.searchOff,
+              size: 64,
+              color: context.colors.outline.withValues(alpha: 0.5),
             ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                tip,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurface,
-                  height: 1.4,
-                ),
+            const SizedBox(height: 16),
+            Text(
+              'Nessun esercizio alternativo trovato',
+              style: context.textTheme.titleMedium?.copyWith(
+                color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Prova a cercare esercizi simili nel database',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.outline,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -225,13 +247,31 @@ class ExerciseInstructionsTab extends ConsumerWidget {
     );
   }
 
-  List<String> _getGeneralTips() {
-    return [
-      'Concentrati sulla corretta esecuzione del movimento',
-      'Mantieni la tensione muscolare durante tutto l\'esercizio',
-      'Respira correttamente: espira durante lo sforzo',
-      'Non sacrificare la forma per aumentare il peso',
-      'Monitora i progressi e adatta il carico progressivamente',
-    ];
+  /// Get difficulty icon
+  IconData _getDifficultyIcon(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'principiante':
+        return AppIcons.star;
+      case 'intermedio':
+        return AppIcons.starHalf;
+      case 'avanzato':
+        return AppIcons.stars;
+      default:
+        return AppIcons.help;
+    }
+  }
+
+  /// Get difficulty color
+  Color _getDifficultyColor(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'principiante':
+        return Colors.green;
+      case 'intermedio':
+        return Colors.orange;
+      case 'avanzato':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }
