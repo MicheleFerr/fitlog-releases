@@ -348,6 +348,11 @@ class DeepLinkLogger {
 Future<void> _initializeStorage() async {
   // ⚡ PERFORMANCE OPTIMIZATION: Open basic boxes in parallel
   // This reduces app startup time by ~30-40% (from ~19s to ~12s)
+
+  if (kDebugMode) {
+    debugPrint('📦 [Storage] Starting initialization...');
+  }
+
   await Future.wait([
     _openBox('auth_box'),
     _openBox('timer_box'),
@@ -357,6 +362,10 @@ Future<void> _initializeStorage() async {
     _openBox<AppConfig>('app_config'),
     _openBox<Map>('workoutMetrics'), // Analytics caching
   ]);
+
+  if (kDebugMode) {
+    debugPrint('📦 [Storage] ✅ Basic boxes opened successfully');
+  }
 
   // ⚡ PERFORMANCE: Initialize datasources and services in parallel
   // This reduces sequential waits and improves startup time by ~20-30%
@@ -430,14 +439,19 @@ Future<void> _safeInitialize(
 Future<void> _openBox<T>(String boxName) async {
   final boxManager = HiveBoxManagerEnhanced();
   try {
+    if (kDebugMode) {
+      debugPrint('📦 [Storage] Opening box: $boxName');
+    }
     await boxManager.openBox<T>(boxName);
+    if (kDebugMode) {
+      debugPrint('📦 [Storage] ✅ Opened: $boxName');
+    }
   } catch (e, stackTrace) {
-    // Log errors only in debug mode
-    assert(() {
-      debugPrint('❌ Failed to open $boxName box: $e');
-      debugPrint('📍 Stack trace: $stackTrace');
-      return true;
-    }());
+    // Log errors ALWAYS (not just in assert) because this is critical
+    if (kDebugMode) {
+      debugPrint('❌ [Storage] FAILED to open $boxName box: $e');
+      debugPrint('📍 [Storage] Stack trace: $stackTrace');
+    }
 
     // Handle corrupted boxes that need recovery
     if ((boxName == 'app_config' && e.toString().contains('typeId')) ||
