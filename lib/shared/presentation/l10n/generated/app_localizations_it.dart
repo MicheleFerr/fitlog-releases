@@ -15683,7 +15683,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get pleaseWait => 'Attendere prego';
+  String get pleaseWait =>
+      'Attendere prego, potrebbe richiedere qualche istante';
 
   @override
   String accountTier(String tier) {
@@ -17150,7 +17151,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get migrationInProgress => 'Migrazione impostazioni...';
 
   @override
-  String get migrationComplete => 'Migrazione completata!';
+  String get migrationComplete => 'Migrazione Completata';
 
   @override
   String get useDefaultTime => 'Usa ora predefinita';
@@ -17297,4 +17298,33 @@ class AppLocalizationsIt extends AppLocalizations {
   String tier_unlock_requirement(int workouts, int days) {
     return 'Completa $workouts allenamenti in $days giorni per sbloccare';
   }
+
+  @override
+  String get migrateWorkoutHistory => 'Migra Storico Allenamenti';
+
+  @override
+  String get migrationWarning =>
+      'Questo migrerà tutti i tuoi dati storici di allenamento al nuovo sistema di analytics.';
+
+  @override
+  String get migrationDescription =>
+      'Questa è un\'operazione una tantum che analizza tutti i workout passati e crea uno storico dettagliato degli esercizi. I tuoi workout originali rimarranno invariati.';
+
+  @override
+  String get migrate => 'Migra';
+
+  @override
+  String get migratingWorkouts => 'Migrazione Allenamenti...';
+
+  @override
+  String get workoutsProcessed => 'Allenamenti Processati';
+
+  @override
+  String get uniqueExercises => 'Esercizi Unici';
+
+  @override
+  String get skipped => 'Saltati';
+
+  @override
+  String get migrationFailed => 'Migrazione Fallita';
 }

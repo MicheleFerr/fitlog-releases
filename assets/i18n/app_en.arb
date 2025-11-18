@@ -20727,5 +20727,61 @@
         "type": "int"
       }
     }
+  },
+  "migrateWorkoutHistory": "Migrate Workout History",
+  "@migrateWorkoutHistory": {
+    "description": "Title for workout migration dialog"
+  },
+  "migrationWarning": "This will migrate all your historical workout data to the new analytics system.",
+  "@migrationWarning": {
+    "description": "Warning message in migration dialog"
+  },
+  "migrationDescription": "This is a one-time operation that analyzes all past workouts and creates detailed exercise history. Your original workouts remain unchanged.",
+  "@migrationDescription": {
+    "description": "Description of migration process"
+  },
+  "migrate": "Migrate",
+  "@migrate": {
+    "description": "Migration button text"
+  },
+  "migratingWorkouts": "Migrating Workouts...",
+  "@migratingWorkouts": {
+    "description": "Title during migration"
+  },
+  "pleaseWait": "Please wait, this may take a moment",
+  "@pleaseWait": {
+    "description": "Message during migration"
+  },
+  "migrationComplete": "Migration Complete",
+  "@migrationComplete": {
+    "description": "Title after successful migration"
+  },
+  "workoutsProcessed": "Workouts Processed",
+  "@workoutsProcessed": {
+    "description": "Migration stat label"
+  },
+  "uniqueExercises": "Unique Exercises",
+  "@uniqueExercises": {
+    "description": "Migration stat label"
+  },
+  "totalSessions": "Total Sessions",
+  "@totalSessions": {
+    "description": "Migration stat label"
+  },
+  "totalSets": "Total Sets",
+  "@totalSets": {
+    "description": "Migration stat label"
+  },
+  "skipped": "Skipped",
+  "@skipped": {
+    "description": "Skipped exercises label"
+  },
+  "migrationFailed": "Migration Failed",
+  "@migrationFailed": {
+    "description": "Title when migration fails"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
   }
 }

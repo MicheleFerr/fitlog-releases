@@ -10115,5 +10115,61 @@
         "type": "int"
       }
     }
+  },
+  "migrateWorkoutHistory": "Migra Storico Allenamenti",
+  "@migrateWorkoutHistory": {
+    "description": "Titolo dialogo migrazione workout"
+  },
+  "migrationWarning": "Questo migrerà tutti i tuoi dati storici di allenamento al nuovo sistema di analytics.",
+  "@migrationWarning": {
+    "description": "Messaggio di avviso nel dialogo migrazione"
+  },
+  "migrationDescription": "Questa è un'operazione una tantum che analizza tutti i workout passati e crea uno storico dettagliato degli esercizi. I tuoi workout originali rimarranno invariati.",
+  "@migrationDescription": {
+    "description": "Descrizione del processo di migrazione"
+  },
+  "migrate": "Migra",
+  "@migrate": {
+    "description": "Testo pulsante migrazione"
+  },
+  "migratingWorkouts": "Migrazione Allenamenti...",
+  "@migratingWorkouts": {
+    "description": "Titolo durante migrazione"
+  },
+  "pleaseWait": "Attendere prego, potrebbe richiedere qualche istante",
+  "@pleaseWait": {
+    "description": "Messaggio durante migrazione"
+  },
+  "migrationComplete": "Migrazione Completata",
+  "@migrationComplete": {
+    "description": "Titolo dopo migrazione riuscita"
+  },
+  "workoutsProcessed": "Allenamenti Processati",
+  "@workoutsProcessed": {
+    "description": "Etichetta statistica migrazione"
+  },
+  "uniqueExercises": "Esercizi Unici",
+  "@uniqueExercises": {
+    "description": "Etichetta statistica migrazione"
+  },
+  "totalSessions": "Sessioni Totali",
+  "@totalSessions": {
+    "description": "Etichetta statistica migrazione"
+  },
+  "totalSets": "Serie Totali",
+  "@totalSets": {
+    "description": "Etichetta statistica migrazione"
+  },
+  "skipped": "Saltati",
+  "@skipped": {
+    "description": "Etichetta esercizi saltati"
+  },
+  "migrationFailed": "Migrazione Fallita",
+  "@migrationFailed": {
+    "description": "Titolo quando migrazione fallisce"
+  },
+  "retry": "Riprova",
+  "@retry": {
+    "description": "Testo pulsante riprova"
   }
 }

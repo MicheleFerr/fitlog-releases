@@ -15530,7 +15530,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get pleaseWait => 'Please wait';
+  String get pleaseWait => 'Please wait, this may take a moment';
 
   @override
   String accountTier(String tier) {
@@ -16981,7 +16981,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get migrationInProgress => 'Migrating settings...';
 
   @override
-  String get migrationComplete => 'Migration complete!';
+  String get migrationComplete => 'Migration Complete';
 
   @override
   String get useDefaultTime => 'Use default time';
@@ -17128,4 +17128,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String tier_unlock_requirement(int workouts, int days) {
     return 'Complete $workouts workouts over $days days to unlock';
   }
+
+  @override
+  String get migrateWorkoutHistory => 'Migrate Workout History';
+
+  @override
+  String get migrationWarning =>
+      'This will migrate all your historical workout data to the new analytics system.';
+
+  @override
+  String get migrationDescription =>
+      'This is a one-time operation that analyzes all past workouts and creates detailed exercise history. Your original workouts remain unchanged.';
+
+  @override
+  String get migrate => 'Migrate';
+
+  @override
+  String get migratingWorkouts => 'Migrating Workouts...';
+
+  @override
+  String get workoutsProcessed => 'Workouts Processed';
+
+  @override
+  String get uniqueExercises => 'Unique Exercises';
+
+  @override
+  String get skipped => 'Skipped';
+
+  @override
+  String get migrationFailed => 'Migration Failed';
 }

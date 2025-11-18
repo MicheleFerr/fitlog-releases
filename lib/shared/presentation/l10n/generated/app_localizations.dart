@@ -5663,7 +5663,7 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get totalExercises;
 
-  /// Label for total number of sets
+  /// Migration stat label
   ///
   /// In en, this message translates to:
   /// **'Total Sets'**
@@ -17484,7 +17484,7 @@ abstract class AppLocalizations {
   /// **'Avg RPE'**
   String get averageRPE;
 
-  /// Label for total number of workout sessions
+  /// Migration stat label
   ///
   /// In en, this message translates to:
   /// **'Total Sessions'**
@@ -27744,10 +27744,10 @@ abstract class AppLocalizations {
   /// **'Continue with {plan}'**
   String continueWithPlan(String plan);
 
-  /// Generic please wait message
+  /// Message during migration
   ///
   /// In en, this message translates to:
-  /// **'Please wait'**
+  /// **'Please wait, this may take a moment'**
   String get pleaseWait;
 
   /// Account tier display
@@ -30384,10 +30384,10 @@ abstract class AppLocalizations {
   /// **'Migrating settings...'**
   String get migrationInProgress;
 
-  /// Success message after migration
+  /// Title after successful migration
   ///
   /// In en, this message translates to:
-  /// **'Migration complete!'**
+  /// **'Migration Complete'**
   String get migrationComplete;
 
   /// Label indicating default time will be used
@@ -30671,6 +30671,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete {workouts} workouts over {days} days to unlock'**
   String tier_unlock_requirement(int workouts, int days);
+
+  /// Title for workout migration dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate Workout History'**
+  String get migrateWorkoutHistory;
+
+  /// Warning message in migration dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will migrate all your historical workout data to the new analytics system.'**
+  String get migrationWarning;
+
+  /// Description of migration process
+  ///
+  /// In en, this message translates to:
+  /// **'This is a one-time operation that analyzes all past workouts and creates detailed exercise history. Your original workouts remain unchanged.'**
+  String get migrationDescription;
+
+  /// Migration button text
+  ///
+  /// In en, this message translates to:
+  /// **'Migrate'**
+  String get migrate;
+
+  /// Title during migration
+  ///
+  /// In en, this message translates to:
+  /// **'Migrating Workouts...'**
+  String get migratingWorkouts;
+
+  /// Migration stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts Processed'**
+  String get workoutsProcessed;
+
+  /// Migration stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Unique Exercises'**
+  String get uniqueExercises;
+
+  /// Skipped exercises label
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skipped;
+
+  /// Title when migration fails
+  ///
+  /// In en, this message translates to:
+  /// **'Migration Failed'**
+  String get migrationFailed;
 }
 
 class _AppLocalizationsDelegate
