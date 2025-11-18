@@ -3148,7 +3148,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get maxReps => 'Max Reps';
 
   @override
-  String get estimated1RM => 'Est. 1RM';
+  String get estimated1RM => 'Estimated 1RM';
 
   @override
   String get volumeProgression => 'Volume Progression';
@@ -7246,7 +7246,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completed => 'Completed';
 
   @override
-  String get set => 'Set';
+  String get set => 'set';
 
   @override
   String get complete => 'Complete';
@@ -17174,4 +17174,50 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tryDifferentTimeframe =>
       'Try selecting a different timeframe to see your progress';
+
+  @override
+  String get volumeRecord => 'Volume Record';
+
+  @override
+  String get heaviestSingleSet => 'Heaviest single set';
+
+  @override
+  String get calculatedMaxStrength => 'Calculated max strength';
+
+  @override
+  String get highestSingleWorkout => 'Highest single workout';
+
+  @override
+  String get setsRecord => 'Sets Record';
+
+  @override
+  String get mostSetsInOneWorkout => 'Most sets in one workout';
+
+  @override
+  String get activityStatistics => 'Activity Statistics';
+
+  @override
+  String get averageLast4Weeks => 'Average (last 4 weeks)';
+
+  @override
+  String get noRecordsYet => 'No records yet';
+
+  @override
+  String get completeWorkoutsToTrackRecords =>
+      'Complete workouts to track records';
+
+  @override
+  String get noWorkoutHistory => 'No workout history';
+
+  @override
+  String get noWorkoutHistoryYet => 'No workout history yet';
+
+  @override
+  String get completeWorkoutToSeeHistory => 'Complete a workout to see history';
+
+  @override
+  String get pr => 'PR';
+
+  @override
+  String get records => 'Records';
 }

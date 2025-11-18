@@ -1790,7 +1790,7 @@ abstract class AppLocalizations {
   /// **'Exercise Category'**
   String get exerciseCategory;
 
-  /// Label for sets (lowercase)
+  /// Plural form of exercise sets
   ///
   /// In en, this message translates to:
   /// **'sets'**
@@ -2959,7 +2959,7 @@ abstract class AppLocalizations {
   /// **'Consistency'**
   String get consistency;
 
-  /// Total workouts statistic
+  /// Total workouts count label
   ///
   /// In en, this message translates to:
   /// **'Total Workouts'**
@@ -2989,7 +2989,7 @@ abstract class AppLocalizations {
   /// **'Per Session'**
   String get perSession;
 
-  /// Section title for personal records
+  /// Personal records section title
   ///
   /// In en, this message translates to:
   /// **'Personal Records'**
@@ -4823,7 +4823,7 @@ abstract class AppLocalizations {
   /// **'Pull to refresh'**
   String get pullToRefresh;
 
-  /// Weekly frequency label
+  /// Weekly training frequency label
   ///
   /// In en, this message translates to:
   /// **'Weekly Frequency'**
@@ -5867,7 +5867,7 @@ abstract class AppLocalizations {
   /// **'Volume Change'**
   String get volumeChange;
 
-  /// Label for maximum weight lifted
+  /// Max weight personal record label
   ///
   /// In en, this message translates to:
   /// **'Max Weight'**
@@ -5879,10 +5879,10 @@ abstract class AppLocalizations {
   /// **'Max Reps'**
   String get maxReps;
 
-  /// Estimated one rep max
+  /// Estimated one-rep max label
   ///
   /// In en, this message translates to:
-  /// **'Est. 1RM'**
+  /// **'Estimated 1RM'**
   String get estimated1RM;
 
   /// Volume progression chart title
@@ -7343,13 +7343,13 @@ abstract class AppLocalizations {
   /// **'Complete workouts to see history'**
   String get completeWorkoutsToSeeHistory;
 
-  /// Label for today's date
+  /// Today time reference
   ///
   /// In en, this message translates to:
   /// **'Today'**
   String get today;
 
-  /// Label for yesterday's date
+  /// Yesterday time reference
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**
@@ -12929,10 +12929,10 @@ abstract class AppLocalizations {
   /// **'Completed'**
   String get completed;
 
-  /// Singular form of set (as in workout set)
+  /// Singular form of exercise set
   ///
   /// In en, this message translates to:
-  /// **'Set'**
+  /// **'set'**
   String get set;
 
   /// Complete button
@@ -17466,7 +17466,7 @@ abstract class AppLocalizations {
   /// **'Effort Progression'**
   String get effortProgression;
 
-  /// Label indicating current streak is a personal best
+  /// Personal record full label
   ///
   /// In en, this message translates to:
   /// **'Personal Record'**
@@ -25698,7 +25698,7 @@ abstract class AppLocalizations {
   /// **'Loading your analytics...'**
   String get loadingYourAnalytics;
 
-  /// From quick wins migration - 1 occurrences
+  /// Empty state for volume chart
   ///
   /// In en, this message translates to:
   /// **'No workout data yet'**
@@ -30755,6 +30755,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try selecting a different timeframe to see your progress'**
   String get tryDifferentTimeframe;
+
+  /// Total volume record label
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Record'**
+  String get volumeRecord;
+
+  /// Max weight record description
+  ///
+  /// In en, this message translates to:
+  /// **'Heaviest single set'**
+  String get heaviestSingleSet;
+
+  /// Estimated 1RM description
+  ///
+  /// In en, this message translates to:
+  /// **'Calculated max strength'**
+  String get calculatedMaxStrength;
+
+  /// Volume record description
+  ///
+  /// In en, this message translates to:
+  /// **'Highest single workout'**
+  String get highestSingleWorkout;
+
+  /// Total sets record label
+  ///
+  /// In en, this message translates to:
+  /// **'Sets Record'**
+  String get setsRecord;
+
+  /// Sets record description
+  ///
+  /// In en, this message translates to:
+  /// **'Most sets in one workout'**
+  String get mostSetsInOneWorkout;
+
+  /// Activity statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Statistics'**
+  String get activityStatistics;
+
+  /// Weekly frequency time period
+  ///
+  /// In en, this message translates to:
+  /// **'Average (last 4 weeks)'**
+  String get averageLast4Weeks;
+
+  /// Empty state when no personal records exist
+  ///
+  /// In en, this message translates to:
+  /// **'No records yet'**
+  String get noRecordsYet;
+
+  /// Prompt to complete workouts for records
+  ///
+  /// In en, this message translates to:
+  /// **'Complete workouts to track records'**
+  String get completeWorkoutsToTrackRecords;
+
+  /// Empty state accessibility label
+  ///
+  /// In en, this message translates to:
+  /// **'No workout history'**
+  String get noWorkoutHistory;
+
+  /// Empty state message for workout history
+  ///
+  /// In en, this message translates to:
+  /// **'No workout history yet'**
+  String get noWorkoutHistoryYet;
+
+  /// Prompt to complete first workout
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a workout to see history'**
+  String get completeWorkoutToSeeHistory;
+
+  /// Personal record abbreviation badge
+  ///
+  /// In en, this message translates to:
+  /// **'PR'**
+  String get pr;
+
+  /// Records tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get records;
 }
 
 class _AppLocalizationsDelegate

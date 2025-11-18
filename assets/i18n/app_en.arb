@@ -20803,5 +20803,117 @@
   "tryDifferentTimeframe": "Try selecting a different timeframe to see your progress",
   "@tryDifferentTimeframe": {
     "description": "Suggestion when no data in current timeframe"
+  },
+  "maxWeight": "Max Weight",
+  "@maxWeight": {
+    "description": "Max weight personal record label"
+  },
+  "estimated1RM": "Estimated 1RM",
+  "@estimated1RM": {
+    "description": "Estimated one-rep max label"
+  },
+  "volumeRecord": "Volume Record",
+  "@volumeRecord": {
+    "description": "Total volume record label"
+  },
+  "volumeProgression": "Volume Progression",
+  "@volumeProgression": {
+    "description": "Volume progression chart title"
+  },
+  "personalRecords": "Personal Records",
+  "@personalRecords": {
+    "description": "Personal records section title"
+  },
+  "heaviestSingleSet": "Heaviest single set",
+  "@heaviestSingleSet": {
+    "description": "Max weight record description"
+  },
+  "calculatedMaxStrength": "Calculated max strength",
+  "@calculatedMaxStrength": {
+    "description": "Estimated 1RM description"
+  },
+  "highestSingleWorkout": "Highest single workout",
+  "@highestSingleWorkout": {
+    "description": "Volume record description"
+  },
+  "setsRecord": "Sets Record",
+  "@setsRecord": {
+    "description": "Total sets record label"
+  },
+  "mostSetsInOneWorkout": "Most sets in one workout",
+  "@mostSetsInOneWorkout": {
+    "description": "Sets record description"
+  },
+  "activityStatistics": "Activity Statistics",
+  "@activityStatistics": {
+    "description": "Activity statistics section title"
+  },
+  "lastWorkout": "Last Workout",
+  "@lastWorkout": {
+    "description": "Last workout date label"
+  },
+  "weeklyFrequency": "Weekly Frequency",
+  "@weeklyFrequency": {
+    "description": "Weekly training frequency label"
+  },
+  "averageLast4Weeks": "Average (last 4 weeks)",
+  "@averageLast4Weeks": {
+    "description": "Weekly frequency time period"
+  },
+  "totalWorkouts": "Total Workouts",
+  "@totalWorkouts": {
+    "description": "Total workouts count label"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today time reference"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday time reference"
+  },
+  "noRecordsYet": "No records yet",
+  "@noRecordsYet": {
+    "description": "Empty state when no personal records exist"
+  },
+  "completeWorkoutsToTrackRecords": "Complete workouts to track records",
+  "@completeWorkoutsToTrackRecords": {
+    "description": "Prompt to complete workouts for records"
+  },
+  "noWorkoutHistory": "No workout history",
+  "@noWorkoutHistory": {
+    "description": "Empty state accessibility label"
+  },
+  "noWorkoutHistoryYet": "No workout history yet",
+  "@noWorkoutHistoryYet": {
+    "description": "Empty state message for workout history"
+  },
+  "completeWorkoutToSeeHistory": "Complete a workout to see history",
+  "@completeWorkoutToSeeHistory": {
+    "description": "Prompt to complete first workout"
+  },
+  "personalRecord": "Personal Record",
+  "@personalRecord": {
+    "description": "Personal record full label"
+  },
+  "pr": "PR",
+  "@pr": {
+    "description": "Personal record abbreviation badge"
+  },
+  "noWorkoutDataYet": "No workout data yet",
+  "@noWorkoutDataYet": {
+    "description": "Empty state for volume chart"
+  },
+  "records": "Records",
+  "@records": {
+    "description": "Records tab label"
+  },
+  "set": "set",
+  "@set": {
+    "description": "Singular form of exercise set"
+  },
+  "sets": "sets",
+  "@sets": {
+    "description": "Plural form of exercise sets"
   }
 }

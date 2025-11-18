@@ -10191,5 +10191,117 @@
   "tryDifferentTimeframe": "Prova a selezionare un intervallo temporale diverso per vedere i tuoi progressi",
   "@tryDifferentTimeframe": {
     "description": "Suggerimento quando non ci sono dati nell'intervallo corrente"
+  },
+  "maxWeight": "Peso Massimo",
+  "@maxWeight": {
+    "description": "Etichetta record peso massimo"
+  },
+  "estimated1RM": "1RM Stimato",
+  "@estimated1RM": {
+    "description": "Etichetta massimale una ripetizione stimato"
+  },
+  "volumeRecord": "Record di Volume",
+  "@volumeRecord": {
+    "description": "Etichetta record volume totale"
+  },
+  "volumeProgression": "Progressione Volume",
+  "@volumeProgression": {
+    "description": "Titolo grafico progressione volume"
+  },
+  "personalRecords": "Record Personali",
+  "@personalRecords": {
+    "description": "Titolo sezione record personali"
+  },
+  "heaviestSingleSet": "Serie più pesante",
+  "@heaviestSingleSet": {
+    "description": "Descrizione record peso massimo"
+  },
+  "calculatedMaxStrength": "Forza massima calcolata",
+  "@calculatedMaxStrength": {
+    "description": "Descrizione 1RM stimato"
+  },
+  "highestSingleWorkout": "Singolo allenamento più alto",
+  "@highestSingleWorkout": {
+    "description": "Descrizione record volume"
+  },
+  "setsRecord": "Record di Serie",
+  "@setsRecord": {
+    "description": "Etichetta record serie totali"
+  },
+  "mostSetsInOneWorkout": "Più serie in un allenamento",
+  "@mostSetsInOneWorkout": {
+    "description": "Descrizione record serie"
+  },
+  "activityStatistics": "Statistiche Attività",
+  "@activityStatistics": {
+    "description": "Titolo sezione statistiche attività"
+  },
+  "lastWorkout": "Ultimo Allenamento",
+  "@lastWorkout": {
+    "description": "Etichetta data ultimo allenamento"
+  },
+  "weeklyFrequency": "Frequenza Settimanale",
+  "@weeklyFrequency": {
+    "description": "Etichetta frequenza allenamento settimanale"
+  },
+  "averageLast4Weeks": "Media (ultime 4 settimane)",
+  "@averageLast4Weeks": {
+    "description": "Periodo frequenza settimanale"
+  },
+  "totalWorkouts": "Allenamenti Totali",
+  "@totalWorkouts": {
+    "description": "Etichetta conteggio allenamenti totali"
+  },
+  "today": "Oggi",
+  "@today": {
+    "description": "Riferimento temporale oggi"
+  },
+  "yesterday": "Ieri",
+  "@yesterday": {
+    "description": "Riferimento temporale ieri"
+  },
+  "noRecordsYet": "Nessun record ancora",
+  "@noRecordsYet": {
+    "description": "Stato vuoto quando non esistono record personali"
+  },
+  "completeWorkoutsToTrackRecords": "Completa allenamenti per tracciare i record",
+  "@completeWorkoutsToTrackRecords": {
+    "description": "Prompt per completare allenamenti per i record"
+  },
+  "noWorkoutHistory": "Nessuna cronologia allenamenti",
+  "@noWorkoutHistory": {
+    "description": "Etichetta accessibilità stato vuoto"
+  },
+  "noWorkoutHistoryYet": "Nessuna cronologia allenamenti ancora",
+  "@noWorkoutHistoryYet": {
+    "description": "Messaggio stato vuoto cronologia allenamenti"
+  },
+  "completeWorkoutToSeeHistory": "Completa un allenamento per vedere la cronologia",
+  "@completeWorkoutToSeeHistory": {
+    "description": "Prompt per completare primo allenamento"
+  },
+  "personalRecord": "Record Personale",
+  "@personalRecord": {
+    "description": "Etichetta completa record personale"
+  },
+  "pr": "RP",
+  "@pr": {
+    "description": "Badge abbreviazione record personale"
+  },
+  "noWorkoutDataYet": "Nessun dato allenamento ancora",
+  "@noWorkoutDataYet": {
+    "description": "Stato vuoto grafico volume"
+  },
+  "records": "Record",
+  "@records": {
+    "description": "Etichetta tab record"
+  },
+  "set": "serie",
+  "@set": {
+    "description": "Forma singolare di serie esercizio"
+  },
+  "sets": "serie",
+  "@sets": {
+    "description": "Forma plurale di serie esercizio"
   }
 }

@@ -7316,7 +7316,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get completed => 'Completato';
 
   @override
-  String get set => 'Serie';
+  String get set => 'serie';
 
   @override
   String get complete => 'Completa';
@@ -14579,7 +14579,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loadingYourAnalytics => 'Caricamento analisi...';
 
   @override
-  String get noWorkoutDataYet => 'Nessun dato di allenamento';
+  String get noWorkoutDataYet => 'Nessun dato allenamento ancora';
 
   @override
   String get completeSomeWorkoutsToSeeYournanalyticsA =>
@@ -17345,4 +17345,51 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get tryDifferentTimeframe =>
       'Prova a selezionare un intervallo temporale diverso per vedere i tuoi progressi';
+
+  @override
+  String get volumeRecord => 'Record di Volume';
+
+  @override
+  String get heaviestSingleSet => 'Serie più pesante';
+
+  @override
+  String get calculatedMaxStrength => 'Forza massima calcolata';
+
+  @override
+  String get highestSingleWorkout => 'Singolo allenamento più alto';
+
+  @override
+  String get setsRecord => 'Record di Serie';
+
+  @override
+  String get mostSetsInOneWorkout => 'Più serie in un allenamento';
+
+  @override
+  String get activityStatistics => 'Statistiche Attività';
+
+  @override
+  String get averageLast4Weeks => 'Media (ultime 4 settimane)';
+
+  @override
+  String get noRecordsYet => 'Nessun record ancora';
+
+  @override
+  String get completeWorkoutsToTrackRecords =>
+      'Completa allenamenti per tracciare i record';
+
+  @override
+  String get noWorkoutHistory => 'Nessuna cronologia allenamenti';
+
+  @override
+  String get noWorkoutHistoryYet => 'Nessuna cronologia allenamenti ancora';
+
+  @override
+  String get completeWorkoutToSeeHistory =>
+      'Completa un allenamento per vedere la cronologia';
+
+  @override
+  String get pr => 'RP';
+
+  @override
+  String get records => 'Record';
 }
