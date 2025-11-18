@@ -809,6 +809,33 @@ class AppLocalizationsEn extends AppLocalizations {
       'Check your notification center to verify it works';
 
   @override
+  String get prNotifications => 'New Personal Records';
+
+  @override
+  String get prNotificationsDescription =>
+      'Get notified when you set a new personal record';
+
+  @override
+  String get streakAchievements => 'Workout Streaks';
+
+  @override
+  String get streakAchievementsDescription =>
+      'Celebrate your workout consistency milestones';
+
+  @override
+  String get goalCompletions => 'Goal Completions';
+
+  @override
+  String get goalCompletionsDescription =>
+      'Reach your monthly volume and workout goals';
+
+  @override
+  String get milestones => 'Milestones';
+
+  @override
+  String get milestonesDescription => 'Track major workout count achievements';
+
+  @override
   String get customRequest => 'Custom Request (Optional)';
 
   @override

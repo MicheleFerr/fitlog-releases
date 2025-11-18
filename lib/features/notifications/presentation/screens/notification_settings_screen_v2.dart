@@ -223,6 +223,49 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 8),
+            // Achievement Notifications (Priority 2)
+            SwitchListTile(
+              title: Text(context.l10n.prNotifications),
+              subtitle: Text(context.l10n.prNotificationsDescription),
+              value: settings.enablePRNotifications,
+              onChanged: (value) {
+                ref
+                    .read(notificationSettingsV2Provider.notifier)
+                    .togglePRNotifications(value);
+              },
+            ),
+            SwitchListTile(
+              title: Text(context.l10n.streakAchievements),
+              subtitle: Text(context.l10n.streakAchievementsDescription),
+              value: settings.enableStreakAchievements,
+              onChanged: (value) {
+                ref
+                    .read(notificationSettingsV2Provider.notifier)
+                    .toggleStreakAchievements(value);
+              },
+            ),
+            SwitchListTile(
+              title: Text(context.l10n.goalCompletions),
+              subtitle: Text(context.l10n.goalCompletionsDescription),
+              value: settings.enableGoalCompletions,
+              onChanged: (value) {
+                ref
+                    .read(notificationSettingsV2Provider.notifier)
+                    .toggleGoalCompletions(value);
+              },
+            ),
+            SwitchListTile(
+              title: Text(context.l10n.milestones),
+              subtitle: Text(context.l10n.milestonesDescription),
+              value: settings.enableMilestones,
+              onChanged: (value) {
+                ref
+                    .read(notificationSettingsV2Provider.notifier)
+                    .toggleMilestones(value);
+              },
+            ),
+            const Divider(height: 24),
+            // Existing Progress & Motivation toggles
             SwitchListTile(
               title: Text(context.l10n.streakMotivation),
               subtitle: Text(context.l10n.streakMotivationDescription),

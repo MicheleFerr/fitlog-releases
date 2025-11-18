@@ -1550,6 +1550,54 @@ abstract class AppLocalizations {
   /// **'Check your notification center to verify it works'**
   String get testNotificationSentDescription;
 
+  /// Toggle for PR (Personal Record) achievement notifications
+  ///
+  /// In en, this message translates to:
+  /// **'New Personal Records'**
+  String get prNotifications;
+
+  /// Description for PR notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when you set a new personal record'**
+  String get prNotificationsDescription;
+
+  /// Toggle for workout streak achievement notifications (7/30/100 days)
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Streaks'**
+  String get streakAchievements;
+
+  /// Description for workout streak notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrate your workout consistency milestones'**
+  String get streakAchievementsDescription;
+
+  /// Toggle for goal completion notifications (volume, frequency targets)
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Completions'**
+  String get goalCompletions;
+
+  /// Description for goal completion notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Reach your monthly volume and workout goals'**
+  String get goalCompletionsDescription;
+
+  /// Toggle for milestone achievement notifications (50/100/500 workouts)
+  ///
+  /// In en, this message translates to:
+  /// **'Milestones'**
+  String get milestones;
+
+  /// Description for milestone notification toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Track major workout count achievements'**
+  String get milestonesDescription;
+
   /// Custom request input label
   ///
   /// In en, this message translates to:

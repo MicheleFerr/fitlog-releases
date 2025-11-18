@@ -812,6 +812,34 @@ class AppLocalizationsIt extends AppLocalizations {
       'Controlla il centro notifiche per verificare che funzioni';
 
   @override
+  String get prNotifications => 'Nuovi Record Personali';
+
+  @override
+  String get prNotificationsDescription =>
+      'Ricevi notifiche quando stabilisci un nuovo record personale';
+
+  @override
+  String get streakAchievements => 'Serie di Allenamenti';
+
+  @override
+  String get streakAchievementsDescription =>
+      'Celebra i traguardi di costanza (7/30/100 giorni)';
+
+  @override
+  String get goalCompletions => 'Obiettivi Raggiunti';
+
+  @override
+  String get goalCompletionsDescription =>
+      'Raggiungi i tuoi obiettivi mensili di volume e frequenza';
+
+  @override
+  String get milestones => 'Traguardi';
+
+  @override
+  String get milestonesDescription =>
+      'Traccia i traguardi principali (50/100/500 allenamenti)';
+
+  @override
   String get customRequest => 'Richiesta Personalizzata (Opzionale)';
 
   @override

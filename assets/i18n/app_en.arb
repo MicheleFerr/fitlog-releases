@@ -1004,6 +1004,38 @@
   "@testNotificationSentDescription": {
     "description": "Instructions after sending test notification"
   },
+  "prNotifications": "New Personal Records",
+  "@prNotifications": {
+    "description": "Toggle for PR (Personal Record) achievement notifications"
+  },
+  "prNotificationsDescription": "Get notified when you set a new personal record",
+  "@prNotificationsDescription": {
+    "description": "Description for PR notification toggle"
+  },
+  "streakAchievements": "Workout Streaks",
+  "@streakAchievements": {
+    "description": "Toggle for workout streak achievement notifications (7/30/100 days)"
+  },
+  "streakAchievementsDescription": "Celebrate your workout consistency milestones",
+  "@streakAchievementsDescription": {
+    "description": "Description for workout streak notification toggle"
+  },
+  "goalCompletions": "Goal Completions",
+  "@goalCompletions": {
+    "description": "Toggle for goal completion notifications (volume, frequency targets)"
+  },
+  "goalCompletionsDescription": "Reach your monthly volume and workout goals",
+  "@goalCompletionsDescription": {
+    "description": "Description for goal completion notification toggle"
+  },
+  "milestones": "Milestones",
+  "@milestones": {
+    "description": "Toggle for milestone achievement notifications (50/100/500 workouts)"
+  },
+  "milestonesDescription": "Track major workout count achievements",
+  "@milestonesDescription": {
+    "description": "Description for milestone notification toggle"
+  },
   "customRequest": "Custom Request (Optional)",
   "@customRequest": {
     "description": "Custom request input label"

@@ -214,6 +214,38 @@ class NotificationSettingsNotifierV2
     await updateSettings(current.copyWith(enableSupplementReminders: enabled));
   }
 
+  /// Toggle PR (Personal Record) notifications
+  Future<void> togglePRNotifications(bool enabled) async {
+    final current = state.value;
+    if (current == null) return;
+
+    await updateSettings(current.copyWith(enablePRNotifications: enabled));
+  }
+
+  /// Toggle workout streak achievement notifications
+  Future<void> toggleStreakAchievements(bool enabled) async {
+    final current = state.value;
+    if (current == null) return;
+
+    await updateSettings(current.copyWith(enableStreakAchievements: enabled));
+  }
+
+  /// Toggle goal completion notifications
+  Future<void> toggleGoalCompletions(bool enabled) async {
+    final current = state.value;
+    if (current == null) return;
+
+    await updateSettings(current.copyWith(enableGoalCompletions: enabled));
+  }
+
+  /// Toggle milestone achievement notifications
+  Future<void> toggleMilestones(bool enabled) async {
+    final current = state.value;
+    if (current == null) return;
+
+    await updateSettings(current.copyWith(enableMilestones: enabled));
+  }
+
   /// Update preferred time
   Future<void> updatePreferredTime(
       NotificationTimePreference preference) async {
