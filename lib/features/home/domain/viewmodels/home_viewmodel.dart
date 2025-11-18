@@ -12,6 +12,7 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/home/data/viewmodels/home_viewmodel_impl.dart';
 
 abstract class HomeViewModel {
   AsyncValue<String> get greeting;
@@ -58,5 +59,5 @@ class StreakData {
 
 // Provider
 final homeViewModelProvider = Provider<HomeViewModel>((ref) {
-  throw UnimplementedError('Implement in data layer');
+  return HomeViewModelImpl(ref);
 });
