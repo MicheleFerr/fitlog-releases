@@ -21,6 +21,7 @@
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/muscle_recovery_data.dart';
@@ -75,11 +76,20 @@ class RecoveryInsightsRepositoryImpl implements RecoveryInsightsRepository {
   @override
   Future<Either<Failure, List<RecoveryTierStatus>>> getTierStatuses() async {
     try {
+      if (kDebugMode) {
+        debugPrint('🧠 [Recovery Insights] Fetching tier statuses for user: $userId');
+      }
+
       // Fetch workout count and account creation date
       final workoutsSnapshot = await firestore
+          .collection('users')
+          .doc(userId)
           .collection('workouts')
-          .where('userId', isEqualTo: userId)
           .get();
+
+      if (kDebugMode) {
+        debugPrint('🧠 [Recovery Insights] Found ${workoutsSnapshot.docs.length} workouts');
+      }
 
       final workouts = workoutsSnapshot.docs
           .map((doc) => Workout.fromJson(doc.data()))
@@ -94,6 +104,11 @@ class RecoveryInsightsRepositoryImpl implements RecoveryInsightsRepository {
       final daysSinceCreation =
           DateTime.now().difference(accountCreatedAt).inDays;
 
+      if (kDebugMode) {
+        debugPrint('🧠 [Recovery Insights] Account age: $daysSinceCreation days');
+        debugPrint('🧠 [Recovery Insights] Total workouts: ${workouts.length}');
+      }
+
       // Calculate status for each tier
       final statuses = <RecoveryTierStatus>[];
 
@@ -101,6 +116,12 @@ class RecoveryInsightsRepositoryImpl implements RecoveryInsightsRepository {
         final config = _getConfigForTier(tier);
         final isUnlocked = workouts.length >= config.minWorkouts &&
             daysSinceCreation >= config.minDays;
+
+        if (kDebugMode) {
+          debugPrint('🧠 [Recovery Insights] ${tier.name} tier:');
+          debugPrint('   Required: ${config.minWorkouts} workouts, ${config.minDays} days');
+          debugPrint('   Status: ${isUnlocked ? "✅ UNLOCKED" : "🔒 LOCKED"}');
+        }
 
         // Check if unlock timestamp exists in Hive
         DateTime? unlockedAt;
