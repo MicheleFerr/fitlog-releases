@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show debugRepaintRainbowEnabled;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -86,6 +88,19 @@ class FitLogApp extends ConsumerWidget {
     // This prevents the 10+ second delay on first timer use
     // ✅ FIX: Watch the provider to ensure it's initialized
     ref.watch(unifiedTimerProvider);
+
+    // ⚡ REPAINT OPTIMIZATION: Enable repaint rainbow visualization (DEBUG ONLY)
+    // Shows colored overlays on widgets when they repaint
+    // Useful for validating RepaintBoundary effectiveness
+    // ✅ SAFETY: Only works in debug mode + when feature flag is enabled
+    if (kDebugMode && FeatureFlags.enableRepaintRainbow) {
+      debugRepaintRainbowEnabled = true;
+      debugPrint('🌈 [REPAINT] Repaint rainbow enabled - colored overlays show widget repaints');
+      debugPrint('   💡 Tip: Areas that flash frequently = excessive repaints');
+      debugPrint('   ✅ Verify: RepaintBoundary prevents color changes in isolated widgets');
+    } else {
+      debugRepaintRainbowEnabled = false;
+    }
 
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {
@@ -491,6 +506,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final exerciseName = state.extra as String;
           return ExerciseDetailScreen(exerciseName: exerciseName);
+        },
+      ),
+      // 📊 ANALYTICS: Exercise Detail Screen with URL parameter
+      // Enables navigation via context.push('/analytics/exercise/Bench Press')
+      // Uses path parameter for deep linking support
+      GoRoute(
+        path: '/analytics/exercise/:exerciseName',
+        name: 'analytics-exercise-detail',
+        builder: (context, state) {
+          final exerciseName = state.pathParameters['exerciseName']!;
+          return ExerciseDetailScreen(
+            exerciseName: Uri.decodeComponent(exerciseName),
+          );
         },
       ),
       GoRoute(
