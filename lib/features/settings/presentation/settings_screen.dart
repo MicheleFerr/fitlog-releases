@@ -12,6 +12,7 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/debug/achievement_debug_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -88,22 +89,40 @@ class SettingsScreen extends ConsumerWidget {
             if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
               Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Center(
-                  child: FilledButton.tonalIcon(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AchievementDebugScreen(),
+                child: Column(
+                  children: [
+                    // Migrate Analytics Button
+                    Center(
+                      child: FilledButton.tonalIcon(
+                        onPressed: () => showMigrationDialog(context, ref),
+                        icon: const Icon(AppIcons.analytics),
+                        label: Text(context.l10n.migrateWorkoutHistory),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                          foregroundColor: context.colors.primary,
                         ),
-                      );
-                    },
-                    icon: const Icon(AppIcons.star),
-                    label: const Text('🧪 Test 13 Achievements'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
-                      foregroundColor: context.colors.secondary,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    // Achievement Test Button
+                    Center(
+                      child: FilledButton.tonalIcon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const AchievementDebugScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(AppIcons.star),
+                        label: const Text('🧪 Test 13 Achievements'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
+                          foregroundColor: context.colors.secondary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
