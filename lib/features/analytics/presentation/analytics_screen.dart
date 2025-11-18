@@ -237,9 +237,8 @@ class _ExerciseHistoryCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to exercise detail screen
-          // NOTE: Route not implemented yet - commented out to prevent navigation error
-          // context.push('/analytics/exercise/${history.exerciseName}');
+          // Navigate to Exercise Detail Screen with URI-encoded exercise name
+          context.push('/analytics/exercise/${Uri.encodeComponent(history.exerciseName)}');
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
