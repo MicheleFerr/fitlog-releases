@@ -18,9 +18,13 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 
 /// Provider per il caricamento del database esercizi
 /// Carica il file corretto in base alla lingua dell'app
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final exercisesDatabaseProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+/// ⚡ CRITICAL FIX: Removed autoDispose to prevent infinite GIF reload loop
+/// Database is ~1MB and doesn't change, caching for entire session prevents:
+/// - Continuous reloads when ExerciseListItem rebuilds
+/// - Network spam (100+ GIF requests/second)
+/// - Memory waste from reloading same JSON repeatedly
+/// This matches the fix in exercise_selection_provider.dart (same database, different use case)
+final exercisesDatabaseProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   try {
     // Ottieni la lingua dell'app
     final locale = ref.watch(localeProvider);

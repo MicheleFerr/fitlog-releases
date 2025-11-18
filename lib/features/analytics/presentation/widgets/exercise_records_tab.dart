@@ -60,20 +60,20 @@ class ExerciseRecordsTab extends StatelessWidget {
           children: [
             SemanticIcon(
               icon: AppIcons.achievement,
-              semanticLabel: 'No records yet', // TODO(Phase 4.1): Replace with context.l10n.noRecordsYet
+              semanticLabel: context.l10n.noRecordsYet,
               size: AppIconSize.xxlarge,
               color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
-              'No records yet', // TODO(Phase 4.1): Replace with context.l10n.noRecordsYet
+              context.l10n.noRecordsYet,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Complete workouts to track records', // TODO(Phase 4.1): Replace with context.l10n.completeWorkoutsToTrackRecords
+              context.l10n.completeWorkoutsToTrackRecords,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
@@ -91,7 +91,7 @@ class ExerciseRecordsTab extends StatelessWidget {
         children: [
           // Section: Personal Records
           Text(
-            'Personal Records', // TODO(Phase 4.1): Replace with context.l10n.personalRecords
+            context.l10n.personalRecords,
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -102,9 +102,9 @@ class ExerciseRecordsTab extends StatelessWidget {
           _RecordCard(
             icon: AppIcons.achievement,
             iconColor: context.colors.primary,
-            title: 'Max Weight', // TODO(Phase 4.1): Replace with context.l10n.maxWeight
+            title: context.l10n.maxWeight,
             value: '${records.maxWeightRecord.toStringAsFixed(1)} kg',
-            subtitle: 'Heaviest single set', // TODO(Phase 4.1): Replace with context.l10n.heaviestSingleSet
+            subtitle: context.l10n.heaviestSingleSet,
           ),
           const SizedBox(height: 12),
 
@@ -112,9 +112,9 @@ class ExerciseRecordsTab extends StatelessWidget {
           _RecordCard(
             icon: AppIcons.workout,
             iconColor: context.colors.secondary,
-            title: 'Estimated 1RM', // TODO(Phase 4.1): Replace with context.l10n.estimated1RM
+            title: context.l10n.estimated1RM,
             value: '${records.estimated1RM.toStringAsFixed(1)} kg',
-            subtitle: 'Calculated max strength', // TODO(Phase 4.1): Replace with context.l10n.calculatedMaxStrength
+            subtitle: context.l10n.calculatedMaxStrength,
           ),
           const SizedBox(height: 12),
 
@@ -122,9 +122,9 @@ class ExerciseRecordsTab extends StatelessWidget {
           _RecordCard(
             icon: AppIcons.trendUp,
             iconColor: context.colors.tertiary,
-            title: 'Volume Record', // TODO(Phase 4.1): Replace with context.l10n.volumeRecord
+            title: context.l10n.volumeRecord,
             value: '${records.totalVolumeRecord.toStringAsFixed(0)} kg',
-            subtitle: 'Highest single workout', // TODO(Phase 4.1): Replace with context.l10n.highestSingleWorkout
+            subtitle: context.l10n.highestSingleWorkout,
           ),
           const SizedBox(height: 12),
 
@@ -132,16 +132,16 @@ class ExerciseRecordsTab extends StatelessWidget {
           _RecordCard(
             icon: AppIcons.list,
             iconColor: context.colors.primary,
-            title: 'Sets Record', // TODO(Phase 4.1): Replace with context.l10n.setsRecord
+            title: context.l10n.setsRecord,
             value: '${records.totalSetsRecord} sets',
-            subtitle: 'Most sets in one workout', // TODO(Phase 4.1): Replace with context.l10n.mostSetsInOneWorkout
+            subtitle: context.l10n.mostSetsInOneWorkout,
           ),
 
           const SizedBox(height: 32),
 
           // Section: Activity Statistics
           Text(
-            'Activity Statistics', // TODO(Phase 4.1): Replace with context.l10n.activityStatistics
+            context.l10n.activityStatistics,
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -152,8 +152,8 @@ class ExerciseRecordsTab extends StatelessWidget {
           _StatCard(
             icon: AppIcons.calendar,
             iconColor: context.colors.onSurfaceVariant,
-            label: 'Last Workout', // TODO(Phase 4.1): Replace with context.l10n.lastWorkout
-            value: _formatLastWorkout(records.daysSinceLastWorkout),
+            label: context.l10n.lastWorkout,
+            value: _formatLastWorkout(context, records.daysSinceLastWorkout),
             subtitle: DateFormat('MMM d, yyyy').format(records.lastWorkoutDate),
           ),
           const SizedBox(height: 12),
@@ -162,9 +162,9 @@ class ExerciseRecordsTab extends StatelessWidget {
           _StatCard(
             icon: AppIcons.barChart,
             iconColor: context.colors.onSurfaceVariant,
-            label: 'Weekly Frequency', // TODO(Phase 4.1): Replace with context.l10n.weeklyFrequency
+            label: context.l10n.weeklyFrequency,
             value: '${records.weeklyFrequency.toStringAsFixed(1)}x/week',
-            subtitle: 'Average (last 4 weeks)', // TODO(Phase 4.1): Replace with context.l10n.averageLast4Weeks
+            subtitle: context.l10n.averageLast4Weeks,
           ),
           const SizedBox(height: 12),
 
@@ -172,7 +172,7 @@ class ExerciseRecordsTab extends StatelessWidget {
           _StatCard(
             icon: AppIcons.workout,
             iconColor: context.colors.onSurfaceVariant,
-            label: 'Total Workouts', // TODO(Phase 4.1): Replace with context.l10n.totalWorkouts
+            label: context.l10n.totalWorkouts,
             value: '${records.totalWorkouts}',
             subtitle: _formatDateRange(records.firstWorkoutDate, records.lastWorkoutDate),
           ),
@@ -182,11 +182,11 @@ class ExerciseRecordsTab extends StatelessWidget {
   }
 
   /// Format days since last workout as human-readable string
-  String _formatLastWorkout(int days) {
+  String _formatLastWorkout(BuildContext context, int days) {
     if (days == 0) {
-      return 'Today'; // TODO(Phase 4.1): Replace with context.l10n.today
+      return context.l10n.today;
     } else if (days == 1) {
-      return 'Yesterday'; // TODO(Phase 4.1): Replace with context.l10n.yesterday
+      return context.l10n.yesterday;
     } else if (days < 7) {
       return '$days days ago';
     } else if (days < 30) {

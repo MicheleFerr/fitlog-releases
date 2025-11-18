@@ -30,6 +30,19 @@ class FeatureFlags {
   /// To enable: Change to `true` and rebuild app
   static const bool enableAPRE = false;
 
+  /// Enable repaint rainbow visualization (DEBUG ONLY)
+  ///
+  /// Shows colored overlays on widgets when they repaint.
+  /// Useful for testing RepaintBoundary effectiveness.
+  ///
+  /// WARNING: Only works in debug mode (kDebugMode = true)
+  /// - Performance: Minimal impact (visual overlay only)
+  /// - Use case: Performance debugging and RepaintBoundary validation
+  ///
+  /// To enable: Change to `true` and rebuild app
+  /// Status: Disabled by default (enable for performance testing)
+  static const bool enableRepaintRainbow = false;
+
   // Future flags can be added here:
   // static const bool enableAICoach = true;
   // static const bool enableAdvancedAnalytics = false;

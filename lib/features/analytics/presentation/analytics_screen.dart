@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -82,6 +83,7 @@ class _AuthenticatedAnalyticsView extends ConsumerWidget {
     return historyAsync.when(
       data: (exerciseHistories) => _AnalyticsContent(
         exerciseHistories: exerciseHistories,
+        userId: userId,
       ),
       loading: () => const _LoadingView(),
       error: (error, _) => _ErrorView(error: error.toString()),
@@ -89,23 +91,37 @@ class _AuthenticatedAnalyticsView extends ConsumerWidget {
   }
 }
 
-class _AnalyticsContent extends StatefulWidget {
+class _AnalyticsContent extends ConsumerStatefulWidget {
   const _AnalyticsContent({
     required this.exerciseHistories,
+    required this.userId,
   });
 
   final List<ExerciseHistory> exerciseHistories;
+  final String userId;
 
   @override
-  State<_AnalyticsContent> createState() => _AnalyticsContentState();
+  ConsumerState<_AnalyticsContent> createState() => _AnalyticsContentState();
 }
 
-class _AnalyticsContentState extends State<_AnalyticsContent> {
+class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  Timer? _debounce;
+
+  /// Debounced search handler - waits 300ms after user stops typing
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _searchQuery = query;
+      });
+    });
+  }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -133,6 +149,9 @@ class _AnalyticsContentState extends State<_AnalyticsContent> {
 
     return Column(
       children: [
+        // Quick stats summary card
+        _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
+
         // Search bar
         Padding(
           padding: const EdgeInsets.all(16),
@@ -153,6 +172,7 @@ class _AnalyticsContentState extends State<_AnalyticsContent> {
                         semanticLabel: context.l10n.clear,
                       ),
                       onPressed: () {
+                        _debounce?.cancel();
                         setState(() {
                           _searchController.clear();
                           _searchQuery = '';
@@ -164,11 +184,7 @@ class _AnalyticsContentState extends State<_AnalyticsContent> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
+            onChanged: _onSearchChanged,
           ),
         ),
 
@@ -204,7 +220,10 @@ class _AnalyticsContentState extends State<_AnalyticsContent> {
                 )
               : RefreshIndicator(
                   onRefresh: () async {
-                    // Invalidation is handled by the refresh button in AppBar
+                    // Invalidate provider to trigger fresh data fetch
+                    ref.invalidate(exerciseHistoryStreamProvider(widget.userId));
+                    // Wait for new data to be available
+                    await ref.read(exerciseHistoryStreamProvider(widget.userId).future);
                   },
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -215,6 +234,148 @@ class _AnalyticsContentState extends State<_AnalyticsContent> {
                     },
                   ),
                 ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Quick stats summary card - shows aggregate statistics
+class _QuickStatsSummary extends StatelessWidget {
+  const _QuickStatsSummary({required this.exerciseHistories});
+
+  final List<ExerciseHistory> exerciseHistories;
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate aggregate stats
+    final totalWorkouts = exerciseHistories.fold<int>(
+      0,
+      (sum, history) => sum + history.sessions.length,
+    );
+
+    final totalVolume = exerciseHistories.fold<double>(
+      0.0,
+      (sum, history) =>
+          sum +
+          history.sessions.fold<double>(
+            0.0,
+            (sessionSum, session) => sessionSum + session.totalVolume,
+          ),
+    );
+
+    final activeExercises = exerciseHistories.length;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            context.colors.primaryContainer,
+            context.colors.secondaryContainer,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // Total workouts
+          _SummaryStatItem(
+            icon: AppIcons.workout,
+            label: context.l10n.totalWorkouts,
+            value: '$totalWorkouts',
+            color: context.colors.onPrimaryContainer,
+          ),
+
+          // Vertical divider
+          Container(
+            height: 40,
+            width: 1,
+            color: context.colors.onPrimaryContainer.withValues(alpha: 0.2),
+          ),
+
+          // Total volume (in tons)
+          _SummaryStatItem(
+            icon: AppIcons.trendUp,
+            label: context.l10n.totalVolume,
+            value: '${(totalVolume / 1000).toStringAsFixed(1)}t',
+            color: context.colors.onPrimaryContainer,
+          ),
+
+          // Vertical divider
+          Container(
+            height: 40,
+            width: 1,
+            color: context.colors.onPrimaryContainer.withValues(alpha: 0.2),
+          ),
+
+          // Active exercises
+          _SummaryStatItem(
+            icon: AppIcons.list,
+            label: context.l10n.exercises,
+            value: '$activeExercises',
+            color: context.colors.onPrimaryContainer,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Individual summary stat item (icon + value + label)
+class _SummaryStatItem extends StatelessWidget {
+  const _SummaryStatItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: '$label: $value',
+          size: AppIconSize.large,
+          color: color,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: context.textTheme.headlineSmall?.copyWith(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: color.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
@@ -416,15 +577,173 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const LoadingIndicator(),
-          const SizedBox(height: 16),
-          Text(context.l10n.loadingYourAnalytics),
-        ],
+    return const _SkeletonLoadingView();
+  }
+}
+
+/// Skeleton loading view with shimmer effect for better UX
+class _SkeletonLoadingView extends StatelessWidget {
+  const _SkeletonLoadingView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        // Search bar skeleton
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: _ShimmerBox(
+            width: double.infinity,
+            height: 56,
+            borderRadius: 12,
+          ),
+        ),
+
+        // Exercise cards skeletons
+        Expanded(
+          child: _SkeletonList(),
+        ),
+      ],
+    );
+  }
+}
+
+/// Skeleton list with multiple cards
+class _SkeletonList extends StatelessWidget {
+  const _SkeletonList();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: 5, // Show 5 skeleton cards
+      itemBuilder: (context, index) => const _SkeletonExerciseCard(),
+    );
+  }
+}
+
+/// Skeleton exercise card
+class _SkeletonExerciseCard extends StatelessWidget {
+  const _SkeletonExerciseCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Card(
+      margin: EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Exercise name skeleton
+            _ShimmerBox(width: 200, height: 20, borderRadius: 4),
+            SizedBox(height: 8),
+            // Muscle group skeleton
+            _ShimmerBox(width: 100, height: 14, borderRadius: 4),
+            SizedBox(height: 16),
+
+            // Stats row skeleton
+            Row(
+              children: [
+                Expanded(
+                  child: _ShimmerBox(
+                    width: double.infinity,
+                    height: 80,
+                    borderRadius: 8,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: _ShimmerBox(
+                    width: double.infinity,
+                    height: 80,
+                    borderRadius: 8,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: _ShimmerBox(
+                    width: double.infinity,
+                    height: 80,
+                    borderRadius: 8,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// Shimmer box widget for skeleton loading
+class _ShimmerBox extends StatefulWidget {
+  const _ShimmerBox({
+    required this.width,
+    required this.height,
+    this.borderRadius = 0,
+  });
+
+  final double width;
+  final double height;
+  final double borderRadius;
+
+  @override
+  State<_ShimmerBox> createState() => _ShimmerBoxState();
+}
+
+class _ShimmerBoxState extends State<_ShimmerBox>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
+
+    _animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                context.colors.surfaceContainerHighest,
+                context.colors.surfaceContainerHigh,
+                context.colors.surfaceContainerHighest,
+              ],
+              stops: [
+                _animation.value - 0.3,
+                _animation.value,
+                _animation.value + 0.3,
+              ].map((e) => e.clamp(0.0, 1.0)).toList(),
+            ),
+          ),
+        );
+      },
     );
   }
 }

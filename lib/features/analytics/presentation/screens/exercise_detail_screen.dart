@@ -165,10 +165,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             Tab(
               icon: SemanticIcon(
                 icon: AppIcons.achievement,
-                semanticLabel: 'Records', // TODO(Phase 4.1): Replace with context.l10n.records
+                semanticLabel: context.l10n.records,
                 size: AppIconSize.medium,
               ),
-              text: 'Records', // TODO(Phase 4.1): Replace with context.l10n.records
+              text: context.l10n.records,
             ),
           ],
         ),

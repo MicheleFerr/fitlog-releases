@@ -68,7 +68,7 @@ class PrBadgeHeader extends StatelessWidget {
           Expanded(
             child: _PrBadge(
               icon: AppIcons.achievement,
-              label: 'Max Weight', // TODO(Phase 4.1): Replace with context.l10n.maxWeight
+              label: context.l10n.maxWeight,
               value: '${records.maxWeightRecord.toStringAsFixed(1)} kg',
               color: context.colors.primary,
             ),
@@ -79,7 +79,7 @@ class PrBadgeHeader extends StatelessWidget {
           Expanded(
             child: _PrBadge(
               icon: AppIcons.workout,
-              label: 'Est. 1RM', // TODO(Phase 4.1): Replace with context.l10n.estimated1RM
+              label: context.l10n.estimated1RM,
               value: '${records.estimated1RM.toStringAsFixed(1)} kg',
               color: context.colors.secondary,
             ),
@@ -90,7 +90,7 @@ class PrBadgeHeader extends StatelessWidget {
           Expanded(
             child: _PrBadge(
               icon: AppIcons.trendUp,
-              label: 'Volume', // TODO(Phase 4.1): Replace with context.l10n.volumeRecord
+              label: context.l10n.volumeRecord,
               value: '${records.totalVolumeRecord.toStringAsFixed(0)} kg',
               color: context.colors.tertiary,
             ),

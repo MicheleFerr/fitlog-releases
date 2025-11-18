@@ -1412,11 +1412,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       );
 
       return gifUrlAsync.when(
-        data: (gifUrl) => ExerciseGifWidget(
-          gifUrl: gifUrl,
-          exerciseName: widget.exercise.name,
-          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-          iconColor: colorScheme.primary,
+        // ⚡ REPAINT OPTIMIZATION: RepaintBoundary isolates GIF animation from parent repaints
+        // GIF widget has AutomaticKeepAliveClientMixin + RepaintBoundary = optimal performance
+        data: (gifUrl) => RepaintBoundary(
+          child: ExerciseGifWidget(
+            gifUrl: gifUrl,
+            exerciseName: widget.exercise.name,
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+            iconColor: colorScheme.primary,
+          ),
         ),
         loading: () => Container(
           width: 56,

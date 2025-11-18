@@ -63,6 +63,8 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexi
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
+// 📊 Exercise Records Cache for Exercise Detail Screen
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 // 💾 Template Cache Service for auto-saving modifications
@@ -562,6 +564,19 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             // Non-critical error - log but don't fail workout save
             if (kDebugMode) {
               debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to invalidate analytics cache: $cacheError');
+            }
+          }
+
+          // 💾 CACHING: Clear exercise records cache for Exercise Detail Screen
+          try {
+            clearRecordsCache();
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '🗑️ [WorkoutProvider] Exercise records cache cleared (Exercise Detail Screen will refresh)');
+            }
+          } catch (recordsCacheError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to clear exercise records cache: $recordsCacheError');
             }
           }
 

@@ -1635,43 +1635,51 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                           return Padding(
                             key: ValueKey(exercise.id), // ⚡ OPTIMIZATION: Key for better performance on list changes
                             padding: const EdgeInsets.only(bottom: 12),
-                            child: exercise.type == ExerciseType.superset && exercise is SupersetExercise
-                                ? SupersetCard(
-                                    superset: exercise,
-                                    index: index,
-                                    isReorderMode: false,
-                                    onTap: () => _editExercise(context, ref, exercise),
-                                    onDelete: () => _deleteExercise(ref, exercise.id),
-                                    onEdit: () => _editExercise(context, ref, exercise),
-                                    onReplace: () => _replaceExercise(context, ref, exercise),
-                                    onSetUpdate: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
-                                    onSetToggleComplete: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
-                                    onExerciseUpdate: (updatedExercise) => _updateExercise(ref, updatedExercise),
-                                    onSupersetSetUpdate: (supersetSet) => _updateSupersetSet(ref, exercise.id, supersetSet),
-                                  )
-                                : ExerciseListItem(
-                                    exercise: exercise,
-                                    isReorderMode: false,
-                                    onTap: () => _editExercise(context, ref, exercise),
-                                    onDelete: () => _deleteExercise(ref, exercise.id),
-                                    onEdit: () => _editExercise(context, ref, exercise),
-                                    onReplace: () => _replaceExercise(context, ref, exercise),
-                                    onSetUpdate: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
-                                    onSetToggleComplete: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
-                                    onExerciseUpdate: (updatedExercise) => _updateExercise(ref, updatedExercise),
-                                  ),
+                            // ⚡ REPAINT OPTIMIZATION: RepaintBoundary isolates each exercise card
+                            // from repaints in other parts of the list (e.g., timer tick updates)
+                            // Each card is on a separate layer, reducing GPU work significantly
+                            child: RepaintBoundary(
+                              child: exercise.type == ExerciseType.superset && exercise is SupersetExercise
+                                  ? SupersetCard(
+                                      superset: exercise,
+                                      index: index,
+                                      isReorderMode: false,
+                                      onTap: () => _editExercise(context, ref, exercise),
+                                      onDelete: () => _deleteExercise(ref, exercise.id),
+                                      onEdit: () => _editExercise(context, ref, exercise),
+                                      onReplace: () => _replaceExercise(context, ref, exercise),
+                                      onSetUpdate: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
+                                      onSetToggleComplete: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
+                                      onExerciseUpdate: (updatedExercise) => _updateExercise(ref, updatedExercise),
+                                      onSupersetSetUpdate: (supersetSet) => _updateSupersetSet(ref, exercise.id, supersetSet),
+                                    )
+                                  : ExerciseListItem(
+                                      exercise: exercise,
+                                      isReorderMode: false,
+                                      onTap: () => _editExercise(context, ref, exercise),
+                                      onDelete: () => _deleteExercise(ref, exercise.id),
+                                      onEdit: () => _editExercise(context, ref, exercise),
+                                      onReplace: () => _replaceExercise(context, ref, exercise),
+                                      onSetUpdate: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
+                                      onSetToggleComplete: (updatedSet) => _updateExerciseSet(ref, exercise.id, updatedSet),
+                                      onExerciseUpdate: (updatedExercise) => _updateExercise(ref, updatedExercise),
+                                    ),
+                            ),
                           );
                         },
                       ),
           ),
 
           // 📱 Banner Ad (non-invasive, at bottom)
+          // ⚡ REPAINT OPTIMIZATION: RepaintBoundary isolates static banner from list repaints
           if (workout.exercises.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: AdaptiveBannerAd(
-                adUnitId: AdMobConfig.bannerAnalytics,
-                height: 50,
+            RepaintBoundary(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: AdaptiveBannerAd(
+                  adUnitId: AdMobConfig.bannerAnalytics,
+                  height: 50,
+                ),
               ),
             ),
         ],

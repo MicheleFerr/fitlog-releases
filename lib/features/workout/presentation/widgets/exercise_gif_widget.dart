@@ -87,9 +87,9 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
             // ✅ OPTIMIZATION: Stable cache key prevents re-downloading same GIF
             // Uses only URL-based key since size shouldn't vary for same exercise
             cacheKey: 'exercise_gif_${widget.exerciseName.replaceAll(' ', '_')}',
-            // ✅ OPTIMIZATION: Disk cache limits (3x size for storing high-res versions)
-            maxHeightDiskCache: (widget.size * 3).toInt(),
-            maxWidthDiskCache: (widget.size * 3).toInt(),
+            // ⚡ FIX: Removed maxHeightDiskCache/maxWidthDiskCache - incompatible with GifCacheManager
+            // These caused assertion error: "cacheManager is ImageCacheManager || (maxWidth == null && maxHeight == null)"
+            // GifCacheManager handles cache limits globally, no per-image resize needed
             // Loading placeholder
             placeholder: (context, url) {
               if (kDebugMode) {
@@ -141,8 +141,7 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             is404 ? 'No GIF' : 'Error',
-                            style: TextStyle(
-                              fontSize: 8,
+                            style: context.textTheme.labelSmall?.copyWith(
                               color: icColor.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,

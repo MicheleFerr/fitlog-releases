@@ -61,7 +61,7 @@ class ExerciseVolumeChart extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: Text(
-            'No workout data yet', // TODO(Phase 4.1): Replace with context.l10n.noWorkoutDataYet
+            context.l10n.noWorkoutDataYet,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
@@ -85,8 +85,18 @@ class ExerciseVolumeChart extends StatelessWidget {
 
     // Add 10% padding to y-axis for better visualization
     final yPadding = (maxVolume - minVolume) * 0.1;
-    final yMax = maxVolume + yPadding;
-    final yMin = (minVolume - yPadding).clamp(0.0, double.infinity).toDouble();
+    var yMax = maxVolume + yPadding;
+    var yMin = (minVolume - yPadding).clamp(0.0, double.infinity).toDouble();
+
+    // 🛡️ SAFETY: Ensure minimum range to prevent fl_chart horizontalInterval zero crash
+    // When all volumes are identical, yMax == yMin, causing division by zero
+    final yRange = yMax - yMin;
+    if (yRange < 10) {
+      // Add minimum 10kg range for single-value datasets
+      final mid = (yMax + yMin) / 2;
+      yMax = mid + 5;
+      yMin = (mid - 5).clamp(0.0, double.infinity).toDouble();
+    }
 
     return Container(
       height: 200,
@@ -105,7 +115,7 @@ class ExerciseVolumeChart extends StatelessWidget {
         children: [
           // Chart title
           Text(
-            'Volume Progression', // TODO(Phase 4.1): Replace with context.l10n.volumeProgression
+            context.l10n.volumeProgression,
             style: context.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),

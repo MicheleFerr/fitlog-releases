@@ -62,20 +62,20 @@ class ExerciseHistoryTab extends StatelessWidget {
           children: [
             SemanticIcon(
               icon: AppIcons.calendar,
-              semanticLabel: 'No workout history', // TODO(Phase 4.1): Replace with context.l10n.noWorkoutHistory
+              semanticLabel: context.l10n.noWorkoutHistory,
               size: AppIconSize.xxlarge,
               color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
-              'No workout history yet', // TODO(Phase 4.1): Replace with context.l10n.noWorkoutHistoryYet
+              context.l10n.noWorkoutHistoryYet,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Complete a workout to see history', // TODO(Phase 4.1): Replace with context.l10n.completeWorkoutToSeeHistory
+              context.l10n.completeWorkoutToSeeHistory,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
@@ -171,13 +171,13 @@ class _SessionCard extends StatelessWidget {
                       children: [
                         SemanticIcon(
                           icon: AppIcons.achievement,
-                          semanticLabel: 'Personal Record', // TODO(Phase 4.1): Replace with context.l10n.personalRecord
+                          semanticLabel: context.l10n.personalRecord,
                           size: AppIconSize.tiny,
                           color: context.colors.primary,
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'PR', // TODO(Phase 4.1): Replace with context.l10n.pr
+                          context.l10n.pr,
                           style: context.textTheme.labelSmall?.copyWith(
                             color: context.colors.primary,
                             fontWeight: FontWeight.bold,
@@ -203,7 +203,7 @@ class _SessionCard extends StatelessWidget {
                 // Sets
                 _StatItem(
                   icon: AppIcons.list,
-                  label: '$setsCount ${setsCount == 1 ? "set" : "sets"}', // TODO(Phase 4.1): Localize
+                  label: '$setsCount ${setsCount == 1 ? context.l10n.set : context.l10n.sets}',
                   color: context.colors.onSurfaceVariant,
                 ),
 

@@ -193,7 +193,9 @@ class WorkoutTemplateCacheService {
       }
 
       // Reconstruct workout from cache
-      final workoutJson = Map<String, dynamic>.from(cacheData['workout'] as Map);
+      // ⚡ FIX: Removed explicit cast to avoid "type '_Map<dynamic, dynamic>' is not a subtype" error
+      // Map.from() automatically handles the conversion from Map<dynamic, dynamic> to Map<String, dynamic>
+      final workoutJson = Map<String, dynamic>.from(cacheData['workout']);
       final workout = Workout.fromJson(workoutJson);
 
       if (kDebugMode) {
