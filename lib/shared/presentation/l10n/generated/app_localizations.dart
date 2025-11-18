@@ -1526,6 +1526,30 @@ abstract class AppLocalizations {
   /// **'Advanced'**
   String get advanced;
 
+  /// Button to send test notification
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notification'**
+  String get testNotification;
+
+  /// Description for test notification button
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test notification to verify that notifications are working correctly'**
+  String get testNotificationDescription;
+
+  /// Confirmation that test notification was sent
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notification Sent!'**
+  String get testNotificationSent;
+
+  /// Instructions after sending test notification
+  ///
+  /// In en, this message translates to:
+  /// **'Check your notification center to verify it works'**
+  String get testNotificationSentDescription;
+
   /// Custom request input label
   ///
   /// In en, this message translates to:
@@ -26657,6 +26681,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Workout Reminders'**
   String get workoutReminders;
+
+  /// Toggle for daily workout reminders
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Workout Reminder'**
+  String get dailyWorkoutReminder;
+
+  /// Category label for progress tracking and motivational notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Progress & Motivation'**
+  String get progressAndMotivation;
 
   /// From quick wins migration - 4 occurrences
   ///

@@ -1,271 +1,228 @@
 rules_version = '2';
-  service cloud.firestore {
-    match /databases/{database}/documents {
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============= HELPER FUNCTIONS =============
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
 
-      // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA SOLO ADMIN =============
-      match /exercises/{exerciseId} {
-        allow read: if true; // Tutti possono leggere gli esercizi (database pubblico)
+    // ============= ESERCIZI - LETTURA PUBBLICA, SCRITTURA AUTENTICATA =============
+    match /exercises/{exerciseId} {
+      allow read: if true; // Tutti possono leggere gli esercizi
+      allow write: if request.auth != null; // Solo utenti autenticati possono scrivere
+    }
 
-        // 🔐 SECURITY: Solo admin possono modificare il database esercizi
-        // Previene spam, vandalismo e modifiche non autorizzate
-        allow write: if request.auth != null && isAdmin();
-      }
+    // ============= COMMUNITY CONTRIBUTIONS =============
+    match /community_contributions/{contributionId} {
+      // Tutti possono leggere (per mostrare contributi pubblici)
+      allow read: if true;
+      
+      // Creazione con validazione
+      allow create: if isAuthenticated() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending';
+      
+      // Update per votazioni e status
+      allow update: if isAuthenticated() && (
+        // Il proprietario può modificare
+        isOwner(resource.data.userId) ||
+        // Altri possono solo votare o il sistema può aggiornare status
+        (request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['upvotedBy', 'downvotedBy', 'upvotes', 'downvotes', 'updatedAt', 'status', 'trustScore']))
+      );
+      
+      // Solo il proprietario può eliminare
+      allow delete: if isOwner(resource.data.userId);
+    }
+    
+    // ============= USER CONTRIBUTION STATS =============
+    match /user_contribution_stats/{userId} {
+      // Tutti possono leggere per la classifica
+      allow read: if true;
+      
+      // L'utente può creare/aggiornare le proprie statistiche
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        isOwner(userId) ||
+        // Permettiamo aggiornamenti di sistema per stats
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['totalContributions', 'approvedContributions', 'totalUpvotes', 'totalDownvotes', 'badges', 'lastActivity'])
+      );
+      
+      // Nessuno può eliminare
+      allow delete: if false;
+    }
+    
+    // ============= CONTRIBUTION REPORTS =============
+    match /contribution_reports/{reportId} {
+      // Solo admin possono leggere i report
+      allow read: if isAuthenticated() && 
+        request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it'];
+      
+      // Tutti gli autenticati possono segnalare
+      allow create: if isAuthenticated()
+        && request.resource.data.reportedBy == request.auth.uid;
+      
+      // Nessuno può modificare o eliminare
+      allow update, delete: if false;
+    }
 
-      // ============= WORKOUT TEMPLATES =============
-      match /workout_templates/{templateId} {
-        allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      }
+    // ============= WORKOUT TEMPLATES =============
+    match /workout_templates/{templateId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
 
-      match /workoutTemplates/{templateId} {
-        // 🔒 SECURITY: Query limit
-        allow list: if request.auth != null && isQueryLimitValid();
-        allow read: if request.auth != null &&
-          request.auth.uid == resource.data.userId;
-        allow write: if request.auth != null &&
-          request.auth.uid == resource.data.userId;
+    match /workoutTemplates/{templateId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow write: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+    }
 
-        // 🔒 SECURITY: Validazione lunghezza campi template + dimensione
-        allow create: if request.auth != null
-          && request.auth.uid == request.resource.data.userId
-          && validateStringField(request.resource.data, 'name', 1, 100, false)
-          && isDocumentSizeValid();
-      }
+    // ============= USERS =============
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
 
-      // ============= USERS - RIMOSSO DUPLICATO (vedi linea 391) =============
-      // Regola spostata più in basso per evitare conflitti
+    // ============= WORKOUTS =============
+    match /workouts/{workoutId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
 
-      // ============= WORKOUTS (regola unificata più in basso) =============
-      match /workouts/{workoutId} {
-        // 🔒 SECURITY: Query limit per prevenire letture massive
-        allow list: if request.auth != null && isQueryLimitValid();
-        allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+    // ============= COMMUNITY REPORTS SYSTEM ================
+    match /exercise_reports/{reportId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.userId
+        && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
+'status'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name'];
+      allow update: if request.auth != null
+        && request.auth.uid != null
+        && (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
+          || (request.auth.token.email in ['admin@admin.com', 'ferrara-michele@hotmail.it']
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
+        );
 
-        // 🔒 SECURITY: Validazione lunghezza campi + dimensione documento per prevenire DoS attacks
-        allow create: if request.auth != null
-          && request.auth.uid == request.resource.data.userId
-          && validateWorkoutData(request.resource.data)
-          && isDocumentSizeValid();
-
-        // 🔒 SECURITY: Validazione dimensione anche su update
-        allow update: if request.auth != null
-          && request.auth.uid == resource.data.userId
-          && isDocumentSizeValid();
-
-        allow delete: if request.auth != null && request.auth.uid == resource.data.userId;
-      }
-
-      // ============= COMMUNITY REPORTS SYSTEM ================
-      match /exercise_reports/{reportId} {
-        // 🔒 SECURITY: Query limit su list operations
-        allow list: if request.auth != null && isQueryLimitValid();
+      match /suggestions/{suggestionId} {
         allow read: if request.auth != null;
-
-        // 🔒 SECURITY: Validazione lunghezza campi + dimensione per prevenire DoS
         allow create: if request.auth != null
           && request.auth.uid == request.resource.data.userId
-          && request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'imageUrl', 'reportType', 'userId', 'timestamp',
-  'status'])
-          && request.resource.data.status == 'pending'
-          && request.resource.data.reportType in ['wrong_image', 'missing_image', 'wrong_name']
-          && validateStringField(request.resource.data, 'exerciseName', 1, 100, false)
-          && validateStringField(request.resource.data, 'imageUrl', 0, 500, true)
-          && isDocumentSizeValid();
-
+          && request.resource.data.keys().hasAll(['reportId', 'userId', 'userName', 'suggestedValue', 'votes', 'voters',
+'timestamp'])
+          && request.resource.data.votes == 0
+          && request.resource.data.voters.size() == 0;
         allow update: if request.auth != null
-          && request.auth.uid != null
-          && (
-            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
-            || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']))
-          );
-
-        match /suggestions/{suggestionId} {
-          allow read: if request.auth != null;
-          allow create: if request.auth != null
-            && request.auth.uid == request.resource.data.userId
-            && request.resource.data.keys().hasAll(['reportId', 'userId', 'userName', 'suggestedValue', 'votes', 'voters',
-  'timestamp'])
-            && request.resource.data.votes == 0
-            && request.resource.data.voters.size() == 0;
-          allow update: if request.auth != null
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'voters']);
-        }
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes', 'voters']);
       }
+    }
 
-      // ============= COACH DELEGATIONS =============
-      match /coach_delegations/{delegationId} {
-        allow read: if request.auth != null &&
-          (resource.data.userId == request.auth.uid ||
-           resource.data.coachEmail == request.auth.token.email);
-        allow create: if request.auth != null &&
-          request.auth.uid == request.resource.data.userId;
-        allow update: if request.auth != null &&
-          request.auth.uid == resource.data.userId;
-        allow delete: if request.auth != null &&
-          (resource.data.userId == request.auth.uid ||
-           resource.data.coachEmail == request.auth.token.email);
-      }
+    // ============= COACH DELEGATIONS =============
+    match /coach_delegations/{delegationId} {
+      allow read: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+      allow create: if request.auth != null &&
+        request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null &&
+        (resource.data.userId == request.auth.uid ||
+         resource.data.coachEmail == request.auth.token.email);
+    }
 
     // ============= COACH NOTIFICATIONS =============
     match /coachNotifications/{notificationId} {
       // Il coach può leggere le proprie notifiche usando l'email
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         request.auth.token.email == resource.data.coachEmail;
       
       // Permettere list/query per le proprie notifiche
-      allow list: if request.auth != null &&
+      allow list: if request.auth != null && 
         request.auth.token.email != null;
       
       // Qualsiasi utente autenticato può creare notifiche
       allow create: if request.auth != null;
       
       // Solo il coach destinatario può aggiornare (per marcare come letta)
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.token.email == resource.data.coachEmail;
       
       // Solo il coach può eliminare le proprie notifiche
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         request.auth.token.email == resource.data.coachEmail;
     }
 
     // ============= ATHLETE NOTIFICATIONS =============
     match /athleteNotifications/{notificationId} {
       // L'atleta può leggere le proprie notifiche usando l'email
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         request.auth.token.email == resource.data.athleteEmail;
       
       // Permettere list/query per le proprie notifiche
-      allow list: if request.auth != null &&
+      allow list: if request.auth != null && 
         request.auth.token.email != null;
       
       // Qualsiasi utente autenticato può creare notifiche
       allow create: if request.auth != null;
       
       // Solo l'atleta destinatario può aggiornare (per marcare come letta)
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.token.email == resource.data.athleteEmail;
       
       // Solo l'atleta può eliminare le proprie notifiche
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         request.auth.token.email == resource.data.athleteEmail;
     }
 
     // ============= WORKOUT TEMPLATES =============
     match /workoutTemplates/{templateId} {
       // Il coach può leggere i propri template o quelli pubblici
-      allow read: if request.auth != null &&
-        (resource.data.coachId == request.auth.uid ||
+      allow read: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
          resource.data.isPublic == true);
       
       // Solo il coach proprietario può creare template
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.coachId;
       
       // Solo il coach proprietario può aggiornare
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
       
       // Solo il coach proprietario può eliminare
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
     }
 
     // ============= TEMPLATE ASSIGNMENTS =============
     match /templateAssignments/{assignmentId} {
       // Coach e atleta possono leggere
-      allow read: if request.auth != null &&
-        (resource.data.coachId == request.auth.uid ||
+      allow read: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
          resource.data.athleteId == request.auth.uid);
-
+      
       // Solo il coach può creare assegnazioni
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.coachId;
-
+      
       // Solo il coach può aggiornare
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
-
+      
       // Coach o atleta possono eliminare
-      allow delete: if request.auth != null &&
-        (resource.data.coachId == request.auth.uid ||
+      allow delete: if request.auth != null && 
+        (resource.data.coachId == request.auth.uid || 
          resource.data.athleteId == request.auth.uid);
-    }
-
-    // ============= WEEKLY ROUTINES =============
-    match /weeklyRoutines/{routineId} {
-      // Permettere query/list per tutti gli utenti autenticati
-      // (la query deve essere filtrata per userId lato client)
-      allow list: if request.auth != null;
-
-      // L'utente può leggere solo le proprie routine (singolo documento)
-      allow get: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-
-      // L'utente può creare routine per se stesso
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['id', 'userId', 'name', 'schedule', 'isActive', 'createdAt']);
-
-      // L'utente può aggiornare solo le proprie routine
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId &&
-        request.auth.uid == request.resource.data.userId;
-
-      // L'utente può eliminare solo le proprie routine
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-    }
-
-    // ============= FLEXIBLE ROUTINES (MULTI-PERIOD) =============
-    match /flexibleRoutines/{routineId} {
-      // Permettere query/list per tutti gli utenti autenticati
-      // (la query deve essere filtrata per userId lato client)
-      allow list: if request.auth != null;
-
-      // L'utente può leggere solo le proprie routine (singolo documento)
-      allow get: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-
-      // L'utente può creare routine per se stesso
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll([
-          'id',
-          'userId',
-          'name',
-          'type',
-          'startDate',
-          'endDate',
-          'pattern',
-          'schedule',
-          'skipTracker',
-          'recoverySettings',
-          'isActive',
-          'createdAt'
-        ]);
-
-      // L'utente può aggiornare solo le proprie routine
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId &&
-        request.auth.uid == request.resource.data.userId;
-
-      // L'utente può eliminare solo le proprie routine
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-    }
-
-    // ============= RECOVERY OPERATIONS VALIDATION =============
-    // ✅ NEW: Server-side validation for missed workout recovery feature
-    //
-    // Enforces:
-    // - Only one recovery per day per routine
-    // - Recovery operations must have originalMissedDate when isRecovery=true
-    // - Yesterday's workout must be marked as skipped
-    // - Today's workout must be marked as completed
-    match /flexibleRoutines/{routineId} {
-      // Additional validation for recovery operations during update
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId &&
-        isRecoveryUpdateValid(request, resource);
     }
 
     // ============= SESSION WORKOUTS - FIXED =============
@@ -293,12 +250,12 @@ rules_version = '2';
         ))
       );
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
          
-      allow update, delete: if request.auth != null &&
+      allow update, delete: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.uid);
@@ -321,18 +278,18 @@ rules_version = '2';
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
       
       // MODIFICATO: ora permette update
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
       
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
@@ -355,18 +312,18 @@ rules_version = '2';
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
       
       // MODIFICATO: ora permette update
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
       
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
@@ -389,11 +346,11 @@ rules_version = '2';
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
-      allow update, delete: if request.auth != null &&
+      allow update, delete: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
@@ -416,18 +373,18 @@ rules_version = '2';
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)).data.permissions.canViewDashboard == true)
       );
 
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
       
       // MODIFICATO: ora permette update
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
       
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid ||
          request.auth.uid == resource.data.userId);
@@ -435,7 +392,6 @@ rules_version = '2';
 
     // ============= USER MASSIMALI =============
     match /userMassimali/{userId} {
-      allow list: if request.auth != null;
       allow read: if request.auth != null && (
         // Proprietario
         request.auth.uid == userId ||
@@ -477,7 +433,7 @@ rules_version = '2';
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)))
       );
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.utente ||
          request.auth.uid == request.resource.data.userId);
       
@@ -490,15 +446,14 @@ rules_version = '2';
          get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.utente)).data.permissions.canEditWorkout == true)
       );
       
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         (request.auth.token.email == resource.data.utente ||
          request.auth.uid == resource.data.userId);
     }
 
     // ============= USERS =============
     match /users/{userId} {
-      // Solo il proprietario può leggere i propri dati
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null
         && request.auth.uid == userId
@@ -519,15 +474,15 @@ rules_version = '2';
            get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
         );
         
-        allow create: if request.auth != null &&
+        allow create: if request.auth != null && 
           request.auth.uid == userId &&
           request.resource.data.userId == userId;
           
-        allow update: if request.auth != null &&
+        allow update: if request.auth != null && 
           request.auth.uid == userId &&
           resource.data.userId == userId;
           
-        allow delete: if request.auth != null &&
+        allow delete: if request.auth != null && 
           request.auth.uid == userId;
       }
 
@@ -543,30 +498,14 @@ rules_version = '2';
            exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
            get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
         );
-
-        allow create: if request.auth != null &&
+        
+        allow create: if request.auth != null && 
           request.auth.uid == userId;
-
-        allow update: if request.auth != null &&
+          
+        allow update: if request.auth != null && 
           request.auth.uid == userId;
-
-        allow delete: if request.auth != null &&
-          request.auth.uid == userId;
-      }
-
-      // ============= WORKOUTS SUBCOLLECTION =============
-      match /workouts/{workoutId} {
-        allow read: if request.auth != null && request.auth.uid == userId;
-
-        allow create: if request.auth != null &&
-          request.auth.uid == userId &&
-          request.resource.data.userId == userId;
-
-        allow update: if request.auth != null &&
-          request.auth.uid == userId &&
-          resource.data.userId == userId;
-
-        allow delete: if request.auth != null &&
+          
+        allow delete: if request.auth != null && 
           request.auth.uid == userId;
       }
     }
@@ -575,16 +514,34 @@ rules_version = '2';
     match /settings/{userId} {
       allow read: if request.auth != null && (
         request.auth.uid == userId ||
-        // Permetti accesso coach solo se esiste delegazione
+        // Permetti lettura per cercare coach tramite coachCode
+        true ||
         (request.auth.token.email != null &&
          resource.data.email != null &&
          exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + resource.data.email)))
       );
-      
+
       allow write: if request.auth != null && request.auth.uid == userId;
 
       // Subcollections
       match /userSettings/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= NOTIFICATION SETTINGS V2.0 (in settings subcollection) =============
+      match /notifications {
+        // Users can only read/write their own notification settings
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+
+        // Validate NotificationSettings v2.0 schema on write
+        allow create, update: if request.auth != null
+          && request.auth.uid == userId
+          && validateNotificationSettings(request.resource.data);
+      }
+
+      // ============= NOTIFICATION METRICS V2.0 (in settings subcollection) =============
+      match /metrics {
+        // Users can only read/write their own notification metrics
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
 
@@ -618,7 +575,7 @@ rules_version = '2';
     // ============= RESTO DELLE REGOLE ESISTENTI =============
     match /userPreferences/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == userId &&
         request.resource.data.keys().hasAll(['showNotes', 'showOptimization', 'showPercentRM']);
       allow update: if request.auth != null && request.auth.uid == userId;
@@ -631,7 +588,7 @@ rules_version = '2';
     
     match /rpeHistory/{rpeId} {
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.userId &&
         request.resource.data.keys().hasAll(['userId', 'schedaId', 'exerciseId', 'timestamp']);
       allow update: if request.auth != null && request.auth.uid == resource.data.userId;
@@ -640,7 +597,7 @@ rules_version = '2';
     
     match /weeklyCheckIns/{checkInId} {
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.userId &&
         request.resource.data.keys().hasAll(['userId', 'schedaId', 'week', 'timestamp']);
       allow update: if request.auth != null && request.auth.uid == resource.data.userId;
@@ -648,7 +605,7 @@ rules_version = '2';
     }
 
     match /cardioSessions/{sessionId} {
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         (request.auth.uid == resource.data.uid ||
          request.auth.token.email == resource.data.email);
 
@@ -657,21 +614,17 @@ rules_version = '2';
             request.auth.token.email == request.resource.data.email)
         && request.resource.data.type in ['walk','run','hiit']
         && request.resource.data.duration is number
-        && request.resource.data.duration > 0           // Min: 1 secondo
-        && request.resource.data.duration < 86400       // Max: 24 ore
-        && request.resource.data.mode in ['outdoor','indoor']
-        && request.resource.data.keys().size() < 20    // Limita numero campi
-        && request.resource.data.size() < 1000000;      // Max 1MB documento
+        && request.resource.data.mode in ['outdoor','indoor'];
 
       allow update, delete: if false;
     }
     
     match /programmingState/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == userId &&
         request.resource.data.keys().hasAll(['userId', 'currentWeek', 'lastProcessedWeek']);
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.uid == userId &&
         request.auth.uid == resource.data.userId;
       allow delete: if request.auth != null && request.auth.uid == userId;
@@ -688,95 +641,21 @@ rules_version = '2';
 
     match /esercizi/{esercizioId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null &&
+      allow create, update, delete: if request.auth != null && 
         request.auth.token.admin == true;
     }
 
-    // ============= EXERCISE FEEDBACK SYSTEM (User Reports) =============
-    match /exercise_feedback/{feedbackId} {
-      // 🔒 SECURITY: Read access control
-      // - Users can read only their own feedback
-      // - Admins can read all feedback for moderation
-      allow read: if request.auth != null && (
-        // User can read their own feedback
-        resource.data.userId == request.auth.uid ||
-        // Admin can read all feedback
-        isAdmin()
-      );
-
-      // 🔒 SECURITY: Create feedback with comprehensive validation
-      // Prevents spam, DoS attacks, and data corruption
-      allow create: if request.auth != null &&
-        // User ownership: feedback belongs to the authenticated user
-        request.auth.uid == request.resource.data.userId &&
-        // Email validation: user email is captured for contact/tracking
-        request.auth.token.email == request.resource.data.userEmail &&
-        // Required fields validation
-        request.resource.data.keys().hasAll([
-          'userId',
-          'userEmail',
-          'exerciseId',
-          'exerciseName',
-          'version',
-          'feedbackType',
-          'message',
-          'severity',
-          'createdAt',
-          'status'
-        ]) &&
-        // Feedback type must be one of allowed values
-        request.resource.data.feedbackType in ['BUG', 'SUGGESTION', 'TYPO', 'OTHER'] &&
-        // New feedback starts as OPEN
-        request.resource.data.status == 'OPEN' &&
-        // Severity must be between 1-5
-        request.resource.data.severity >= 1 &&
-        request.resource.data.severity <= 5 &&
-        // Message validation: non-empty, reasonable length
-        validateStringField(request.resource.data, 'message', 1, 2000, false) &&
-        // Exercise name validation
-        validateStringField(request.resource.data, 'exerciseName', 1, 100, false) &&
-        // Version validation: app version format
-        validateStringField(request.resource.data, 'version', 1, 20, false) &&
-        // Exercise ID validation
-        validateStringField(request.resource.data, 'exerciseId', 1, 100, false) &&
-        // Prevent document size DoS attacks
-        request.resource.size() < 100000;  // 100KB max per document
-
-      // 🔒 SECURITY: Update access (admin moderation only)
-      // Prevents users from modifying feedback after submission
-      allow update: if request.auth != null && isAdmin() &&
-        // Can only modify specific moderation fields
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'status',      // OPEN → REVIEWING → RESOLVED/DISMISSED
-          'adminNotes',  // Admin commentary
-          'severity'     // Severity adjustment based on triage
-        ]) &&
-        // Maintain user ownership immutability
-        request.resource.data.userId == resource.data.userId &&
-        // Maintain original message immutability
-        request.resource.data.message == resource.data.message &&
-        // Status must be valid
-        request.resource.data.status in ['OPEN', 'REVIEWING', 'RESOLVED', 'DISMISSED'];
-
-      // 🔒 SECURITY: Delete access (admin only)
-      allow delete: if request.auth != null && isAdmin();
-
-      // 🔒 SECURITY: Prevent non-existent fields from being added
-      // Additional fields will cause failure
-      allow list: if request.auth != null;
-    }
-
-    // ============= EXERCISE FEEDBACK SYSTEM (Community Corrections) =============
+    // ============= EXERCISE FEEDBACK SYSTEM =============
     match /exerciseFeedback/{feedbackId} {
       // Tutti gli utenti autenticati possono leggere
       allow read: if request.auth != null;
-
+      
       // Creazione con controlli
       allow create: if request.auth != null &&
         request.auth.uid == request.resource.data.reportedBy.userId &&
         request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'feedbackType', 'currentValue', 'proposedValue', 'reportedBy', 'deviceInfo']) &&
         request.resource.data.feedbackType in ['nome', 'immagine', 'focus'];
-
+      
       // Update solo per aggiungere approvazioni
       allow update: if request.auth != null &&
         // Non può approvare le proprie segnalazioni
@@ -785,7 +664,7 @@ rules_version = '2';
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approvals', 'approvalCount', 'firstApprovalAt']) &&
         // L'utente non ha già approvato
         !resource.data.approvals.hasAny([request.auth.uid]);
-
+      
       // Solo admin può eliminare
       allow delete: if request.auth != null && request.auth.token.admin == true;
     }
@@ -793,7 +672,7 @@ rules_version = '2';
     // ============= USER FEEDBACK STATS =============
     match /userFeedbackStats/{statsId} {
       // L'utente può leggere le proprie statistiche
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         (resource.data.userId == request.auth.uid || request.auth.token.admin == true);
       
       // Sistema può creare/aggiornare (gestito dal service)
@@ -809,268 +688,22 @@ rules_version = '2';
     match /exercises/{exerciseId} {
       // Permetti lettura a tutti gli utenti autenticati
       allow read: if request.auth != null;
-
+      
       // Solo admin può creare, modificare o eliminare
-      allow create, update, delete: if request.auth != null &&
+      allow create, update, delete: if request.auth != null && 
         request.auth.token.admin == true;
     }
 
-    // ============= EXERCISE METADATA (ADMIN SYSTEM) =============
-    match /exercise_metadata/{metadataId} {
-      // Tutti gli utenti autenticati possono leggere metadati
-      allow read: if request.auth != null;
-
-      // Solo admin può creare, modificare o eliminare metadati
-      allow create, update, delete: if request.auth != null && isAdmin();
-    }
-
-    // ============= EXERCISES METADATA (VERSION INFO) =============
-    match /exercises_metadata/{metadataDoc} {
-      // Tutti gli utenti autenticati possono leggere i metadati degli esercizi
-      allow read: if request.auth != null;
-
-      // Solo admin può scrivere metadati
-      allow write: if request.auth != null && isAdmin();
-    }
-
-    // ============= COMMUNITY CONTRIBUTIONS =============
-    match /community_contributions/{contributionId} {
-      // Get (singolo documento): Chiunque autenticato può leggere approved, solo owner/admin pending/rejected
-      allow get: if request.auth != null && (
-        resource.data.status == 'approved' ||
-        resource.data.userId == request.auth.uid ||
-        isAdmin()
-      );
-
-      // List (query): Permetti query filtrate con limite dimensione
-      // 🔐 SECURITY: Previene large queries che potrebbero causare DoS
-      allow list: if request.auth != null &&
-        request.query.limit <= 100;
-
-      // Create: Utenti autenticati possono creare contributi (sempre pending)
-      // 🔒 SECURITY: Validazione lunghezza per prevenire DoS
-      allow create: if request.auth != null &&
-        request.resource.data.userId == request.auth.uid &&
-        request.resource.data.status == 'pending' &&
-        request.resource.data.keys().hasAll(['userId', 'userName', 'exerciseId', 'exerciseName', 'type', 'status', 'title', 'description', 'createdAt']) &&
-        validateStringField(request.resource.data, 'title', 1, 150, false) &&
-        validateStringField(request.resource.data, 'description', 1, 1000, false) &&
-        validateStringField(request.resource.data, 'exerciseName', 1, 100, false);
-
-      // Update: Owner (solo pending), voting (tutti), admin (moderation)
-      allow update: if request.auth != null && (
-        // Owner può modificare solo se pending
-        (resource.data.userId == request.auth.uid &&
-         resource.data.status == 'pending' &&
-         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'originalValue', 'suggestedValue', 'updatedAt'])) ||
-        // Voting: Chiunque può votare (solo campi voto)
-        (isVoteUpdate()) ||
-        // Admin: può approvare/rifiutare
-        (isAdmin() &&
-         request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'reviewedBy', 'reviewedAt', 'reviewNote', 'updatedAt']))
-      );
-
-      // Delete: Solo admin
-      allow delete: if request.auth != null && isAdmin();
-    }
-
-    // Helper per controllare se è un update di voti
-    function isVoteUpdate() {
-      return request.resource.data.diff(resource.data).affectedKeys()
-        .hasOnly(['upvotes', 'downvotes', 'upvotedBy', 'downvotedBy', 'updatedAt', 'status']);
-    }
-
-    // Helper per controllare se è admin
-    // IMPORTANTE: Usa Firebase custom claims invece di email hardcodate
-    // Per impostare admin: usa Firebase Admin SDK o Firebase Console
-    function isAdmin() {
-      return request.auth.token.admin == true;
-    }
-
-    // 🔒 SECURITY: Helper per validare lunghezza campi workout
-    // Previene DoS attacks con payload enormi
-    function validateWorkoutData(data) {
-      return validateStringField(data, 'name', 1, 100, false)  // name è obbligatorio
-        && validateStringField(data, 'notes', 0, 5000, true);  // notes è opzionale
-    }
-
-    // 🔒 SECURITY: Helper generico per validazione stringhe
-    function validateStringField(data, field, minLen, maxLen, optional) {
-      return !data.keys().hasAny([field])  // Campo non presente
-        || (optional == true && (!data.keys().hasAny([field]) || data[field] == null))  // Campo opzionale
-        || (data[field] is string
-            && data[field].size() >= minLen
-            && data[field].size() <= maxLen);
-    }
-
-    // 🔒 SECURITY: Helper per validare dimensione documento (previene DoS)
-    // Firestore ha limite 1MB per documento, ma per sicurezza limitiamo a 500KB
-    function isDocumentSizeValid() {
-      return request.resource.size() < 500000;  // 500KB limit
-    }
-
-    // 🔒 SECURITY: Helper per validare limiti query (previene query massive)
-    function isQueryLimitValid() {
-      return !request.query.limit.exists() || request.query.limit <= 100;
-    }
-
-    // ============= BUDDY MATCHING VALIDATION HELPERS =============
-
-    // Validate buddy profile data structure and content
-    function validateBuddyProfileData(data) {
-      return data.keys().hasAll(['uid', 'displayName', 'preferences', 'isActive'])
-        && data.uid is string
-        && validateStringField(data, 'displayName', 1, 100, false)
-        && data.isActive is bool
-        && validateBuddyPreferences(data.preferences)
-        && (!data.keys().hasAny(['bio']) || validateStringField(data, 'bio', 0, 500, true))
-        && (!data.keys().hasAny(['reportCount']) || data.reportCount is int)
-        && (!data.keys().hasAny(['isBanned']) || data.isBanned is bool);
-    }
-
-    // Validate buddy profile updates (prevent critical field tampering)
-    function validateBuddyProfileUpdate(oldData, newData) {
-      return newData.uid == oldData.uid  // UID cannot change
-        && (!newData.keys().hasAny(['reportCount']) || newData.reportCount == oldData.reportCount)  // Report count only by system
-        && (!newData.keys().hasAny(['isBanned']) || newData.isBanned == oldData.isBanned)  // Ban status only by admin
-        && (!newData.keys().hasAny(['isVerified']) || newData.isVerified == oldData.isVerified)  // Verification only by system
-        && validateBuddyProfileData(newData);
-    }
-
-    // Validate buddy preferences structure
-    function validateBuddyPreferences(prefs) {
-      return prefs.keys().hasAny(['isLookingForBuddy'])
-        && prefs.isLookingForBuddy is bool
-        && (!prefs.keys().hasAny(['maxDistance']) || (prefs.maxDistance is number && prefs.maxDistance >= 1 && prefs.maxDistance <= 100))
-        && (!prefs.keys().hasAny(['bio']) || validateStringField(prefs, 'bio', 0, 500, true));
-    }
-
-    // Validate buddy match data structure
-    function validateBuddyMatchData(data) {
-      return data.keys().hasAll(['user1Id', 'user2Id', 'status', 'compatibilityScore'])
-        && data.user1Id is string
-        && data.user2Id is string
-        && data.user1Id != data.user2Id  // Cannot match with self
-        && data.status in ['pending', 'confirmed', 'partnership', 'completed', 'expired', 'cancelled']
-        && data.compatibilityScore is number
-        && data.compatibilityScore >= 0
-        && data.compatibilityScore <= 100;
-    }
-
-    // Validate buddy match updates (prevent status manipulation)
-    function validateBuddyMatchUpdate(oldData, newData) {
-      return newData.user1Id == oldData.user1Id  // User IDs cannot change
-        && newData.user2Id == oldData.user2Id
-        && newData.compatibilityScore == oldData.compatibilityScore  // Score cannot change
-        && validateBuddyMatchStatusTransition(oldData.status, newData.status);
-    }
-
-    // Validate buddy match status transitions (prevent invalid flows)
-    function validateBuddyMatchStatusTransition(oldStatus, newStatus) {
-      return (oldStatus == 'pending' && newStatus in ['confirmed', 'expired', 'cancelled'])
-        || (oldStatus == 'confirmed' && newStatus in ['partnership', 'cancelled'])
-        || (oldStatus == 'partnership' && newStatus in ['completed', 'cancelled'])
-        || (oldStatus == newStatus);  // Status can stay the same
-    }
-
-    // Validate buddy action data structure
-    function validateBuddyActionData(data) {
-      return data.keys().hasAll(['fromUserId', 'toUserId', 'actionType'])
-        && data.fromUserId is string
-        && data.toUserId is string
-        && data.fromUserId != data.toUserId  // Cannot action on self
-        && data.actionType in ['like', 'superLike', 'pass', 'block', 'report']
-        && (data.actionType != 'report' || validateBuddyReport(data));
-    }
-
-    // Validate buddy report data (requires reason and description)
-    function validateBuddyReport(data) {
-      return data.keys().hasAll(['reportReason', 'reportDescription'])
-        && data.reportReason in ['inappropriatePhotos', 'harassment', 'spam', 'fakeProfile', 'underage', 'other']
-        && validateStringField(data, 'reportDescription', 10, 500, false);
-    }
-
-    // ============= RECOVERY OPERATIONS VALIDATION =============
-    // ✅ NEW: Server-side validation for missed workout recovery operations
-
-    // Validate recovery operations during routine updates
-    function isRecoveryUpdateValid(request, resource) {
-      let newSchedule = request.resource.data.schedule;
-      let oldSchedule = resource.data.schedule;
-
-      // Check if any schedule day has recovery=true
-      let hasRecovery = newSchedule.values().hasAny(['isRecovery', true]);
-
-      // If no recovery, allow; otherwise validate recovery structure
-      return !hasRecovery || (
-        newSchedule is map
-        && isValidRecoveryScheduleChange(oldSchedule, newSchedule)
-        && request.resource.data.updatedAt is timestamp
-      );
-    }
-
-    // Validate that recovery schedule changes are valid
-    function isValidRecoveryScheduleChange(oldSchedule, newSchedule) {
-      // Ensure schedule is a map
-      return oldSchedule is map && newSchedule is map
-        // Only allow schedule key to be updated
-        // (other fields must stay unchanged to prevent cheating)
-        && oldSchedule.keys() == newSchedule.keys();
-    }
-
-    // ============= COMMUNITY CONTRIBUTION STATS =============
-    match /user_contribution_stats/{userId} {
-      // Read: Chiunque può leggere stats (per leaderboard)
-      allow read: if request.auth != null;
-
-      // Write: Solo il sistema (via repository) può scrivere
-      // In pratica permettiamo write a tutti perché viene gestito dal repository
-      allow create, update: if request.auth != null;
-
-      // Delete: Solo admin
-      allow delete: if request.auth != null && isAdmin();
-    }
-
-    // ============= CONTRIBUTION VOTES (se decidiamo di fare collezione separata) =============
-    match /contribution_votes/{voteId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null &&
-        request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-    }
-
-    // ============= EXERCISE CORRECTIONS (COMMUNITY SYSTEM) =============
-    match /exercise_corrections/{correctionId} {
-      // Tutti gli utenti autenticati possono leggere correzioni
-      allow read: if request.auth != null;
-
-      // Utenti autenticati possono creare correzioni
-      allow create: if request.auth != null &&
-        request.resource.data.keys().hasAll(['exerciseId', 'exerciseName', 'userId', 'userName', 'status', 'createdAt']) &&
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.status == 'pending';
-
-      // Solo admin può modificare correzioni (approvare/rifiutare)
-      allow update: if request.auth != null && isAdmin() &&
-        request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'reviewedAt', 'reviewedBy', 'adminNotes']);
-
-      // Solo admin può eliminare correzioni
-      allow delete: if request.auth != null && isAdmin();
-    }
-
     match /attivitaEsercizi/{activityId} {
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         (request.auth.uid == resource.data.userId ||
          request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid);
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.uid == request.resource.data.userId ||
          request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.uid);
-      allow update, delete: if request.auth != null &&
+      allow update, delete: if request.auth != null && 
         (request.auth.uid == resource.data.userId ||
          request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.uid);
@@ -1082,13 +715,13 @@ rules_version = '2';
       // I documenti saranno filtrati dalla query stessa
       allow read: if request.auth != null;
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.athleteId &&
         request.resource.data.keys().hasAll(['athleteId', 'athleteEmail', 'athleteName', 'overallRPE', 'overallDifficulty']);
       
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         resource != null &&
-        (request.auth.uid == resource.data.athleteId ||
+        (request.auth.uid == resource.data.athleteId || 
          request.auth.uid == resource.data.coachId);
       
       allow delete: if false; // Non permettiamo eliminazione di feedback
@@ -1121,17 +754,17 @@ rules_version = '2';
     // ============= WORKOUT TEMPLATES =============
     match /workoutTemplates/{templateId} {
       // Il coach proprietario può leggere/scrivere i propri template
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.auth.uid == request.resource.data.coachId &&
         request.resource.data.keys().hasAll(['coachId', 'name', 'giorni', 'createdAt']);
       
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
       
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         request.auth.uid == resource.data.coachId;
     }
 
@@ -1156,23 +789,35 @@ rules_version = '2';
         ))
       );
       
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.uid == request.resource.data.userId ||
          request.auth.token.email == request.resource.data.email);
         
-      allow update, delete: if request.auth != null &&
+      allow update, delete: if request.auth != null && 
         (request.auth.uid == resource.data.userId ||
          request.auth.token.email == resource.data.email);
     }
 
-    // (Blocco rimosso perché duplicato e obsoleto)
+    // ============= WORKOUTS - MODIFICATO PER SUPPORTARE EMAIL =============
+    match /workouts/{workoutId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.userId ||
+        request.auth.token.email == resource.data.email  // AGGIUNTO per supportare dati vecchi
+      );
+      allow create: if request.auth != null && 
+        request.auth.uid == request.resource.data.userId;
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+    }
 
     match /workoutHistory/{historyId} {
-      allow read: if request.auth != null &&
+      allow read: if request.auth != null && 
         (request.auth.token.email == resource.data.email ||
          request.auth.uid == resource.data.userId ||
          request.auth.uid == resource.data.uid);
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         (request.auth.token.email == request.resource.data.email ||
          request.auth.uid == request.resource.data.userId ||
          request.auth.uid == request.resource.data.uid);
@@ -1205,7 +850,7 @@ rules_version = '2';
       allow read: if request.auth != null;
       
       // Creazione solo per utenti autenticati
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.resource.data.authorId == request.auth.uid &&
         request.resource.data.keys().hasAll(['authorId', 'authorName', 'authorEmail', 'title', 'description', 'category', 'difficulty', 'duration', 'daysPerWeek', 'giorni', 'tags', 'isPublic', 'stats']);
       
@@ -1220,7 +865,7 @@ rules_version = '2';
       );
       
       // Eliminazione solo per l'autore
-      allow delete: if request.auth != null &&
+      allow delete: if request.auth != null && 
         resource.data.authorId == request.auth.uid;
       
       // ============= PROGRAM REVIEWS (subcollection) =============
@@ -1229,16 +874,16 @@ rules_version = '2';
         allow read: if request.auth != null;
         
         // Creazione solo per utenti che hanno scaricato il programma
-        allow create: if request.auth != null &&
+        allow create: if request.auth != null && 
           request.resource.data.userId == request.auth.uid &&
           request.resource.data.keys().hasAll(['userId', 'userName', 'rating', 'review', 'timestamp']);
         
         // Update solo per l'autore della recensione
-        allow update: if request.auth != null &&
+        allow update: if request.auth != null && 
           resource.data.userId == request.auth.uid;
         
         // Eliminazione solo per l'autore della recensione
-        allow delete: if request.auth != null &&
+        allow delete: if request.auth != null && 
           resource.data.userId == request.auth.uid;
       }
     }
@@ -1252,266 +897,156 @@ rules_version = '2';
         resource.data.userId == request.auth.uid ||
         (resource.data.rating != null && resource.data.rating > 0)
       );
-
+      
       // Gli utenti possono creare download per se stessi
-      allow create: if request.auth != null &&
+      allow create: if request.auth != null && 
         request.resource.data.userId == request.auth.uid &&
         request.resource.data.keys().hasAll(['programId', 'programTitle', 'authorName', 'userId', 'userName', 'downloadedAt', 'appliedToScheda']);
-
+      
       // Gli utenti possono aggiornare i propri download (per recensioni)
-      allow update: if request.auth != null &&
+      allow update: if request.auth != null && 
         resource.data.userId == request.auth.uid &&
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'review', 'reviewedAt', 'appliedToScheda', 'schedaId']);
-
+      
       // Nessuno può eliminare i download (per mantenere le statistiche)
       allow delete: if false;
     }
 
-    // ============= MISSING EXERCISE REQUESTS =============
-    match /missing_exercise_requests/{requestId} {
-      // Utenti autenticati possono leggere:
-      // 1. Le proprie richieste (sempre)
-      // 2. Tutte le richieste (se admin)
-      allow read: if request.auth != null && (
-        resource.data.userId == request.auth.uid ||
-        isAdmin()
-      );
+    // ==========================================
+    // NOTIFICATION SETTINGS V2.0 SECURITY RULES
+    // ==========================================
 
-      // Utenti autenticati possono creare richieste per se stessi
-      allow create: if request.auth != null &&
-        request.resource.data.userId == request.auth.uid &&
-        request.resource.data.keys().hasAll(['exerciseName', 'exerciseId', 'userId', 'requestedAt', 'status']) &&
-        request.resource.data.status == 'pending';
+    // User notification settings collection
+    match /users/{userId}/notificationSettings {
 
-      // Solo admin può aggiornare le richieste (per approvarle/rifiutarle)
-      allow update: if request.auth != null && isAdmin() &&
-        request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'adminNotes', 'reviewedAt', 'reviewedBy']);
+      // Users can only read/write their own notification settings
+      allow read, write: if request.auth != null && request.auth.uid == userId;
 
-      // Solo admin può eliminare le richieste
-      allow delete: if request.auth != null && isAdmin();
+      // Validate NotificationSettings v2.0 schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationSettings(request.resource.data);
     }
 
-    // ============= AI COACH INSIGHT FEEDBACK =============
-    match /insight_feedback/{feedbackId} {
-      // Permettere list/query per tutti gli utenti autenticati
-      // (la query deve essere filtrata per userId lato client)
-      allow list: if request.auth != null;
+    // User notification history collection
+    match /users/{userId}/notificationHistory/{notificationId} {
 
-      // L'utente può leggere solo il proprio feedback (singolo documento)
-      allow get: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
+      // Users can only read/write their own notification history
+      allow read, write: if request.auth != null && request.auth.uid == userId;
 
-      // L'utente può creare feedback solo per se stesso
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.userId &&
-        request.resource.data.keys().hasAll(['id', 'userId', 'insightType', 'insightHash', 'isHelpful', 'timestamp']);
+      // Validate NotificationHistoryEntry schema on write
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && validateNotificationHistoryEntry(request.resource.data);
 
-      // L'utente può aggiornare solo il proprio feedback
-      allow update: if request.auth != null &&
-        request.auth.uid == resource.data.userId &&
-        request.auth.uid == request.resource.data.userId;
-
-      // L'utente può eliminare solo il proprio feedback
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
-    }
-
-    // ============= USER FEEDBACK SYSTEM =============
-    match /userFeedback/{feedbackId} {
-      // Permettere list/query per tutti gli utenti autenticati
-      // (gli admin vedranno tutto, gli utenti normali devono filtrare per userId lato client)
-      allow list: if request.auth != null;
-
-      // Gli utenti possono leggere:
-      // 1. Il proprio feedback (sempre)
-      // 2. Tutto il feedback (solo se admin)
-      allow read: if request.auth != null && (
-        resource.data.userId == request.auth.uid ||
-        isAdmin()
-      );
-
-      // Gli utenti autenticati possono creare feedback per se stessi
-      // 🔒 SECURITY: Validazione lunghezza messaggio per prevenire DoS
-      allow create: if request.auth != null &&
-        request.resource.data.userId == request.auth.uid &&
-        request.resource.data.keys().hasAll([
-          'id',
-          'userId',
-          'message',
-          'category',
-          'status',
-          'createdAt'
-        ]) &&
-        request.resource.data.status == 'newFeedback' &&
-        validateStringField(request.resource.data, 'message', 1, 2000, false);
-
-      // Solo l'admin può aggiornare il feedback (per cambiare status, aggiungere note)
-      allow update: if request.auth != null && isAdmin() &&
-        request.resource.data.diff(resource.data).affectedKeys().hasAny([
-          'status',
-          'reviewedAt',
-          'reviewedBy',
-          'adminNotes'
-        ]);
-
-      // Solo l'admin può eliminare feedback
-      allow delete: if request.auth != null && isAdmin();
-    }
-
-    // ============= ACHIEVEMENTS =============
-    // Ogni utente può accedere solo ai propri achievement
-    match /achievements/{userId} {
-      // Solo il proprietario può leggere i propri achievement
-      allow read: if request.auth != null && request.auth.uid == userId;
-
-      // Solo il proprietario può creare achievement per se stesso
-      allow create: if request.auth != null && request.auth.uid == userId;
-
-      // Solo il proprietario può aggiornare i propri achievement
-      allow update: if request.auth != null && request.auth.uid == userId;
-
-      // Solo il proprietario può eliminare i propri achievement
+      // Allow deletion for GDPR compliance (Article 17: Right to Erasure)
       allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
-    // ============= BUDDY MATCHING SYSTEM =============
+    // ==========================================
+    // NOTIFICATION V2.0 VALIDATION FUNCTIONS
+    // ==========================================
 
-    // Buddy Profiles Collection
-    match /buddy_profiles/{profileId} {
-      // 🔒 SECURITY: Users can only read their own profile OR profiles that are actively looking for buddy
-      allow get: if request.auth != null && (
-        request.auth.uid == profileId ||
-        (resource.data.isActive == true && resource.data.preferences.isLookingForBuddy == true)
-      );
-
-      // 🔒 SECURITY: List queries must be limited and only for active profiles
-      allow list: if request.auth != null &&
-        isQueryLimitValid() &&
-        request.query.limit <= 50; // Max 50 profiles per query
-
-      // 🔒 SECURITY: Users can only create their own profile
-      allow create: if request.auth != null &&
-        request.auth.uid == profileId &&
-        request.resource.data.uid == request.auth.uid &&
-        validateBuddyProfileData(request.resource.data) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Users can only update their own profile
-      allow update: if request.auth != null &&
-        request.auth.uid == profileId &&
-        request.auth.uid == resource.data.uid &&
-        validateBuddyProfileUpdate(resource.data, request.resource.data) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Users can only delete their own profile
-      allow delete: if request.auth != null &&
-        request.auth.uid == profileId;
+    function validateNotificationSettings(data) {
+      return data.keys().hasAll([
+        'enableWorkoutReminders',
+        'enableRecoveryAlerts',
+        'settingsVersion'
+      ])
+      && data.settingsVersion is int
+      && data.settingsVersion >= 2
+      && (data.enableWorkoutReminders is bool)
+      && (data.enableRecoveryAlerts is bool)
+      && (data.enableStreakMotivation is bool)
+      && (data.enableRestDayReminders is bool)
+      && (data.enableSmartScheduling is bool)
+      && (data.doNotDisturbEnabled is bool)
+      && (data.reminderMinutesBefore is int)
+      && (data.reminderMinutesBefore >= 0 && data.reminderMinutesBefore <= 1440)
+      // v2.0 specific validations
+      && validateFrequencyCap(data)
+      && validateDataRetention(data)
+      && validateConsent(data);
     }
 
-    // Buddy Matches Collection
-    match /buddy_matches/{matchId} {
-      // 🔒 SECURITY: Only match participants can read the match
-      allow get: if request.auth != null && (
-        request.auth.uid == resource.data.user1Id ||
-        request.auth.uid == resource.data.user2Id
-      );
-
-      // 🔒 SECURITY: Users can only list their own matches
-      allow list: if request.auth != null && isQueryLimitValid();
-
-      // 🔒 SECURITY: Match creation requires valid participants
-      allow create: if request.auth != null &&
-        (request.auth.uid == request.resource.data.user1Id ||
-         request.auth.uid == request.resource.data.user2Id) &&
-        validateBuddyMatchData(request.resource.data) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Only match participants can update
-      allow update: if request.auth != null &&
-        (request.auth.uid == resource.data.user1Id ||
-         request.auth.uid == resource.data.user2Id) &&
-        validateBuddyMatchUpdate(resource.data, request.resource.data) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Only match participants can delete (cancel)
-      allow delete: if request.auth != null &&
-        (request.auth.uid == resource.data.user1Id ||
-         request.auth.uid == resource.data.user2Id);
+    function validateFrequencyCap(data) {
+      return !data.keys().hasAny(['frequencyCapPreferences'])
+        || (
+          data.frequencyCapPreferences.maxPerDay is int
+          && data.frequencyCapPreferences.maxPerDay >= 1
+          && data.frequencyCapPreferences.maxPerDay <= 10
+          && data.frequencyCapPreferences.maxPerWeek is int
+          && data.frequencyCapPreferences.maxPerWeek >= 1
+          && data.frequencyCapPreferences.maxPerWeek <= 20
+          && data.frequencyCapPreferences.minIntervalHours is int
+          && data.frequencyCapPreferences.minIntervalHours >= 0
+          && data.frequencyCapPreferences.minIntervalHours <= 24
+        );
     }
 
-    // Buddy Actions Collection (likes, passes, blocks, reports)
-    match /buddy_actions/{actionId} {
-      // 🔒 SECURITY: Users can only read their own actions
-      allow get: if request.auth != null &&
-        request.auth.uid == resource.data.fromUserId;
-
-      // 🔒 SECURITY: Users can list their own actions
-      allow list: if request.auth != null &&
-        isQueryLimitValid();
-
-      // 🔒 SECURITY: Users can only create actions from themselves
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.fromUserId &&
-        validateBuddyActionData(request.resource.data) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Actions are immutable (no updates)
-      allow update: if false;
-
-      // 🔒 SECURITY: Users can delete their own non-report actions
-      allow delete: if request.auth != null &&
-        request.auth.uid == resource.data.fromUserId &&
-        resource.data.actionType != 'report';
+    function validateDataRetention(data) {
+      return data.dataRetentionDays is int
+        && data.dataRetentionDays >= 30
+        && data.dataRetentionDays <= 365;
     }
 
-    // Buddy Messages Collection (chat within matches)
-    match /buddy_matches/{matchId}/messages/{messageId} {
-      // 🔒 SECURITY: Only match participants can read messages
-      allow read: if request.auth != null &&
-        (request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user1Id ||
-         request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user2Id);
-
-      // 🔒 SECURITY: Only match participants can send messages
-      allow create: if request.auth != null &&
-        request.auth.uid == request.resource.data.senderId &&
-        (request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user1Id ||
-         request.auth.uid == get(/databases/$(database)/documents/buddy_matches/$(matchId)).data.user2Id) &&
-        validateStringField(request.resource.data, 'content', 1, 1000, false) &&
-        isDocumentSizeValid();
-
-      // 🔒 SECURITY: Messages are immutable
-      allow update, delete: if false;
+    function validateConsent(data) {
+      // GDPR: If enableAnalytics is true, consentTimestamp must exist
+      return !data.enableAnalytics
+        || (data.enableAnalytics && data.keys().hasAny(['consentTimestamp']));
     }
 
-    // User Search Filters (saved preferences)
-    match /user_search_filters/{userId} {
-      // 🔒 SECURITY: Users can only access their own filters
-      allow read, write: if request.auth != null &&
-        request.auth.uid == userId;
+    function validateNotificationHistoryEntry(data) {
+      return data.keys().hasAll([
+        'type',
+        'title',
+        'body',
+        'timestamp',
+        'isRead'
+      ])
+      && data.type is string
+      && data.type in ['workout_reminder', 'recovery_alert', 'streak_motivation', 'rest_day_reminder', 'achievement']
+      && data.title is string
+      && data.body is string
+      && data.timestamp is timestamp
+      && data.isRead is bool;
     }
 
-    // Ice Breakers Collection (read-only reference data)
-    match /ice_breakers/{iceBreakerId} {
-      // 🔒 SECURITY: All authenticated users can read ice breakers
-      allow read: if request.auth != null;
 
-      // 🔒 SECURITY: Only admins can manage ice breakers
-      allow write: if request.auth != null && isAdmin();
+    // ==========================================
+    // FLEXIBLE ROUTINES
+    // ==========================================
+    match /flexibleRoutines/{routineId} {
+      // Users can read/write their own routines
+      allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // Users can create routines for themselves
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
     }
 
-    // ============= BACKUP COLLECTIONS (for data migration) =============
-    match /{collection}/{document} {
-      // Solo admin può creare collezioni di backup per migrazione dati
-      allow read, write: if request.auth != null && isAdmin() &&
-        collection.matches('.*_backup_.*');
+    // ==========================================
+    // EXERCISES METADATA (VERSION INFO)
+    // ==========================================
+    match /exercises_metadata/version_info {
+      // Everyone can read version info (for update checks)
+      allow read: if true;
+      
+      // Only authenticated users can write (admin/system)
+      allow write: if request.auth != null;
     }
 
-    // ============= FALLBACK DI SICUREZZA =============
-    // ⚠️ IMPORTANTE: Blocca TUTTE le collezioni NON specificate sopra
-    // Questo previene accessi non autorizzati a collezioni future o sconosciute
-    // Se aggiungi una nuova collezione, DEVI aggiungere regole specifiche sopra
-    match /{document=**} {
-      allow read, write: if false;  // ❌ NEGA TUTTO per default
+    // ==========================================
+    // INSIGHT FEEDBACK
+    // ==========================================
+    match /insight_feedback/{feedbackId} {
+      // Users can read their own feedback
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      
+      // Users can create feedback for themselves
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own feedback
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
   }

@@ -368,6 +368,10 @@
   "beginner": "Principiante",
   "intermediate": "Intermedio",
   "advanced": "Avanzate",
+  "testNotification": "Notifica di Test",
+  "testNotificationDescription": "Invia una notifica di test per verificare che il sistema funzioni correttamente",
+  "testNotificationSent": "Notifica di Test Inviata!",
+  "testNotificationSentDescription": "Controlla il centro notifiche per verificare che funzioni",
   "customRequest": "Richiesta Personalizzata (Opzionale)",
   "customRequestHint": "es. Focus movimenti composti, allenamento 45 min, attrezzatura minima",
   "generatedPrompt": "Prompt AI Generato",
@@ -7794,6 +7798,14 @@
   "@workoutReminders": {
     "description": "Etichetta categoria per notifiche promemoria allenamento",
     "context": "Found in: 'reminders',\n          'Workout Reminders',\n          description: 'Reminders to workout and stay active',, ref,\n            title: 'Workout Reminders',\n            subtitle: 'Get reminded before your scheduled workouts',"
+  },
+  "dailyWorkoutReminder": "Promemoria Allenamento Giornaliero",
+  "@dailyWorkoutReminder": {
+    "description": "Toggle per promemoria allenamenti giornalieri"
+  },
+  "progressAndMotivation": "Progressi & Motivazione",
+  "@progressAndMotivation": {
+    "description": "Etichetta categoria per notifiche di progresso e motivazione"
   },
   "questaAzioneNonPuEssereAnnullata": "Questa azione non può essere annullata.",
   "@questaAzioneNonPuEssereAnnullata": {

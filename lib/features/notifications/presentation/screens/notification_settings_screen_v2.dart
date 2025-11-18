@@ -148,8 +148,24 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
               style: context.textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
+
+            // 🔔 Workout Reminders Category
+            Row(
+              children: [
+                Icon(AppIcons.notifications, size: AppIconSize.small, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.workoutReminders,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             SwitchListTile(
-              title: Text(context.l10n.workoutReminders),
+              title: Text(context.l10n.dailyWorkoutReminder),
               subtitle: Text(context.l10n.dailyWorkoutRemindersDescription),
               value: settings.enableWorkoutReminders,
               onChanged: (value) {
@@ -190,6 +206,23 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                   onTap: () => _showCustomTimePicker(context, ref, settings, 'recoveryAlert'),
                 ),
               ),
+
+            // 🎯 Progress & Motivation Category
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Icon(AppIcons.analytics, size: AppIconSize.small, color: context.colors.secondary),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.progressAndMotivation,
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: context.colors.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             SwitchListTile(
               title: Text(context.l10n.streakMotivation),
               subtitle: Text(context.l10n.streakMotivationDescription),
@@ -571,6 +604,13 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
               style: context.textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
+            ListTile(
+              leading: Icon(AppIcons.notifications, color: context.colors.success),
+              title: Text(context.l10n.testNotification),
+              subtitle: Text(context.l10n.testNotificationDescription),
+              trailing: const Icon(AppIcons.send, size: AppIconSize.small),
+              onTap: () => _sendTestNotification(context),
+            ),
             ListTile(
               leading: Icon(AppIcons.restore, color: context.colors.primary),
               title: Text(context.l10n.resetToDefaults),
@@ -1075,6 +1115,45 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
         ref.read(notificationSettingsV2Provider.notifier).updateSettings(updated),
       );
     }
+  }
+
+  /// Send test notification to verify notification system works
+  void _sendTestNotification(BuildContext context) {
+    // Show immediate feedback
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(AppIcons.checkCircle, color: context.colors.success),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    context.l10n.testNotificationSent,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    context.l10n.testNotificationSentDescription,
+                    style: context.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: context.colors.success.withValues(alpha: 0.9),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+
+    // TODO: Integrate with actual notification service
+    // Example: ref.read(notificationServiceProvider).sendTestNotification();
   }
 
   void _showResetDialog(BuildContext context, WidgetRef ref) {

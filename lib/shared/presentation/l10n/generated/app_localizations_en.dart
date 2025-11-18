@@ -795,6 +795,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get advanced => 'Advanced';
 
   @override
+  String get testNotification => 'Test Notification';
+
+  @override
+  String get testNotificationDescription =>
+      'Send a test notification to verify that notifications are working correctly';
+
+  @override
+  String get testNotificationSent => 'Test Notification Sent!';
+
+  @override
+  String get testNotificationSentDescription =>
+      'Check your notification center to verify it works';
+
+  @override
   String get customRequest => 'Custom Request (Optional)';
 
   @override
@@ -14950,6 +14964,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutReminders => 'Workout Reminders';
+
+  @override
+  String get dailyWorkoutReminder => 'Daily Workout Reminder';
+
+  @override
+  String get progressAndMotivation => 'Progress & Motivation';
 
   @override
   String get questaAzioneNonPuEssereAnnullata =>

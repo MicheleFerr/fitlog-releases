@@ -988,6 +988,22 @@
   "@advanced": {
     "description": "Advanced section header"
   },
+  "testNotification": "Test Notification",
+  "@testNotification": {
+    "description": "Button to send test notification"
+  },
+  "testNotificationDescription": "Send a test notification to verify that notifications are working correctly",
+  "@testNotificationDescription": {
+    "description": "Description for test notification button"
+  },
+  "testNotificationSent": "Test Notification Sent!",
+  "@testNotificationSent": {
+    "description": "Confirmation that test notification was sent"
+  },
+  "testNotificationSentDescription": "Check your notification center to verify it works",
+  "@testNotificationSentDescription": {
+    "description": "Instructions after sending test notification"
+  },
   "customRequest": "Custom Request (Optional)",
   "@customRequest": {
     "description": "Custom request input label"
@@ -18406,6 +18422,14 @@
   "@workoutReminders": {
     "description": "Category label for workout reminder notifications",
     "context": "Found in: 'reminders',\n          'Workout Reminders',\n          description: 'Reminders to workout and stay active',, ref,\n            title: 'Workout Reminders',\n            subtitle: 'Get reminded before your scheduled workouts',"
+  },
+  "dailyWorkoutReminder": "Daily Workout Reminder",
+  "@dailyWorkoutReminder": {
+    "description": "Toggle for daily workout reminders"
+  },
+  "progressAndMotivation": "Progress & Motivation",
+  "@progressAndMotivation": {
+    "description": "Category label for progress tracking and motivational notifications"
   },
   "questaAzioneNonPuEssereAnnullata": "Questa azione non può essere annullata.",
   "@questaAzioneNonPuEssereAnnullata": {
