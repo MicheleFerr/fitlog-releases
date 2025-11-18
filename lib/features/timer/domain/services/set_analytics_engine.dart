@@ -183,13 +183,14 @@ class SetAnalyticsEngine {
   }
 
   /// Predict optimal rest time between sets
+  /// ⚡ OPTIMIZATION: Reduced limit from 50 → 10 to save memory
   Future<RestPrediction> predictOptimalRestTime(
     String exerciseId,
     double currentFatigueIndex,
     double targetRecoveryPercent,
   ) async {
     try {
-      final historicalData = await _getRecentTimings(exerciseId, limit: 50);
+      final historicalData = await _getRecentTimings(exerciseId, limit: 10);
       
       if (historicalData.isEmpty) {
         return RestPrediction.defaultRest();

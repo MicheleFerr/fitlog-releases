@@ -177,7 +177,6 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
     // Only rebuild when specific properties change, not entire workout object
-    final currentWorkout = ref.watch(currentWorkoutProvider);
     final sessionId = (GoRouterState.of(context).extra as Map?)?['sessionId'] as String?;
 
     final workoutName = ref.watch(
@@ -331,7 +330,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 if (!hasWorkout)
                   _buildWelcomeView(context, ref)
                 else if (isPreloaded && hasExercises)
-                  _buildPreloadedView(context, ref, currentWorkout!, sessionId ?? _generateSessionId())
+                  // ⚡ OPTIMIZATION: Only watch full workout for preloaded view
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final currentWorkout = ref.watch(currentWorkoutProvider);
+                      if (currentWorkout == null) return const SizedBox.shrink();
+                      return _buildPreloadedView(context, ref, currentWorkout, sessionId ?? _generateSessionId());
+                    },
+                  )
                 else
                   Consumer(
                     builder: (context, ref, child) {
