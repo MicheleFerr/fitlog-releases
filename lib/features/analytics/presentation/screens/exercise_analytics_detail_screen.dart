@@ -25,6 +25,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/max_weight_progression_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_progression_chart_analytics.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/one_rm_progression_chart_analytics.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/reps_progression_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/pr_timeline_chart.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -162,16 +167,16 @@ class _ExerciseCharts extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                // TODO: Max weight chart (Task 3.2)
-                _PlaceholderChart(title: context.l10n.maxWeight),
-                // TODO: Volume chart (Task 3.2)
-                _PlaceholderChart(title: context.l10n.volume),
-                // TODO: 1RM chart (Task 3.2)
-                const _PlaceholderChart(title: '1RM'),
-                // TODO: Reps chart (Task 3.3)
-                _PlaceholderChart(title: context.l10n.reps),
-                // TODO: PR timeline chart (Task 3.3)
-                const _PlaceholderChart(title: 'PR Timeline'),
+                // Max weight chart
+                MaxWeightProgressionChart(history: history),
+                // Volume chart
+                VolumeProgressionChartAnalytics(history: history),
+                // 1RM chart
+                OneRMProgressionChartAnalytics(history: history),
+                // Reps chart
+                RepsProgressionChart(history: history),
+                // PR timeline chart
+                PRTimelineChart(history: history),
               ],
             ),
           ),
@@ -283,44 +288,6 @@ class _Divider extends StatelessWidget {
       width: 1,
       height: 60,
       color: context.colors.onSurfaceVariant.withValues(alpha: 0.2),
-    );
-  }
-}
-
-/// Placeholder chart (TODO: Replace with actual charts in Task 3.2-3.3)
-class _PlaceholderChart extends StatelessWidget {
-  const _PlaceholderChart({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SemanticIcon(
-            icon: AppIcons.barChart,
-            semanticLabel: '$title chart placeholder',
-            size: AppIconSize.xxlarge,
-            color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'TODO: $title Chart',
-            style: context.textTheme.titleMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '(Task 3.2-3.3)',
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
