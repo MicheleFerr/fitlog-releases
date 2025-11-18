@@ -1,3 +1,13 @@
+/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
+///
+/// 📁 Layer: test/unit
+/// 🎯 Feature: home
+/// 🔧 Type: unit test
+/// 🌍 Localization: N/A - Test file
+/// 🎨 Theme: N/A - Test file
+/// 📱 Platform: Universal
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/home/domain/viewmodels/home_viewmodel.dart';
