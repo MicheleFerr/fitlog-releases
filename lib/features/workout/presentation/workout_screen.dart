@@ -339,20 +339,47 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     },
                   )
                 else
+                  // ⚡ CRITICAL FIX FOR INFINITE GIF RELOAD LOOP - SOLUTION 2 (Surgical Fix)
+                  // ROOT CAUSE: Consumer watches ENTIRE provider → rebuilds on every state change (timer, flags, etc.)
+                  // SOLUTION: Use .select() to watch ONLY the exercises list (what ListView actually needs)
+                  // This prevents rebuilds when timer/internal flags change, only rebuilding on exercise changes
+                  // Expected: 100+ rebuilds/sec → ~0-5 rebuilds (only when exercises actually change)
                   Consumer(
                     builder: (context, ref, child) {
-                      // ⚡ OPTIMIZATION: Watch full workout only in body builder
-                      // This isolates rebuilds to this section when exercise data changes
-                      final currentWorkout = ref.watch(currentWorkoutProvider);
+                      // ⚡ OPTIMIZATION: Watch only exercises list, not entire workout
+                      // This uses Riverpod's .select() to create a granular dependency
+                      final exercises = ref.watch(
+                        currentWorkoutProvider.select((workout) => workout?.exercises ?? []),
+                      );
 
-                      // 🐛 DEBUG: Log exercise counting modes on rebuild (now with kDebugMode guard for production safety)
-                      if (kDebugMode && currentWorkout != null) {
-                        for (final ex in currentWorkout.exercises) {
-                          debugPrint('🔍 [WorkoutScreen Consumer] Exercise: ${ex.name}, CountingMode: ${ex.countingMode.name}');
-                        }
+                      // Watch workout name separately for AppBar (rarely changes)
+                      final workoutName = ref.watch(
+                        currentWorkoutProvider.select((workout) => workout?.name ?? ''),
+                      );
+
+                      // Watch workout ID for key stability
+                      final workoutId = ref.watch(
+                        currentWorkoutProvider.select((workout) => workout?.id),
+                      );
+
+                      // 🐛 DEBUG: Log ONLY when exercises actually change (not on timer updates)
+                      if (kDebugMode) {
+                        debugPrint('🏗️ [WorkoutScreen] Building workout view with ${exercises.length} exercises (ID: $workoutId)');
                       }
 
-                      return _buildWorkoutView(context, ref, currentWorkout!);
+                      if (workoutId == null || exercises.isEmpty) {
+                        return const Center(child: LoadingIndicator());
+                      }
+
+                      // Get full workout object only when needed for _buildWorkoutView
+                      // This is read-only access (no rebuild trigger)
+                      final currentWorkout = ref.read(currentWorkoutProvider);
+
+                      if (currentWorkout == null) {
+                        return const Center(child: LoadingIndicator());
+                      }
+
+                      return _buildWorkoutView(context, ref, currentWorkout);
                     },
                   ),
                 // Timer Overlay
