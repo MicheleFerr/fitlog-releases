@@ -461,6 +461,18 @@ service cloud.firestore {
             request.resource.data.completedMin >= resource.data.completedMin);
       allow delete: if false;
 
+      // ============= WORKOUTS SUBCOLLECTION (ANALYTICS) =============
+      match /workouts/{workoutId} {
+        // Users can read/write their own workout history
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ============= ANALYTICS SUBCOLLECTION =============
+      match /analytics/{exerciseName} {
+        // Users can read/write their own analytics data
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
       // ============= BODY MEASUREMENTS SUBCOLLECTION =============
       match /bodyMeasurements/{measurementId} {
         allow read: if request.auth != null && (
