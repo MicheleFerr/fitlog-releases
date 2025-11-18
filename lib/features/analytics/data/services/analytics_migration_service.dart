@@ -100,7 +100,7 @@ class AnalyticsMigrationService {
       final workoutsSnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
-          .orderBy('startTime', descending: false) // Oldest first
+          // Note: No orderBy to avoid filtering out docs without startTime field
           .get();
 
       print('🔄 [MIGRATION] Total workouts fetched: ${workoutsSnapshot.docs.length}');
