@@ -62,11 +62,11 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_badge_header.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_volume_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_history_tab.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_records_tab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -250,16 +250,8 @@ class _ExerciseDetailContent extends StatelessWidget {
               // History Tab - Workout session history
               ExerciseHistoryTab(history: history),
 
-              // Records Tab (placeholder for Phase 2.5)
-              Container(
-                color: context.colors.success.withValues(alpha: 0.1),
-                child: Center(
-                  child: Text(
-                    'Records Tab (Phase 2.5)',
-                    style: context.textTheme.bodyMedium,
-                  ),
-                ),
-              ),
+              // Records Tab - Personal records breakdown
+              ExerciseRecordsTab(records: records),
             ],
           ),
         ),
