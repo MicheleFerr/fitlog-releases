@@ -349,9 +349,8 @@ Future<void> _initializeStorage() async {
   // ⚡ PERFORMANCE OPTIMIZATION: Open basic boxes in parallel
   // This reduces app startup time by ~30-40% (from ~19s to ~12s)
 
-  if (kDebugMode) {
-    debugPrint('📦 [Storage] Starting initialization...');
-  }
+  // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
+  print('📦 [Storage] Starting initialization...');
 
   await Future.wait([
     _openBox('auth_box'),
@@ -363,9 +362,8 @@ Future<void> _initializeStorage() async {
     _openBox<Map>('workoutMetrics'), // Analytics caching
   ]);
 
-  if (kDebugMode) {
-    debugPrint('📦 [Storage] ✅ Basic boxes opened successfully');
-  }
+  // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
+  print('📦 [Storage] ✅ Basic boxes opened successfully');
 
   // ⚡ PERFORMANCE: Initialize datasources and services in parallel
   // This reduces sequential waits and improves startup time by ~20-30%
@@ -439,19 +437,15 @@ Future<void> _safeInitialize(
 Future<void> _openBox<T>(String boxName) async {
   final boxManager = HiveBoxManagerEnhanced();
   try {
-    if (kDebugMode) {
-      debugPrint('📦 [Storage] Opening box: $boxName');
-    }
+    // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
+    print('📦 [Storage] Opening box: $boxName');
     await boxManager.openBox<T>(boxName);
-    if (kDebugMode) {
-      debugPrint('📦 [Storage] ✅ Opened: $boxName');
-    }
+    // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
+    print('📦 [Storage] ✅ Opened: $boxName');
   } catch (e, stackTrace) {
-    // Log errors ALWAYS (not just in assert) because this is critical
-    if (kDebugMode) {
-      debugPrint('❌ [Storage] FAILED to open $boxName box: $e');
-      debugPrint('📍 [Storage] Stack trace: $stackTrace');
-    }
+    // DIAGNOSTIC: Log errors ALWAYS (critical for debugging Release mode)
+    print('❌ [Storage] FAILED to open $boxName box: $e');
+    print('📍 [Storage] Stack trace: $stackTrace');
 
     // Handle corrupted boxes that need recovery
     if ((boxName == 'app_config' && e.toString().contains('typeId')) ||
