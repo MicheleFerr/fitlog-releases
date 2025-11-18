@@ -17334,4 +17334,15 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get tryAnotherSearch =>
       'Prova a cercare un esercizio o un gruppo muscolare diverso';
+
+  @override
+  String get months => 'Mesi';
+
+  @override
+  String get noDataForTimeframe =>
+      'Nessun dato disponibile per questo intervallo temporale';
+
+  @override
+  String get tryDifferentTimeframe =>
+      'Prova a selezionare un intervallo temporale diverso per vedere i tuoi progressi';
 }

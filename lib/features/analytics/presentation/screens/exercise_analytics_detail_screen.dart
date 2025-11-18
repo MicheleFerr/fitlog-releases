@@ -38,6 +38,53 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extens
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
+/// Timeframe options for filtering chart data
+enum Timeframe {
+  week,
+  month,
+  threeMonths,
+  year,
+  allTime;
+
+  /// Get duration from now for filtering
+  DateTime? get cutoffDate {
+    final now = DateTime.now();
+    switch (this) {
+      case Timeframe.week:
+        return now.subtract(const Duration(days: 7));
+      case Timeframe.month:
+        return now.subtract(const Duration(days: 30));
+      case Timeframe.threeMonths:
+        return now.subtract(const Duration(days: 90));
+      case Timeframe.year:
+        return now.subtract(const Duration(days: 365));
+      case Timeframe.allTime:
+        return null; // No filtering
+    }
+  }
+
+  /// Get display label
+  String getLabel(BuildContext context) {
+    switch (this) {
+      case Timeframe.week:
+        return context.l10n.week;
+      case Timeframe.month:
+        return context.l10n.month;
+      case Timeframe.threeMonths:
+        return '3 ${context.l10n.months}';
+      case Timeframe.year:
+        return context.l10n.year;
+      case Timeframe.allTime:
+        return context.l10n.allTime;
+    }
+  }
+}
+
+/// Provider for selected timeframe (defaults to all time)
+final selectedTimeframeProvider = StateProvider<Timeframe>(
+  (ref) => Timeframe.allTime,
+);
+
 /// Exercise analytics detail screen
 class ExerciseAnalyticsDetailScreen extends ConsumerWidget {
   const ExerciseAnalyticsDetailScreen({
@@ -98,15 +145,63 @@ class _ExerciseDetailContent extends ConsumerWidget {
 }
 
 /// Exercise charts and stats
-class _ExerciseCharts extends StatelessWidget {
+class _ExerciseCharts extends ConsumerWidget {
   const _ExerciseCharts({required this.history});
 
   final ExerciseHistory history;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (history.sessions.isEmpty) {
       return const _EmptyStateView();
+    }
+
+    // Watch selected timeframe
+    final selectedTimeframe = ref.watch(selectedTimeframeProvider);
+
+    // Filter sessions based on timeframe
+    final cutoffDate = selectedTimeframe.cutoffDate;
+    final filteredSessions = cutoffDate == null
+        ? history.sessions
+        : history.sessions.where((session) => session.date.isAfter(cutoffDate)).toList();
+
+    // Create filtered history
+    final filteredHistory = ExerciseHistory(
+      exerciseName: history.exerciseName,
+      muscleGroup: history.muscleGroup,
+      sessions: filteredSessions,
+    );
+
+    // Check if filtered history is empty
+    if (filteredSessions.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SemanticIcon(
+              icon: AppIcons.calendar,
+              semanticLabel: context.l10n.noDataAvailable,
+              size: AppIconSize.xxlarge,
+              color: context.colors.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.noDataForTimeframe,
+              style: context.textTheme.titleMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.tryDifferentTimeframe,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return DefaultTabController(
@@ -114,7 +209,10 @@ class _ExerciseCharts extends StatelessWidget {
       child: Column(
         children: [
           // Stats summary card
-          _StatsSummaryCard(history: history),
+          _StatsSummaryCard(history: filteredHistory),
+
+          // Timeframe selector
+          _TimeframeSelector(),
 
           // Chart type tabs
           TabBar(
@@ -168,19 +266,57 @@ class _ExerciseCharts extends StatelessWidget {
             child: TabBarView(
               children: [
                 // Max weight chart
-                MaxWeightProgressionChart(history: history),
+                MaxWeightProgressionChart(history: filteredHistory),
                 // Volume chart
-                VolumeProgressionChartAnalytics(history: history),
+                VolumeProgressionChartAnalytics(history: filteredHistory),
                 // 1RM chart
-                OneRMProgressionChartAnalytics(history: history),
+                OneRMProgressionChartAnalytics(history: filteredHistory),
                 // Reps chart
-                RepsProgressionChart(history: history),
+                RepsProgressionChart(history: filteredHistory),
                 // PR timeline chart
-                PRTimelineChart(history: history),
+                PRTimelineChart(history: filteredHistory),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Timeframe selector widget with chips
+class _TimeframeSelector extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedTimeframe = ref.watch(selectedTimeframeProvider);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: Timeframe.values.map((timeframe) {
+            final isSelected = selectedTimeframe == timeframe;
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilterChip(
+                label: Text(timeframe.getLabel(context)),
+                selected: isSelected,
+                onSelected: (_) {
+                  ref.read(selectedTimeframeProvider.notifier).state = timeframe;
+                },
+                selectedColor: context.colors.primary.withValues(alpha: 0.2),
+                checkmarkColor: context.colors.primary,
+                labelStyle: context.textTheme.bodyMedium?.copyWith(
+                  color: isSelected
+                      ? context.colors.primary
+                      : context.colors.onSurfaceVariant,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

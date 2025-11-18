@@ -17164,4 +17164,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tryAnotherSearch =>
       'Try searching for a different exercise or muscle group';
+
+  @override
+  String get months => 'Months';
+
+  @override
+  String get noDataForTimeframe => 'No data available for this timeframe';
+
+  @override
+  String get tryDifferentTimeframe =>
+      'Try selecting a different timeframe to see your progress';
 }

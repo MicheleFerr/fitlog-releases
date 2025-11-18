@@ -20791,5 +20791,17 @@
   "tryAnotherSearch": "Try searching for a different exercise or muscle group",
   "@tryAnotherSearch": {
     "description": "Suggestion message when no search results found"
+  },
+  "months": "Months",
+  "@months": {
+    "description": "Plural form of month"
+  },
+  "noDataForTimeframe": "No data available for this timeframe",
+  "@noDataForTimeframe": {
+    "description": "Message when no data exists in selected timeframe"
+  },
+  "tryDifferentTimeframe": "Try selecting a different timeframe to see your progress",
+  "@tryDifferentTimeframe": {
+    "description": "Suggestion when no data in current timeframe"
   }
 }

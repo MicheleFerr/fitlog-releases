@@ -30737,6 +30737,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try searching for a different exercise or muscle group'**
   String get tryAnotherSearch;
+
+  /// Plural form of month
+  ///
+  /// In en, this message translates to:
+  /// **'Months'**
+  String get months;
+
+  /// Message when no data exists in selected timeframe
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for this timeframe'**
+  String get noDataForTimeframe;
+
+  /// Suggestion when no data in current timeframe
+  ///
+  /// In en, this message translates to:
+  /// **'Try selecting a different timeframe to see your progress'**
+  String get tryDifferentTimeframe;
 }
 
 class _AppLocalizationsDelegate

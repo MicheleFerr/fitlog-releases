@@ -10179,5 +10179,17 @@
   "tryAnotherSearch": "Prova a cercare un esercizio o un gruppo muscolare diverso",
   "@tryAnotherSearch": {
     "description": "Messaggio di suggerimento quando nessun risultato trovato"
+  },
+  "months": "Mesi",
+  "@months": {
+    "description": "Forma plurale di mese"
+  },
+  "noDataForTimeframe": "Nessun dato disponibile per questo intervallo temporale",
+  "@noDataForTimeframe": {
+    "description": "Messaggio quando non ci sono dati nell'intervallo selezionato"
+  },
+  "tryDifferentTimeframe": "Prova a selezionare un intervallo temporale diverso per vedere i tuoi progressi",
+  "@tryDifferentTimeframe": {
+    "description": "Suggerimento quando non ci sono dati nell'intervallo corrente"
   }
 }
