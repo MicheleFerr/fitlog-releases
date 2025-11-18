@@ -59,7 +59,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 final analyticsCacheBoxProvider =
     Provider<Box<Map<dynamic, dynamic>>>((ref) {
   // Open Hive box synchronously (must be initialized in main.dart)
-  return Hive.box<Map<dynamic, dynamic>>('analytics_cache');
+  // ✅ FIX: Cast the Box<dynamic> to the correct type
+  // The box is opened as Box<dynamic> in HiveBoxManagerEnhanced.initialize()
+  return Hive.box('analytics_cache') as Box<Map<dynamic, dynamic>>;
 });
 
 /// Firestore instance provider

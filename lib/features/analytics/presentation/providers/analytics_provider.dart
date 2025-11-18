@@ -136,12 +136,19 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((re
   final syncNotifier = ref.read(workoutSyncStatusProvider.notifier);
 
   try {
-    // Set checking state
-    syncNotifier.setChecking();
+    // RIVERPOD FIX: Defer state modification to avoid "modifying other providers during build" error
+    // Schedule setChecking() for next microtask to ensure provider initialization completes first
+    // ignore: unawaited_futures
+    Future.microtask(() {
+      if (ref.state.hasValue || ref.state.isLoading) {
+        syncNotifier.setChecking();
+      }
+    });
 
     // Set up progress callback for sync
     if (analyticsRepo is WorkoutAnalyticsRepositoryImpl) {
       analyticsRepo.setSyncProgressCallback((current, total) {
+        // Progress callbacks happen during async operation, so they're safe
         syncNotifier.setSyncing(current, total);
       });
     }
@@ -149,11 +156,12 @@ final historicalWorkoutsProvider = FutureProvider.autoDispose<List<Workout>>((re
     // Fetch completed workouts for analytics (this will trigger sync if needed)
     final workouts = await analyticsRepo.getHistoricalWorkouts(user.uid, limit: 100);
 
-    // Mark as completed
+    // Mark as completed (happens after async operation, so it's safe)
     syncNotifier.setCompleted();
 
     return workouts;
   } catch (e) {
+    // Error handling happens after async operation, so it's safe
     syncNotifier.setError(e.toString());
     rethrow;
   }

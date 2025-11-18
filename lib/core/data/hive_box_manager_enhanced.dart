@@ -80,13 +80,44 @@ class HiveBoxManagerEnhanced {
     // Pre-open critical boxes that are truly Box<dynamic> (no specific type)
     // Note: app_config is NOT pre-opened because it's typed as Box<AppConfig>
     // and will be opened on-demand by AppConfigNotifier with the correct type
-    await Future.wait([
-      _instance.openBox<dynamic>('user_consents'),  // Privacy/GDPR
-      _instance.openBox<dynamic>('privacy'),         // Privacy Manager
-    ]);
+
+    // ✅ FIX: Open boxes individually with error handling instead of Future.wait
+    // This ensures that if one box fails, others still open successfully
+    final List<String> failedBoxes = [];
+
+    try {
+      await _instance.openBox<dynamic>('privacy');  // Privacy Manager
+    } catch (e) {
+      failedBoxes.add('privacy: $e');
+      if (kDebugMode) {
+        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "privacy": $e');
+      }
+    }
+
+    try {
+      await _instance.openBox<dynamic>('user_consents');  // Privacy/GDPR
+    } catch (e) {
+      failedBoxes.add('user_consents: $e');
+      if (kDebugMode) {
+        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "user_consents": $e');
+      }
+    }
+
+    try {
+      // ✅ FIX: Open analytics_cache as Box<dynamic> first, then cast when needed
+      await _instance.openBox<dynamic>('analytics_cache');  // Analytics cache for AI coach
+    } catch (e) {
+      failedBoxes.add('analytics_cache: $e');
+      if (kDebugMode) {
+        debugPrint('📦 [HiveBoxManagerEnhanced] ❌ Failed to open box "analytics_cache": $e');
+      }
+    }
 
     if (kDebugMode) {
       debugPrint('📦 [HiveBoxManagerEnhanced] ✅ Initialized with ${_instance._openBoxes.length} critical boxes');
+      if (failedBoxes.isNotEmpty) {
+        debugPrint('📦 [HiveBoxManagerEnhanced] ⚠️ Failed boxes: ${failedBoxes.join(', ')}');
+      }
     }
   }
 

@@ -131,14 +131,133 @@ class AnalyticsMigrationService {
       int totalWorkouts = 0;
       int totalSets = 0;
       final List<String> skippedExercises = [];
+      int parseErrors = 0;
+      int emptyExercisesCount = 0;
+      int processedWorkoutsWithExercises = 0;
 
-      for (final workoutDoc in completedWorkoutDocs) {
+      print('🔄 [MIGRATION] Starting to parse ${completedWorkoutDocs.length} workouts...');
+
+      for (int i = 0; i < completedWorkoutDocs.length; i++) {
+        final workoutDoc = completedWorkoutDocs[i];
         try {
           final workoutData = workoutDoc.data();
-          final workout = Workout.fromJson(workoutData);
+          print('🔄 [MIGRATION] Processing workout ${i + 1}/${completedWorkoutDocs.length} - ID: ${workoutDoc.id}');
+
+          // Log raw data structure to debug parsing
+          if (i == 0) {
+            print('📋 [MIGRATION] Sample workout structure:');
+            print('  - Keys: ${workoutData.keys.join(", ")}');
+            if (workoutData['exercises'] != null) {
+              print('  - Exercises field type: ${workoutData['exercises'].runtimeType}');
+              if (workoutData['exercises'] is List) {
+                final exercises = workoutData['exercises'] as List;
+                print('  - Number of exercises: ${exercises.length}');
+                if (exercises.isNotEmpty) {
+                  print('  - First exercise: ${exercises.first}');
+                }
+              }
+            }
+          }
+
+          // Add missing fields for old workout documents
+          // 1. Add the document ID as 'id' field
+          // 2. Infer status from completedAt (we already filtered for completed workouts)
+          // 3. Convert Firestore Timestamps to ISO strings for proper parsing
+          final enrichedData = Map<String, dynamic>.from(workoutData);
+          enrichedData['id'] = workoutDoc.id; // Add document ID
+          enrichedData['status'] = 'completed'; // All filtered workouts have completedAt, so they're completed
+
+          // Convert Timestamp fields to ISO strings for proper parsing
+          ['createdAt', 'updatedAt', 'startTime', 'endTime', 'completedAt', 'startedAt'].forEach((field) {
+            if (enrichedData[field] != null && enrichedData[field] is Timestamp) {
+              enrichedData[field] = (enrichedData[field] as Timestamp).toDate().toIso8601String();
+            }
+          });
+
+          // Also convert Timestamps in exercises and their sets
+          if (enrichedData['exercises'] != null && enrichedData['exercises'] is List) {
+            final exercises = enrichedData['exercises'] as List;
+            enrichedData['exercises'] = exercises.map((exercise) {
+              if (exercise is Map<String, dynamic>) {
+                final exerciseMap = Map<String, dynamic>.from(exercise);
+
+                // CRITICAL FIX: Flatten exerciseData wrapper if it exists
+                // Old structure: { category: "...", exerciseData: { id: "...", name: "..." }, sets: [...] }
+                // New structure: { category: "...", id: "...", name: "...", sets: [...] }
+                if (exerciseMap['exerciseData'] != null && exerciseMap['exerciseData'] is Map) {
+                  print('🔧 [MIGRATION] Flattening exerciseData wrapper for exercise');
+                  final exerciseData = exerciseMap['exerciseData'] as Map<String, dynamic>;
+                  // Move all fields from exerciseData to top level
+                  exerciseData.forEach((key, value) {
+                    exerciseMap[key] = value;
+                  });
+                  // Remove the wrapper
+                  exerciseMap.remove('exerciseData');
+                }
+
+                // Convert exercise timestamps
+                ['createdAt', 'updatedAt'].forEach((field) {
+                  if (exerciseMap[field] != null && exerciseMap[field] is Timestamp) {
+                    exerciseMap[field] = (exerciseMap[field] as Timestamp).toDate().toIso8601String();
+                  }
+                });
+
+                // Convert timestamps in sets
+                if (exerciseMap['sets'] != null && exerciseMap['sets'] is List) {
+                  final sets = exerciseMap['sets'] as List;
+                  exerciseMap['sets'] = sets.map((set) {
+                    if (set is Map<String, dynamic>) {
+                      final setMap = Map<String, dynamic>.from(set);
+                      if (setMap['completedAt'] != null && setMap['completedAt'] is Timestamp) {
+                        setMap['completedAt'] = (setMap['completedAt'] as Timestamp).toDate().toIso8601String();
+                      }
+                      return setMap;
+                    }
+                    return set;
+                  }).toList();
+                }
+
+                return exerciseMap;
+              }
+              return exercise;
+            }).toList();
+          }
+
+          // Debug: Check raw exercises data before parsing
+          if (enrichedData['exercises'] != null) {
+            final rawExercises = enrichedData['exercises'];
+            if (rawExercises is List) {
+              print('🔍 [DEBUG] Workout ${workoutDoc.id} has ${rawExercises.length} raw exercises in data');
+              if (rawExercises.isNotEmpty) {
+                print('🔍 [DEBUG] First exercise structure: ${rawExercises.first}');
+              }
+            } else {
+              print('🔍 [DEBUG] exercises field is not a List, it is: ${rawExercises.runtimeType}');
+            }
+          } else {
+            print('🔍 [DEBUG] Workout ${workoutDoc.id} has NO exercises field in enrichedData');
+          }
+
+          Workout workout;
+          try {
+            workout = Workout.fromJson(enrichedData);
+            print('🔍 [DEBUG] After parsing: workout.exercises.length = ${workout.exercises.length}');
+          } catch (e, stackTrace) {
+            print('❌ [ERROR] Failed to parse workout ${workoutDoc.id}: $e');
+            print('Stack trace: $stackTrace');
+            parseErrors++;
+            continue;
+          }
 
           // Skip if workout has no exercises
-          if (workout.exercises.isEmpty) continue;
+          if (workout.exercises.isEmpty) {
+            emptyExercisesCount++;
+            print('⚠️ [MIGRATION] Workout ${workoutDoc.id} has no exercises after parsing');
+            continue;
+          }
+
+          processedWorkoutsWithExercises++;
+          print('✅ [MIGRATION] Workout has ${workout.exercises.length} exercises');
 
           totalWorkouts++;
 
@@ -147,10 +266,15 @@ class AnalyticsMigrationService {
 
           // Process each exercise in workout
           for (final exercise in workout.exercises) {
+            print('  📊 Exercise: ${exercise.name} - Sets: ${exercise.sets.length}');
+
             // Skip exercises with no completed sets
             final completedSets =
                 exercise.sets.where((set) => set.isCompleted).toList();
-            if (completedSets.isEmpty) continue;
+            if (completedSets.isEmpty) {
+              print('    ⚠️ No completed sets for ${exercise.name}');
+              continue;
+            }
 
             final exerciseName = exercise.name;
             final muscleGroup = _categoryToMuscleGroup(exercise.category);
@@ -171,9 +295,11 @@ class AnalyticsMigrationService {
 
             if (analyticsSets.isEmpty) {
               skippedExercises.add('$exerciseName (no valid sets)');
+              print('    ⚠️ No valid sets (with weight/reps) for ${exercise.name}');
               continue;
             }
 
+            print('    ✅ Created ${analyticsSets.length} analytics sets for ${exercise.name}');
             totalSets += analyticsSets.length;
 
             // Create session data
@@ -189,11 +315,21 @@ class AnalyticsMigrationService {
                 .putIfAbsent(exerciseName, () => [])
                 .add(sessionData);
           }
-        } catch (e) {
+        } catch (e, stack) {
+          parseErrors++;
+          print('❌ [MIGRATION] Error parsing workout ${workoutDoc.id}: $e');
+          print('   Stack trace: $stack');
           // Skip malformed workout document
           continue;
         }
       }
+
+      print('🔄 [MIGRATION] Parsing complete:');
+      print('   - Parse errors: $parseErrors');
+      print('   - Workouts with empty exercises: $emptyExercisesCount');
+      print('   - Workouts processed with exercises: $processedWorkoutsWithExercises');
+      print('   - Unique exercises found: ${exerciseSessionsMap.length}');
+      print('   - Skipped exercises: ${skippedExercises.length}');
 
       // Step 3: Create ExerciseHistory documents for each exercise
       final batch = _firestore.batch();
