@@ -95,11 +95,15 @@ class AnalyticsMigrationService {
   }) async {
     try {
       // Step 1: Fetch all workouts for user (filter completed in-memory)
+      print('🔄 [MIGRATION] Starting migration for user: $userId');
+
       final workoutsSnapshot = await _firestore
           .collection('workouts')
           .where('userId', isEqualTo: userId)
           .orderBy('startTime', descending: false) // Oldest first
           .get();
+
+      print('🔄 [MIGRATION] Total workouts fetched: ${workoutsSnapshot.docs.length}');
 
       // Filter only completed workouts (with completedAt timestamp)
       final completedWorkoutDocs = workoutsSnapshot.docs.where((doc) {
@@ -107,7 +111,10 @@ class AnalyticsMigrationService {
         return data['completedAt'] != null; // Only workouts with completedAt
       }).toList();
 
+      print('🔄 [MIGRATION] Completed workouts (with completedAt): ${completedWorkoutDocs.length}');
+
       if (completedWorkoutDocs.isEmpty) {
+        print('❌ [MIGRATION] No completed workouts found. Migration aborted.');
         return Right(
           MigrationStats(
             totalWorkouts: 0,
@@ -229,7 +236,16 @@ class AnalyticsMigrationService {
       }
 
       // Step 4: Commit batch write
+      print('🔄 [MIGRATION] Writing ${exerciseSessionsMap.length} exercises to Firestore...');
+      print('🔄 [MIGRATION] Exercises: ${exerciseSessionsMap.keys.join(", ")}');
+
       await batch.commit();
+
+      print('✅ [MIGRATION] Migration complete!');
+      print('   - Total workouts: $totalWorkouts');
+      print('   - Unique exercises: ${exerciseSessionsMap.length}');
+      print('   - Total sessions: $totalSessions');
+      print('   - Total sets: $totalSets');
 
       // Return statistics
       return Right(

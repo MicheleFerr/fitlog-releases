@@ -84,6 +84,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     String userId,
   ) {
     try {
+      print('📊 [ANALYTICS] Subscribing to analytics stream for user: $userId');
+
       return _firestore
           .collection('users')
           .doc(userId)
@@ -91,6 +93,14 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           .snapshots()
           .map((snapshot) {
         try {
+          print('📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents');
+
+          if (snapshot.docs.isEmpty) {
+            print('⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.');
+          } else {
+            print('📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}');
+          }
+
           final histories = snapshot.docs
               .map((doc) => ExerciseHistoryModel.fromFirestore(doc).toDomain())
               .toList();
@@ -98,12 +108,16 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           // Sort by exercise name alphabetically
           histories.sort((a, b) => a.exerciseName.compareTo(b.exerciseName));
 
+          print('✅ [ANALYTICS] Returning ${histories.length} exercise histories');
+
           return Right(histories);
         } catch (e) {
+          print('❌ [ANALYTICS] Parse error: $e');
           return Left(CacheFailure( 'Failed to parse analytics: $e'));
         }
       });
     } catch (e) {
+      print('❌ [ANALYTICS] Stream error: $e');
       return Stream.value(
         Left(ServerFailure( 'Failed to fetch analytics: $e')),
       );
