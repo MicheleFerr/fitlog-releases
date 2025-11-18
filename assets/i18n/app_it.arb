@@ -10171,5 +10171,13 @@
   "retry": "Riprova",
   "@retry": {
     "description": "Testo pulsante riprova"
+  },
+  "noResultsFound": "Nessun risultato trovato",
+  "@noResultsFound": {
+    "description": "Messaggio quando la ricerca non restituisce risultati"
+  },
+  "tryAnotherSearch": "Prova a cercare un esercizio o un gruppo muscolare diverso",
+  "@tryAnotherSearch": {
+    "description": "Messaggio di suggerimento quando nessun risultato trovato"
   }
 }

@@ -20783,5 +20783,13 @@
   "retry": "Retry",
   "@retry": {
     "description": "Retry button text"
+  },
+  "noResultsFound": "No results found",
+  "@noResultsFound": {
+    "description": "Message when search returns no results"
+  },
+  "tryAnotherSearch": "Try searching for a different exercise or muscle group",
+  "@tryAnotherSearch": {
+    "description": "Suggestion message when no search results found"
   }
 }

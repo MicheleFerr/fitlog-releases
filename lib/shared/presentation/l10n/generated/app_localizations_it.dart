@@ -17327,4 +17327,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get migrationFailed => 'Migrazione Fallita';
+
+  @override
+  String get noResultsFound => 'Nessun risultato trovato';
+
+  @override
+  String get tryAnotherSearch =>
+      'Prova a cercare un esercizio o un gruppo muscolare diverso';
 }

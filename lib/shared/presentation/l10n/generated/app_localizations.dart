@@ -30725,6 +30725,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Migration Failed'**
   String get migrationFailed;
+
+  /// Message when search returns no results
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// Suggestion message when no search results found
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching for a different exercise or muscle group'**
+  String get tryAnotherSearch;
 }
 
 class _AppLocalizationsDelegate

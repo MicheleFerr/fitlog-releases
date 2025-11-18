@@ -89,7 +89,7 @@ class _AuthenticatedAnalyticsView extends ConsumerWidget {
   }
 }
 
-class _AnalyticsContent extends StatelessWidget {
+class _AnalyticsContent extends StatefulWidget {
   const _AnalyticsContent({
     required this.exerciseHistories,
   });
@@ -97,23 +97,126 @@ class _AnalyticsContent extends StatelessWidget {
   final List<ExerciseHistory> exerciseHistories;
 
   @override
+  State<_AnalyticsContent> createState() => _AnalyticsContentState();
+}
+
+class _AnalyticsContentState extends State<_AnalyticsContent> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<ExerciseHistory> get _filteredHistories {
+    if (_searchQuery.isEmpty) {
+      return widget.exerciseHistories;
+    }
+
+    final query = _searchQuery.toLowerCase();
+    return widget.exerciseHistories.where((history) {
+      final exerciseName = history.exerciseName.toLowerCase();
+      final muscleGroup = history.muscleGroup.toLowerCase();
+      return exerciseName.contains(query) || muscleGroup.contains(query);
+    }).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (exerciseHistories.isEmpty) {
+    if (widget.exerciseHistories.isEmpty) {
       return const _EmptyStateView();
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        // Invalidation is handled by the refresh button in AppBar
-      },
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: exerciseHistories.length,
-        itemBuilder: (context, index) {
-          final history = exerciseHistories[index];
-          return _ExerciseHistoryCard(history: history);
-        },
-      ),
+    final filteredHistories = _filteredHistories;
+
+    return Column(
+      children: [
+        // Search bar
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: context.l10n.searchExercises,
+              prefixIcon: SemanticIcon(
+                icon: AppIcons.search,
+                semanticLabel: context.l10n.search,
+                size: AppIconSize.medium,
+                color: context.colors.onSurfaceVariant,
+              ),
+              suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: SemanticIcon.button(
+                        icon: AppIcons.close,
+                        semanticLabel: context.l10n.clear,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          _searchQuery = '';
+                        });
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+            },
+          ),
+        ),
+
+        // Results list
+        Expanded(
+          child: filteredHistories.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.search,
+                        semanticLabel: context.l10n.noResultsFound,
+                        size: AppIconSize.xxlarge,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        context.l10n.noResultsFound,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        context.l10n.tryAnotherSearch,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    // Invalidation is handled by the refresh button in AppBar
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: filteredHistories.length,
+                    itemBuilder: (context, index) {
+                      final history = filteredHistories[index];
+                      return _ExerciseHistoryCard(history: history);
+                    },
+                  ),
+                ),
+        ),
+      ],
     );
   }
 }
