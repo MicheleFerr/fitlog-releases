@@ -360,7 +360,7 @@ Future<void> _initializeStorage() async {
     _openBox<OnboardingState>('onboarding_state'),
     _openBox<AppConfig>('app_config'),
     _openBox<Map>('workoutMetrics'), // Analytics caching
-    _openBox<Map>('analytics_cache'), // Analytics cache for repository
+    // ✅ FIX: Removed analytics_cache - already opened in HiveBoxManagerEnhanced.initialize()
   ]);
 
   // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
