@@ -23,6 +23,9 @@ mixin _$ExerciseHistory {
   /// Name of the exercise (e.g., "Bench Press", "Squat")
   String get exerciseName => throw _privateConstructorUsedError;
 
+  /// Target muscle group (e.g., "chest", "back", "legs")
+  String get muscleGroup => throw _privateConstructorUsedError;
+
   /// All sessions performed for this exercise (sorted by date)
   List<ExerciseSession> get sessions => throw _privateConstructorUsedError;
 
@@ -38,7 +41,10 @@ abstract class $ExerciseHistoryCopyWith<$Res> {
           ExerciseHistory value, $Res Function(ExerciseHistory) then) =
       _$ExerciseHistoryCopyWithImpl<$Res, ExerciseHistory>;
   @useResult
-  $Res call({String exerciseName, List<ExerciseSession> sessions});
+  $Res call(
+      {String exerciseName,
+      String muscleGroup,
+      List<ExerciseSession> sessions});
 }
 
 /// @nodoc
@@ -55,12 +61,17 @@ class _$ExerciseHistoryCopyWithImpl<$Res, $Val extends ExerciseHistory>
   @override
   $Res call({
     Object? exerciseName = null,
+    Object? muscleGroup = null,
     Object? sessions = null,
   }) {
     return _then(_value.copyWith(
       exerciseName: null == exerciseName
           ? _value.exerciseName
           : exerciseName // ignore: cast_nullable_to_non_nullable
+              as String,
+      muscleGroup: null == muscleGroup
+          ? _value.muscleGroup
+          : muscleGroup // ignore: cast_nullable_to_non_nullable
               as String,
       sessions: null == sessions
           ? _value.sessions
@@ -78,7 +89,10 @@ abstract class _$$ExerciseHistoryImplCopyWith<$Res>
       __$$ExerciseHistoryImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String exerciseName, List<ExerciseSession> sessions});
+  $Res call(
+      {String exerciseName,
+      String muscleGroup,
+      List<ExerciseSession> sessions});
 }
 
 /// @nodoc
@@ -93,12 +107,17 @@ class __$$ExerciseHistoryImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? exerciseName = null,
+    Object? muscleGroup = null,
     Object? sessions = null,
   }) {
     return _then(_$ExerciseHistoryImpl(
       exerciseName: null == exerciseName
           ? _value.exerciseName
           : exerciseName // ignore: cast_nullable_to_non_nullable
+              as String,
+      muscleGroup: null == muscleGroup
+          ? _value.muscleGroup
+          : muscleGroup // ignore: cast_nullable_to_non_nullable
               as String,
       sessions: null == sessions
           ? _value._sessions
@@ -113,6 +132,7 @@ class __$$ExerciseHistoryImplCopyWithImpl<$Res>
 class _$ExerciseHistoryImpl extends _ExerciseHistory {
   const _$ExerciseHistoryImpl(
       {required this.exerciseName,
+      required this.muscleGroup,
       required final List<ExerciseSession> sessions})
       : _sessions = sessions,
         super._();
@@ -123,6 +143,10 @@ class _$ExerciseHistoryImpl extends _ExerciseHistory {
   /// Name of the exercise (e.g., "Bench Press", "Squat")
   @override
   final String exerciseName;
+
+  /// Target muscle group (e.g., "chest", "back", "legs")
+  @override
+  final String muscleGroup;
 
   /// All sessions performed for this exercise (sorted by date)
   final List<ExerciseSession> _sessions;
@@ -137,7 +161,7 @@ class _$ExerciseHistoryImpl extends _ExerciseHistory {
 
   @override
   String toString() {
-    return 'ExerciseHistory(exerciseName: $exerciseName, sessions: $sessions)';
+    return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
   }
 
   @override
@@ -147,12 +171,14 @@ class _$ExerciseHistoryImpl extends _ExerciseHistory {
             other is _$ExerciseHistoryImpl &&
             (identical(other.exerciseName, exerciseName) ||
                 other.exerciseName == exerciseName) &&
+            (identical(other.muscleGroup, muscleGroup) ||
+                other.muscleGroup == muscleGroup) &&
             const DeepCollectionEquality().equals(other._sessions, _sessions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName,
+  int get hashCode => Object.hash(runtimeType, exerciseName, muscleGroup,
       const DeepCollectionEquality().hash(_sessions));
 
   @JsonKey(ignore: true)
@@ -173,6 +199,7 @@ class _$ExerciseHistoryImpl extends _ExerciseHistory {
 abstract class _ExerciseHistory extends ExerciseHistory {
   const factory _ExerciseHistory(
       {required final String exerciseName,
+      required final String muscleGroup,
       required final List<ExerciseSession> sessions}) = _$ExerciseHistoryImpl;
   const _ExerciseHistory._() : super._();
 
@@ -183,6 +210,10 @@ abstract class _ExerciseHistory extends ExerciseHistory {
 
   /// Name of the exercise (e.g., "Bench Press", "Squat")
   String get exerciseName;
+  @override
+
+  /// Target muscle group (e.g., "chest", "back", "legs")
+  String get muscleGroup;
   @override
 
   /// All sessions performed for this exercise (sorted by date)

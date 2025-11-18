@@ -47,6 +47,9 @@ class ExerciseHistory with _$ExerciseHistory {
     /// Name of the exercise (e.g., "Bench Press", "Squat")
     required String exerciseName,
 
+    /// Target muscle group (e.g., "chest", "back", "legs")
+    required String muscleGroup,
+
     /// All sessions performed for this exercise (sorted by date)
     required List<ExerciseSession> sessions,
   }) = _ExerciseHistory;
