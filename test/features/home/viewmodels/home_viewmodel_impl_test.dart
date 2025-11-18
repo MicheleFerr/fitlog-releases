@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/home/domain/viewmodels/home_viewmodel.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/providers/home_viewmodel_provider.dart';
 
 void main() {
   test('HomeViewModelImpl loads data within 3 seconds', () async {

@@ -47,7 +47,8 @@ class HomeViewModelImpl implements HomeViewModel {
       _ref.read(workoutBannerProvider.future),
     ]);
 
-    _logger.logDataFetch('critical_data', stopwatch.elapsed, 100);
+    final criticalTime = stopwatch.elapsed;
+    _logger.logDataFetch('critical_data', criticalTime, 100);
 
     // Load secondary data
     await Future.wait([
@@ -55,11 +56,8 @@ class HomeViewModelImpl implements HomeViewModel {
       _ref.read(streakProvider.future),
     ]);
 
-    _logger.logDataFetch(
-      'secondary_data',
-      stopwatch.elapsed - stopwatch.elapsed,
-      200,
-    );
+    final secondaryTime = stopwatch.elapsed - criticalTime;
+    _logger.logDataFetch('secondary_data', secondaryTime, 150);
   }
 
   @override
@@ -74,7 +72,7 @@ class HomeViewModelImpl implements HomeViewModel {
 
   @override
   void dispose() {
-    // Cleanup if needed
+    // No resources to clean up - data providers are managed by Riverpod
   }
 }
 
