@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_wor
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_sync_service.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 
 /// Provider for Hive workout data source
 final hiveWorkoutDataSourceProvider = Provider<HiveWorkoutDataSource>((ref) {
@@ -40,11 +41,13 @@ final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
   final localDataSource = ref.watch(hiveWorkoutDataSourceProvider);
   final remoteDataSource = ref.watch(firebaseWorkoutDataSourceProvider);
   final auth = FirebaseAuth.instance;
-  
+  final analyticsRepository = ref.watch(analyticsRepositoryProvider);
+
   return HybridWorkoutRepositoryImpl(
     localDataSource: localDataSource,
     remoteDataSource: remoteDataSource,
     auth: auth,
+    analyticsRepository: analyticsRepository,
   );
 });
 

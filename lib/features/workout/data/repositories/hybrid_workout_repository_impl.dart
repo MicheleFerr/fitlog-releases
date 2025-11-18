@@ -28,6 +28,13 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/domain/concurrency/mutex_wrapper.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_set.dart';
+
+// Import unawaited for fire-and-forget futures
+// ignore: unused_import
+import 'dart:async' show unawaited;
 
 /// Hybrid implementation of WorkoutRepository
 /// - Free users: Local storage only (Hive)
@@ -38,15 +45,18 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
     required HiveWorkoutDataSource localDataSource,
     required FirebaseWorkoutDataSource remoteDataSource,
     required FirebaseAuth auth,
+    AnalyticsRepository? analyticsRepository,
   }) : _localDataSource = localDataSource,
        _remoteDataSource = remoteDataSource,
-       _auth = auth {
+       _auth = auth,
+       _analyticsRepository = analyticsRepository {
     // Listen to user profile changes
     _initUserProfileListener();
   }
   final HiveWorkoutDataSource _localDataSource;
   final FirebaseWorkoutDataSource _remoteDataSource;
   final FirebaseAuth _auth;
+  final AnalyticsRepository? _analyticsRepository;
 
   // Cache user profile to avoid frequent reads
   UserProfile? _cachedUserProfile;
@@ -171,6 +181,11 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
           workoutModel,
           currentUser.uid,
         );
+
+        // Update analytics if workout is completed
+        if (workout.isCompleted && _analyticsRepository != null) {
+          await _updateAnalytics(workout, currentUser.uid);
+        }
 
         // Sync to cloud if premium or admin
         if (isPremiumUser || isAdminUser) {
@@ -775,6 +790,74 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         debugPrint('❌ [HybridWorkoutRepository] getLastCompletedWorkout error: $e');
       }
       return null; // Graceful fallback
+    }
+  }
+
+  /// Update analytics for completed workout
+  ///
+  /// **Purpose**: Write-through strategy - update analytics collection when workout completes
+  ///
+  /// **Logic**:
+  /// 1. Extract all completed exercises
+  /// 2. Filter sets with valid weight/reps
+  /// 3. Create ExerciseSession for each exercise
+  /// 4. Update analytics collection via repository
+  Future<void> _updateAnalytics(Workout workout, String userId) async {
+    try {
+      // Extract session date (use workout startTime or createdAt)
+      final sessionDate = workout.startTime ?? workout.createdAt;
+
+      // Process each exercise
+      for (final exercise in workout.exercises) {
+        // Filter completed sets with valid data
+        final completedSets = exercise.sets
+            .where((set) =>
+                set.isCompleted &&
+                set.weight != null &&
+                set.weight! > 0 &&
+                (set.actualReps ?? set.reps) != null &&
+                (set.actualReps ?? set.reps)! > 0)
+            .toList();
+
+        // Skip exercises with no valid sets
+        if (completedSets.isEmpty) continue;
+
+        // Convert to AnalyticsSets
+        final analyticsSets = completedSets.map((set) {
+          return AnalyticsSet(
+            weight: set.weight!,
+            reps: set.actualReps ?? set.reps!,
+            date: set.completedAt ?? sessionDate,
+          );
+        }).toList();
+
+        // Create ExerciseSession
+        final session = ExerciseSession(
+          exerciseName: exercise.name,
+          muscleGroup: exercise.category.name, // Enum name matches string
+          sets: analyticsSets,
+          date: sessionDate,
+        );
+
+        // Update analytics (fire-and-forget, don't block workout save)
+        unawaited(
+          _analyticsRepository!.updateExerciseHistory(
+            userId: userId,
+            exerciseName: exercise.name,
+            muscleGroup: exercise.category.name,
+            session: session,
+          ),
+        );
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ [HybridWorkoutRepository] Analytics updated for ${workout.exercises.length} exercises');
+      }
+    } catch (e) {
+      // Log error but don't fail workout save
+      if (kDebugMode) {
+        debugPrint('⚠️ [HybridWorkoutRepository] Failed to update analytics: $e');
+      }
     }
   }
 

@@ -168,4 +168,46 @@ abstract class AnalyticsRepository {
   /// - true: Cache is valid, can use cached data
   /// - false: Cache is stale, should fetch from Firestore
   Future<bool> isCacheValid(String userId);
+
+  /// Update exercise history with new session (write-through strategy)
+  ///
+  /// **Purpose**: Add new workout session to exercise history
+  ///
+  /// **Parameters**:
+  /// - userId: User identifier
+  /// - exerciseName: Name of the exercise
+  /// - muscleGroup: Muscle group category (chest, back, legs, etc.)
+  /// - session: New exercise session with sets
+  ///
+  /// **Behavior**:
+  /// - If exercise exists: Append session to existing history
+  /// - If exercise doesn't exist: Create new history document
+  /// - Updates Firestore immediately
+  /// - Invalidates local cache for the exercise
+  ///
+  /// **Returns**: Future<Either<Failure, void>>
+  /// - Left: Failure if update fails
+  /// - Right: void (success)
+  ///
+  /// **Example**:
+  /// ```dart
+  /// final session = ExerciseSession(
+  ///   exerciseName: 'Bench Press',
+  ///   muscleGroup: 'chest',
+  ///   sets: [AnalyticsSet(weight: 100, reps: 8, date: DateTime.now())],
+  ///   date: DateTime.now(),
+  /// );
+  /// await repository.updateExerciseHistory(
+  ///   userId: 'user123',
+  ///   exerciseName: 'Bench Press',
+  ///   muscleGroup: 'chest',
+  ///   session: session,
+  /// );
+  /// ```
+  Future<Either<Failure, void>> updateExerciseHistory({
+    required String userId,
+    required String exerciseName,
+    required String muscleGroup,
+    required ExerciseSession session,
+  });
 }
