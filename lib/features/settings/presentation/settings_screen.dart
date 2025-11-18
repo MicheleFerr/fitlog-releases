@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_pro
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
+import 'package:gymbro_flutter_new/debug/achievement_debug_screen.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -68,12 +69,43 @@ class SettingsScreen extends ConsumerWidget {
             _buildWorkoutEssentialsSection(context, ref, config),
             const SizedBox(height: 24),
 
+            // AI Coach & Recovery
+            _buildAICoachSection(context),
+            const SizedBox(height: 24),
+
+            // Notifications (v2.0)
+            _buildNotificationsSection(context),
+            const SizedBox(height: 24),
+
             // Units & Language
             _buildUnitsLanguageSection(context, ref, config),
             const SizedBox(height: 24),
 
             // Account Actions
             _buildAccountSection(context, ref),
+
+            // DEBUG: Achievement test (ferrara-michele only)
+            if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
+              Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Center(
+                  child: FilledButton.tonalIcon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AchievementDebugScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(AppIcons.star),
+                    label: const Text('🧪 Test 13 Achievements'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
+                      foregroundColor: context.colors.secondary,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -377,6 +409,78 @@ class SettingsScreen extends ConsumerWidget {
               ),
               leading: const Icon(AppIcons.schedule),
               onTap: () => _showDayCutoffDialog(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAICoachSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(AppIcons.insights, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.aiCoach,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // AI Coach Entry Point
+            _buildSettingTile(
+              context,
+              title: 'Recovery Insights',
+              subtitle: 'Track readiness, muscle recovery, and overtraining risk',
+              leading: Icon(AppIcons.analytics),
+              onTap: () => context.pushNamed('ai-coach'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationsSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Icon(AppIcons.notifications, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.notifications,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Notification Settings Link
+            _buildSettingTile(
+              context,
+              title: context.l10n.notificationSettings,
+              subtitle: context.l10n.notificationSettingsDesc,
+              leading: Icon(AppIcons.notifications),
+              onTap: () => context.pushNamed('notifications-v2'),
             ),
           ],
         ),
@@ -834,6 +938,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   // Helper Methods
+
   String _getThemeModeText(AppLocalizations l10n, ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
