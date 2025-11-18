@@ -39,6 +39,8 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
+// 🔒 Feature Flags
+import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 // 🔒 Security: Input sanitization
 import 'package:gymbro_flutter_new/shared/domain/services/input_sanitizer.dart';
 // Haptic feedback
@@ -279,7 +281,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           );
 
           // Apply APRE configuration if enabled globally
-          if (isApreEnabled && exercise.type == ExerciseType.single && exercise.sets.isNotEmpty) {
+          // 🔒 KILL SWITCH: Check feature flag first
+          if (FeatureFlags.enableAPRE && isApreEnabled && exercise.type == ExerciseType.single && exercise.sets.isNotEmpty) {
             // Auto-select protocol based on target reps of first set
             final targetReps = exercise.sets.first.reps ?? 6;
             final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
@@ -1111,7 +1114,8 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       Exercise exerciseToAdd = exercise;
 
       // Apply default APRE settings if enabled and exercise doesn't already have auto-adjustment
-      if (isApreEnabled && exercise.autoAdjustmentType == null && exercise.type == ExerciseType.single) {
+      // 🔒 KILL SWITCH: Check feature flag first
+      if (FeatureFlags.enableAPRE && isApreEnabled && exercise.autoAdjustmentType == null && exercise.type == ExerciseType.single) {
         // Auto-select protocol based on target reps
         final targetReps = exercise.sets.isNotEmpty ? (exercise.sets.first.reps ?? 6) : 6;
         final protocol = APREAutoRegulationService.selectProtocolFromTargetReps(targetReps);
@@ -1743,6 +1747,12 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
   /// Pre-calculate APRE weights for all exercises when starting workout
   Future<void> _preCalculateAllAPREWeights() async {
+    // 🔒 KILL SWITCH: Early exit if APRE disabled
+    if (!FeatureFlags.enableAPRE) {
+      debugLog(LogCategory.workout, '⚠️ APRE disabled (feature flag) - skipping pre-calculation');
+      return; // No calculations = zero CPU overhead
+    }
+
     if (state == null) return;
 
     // CRITICAL FIX: Prevent concurrent APRE calculations

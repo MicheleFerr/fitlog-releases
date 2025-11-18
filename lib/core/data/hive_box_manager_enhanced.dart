@@ -104,8 +104,8 @@ class HiveBoxManagerEnhanced {
     }
 
     try {
-      // ✅ FIX: Open analytics_cache as Box<dynamic> first, then cast when needed
-      await _instance.openBox<dynamic>('analytics_cache');  // Analytics cache for AI coach
+      // ✅ FIX: Open analytics_cache with the correct generic type for the provider
+      await _instance.openBox<Map<dynamic, dynamic>>('analytics_cache');  // Analytics cache for AI coach
     } catch (e) {
       failedBoxes.add('analytics_cache: $e');
       if (kDebugMode) {

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'package:gymbro_flutter_new/core/utils/debug_logger.dart';
+import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 
 /// TIER-1 Velocity Analysis Service using device sensors
 /// Provides real-time velocity tracking for resistance training
@@ -39,19 +40,25 @@ class VelocityAnalyzerService {
 
   /// Initialize the velocity analyzer
   Future<void> initialize() async {
+    // 🔒 KILL SWITCH: Check feature flag first
+    if (!FeatureFlags.enableVelocityTracking) {
+      DebugLogger.log(LogCategory.timer, '⚠️ Velocity tracking disabled (feature flag)');
+      return; // Early exit - sensors never initialized
+    }
+
     try {
       DebugLogger.log(LogCategory.timer, 'TIER-1: Initializing velocity analyzer');
-      
+
       // Start sensor streams
       _accelerometerSubscription = accelerometerEvents.listen(_onAccelerometerEvent);
       _gyroscopeSubscription = gyroscopeEvents.listen(_onGyroscopeEvent);
-      
+
       // Calibrate baseline readings
       await _calibrateBaseline();
-      
+
       _isActive = true;
       DebugLogger.log(LogCategory.timer, 'TIER-1: Velocity analyzer initialized');
-      
+
     } catch (e) {
       DebugLogger.log(LogCategory.timer, 'Velocity analyzer initialization error: $e');
       rethrow;
@@ -60,52 +67,71 @@ class VelocityAnalyzerService {
 
   /// Start velocity tracking
   void startTracking() {
+    // 🔒 KILL SWITCH: Check feature flag first
+    if (!FeatureFlags.enableVelocityTracking) {
+      DebugLogger.log(LogCategory.timer, '⚠️ Velocity tracking disabled (feature flag)');
+      return; // Early exit - no tracking started
+    }
+
     _isActive = true;
     _velocityBuffer.clear();
     _currentVelocity = 0.0;
     _peakVelocity = 0.0;
     _lastUpdate = DateTime.now();
-    
+
     DebugLogger.log(LogCategory.timer, 'TIER-1: Velocity tracking started');
   }
 
   /// Stop velocity tracking
   void stopTracking() {
+    // 🔒 KILL SWITCH: If feature disabled, cleanup subscriptions
+    if (!FeatureFlags.enableVelocityTracking) {
+      _accelerometerSubscription?.cancel();
+      _gyroscopeSubscription?.cancel();
+      _isActive = false;
+      return;
+    }
+
     _isActive = false;
     DebugLogger.log(LogCategory.timer, 'TIER-1: Velocity tracking stopped');
   }
 
   /// Get current velocity in m/s
   Future<double> getCurrentVelocity() async {
+    if (!FeatureFlags.enableVelocityTracking) return 0.0;
     return _currentVelocity;
   }
 
   /// Get peak velocity from current session
   double getPeakVelocity() {
+    if (!FeatureFlags.enableVelocityTracking) return 0.0;
     return _peakVelocity;
   }
 
   /// Get velocity history for analysis
   List<double> getVelocityHistory() {
+    if (!FeatureFlags.enableVelocityTracking) return [];
     return List<double>.from(_velocityBuffer);
   }
 
   /// Calculate average velocity over time window
   double getAverageVelocity(Duration timeWindow) {
+    if (!FeatureFlags.enableVelocityTracking) return 0.0;
     if (_velocityBuffer.isEmpty) return 0.0;
-    
+
     final samplesNeeded = (timeWindow.inMilliseconds / 20).round(); // 50Hz sampling
-    final samples = _velocityBuffer.length >= samplesNeeded 
+    final samples = _velocityBuffer.length >= samplesNeeded
       ? _velocityBuffer.sublist(_velocityBuffer.length - samplesNeeded)
       : _velocityBuffer;
-    
+
     return samples.reduce((a, b) => a + b) / samples.length;
   }
 
   /// Detect velocity-based training zones
   VelocityZone getCurrentZone() {
+    if (!FeatureFlags.enableVelocityTracking) return VelocityZone.endurance;
     final velocity = _currentVelocity.abs();
-    
+
     if (velocity > 1.3) return VelocityZone.explosive;
     if (velocity > 1.0) return VelocityZone.speed;
     if (velocity > 0.75) return VelocityZone.strengthSpeed;
@@ -287,6 +313,16 @@ enum RepQuality {
 }
 
 // Provider for the service
-final velocityAnalyzerServiceProvider = Provider<VelocityAnalyzerService>((ref) {
-  return VelocityAnalyzerService();
+final velocityAnalyzerServiceProvider = Provider.autoDispose<VelocityAnalyzerService>((ref) {
+  final service = VelocityAnalyzerService();
+
+  // Ensure cleanup even if flag changes at runtime
+  ref.onDispose(() {
+    service.dispose();
+  });
+
+  // Future: watch(featureFlagsProvider) when dynamic flags implemented
+  // ref.watch(featureFlagsProvider);
+
+  return service;
 });

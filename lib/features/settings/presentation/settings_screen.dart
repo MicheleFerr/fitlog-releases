@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
+import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
@@ -392,21 +393,22 @@ class SettingsScreen extends ConsumerWidget {
 
             const Divider(),
 
-            // APRE System Toggle
-            _buildSwitchTile(
-              context,
-              title: context.l10n.settingsApreAutoAdjustment,
-              subtitle: context.l10n.settingsApreAutoAdjustmentDesc,
-              value: config.enableApre ?? false,
-              onChanged: (value) {
-                ref.read(appConfigProvider.notifier).updateWorkoutSettings(
-                  enableApre: value,
-                );
-              },
-            ),
+            // 🔒 APRE System Toggle (hidden if feature disabled)
+            if (FeatureFlags.enableAPRE)
+              _buildSwitchTile(
+                context,
+                title: context.l10n.settingsApreAutoAdjustment,
+                subtitle: context.l10n.settingsApreAutoAdjustmentDesc,
+                value: config.enableApre ?? false,
+                onChanged: (value) {
+                  ref.read(appConfigProvider.notifier).updateWorkoutSettings(
+                    enableApre: value,
+                  );
+                },
+              ),
 
-            // APRE Protocol Config (only if enabled)
-            if (config.enableApre == true) ...[
+            // APRE Protocol Config (only if feature AND setting enabled)
+            if (FeatureFlags.enableAPRE && config.enableApre == true) ...[
               const Divider(),
               _buildSettingTile(
                 context,

@@ -268,11 +268,18 @@ class AnalyticsMigrationService {
           for (final exercise in workout.exercises) {
             print('  📊 Exercise: ${exercise.name} - Sets: ${exercise.sets.length}');
 
-            // Skip exercises with no completed sets
-            final completedSets =
-                exercise.sets.where((set) => set.isCompleted).toList();
-            if (completedSets.isEmpty) {
-              print('    ⚠️ No completed sets for ${exercise.name}');
+            // For completed workouts, consider all sets with valid weight/reps as completed
+            // Don't rely on isCompleted field which may be false in older data
+            final validSets = exercise.sets
+                .where((set) =>
+                    (set.weight != null && set.weight! > 0) &&
+                    ((set.actualReps ?? set.reps) != null &&
+                        (set.actualReps ?? set.reps)! > 0))
+                .toList();
+
+            if (validSets.isEmpty) {
+              print('    ⚠️ No valid sets (with weight/reps) for ${exercise.name}');
+              skippedExercises.add('${exercise.name} (no valid sets)');
               continue;
             }
 
@@ -280,24 +287,13 @@ class AnalyticsMigrationService {
             final muscleGroup = _categoryToMuscleGroup(exercise.category);
 
             // Convert Exercise sets to AnalyticsSets
-            final analyticsSets = completedSets
-                .where((set) =>
-                    (set.weight != null && set.weight! > 0) &&
-                    ((set.actualReps ?? set.reps) != null &&
-                        (set.actualReps ?? set.reps)! > 0))
-                .map((set) {
+            final analyticsSets = validSets.map((set) {
               return AnalyticsSet(
                 weight: set.weight!,
                 reps: set.actualReps ?? set.reps!,
                 date: set.completedAt ?? sessionDate,
               );
             }).toList();
-
-            if (analyticsSets.isEmpty) {
-              skippedExercises.add('$exerciseName (no valid sets)');
-              print('    ⚠️ No valid sets (with weight/reps) for ${exercise.name}');
-              continue;
-            }
 
             print('    ✅ Created ${analyticsSets.length} analytics sets for ${exercise.name}');
             totalSets += analyticsSets.length;

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/onerm_calculation_config.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 
 /// 🐛 DEBUG FLAG: Enable verbose APRE calculation logs
 /// Set to true only when debugging APRE weight calculations
@@ -88,6 +89,14 @@ class APREAutoRegulationService {
   ///
   /// Note: Adjustments are always relative to YOUR target reps, not fixed values
   static int selectProtocolFromTargetReps(int targetReps) {
+    // 🔒 KILL SWITCH: Return safe default if APRE disabled
+    if (!FeatureFlags.enableAPRE) {
+      if (kDebugMode) {
+        debugPrint('⚠️ APRE disabled (feature flag) - returning safe default protocol (6)');
+      }
+      return 6; // Safe default (hypertrophy protocol)
+    }
+
     if (targetReps <= 5) {
       return 3; // Strength protocol
     } else if (targetReps <= 10) {
@@ -131,6 +140,27 @@ class APREAutoRegulationService {
     int? maxSetsToUse = 10,
     OneRMCalculationConfig config = OneRMCalculationConfig.topFiveSets,
   }) {
+    // 🔒 KILL SWITCH: Return disabled state if APRE disabled
+    if (!FeatureFlags.enableAPRE) {
+      if (kDebugMode) {
+        debugPrint('⚠️ APRE disabled (feature flag) - returning disabled state');
+      }
+      return {
+        'calculated1RM': null,
+        'calculated3RM': null,
+        'calculated6RM': null,
+        'calculated10RM': null,
+        'confidence': CalculationConfidence.unknown,
+        'dataPoints': 0,
+        'formula': used1RMFormula,
+        'metadata': 'APRE disabled (feature flag)',
+        'requiresManualInput': true,
+        'standardDeviation': 0.0,
+        'dataAge': Duration.zero,
+        'disabled': true, // Flag to indicate feature is disabled
+      };
+    }
+
     if (kEnableApreDebugLogs) {
       debugPrint('[APRE] Calculating weights from ${historicalSets.length} historical sets');
     }
