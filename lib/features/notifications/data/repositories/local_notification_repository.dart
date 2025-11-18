@@ -13,11 +13,16 @@ library;
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kDebugMode, debugPrint
+import 'package:flutter/material.dart' hide TimeOfDay; // For Material widgets (hide TimeOfDay conflict)
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification_state.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart'
+    hide NotificationType, NotificationPriority; // 🔔 FIX: Avoid ambiguous import
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_settings_provider_v2.dart';
 
 /// Local implementation of NotificationRepository
 /// ✅ PRODUCTION READY: Complete implementation with flutter_local_notifications
@@ -27,10 +32,12 @@ class LocalNotificationRepository implements NotificationRepository {
   LocalNotificationRepository({
     FlutterLocalNotificationsPlugin? notificationsPlugin,
     this.onNotificationTapped, // 🔔 WARM-START: Optional callback for navigation
+    required this.ref, // 🔔 FIX: Needed to read NotificationSettings v2.0
   }) : _notificationsPlugin =
             notificationsPlugin ?? FlutterLocalNotificationsPlugin();
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
   final void Function(Map<String, dynamic> payload)? onNotificationTapped;
+  final Ref ref; // 🔔 FIX: Access to providers for reading settings
   bool _isInitialized = false;
 
   @override
@@ -463,8 +470,89 @@ class LocalNotificationRepository implements NotificationRepository {
 
   @override
   Future<NotificationPreferences> getPreferences() async {
-    // TODO: Implement
-    return NotificationPreferences.defaults();
+    // 🔔 FIX: Read from NotificationSettings v2.0 instead of hardcoded defaults
+    try {
+      // Import needed: lib/features/notifications/presentation/providers/notification_settings_provider_v2.dart
+      final settingsV2AsyncValue = ref.read(notificationSettingsV2Provider);
+
+      // Extract settings from AsyncValue
+      final settingsV2 = settingsV2AsyncValue.value;
+
+      if (settingsV2 == null) {
+        // Fallback to defaults if settings not loaded yet
+        return NotificationPreferences.defaults();
+      }
+
+      // Convert NotificationSettings v2.0 → NotificationPreferences
+      return _convertToNotificationPreferences(settingsV2);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [LocalNotificationRepository] Failed to read settings v2.0: $e');
+      }
+      return NotificationPreferences.defaults();
+    }
+  }
+
+  /// Convert NotificationSettings v2.0 → NotificationPreferences
+  ///
+  /// Maps individual toggle fields to type-specific preferences
+  NotificationPreferences _convertToNotificationPreferences(NotificationSettings settingsV2) {
+    // Build type preferences map
+    // Note: NotificationSettings v2.0 has fields not in unified NotificationType enum:
+    //  - enableRecoveryAlerts (no recoveryAlert type)
+    //  - enableSupplementReminders (no supplementReminder type)
+    final Map<NotificationType, bool> typePreferences = {
+      // Workout reminders
+      NotificationType.workoutReminder: settingsV2.enableWorkoutReminders,
+
+      // Streak motivation
+      NotificationType.streakReminder: settingsV2.enableStreakMotivation,
+
+      // Achievement notifications (Priority 2)
+      NotificationType.achievementUnlocked: settingsV2.enablePRNotifications ||
+                                             settingsV2.enableStreakAchievements ||
+                                             settingsV2.enableGoalCompletions ||
+                                             settingsV2.enableMilestones,
+      NotificationType.progressMilestone: settingsV2.enableMilestones,
+
+      // Default to true for other types not in settings
+      NotificationType.timerComplete: true,
+      NotificationType.emergency: true,
+      NotificationType.restReminder: true,
+      NotificationType.workoutSummary: true,
+      NotificationType.friendActivity: true,
+      NotificationType.coachMessage: true,
+      NotificationType.systemUpdate: true,
+      NotificationType.promotional: false, // Disabled by default
+    };
+
+    // Build quiet hours from DND settings
+    final List<TimeRange> quietHours = [];
+    if (settingsV2.doNotDisturbEnabled &&
+        settingsV2.doNotDisturbStart != null &&
+        settingsV2.doNotDisturbEnd != null) {
+      quietHours.add(
+        TimeRange(
+          start: TimeOfDay(
+            hour: settingsV2.doNotDisturbStart!.hour,
+            minute: settingsV2.doNotDisturbStart!.minute,
+          ),
+          end: TimeOfDay(
+            hour: settingsV2.doNotDisturbEnd!.hour,
+            minute: settingsV2.doNotDisturbEnd!.minute,
+          ),
+        ),
+      );
+    }
+
+    return NotificationPreferences(
+      enabled: true, // Global enable - can add to settings if needed
+      typePreferences: typePreferences,
+      quietHours: quietHours,
+      soundPreferences: NotificationSound.defaults(),
+      vibrationEnabled: true, // Default - can add to settings if needed
+      frequency: NotificationFrequency.normal,
+    );
   }
 
   @override
@@ -481,8 +569,16 @@ class LocalNotificationRepository implements NotificationRepository {
 
   @override
   Future<bool> isNotificationTypeEnabled(NotificationType type) async {
-    // TODO: Implement
-    return true;
+    // 🔔 FIX: Check settings v2.0 instead of hardcoded true
+    try {
+      final preferences = await getPreferences();
+      return preferences.typePreferences[type] ?? true;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [LocalNotificationRepository] Failed to check type enabled: $e');
+      }
+      return true; // Default to enabled on error
+    }
   }
 
   @override
