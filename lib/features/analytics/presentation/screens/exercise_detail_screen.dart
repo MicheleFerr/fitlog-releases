@@ -61,6 +61,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exe
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_badge_header.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_volume_chart.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_history_tab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -246,16 +247,8 @@ class _ExerciseDetailContent extends StatelessWidget {
           child: TabBarView(
             controller: tabController,
             children: [
-              // History Tab (placeholder for Phase 2.4)
-              Container(
-                color: context.colors.tertiary.withValues(alpha: 0.1),
-                child: Center(
-                  child: Text(
-                    'History Tab (Phase 2.4)',
-                    style: context.textTheme.bodyMedium,
-                  ),
-                ),
-              ),
+              // History Tab - Workout session history
+              ExerciseHistoryTab(history: history),
 
               // Records Tab (placeholder for Phase 2.5)
               Container(
