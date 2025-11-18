@@ -31,6 +31,7 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/analytics_repository_impl.dart';
+import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_migration_service.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
@@ -282,3 +283,29 @@ final searchExercisesProvider = FutureProvider.autoDispose
 ///   // Show refresh indicator
 /// }
 /// ```
+
+// ============================================================================
+// MIGRATION PROVIDER
+// ============================================================================
+
+/// Analytics migration service
+///
+/// **Purpose**: One-time migration of historical workout data
+///
+/// **Usage**:
+/// ```dart
+/// final migrationService = ref.read(analyticsMigrationServiceProvider);
+/// final userId = ref.watch(currentUserIdProvider);
+///
+/// final result = await migrationService.migrateUserWorkouts(userId: userId!);
+/// result.fold(
+///   (failure) => print('Migration failed: $failure'),
+///   (stats) => print('Migrated: ${stats.totalWorkouts} workouts'),
+/// );
+/// ```
+final analyticsMigrationServiceProvider =
+    Provider<AnalyticsMigrationService>((ref) {
+  final firestore = ref.watch(_firestoreProvider);
+
+  return AnalyticsMigrationService(firestore: firestore);
+});
