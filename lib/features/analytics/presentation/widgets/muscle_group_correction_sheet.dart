@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// BottomSheet for correcting exercise muscle groups
 ///
@@ -68,7 +69,8 @@ class MuscleGroupCorrectionSheet extends ConsumerStatefulWidget {
 }
 
 class _MuscleGroupCorrectionSheetState
-    extends ConsumerState<MuscleGroupCorrectionSheet> {
+    extends ConsumerState<MuscleGroupCorrectionSheet>
+    with SafeSetStateMixin {
   /// Selected new muscle group (null = not selected yet)
   String? _selectedMuscleGroup;
 
@@ -115,7 +117,7 @@ class _MuscleGroupCorrectionSheetState
       return;
     }
 
-    setState(() {
+    safeSetState(() {
       _isSaving = true;
     });
 
@@ -134,7 +136,7 @@ class _MuscleGroupCorrectionSheetState
 
     if (!mounted) return;
 
-    setState(() {
+    safeSetState(() {
       _isSaving = false;
     });
 
@@ -332,7 +334,7 @@ class _MuscleGroupCorrectionSheetState
                     : (value) {
                         if (value != null) {
                           HapticFeedback.selectionClick();
-                          setState(() {
+                          safeSetState(() {
                             _selectedMuscleGroup = value;
                           });
                         }

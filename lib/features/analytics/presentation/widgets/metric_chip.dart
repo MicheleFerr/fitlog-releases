@@ -56,6 +56,7 @@ class MetricChip extends ConsumerWidget {
         HapticFeedback.selectionClick();
 
         // Toggle metric selection
+        // OK: read - Using ref.read() in callback is correct pattern for calling notifier methods
         ref.read(landscapeMetricsProvider.notifier).toggle(metric);
       },
       showCheckmark: true,

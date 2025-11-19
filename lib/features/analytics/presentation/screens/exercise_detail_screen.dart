@@ -84,6 +84,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// Exercise Detail Screen
 ///
@@ -216,7 +217,8 @@ class _ExerciseDetailContent extends StatefulWidget {
       _ExerciseDetailContentState();
 }
 
-class _ExerciseDetailContentState extends State<_ExerciseDetailContent> {
+class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
+    with SafeSetStateMixin {
   /// Thresholds for snap behavior
   static const double _collapseThreshold = 100.0; // Scroll down > 100px → collapse
   static const double _expandThreshold = 120.0; // Scroll up > 120px → expand
@@ -270,7 +272,7 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent> {
   Future<void> _snapTo(double target) async {
     if (_isAnimating) return;
 
-    setState(() {
+    safeSetState(() {
       _isAnimating = true;
     });
 
@@ -280,11 +282,9 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent> {
       curve: Curves.easeInOut,
     );
 
-    if (mounted) {
-      setState(() {
-        _isAnimating = false;
-      });
-    }
+    safeSetState(() {
+      _isAnimating = false;
+    });
   }
 
   @override

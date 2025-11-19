@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// Sort options for exercise list
 enum SortBy {
@@ -121,7 +122,8 @@ class _AnalyticsContent extends ConsumerStatefulWidget {
   ConsumerState<_AnalyticsContent> createState() => _AnalyticsContentState();
 }
 
-class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
+class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
+    with SafeSetStateMixin {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   Timer? _debounce;
@@ -131,7 +133,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      setState(() {
+      safeSetState(() {
         _searchQuery = query;
       });
     });
@@ -253,7 +255,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
                       ),
                       onPressed: () {
                         _debounce?.cancel();
-                        setState(() {
+                        safeSetState(() {
                           _searchController.clear();
                           _searchQuery = '';
                         });
@@ -272,7 +274,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
         _SortFilterChips(
           sortBy: _sortBy,
           filterCounts: _filterCounts,
-          onSortChanged: (newSort) => setState(() => _sortBy = newSort),
+          onSortChanged: (newSort) => safeSetState(() => _sortBy = newSort),
         ),
 
         // Results list

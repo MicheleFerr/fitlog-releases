@@ -38,7 +38,9 @@ final muscleCorrectionRepositoryProvider =
 /// **Returns**: FutureProvider with list of local corrections
 ///
 /// **Updates**: When corrections are saved/deleted locally
-final localCorrectionsProvider = FutureProvider<List<MuscleCorrection>>((ref) async {
+///
+/// **Note**: Uses autoDispose because this is scoped data (not global auth/config)
+final localCorrectionsProvider = FutureProvider.autoDispose<List<MuscleCorrection>>((ref) async {
   final repository = ref.watch(muscleCorrectionRepositoryProvider);
 
   final result = await repository.getLocalCorrections();

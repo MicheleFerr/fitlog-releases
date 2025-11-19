@@ -39,6 +39,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// Dialog for submitting correction feedback to admin
 ///
@@ -66,13 +67,14 @@ class FeedbackSubmissionDialog extends ConsumerStatefulWidget {
 }
 
 class _FeedbackSubmissionDialogState
-    extends ConsumerState<FeedbackSubmissionDialog> {
+    extends ConsumerState<FeedbackSubmissionDialog>
+    with SafeSetStateMixin {
   /// Loading state during submission
   bool _isSubmitting = false;
 
   /// Submit correction to admin (Firestore)
   Future<void> _submitToAdmin() async {
-    setState(() {
+    safeSetState(() {
       _isSubmitting = true;
     });
 
@@ -82,7 +84,7 @@ class _FeedbackSubmissionDialogState
 
     if (!mounted) return;
 
-    setState(() {
+    safeSetState(() {
       _isSubmitting = false;
     });
 

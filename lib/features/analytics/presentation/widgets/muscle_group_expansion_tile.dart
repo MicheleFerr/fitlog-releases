@@ -119,6 +119,7 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
         HapticFeedback.lightImpact();
 
         // Toggle expansion state in provider
+        // OK: read - Using ref.read() in callback is correct pattern for calling notifier methods
         ref.read(muscleGroupExpansionProvider.notifier).toggleExpansion(
               muscleGroup,
             );
