@@ -629,8 +629,16 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
           child: TabBarView(
             controller: widget.tabController,
             children: [
-              // History Tab - Workout session history
-              ExerciseHistoryTab(history: widget.history),
+              // History Tab - Workout session history (filtered by view mode)
+              Consumer(
+                builder: (context, ref, child) {
+                  final viewMode = ref.watch(exerciseViewModeProvider);
+                  return ExerciseHistoryTab(
+                    history: widget.history,
+                    viewMode: viewMode,
+                  );
+                },
+              ),
 
               // Records Tab - Personal records breakdown
               ExerciseRecordsTab(records: widget.records),

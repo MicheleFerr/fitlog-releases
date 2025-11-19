@@ -33,6 +33,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -42,17 +44,85 @@ import 'package:intl/intl.dart';
 /// Exercise History Tab Widget
 ///
 /// **Displays**: Scrollable list of workout session cards
+/// **Supports**: View mode filtering (detailed, compact, byMajorWorkouts, byDate, byMuscleGroup)
 class ExerciseHistoryTab extends StatelessWidget {
   const ExerciseHistoryTab({
     required this.history,
+    this.viewMode = ExerciseViewMode.detailed,
     super.key,
   });
 
   final ExerciseHistory history;
+  final ExerciseViewMode viewMode;
+
+  /// Filter sessions based on view mode
+  List<ExerciseSession> _filterSessionsByViewMode(
+      List<ExerciseSession> sessions) {
+    switch (viewMode) {
+      case ExerciseViewMode.byMajorWorkouts:
+        // Show only "major" workouts: sessions with significant improvements
+        // A session is "major" if:
+        // 1. It has the highest 1RM (PR session)
+        // 2. OR it has significantly higher volume (+20%) than previous 3 sessions average
+        // 3. OR it has new max weight
+
+        if (sessions.length <= 1) return sessions;
+
+        final prSession = sessions.reduce(
+          (current, next) =>
+              next.highestEstimated1RM > current.highestEstimated1RM
+                  ? next
+                  : current,
+        );
+
+        final majorWorkouts = <ExerciseSession>[];
+        double previousMaxWeight = 0;
+
+        for (int i = sessions.length - 1; i >= 0; i--) {
+          final session = sessions[i];
+          final isPrSession = session == prSession;
+
+          // Check if new max weight
+          final isNewMaxWeight = session.maxWeight > previousMaxWeight;
+          if (isNewMaxWeight) {
+            previousMaxWeight = session.maxWeight;
+          }
+
+          // Check if significant volume increase
+          bool isSignificantVolumeIncrease = false;
+          if (i < sessions.length - 1) {
+            // Get average volume of previous 3 sessions
+            final previousSessions =
+                sessions.sublist(i + 1, (i + 4).clamp(0, sessions.length));
+            final avgPreviousVolume = previousSessions.isEmpty
+                ? 0.0
+                : previousSessions.fold<double>(
+                        0, (sum, s) => sum + s.totalVolume) /
+                    previousSessions.length;
+
+            isSignificantVolumeIncrease =
+                session.totalVolume > avgPreviousVolume * 1.2; // +20%
+          }
+
+          if (isPrSession || isNewMaxWeight || isSignificantVolumeIncrease) {
+            majorWorkouts.add(session);
+          }
+        }
+
+        return majorWorkouts.reversed.toList(); // Return in chronological order
+
+      case ExerciseViewMode.byDate:
+      case ExerciseViewMode.byMuscleGroup:
+      case ExerciseViewMode.compact:
+      case ExerciseViewMode.detailed:
+        return sessions; // No filtering for other modes
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final sessions = history.sessionsSortedByDate;
+    final allSessions = history.sessionsSortedByDate;
+    final sessions = _filterSessionsByViewMode(allSessions);
 
     // Handle empty state
     if (sessions.isEmpty) {
