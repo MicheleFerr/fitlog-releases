@@ -135,6 +135,15 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
 
       final bytes = byteData.buffer.asUint8List();
 
+      // Calculate share origin for iOS popover positioning
+      // Use center of screen as origin for share sheet
+      final screenSize = MediaQuery.of(context).size;
+      final sharePositionOrigin = Rect.fromCenter(
+        center: Offset(screenSize.width / 2, screenSize.height / 2),
+        width: 10,
+        height: 10,
+      );
+
       // Share via native share sheet
       await Share.shareXFiles(
         [
@@ -146,6 +155,7 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
         ],
         subject: '${widget.exerciseName} Progress Chart',
         text: 'Check out my ${widget.exerciseName} progress!',
+        sharePositionOrigin: sharePositionOrigin,
       );
     } catch (e) {
       // Show error to user
