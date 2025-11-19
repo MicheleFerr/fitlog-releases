@@ -354,6 +354,7 @@
   "exportLimits": "Limiti Esportazione",
   "yourCurrentLimits": "I tuoi attuali limiti di esportazione:",
   "close": "Chiudi",
+  "fullscreen": "Schermo Intero",
   "limitReached": "Limite Raggiunto",
   "upgradeToExportMore": "Aggiorna a premium per esportare più schede con dati analitici.",
   "pleaseSignIn": "Accedi per usare le funzionalità di esportazione",
@@ -415,6 +416,8 @@
   "sets": "serie",
   "addSet": "Aggiungi Serie",
   "weight": "Peso",
+  "oneRmEstimated": "1RM (Stim.)",
+  "weightTimesReps": "Peso × Rip",
   "reps": "rip",
   "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
@@ -10303,5 +10306,89 @@
   "sets": "serie",
   "@sets": {
     "description": "Forma plurale di serie esercizio"
+  },
+  "expandAll": "Espandi Tutto",
+  "@expandAll": {
+    "description": "Pulsante per espandere tutti gli accordion gruppi muscolari"
+  },
+  "collapseAll": "Comprimi Tutto",
+  "@collapseAll": {
+    "description": "Pulsante per comprimere tutti gli accordion gruppi muscolari"
+  },
+  "muscleGroupChest": "Petto",
+  "@muscleGroupChest": {
+    "description": "Nome gruppo muscolare petto"
+  },
+  "muscleGroupBack": "Schiena",
+  "@muscleGroupBack": {
+    "description": "Nome gruppo muscolare schiena"
+  },
+  "muscleGroupLegs": "Gambe",
+  "@muscleGroupLegs": {
+    "description": "Nome gruppo muscolare gambe"
+  },
+  "muscleGroupShoulders": "Spalle",
+  "@muscleGroupShoulders": {
+    "description": "Nome gruppo muscolare spalle"
+  },
+  "muscleGroupArms": "Braccia",
+  "@muscleGroupArms": {
+    "description": "Nome gruppo muscolare braccia"
+  },
+  "muscleGroupCore": "Core",
+  "@muscleGroupCore": {
+    "description": "Nome gruppo muscolare core"
+  },
+  "exercise": "esercizio",
+  "@exercise": {
+    "description": "Forma singolare di esercizio"
+  },
+  "exercises": "esercizi",
+  "@exercises": {
+    "description": "Forma plurale di esercizi"
+  },
+  "correctionSavedLocally": "Correzione salvata localmente",
+  "@correctionSavedLocally": {
+    "description": "Messaggio di successo quando la correzione è salvata"
+  },
+  "correctMuscleGroup": "Correggi Gruppo Muscolare",
+  "@correctMuscleGroup": {
+    "description": "Intestazione per il foglio di correzione gruppo muscolare"
+  },
+  "currentMuscleGroup": "Gruppo Muscolare Attuale",
+  "@currentMuscleGroup": {
+    "description": "Etichetta per il gruppo muscolare attuale (errato)"
+  },
+  "selectMuscleGroup": "Seleziona Gruppo Muscolare",
+  "@selectMuscleGroup": {
+    "description": "Testo segnaposto del menu a discesa"
+  },
+  "saveCorrection": "Salva Correzione",
+  "@saveCorrection": {
+    "description": "Pulsante per salvare la correzione del gruppo muscolare"
+  },
+  "feedbackSubmittedSuccess": "Feedback inviato! Riceverai una notifica quando l'admin lo esaminerà.",
+  "@feedbackSubmittedSuccess": {
+    "description": "Messaggio di successo dopo l'invio del feedback all'admin"
+  },
+  "reportToAdmin": "Segnalare all'Admin?",
+  "@reportToAdmin": {
+    "description": "Titolo del dialogo che chiede se l'utente vuole segnalare la correzione"
+  },
+  "reportToAdminExplanation": "La tua correzione è già salvata localmente. Vuoi segnalarla al team admin così possono correggerla globalmente per tutti gli utenti?",
+  "@reportToAdminExplanation": {
+    "description": "Spiegazione di cosa succede quando si segnala all'admin"
+  },
+  "adminWillReviewNotification": "Un admin esaminerà il tuo suggerimento e riceverai una notifica con la decisione.",
+  "@adminWillReviewNotification": {
+    "description": "Messaggio informativo sul processo di revisione admin"
+  },
+  "noKeepLocal": "No, Mantieni Locale",
+  "@noKeepLocal": {
+    "description": "Pulsante per rifiutare la segnalazione all'admin"
+  },
+  "yesReportToAdmin": "Sì, Segnala",
+  "@yesReportToAdmin": {
+    "description": "Pulsante per confermare la segnalazione all'admin"
   }
 }

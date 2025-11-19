@@ -51,7 +51,9 @@ class PrBadgeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      constraints: const BoxConstraints(
+        minHeight: 90, // Increased from 80 (Task 6.1)
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -118,7 +120,7 @@ class _PrBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12), // Increased from 8 (Task 6.2)
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
@@ -135,17 +137,23 @@ class _PrBadge extends StatelessWidget {
           ),
           const SizedBox(height: 2),
 
-          // Value (emphasized)
-          Text(
-            value,
-            style: context.textTheme.titleSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+          // Value (emphasized) - with FittedBox and Semantics (Tasks 6.3 & 6.4)
+          Semantics(
+            label: '$label: $value',
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: context.textTheme.titleSmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
 
           // Label (subtle)

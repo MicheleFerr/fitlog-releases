@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/muscle_group_expansion_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -13,6 +18,18 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+/// Sort options for exercise list
+enum SortBy {
+  /// Sort by personal record (highest 1RM first)
+  pr,
+
+  /// Sort by workout frequency (most workouts first)
+  frequency,
+
+  /// Sort by most recent workout (newest first)
+  lastWorkout,
+}
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -108,6 +125,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   Timer? _debounce;
+  SortBy _sortBy = SortBy.frequency; // Default: sort by frequency
 
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
@@ -126,17 +144,79 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
     super.dispose();
   }
 
+  /// Calculate filter counts for live counter badges
+  /// Returns Map with counts for each filter type
+  Map<SortBy, int> get _filterCounts {
+    return {
+      // PR filter: Count exercises with personalRecord > 0
+      SortBy.pr: widget.exerciseHistories
+          .where((h) => h.personalRecord > 0)
+          .length,
+
+      // Frequency filter: Total number of exercises
+      SortBy.frequency: widget.exerciseHistories.length,
+
+      // Last Workout filter: Exercises with at least 1 workout session
+      SortBy.lastWorkout: widget.exerciseHistories
+          .where((h) => h.sessions.isNotEmpty)
+          .length,
+    };
+  }
+
   List<ExerciseHistory> get _filteredHistories {
-    if (_searchQuery.isEmpty) {
-      return widget.exerciseHistories;
+    // Step 1: Filter by search query
+    final filtered = _searchQuery.isEmpty
+        ? widget.exerciseHistories
+        : widget.exerciseHistories.where((history) {
+            final query = _searchQuery.toLowerCase();
+            final exerciseName = history.exerciseName.toLowerCase();
+            final muscleGroup = history.muscleGroup.toLowerCase();
+            return exerciseName.contains(query) || muscleGroup.contains(query);
+          }).toList();
+
+    // Step 2: Sort by selected criteria
+    switch (_sortBy) {
+      case SortBy.pr:
+        filtered.sort((a, b) => b.personalRecord.compareTo(a.personalRecord));
+        break;
+      case SortBy.frequency:
+        filtered.sort((a, b) => b.sessions.length.compareTo(a.sessions.length));
+        break;
+      case SortBy.lastWorkout:
+        filtered.sort((a, b) {
+          final aLast = a.sessions.isEmpty
+              ? DateTime(1970)
+              : a.sessions
+                  .map((s) => s.date)
+                  .reduce((a, b) => a.isAfter(b) ? a : b);
+          final bLast = b.sessions.isEmpty
+              ? DateTime(1970)
+              : b.sessions
+                  .map((s) => s.date)
+                  .reduce((a, b) => a.isAfter(b) ? a : b);
+          return bLast.compareTo(aLast);
+        });
+        break;
     }
 
-    final query = _searchQuery.toLowerCase();
-    return widget.exerciseHistories.where((history) {
-      final exerciseName = history.exerciseName.toLowerCase();
-      final muscleGroup = history.muscleGroup.toLowerCase();
-      return exerciseName.contains(query) || muscleGroup.contains(query);
-    }).toList();
+    return filtered;
+  }
+
+  /// Group exercises by muscle group
+  Map<String, List<ExerciseHistory>> get _groupedHistories {
+    final grouped = <String, List<ExerciseHistory>>{};
+
+    for (final history in _filteredHistories) {
+      final muscleGroup = history.muscleGroup;
+      if (!grouped.containsKey(muscleGroup)) {
+        grouped[muscleGroup] = [];
+      }
+      grouped[muscleGroup]!.add(history);
+    }
+
+    // Sort muscle groups alphabetically
+    final sortedKeys = grouped.keys.toList()..sort();
+    return {for (var key in sortedKeys) key: grouped[key]!};
   }
 
   @override
@@ -188,6 +268,13 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
           ),
         ),
 
+        // Sort & Filter chips with live counters
+        _SortFilterChips(
+          sortBy: _sortBy,
+          filterCounts: _filterCounts,
+          onSortChanged: (newSort) => setState(() => _sortBy = newSort),
+        ),
+
         // Results list
         Expanded(
           child: filteredHistories.isEmpty
@@ -225,17 +312,41 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent> {
                     // Wait for new data to be available
                     await ref.read(exerciseHistoryStreamProvider(widget.userId).future);
                   },
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filteredHistories.length,
-                    itemBuilder: (context, index) {
-                      final history = filteredHistories[index];
-                      return _ExerciseHistoryCard(history: history);
-                    },
-                  ),
+                  child: _buildAccordionList(),
                 ),
         ),
       ],
+    );
+  }
+
+  /// Build accordion list of exercises grouped by muscle group
+  ///
+  /// Uses MuscleGroupExpansionTile for expand/collapse functionality
+  Widget _buildAccordionList() {
+    final grouped = _groupedHistories;
+
+    if (grouped.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: grouped.length,
+      itemBuilder: (context, groupIndex) {
+        final muscleGroup = grouped.keys.elementAt(groupIndex);
+        final exercises = grouped[muscleGroup]!;
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: MuscleGroupExpansionTile(
+            muscleGroup: muscleGroup,
+            exerciseCount: exercises.length,
+            children: exercises
+                .map((history) => _ExerciseHistoryCard(history: history))
+                .toList(),
+          ),
+        );
+      },
     );
   }
 }
@@ -333,7 +444,91 @@ class _QuickStatsSummary extends StatelessWidget {
   }
 }
 
-/// Individual summary stat item (icon + value + label)
+/// Animated counter widget - Smoothly animates from 0 to target value
+/// **Used in**: Quick Stats card for dynamic number animation
+class _AnimatedCounter extends StatefulWidget {
+  const _AnimatedCounter({
+    required this.value,
+    required this.style,
+    this.duration = const Duration(milliseconds: 1000),
+  });
+
+  final String value; // Can be "123", "12.5t", etc.
+  final TextStyle? style;
+  final Duration duration;
+
+  @override
+  State<_AnimatedCounter> createState() => _AnimatedCounterState();
+}
+
+class _AnimatedCounterState extends State<_AnimatedCounter>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late Animation<double> _animation;
+  double _targetValue = 0;
+  String _suffix = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _parseValueAndAnimate();
+  }
+
+  @override
+  void didUpdateWidget(_AnimatedCounter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _parseValueAndAnimate();
+    }
+  }
+
+  void _parseValueAndAnimate() {
+    // Extract number and suffix (e.g., "12.5t" -> 12.5 + "t")
+    final match = RegExp(r'([\d.]+)(.*)').firstMatch(widget.value);
+    if (match != null) {
+      _targetValue = double.tryParse(match.group(1)!) ?? 0;
+      _suffix = match.group(2)!;
+
+      _animation = Tween<double>(
+        begin: 0,
+        end: _targetValue,
+      ).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ));
+
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        // Format based on suffix
+        final currentValue = _animation.value;
+        final formattedValue = _suffix == 't'
+            ? currentValue.toStringAsFixed(1) // Decimal for tons
+            : currentValue.toInt().toString(); // Integer for counts
+
+        return Text(
+          '$formattedValue$_suffix',
+          style: widget.style,
+        );
+      },
+    );
+  }
+}
+
+/// Individual summary stat item (icon + animated value + label)
 class _SummaryStatItem extends StatelessWidget {
   const _SummaryStatItem({
     required this.icon,
@@ -359,8 +554,9 @@ class _SummaryStatItem extends StatelessWidget {
           color: color,
         ),
         const SizedBox(height: 8),
-        Text(
-          value,
+        // Animated counter instead of static text
+        _AnimatedCounter(
+          value: value,
           style: context.textTheme.headlineSmall?.copyWith(
             color: color,
             fontWeight: FontWeight.bold,
@@ -383,13 +579,49 @@ class _SummaryStatItem extends StatelessWidget {
 }
 
 /// Exercise history card - shows exercise name, PR, sessions count
-class _ExerciseHistoryCard extends StatelessWidget {
+class _ExerciseHistoryCard extends ConsumerWidget {
   const _ExerciseHistoryCard({required this.history});
 
   final ExerciseHistory history;
 
+  /// Show muscle group correction bottom sheet
+  Future<void> _showCorrectionSheet(BuildContext context) async {
+    // Show bottom sheet
+    final correction = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: MuscleGroupCorrectionSheet(
+          exerciseName: history.exerciseName,
+          currentMuscleGroup: history.muscleGroup,
+        ),
+      ),
+    );
+
+    // If correction was saved, ask if user wants to report to admin
+    if (correction != null && context.mounted) {
+      final submitted = await showDialog<bool>(
+        context: context,
+        builder: (_) => FeedbackSubmissionDialog(
+          correction: correction,
+        ),
+      );
+
+      // Refresh analytics data if correction was made
+      // (local correction is already applied via Hive, just need UI refresh)
+      if (context.mounted && (correction != null || submitted == true)) {
+        // TODO: Trigger analytics refresh if needed
+        // For now, the expansion state provider will handle UI updates
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final pr = history.personalRecord;
     final sessionsCount = history.sessions.length;
     final weeklyProgression = history.weeklyVolumeProgression;
@@ -400,6 +632,11 @@ class _ExerciseHistoryCard extends StatelessWidget {
         onTap: () {
           // Navigate to Exercise Detail Screen with URI-encoded exercise name
           context.push('/analytics/exercise/${Uri.encodeComponent(history.exerciseName)}');
+        },
+        onLongPress: () {
+          // Show correction sheet on long press
+          HapticFeedback.mediumImpact();
+          _showCorrectionSheet(context);
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -637,10 +874,10 @@ class _SkeletonExerciseCard extends StatelessWidget {
           children: [
             // Exercise name skeleton
             _ShimmerBox(width: 200, height: 20, borderRadius: 4),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             // Muscle group skeleton
             _ShimmerBox(width: 100, height: 14, borderRadius: 4),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Stats row skeleton
             Row(
@@ -652,7 +889,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,
@@ -660,7 +897,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,
@@ -822,6 +1059,286 @@ class _EmptyStateView extends StatelessWidget {
               semanticLabel: context.l10n.startYourFirstWorkout,
             ),
             label: Text(context.l10n.startYourFirstWorkout),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Sort & Filter chips widget - Horizontal row of filter options
+/// **Enhanced with live counters** showing number of exercises per filter
+class _SortFilterChips extends ConsumerWidget {
+  const _SortFilterChips({
+    required this.sortBy,
+    required this.filterCounts,
+    required this.onSortChanged,
+  });
+
+  final SortBy sortBy;
+  final Map<SortBy, int> filterCounts;
+  final ValueChanged<SortBy> onSortChanged;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch expansion state to determine expand/collapse all button
+    final expansionState = ref.watch(muscleGroupExpansionProvider);
+    final areAllExpanded = ref
+        .read(muscleGroupExpansionProvider.notifier)
+        .areAllExpanded;
+
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+            context.colors.surface,
+          ],
+        ),
+        border: Border(
+          bottom: BorderSide(
+            color: context.colors.outlineVariant.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          // Scrollable filter chips
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  // PR (Personal Record) filter
+                  _FilterChipItem(
+                    label: context.l10n.pr,
+                    icon: AppIcons.achievement,
+                    count: filterCounts[SortBy.pr] ?? 0,
+                    selected: sortBy == SortBy.pr,
+                    onSelected: () => onSortChanged(SortBy.pr),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // Frequency (Workout count) filter
+                  _FilterChipItem(
+                    label: context.l10n.workouts,
+                    icon: AppIcons.calendar,
+                    count: filterCounts[SortBy.frequency] ?? 0,
+                    selected: sortBy == SortBy.frequency,
+                    onSelected: () => onSortChanged(SortBy.frequency),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // Last Workout (Newest) filter
+                  _FilterChipItem(
+                    label: context.l10n.recentWorkouts,
+                    icon: AppIcons.clock,
+                    count: filterCounts[SortBy.lastWorkout] ?? 0,
+                    selected: sortBy == SortBy.lastWorkout,
+                    onSelected: () => onSortChanged(SortBy.lastWorkout),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Expand/Collapse all button (fixed on right)
+          const SizedBox(width: 12),
+          IconButton(
+            icon: SemanticIcon.button(
+              icon: areAllExpanded ? AppIcons.unfoldLess : AppIcons.expand,
+              semanticLabel: areAllExpanded
+                  ? context.l10n.collapseAll
+                  : context.l10n.expandAll,
+            ),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              if (areAllExpanded) {
+                ref.read(muscleGroupExpansionProvider.notifier).collapseAll();
+              } else {
+                ref.read(muscleGroupExpansionProvider.notifier).expandAll();
+              }
+            },
+            tooltip: areAllExpanded
+                ? context.l10n.collapseAll
+                : context.l10n.expandAll,
+            style: IconButton.styleFrom(
+              backgroundColor: areAllExpanded
+                  ? context.colors.primary.withValues(alpha: 0.1)
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Individual filter chip item with live counter and scale animation
+class _FilterChipItem extends StatefulWidget {
+  const _FilterChipItem({
+    required this.label,
+    required this.icon,
+    required this.count,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final String label;
+  final IconData icon;
+  final int count;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  @override
+  State<_FilterChipItem> createState() => _FilterChipItemState();
+}
+
+class _FilterChipItemState extends State<_FilterChipItem>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scaleController;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    // Trigger scale animation
+    _scaleController.forward().then((_) => _scaleController.reverse());
+    widget.onSelected();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: FilterChip(
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SemanticIcon(
+              icon: widget.icon,
+              semanticLabel: widget.label,
+              size: AppIconSize.tiny,
+              color: widget.selected
+                  ? context.colors.onPrimary
+                  : context.colors.onSurfaceVariant,
+            ),
+            const SizedBox(width: 6),
+            Text(widget.label),
+            const SizedBox(width: 6),
+            // Live counter badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: widget.selected
+                    ? context.colors.onPrimary.withValues(alpha: 0.2)
+                    : context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${widget.count}',
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: widget.selected
+                      ? context.colors.onPrimary
+                      : context.colors.onSurfaceVariant,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
+              ),
+            ),
+          ],
+        ),
+        selected: widget.selected,
+        onSelected: (_) => _handleTap(),
+        selectedColor: context.colors.primary,
+        checkmarkColor: context.colors.onPrimary,
+        labelStyle: context.textTheme.bodyMedium?.copyWith(
+          color: widget.selected
+              ? context.colors.onPrimary
+              : context.colors.onSurface,
+          fontWeight: widget.selected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
+  }
+}
+
+/// Muscle group header widget for grouped view
+class _MuscleGroupHeader extends StatelessWidget {
+  const _MuscleGroupHeader({
+    required this.muscleGroup,
+    required this.exerciseCount,
+  });
+
+  final String muscleGroup;
+  final int exerciseCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          // Muscle group icon
+          SemanticIcon(
+            icon: AppIcons.workout,
+            semanticLabel: muscleGroup,
+            size: AppIconSize.small,
+            color: context.colors.onPrimaryContainer,
+          ),
+          const SizedBox(width: 8),
+
+          // Muscle group name (uppercase with letter spacing)
+          Expanded(
+            child: Text(
+              muscleGroup.toUpperCase(),
+              style: context.textTheme.labelLarge?.copyWith(
+                color: context.colors.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+
+          // Exercise count badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: context.colors.primary,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '$exerciseCount',
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

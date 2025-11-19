@@ -932,6 +932,10 @@
   "@close": {
     "description": "Close button"
   },
+  "fullscreen": "Fullscreen",
+  "@fullscreen": {
+    "description": "Fullscreen button tooltip"
+  },
   "limitReached": "Limit Reached",
   "@limitReached": {
     "description": "Quota limit reached title"
@@ -1175,6 +1179,14 @@
   "weight": "Weight",
   "@weight": {
     "description": "Weight metric label"
+  },
+  "oneRmEstimated": "1RM (Est.)",
+  "@oneRmEstimated": {
+    "description": "Estimated one-rep max metric label"
+  },
+  "weightTimesReps": "Weight × Reps",
+  "@weightTimesReps": {
+    "description": "Weight times reps metric label"
   },
   "reps": "reps",
   "@reps": {
@@ -20915,5 +20927,89 @@
   "sets": "sets",
   "@sets": {
     "description": "Plural form of exercise sets"
+  },
+  "expandAll": "Expand All",
+  "@expandAll": {
+    "description": "Button to expand all muscle group accordions"
+  },
+  "collapseAll": "Collapse All",
+  "@collapseAll": {
+    "description": "Button to collapse all muscle group accordions"
+  },
+  "muscleGroupChest": "Chest",
+  "@muscleGroupChest": {
+    "description": "Chest muscle group name"
+  },
+  "muscleGroupBack": "Back",
+  "@muscleGroupBack": {
+    "description": "Back muscle group name"
+  },
+  "muscleGroupLegs": "Legs",
+  "@muscleGroupLegs": {
+    "description": "Legs muscle group name"
+  },
+  "muscleGroupShoulders": "Shoulders",
+  "@muscleGroupShoulders": {
+    "description": "Shoulders muscle group name"
+  },
+  "muscleGroupArms": "Arms",
+  "@muscleGroupArms": {
+    "description": "Arms muscle group name"
+  },
+  "muscleGroupCore": "Core",
+  "@muscleGroupCore": {
+    "description": "Core muscle group name"
+  },
+  "exercise": "exercise",
+  "@exercise": {
+    "description": "Singular form of exercise"
+  },
+  "exercises": "exercises",
+  "@exercises": {
+    "description": "Plural form of exercises"
+  },
+  "correctionSavedLocally": "Correction saved locally",
+  "@correctionSavedLocally": {
+    "description": "Success message when muscle group correction is saved"
+  },
+  "correctMuscleGroup": "Correct Muscle Group",
+  "@correctMuscleGroup": {
+    "description": "Header for muscle group correction sheet"
+  },
+  "currentMuscleGroup": "Current Muscle Group",
+  "@currentMuscleGroup": {
+    "description": "Label for current (incorrect) muscle group"
+  },
+  "selectMuscleGroup": "Select Muscle Group",
+  "@selectMuscleGroup": {
+    "description": "Dropdown placeholder text"
+  },
+  "saveCorrection": "Save Correction",
+  "@saveCorrection": {
+    "description": "Button to save muscle group correction"
+  },
+  "feedbackSubmittedSuccess": "Feedback submitted! You'll be notified when admin reviews it.",
+  "@feedbackSubmittedSuccess": {
+    "description": "Success message after submitting feedback to admin"
+  },
+  "reportToAdmin": "Report to Admin?",
+  "@reportToAdmin": {
+    "description": "Dialog title asking if user wants to report correction"
+  },
+  "reportToAdminExplanation": "Your correction is already saved locally. Would you like to report this to the admin team so they can fix it globally for all users?",
+  "@reportToAdminExplanation": {
+    "description": "Explanation of what happens when reporting to admin"
+  },
+  "adminWillReviewNotification": "An admin will review your suggestion and you'll receive a notification with their decision.",
+  "@adminWillReviewNotification": {
+    "description": "Info message about admin review process"
+  },
+  "noKeepLocal": "No, Keep Local",
+  "@noKeepLocal": {
+    "description": "Button to decline reporting to admin"
+  },
+  "yesReportToAdmin": "Yes, Report",
+  "@yesReportToAdmin": {
+    "description": "Button to confirm reporting to admin"
   }
 }

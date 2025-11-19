@@ -751,6 +751,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close => 'Close';
 
   @override
+  String get fullscreen => 'Fullscreen';
+
+  @override
   String get limitReached => 'Limit Reached';
 
   @override
@@ -948,6 +951,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weight => 'Weight';
+
+  @override
+  String get oneRmEstimated => '1RM (Est.)';
+
+  @override
+  String get weightTimesReps => 'Weight × Reps';
 
   @override
   String get reps => 'reps';
@@ -3656,7 +3665,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noExercisesFoundInJSON => 'No exercises found in JSON';
 
   @override
-  String get exercise => 'Exercise';
+  String get exercise => 'exercise';
 
   @override
   String roundNumber(int number) {
@@ -17220,4 +17229,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get records => 'Records';
+
+  @override
+  String get expandAll => 'Expand All';
+
+  @override
+  String get collapseAll => 'Collapse All';
+
+  @override
+  String get muscleGroupCore => 'Core';
+
+  @override
+  String get correctionSavedLocally => 'Correction saved locally';
+
+  @override
+  String get correctMuscleGroup => 'Correct Muscle Group';
+
+  @override
+  String get currentMuscleGroup => 'Current Muscle Group';
+
+  @override
+  String get selectMuscleGroup => 'Select Muscle Group';
+
+  @override
+  String get saveCorrection => 'Save Correction';
+
+  @override
+  String get feedbackSubmittedSuccess =>
+      'Feedback submitted! You\'ll be notified when admin reviews it.';
+
+  @override
+  String get reportToAdmin => 'Report to Admin?';
+
+  @override
+  String get reportToAdminExplanation =>
+      'Your correction is already saved locally. Would you like to report this to the admin team so they can fix it globally for all users?';
+
+  @override
+  String get adminWillReviewNotification =>
+      'An admin will review your suggestion and you\'ll receive a notification with their decision.';
+
+  @override
+  String get noKeepLocal => 'No, Keep Local';
+
+  @override
+  String get yesReportToAdmin => 'Yes, Report';
 }

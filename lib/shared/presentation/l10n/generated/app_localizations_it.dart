@@ -754,6 +754,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get close => 'Chiudi';
 
   @override
+  String get fullscreen => 'Schermo Intero';
+
+  @override
   String get limitReached => 'Limite Raggiunto';
 
   @override
@@ -951,6 +954,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get weight => 'Peso';
+
+  @override
+  String get oneRmEstimated => '1RM (Stim.)';
+
+  @override
+  String get weightTimesReps => 'Peso × Rip';
 
   @override
   String get reps => 'rip';
@@ -3684,7 +3693,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noExercisesFoundInJSON => 'Nessun esercizio trovato nel JSON';
 
   @override
-  String get exercise => 'Esercizio';
+  String get exercise => 'esercizio';
 
   @override
   String roundNumber(int number) {
@@ -17392,4 +17401,49 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get records => 'Record';
+
+  @override
+  String get expandAll => 'Espandi Tutto';
+
+  @override
+  String get collapseAll => 'Comprimi Tutto';
+
+  @override
+  String get muscleGroupCore => 'Core';
+
+  @override
+  String get correctionSavedLocally => 'Correzione salvata localmente';
+
+  @override
+  String get correctMuscleGroup => 'Correggi Gruppo Muscolare';
+
+  @override
+  String get currentMuscleGroup => 'Gruppo Muscolare Attuale';
+
+  @override
+  String get selectMuscleGroup => 'Seleziona Gruppo Muscolare';
+
+  @override
+  String get saveCorrection => 'Salva Correzione';
+
+  @override
+  String get feedbackSubmittedSuccess =>
+      'Feedback inviato! Riceverai una notifica quando l\'admin lo esaminerà.';
+
+  @override
+  String get reportToAdmin => 'Segnalare all\'Admin?';
+
+  @override
+  String get reportToAdminExplanation =>
+      'La tua correzione è già salvata localmente. Vuoi segnalarla al team admin così possono correggerla globalmente per tutti gli utenti?';
+
+  @override
+  String get adminWillReviewNotification =>
+      'Un admin esaminerà il tuo suggerimento e riceverai una notifica con la decisione.';
+
+  @override
+  String get noKeepLocal => 'No, Mantieni Locale';
+
+  @override
+  String get yesReportToAdmin => 'Sì, Segnala';
 }

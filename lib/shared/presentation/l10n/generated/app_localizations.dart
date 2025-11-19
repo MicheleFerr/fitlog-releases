@@ -1442,6 +1442,12 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get close;
 
+  /// Fullscreen button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Fullscreen'**
+  String get fullscreen;
+
   /// Quota limit reached title
   ///
   /// In en, this message translates to:
@@ -1808,6 +1814,18 @@ abstract class AppLocalizations {
   /// **'Weight'**
   String get weight;
 
+  /// Estimated one-rep max metric label
+  ///
+  /// In en, this message translates to:
+  /// **'1RM (Est.)'**
+  String get oneRmEstimated;
+
+  /// Weight times reps metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight × Reps'**
+  String get weightTimesReps;
+
   /// Label for repetitions (lowercase)
   ///
   /// In en, this message translates to:
@@ -1922,7 +1940,7 @@ abstract class AppLocalizations {
   /// **'Paused'**
   String get workoutStatusPaused;
 
-  /// Exercises label (plural)
+  /// Plural form of exercises
   ///
   /// In en, this message translates to:
   /// **'exercises'**
@@ -4733,31 +4751,31 @@ abstract class AppLocalizations {
   /// **'Ensure proper form with this weight increase'**
   String get aiInsightLargeWeightJumpRec;
 
-  /// Muscle group name for legs
+  /// Legs muscle group name
   ///
   /// In en, this message translates to:
   /// **'Legs'**
   String get muscleGroupLegs;
 
-  /// Muscle group name for chest
+  /// Chest muscle group name
   ///
   /// In en, this message translates to:
   /// **'Chest'**
   String get muscleGroupChest;
 
-  /// Muscle group name for back
+  /// Back muscle group name
   ///
   /// In en, this message translates to:
   /// **'Back'**
   String get muscleGroupBack;
 
-  /// Muscle group name for shoulders
+  /// Shoulders muscle group name
   ///
   /// In en, this message translates to:
   /// **'Shoulders'**
   String get muscleGroupShoulders;
 
-  /// Muscle group name for arms
+  /// Arms muscle group name
   ///
   /// In en, this message translates to:
   /// **'Arms'**
@@ -6779,10 +6797,10 @@ abstract class AppLocalizations {
   /// **'No exercises found in JSON'**
   String get noExercisesFoundInJSON;
 
-  /// No description provided for @exercise.
+  /// Singular form of exercise
   ///
   /// In en, this message translates to:
-  /// **'Exercise'**
+  /// **'exercise'**
   String get exercise;
 
   /// Round number label
@@ -30845,6 +30863,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Records'**
   String get records;
+
+  /// Button to expand all muscle group accordions
+  ///
+  /// In en, this message translates to:
+  /// **'Expand All'**
+  String get expandAll;
+
+  /// Button to collapse all muscle group accordions
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse All'**
+  String get collapseAll;
+
+  /// Core muscle group name
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get muscleGroupCore;
+
+  /// Success message when muscle group correction is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Correction saved locally'**
+  String get correctionSavedLocally;
+
+  /// Header for muscle group correction sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Correct Muscle Group'**
+  String get correctMuscleGroup;
+
+  /// Label for current (incorrect) muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'Current Muscle Group'**
+  String get currentMuscleGroup;
+
+  /// Dropdown placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Select Muscle Group'**
+  String get selectMuscleGroup;
+
+  /// Button to save muscle group correction
+  ///
+  /// In en, this message translates to:
+  /// **'Save Correction'**
+  String get saveCorrection;
+
+  /// Success message after submitting feedback to admin
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback submitted! You\'ll be notified when admin reviews it.'**
+  String get feedbackSubmittedSuccess;
+
+  /// Dialog title asking if user wants to report correction
+  ///
+  /// In en, this message translates to:
+  /// **'Report to Admin?'**
+  String get reportToAdmin;
+
+  /// Explanation of what happens when reporting to admin
+  ///
+  /// In en, this message translates to:
+  /// **'Your correction is already saved locally. Would you like to report this to the admin team so they can fix it globally for all users?'**
+  String get reportToAdminExplanation;
+
+  /// Info message about admin review process
+  ///
+  /// In en, this message translates to:
+  /// **'An admin will review your suggestion and you\'ll receive a notification with their decision.'**
+  String get adminWillReviewNotification;
+
+  /// Button to decline reporting to admin
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep Local'**
+  String get noKeepLocal;
+
+  /// Button to confirm reporting to admin
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Report'**
+  String get yesReportToAdmin;
 }
 
 class _AppLocalizationsDelegate
