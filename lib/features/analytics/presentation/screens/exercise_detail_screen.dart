@@ -219,9 +219,9 @@ class _ExerciseDetailContent extends StatefulWidget {
 
 class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
     with SafeSetStateMixin {
-  /// Thresholds for snap behavior
-  static const double _collapseThreshold = 100.0; // Scroll down > 100px → collapse
-  static const double _expandThreshold = 120.0; // Scroll up > 120px → expand
+  /// Thresholds for snap behavior (reduced for easier interaction)
+  static const double _collapseThreshold = 30.0; // Scroll down > 30px → collapse
+  static const double _expandThreshold = 40.0; // Scroll up > 40px → expand
 
   /// Expanded and collapsed heights for SliverAppBar
   static const double _expandedHeight = 340.0;
@@ -232,6 +232,11 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
 
   /// Track previous scroll offset to detect direction
   double _previousOffset = 0.0;
+
+  /// Track if header is currently collapsed
+  bool get _isCollapsed =>
+      widget.scrollController.hasClients &&
+      widget.scrollController.offset >= (_expandedHeight - _collapsedHeight);
 
   @override
   void initState() {
@@ -285,6 +290,24 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
     safeSetState(() {
       _isAnimating = false;
     });
+  }
+
+  /// Toggle header state (collapse ⇄ expand) with tap
+  ///
+  /// **UX**: Tap on chart area to quickly toggle between states
+  void _toggleHeaderState() {
+    if (!widget.scrollController.hasClients || _isAnimating) return;
+
+    final maxScroll = _expandedHeight - _collapsedHeight;
+    final currentOffset = widget.scrollController.offset;
+
+    // If currently expanded (offset < half), collapse
+    // If currently collapsed (offset >= half), expand
+    if (currentOffset < maxScroll / 2) {
+      _snapTo(maxScroll); // Collapse
+    } else {
+      _snapTo(0.0); // Expand
+    }
   }
 
   @override
@@ -357,40 +380,109 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
                 collapseMode: CollapseMode.parallax,
 
                 // Background content (PR badges + chart) - visible when expanded
-                background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.colors.primary.withValues(alpha: 0.08),
-                    context.colors.secondary.withValues(alpha: 0.05),
-                    context.colors.surface,
-                  ],
-                ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60), // Space for title + toolbar
-
-                    // PR Badge Header - Personal records display (always visible)
-                    PrBadgeHeader(records: widget.records),
-
-                    // Volume Progression Chart - Fades out with parallax on collapse
-                    // Chart has intrinsic height of 200px
-                    Transform.translate(
-                      offset: Offset(0, parallaxOffset),
-                      child: Opacity(
-                        opacity: chartOpacity,
-                        child: ExerciseVolumeChart(history: widget.history),
+                // Tappable for quick collapse/expand
+                background: GestureDetector(
+                  onTap: _toggleHeaderState,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          context.colors.primary.withValues(alpha: 0.08),
+                          context.colors.secondary.withValues(alpha: 0.05),
+                          context.colors.surface,
+                        ],
                       ),
                     ),
-                  ],
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 60), // Space for title + toolbar
+
+                          // PR Badge Header - Personal records display (always visible)
+                          PrBadgeHeader(records: widget.records),
+
+                          // Volume Progression Chart - Fades out with parallax on collapse
+                          // Chart has intrinsic height of 200px
+                          Transform.translate(
+                            offset: Offset(0, parallaxOffset),
+                            child: Opacity(
+                              opacity: chartOpacity,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  ExerciseVolumeChart(history: widget.history),
+
+                                  // Collapse/Expand indicator (chevron)
+                                  // Fades in when chart is visible
+                                  if (chartOpacity > 0.5)
+                                    Positioned(
+                                      bottom: 8,
+                                      child: Opacity(
+                                        opacity: chartOpacity * 0.6,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 6,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: context.colors.surface
+                                                .withValues(alpha: 0.9),
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withValues(alpha: 0.1),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SemanticIcon(
+                                                icon: _isCollapsed
+                                                    ? AppIcons.expandMore
+                                                    : AppIcons.expandLess,
+                                                semanticLabel: _isCollapsed
+                                                    ? context.l10n.expand
+                                                    : context.l10n.collapse,
+                                                size: AppIconSize.small,
+                                                color:
+                                                    context.colors.onSurface,
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                _isCollapsed
+                                                    ? context.l10n.expand
+                                                    : context.l10n.collapse,
+                                                style: context
+                                                    .textTheme.labelSmall
+                                                    ?.copyWith(
+                                                  color:
+                                                      context.colors.onSurface,
+                                                  fontSize: 11,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
+              );
             },
           ),
         ),
