@@ -464,31 +464,135 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   }
 }
 
-/// Quick stats summary card - shows aggregate statistics
+/// Hybrid Motivator Card - Combines gamification + analytics
+/// Shows: Streak, Weekly Goal, Volume Trend, Recent PRs
 class _QuickStatsSummary extends StatelessWidget {
   const _QuickStatsSummary({required this.exerciseHistories});
 
   final List<ExerciseHistory> exerciseHistories;
 
+  /// Calculate current streak (consecutive days with workouts)
+  int _calculateStreak() {
+    if (exerciseHistories.isEmpty) return 0;
+
+    // Get all unique workout dates (across all exercises)
+    final allDates = <DateTime>{};
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        // Normalize to date only (remove time)
+        final dateOnly = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        allDates.add(dateOnly);
+      }
+    }
+
+    // Sort dates descending (newest first)
+    final sortedDates = allDates.toList()
+      ..sort((a, b) => b.compareTo(a));
+
+    if (sortedDates.isEmpty) return 0;
+
+    final today = DateTime.now();
+    final todayOnly = DateTime(today.year, today.month, today.day);
+
+    // Check if most recent workout is today or yesterday
+    final mostRecent = sortedDates.first;
+    final daysSinceRecent = todayOnly.difference(mostRecent).inDays;
+
+    // If last workout was more than 1 day ago, streak is broken
+    if (daysSinceRecent > 1) return 0;
+
+    // Count consecutive days backwards from most recent
+    int streak = 1;
+    DateTime expectedDate = mostRecent.subtract(const Duration(days: 1));
+
+    for (int i = 1; i < sortedDates.length; i++) {
+      if (sortedDates[i].isAtSameMomentAs(expectedDate)) {
+        streak++;
+        expectedDate = expectedDate.subtract(const Duration(days: 1));
+      } else {
+        // Gap in streak, stop counting
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  /// Calculate workouts this week (last 7 days)
+  int _calculateWeeklyWorkouts() {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    final weeklyDates = <DateTime>{};
+    for (final history in exerciseHistories) {
+      for (final session in history.sessions) {
+        if (session.date.isAfter(weekAgo)) {
+          final dateOnly = DateTime(
+            session.date.year,
+            session.date.month,
+            session.date.day,
+          );
+          weeklyDates.add(dateOnly);
+        }
+      }
+    }
+
+    return weeklyDates.length;
+  }
+
+  /// Calculate average weekly volume progression across all exercises
+  double _calculateVolumeProgression() {
+    if (exerciseHistories.isEmpty) return 0;
+
+    final progressions = exerciseHistories
+        .map((h) => h.weeklyVolumeProgression)
+        .where((p) => p != 0) // Exclude exercises with no baseline
+        .toList();
+
+    if (progressions.isEmpty) return 0;
+
+    final avgProgression =
+        progressions.reduce((a, b) => a + b) / progressions.length;
+    return avgProgression;
+  }
+
+  /// Calculate recent PRs (last 7 days)
+  int _calculateRecentPRs() {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    int prCount = 0;
+
+    for (final history in exerciseHistories) {
+      if (history.sessions.isEmpty) continue;
+
+      // Find personal record (highest 1RM)
+      final pr = history.personalRecord;
+
+      // Check if any session in last 7 days achieved this PR
+      for (final session in history.sessions) {
+        if (session.date.isAfter(weekAgo) &&
+            session.highestEstimated1RM >= pr * 0.99) {
+          // Within 1% of PR (accounts for rounding)
+          prCount++;
+          break; // Count once per exercise
+        }
+      }
+    }
+
+    return prCount;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Calculate aggregate stats
-    final totalWorkouts = exerciseHistories.fold<int>(
-      0,
-      (sum, history) => sum + history.sessions.length,
-    );
-
-    final totalVolume = exerciseHistories.fold<double>(
-      0.0,
-      (sum, history) =>
-          sum +
-          history.sessions.fold<double>(
-            0.0,
-            (sessionSum, session) => sessionSum + session.totalVolume,
-          ),
-    );
-
-    final activeExercises = exerciseHistories.length;
+    final streak = _calculateStreak();
+    final weeklyWorkouts = _calculateWeeklyWorkouts();
+    final volumeProgression = _calculateVolumeProgression();
+    final recentPRs = _calculateRecentPRs();
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -511,45 +615,73 @@ class _QuickStatsSummary extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          // Total workouts
-          _SummaryStatItem(
-            icon: AppIcons.workout,
-            label: context.l10n.totalWorkouts,
-            value: '$totalWorkouts',
-            color: context.colors.onPrimaryContainer,
+          // Row 1: Streak + Volume Trend
+          Row(
+            children: [
+              // Streak (left half)
+              Expanded(
+                child: _HybridStatItem(
+                  icon: AppIcons.streak,
+                  label: 'Streak',
+                  value: '$streak',
+                  suffix: streak == 1 ? 'giorno' : 'giorni',
+                  color: context.colors.onPrimaryContainer,
+                  trend: null,
+                ),
+              ),
+              const SizedBox(width: 12),
+
+              // Volume trend (right half)
+              Expanded(
+                child: _HybridStatItem(
+                  icon: AppIcons.trendUp,
+                  label: 'Volume',
+                  value: volumeProgression >= 0
+                      ? '+${volumeProgression.toStringAsFixed(0)}'
+                      : volumeProgression.toStringAsFixed(0),
+                  suffix: '%',
+                  color: context.colors.onPrimaryContainer,
+                  trend: volumeProgression >= 0 ? 'up' : 'down',
+                  trendColor: volumeProgression >= 0
+                      ? context.colors.success
+                      : context.colors.error,
+                ),
+              ),
+            ],
           ),
 
-          // Vertical divider
-          Container(
-            height: 40,
-            width: 1,
-            color: context.colors.onPrimaryContainer.withValues(alpha: 0.2),
-          ),
+          const SizedBox(height: 12),
 
-          // Total volume (in tons)
-          _SummaryStatItem(
-            icon: AppIcons.trendUp,
-            label: context.l10n.totalVolume,
-            value: '${(totalVolume / 1000).toStringAsFixed(1)}t',
-            color: context.colors.onPrimaryContainer,
-          ),
+          // Row 2: Weekly Goal + Recent PRs
+          Row(
+            children: [
+              // Weekly goal (left half)
+              Expanded(
+                child: _HybridStatItem(
+                  icon: AppIcons.calendar,
+                  label: 'Settimana',
+                  value: '$weeklyWorkouts',
+                  suffix: '/5 allenamenti',
+                  color: context.colors.onPrimaryContainer,
+                  trend: null,
+                ),
+              ),
+              const SizedBox(width: 12),
 
-          // Vertical divider
-          Container(
-            height: 40,
-            width: 1,
-            color: context.colors.onPrimaryContainer.withValues(alpha: 0.2),
-          ),
-
-          // Active exercises
-          _SummaryStatItem(
-            icon: AppIcons.list,
-            label: context.l10n.exercises,
-            value: '$activeExercises',
-            color: context.colors.onPrimaryContainer,
+              // Recent PRs (right half)
+              Expanded(
+                child: _HybridStatItem(
+                  icon: AppIcons.achievement,
+                  label: 'PR (7 giorni)',
+                  value: '$recentPRs',
+                  suffix: recentPRs == 1 ? 'nuovo' : 'nuovi',
+                  color: context.colors.onPrimaryContainer,
+                  trend: null,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -641,52 +773,99 @@ class _AnimatedCounterState extends State<_AnimatedCounter>
   }
 }
 
-/// Individual summary stat item (icon + animated value + label)
-class _SummaryStatItem extends StatelessWidget {
-  const _SummaryStatItem({
+/// Hybrid stat item - compact horizontal layout with optional trend indicator
+class _HybridStatItem extends StatelessWidget {
+  const _HybridStatItem({
     required this.icon,
     required this.label,
     required this.value,
+    required this.suffix,
     required this.color,
+    this.trend,
+    this.trendColor,
   });
 
   final IconData icon;
   final String label;
   final String value;
+  final String suffix;
   final Color color;
+  final String? trend; // 'up', 'down', or null
+  final Color? trendColor;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SemanticIcon(
-          icon: icon,
-          semanticLabel: '$label: $value',
-          size: AppIconSize.large,
-          color: color,
-        ),
-        const SizedBox(height: 8),
-        // Animated counter instead of static text
-        _AnimatedCounter(
-          value: value,
-          style: context.textTheme.headlineSmall?.copyWith(
-            color: color,
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surface.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header: Icon + Label
+          Row(
+            children: [
+              SemanticIcon(
+                icon: icon,
+                semanticLabel: label,
+                size: AppIconSize.small,
+                color: color.withValues(alpha: 0.7),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: color.withValues(alpha: 0.7),
+                    fontSize: 11,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              // Trend indicator (if provided)
+              if (trend != null && trendColor != null)
+                SemanticIcon(
+                  icon: trend == 'up' ? AppIcons.trendingUp : AppIcons.trendingDown,
+                  semanticLabel: trend == 'up' ? 'Aumentato' : 'Diminuito',
+                  size: AppIconSize.tiny,
+                  color: trendColor!,
+                ),
+            ],
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: color.withValues(alpha: 0.8),
-            fontSize: 11,
+          const SizedBox(height: 8),
+
+          // Value + Suffix
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                value,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  suffix,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: color.withValues(alpha: 0.6),
+                    fontSize: 12,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
