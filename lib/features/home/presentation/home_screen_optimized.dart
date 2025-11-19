@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/workout_anal
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_workout_banner.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/smart_workout_cta.dart';
-import 'package:gymbro_flutter_new/features/streak/presentation/widgets/streak_counter_widget.dart';
+import 'package:gymbro_flutter_new/features/streak/presentation/widgets/consistency_score_widget.dart';
 // import 'package:gymbro_flutter_new/features/home/presentation/widgets/progress_dashboard.dart'; // Widget rimosso
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/secondary_actions.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/dynamic_greeting.dart';
@@ -111,7 +111,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
               color: Theme.of(context).colorScheme.primary,
               size: AppIconSize.large,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 l10n.communityComingSoonTitle,
@@ -132,7 +132,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -146,7 +146,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                     color: Theme.of(context).colorScheme.primary,
                     size: AppIconSize.small,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '🚀 ${l10n.comingSoon}',
@@ -235,8 +235,8 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   const SizedBox(height: 24),
                 ],
 
-                // 🔥 STREAK COUNTER (P0 Feature - +35-40% retention evidence)
-                const StreakCounterWidget(),
+                // 📊 CONSISTENCY SCORE (Replaces streak counter to promote healthy training habits)
+                const ConsistencyScoreWidget(),
                 const SizedBox(height: 24),
 
                 // DISABLED: Stale profile banner
@@ -256,13 +256,13 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
                 // AI Coach Insights Card
                 AICoachCard(key: aiCoachCardKey),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 const SizedBox(height: 20),
 
                 // Primary CTA - Smart workout starter
                 SmartWorkoutCTA(key: smartWorkoutCardKey),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Routine Center Card (Flexible Multi-Period Routines)
                 Material(
@@ -305,7 +305,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               size: 24,
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,7 +317,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   l10n.routineCenterDescription,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -361,7 +361,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                             AppIcons.people,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +373,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   l10n.comingSoon,
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -401,7 +401,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                   analyticsKey: analyticsCardKey,
                   historyKey: historyCardKey,
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Admin panel (only visible for admin users)
                 Consumer(
@@ -429,7 +429,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                 color: Theme.of(context).colorScheme.onErrorContainer,
                                 size: 20,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 context.l10n.adminPanel,
                                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -554,7 +554,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       );
                     }
                   },
-                  child: Icon(AppIcons.refresh, size: AppIconSize.small),
+                  child: const Icon(AppIcons.refresh, size: AppIconSize.small),
                 ),
                 SizedBox(height: 8),
                 // Regular Quick Start

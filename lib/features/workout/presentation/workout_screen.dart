@@ -284,12 +284,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               title: Text(workoutName ?? context.l10n.myWorkouts),
               leading: isActive
                 ? IconButton(
-                    icon: Icon(AppIcons.home),
+                    icon: const Icon(AppIcons.home),
                     onPressed: () => _handleBackNavigation(context, ref),
                     tooltip: context.l10n.backToHomeKeepWorkoutActive,
                   )
                 : IconButton(
-                    icon: Icon(AppIcons.back),
+                    icon: const Icon(AppIcons.back),
                     onPressed: () => context.goNamed('home'),
                     tooltip: context.l10n.backToHome,
                   ),
@@ -315,7 +315,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   IconButton(
                     key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
                     onPressed: () => _completeWorkout(context, ref),
-                    icon: Icon(AppIcons.checkCircle),
+                    icon: const Icon(AppIcons.checkCircle),
                     tooltip: context.l10n.completeWorkout,
                   ),
                 IconButton(
@@ -486,11 +486,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(AppIcons.error, size: 64, color: context.errorColor),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text('Error: $e', style: context.textTheme.bodySmall),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => context.goNamed('home'),
                 child: Text(context.l10n.goHome),
@@ -519,11 +519,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               labelStyle: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               tabs: [
                 Tab(
-                  icon: Icon(AppIcons.person),
+                  icon: const Icon(AppIcons.person),
                   text: context.l10n.yourTemplates,
                 ),
                 Tab(
-                  icon: Icon(AppIcons.stars),
+                  icon: const Icon(AppIcons.stars),
                   text: context.l10n.predefinedWorkouts,
                 ),
               ],
@@ -597,14 +597,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               size: 64,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               isCustomTab ? context.l10n.noCustomTemplates : context.l10n.noPredefinedWorkouts,
               style: context.textTheme.titleMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.5),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               isCustomTab ? context.l10n.createFirstTemplate : context.l10n.predefinedWorkoutsComingSoon,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -612,10 +612,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               ),
             ),
             if (isCustomTab) ...[
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: () => _showCreateTemplateModal(context),
-                icon: Icon(AppIcons.add),
+                icon: const Icon(AppIcons.add),
                 label: Text(context.l10n.createNewTemplate),
               ),
             ],
@@ -715,7 +715,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                               size: 14,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               context.l10n.exercisesCount(template.exercises.length),
                               style: theme.textTheme.bodySmall,
@@ -738,7 +738,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                             ),
                           ],
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         // Custom badge
                         if (template.isCustom)
                           Container(
@@ -939,7 +939,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               ),
             ],
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -957,7 +957,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           color: context.colors.secondary,
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.cardio,
           title: context.l10n.lowerBody,
@@ -965,7 +965,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           color: context.colors.tertiary,
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.timer,
           title: context.l10n.hiitTraining,
@@ -1221,7 +1221,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             Expanded(
               child: Text(workout.name),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
@@ -1236,7 +1236,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     size: 14,
                     color: context.colors.primary,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     'Suggerito',
                     style: context.textTheme.labelSmall?.copyWith(
@@ -1724,14 +1724,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             size: 64,
             color: context.colors.onSurface.withValues(alpha: 0.3),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -2101,7 +2101,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Container(
             width: 40,
             height: 4,
@@ -2110,7 +2110,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           if (ref.watch(currentWorkoutProvider) != null) ...[
             ListTile(
               leading: Icon(AppIcons.saveAlt),
@@ -2202,7 +2202,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const LoadingIndicator(),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(context.l10n.generatingPdf),
                 ],
               ),
@@ -2270,7 +2270,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const LoadingIndicator(),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(context.l10n.preparingPrint),
                 ],
               ),
@@ -2313,7 +2313,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(context.l10n.deleteTemplateQuestion(template.name)),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Questa azione non può essere annullata.',
               style: context.textTheme.bodySmall?.copyWith(

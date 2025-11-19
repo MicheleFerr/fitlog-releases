@@ -103,24 +103,6 @@ class AnalyticsScreen extends ConsumerWidget {
                     ),
                   ),
                   PopupMenuItem(
-                    value: ExerciseViewMode.detailed,
-                    child: Row(
-                      children: [
-                        Icon(
-                          currentMode == ExerciseViewMode.detailed
-                              ? AppIcons.checkCircle
-                              : AppIcons.radioButtonUnchecked,
-                          size: AppIconSize.small,
-                          color: currentMode == ExerciseViewMode.detailed
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(context.l10n.viewModeDetailed),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
                     value: ExerciseViewMode.byMuscleGroup,
                     child: Row(
                       children: [
@@ -153,24 +135,6 @@ class AnalyticsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(width: 12),
                         Text(context.l10n.viewModeByDate),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: ExerciseViewMode.byMajorWorkouts,
-                    child: Row(
-                      children: [
-                        Icon(
-                          currentMode == ExerciseViewMode.byMajorWorkouts
-                              ? AppIcons.checkCircle
-                              : AppIcons.radioButtonUnchecked,
-                          size: AppIconSize.small,
-                          color: currentMode == ExerciseViewMode.byMajorWorkouts
-                              ? context.colors.primary
-                              : context.colors.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(context.l10n.viewModeByMajorWorkouts),
                       ],
                     ),
                   ),
@@ -236,7 +200,7 @@ class _AnalyticsContent extends ConsumerStatefulWidget {
 class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     with SafeSetStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+  final ValueNotifier<String> _searchQuery = ValueNotifier<String>('');
   Timer? _debounce;
   SortBy _sortBy = SortBy.frequency; // Default: sort by frequency
 
@@ -244,15 +208,14 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      safeSetState(() {
-        _searchQuery = query;
-      });
+      _searchQuery.value = query; // ValueNotifier update (no setState needed)
     });
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
+    _searchQuery.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -276,12 +239,12 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     };
   }
 
-  List<ExerciseHistory> get _filteredHistories {
+  List<ExerciseHistory> _getFilteredHistories(String searchQuery) {
     // Step 1: Filter by search query
-    final filtered = _searchQuery.isEmpty
+    final filtered = searchQuery.isEmpty
         ? widget.exerciseHistories
         : widget.exerciseHistories.where((history) {
-            final query = _searchQuery.toLowerCase();
+            final query = searchQuery.toLowerCase();
             final exerciseName = history.exerciseName.toLowerCase();
             final muscleGroup = history.muscleGroup.toLowerCase();
             return exerciseName.contains(query) || muscleGroup.contains(query);
@@ -316,10 +279,10 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   }
 
   /// Group exercises by muscle group
-  Map<String, List<ExerciseHistory>> get _groupedHistories {
+  Map<String, List<ExerciseHistory>> _getGroupedHistories(List<ExerciseHistory> histories) {
     final grouped = <String, List<ExerciseHistory>>{};
 
-    for (final history in _filteredHistories) {
+    for (final history in histories) {
       final muscleGroup = history.muscleGroup;
       if (!grouped.containsKey(muscleGroup)) {
         grouped[muscleGroup] = [];
@@ -338,9 +301,12 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
       return const _EmptyStateView();
     }
 
-    final filteredHistories = _filteredHistories;
+    return ValueListenableBuilder<String>(
+      valueListenable: _searchQuery,
+      builder: (context, searchQuery, _) {
+        final filteredHistories = _getFilteredHistories(searchQuery);
 
-    return Column(
+        return Column(
       children: [
         // Quick stats summary card
         _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
@@ -358,7 +324,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                 size: AppIconSize.medium,
                 color: context.colors.onSurfaceVariant,
               ),
-              suffixIcon: _searchQuery.isNotEmpty
+              suffixIcon: searchQuery.isNotEmpty
                   ? IconButton(
                       icon: SemanticIcon.button(
                         icon: AppIcons.close,
@@ -366,10 +332,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                       ),
                       onPressed: () {
                         _debounce?.cancel();
-                        safeSetState(() {
-                          _searchController.clear();
-                          _searchQuery = '';
-                        });
+                        _searchController.clear();
+                        _searchQuery.value = ''; // ValueNotifier update
                       },
                     )
                   : null,
@@ -425,18 +389,33 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                     // Wait for new data to be available
                     await ref.read(exerciseHistoryStreamProvider(widget.userId).future);
                   },
-                  child: _buildAccordionList(),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final viewMode = ref.watch(exerciseViewModeProvider);
+
+                      switch (viewMode) {
+                        case ExerciseViewMode.compact:
+                          return _buildFlatList(filteredHistories);
+                        case ExerciseViewMode.byMuscleGroup:
+                          return _buildAccordionList(filteredHistories);
+                        case ExerciseViewMode.byDate:
+                          return _buildTimelineList(filteredHistories);
+                      }
+                    },
+                  ),
                 ),
         ),
       ],
-    );
+    ); // Close Column
+      }, // Close ValueListenableBuilder builder
+    ); // Close ValueListenableBuilder
   }
 
   /// Build accordion list of exercises grouped by muscle group
   ///
   /// Uses MuscleGroupExpansionTile for expand/collapse functionality
-  Widget _buildAccordionList() {
-    final grouped = _groupedHistories;
+  Widget _buildAccordionList(List<ExerciseHistory> filteredHistories) {
+    final grouped = _getGroupedHistories(filteredHistories);
 
     if (grouped.isEmpty) {
       return const SizedBox.shrink();
@@ -450,6 +429,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
         final exercises = grouped[muscleGroup]!;
 
         return Padding(
+          key: ValueKey(muscleGroup),
           padding: const EdgeInsets.only(bottom: 8),
           child: MuscleGroupExpansionTile(
             muscleGroup: muscleGroup,
@@ -461,6 +441,132 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
         );
       },
     );
+  }
+
+  /// Build flat list of exercises (compact view)
+  ///
+  /// Shows exercises in a simple list without grouping
+  Widget _buildFlatList(List<ExerciseHistory> filteredHistories) {
+    final histories = filteredHistories;
+
+    if (histories.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: histories.length,
+      itemBuilder: (context, index) {
+        final history = histories[index];
+        return Padding(
+          key: ValueKey(history.exerciseName),
+          padding: const EdgeInsets.only(bottom: 8),
+          child: _ExerciseHistoryCard(history: history),
+        );
+      },
+    );
+  }
+
+  /// Build timeline list of exercises grouped by date periods
+  ///
+  /// Groups exercises by date periods (Today, Yesterday, This Week, This Month, Older)
+  Widget _buildTimelineList(List<ExerciseHistory> filteredHistories) {
+    final grouped = _groupByDatePeriod(filteredHistories);
+
+    if (grouped.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: grouped.length,
+      itemBuilder: (context, index) {
+        final entry = grouped.entries.elementAt(index);
+        final periodLabel = entry.key;
+        final exercises = entry.value;
+
+        return Padding(
+          key: ValueKey(periodLabel),
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ExpansionTile(
+              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              initiallyExpanded: index == 0, // Expand first section (today/most recent)
+              leading: SemanticIcon(
+                icon: AppIcons.calendar,
+                semanticLabel: periodLabel,
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
+              title: Text(
+                periodLabel,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+              subtitle: Text(
+                '${exercises.length} ${exercises.length == 1 ? context.l10n.exercise : context.l10n.exercises}',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+              children: exercises
+                  .map((history) => _ExerciseHistoryCard(history: history))
+                  .toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Group exercises by date period
+  Map<String, List<ExerciseHistory>> _groupByDatePeriod(
+      List<ExerciseHistory> histories) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final weekAgo = today.subtract(const Duration(days: 7));
+    final monthAgo = today.subtract(const Duration(days: 30));
+
+    final grouped = <String, List<ExerciseHistory>>{
+      context.l10n.today: [],
+      context.l10n.yesterday: [],
+      context.l10n.thisWeek: [],
+      context.l10n.thisMonth: [],
+      context.l10n.older: [],
+    };
+
+    for (final history in histories) {
+      // Get most recent session date
+      if (history.sessionsSortedByDate.isEmpty) continue;
+      final lastSessionDate = history.sessionsSortedByDate.first.date;
+      final sessionDay =
+          DateTime(lastSessionDate.year, lastSessionDate.month, lastSessionDate.day);
+
+      if (sessionDay == today) {
+        grouped[context.l10n.today]!.add(history);
+      } else if (sessionDay == yesterday) {
+        grouped[context.l10n.yesterday]!.add(history);
+      } else if (sessionDay.isAfter(weekAgo)) {
+        grouped[context.l10n.thisWeek]!.add(history);
+      } else if (sessionDay.isAfter(monthAgo)) {
+        grouped[context.l10n.thisMonth]!.add(history);
+      } else {
+        grouped[context.l10n.older]!.add(history);
+      }
+    }
+
+    // Remove empty sections
+    grouped.removeWhere((key, value) => value.isEmpty);
+
+    return grouped;
   }
 }
 
