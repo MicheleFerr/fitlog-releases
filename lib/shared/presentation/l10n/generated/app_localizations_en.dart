@@ -10077,7 +10077,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewModeList => 'List View';
 
   @override
-  String get viewModeCompact => 'Compact View';
+  String get viewModeCompact => 'Compact';
 
   @override
   String get viewModeCalendar => 'Calendar View';
@@ -14089,6 +14089,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noDataAvailable => 'No data available';
 
   @override
+  String get selectAtLeastOneMetric => 'Select at least one metric';
+
+  @override
+  String get errorNormalizingData => 'Error normalizing data';
+
+  @override
   String get chooseYourPlan => 'Choose Your Plan';
 
   @override
@@ -17274,4 +17280,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yesReportToAdmin => 'Yes, Report';
+
+  @override
+  String get viewModeDetailed => 'Detailed';
+
+  @override
+  String get viewModeByMuscleGroup => 'By Muscle Group';
+
+  @override
+  String get viewModeByDate => 'By Date';
+
+  @override
+  String get viewModeByMajorWorkouts => 'Major Workouts';
 }

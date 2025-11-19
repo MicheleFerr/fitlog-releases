@@ -21021,5 +21021,29 @@
   "yesReportToAdmin": "Yes, Report",
   "@yesReportToAdmin": {
     "description": "Button to confirm reporting to admin"
+  },
+  "viewModeCompact": "Compact",
+  "@viewModeCompact": {
+    "description": "Compact view mode (minimal info)"
+  },
+  "viewModeDetailed": "Detailed",
+  "@viewModeDetailed": {
+    "description": "Detailed view mode (full info)"
+  },
+  "viewModeByMuscleGroup": "By Muscle Group",
+  "@viewModeByMuscleGroup": {
+    "description": "View mode grouped by muscle group"
+  },
+  "viewModeByDate": "By Date",
+  "@viewModeByDate": {
+    "description": "View mode organized chronologically"
+  },
+  "viewModeByMajorWorkouts": "Major Workouts",
+  "@viewModeByMajorWorkouts": {
+    "description": "View mode showing only major/significant workouts"
+  },
+  "viewMode": "View Mode",
+  "@viewMode": {
+    "description": "Label for view mode selector"
   }
 }

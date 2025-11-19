@@ -10184,7 +10184,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get viewModeList => 'Vista Lista';
 
   @override
-  String get viewModeCompact => 'Vista Compatta';
+  String get viewModeCompact => 'Compatta';
 
   @override
   String get viewModeCalendar => 'Vista Calendario';
@@ -14241,6 +14241,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noDataAvailable => 'No data available';
 
   @override
+  String get selectAtLeastOneMetric => 'Seleziona almeno una metrica';
+
+  @override
+  String get errorNormalizingData =>
+      'Errore durante la normalizzazione dei dati';
+
+  @override
   String get chooseYourPlan => 'Choose Your Plan';
 
   @override
@@ -17446,4 +17453,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get yesReportToAdmin => 'Sì, Segnala';
+
+  @override
+  String get viewModeDetailed => 'Dettagliata';
+
+  @override
+  String get viewModeByMuscleGroup => 'Per Gruppo Muscolare';
+
+  @override
+  String get viewModeByDate => 'Per Data';
+
+  @override
+  String get viewModeByMajorWorkouts => 'Allenamenti Principali';
 }

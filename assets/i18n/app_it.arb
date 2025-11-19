@@ -10400,5 +10400,29 @@
   "yesReportToAdmin": "Sì, Segnala",
   "@yesReportToAdmin": {
     "description": "Pulsante per confermare la segnalazione all'admin"
+  },
+  "viewModeCompact": "Compatta",
+  "@viewModeCompact": {
+    "description": "Modalità vista compatta (info minime)"
+  },
+  "viewModeDetailed": "Dettagliata",
+  "@viewModeDetailed": {
+    "description": "Modalità vista dettagliata (info complete)"
+  },
+  "viewModeByMuscleGroup": "Per Gruppo Muscolare",
+  "@viewModeByMuscleGroup": {
+    "description": "Modalità vista raggruppata per gruppo muscolare"
+  },
+  "viewModeByDate": "Per Data",
+  "@viewModeByDate": {
+    "description": "Modalità vista organizzata cronologicamente"
+  },
+  "viewModeByMajorWorkouts": "Allenamenti Principali",
+  "@viewModeByMajorWorkouts": {
+    "description": "Modalità vista che mostra solo allenamenti principali/significativi"
+  },
+  "viewMode": "Modalità Vista",
+  "@viewMode": {
+    "description": "Etichetta per selettore modalità vista"
   }
 }

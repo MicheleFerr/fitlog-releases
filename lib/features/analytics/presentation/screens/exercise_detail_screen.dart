@@ -72,6 +72,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_view_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_badge_header.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_volume_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_history_tab.dart';
@@ -352,13 +354,114 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
               },
               tooltip: context.l10n.fullscreen,
             ),
-            IconButton(
-              icon: SemanticIcon.button(
-                icon: AppIcons.refresh,
-                semanticLabel: context.l10n.refresh,
-              ),
-              onPressed: widget.onRefresh,
-              tooltip: context.l10n.refresh,
+            // View mode selector (replaces refresh button)
+            Consumer(
+              builder: (context, ref, child) {
+                final currentMode = ref.watch(exerciseViewModeProvider);
+
+                return PopupMenuButton<ExerciseViewMode>(
+                  icon: SemanticIcon.button(
+                    icon: AppIcons.viewList,
+                    semanticLabel: context.l10n.viewMode,
+                  ),
+                  tooltip: context.l10n.viewMode,
+                  onSelected: (ExerciseViewMode mode) {
+                    ref.read(exerciseViewModeProvider.notifier).state = mode;
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: ExerciseViewMode.compact,
+                      child: Row(
+                        children: [
+                          Icon(
+                            currentMode == ExerciseViewMode.compact
+                                ? AppIcons.checkCircle
+                                : AppIcons.radioButtonUnchecked,
+                            size: AppIconSize.small,
+                            color: currentMode == ExerciseViewMode.compact
+                                ? context.colors.primary
+                                : context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(context.l10n.viewModeCompact),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: ExerciseViewMode.detailed,
+                      child: Row(
+                        children: [
+                          Icon(
+                            currentMode == ExerciseViewMode.detailed
+                                ? AppIcons.checkCircle
+                                : AppIcons.radioButtonUnchecked,
+                            size: AppIconSize.small,
+                            color: currentMode == ExerciseViewMode.detailed
+                                ? context.colors.primary
+                                : context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(context.l10n.viewModeDetailed),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: ExerciseViewMode.byMuscleGroup,
+                      child: Row(
+                        children: [
+                          Icon(
+                            currentMode == ExerciseViewMode.byMuscleGroup
+                                ? AppIcons.checkCircle
+                                : AppIcons.radioButtonUnchecked,
+                            size: AppIconSize.small,
+                            color: currentMode == ExerciseViewMode.byMuscleGroup
+                                ? context.colors.primary
+                                : context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(context.l10n.viewModeByMuscleGroup),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: ExerciseViewMode.byDate,
+                      child: Row(
+                        children: [
+                          Icon(
+                            currentMode == ExerciseViewMode.byDate
+                                ? AppIcons.checkCircle
+                                : AppIcons.radioButtonUnchecked,
+                            size: AppIconSize.small,
+                            color: currentMode == ExerciseViewMode.byDate
+                                ? context.colors.primary
+                                : context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(context.l10n.viewModeByDate),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: ExerciseViewMode.byMajorWorkouts,
+                      child: Row(
+                        children: [
+                          Icon(
+                            currentMode == ExerciseViewMode.byMajorWorkouts
+                                ? AppIcons.checkCircle
+                                : AppIcons.radioButtonUnchecked,
+                            size: AppIconSize.small,
+                            color: currentMode == ExerciseViewMode.byMajorWorkouts
+                                ? context.colors.primary
+                                : context.colors.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(context.l10n.viewModeByMajorWorkouts),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
           flexibleSpace: LayoutBuilder(
@@ -397,23 +500,34 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
                       ),
                     ),
                     child: SafeArea(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 60), // Space for title + toolbar
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final viewMode = ref.watch(exerciseViewModeProvider);
+                          final shouldShowPrBadges =
+                              !viewMode.shouldHidePrBadges;
+                          final shouldShowChart = !viewMode.shouldHideChart;
 
-                          // PR Badge Header - Personal records display (always visible)
-                          PrBadgeHeader(records: widget.records),
+                          return Column(
+                            children: [
+                              const SizedBox(
+                                  height: 60), // Space for title + toolbar
 
-                          // Volume Progression Chart - Fades out with parallax on collapse
-                          // Chart has intrinsic height of 200px
-                          Transform.translate(
-                            offset: Offset(0, parallaxOffset),
-                            child: Opacity(
-                              opacity: chartOpacity,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  ExerciseVolumeChart(history: widget.history),
+                              // PR Badge Header - Personal records display (hidden in compact mode)
+                              if (shouldShowPrBadges)
+                                PrBadgeHeader(records: widget.records),
+
+                              // Volume Progression Chart - Fades out with parallax on collapse (hidden in compact mode)
+                              // Chart has intrinsic height of 200px
+                              if (shouldShowChart)
+                                Transform.translate(
+                                  offset: Offset(0, parallaxOffset),
+                                  child: Opacity(
+                                    opacity: chartOpacity,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        ExerciseVolumeChart(
+                                            history: widget.history),
 
                                   // Collapse/Expand indicator (chevron)
                                   // Fades in when chart is visible
@@ -473,11 +587,13 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
                                         ),
                                       ),
                                     ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),

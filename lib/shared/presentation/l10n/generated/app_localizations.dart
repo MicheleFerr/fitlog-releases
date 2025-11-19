@@ -17874,7 +17874,7 @@ abstract class AppLocalizations {
   /// **'History View Settings'**
   String get historyViewSettings;
 
-  /// Label for view mode setting
+  /// Label for view mode selector
   ///
   /// In en, this message translates to:
   /// **'View Mode'**
@@ -17886,10 +17886,10 @@ abstract class AppLocalizations {
   /// **'List View'**
   String get viewModeList;
 
-  /// Compact view mode option
+  /// Compact view mode (minimal info)
   ///
   /// In en, this message translates to:
-  /// **'Compact View'**
+  /// **'Compact'**
   String get viewModeCompact;
 
   /// Calendar view mode option
@@ -30959,6 +30959,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes, Report'**
   String get yesReportToAdmin;
+
+  /// Detailed view mode (full info)
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed'**
+  String get viewModeDetailed;
+
+  /// View mode grouped by muscle group
+  ///
+  /// In en, this message translates to:
+  /// **'By Muscle Group'**
+  String get viewModeByMuscleGroup;
+
+  /// View mode organized chronologically
+  ///
+  /// In en, this message translates to:
+  /// **'By Date'**
+  String get viewModeByDate;
+
+  /// View mode showing only major/significant workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Major Workouts'**
+  String get viewModeByMajorWorkouts;
 }
 
 class _AppLocalizationsDelegate
