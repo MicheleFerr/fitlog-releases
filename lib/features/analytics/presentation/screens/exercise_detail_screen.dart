@@ -103,7 +103,7 @@ class ExerciseDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin {
   /// Tab controller for History/Records tabs
   late final TabController _tabController;
 
@@ -114,85 +114,18 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   /// - Scroll up > 120px (from collapsed) → auto-expand
   late final ScrollController _scrollController;
 
-  /// Track if landscape navigation is in progress
-  ///
-  /// Prevents duplicate navigation when device is rotated to landscape
-  bool _isNavigatingToLandscape = false;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _scrollController = ScrollController();
-
-    // Register orientation observer for auto-rotation trigger
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
-
-    // Unregister orientation observer
-    WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-
-    // Auto-navigate to landscape screen when device is rotated to landscape
-    if (!mounted) return;
-
-    final orientation = MediaQuery.of(context).orientation;
-
-    // Only navigate if:
-    // 1. Device is in landscape orientation
-    // 2. Not already navigating (prevents duplicate navigation)
-    if (orientation == Orientation.landscape && !_isNavigatingToLandscape) {
-      _isNavigatingToLandscape = true;
-
-      // Get current history data for landscape screen
-      final userId = ref.read(currentUserIdProvider);
-      if (userId != null) {
-        final historyAsync = ref.read(exerciseHistoryStreamProvider(userId));
-
-        historyAsync.whenData((allHistories) {
-          try {
-            final history = allHistories.firstWhere(
-              (h) => h.exerciseName == widget.exerciseName,
-            );
-
-            // Navigate to landscape graph screen
-            if (mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => LandscapeGraphScreen(
-                    exerciseName: widget.exerciseName,
-                    history: history,
-                  ),
-                ),
-              ).then((_) {
-                // Reset flag when returning from landscape screen
-                if (mounted) {
-                  _isNavigatingToLandscape = false;
-                }
-              });
-            }
-          } catch (_) {
-            // Exercise not found, reset flag
-            _isNavigatingToLandscape = false;
-          }
-        });
-      } else {
-        // No user, reset flag
-        _isNavigatingToLandscape = false;
-      }
-    }
   }
 
   @override
