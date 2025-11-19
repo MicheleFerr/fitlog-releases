@@ -68,7 +68,8 @@ class LandscapeGraphScreen extends ConsumerStatefulWidget {
       _LandscapeGraphScreenState();
 }
 
-class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
+class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -78,10 +79,16 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+
+    // Register orientation observer for auto-rotation back to portrait
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    // Unregister orientation observer
+    WidgetsBinding.instance.removeObserver(this);
+
     // Restore portrait orientation on screen dispose
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -89,6 +96,26 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
     ]);
 
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+
+    // Auto-pop when device is rotated back to portrait
+    if (!mounted) return;
+
+    final orientation = MediaQuery.of(context).orientation;
+
+    // If device rotated to portrait, pop back to exercise detail screen
+    if (orientation == Orientation.portrait) {
+      // Small delay to avoid conflict with orientation lock
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      });
+    }
   }
 
   @override
