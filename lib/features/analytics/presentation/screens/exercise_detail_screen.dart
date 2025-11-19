@@ -302,14 +302,20 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
           pinned: true,
           title: AnimatedExerciseTitle(exerciseName: widget.exerciseName),
           leading: IconButton(
-            icon: Icon(AppIcons.back),
+            icon: SemanticIcon.button(
+              icon: AppIcons.back,
+              semanticLabel: context.l10n.back,
+            ),
             onPressed: () => context.pop(),
             tooltip: context.l10n.back,
           ),
           actions: [
             // Fullscreen landscape graph button
             IconButton(
-              icon: Icon(AppIcons.zoomOutMap),
+              icon: SemanticIcon.button(
+                icon: AppIcons.zoomOutMap,
+                semanticLabel: context.l10n.fullscreen,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -324,7 +330,10 @@ class _ExerciseDetailContentState extends State<_ExerciseDetailContent>
               tooltip: context.l10n.fullscreen,
             ),
             IconButton(
-              icon: Icon(AppIcons.refresh),
+              icon: SemanticIcon.button(
+                icon: AppIcons.refresh,
+                semanticLabel: context.l10n.refresh,
+              ),
               onPressed: widget.onRefresh,
               tooltip: context.l10n.refresh,
             ),

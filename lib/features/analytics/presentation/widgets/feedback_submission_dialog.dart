@@ -39,6 +39,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// Dialog for submitting correction feedback to admin
@@ -122,8 +123,9 @@ class _FeedbackSubmissionDialogState
       ),
       title: Row(
         children: [
-          Icon(
-            AppIcons.send,
+          SemanticIcon(
+            icon: AppIcons.send,
+            semanticLabel: context.l10n.reportToAdmin,
             color: colors.primary,
             size: 28,
           ),
@@ -197,8 +199,9 @@ class _FeedbackSubmissionDialogState
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              AppIcons.close,
+                            SemanticIcon(
+                              icon: AppIcons.close,
+                              semanticLabel: 'Incorrect muscle group',
                               size: 14,
                               color: colors.error,
                             ),
@@ -222,8 +225,9 @@ class _FeedbackSubmissionDialogState
                     // Arrow
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Icon(
-                        AppIcons.chevronRight,
+                      child: SemanticIcon(
+                        icon: AppIcons.chevronRight,
+                        semanticLabel: 'Changes to',
                         size: 16,
                         color: colors.onSurfaceVariant,
                       ),
@@ -243,8 +247,9 @@ class _FeedbackSubmissionDialogState
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              AppIcons.check,
+                            SemanticIcon(
+                              icon: AppIcons.check,
+                              semanticLabel: 'Correct muscle group',
                               size: 14,
                               color: colors.primary,
                             ),
@@ -282,8 +287,9 @@ class _FeedbackSubmissionDialogState
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  AppIcons.info,
+                SemanticIcon(
+                  icon: AppIcons.info,
+                  semanticLabel: context.l10n.adminWillReviewNotification,
                   size: 20,
                   color: colors.tertiary,
                 ),

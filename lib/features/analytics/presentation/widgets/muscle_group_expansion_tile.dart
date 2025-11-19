@@ -51,6 +51,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/mus
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Accordion tile for displaying a muscle group with expandable exercises
 ///
@@ -104,8 +105,9 @@ class MuscleGroupExpansionTile extends ConsumerWidget {
       ),
 
       // Trailing icon: Arrow down/up based on expansion state
-      trailing: Icon(
-        isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
+      trailing: SemanticIcon(
+        icon: isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
+        semanticLabel: isExpanded ? 'Collapse' : 'Expand',
         size: AppIconSize.medium,
         color: context.colors.primary,
       ),

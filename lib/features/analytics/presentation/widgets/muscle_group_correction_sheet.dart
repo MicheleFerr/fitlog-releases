@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// BottomSheet for correcting exercise muscle groups
@@ -186,8 +187,9 @@ class _MuscleGroupCorrectionSheetState
           // Header
           Row(
             children: [
-              Icon(
-                AppIcons.edit,
+              SemanticIcon(
+                icon: AppIcons.edit,
+                semanticLabel: context.l10n.correctMuscleGroup,
                 color: colors.primary,
                 size: 28,
               ),
@@ -216,11 +218,12 @@ class _MuscleGroupCorrectionSheetState
                 ),
               ),
               IconButton(
-                icon: Icon(
-                  AppIcons.close,
-                  color: colors.onSurfaceVariant,
+                icon: SemanticIcon.button(
+                  icon: AppIcons.close,
+                  semanticLabel: context.l10n.close,
                 ),
                 onPressed: () => Navigator.of(context).pop(),
+                tooltip: context.l10n.close,
               ),
             ],
           ),
@@ -248,8 +251,9 @@ class _MuscleGroupCorrectionSheetState
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.error,
+                SemanticIcon(
+                  icon: AppIcons.error,
+                  semanticLabel: 'Current incorrect muscle group',
                   color: colors.error,
                   size: 20,
                 ),
@@ -299,8 +303,9 @@ class _MuscleGroupCorrectionSheetState
                   ),
                 ),
                 isExpanded: true,
-                icon: Icon(
-                  AppIcons.arrowDropDown,
+                icon: SemanticIcon(
+                  icon: AppIcons.arrowDropDown,
+                  semanticLabel: 'Dropdown',
                   color: colors.onSurfaceVariant,
                 ),
                 dropdownColor: colors.surfaceContainerHighest,
@@ -310,8 +315,9 @@ class _MuscleGroupCorrectionSheetState
                     child: Row(
                       children: [
                         if (group == widget.currentMuscleGroup) ...[
-                          Icon(
-                            AppIcons.error,
+                          SemanticIcon(
+                            icon: AppIcons.error,
+                            semanticLabel: 'Incorrect',
                             size: 16,
                             color: colors.error,
                           ),

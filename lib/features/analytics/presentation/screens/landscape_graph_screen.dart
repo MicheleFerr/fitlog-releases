@@ -44,6 +44,7 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/metri
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/chart_legend.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Landscape fullscreen graph screen
 ///
@@ -101,7 +102,10 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(AppIcons.close),
+          icon: SemanticIcon.button(
+            icon: AppIcons.close,
+            semanticLabel: context.l10n.close,
+          ),
           onPressed: () => context.pop(),
           tooltip: context.l10n.close,
         ),
@@ -132,8 +136,9 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    AppIcons.lineChart,
+                  SemanticIcon(
+                    icon: AppIcons.lineChart,
+                    semanticLabel: 'Multi-metric chart placeholder',
                     size: 64,
                     color: context.colors.primary,
                   ),
