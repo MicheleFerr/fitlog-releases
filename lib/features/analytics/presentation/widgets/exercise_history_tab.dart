@@ -55,6 +55,62 @@ class ExerciseHistoryTab extends StatelessWidget {
   final ExerciseHistory history;
   final ExerciseViewMode viewMode;
 
+  /// Build date-grouped list with month section headers
+  Widget _buildDateGroupedList(
+    BuildContext context,
+    List<ExerciseSession> sessions,
+    ExerciseSession prSession,
+  ) {
+    // Group sessions by month/year
+    final Map<String, List<ExerciseSession>> groupedSessions = {};
+
+    for (final session in sessions) {
+      final monthKey = DateFormat('MMMM yyyy').format(session.date);
+      groupedSessions.putIfAbsent(monthKey, () => []).add(session);
+    }
+
+    // Flatten to list with section headers
+    final items = <dynamic>[];
+    for (final entry in groupedSessions.entries) {
+      items.add(entry.key); // Section header (month)
+      items.addAll(entry.value); // Sessions for that month
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+
+        // Section header (month)
+        if (item is String) {
+          return Padding(
+            padding: EdgeInsets.only(
+              top: index == 0 ? 0 : 16,
+              bottom: 12,
+            ),
+            child: Text(
+              item,
+              style: context.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.colors.primary,
+              ),
+            ),
+          );
+        }
+
+        // Session card
+        final session = item as ExerciseSession;
+        final isNewPR = session.date == prSession.date;
+
+        return _SessionCard(
+          session: session,
+          isNewPR: isNewPR,
+        );
+      },
+    );
+  }
+
   /// Filter sessions based on view mode
   List<ExerciseSession> _filterSessionsByViewMode(
       List<ExerciseSession> sessions) {
@@ -163,6 +219,12 @@ class ExerciseHistoryTab extends StatelessWidget {
           : current,
     );
 
+    // For byDate mode, group sessions by month
+    if (viewMode == ExerciseViewMode.byDate) {
+      return _buildDateGroupedList(context, sessions, prSession);
+    }
+
+    // Default: Simple list without grouping
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: sessions.length,
