@@ -25050,6 +25050,18 @@ abstract class AppLocalizations {
   /// **'No data available'**
   String get noDataAvailable;
 
+  /// Message shown in landscape chart when no metrics are selected
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one metric'**
+  String get selectAtLeastOneMetric;
+
+  /// Error message when metric normalization fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error normalizing data'**
+  String get errorNormalizingData;
+
   /// From quick wins migration - 5 occurrences
   ///
   /// In en, this message translates to:

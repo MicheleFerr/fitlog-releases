@@ -17053,6 +17053,16 @@
     "description": "From quick wins migration - 5 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/workout_frequency_chart.dart, lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
   },
+  "selectAtLeastOneMetric": "Select at least one metric",
+  "@selectAtLeastOneMetric": {
+    "description": "Message shown in landscape chart when no metrics are selected",
+    "context": "Found in: lib/features/analytics/presentation/widgets/landscape_chart_widget.dart"
+  },
+  "errorNormalizingData": "Error normalizing data",
+  "@errorNormalizingData": {
+    "description": "Error message when metric normalization fails",
+    "context": "Found in: lib/features/analytics/presentation/widgets/landscape_chart_widget.dart"
+  },
   "chooseYourPlan": "Choose Your Plan",
   "@chooseYourPlan": {
     "description": "From quick wins migration - 5 occurrences",

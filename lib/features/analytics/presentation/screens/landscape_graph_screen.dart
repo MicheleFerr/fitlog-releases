@@ -42,6 +42,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/landscape_metrics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/metric_chip.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/chart_legend.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/landscape_chart_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -130,34 +131,18 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
             ),
           ),
 
-          // Chart placeholder (will be replaced with actual chart in Task 5.6)
+          // Multi-metric chart with 0-100 normalization
           Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SemanticIcon(
-                    icon: AppIcons.lineChart,
-                    semanticLabel: 'Multi-metric chart placeholder',
-                    size: 64,
-                    color: context.colors.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Multi-metric chart',
-                    style: context.textTheme.headlineSmall?.copyWith(
-                      color: context.colors.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Chart will be rendered here',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
+            child: Consumer(
+              builder: (context, ref, child) {
+                // Watch selected metrics from provider
+                final selectedMetrics = ref.watch(landscapeMetricsProvider);
+
+                return LandscapeChartWidget(
+                  history: widget.history,
+                  selectedMetrics: selectedMetrics,
+                );
+              },
             ),
           ),
 
