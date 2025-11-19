@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_view_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
@@ -66,6 +68,115 @@ class AnalyticsScreen extends ConsumerWidget {
             ),
             onPressed: () => showMigrationDialog(context, ref),
             tooltip: context.l10n.migrateWorkoutHistory,
+          ),
+          // View mode selector
+          Consumer(
+            builder: (context, ref, child) {
+              final currentMode = ref.watch(exerciseViewModeProvider);
+
+              return PopupMenuButton<ExerciseViewMode>(
+                icon: SemanticIcon.button(
+                  icon: AppIcons.viewList,
+                  semanticLabel: context.l10n.viewMode,
+                ),
+                tooltip: context.l10n.viewMode,
+                onSelected: (ExerciseViewMode mode) {
+                  ref.read(exerciseViewModeProvider.notifier).state = mode;
+                },
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    value: ExerciseViewMode.compact,
+                    child: Row(
+                      children: [
+                        Icon(
+                          currentMode == ExerciseViewMode.compact
+                              ? AppIcons.checkCircle
+                              : AppIcons.radioButtonUnchecked,
+                          size: AppIconSize.small,
+                          color: currentMode == ExerciseViewMode.compact
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(context.l10n.viewModeCompact),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: ExerciseViewMode.detailed,
+                    child: Row(
+                      children: [
+                        Icon(
+                          currentMode == ExerciseViewMode.detailed
+                              ? AppIcons.checkCircle
+                              : AppIcons.radioButtonUnchecked,
+                          size: AppIconSize.small,
+                          color: currentMode == ExerciseViewMode.detailed
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(context.l10n.viewModeDetailed),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: ExerciseViewMode.byMuscleGroup,
+                    child: Row(
+                      children: [
+                        Icon(
+                          currentMode == ExerciseViewMode.byMuscleGroup
+                              ? AppIcons.checkCircle
+                              : AppIcons.radioButtonUnchecked,
+                          size: AppIconSize.small,
+                          color: currentMode == ExerciseViewMode.byMuscleGroup
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(context.l10n.viewModeByMuscleGroup),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: ExerciseViewMode.byDate,
+                    child: Row(
+                      children: [
+                        Icon(
+                          currentMode == ExerciseViewMode.byDate
+                              ? AppIcons.checkCircle
+                              : AppIcons.radioButtonUnchecked,
+                          size: AppIconSize.small,
+                          color: currentMode == ExerciseViewMode.byDate
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(context.l10n.viewModeByDate),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: ExerciseViewMode.byMajorWorkouts,
+                    child: Row(
+                      children: [
+                        Icon(
+                          currentMode == ExerciseViewMode.byMajorWorkouts
+                              ? AppIcons.checkCircle
+                              : AppIcons.radioButtonUnchecked,
+                          size: AppIconSize.small,
+                          color: currentMode == ExerciseViewMode.byMajorWorkouts
+                              ? context.colors.primary
+                              : context.colors.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(context.l10n.viewModeByMajorWorkouts),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           IconButton(
             icon: SemanticIcon.button(
