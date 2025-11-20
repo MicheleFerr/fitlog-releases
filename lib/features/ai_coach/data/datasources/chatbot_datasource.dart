@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/analyze
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/intent_detector.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/response_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/simple_entity_extractor.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hybrid_exercise_repository.dart';
@@ -63,6 +64,7 @@ class ChatBotDatasource {
   final HybridExerciseRepository exerciseRepository;
   final SimpleEntityExtractor entityExtractor;
   final AnalyticsRepository analyticsRepository;
+  final AICoachAnalytics aiCoachAnalytics;
   final Uuid _uuid = const Uuid();
 
   ChatBotDatasource({
@@ -73,6 +75,7 @@ class ChatBotDatasource {
     required this.exerciseRepository,
     required this.entityExtractor,
     required this.analyticsRepository,
+    required this.aiCoachAnalytics,
   });
 
   /// Send message and stream bot response
@@ -201,6 +204,14 @@ class ChatBotDatasource {
       // TODO: Pass real workouts from _fetchAnalyzerData in Phase 2.4
       metadata = await _generateChartMetadata(intent, analyzerData, <Workout>[]);
     }
+
+    // 6.6. Track message sent analytics (Phase 2.4)
+    await aiCoachAnalytics.trackMessageSent(
+      userId: userId,
+      intent: intent.toString(),
+      hasChart: metadata != null && metadata.containsKey('chartType'),
+      conversationDepth: 0, // TODO: Track depth in Task 5
+    );
 
     // 7. Emit final message (isStreaming=false) with follow-up chips and chart metadata
     yield AIMessage(

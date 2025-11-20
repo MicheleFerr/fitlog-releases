@@ -29,10 +29,16 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/mobility_ana
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
 
 // ============================================================================
 // Datasource Providers (Singleton)
 // ============================================================================
+
+/// AI Coach analytics provider (event tracking)
+final aiCoachAnalyticsProvider = Provider<AICoachAnalytics>((ref) {
+  return AICoachAnalytics();
+});
 
 /// Intent detector provider (pattern-based classification)
 final intentDetectorProvider = Provider<IntentDetector>((ref) {
@@ -80,6 +86,7 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
   final exerciseRepository = ref.watch(hybridExerciseRepositoryProvider);
   final entityExtractor = ref.watch(simpleEntityExtractorProvider);
   final analyticsRepository = ref.watch(analyticsRepositoryProvider);
+  final aiCoachAnalytics = ref.watch(aiCoachAnalyticsProvider);
 
   return ChatBotDatasource(
     intentDetector: intentDetector,
@@ -89,6 +96,7 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
     exerciseRepository: exerciseRepository,
     entityExtractor: entityExtractor,
     analyticsRepository: analyticsRepository,
+    aiCoachAnalytics: aiCoachAnalytics,
   );
 });
 

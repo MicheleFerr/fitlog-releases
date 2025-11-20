@@ -14,8 +14,10 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/inline_chart.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -23,7 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:intl/intl.dart';
 
 /// Message bubble widget
-class MessageBubble extends StatelessWidget {
+class MessageBubble extends ConsumerWidget {
   final AIMessage message;
   final bool showTypingIndicator;
   final Function(FollowUpChip)? onChipTap; // Callback for chip tap
@@ -36,7 +38,7 @@ class MessageBubble extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isUser = message.role == MessageRole.user;
     final isSystem = message.role == MessageRole.system;
     final hasChips = !isUser &&
@@ -46,7 +48,7 @@ class MessageBubble extends StatelessWidget {
 
     // System messages use special layout
     if (isSystem) {
-      return _buildSystemMessage(context);
+      return _buildSystemMessage(context, ref);
     }
 
     return Padding(
@@ -96,8 +98,28 @@ class MessageBubble extends StatelessWidget {
                       // Inline chart (for assistant messages with chart metadata)
                       if (!isUser &&
                           message.metadata != null &&
-                          message.metadata!.containsKey('chartType'))
-                        InlineChart.fromMetadata(message.metadata!),
+                          message.metadata!.containsKey('chartType')) ...[
+                        Builder(
+                          builder: (context) {
+                            // Track chart viewed
+                            final analytics = ref.read(aiCoachAnalyticsProvider);
+                            final chartType = message.metadata!['chartType'] as String;
+                            final chartData = message.metadata!['chartData'] as Map<String, dynamic>?;
+                            final dataPoints = (chartData?['data'] as List<dynamic>?)?.length ?? 0;
+
+                            // Track on first build (chart now visible)
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              analytics.trackChartViewed(
+                                userId: 'test-user',
+                                chartType: chartType,
+                                dataPoints: dataPoints,
+                              );
+                            });
+
+                            return InlineChart.fromMetadata(message.metadata!);
+                          },
+                        ),
+                      ],
 
                       // Typing indicator (for streaming messages)
                       if (showTypingIndicator) ...[
@@ -244,7 +266,7 @@ class MessageBubble extends StatelessWidget {
   }
 
   /// Build system message (special styling for tips, warnings, info)
-  Widget _buildSystemMessage(BuildContext context) {
+  Widget _buildSystemMessage(BuildContext context, WidgetRef ref) {
     // Detect message type from content or metadata
     final isWarning = message.content.toLowerCase().contains('warning') ||
                       message.content.toLowerCase().contains('attenzione') ||
@@ -253,6 +275,16 @@ class MessageBubble extends StatelessWidget {
     final isTip = message.content.toLowerCase().contains('tip') ||
                   message.content.toLowerCase().contains('consiglio') ||
                   message.metadata?['type'] == 'tip';
+
+    // Track system message shown
+    final messageType = isWarning ? 'warning' : isTip ? 'tip' : 'info';
+    final analytics = ref.read(aiCoachAnalyticsProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      analytics.trackSystemMessageShown(
+        userId: 'test-user',
+        messageType: messageType,
+      );
+    });
 
     // Select icon and colors based on type
     final IconData icon;

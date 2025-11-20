@@ -54,21 +54,53 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textController = TextEditingController();
+  DateTime? _sessionStartTime;
 
   @override
   void initState() {
     super.initState();
+    // Track session start
+    _sessionStartTime = DateTime.now();
+
     // Check onboarding status after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowOnboarding();
+      _trackSessionStarted();
     });
   }
 
   @override
   void dispose() {
+    // Track session end
+    _trackSessionEnded();
     _scrollController.dispose();
     _textController.dispose();
     super.dispose();
+  }
+
+  /// Track session started
+  void _trackSessionStarted() {
+    const userId = 'test-user';
+    final analytics = ref.read(aiCoachAnalyticsProvider);
+    analytics.trackSessionStarted(userId: userId);
+  }
+
+  /// Track session ended
+  void _trackSessionEnded() {
+    if (_sessionStartTime == null) return;
+
+    const userId = 'test-user';
+    final analytics = ref.read(aiCoachAnalyticsProvider);
+    final chatState = ref.read(chatNotifierProvider(userId));
+
+    final duration = DateTime.now().difference(_sessionStartTime!);
+    final messageCount = chatState.messages.where((m) => m.role == MessageRole.user).length;
+
+    analytics.trackSessionEnded(
+      userId: userId,
+      durationSeconds: duration.inSeconds,
+      messageCount: messageCount,
+    );
   }
 
   /// Check if user has seen onboarding and show modal if not
@@ -93,14 +125,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => OnboardingModal(
+        builder: (modalContext) => OnboardingModal(
           userName: firstName,
           onDismiss: () async {
+            // Capture navigator before async call
+            final navigator = Navigator.of(modalContext);
+
             // Mark onboarding as seen
             await datasource.markOnboardingSeen(userId: userId);
-            if (mounted) {
-              Navigator.of(context).pop();
-            }
+
+            // Track onboarding completion
+            final analytics = ref.read(aiCoachAnalyticsProvider);
+            await analytics.trackOnboardingCompleted(userId: userId);
+
+            // Pop modal
+            navigator.pop();
           },
         ),
       );
@@ -312,6 +351,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   /// Handle follow-up chip tap
   Future<void> _handleChipTap(BuildContext context, String userId, FollowUpChip chip) async {
+    // Track chip tap
+    final analytics = ref.read(aiCoachAnalyticsProvider);
+    await analytics.trackChipTapped(
+      userId: userId,
+      intent: chip.intent,
+      chipLabel: chip.label,
+    );
+
     // Get locale from context (default to 'en' if not available)
     final locale = Localizations.localeOf(context).languageCode;
 
