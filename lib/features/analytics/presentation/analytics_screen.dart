@@ -6,32 +6,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_view_mode_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/favorite_exercises_notifier.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view_mode.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/muscle_group_expansion_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/floating_search_fab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
+import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 
-/// Sort options for exercise list
+/// Filter options for exercise list
+///
+/// Task 5.1: Simplified to 3 chips (removed PR, frequency)
 enum SortBy {
-  /// Sort by personal record (highest 1RM first)
-  pr,
+  /// Filter by favorite exercises (starred)
+  favorites,
 
   /// Sort by workout frequency (most workouts first)
-  frequency,
+  mostUsed,
 
   /// Sort by most recent workout (newest first)
-  lastWorkout,
+  recent,
 }
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -60,15 +64,6 @@ class AnalyticsScreen extends ConsumerWidget {
           },
         ),
         actions: [
-          // Migration button (temporary - for testing)
-          IconButton(
-            icon: SemanticIcon.button(
-              icon: AppIcons.sync,
-              semanticLabel: context.l10n.migrateWorkoutHistory,
-            ),
-            onPressed: () => showMigrationDialog(context, ref),
-            tooltip: context.l10n.migrateWorkoutHistory,
-          ),
           // View mode selector
           Consumer(
             builder: (context, ref, child) {
@@ -142,17 +137,6 @@ class AnalyticsScreen extends ConsumerWidget {
               );
             },
           ),
-          IconButton(
-            icon: SemanticIcon.button(
-              icon: AppIcons.refresh,
-              semanticLabel: context.l10n.refresh,
-            ),
-            onPressed: () {
-              if (userId != null) {
-                ref.invalidate(exerciseHistoryStreamProvider(userId));
-              }
-            },
-          ),
         ],
       ),
       body: authState != AuthState.authenticated
@@ -201,8 +185,25 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     with SafeSetStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<String> _searchQuery = ValueNotifier<String>('');
+  final ScrollController _scrollController = ScrollController();
+  final ValueNotifier<double> _scrollOffset = ValueNotifier<double>(0.0);
+  final ValueNotifier<bool> _showFab = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _fabExpanded = ValueNotifier<bool>(false); // Task 4.2
+  final FocusNode _fabSearchFocus = FocusNode(); // Task 4.2
   Timer? _debounce;
-  SortBy _sortBy = SortBy.frequency; // Default: sort by frequency
+  SortBy _sortBy = SortBy.mostUsed; // Default: sort by most used
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  /// Scroll listener - tracks offset and triggers FAB visibility
+  void _onScroll() {
+    _scrollOffset.value = _scrollController.offset;
+    _showFab.value = _scrollController.offset > 50.0; // AppAnimations.scrollFabThreshold
+  }
 
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
@@ -217,23 +218,31 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     _debounce?.cancel();
     _searchQuery.dispose();
     _searchController.dispose();
+    _scrollController.dispose();
+    _scrollOffset.dispose();
+    _showFab.dispose();
+    _fabExpanded.dispose(); // Task 4.2
+    _fabSearchFocus.dispose(); // Task 4.2
     super.dispose();
   }
 
   /// Calculate filter counts for live counter badges
   /// Returns Map with counts for each filter type
   Map<SortBy, int> get _filterCounts {
+    // Watch favorites from provider (Task 5.3)
+    final favorites = ref.watch(favoriteExercisesNotifierProvider);
+
     return {
-      // PR filter: Count exercises with personalRecord > 0
-      SortBy.pr: widget.exerciseHistories
-          .where((h) => h.personalRecord > 0)
+      // Favorites filter: Count exercises marked as favorite (Task 5.3)
+      SortBy.favorites: widget.exerciseHistories
+          .where((h) => favorites.contains(h.exerciseName))
           .length,
 
-      // Frequency filter: Total number of exercises
-      SortBy.frequency: widget.exerciseHistories.length,
+      // Most Used filter: Total number of exercises (Task 5.1)
+      SortBy.mostUsed: widget.exerciseHistories.length,
 
-      // Last Workout filter: Exercises with at least 1 workout session
-      SortBy.lastWorkout: widget.exerciseHistories
+      // Recent filter: Exercises with at least 1 workout session (Task 5.1)
+      SortBy.recent: widget.exerciseHistories
           .where((h) => h.sessions.isNotEmpty)
           .length,
     };
@@ -250,15 +259,26 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
             return exerciseName.contains(query) || muscleGroup.contains(query);
           }).toList();
 
-    // Step 2: Sort by selected criteria
+    // Watch favorites from provider (Task 5.3)
+    final favorites = ref.watch(favoriteExercisesNotifierProvider);
+
+    // Step 2: Filter/Sort by selected criteria (Task 5.3)
     switch (_sortBy) {
-      case SortBy.pr:
-        filtered.sort((a, b) => b.personalRecord.compareTo(a.personalRecord));
-        break;
-      case SortBy.frequency:
+      case SortBy.favorites:
+        // Filter favorites, then sort alphabetically (Task 5.3)
+        final favoritesOnly = filtered
+            .where((h) => favorites.contains(h.exerciseName))
+            .toList();
+        favoritesOnly.sort((a, b) => a.exerciseName.compareTo(b.exerciseName));
+        return favoritesOnly;
+
+      case SortBy.mostUsed:
+        // Sort by workout frequency (most sessions first)
         filtered.sort((a, b) => b.sessions.length.compareTo(a.sessions.length));
         break;
-      case SortBy.lastWorkout:
+
+      case SortBy.recent:
+        // Sort by most recent workout date
         filtered.sort((a, b) {
           final aLast = a.sessions.isEmpty
               ? DateTime(1970)
@@ -301,15 +321,39 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
       return const _EmptyStateView();
     }
 
-    return ValueListenableBuilder<String>(
-      valueListenable: _searchQuery,
-      builder: (context, searchQuery, _) {
-        final filteredHistories = _getFilteredHistories(searchQuery);
-
-        return Column(
+    return Stack(
       children: [
-        // Quick stats summary card
-        _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
+        // Main content
+        ValueListenableBuilder<String>(
+          valueListenable: _searchQuery,
+          builder: (context, searchQuery, _) {
+            final filteredHistories = _getFilteredHistories(searchQuery);
+
+            return Column(
+              children: [
+        // Quick stats summary card (collapsible on scroll)
+        ValueListenableBuilder<double>(
+          valueListenable: _scrollOffset,
+          builder: (context, offset, child) {
+            // Calculate opacity: 1.0 at 0px, 0.0 at 100px+
+            final opacity = offset >= AppAnimations.scrollCollapseThreshold
+                ? 0.0
+                : 1.0 - (offset / AppAnimations.scrollCollapseThreshold);
+
+            return AnimatedOpacity(
+              opacity: opacity,
+              duration: AppAnimations.normal, // 300ms
+              curve: AppAnimations.decelerate, // easeOutCubic
+              child: AnimatedContainer(
+                height: opacity > 0 ? null : 0, // Collapse height
+                duration: AppAnimations.normal,
+                curve: AppAnimations.decelerate,
+                child: child,
+              ),
+            );
+          },
+          child: _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
+        ),
 
         // Search bar
         Padding(
@@ -394,6 +438,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                       final viewMode = ref.watch(exerciseViewModeProvider);
 
                       switch (viewMode) {
+                        case ExerciseViewMode.detailed:
+                          return _buildFlatList(filteredHistories);
                         case ExerciseViewMode.compact:
                           return _buildFlatList(filteredHistories);
                         case ExerciseViewMode.byMuscleGroup:
@@ -405,10 +451,114 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                   ),
                 ),
         ),
+              ],
+            ); // Close Column
+          }, // Close ValueListenableBuilder builder
+        ), // Close ValueListenableBuilder
+
+        // Floating search button (appears on scroll - hidden when expanded)
+        ValueListenableBuilder<bool>(
+          valueListenable: _fabExpanded,
+          builder: (context, expanded, child) {
+            return expanded
+                ? const SizedBox.shrink() // Hide FAB when expanded
+                : FloatingSearchFab(
+                    showFab: _showFab,
+                    onTap: _onFabTap,
+                  );
+          },
+        ),
+
+        // Expanded search bar (Task 4.2) - shows when FAB expanded
+        ValueListenableBuilder<bool>(
+          valueListenable: _fabExpanded,
+          builder: (context, expanded, child) {
+            return AnimatedPositioned(
+              duration: AppAnimations.normal, // 300ms
+              curve: AppAnimations.decelerate,
+              top: 16,
+              left: expanded ? 16 : MediaQuery.of(context).size.width,
+              right: 16,
+              child: AnimatedOpacity(
+                opacity: expanded ? 1.0 : 0.0,
+                duration: AppAnimations.normal,
+                curve: AppAnimations.decelerate,
+                child: Material(
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(16),
+                  color: context.colors.surface,
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _fabSearchFocus,
+                    onChanged: _onSearchChanged,
+                    decoration: InputDecoration(
+                      hintText: context.l10n.searchExercises,
+                      prefixIcon: SemanticIcon(
+                        icon: AppIcons.search,
+                        semanticLabel: context.l10n.search,
+                        size: AppIconSize.medium,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: SemanticIcon.button(
+                          icon: AppIcons.close,
+                          semanticLabel: context.l10n.close,
+                        ),
+                        onPressed: _onFabSearchClose,
+                        tooltip: context.l10n.close,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: context.colors.surface,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ],
-    ); // Close Column
-      }, // Close ValueListenableBuilder builder
-    ); // Close ValueListenableBuilder
+    ); // Close Stack
+  }
+
+  /// Handle FAB tap - expand to search TextField (Task 4.2 + 4.3)
+  void _onFabTap() {
+    // Expand FAB to show search TextField
+    _fabExpanded.value = true;
+
+    // Auto-scroll to top (Task 4.3)
+    _scrollController.animateTo(
+      0,
+      duration: AppAnimations.fast, // 150ms
+      curve: AppAnimations.decelerate,
+    );
+
+    // Auto-focus TextField after animation completes
+    Future.delayed(AppAnimations.fast, () {
+      if (mounted) {
+        _fabSearchFocus.requestFocus();
+      }
+    });
+  }
+
+  /// Handle FAB search close (Task 4.2)
+  void _onFabSearchClose() {
+    // Clear search
+    _searchController.clear();
+    _searchQuery.value = '';
+
+    // Collapse FAB
+    _fabExpanded.value = false;
+
+    // Remove focus
+    _fabSearchFocus.unfocus();
   }
 
   /// Build accordion list of exercises grouped by muscle group
@@ -422,6 +572,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     }
 
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: grouped.length,
       itemBuilder: (context, groupIndex) {
@@ -454,6 +605,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     }
 
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: histories.length,
       itemBuilder: (context, index) {
@@ -478,6 +630,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     }
 
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: grouped.length,
       itemBuilder: (context, index) {
@@ -1024,6 +1177,10 @@ class _ExerciseHistoryCard extends ConsumerWidget {
     final sessionsCount = history.sessions.length;
     final weeklyProgression = history.weeklyVolumeProgression;
 
+    // Watch favorites state from provider (Task 5.2)
+    final favorites = ref.watch(favoriteExercisesNotifierProvider);
+    final isFavorite = favorites.contains(history.exerciseName);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -1042,7 +1199,7 @@ class _ExerciseHistoryCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Exercise name + muscle group
+              // Exercise name + muscle group + favorite toggle (Task 5.2)
               Row(
                 children: [
                   Expanded(
@@ -1065,6 +1222,29 @@ class _ExerciseHistoryCard extends ConsumerWidget {
                         ),
                       ],
                     ),
+                  ),
+                  // Favorite star icon toggle (Task 5.2)
+                  IconButton(
+                    icon: SemanticIcon.button(
+                      icon: isFavorite
+                          ? AppIcons.star
+                          : AppIcons.starOutline,
+                      semanticLabel: isFavorite
+                          ? context.l10n.removeFromFavorites
+                          : context.l10n.addToFavorites,
+                    ),
+                    color: isFavorite
+                        ? context.iconWarning  // Yellow/warning color for favorites
+                        : context.colors.onSurfaceVariant,
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      ref
+                          .read(favoriteExercisesNotifierProvider.notifier)
+                          .toggleFavorite(history.exerciseName);
+                    },
+                    tooltip: isFavorite
+                        ? context.l10n.removeFromFavorites
+                        : context.l10n.addToFavorites,
                   ),
                   SemanticIcon(
                     icon: AppIcons.chevronRight,
@@ -1479,12 +1659,6 @@ class _SortFilterChips extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch expansion state to determine expand/collapse all button
-    final expansionState = ref.watch(muscleGroupExpansionProvider);
-    final areAllExpanded = ref
-        .read(muscleGroupExpansionProvider.notifier)
-        .areAllExpanded;
-
     return Container(
       height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1512,63 +1686,36 @@ class _SortFilterChips extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  // PR (Personal Record) filter
+                  // Favorites ⭐ filter (Task 5.1)
                   _FilterChipItem(
-                    label: context.l10n.pr,
-                    icon: AppIcons.achievement,
-                    count: filterCounts[SortBy.pr] ?? 0,
-                    selected: sortBy == SortBy.pr,
-                    onSelected: () => onSortChanged(SortBy.pr),
+                    label: context.l10n.favorites,
+                    icon: AppIcons.star,
+                    count: filterCounts[SortBy.favorites] ?? 0,
+                    selected: sortBy == SortBy.favorites,
+                    onSelected: () => onSortChanged(SortBy.favorites),
                   ),
                   const SizedBox(width: 8),
 
-                  // Frequency (Workout count) filter
+                  // Most Used 🔥 filter (Task 5.1)
                   _FilterChipItem(
-                    label: context.l10n.workouts,
-                    icon: AppIcons.calendar,
-                    count: filterCounts[SortBy.frequency] ?? 0,
-                    selected: sortBy == SortBy.frequency,
-                    onSelected: () => onSortChanged(SortBy.frequency),
+                    label: context.l10n.mostUsed,
+                    icon: AppIcons.barChart,
+                    count: filterCounts[SortBy.mostUsed] ?? 0,
+                    selected: sortBy == SortBy.mostUsed,
+                    onSelected: () => onSortChanged(SortBy.mostUsed),
                   ),
                   const SizedBox(width: 8),
 
-                  // Last Workout (Newest) filter
+                  // Recent 📅 filter (Task 5.1)
                   _FilterChipItem(
-                    label: context.l10n.recentWorkouts,
+                    label: context.l10n.recent,
                     icon: AppIcons.clock,
-                    count: filterCounts[SortBy.lastWorkout] ?? 0,
-                    selected: sortBy == SortBy.lastWorkout,
-                    onSelected: () => onSortChanged(SortBy.lastWorkout),
+                    count: filterCounts[SortBy.recent] ?? 0,
+                    selected: sortBy == SortBy.recent,
+                    onSelected: () => onSortChanged(SortBy.recent),
                   ),
                 ],
               ),
-            ),
-          ),
-
-          // Expand/Collapse all button (fixed on right)
-          const SizedBox(width: 12),
-          IconButton(
-            icon: SemanticIcon.button(
-              icon: areAllExpanded ? AppIcons.unfoldLess : AppIcons.expand,
-              semanticLabel: areAllExpanded
-                  ? context.l10n.collapseAll
-                  : context.l10n.expandAll,
-            ),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              if (areAllExpanded) {
-                ref.read(muscleGroupExpansionProvider.notifier).collapseAll();
-              } else {
-                ref.read(muscleGroupExpansionProvider.notifier).expandAll();
-              }
-            },
-            tooltip: areAllExpanded
-                ? context.l10n.collapseAll
-                : context.l10n.expandAll,
-            style: IconButton.styleFrom(
-              backgroundColor: areAllExpanded
-                  ? context.colors.primary.withValues(alpha: 0.1)
-                  : null,
             ),
           ),
         ],
@@ -1677,68 +1824,6 @@ class _FilterChipItemState extends State<_FilterChipItem>
               : context.colors.onSurface,
           fontWeight: widget.selected ? FontWeight.bold : FontWeight.normal,
         ),
-      ),
-    );
-  }
-}
-
-/// Muscle group header widget for grouped view
-class _MuscleGroupHeader extends StatelessWidget {
-  const _MuscleGroupHeader({
-    required this.muscleGroup,
-    required this.exerciseCount,
-  });
-
-  final String muscleGroup;
-  final int exerciseCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: context.colors.primaryContainer.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          // Muscle group icon
-          SemanticIcon(
-            icon: AppIcons.workout,
-            semanticLabel: muscleGroup,
-            size: AppIconSize.small,
-            color: context.colors.onPrimaryContainer,
-          ),
-          const SizedBox(width: 8),
-
-          // Muscle group name (uppercase with letter spacing)
-          Expanded(
-            child: Text(
-              muscleGroup.toUpperCase(),
-              style: context.textTheme.labelLarge?.copyWith(
-                color: context.colors.onPrimaryContainer,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-              ),
-            ),
-          ),
-
-          // Exercise count badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: context.colors.primary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '$exerciseCount',
-              style: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
