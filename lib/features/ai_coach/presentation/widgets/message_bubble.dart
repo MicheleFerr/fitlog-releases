@@ -38,9 +38,16 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUser = message.role == MessageRole.user;
+    final isSystem = message.role == MessageRole.system;
     final hasChips = !isUser &&
+                     !isSystem &&
                      message.followUpChips.isNotEmpty &&
                      !showTypingIndicator;
+
+    // System messages use special layout
+    if (isSystem) {
+      return _buildSystemMessage(context);
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -232,6 +239,110 @@ class MessageBubble extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  /// Build system message (special styling for tips, warnings, info)
+  Widget _buildSystemMessage(BuildContext context) {
+    // Detect message type from content or metadata
+    final isWarning = message.content.toLowerCase().contains('warning') ||
+                      message.content.toLowerCase().contains('attenzione') ||
+                      message.metadata?['type'] == 'warning';
+
+    final isTip = message.content.toLowerCase().contains('tip') ||
+                  message.content.toLowerCase().contains('consiglio') ||
+                  message.metadata?['type'] == 'tip';
+
+    // Select icon and colors based on type
+    final IconData icon;
+    final Color backgroundColor;
+    final Color iconColor;
+
+    if (isWarning) {
+      icon = AppIcons.warning;
+      backgroundColor = context.colors.errorContainer;
+      iconColor = context.colors.error;
+    } else if (isTip) {
+      icon = AppIcons.lightbulb;
+      backgroundColor = context.colors.primaryContainer;
+      iconColor = context.colors.primary;
+    } else {
+      // Default: info message
+      icon = AppIcons.info;
+      backgroundColor = context.colors.surfaceContainerHighest;
+      iconColor = context.colors.tertiary;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: iconColor.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon
+            SemanticIcon(
+              icon: icon,
+              semanticLabel: isWarning
+                  ? 'Warning'
+                  : isTip
+                      ? 'Tip'
+                      : 'Info',
+              size: AppIconSize.medium,
+              color: iconColor,
+            ),
+            const SizedBox(width: 12),
+
+            // Message content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Label (System / Tip / Warning)
+                  Text(
+                    isWarning
+                        ? (message.metadata?['label'] ?? 'Warning')
+                        : isTip
+                            ? (message.metadata?['label'] ?? 'Tip')
+                            : (message.metadata?['label'] ?? 'System'),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: iconColor,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Message text
+                  Text(
+                    message.content,
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+
+                  // Timestamp
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatTimestamp(message.timestamp),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
