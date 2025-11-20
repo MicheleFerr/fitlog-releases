@@ -227,10 +227,17 @@ class ChatBotDatasource {
       analyzerData: analyzerData,
     );
 
-    // Merge reasoning with existing metadata (charts)
+    // 6.7. Generate multi-modal metadata (Phase 3.4)
+    final multiModalMetadata = _generateMultiModalMetadata(
+      intent: intent,
+      analyzerData: analyzerData,
+    );
+
+    // Merge all metadata: charts + reasoning + multi-modal
     final finalMetadata = <String, dynamic>{
       ...?metadata, // Chart data (if any)
       if (reasoning != null) ...reasoning, // Reasoning data
+      if (multiModalMetadata != null) ...multiModalMetadata, // Multi-modal data
     };
 
     // 7. Emit final message (isStreaming=false) with follow-up chips, chart, and reasoning
@@ -888,6 +895,123 @@ class ChatBotDatasource {
           ? 'Last ${analyzerData['workout_count']} workouts'
           : 'Your workout history',
       'confidence': 'high', // TODO: Calculate actual confidence
+    };
+  }
+
+  // ========================================================================
+  // Multi-Modal Response Generation (Phase 3.4)
+  // ========================================================================
+
+  /// Generate multi-modal metadata for enhanced responses
+  ///
+  /// **Supported Modalities**:
+  /// - Exercise demonstrations (images/videos)
+  /// - Workout plan tables (structured format)
+  ///
+  /// **Returns**: Map with multi-modal data or null if none needed
+  Map<String, dynamic>? _generateMultiModalMetadata({
+    required UserIntent intent,
+    required Map<String, String> analyzerData,
+  }) {
+    // Form intent: Add exercise demonstration images
+    if (intent == UserIntent.form) {
+      return _generateExerciseDemonstration(analyzerData);
+    }
+
+    // Plan intent: Add workout plan table
+    if (intent == UserIntent.plan) {
+      return _generateWorkoutPlanTable(analyzerData);
+    }
+
+    return null;
+  }
+
+  /// Generate exercise demonstration metadata
+  ///
+  /// **Features**:
+  /// - Exercise image URL
+  /// - Video tutorial link
+  /// - Key form cues
+  ///
+  /// TODO: Integrate with ExerciseRepository to get real images
+  Map<String, dynamic> _generateExerciseDemonstration(
+    Map<String, String> analyzerData,
+  ) {
+    // Mock data - TODO: Get from ExerciseRepository based on detected exercise
+    return {
+      'exerciseMedia': {
+        'exerciseName': 'Bench Press', // TODO: Extract from analyzerData
+        'imageUrl':
+            'https://via.placeholder.com/400x300.png?text=Bench+Press+Form',
+        'videoUrl': null, // TODO: Add video URLs from database
+        'formCues': [
+          'Keep shoulder blades retracted',
+          'Bar path: Straight vertical line',
+          'Feet flat on floor, drive through heels',
+          'Lower to mid-chest, touch lightly',
+          'Press up and slightly back toward rack',
+        ],
+      },
+    };
+  }
+
+  /// Generate workout plan table metadata
+  ///
+  /// **Features**:
+  /// - Structured exercise list
+  /// - Sets, reps, rest recommendations
+  /// - Progressive overload notes
+  ///
+  /// TODO: Use PeriodizationAnalyzer to generate real plans
+  Map<String, dynamic> _generateWorkoutPlanTable(
+    Map<String, String> analyzerData,
+  ) {
+    // Mock data - TODO: Generate from PeriodizationAnalyzer
+    return {
+      'workoutTable': {
+        'title': 'Push Day - Beginner Program',
+        'exercises': [
+          {
+            'name': 'Bench Press',
+            'sets': 3,
+            'reps': '8-10',
+            'rest': '2-3 min',
+            'notes': 'Compound movement - go heavy',
+          },
+          {
+            'name': 'Overhead Press',
+            'sets': 3,
+            'reps': '8-10',
+            'rest': '2-3 min',
+            'notes': 'Strict form, no leg drive',
+          },
+          {
+            'name': 'Incline Dumbbell Press',
+            'sets': 3,
+            'reps': '10-12',
+            'rest': '90 sec',
+            'notes': 'Upper chest focus',
+          },
+          {
+            'name': 'Lateral Raises',
+            'sets': 3,
+            'reps': '12-15',
+            'rest': '60 sec',
+            'notes': 'Light weight, control the movement',
+          },
+          {
+            'name': 'Tricep Pushdowns',
+            'sets': 3,
+            'reps': '12-15',
+            'rest': '60 sec',
+            'notes': 'Keep elbows tucked',
+          },
+        ],
+        'totalVolume': 15, // Total sets
+        'estimatedDuration': '45-60 min',
+        'progressionNotes':
+            'Increase weight by 2.5kg when you can complete all sets with good form',
+      },
     };
   }
 }

@@ -129,6 +129,22 @@ class MessageBubble extends ConsumerWidget {
                         _buildReasoningSection(context),
                       ],
 
+                      // Exercise demonstration (Phase 3.4 - Multi-modal)
+                      if (!isUser &&
+                          message.metadata != null &&
+                          message.metadata!.containsKey('exerciseMedia')) ...[
+                        const SizedBox(height: 12),
+                        _buildExerciseDemonstration(context),
+                      ],
+
+                      // Workout plan table (Phase 3.4 - Multi-modal)
+                      if (!isUser &&
+                          message.metadata != null &&
+                          message.metadata!.containsKey('workoutTable')) ...[
+                        const SizedBox(height: 12),
+                        _buildWorkoutPlanTable(context),
+                      ],
+
                       // Typing indicator (for streaming messages)
                       if (showTypingIndicator) ...[
                         const SizedBox(height: 4),
@@ -483,6 +499,324 @@ class MessageBubble extends ConsumerWidget {
               }),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  /// Build exercise demonstration widget (Phase 3.4 - Multi-modal)
+  ///
+  /// Shows:
+  /// - Exercise image
+  /// - Form cues (bullet list)
+  Widget _buildExerciseDemonstration(BuildContext context) {
+    final exerciseMedia =
+        message.metadata!['exerciseMedia'] as Map<String, dynamic>;
+    final exerciseName = exerciseMedia['exerciseName'] as String;
+    final imageUrl = exerciseMedia['imageUrl'] as String?;
+    final formCues = exerciseMedia['formCues'] as List<dynamic>?;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header: Exercise name
+          Row(
+            children: [
+              Icon(
+                AppIcons.workout,
+                size: AppIconSize.small,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  exerciseName,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Exercise image
+          if (imageUrl != null) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                imageUrl,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 200,
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              loadingProgress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 200,
+                    color: context.colors.surfaceContainerHighest,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          AppIcons.error,
+                          color: context.colors.error,
+                          size: AppIconSize.large,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Image not available',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.error,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+
+          // Form cues
+          if (formCues != null && formCues.isNotEmpty) ...[
+            Text(
+              'Form Cues:',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...formCues.asMap().entries.map((entry) {
+              final cue = entry.value as String;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 6),
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: context.colors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        cue,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurface,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Build workout plan table widget (Phase 3.4 - Multi-modal)
+  ///
+  /// Shows:
+  /// - Structured exercise list
+  /// - Sets, reps, rest for each exercise
+  /// - Progressive overload notes
+  Widget _buildWorkoutPlanTable(BuildContext context) {
+    final workoutTable =
+        message.metadata!['workoutTable'] as Map<String, dynamic>;
+    final title = workoutTable['title'] as String;
+    final exercises = workoutTable['exercises'] as List<dynamic>;
+    final totalVolume = workoutTable['totalVolume'] as int;
+    final estimatedDuration = workoutTable['estimatedDuration'] as String;
+    final progressionNotes = workoutTable['progressionNotes'] as String?;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.secondary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header: Plan title
+          Row(
+            children: [
+              Icon(
+                AppIcons.document,
+                size: AppIconSize.small,
+                color: context.colors.secondary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    color: context.colors.secondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 4),
+
+          // Meta info: Total volume + duration
+          Text(
+            '$totalVolume sets • $estimatedDuration',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Exercise table
+          ...exercises.asMap().entries.map((entry) {
+            final index = entry.key;
+            final exercise = entry.value as Map<String, dynamic>;
+            final name = exercise['name'] as String;
+            final sets = exercise['sets'] as int;
+            final reps = exercise['reps'] as String;
+            final rest = exercise['rest'] as String;
+            final notes = exercise['notes'] as String?;
+
+            return Container(
+              margin: EdgeInsets.only(bottom: index < exercises.length - 1 ? 12 : 0),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Exercise name
+                  Text(
+                    '${index + 1}. $name',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Sets × Reps • Rest
+                  Row(
+                    children: [
+                      Icon(
+                        AppIcons.repeat,
+                        size: AppIconSize.tiny,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$sets × $reps',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Icon(
+                        AppIcons.timer,
+                        size: AppIconSize.tiny,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        rest,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Notes
+                  if (notes != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      notes,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            );
+          }),
+
+          // Progression notes
+          if (progressionNotes != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.secondaryContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    AppIcons.lightbulb,
+                    size: AppIconSize.small,
+                    color: context.colors.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      progressionNotes,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.onSecondaryContainer,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
