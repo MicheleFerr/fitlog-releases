@@ -30,6 +30,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/message_bubble.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_input.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/suggestion_chips.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -109,12 +110,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: chatState.isLoading
                 ? const Center(child: LoadingIndicator())
                 : chatState.messages.isEmpty
-                    ? _buildEmptyState(context)
+                    ? _buildEmptyState(context, userId)
                     : _buildMessagesList(context, chatState, userId),
           ),
 
           // Error banner (if any)
           if (chatState.error != null) _buildErrorBanner(context, chatState.error!),
+
+          // Suggestion chips (always visible)
+          if (chatState.messages.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: SuggestionChips(
+                onSuggestionTap: (query) {
+                  _textController.text = query;
+                  _sendMessage(context, userId, query);
+                },
+              ),
+            ),
 
           // Chat input
           ChatInput(
@@ -159,7 +172,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   /// Build empty state
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, String userId) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -187,34 +200,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildSuggestedQuestions(context),
+            SuggestionChips(
+              onSuggestionTap: (query) {
+                _textController.text = query;
+                _sendMessage(context, userId, query);
+              },
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  /// Build suggested questions
-  Widget _buildSuggestedQuestions(BuildContext context) {
-    final questions = [
-      context.l10n.aiCoachQuestionProgress,
-      context.l10n.aiCoachQuestionRest,
-      context.l10n.aiCoachQuestionVolume,
-    ];
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      children: questions.map((question) {
-        return ActionChip(
-          label: Text(question),
-          onPressed: () {
-            _textController.text = question;
-            _sendMessage(context, 'test-user', question);
-          },
-        );
-      }).toList(),
     );
   }
 

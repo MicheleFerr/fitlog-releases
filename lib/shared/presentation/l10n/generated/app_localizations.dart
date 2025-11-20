@@ -1202,10 +1202,10 @@ abstract class AppLocalizations {
   /// **'e.g. Morning Session'**
   String get workoutNameHint;
 
-  /// Exercise name field label
+  /// Label for exercise name
   ///
   /// In en, this message translates to:
-  /// **'Exercise Name'**
+  /// **'Exercise'**
   String get exerciseName;
 
   /// Exercise name input field hint
@@ -4168,6 +4168,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'AI Coach'**
   String get aiCoach;
+
+  /// Suggestion chip: show personal records
+  ///
+  /// In en, this message translates to:
+  /// **'Show PR'**
+  String get showPR;
+
+  /// Suggestion chip: analyze training volume
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze volume'**
+  String get analyzeVolume;
+
+  /// Suggestion chip: ask about training progress
+  ///
+  /// In en, this message translates to:
+  /// **'How is training?'**
+  String get howIsTraining;
+
+  /// Suggestion chip: ask about recovery needs
+  ///
+  /// In en, this message translates to:
+  /// **'Need rest?'**
+  String get needRest;
 
   /// Critical insights count badge
   ///
@@ -8189,10 +8213,10 @@ abstract class AppLocalizations {
   /// **'Correction Type'**
   String get correctionType;
 
-  /// Label for current value in correction
+  /// Label for current field value
   ///
   /// In en, this message translates to:
-  /// **'Current Value'**
+  /// **'Current value'**
   String get currentValue;
 
   /// Label for proposed value in correction
@@ -8204,10 +8228,10 @@ abstract class AppLocalizations {
   /// Label for submission timestamp
   ///
   /// In en, this message translates to:
-  /// **'Submitted At'**
+  /// **'Submitted'**
   String get submittedAt;
 
-  /// Label for who reviewed the correction
+  /// Label for reviewer
   ///
   /// In en, this message translates to:
   /// **'Reviewed by'**
@@ -8465,10 +8489,10 @@ abstract class AppLocalizations {
   /// **'Select Field'**
   String get selectField;
 
-  /// New value for bulk edit
+  /// Label for new field value input
   ///
   /// In en, this message translates to:
-  /// **'New Value'**
+  /// **'New value'**
   String get newValue;
 
   /// Button to apply selected weight increase percentage
@@ -20430,7 +20454,7 @@ abstract class AppLocalizations {
   /// **'Same equipment'**
   String get sameEquipment;
 
-  /// Label for favorite exercises filter
+  /// Filter label for favorite exercises
   ///
   /// In en, this message translates to:
   /// **'Favorites'**
@@ -24180,6 +24204,12 @@ abstract class AppLocalizations {
   /// **'This month'**
   String get thisMonth;
 
+  /// Label for exercises older than a month
+  ///
+  /// In en, this message translates to:
+  /// **'Older'**
+  String get older;
+
   /// Auto-generated for timeRange
   ///
   /// In en, this message translates to:
@@ -26304,7 +26334,7 @@ abstract class AppLocalizations {
   /// **'Current Score'**
   String get currentScore;
 
-  /// From quick wins migration - 1 occurrences
+  /// Score breakdown section title
   ///
   /// In en, this message translates to:
   /// **'Score Breakdown'**
@@ -30960,12 +30990,6 @@ abstract class AppLocalizations {
   /// **'Yes, Report'**
   String get yesReportToAdmin;
 
-  /// Detailed view mode (full info)
-  ///
-  /// In en, this message translates to:
-  /// **'Detailed'**
-  String get viewModeDetailed;
-
   /// View mode grouped by muscle group
   ///
   /// In en, this message translates to:
@@ -30978,11 +31002,551 @@ abstract class AppLocalizations {
   /// **'By Date'**
   String get viewModeByDate;
 
-  /// View mode showing only major/significant workouts
+  /// Workout consistency score title
   ///
   /// In en, this message translates to:
-  /// **'Major Workouts'**
-  String get viewModeByMajorWorkouts;
+  /// **'Consistency Score'**
+  String get consistencyScore;
+
+  /// Score rating for 90-100
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get scoreRatingExcellent;
+
+  /// Score rating for 75-89
+  ///
+  /// In en, this message translates to:
+  /// **'Great'**
+  String get scoreRatingGreat;
+
+  /// Score rating for 60-74
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get scoreRatingGood;
+
+  /// Score rating for 40-59
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get scoreRatingFair;
+
+  /// Score rating for 0-39
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get scoreRatingNeedsImprovement;
+
+  /// Frequency component of consistency score
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get frequencyScore;
+
+  /// Rest component of consistency score
+  ///
+  /// In en, this message translates to:
+  /// **'Rest'**
+  String get restScore;
+
+  /// Volume component of consistency score
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volumeScore;
+
+  /// Progression component of consistency score
+  ///
+  /// In en, this message translates to:
+  /// **'Progression'**
+  String get progressionScore;
+
+  /// Overtraining risk level label
+  ///
+  /// In en, this message translates to:
+  /// **'Overtraining Risk'**
+  String get overtrainingRisk;
+
+  /// Low risk level
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get riskLow;
+
+  /// Medium risk level
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get riskMedium;
+
+  /// High risk level
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get riskHigh;
+
+  /// Weekly average label
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Average'**
+  String get weeklyAverage;
+
+  /// Workouts per week unit
+  ///
+  /// In en, this message translates to:
+  /// **'workouts/week'**
+  String get workoutsPerWeek;
+
+  /// Rest days per week unit
+  ///
+  /// In en, this message translates to:
+  /// **'rest days/week'**
+  String get restDaysPerWeek;
+
+  /// Weekly statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Stats (Last 4 Weeks)'**
+  String get weeklyStats;
+
+  /// AI Coach chat empty state welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with AI Coach'**
+  String get aiCoachChatWelcome;
+
+  /// AI Coach chat empty state description
+  ///
+  /// In en, this message translates to:
+  /// **'Ask me about your workouts, progression, and recovery'**
+  String get aiCoachChatDescription;
+
+  /// Suggested question about progression
+  ///
+  /// In en, this message translates to:
+  /// **'How am I progressing?'**
+  String get aiCoachQuestionProgress;
+
+  /// Suggested question about rest
+  ///
+  /// In en, this message translates to:
+  /// **'Should I rest today?'**
+  String get aiCoachQuestionRest;
+
+  /// Suggested question about training volume
+  ///
+  /// In en, this message translates to:
+  /// **'Am I training too much?'**
+  String get aiCoachQuestionVolume;
+
+  /// Clear history confirmation dialog content
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all conversation history?'**
+  String get clearHistoryConfirm;
+
+  /// Input hint when AI is streaming response
+  ///
+  /// In en, this message translates to:
+  /// **'AI is responding...'**
+  String get aiCoachRespondingHint;
+
+  /// Chat input placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// Filter label for most frequently used exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Most Used'**
+  String get mostUsed;
+
+  /// Filter label for recently worked exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get recent;
+
+  /// Button label to mark exercise as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Add to favorites'**
+  String get addToFavorites;
+
+  /// Button label to unmark exercise as favorite
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorites'**
+  String get removeFromFavorites;
+
+  /// Title for exercise match breakdown bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Match Breakdown'**
+  String get matchBreakdownTitle;
+
+  /// Primary muscles factor label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Muscles'**
+  String get matchBreakdownPrimaryMuscles;
+
+  /// Equipment factor label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment'**
+  String get matchBreakdownEquipment;
+
+  /// Movement pattern factor label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Movement Pattern'**
+  String get matchBreakdownMovementPattern;
+
+  /// Secondary muscles factor label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary Muscles'**
+  String get matchBreakdownSecondaryMuscles;
+
+  /// Category factor label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get matchBreakdownCategory;
+
+  /// Total similarity score label in match breakdown
+  ///
+  /// In en, this message translates to:
+  /// **'Total Score'**
+  String get matchBreakdownTotalScore;
+
+  /// Score label for individual factor
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get matchBreakdownScore;
+
+  /// Weight percentage label for individual factor
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get matchBreakdownWeight;
+
+  /// Description for primary muscles match
+  ///
+  /// In en, this message translates to:
+  /// **'Pectorals, Deltoids'**
+  String get matchBreakdownPrimaryMusclesDesc;
+
+  /// Description for equipment match
+  ///
+  /// In en, this message translates to:
+  /// **'Barbell → Dumbbell (compatible)'**
+  String get matchBreakdownEquipmentDesc;
+
+  /// Description for movement pattern match
+  ///
+  /// In en, this message translates to:
+  /// **'Push pattern match'**
+  String get matchBreakdownMovementPatternDesc;
+
+  /// Description for secondary muscles match
+  ///
+  /// In en, this message translates to:
+  /// **'Different activation'**
+  String get matchBreakdownSecondaryMusclesDesc;
+
+  /// Description for category match
+  ///
+  /// In en, this message translates to:
+  /// **'Chest vs Shoulders'**
+  String get matchBreakdownCategoryDesc;
+
+  /// Button to report an error in exercise data
+  ///
+  /// In en, this message translates to:
+  /// **'Report Error'**
+  String get reportError;
+
+  /// Title for report error dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Report Exercise Error'**
+  String get reportErrorTitle;
+
+  /// Description in report error dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Found incorrect information? Let us know and we\'ll review it.'**
+  String get reportErrorDescription;
+
+  /// Label for field selector dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select field to correct'**
+  String get selectFieldToCorrect;
+
+  /// Label for reason text input
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for change'**
+  String get reasonForChange;
+
+  /// Hint text for reason input field
+  ///
+  /// In en, this message translates to:
+  /// **'Explain why this change is needed (min 10 characters)'**
+  String get reasonHint;
+
+  /// Button text to submit patch
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Correction'**
+  String get submitCorrection;
+
+  /// Success message after patch submission
+  ///
+  /// In en, this message translates to:
+  /// **'Correction submitted successfully! It will be reviewed by admins.'**
+  String get patchSubmittedSuccess;
+
+  /// Success message for local patch application
+  ///
+  /// In en, this message translates to:
+  /// **'Correction applied locally. Your view is updated immediately.'**
+  String get patchSubmittedLocalSuccess;
+
+  /// Error message prefix for patch submission failure
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit correction'**
+  String get patchSubmissionError;
+
+  /// Validation error for short reason
+  ///
+  /// In en, this message translates to:
+  /// **'Reason must be at least 10 characters'**
+  String get reasonTooShort;
+
+  /// Error when user tries to submit duplicate patch
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a pending correction for this field'**
+  String get duplicatePatchError;
+
+  /// Status label for pending patch
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get patchStatusPending;
+
+  /// Status label for approved patch
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get patchStatusApproved;
+
+  /// Status label for rejected patch
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get patchStatusRejected;
+
+  /// Status label for automatically rejected patch
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Rejected'**
+  String get patchStatusAutoRejected;
+
+  /// Status label for expired patch
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get patchStatusExpired;
+
+  /// Title for user's patch history screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Corrections'**
+  String get myCorrections;
+
+  /// Empty state message when user has no patches
+  ///
+  /// In en, this message translates to:
+  /// **'No corrections submitted yet'**
+  String get noPatchesYet;
+
+  /// Empty state description
+  ///
+  /// In en, this message translates to:
+  /// **'Found an error? Report it and help improve the database!'**
+  String get noPatchesDescription;
+
+  /// Count of user patches
+  ///
+  /// In en, this message translates to:
+  /// **'{count} correction(s)'**
+  String patchesCount(int count);
+
+  /// Count of pending patches
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pending'**
+  String pendingPatchesCount(int count);
+
+  /// Message shown when patch is approved
+  ///
+  /// In en, this message translates to:
+  /// **'Your correction was approved!'**
+  String get patchApprovedMessage;
+
+  /// Message shown when patch is rejected
+  ///
+  /// In en, this message translates to:
+  /// **'Your correction was rejected'**
+  String get patchRejectedMessage;
+
+  /// Message shown for expired patch
+  ///
+  /// In en, this message translates to:
+  /// **'This correction expired after 30 days'**
+  String get patchExpiredMessage;
+
+  /// Label for admin note field
+  ///
+  /// In en, this message translates to:
+  /// **'Admin note'**
+  String get adminNote;
+
+  /// Label for rejection reason
+  ///
+  /// In en, this message translates to:
+  /// **'Rejection reason'**
+  String get rejectReason;
+
+  /// Days until patch expiration
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in {days} day(s)'**
+  String daysUntilExpiration(int days);
+
+  /// Label for expired patch
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get patchExpired;
+
+  /// Button to view patch details
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewPatchDetails;
+
+  /// Title for patch details screen
+  ///
+  /// In en, this message translates to:
+  /// **'Correction Details'**
+  String get patchDetailsTitle;
+
+  /// Label for field name
+  ///
+  /// In en, this message translates to:
+  /// **'Field'**
+  String get fieldName;
+
+  /// Label for old value
+  ///
+  /// In en, this message translates to:
+  /// **'Old value'**
+  String get oldValue;
+
+  /// Label for review timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get reviewedAt;
+
+  /// Status message for pending patch
+  ///
+  /// In en, this message translates to:
+  /// **'Pending admin review'**
+  String get pendingReview;
+
+  /// Status message for approved patch
+  ///
+  /// In en, this message translates to:
+  /// **'Approved and applied to database'**
+  String get approvedAndApplied;
+
+  /// Status message for rejected patch
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected - not applied'**
+  String get rejectedNotApplied;
+
+  /// Status message for expired patch
+  ///
+  /// In en, this message translates to:
+  /// **'Expired without review'**
+  String get expiredNotReviewed;
+
+  /// Title for patch submission dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Report Exercise Error'**
+  String get reportExerciseError;
+
+  /// Subtitle for patch submission dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Help improve our exercise database'**
+  String get reportErrorSubtitle;
+
+  /// Validation error for empty field selection
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a field'**
+  String get pleaseSelectField;
+
+  /// Hint text for new value input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the corrected value'**
+  String get enterCorrectedValue;
+
+  /// Validation error for empty new value
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a new value'**
+  String get pleaseEnterNewValue;
+
+  /// Validation error when new value equals current
+  ///
+  /// In en, this message translates to:
+  /// **'New value must be different from current'**
+  String get newValueMustDiffer;
+
+  /// Label for reason input field
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get reason;
+
+  /// Hint text for reason input
+  ///
+  /// In en, this message translates to:
+  /// **'Explain why this correction is needed'**
+  String get explainWhyCorrection;
+
+  /// Validation error for empty reason
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a reason'**
+  String get pleaseProvideReason;
 }
 
 class _AppLocalizationsDelegate

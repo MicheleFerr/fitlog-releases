@@ -618,7 +618,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutNameHint => 'e.g. Morning Session';
 
   @override
-  String get exerciseName => 'Exercise Name';
+  String get exerciseName => 'Exercise';
 
   @override
   String get exerciseNameHint => 'e.g., Bench Press';
@@ -2185,6 +2185,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiCoach => 'AI Coach';
+
+  @override
+  String get showPR => 'Show PR';
+
+  @override
+  String get analyzeVolume => 'Analyze volume';
+
+  @override
+  String get howIsTraining => 'How is training?';
+
+  @override
+  String get needRest => 'Need rest?';
 
   @override
   String criticalInsights(int count) {
@@ -4405,13 +4417,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get correctionType => 'Correction Type';
 
   @override
-  String get currentValue => 'Current Value';
+  String get currentValue => 'Current value';
 
   @override
   String get proposedValue => 'Proposed Value';
 
   @override
-  String get submittedAt => 'Submitted At';
+  String get submittedAt => 'Submitted';
 
   @override
   String get reviewedBy => 'Reviewed by';
@@ -4549,7 +4561,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectField => 'Select Field';
 
   @override
-  String get newValue => 'New Value';
+  String get newValue => 'New value';
 
   @override
   String get apply => 'Apply';
@@ -13608,6 +13620,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisMonth => 'This month';
 
   @override
+  String get older => 'Older';
+
+  @override
   String get timeRange => 'Time range';
 
   @override
@@ -17282,14 +17297,295 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yesReportToAdmin => 'Yes, Report';
 
   @override
-  String get viewModeDetailed => 'Detailed';
-
-  @override
   String get viewModeByMuscleGroup => 'By Muscle Group';
 
   @override
   String get viewModeByDate => 'By Date';
 
   @override
-  String get viewModeByMajorWorkouts => 'Major Workouts';
+  String get consistencyScore => 'Consistency Score';
+
+  @override
+  String get scoreRatingExcellent => 'Excellent';
+
+  @override
+  String get scoreRatingGreat => 'Great';
+
+  @override
+  String get scoreRatingGood => 'Good';
+
+  @override
+  String get scoreRatingFair => 'Fair';
+
+  @override
+  String get scoreRatingNeedsImprovement => 'Needs Improvement';
+
+  @override
+  String get frequencyScore => 'Frequency';
+
+  @override
+  String get restScore => 'Rest';
+
+  @override
+  String get volumeScore => 'Volume';
+
+  @override
+  String get progressionScore => 'Progression';
+
+  @override
+  String get overtrainingRisk => 'Overtraining Risk';
+
+  @override
+  String get riskLow => 'Low';
+
+  @override
+  String get riskMedium => 'Medium';
+
+  @override
+  String get riskHigh => 'High';
+
+  @override
+  String get weeklyAverage => 'Weekly Average';
+
+  @override
+  String get workoutsPerWeek => 'workouts/week';
+
+  @override
+  String get restDaysPerWeek => 'rest days/week';
+
+  @override
+  String get weeklyStats => 'Weekly Stats (Last 4 Weeks)';
+
+  @override
+  String get aiCoachChatWelcome => 'Chat with AI Coach';
+
+  @override
+  String get aiCoachChatDescription =>
+      'Ask me about your workouts, progression, and recovery';
+
+  @override
+  String get aiCoachQuestionProgress => 'How am I progressing?';
+
+  @override
+  String get aiCoachQuestionRest => 'Should I rest today?';
+
+  @override
+  String get aiCoachQuestionVolume => 'Am I training too much?';
+
+  @override
+  String get clearHistoryConfirm =>
+      'Are you sure you want to delete all conversation history?';
+
+  @override
+  String get aiCoachRespondingHint => 'AI is responding...';
+
+  @override
+  String get typeMessage => 'Type a message...';
+
+  @override
+  String get mostUsed => 'Most Used';
+
+  @override
+  String get recent => 'Recent';
+
+  @override
+  String get addToFavorites => 'Add to favorites';
+
+  @override
+  String get removeFromFavorites => 'Remove from favorites';
+
+  @override
+  String get matchBreakdownTitle => 'Match Breakdown';
+
+  @override
+  String get matchBreakdownPrimaryMuscles => 'Primary Muscles';
+
+  @override
+  String get matchBreakdownEquipment => 'Equipment';
+
+  @override
+  String get matchBreakdownMovementPattern => 'Movement Pattern';
+
+  @override
+  String get matchBreakdownSecondaryMuscles => 'Secondary Muscles';
+
+  @override
+  String get matchBreakdownCategory => 'Category';
+
+  @override
+  String get matchBreakdownTotalScore => 'Total Score';
+
+  @override
+  String get matchBreakdownScore => 'Score';
+
+  @override
+  String get matchBreakdownWeight => 'Weight';
+
+  @override
+  String get matchBreakdownPrimaryMusclesDesc => 'Pectorals, Deltoids';
+
+  @override
+  String get matchBreakdownEquipmentDesc => 'Barbell → Dumbbell (compatible)';
+
+  @override
+  String get matchBreakdownMovementPatternDesc => 'Push pattern match';
+
+  @override
+  String get matchBreakdownSecondaryMusclesDesc => 'Different activation';
+
+  @override
+  String get matchBreakdownCategoryDesc => 'Chest vs Shoulders';
+
+  @override
+  String get reportError => 'Report Error';
+
+  @override
+  String get reportErrorTitle => 'Report Exercise Error';
+
+  @override
+  String get reportErrorDescription =>
+      'Found incorrect information? Let us know and we\'ll review it.';
+
+  @override
+  String get selectFieldToCorrect => 'Select field to correct';
+
+  @override
+  String get reasonForChange => 'Reason for change';
+
+  @override
+  String get reasonHint =>
+      'Explain why this change is needed (min 10 characters)';
+
+  @override
+  String get submitCorrection => 'Submit Correction';
+
+  @override
+  String get patchSubmittedSuccess =>
+      'Correction submitted successfully! It will be reviewed by admins.';
+
+  @override
+  String get patchSubmittedLocalSuccess =>
+      'Correction applied locally. Your view is updated immediately.';
+
+  @override
+  String get patchSubmissionError => 'Failed to submit correction';
+
+  @override
+  String get reasonTooShort => 'Reason must be at least 10 characters';
+
+  @override
+  String get duplicatePatchError =>
+      'You already have a pending correction for this field';
+
+  @override
+  String get patchStatusPending => 'Pending Review';
+
+  @override
+  String get patchStatusApproved => 'Approved';
+
+  @override
+  String get patchStatusRejected => 'Rejected';
+
+  @override
+  String get patchStatusAutoRejected => 'Auto-Rejected';
+
+  @override
+  String get patchStatusExpired => 'Expired';
+
+  @override
+  String get myCorrections => 'My Corrections';
+
+  @override
+  String get noPatchesYet => 'No corrections submitted yet';
+
+  @override
+  String get noPatchesDescription =>
+      'Found an error? Report it and help improve the database!';
+
+  @override
+  String patchesCount(int count) {
+    return '$count correction(s)';
+  }
+
+  @override
+  String pendingPatchesCount(int count) {
+    return '$count pending';
+  }
+
+  @override
+  String get patchApprovedMessage => 'Your correction was approved!';
+
+  @override
+  String get patchRejectedMessage => 'Your correction was rejected';
+
+  @override
+  String get patchExpiredMessage => 'This correction expired after 30 days';
+
+  @override
+  String get adminNote => 'Admin note';
+
+  @override
+  String get rejectReason => 'Rejection reason';
+
+  @override
+  String daysUntilExpiration(int days) {
+    return 'Expires in $days day(s)';
+  }
+
+  @override
+  String get patchExpired => 'Expired';
+
+  @override
+  String get viewPatchDetails => 'View Details';
+
+  @override
+  String get patchDetailsTitle => 'Correction Details';
+
+  @override
+  String get fieldName => 'Field';
+
+  @override
+  String get oldValue => 'Old value';
+
+  @override
+  String get reviewedAt => 'Reviewed';
+
+  @override
+  String get pendingReview => 'Pending admin review';
+
+  @override
+  String get approvedAndApplied => 'Approved and applied to database';
+
+  @override
+  String get rejectedNotApplied => 'Rejected - not applied';
+
+  @override
+  String get expiredNotReviewed => 'Expired without review';
+
+  @override
+  String get reportExerciseError => 'Report Exercise Error';
+
+  @override
+  String get reportErrorSubtitle => 'Help improve our exercise database';
+
+  @override
+  String get pleaseSelectField => 'Please select a field';
+
+  @override
+  String get enterCorrectedValue => 'Enter the corrected value';
+
+  @override
+  String get pleaseEnterNewValue => 'Please enter a new value';
+
+  @override
+  String get newValueMustDiffer => 'New value must be different from current';
+
+  @override
+  String get reason => 'Reason';
+
+  @override
+  String get explainWhyCorrection => 'Explain why this correction is needed';
+
+  @override
+  String get pleaseProvideReason => 'Please provide a reason';
 }

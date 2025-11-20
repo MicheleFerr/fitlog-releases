@@ -804,6 +804,10 @@
   "duration": "Durata",
   "calories": "Calorie",
   "aiCoach": "AI Coach",
+  "showPR": "Mostra PR",
+  "analyzeVolume": "Analizza volume",
+  "howIsTraining": "Come va l'allenamento?",
+  "needRest": "Serve riposo?",
   "volume": "Volume",
   "startWorkoutQuick": "INIZIA ALLENAMENTO",
   "suggestedForToday": "Suggerito per oggi",
@@ -6228,6 +6232,7 @@
   "templateLimitSuggestion": "Modello limit suggestion",
   "templateSyncDescription": "Modello sync descrizione",
   "thisMonth": "This month",
+  "older": "Precedenti",
   "timeRange": "Time range",
   "toggleToShowInMatching": "Toggle a mostra in accoppiamento",
   "totalWeightLifted": "Totale peso sollevato",
@@ -10405,10 +10410,6 @@
   "@viewModeCompact": {
     "description": "Modalità vista compatta (info minime)"
   },
-  "viewModeDetailed": "Dettagliata",
-  "@viewModeDetailed": {
-    "description": "Modalità vista dettagliata (info complete)"
-  },
   "viewModeByMuscleGroup": "Per Gruppo Muscolare",
   "@viewModeByMuscleGroup": {
     "description": "Modalità vista raggruppata per gruppo muscolare"
@@ -10417,12 +10418,443 @@
   "@viewModeByDate": {
     "description": "Modalità vista organizzata cronologicamente"
   },
-  "viewModeByMajorWorkouts": "Allenamenti Principali",
-  "@viewModeByMajorWorkouts": {
-    "description": "Modalità vista che mostra solo allenamenti principali/significativi"
-  },
   "viewMode": "Modalità Vista",
   "@viewMode": {
     "description": "Etichetta per selettore modalità vista"
+  },
+  "consistencyScore": "Punteggio Costanza",
+  "@consistencyScore": {
+    "description": "Titolo punteggio costanza allenamento"
+  },
+  "scoreRatingExcellent": "Eccellente",
+  "@scoreRatingExcellent": {
+    "description": "Valutazione punteggio per 90-100"
+  },
+  "scoreRatingGreat": "Ottimo",
+  "@scoreRatingGreat": {
+    "description": "Valutazione punteggio per 75-89"
+  },
+  "scoreRatingGood": "Buono",
+  "@scoreRatingGood": {
+    "description": "Valutazione punteggio per 60-74"
+  },
+  "scoreRatingFair": "Discreto",
+  "@scoreRatingFair": {
+    "description": "Valutazione punteggio per 40-59"
+  },
+  "scoreRatingNeedsImprovement": "Da Migliorare",
+  "@scoreRatingNeedsImprovement": {
+    "description": "Valutazione punteggio per 0-39"
+  },
+  "frequencyScore": "Frequenza",
+  "@frequencyScore": {
+    "description": "Componente frequenza del punteggio costanza"
+  },
+  "restScore": "Riposo",
+  "@restScore": {
+    "description": "Componente riposo del punteggio costanza"
+  },
+  "volumeScore": "Volume",
+  "@volumeScore": {
+    "description": "Componente volume del punteggio costanza"
+  },
+  "progressionScore": "Progressione",
+  "@progressionScore": {
+    "description": "Componente progressione del punteggio costanza"
+  },
+  "overtrainingRisk": "Rischio Sovrallenamento",
+  "@overtrainingRisk": {
+    "description": "Etichetta livello rischio sovrallenamento"
+  },
+  "riskLow": "Basso",
+  "@riskLow": {
+    "description": "Livello rischio basso"
+  },
+  "riskMedium": "Medio",
+  "@riskMedium": {
+    "description": "Livello rischio medio"
+  },
+  "riskHigh": "Alto",
+  "@riskHigh": {
+    "description": "Livello rischio alto"
+  },
+  "weeklyAverage": "Media Settimanale",
+  "@weeklyAverage": {
+    "description": "Etichetta media settimanale"
+  },
+  "workoutsPerWeek": "allenamenti/settimana",
+  "@workoutsPerWeek": {
+    "description": "Unità allenamenti per settimana"
+  },
+  "restDaysPerWeek": "giorni riposo/settimana",
+  "@restDaysPerWeek": {
+    "description": "Unità giorni riposo per settimana"
+  },
+  "scoreBreakdown": "Dettaglio Punteggio",
+  "@scoreBreakdown": {
+    "description": "Titolo sezione dettaglio punteggio"
+  },
+  "weeklyStats": "Statistiche Settimanali (Ultime 4 Settimane)",
+  "@weeklyStats": {
+    "description": "Titolo sezione statistiche settimanali"
+  },
+  "aiCoachChatWelcome": "Chatta con AI Coach",
+  "@aiCoachChatWelcome": {
+    "description": "Titolo stato vuoto chat AI Coach"
+  },
+  "aiCoachChatDescription": "Chiedimi dei tuoi allenamenti, progressi e recupero",
+  "@aiCoachChatDescription": {
+    "description": "Descrizione stato vuoto chat AI Coach"
+  },
+  "aiCoachQuestionProgress": "Come sto progredendo?",
+  "@aiCoachQuestionProgress": {
+    "description": "Domanda suggerita sui progressi"
+  },
+  "aiCoachQuestionRest": "Dovrei riposare oggi?",
+  "@aiCoachQuestionRest": {
+    "description": "Domanda suggerita sul riposo"
+  },
+  "aiCoachQuestionVolume": "Mi sto allenando troppo?",
+  "@aiCoachQuestionVolume": {
+    "description": "Domanda suggerita sul volume di allenamento"
+  },
+  "clearHistoryConfirm": "Sei sicuro di voler eliminare tutta la cronologia delle conversazioni?",
+  "@clearHistoryConfirm": {
+    "description": "Contenuto dialogo conferma cancellazione cronologia"
+  },
+  "aiCoachRespondingHint": "L'AI sta rispondendo...",
+  "@aiCoachRespondingHint": {
+    "description": "Suggerimento input quando AI sta scrivendo"
+  },
+  "typeMessage": "Scrivi un messaggio...",
+  "@typeMessage": {
+    "description": "Placeholder input chat"
+  },
+  "favorites": "Preferiti",
+  "@favorites": {
+    "description": "Etichetta filtro per esercizi preferiti"
+  },
+  "mostUsed": "Più usati",
+  "@mostUsed": {
+    "description": "Etichetta filtro per esercizi più utilizzati"
+  },
+  "recent": "Recenti",
+  "@recent": {
+    "description": "Etichetta filtro per esercizi allenati di recente"
+  },
+  "addToFavorites": "Aggiungi ai preferiti",
+  "@addToFavorites": {
+    "description": "Etichetta pulsante per segnare esercizio come preferito"
+  },
+  "removeFromFavorites": "Rimuovi dai preferiti",
+  "@removeFromFavorites": {
+    "description": "Etichetta pulsante per rimuovere esercizio dai preferiti"
+  },
+  "matchBreakdownTitle": "Dettaglio Compatibilità",
+  "@matchBreakdownTitle": {
+    "description": "Titolo del bottom sheet con dettaglio compatibilità esercizio"
+  },
+  "matchBreakdownPrimaryMuscles": "Muscoli Primari",
+  "@matchBreakdownPrimaryMuscles": {
+    "description": "Etichetta fattore muscoli primari nel dettaglio compatibilità"
+  },
+  "matchBreakdownEquipment": "Attrezzatura",
+  "@matchBreakdownEquipment": {
+    "description": "Etichetta fattore attrezzatura nel dettaglio compatibilità"
+  },
+  "matchBreakdownMovementPattern": "Pattern Movimento",
+  "@matchBreakdownMovementPattern": {
+    "description": "Etichetta fattore pattern movimento nel dettaglio compatibilità"
+  },
+  "matchBreakdownSecondaryMuscles": "Muscoli Secondari",
+  "@matchBreakdownSecondaryMuscles": {
+    "description": "Etichetta fattore muscoli secondari nel dettaglio compatibilità"
+  },
+  "matchBreakdownCategory": "Categoria",
+  "@matchBreakdownCategory": {
+    "description": "Etichetta fattore categoria nel dettaglio compatibilità"
+  },
+  "matchBreakdownTotalScore": "Punteggio Totale",
+  "@matchBreakdownTotalScore": {
+    "description": "Etichetta punteggio totale similarità nel dettaglio compatibilità"
+  },
+  "matchBreakdownScore": "Punteggio",
+  "@matchBreakdownScore": {
+    "description": "Etichetta punteggio per singolo fattore"
+  },
+  "matchBreakdownWeight": "Peso",
+  "@matchBreakdownWeight": {
+    "description": "Etichetta percentuale peso per singolo fattore"
+  },
+  "matchBreakdownPrimaryMusclesDesc": "Pettorali, Deltoidi",
+  "@matchBreakdownPrimaryMusclesDesc": {
+    "description": "Descrizione per compatibilità muscoli primari"
+  },
+  "matchBreakdownEquipmentDesc": "Bilanciere → Manubri (compatibile)",
+  "@matchBreakdownEquipmentDesc": {
+    "description": "Descrizione per compatibilità attrezzatura"
+  },
+  "matchBreakdownMovementPatternDesc": "Pattern spinta compatibile",
+  "@matchBreakdownMovementPatternDesc": {
+    "description": "Descrizione per compatibilità pattern movimento"
+  },
+  "matchBreakdownSecondaryMusclesDesc": "Attivazione diversa",
+  "@matchBreakdownSecondaryMusclesDesc": {
+    "description": "Descrizione per compatibilità muscoli secondari"
+  },
+  "matchBreakdownCategoryDesc": "Petto vs Spalle",
+  "@matchBreakdownCategoryDesc": {
+    "description": "Descrizione per compatibilità categoria"
+  },
+  "reportError": "Segnala Errore",
+  "@reportError": {
+    "description": "Pulsante per segnalare un errore nei dati dell'esercizio"
+  },
+  "reportErrorTitle": "Segnala Errore Esercizio",
+  "@reportErrorTitle": {
+    "description": "Titolo del dialog di segnalazione errore"
+  },
+  "reportErrorDescription": "Hai trovato informazioni errate? Faccelo sapere e le verificheremo.",
+  "@reportErrorDescription": {
+    "description": "Descrizione nel dialog di segnalazione errore"
+  },
+  "selectFieldToCorrect": "Seleziona campo da correggere",
+  "@selectFieldToCorrect": {
+    "description": "Etichetta per dropdown selezione campo"
+  },
+  "currentValue": "Valore attuale",
+  "@currentValue": {
+    "description": "Etichetta che mostra il valore attuale del campo"
+  },
+  "newValue": "Nuovo valore",
+  "@newValue": {
+    "description": "Etichetta per input nuovo valore corretto"
+  },
+  "reasonForChange": "Motivo della modifica",
+  "@reasonForChange": {
+    "description": "Etichetta per input motivo"
+  },
+  "reasonHint": "Spiega perché questa modifica è necessaria (min 10 caratteri)",
+  "@reasonHint": {
+    "description": "Testo di suggerimento per campo motivo"
+  },
+  "submitCorrection": "Invia Correzione",
+  "@submitCorrection": {
+    "description": "Pulsante per inviare la patch"
+  },
+  "patchSubmittedSuccess": "Correzione inviata! La verificheremo presto.",
+  "@patchSubmittedSuccess": {
+    "description": "Messaggio di successo dopo invio patch"
+  },
+  "patchSubmittedLocalSuccess": "Correzione applicata localmente. La tua vista è aggiornata immediatamente.",
+  "@patchSubmittedLocalSuccess": {
+    "description": "Messaggio di successo per applicazione patch locale"
+  },
+  "patchSubmissionError": "Invio correzione fallito. Riprova.",
+  "@patchSubmissionError": {
+    "description": "Messaggio di errore per fallimento invio patch"
+  },
+  "reasonTooShort": "Il motivo deve essere di almeno 10 caratteri",
+  "@reasonTooShort": {
+    "description": "Errore di validazione per motivo troppo breve"
+  },
+  "duplicatePatchError": "Hai già una correzione in attesa per questo campo",
+  "@duplicatePatchError": {
+    "description": "Errore quando l'utente prova a inviare una patch duplicata"
+  },
+  "patchStatusPending": "In Revisione",
+  "@patchStatusPending": {
+    "description": "Etichetta stato per patch in attesa"
+  },
+  "patchStatusApproved": "Approvata",
+  "@patchStatusApproved": {
+    "description": "Etichetta stato per patch approvata"
+  },
+  "patchStatusRejected": "Rifiutata",
+  "@patchStatusRejected": {
+    "description": "Etichetta stato per patch rifiutata"
+  },
+  "patchStatusAutoRejected": "Auto-Rifiutata",
+  "@patchStatusAutoRejected": {
+    "description": "Etichetta stato per patch rifiutata automaticamente"
+  },
+  "patchStatusExpired": "Scaduta",
+  "@patchStatusExpired": {
+    "description": "Etichetta stato per patch scaduta"
+  },
+  "myCorrections": "Le Mie Correzioni",
+  "@myCorrections": {
+    "description": "Titolo per schermata cronologia patch dell'utente"
+  },
+  "noPatchesYet": "Nessuna correzione inviata ancora",
+  "@noPatchesYet": {
+    "description": "Messaggio stato vuoto quando l'utente non ha patch"
+  },
+  "noPatchesDescription": "Hai trovato un errore? Segnalalo e aiutaci a migliorare il database!",
+  "@noPatchesDescription": {
+    "description": "Descrizione stato vuoto"
+  },
+  "patchesCount": "{count} correzione/i",
+  "@patchesCount": {
+    "description": "Conteggio patch dell'utente",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingPatchesCount": "{count} in attesa",
+  "@pendingPatchesCount": {
+    "description": "Conteggio patch in attesa",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "patchApprovedMessage": "La tua correzione è stata approvata!",
+  "@patchApprovedMessage": {
+    "description": "Messaggio mostrato quando la patch è approvata"
+  },
+  "patchRejectedMessage": "La tua correzione è stata rifiutata",
+  "@patchRejectedMessage": {
+    "description": "Messaggio mostrato quando la patch è rifiutata"
+  },
+  "patchExpiredMessage": "Questa correzione è scaduta dopo 30 giorni",
+  "@patchExpiredMessage": {
+    "description": "Messaggio mostrato per patch scaduta"
+  },
+  "adminNote": "Nota admin",
+  "@adminNote": {
+    "description": "Etichetta per campo nota admin"
+  },
+  "rejectReason": "Motivo rifiuto",
+  "@rejectReason": {
+    "description": "Etichetta per motivo rifiuto"
+  },
+  "daysUntilExpiration": "Scade tra {days} giorno/i",
+  "@daysUntilExpiration": {
+    "description": "Giorni alla scadenza della patch",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "patchExpired": "Scaduta",
+  "@patchExpired": {
+    "description": "Etichetta per patch scaduta"
+  },
+  "viewPatchDetails": "Vedi Dettagli",
+  "@viewPatchDetails": {
+    "description": "Pulsante per vedere dettagli patch"
+  },
+  "patchDetailsTitle": "Dettagli Correzione",
+  "@patchDetailsTitle": {
+    "description": "Titolo per schermata dettagli patch"
+  },
+  "exerciseName": "Esercizio",
+  "@exerciseName": {
+    "description": "Etichetta per nome esercizio"
+  },
+  "fieldName": "Campo",
+  "@fieldName": {
+    "description": "Etichetta per nome campo"
+  },
+  "oldValue": "Valore vecchio",
+  "@oldValue": {
+    "description": "Etichetta per valore vecchio"
+  },
+  "submittedAt": "Inviata",
+  "@submittedAt": {
+    "description": "Etichetta per timestamp invio"
+  },
+  "reviewedAt": "Revisionata",
+  "@reviewedAt": {
+    "description": "Etichetta per timestamp revisione"
+  },
+  "reviewedBy": "Revisionata da",
+  "@reviewedBy": {
+    "description": "Etichetta per revisore"
+  },
+  "pendingReview": "In attesa di revisione admin",
+  "@pendingReview": {
+    "description": "Messaggio stato per patch in attesa"
+  },
+  "approvedAndApplied": "Approvata e applicata al database",
+  "@approvedAndApplied": {
+    "description": "Messaggio stato per patch approvata"
+  },
+  "rejectedNotApplied": "Rifiutata - non applicata",
+  "@rejectedNotApplied": {
+    "description": "Messaggio stato per patch rifiutata"
+  },
+  "expiredNotReviewed": "Scaduta senza revisione",
+  "@expiredNotReviewed": {
+    "description": "Messaggio stato per patch scaduta"
+  },
+  "reportExerciseError": "Segnala Errore Esercizio",
+  "@reportExerciseError": {
+    "description": "Titolo per dialog invio patch"
+  },
+  "reportErrorSubtitle": "Aiutaci a migliorare il database degli esercizi",
+  "@reportErrorSubtitle": {
+    "description": "Sottotitolo per dialog invio patch"
+  },
+  "selectFieldToCorrect": "Seleziona campo da correggere",
+  "@selectFieldToCorrect": {
+    "description": "Etichetta per dropdown selezione campo"
+  },
+  "pleaseSelectField": "Seleziona un campo",
+  "@pleaseSelectField": {
+    "description": "Errore validazione per selezione campo vuota"
+  },
+  "currentValue": "Valore attuale",
+  "@currentValue": {
+    "description": "Etichetta per valore campo attuale"
+  },
+  "newValue": "Nuovo valore",
+  "@newValue": {
+    "description": "Etichetta per input nuovo valore"
+  },
+  "enterCorrectedValue": "Inserisci il valore corretto",
+  "@enterCorrectedValue": {
+    "description": "Hint text per input nuovo valore"
+  },
+  "pleaseEnterNewValue": "Inserisci un nuovo valore",
+  "@pleaseEnterNewValue": {
+    "description": "Errore validazione per nuovo valore vuoto"
+  },
+  "newValueMustDiffer": "Il nuovo valore deve essere diverso dall'attuale",
+  "@newValueMustDiffer": {
+    "description": "Errore validazione quando nuovo valore uguale all'attuale"
+  },
+  "reason": "Motivazione",
+  "@reason": {
+    "description": "Etichetta per campo motivazione"
+  },
+  "explainWhyCorrection": "Spiega perché questa correzione è necessaria",
+  "@explainWhyCorrection": {
+    "description": "Hint text per input motivazione"
+  },
+  "pleaseProvideReason": "Fornisci una motivazione",
+  "@pleaseProvideReason": {
+    "description": "Errore validazione per motivazione vuota"
+  },
+  "reasonTooShort": "La motivazione deve essere di almeno 10 caratteri",
+  "@reasonTooShort": {
+    "description": "Errore validazione per motivazione troppo corta"
+  },
+  "submitCorrection": "Invia Correzione",
+  "@submitCorrection": {
+    "description": "Testo pulsante per inviare patch"
+  },
+  "patchSubmittedSuccess": "Correzione inviata con successo! Sarà revisionata dagli admin.",
+  "@patchSubmittedSuccess": {
+    "description": "Messaggio di successo dopo invio patch"
+  },
+  "patchSubmissionError": "Errore nell'invio della correzione",
+  "@patchSubmissionError": {
+    "description": "Prefisso messaggio errore per invio patch fallito"
   }
 }

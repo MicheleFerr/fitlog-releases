@@ -2834,6 +2834,22 @@
   "@aiCoach": {
     "description": "AI Coach section title"
   },
+  "showPR": "Show PR",
+  "@showPR": {
+    "description": "Suggestion chip: show personal records"
+  },
+  "analyzeVolume": "Analyze volume",
+  "@analyzeVolume": {
+    "description": "Suggestion chip: analyze training volume"
+  },
+  "howIsTraining": "How is training?",
+  "@howIsTraining": {
+    "description": "Suggestion chip: ask about training progress"
+  },
+  "needRest": "Need rest?",
+  "@needRest": {
+    "description": "Suggestion chip: ask about recovery needs"
+  },
   "criticalInsights": "{count} Critical",
   "@criticalInsights": {
     "description": "Critical insights count badge",
@@ -16365,6 +16381,10 @@
   "@thisMonth": {
     "description": "Auto-generated for thisMonth"
   },
+  "older": "Older",
+  "@older": {
+    "description": "Label for exercises older than a month"
+  },
   "timeRange": "Time range",
   "@timeRange": {
     "description": "Auto-generated for timeRange"
@@ -21026,10 +21046,6 @@
   "@viewModeCompact": {
     "description": "Compact view mode (minimal info)"
   },
-  "viewModeDetailed": "Detailed",
-  "@viewModeDetailed": {
-    "description": "Detailed view mode (full info)"
-  },
   "viewModeByMuscleGroup": "By Muscle Group",
   "@viewModeByMuscleGroup": {
     "description": "View mode grouped by muscle group"
@@ -21038,12 +21054,443 @@
   "@viewModeByDate": {
     "description": "View mode organized chronologically"
   },
-  "viewModeByMajorWorkouts": "Major Workouts",
-  "@viewModeByMajorWorkouts": {
-    "description": "View mode showing only major/significant workouts"
-  },
   "viewMode": "View Mode",
   "@viewMode": {
     "description": "Label for view mode selector"
+  },
+  "consistencyScore": "Consistency Score",
+  "@consistencyScore": {
+    "description": "Workout consistency score title"
+  },
+  "scoreRatingExcellent": "Excellent",
+  "@scoreRatingExcellent": {
+    "description": "Score rating for 90-100"
+  },
+  "scoreRatingGreat": "Great",
+  "@scoreRatingGreat": {
+    "description": "Score rating for 75-89"
+  },
+  "scoreRatingGood": "Good",
+  "@scoreRatingGood": {
+    "description": "Score rating for 60-74"
+  },
+  "scoreRatingFair": "Fair",
+  "@scoreRatingFair": {
+    "description": "Score rating for 40-59"
+  },
+  "scoreRatingNeedsImprovement": "Needs Improvement",
+  "@scoreRatingNeedsImprovement": {
+    "description": "Score rating for 0-39"
+  },
+  "frequencyScore": "Frequency",
+  "@frequencyScore": {
+    "description": "Frequency component of consistency score"
+  },
+  "restScore": "Rest",
+  "@restScore": {
+    "description": "Rest component of consistency score"
+  },
+  "volumeScore": "Volume",
+  "@volumeScore": {
+    "description": "Volume component of consistency score"
+  },
+  "progressionScore": "Progression",
+  "@progressionScore": {
+    "description": "Progression component of consistency score"
+  },
+  "overtrainingRisk": "Overtraining Risk",
+  "@overtrainingRisk": {
+    "description": "Overtraining risk level label"
+  },
+  "riskLow": "Low",
+  "@riskLow": {
+    "description": "Low risk level"
+  },
+  "riskMedium": "Medium",
+  "@riskMedium": {
+    "description": "Medium risk level"
+  },
+  "riskHigh": "High",
+  "@riskHigh": {
+    "description": "High risk level"
+  },
+  "weeklyAverage": "Weekly Average",
+  "@weeklyAverage": {
+    "description": "Weekly average label"
+  },
+  "workoutsPerWeek": "workouts/week",
+  "@workoutsPerWeek": {
+    "description": "Workouts per week unit"
+  },
+  "restDaysPerWeek": "rest days/week",
+  "@restDaysPerWeek": {
+    "description": "Rest days per week unit"
+  },
+  "scoreBreakdown": "Score Breakdown",
+  "@scoreBreakdown": {
+    "description": "Score breakdown section title"
+  },
+  "weeklyStats": "Weekly Stats (Last 4 Weeks)",
+  "@weeklyStats": {
+    "description": "Weekly statistics section title"
+  },
+  "aiCoachChatWelcome": "Chat with AI Coach",
+  "@aiCoachChatWelcome": {
+    "description": "AI Coach chat empty state welcome title"
+  },
+  "aiCoachChatDescription": "Ask me about your workouts, progression, and recovery",
+  "@aiCoachChatDescription": {
+    "description": "AI Coach chat empty state description"
+  },
+  "aiCoachQuestionProgress": "How am I progressing?",
+  "@aiCoachQuestionProgress": {
+    "description": "Suggested question about progression"
+  },
+  "aiCoachQuestionRest": "Should I rest today?",
+  "@aiCoachQuestionRest": {
+    "description": "Suggested question about rest"
+  },
+  "aiCoachQuestionVolume": "Am I training too much?",
+  "@aiCoachQuestionVolume": {
+    "description": "Suggested question about training volume"
+  },
+  "clearHistoryConfirm": "Are you sure you want to delete all conversation history?",
+  "@clearHistoryConfirm": {
+    "description": "Clear history confirmation dialog content"
+  },
+  "aiCoachRespondingHint": "AI is responding...",
+  "@aiCoachRespondingHint": {
+    "description": "Input hint when AI is streaming response"
+  },
+  "typeMessage": "Type a message...",
+  "@typeMessage": {
+    "description": "Chat input placeholder"
+  },
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Filter label for favorite exercises"
+  },
+  "mostUsed": "Most Used",
+  "@mostUsed": {
+    "description": "Filter label for most frequently used exercises"
+  },
+  "recent": "Recent",
+  "@recent": {
+    "description": "Filter label for recently worked exercises"
+  },
+  "addToFavorites": "Add to favorites",
+  "@addToFavorites": {
+    "description": "Button label to mark exercise as favorite"
+  },
+  "removeFromFavorites": "Remove from favorites",
+  "@removeFromFavorites": {
+    "description": "Button label to unmark exercise as favorite"
+  },
+  "matchBreakdownTitle": "Match Breakdown",
+  "@matchBreakdownTitle": {
+    "description": "Title for exercise match breakdown bottom sheet"
+  },
+  "matchBreakdownPrimaryMuscles": "Primary Muscles",
+  "@matchBreakdownPrimaryMuscles": {
+    "description": "Primary muscles factor label in match breakdown"
+  },
+  "matchBreakdownEquipment": "Equipment",
+  "@matchBreakdownEquipment": {
+    "description": "Equipment factor label in match breakdown"
+  },
+  "matchBreakdownMovementPattern": "Movement Pattern",
+  "@matchBreakdownMovementPattern": {
+    "description": "Movement pattern factor label in match breakdown"
+  },
+  "matchBreakdownSecondaryMuscles": "Secondary Muscles",
+  "@matchBreakdownSecondaryMuscles": {
+    "description": "Secondary muscles factor label in match breakdown"
+  },
+  "matchBreakdownCategory": "Category",
+  "@matchBreakdownCategory": {
+    "description": "Category factor label in match breakdown"
+  },
+  "matchBreakdownTotalScore": "Total Score",
+  "@matchBreakdownTotalScore": {
+    "description": "Total similarity score label in match breakdown"
+  },
+  "matchBreakdownScore": "Score",
+  "@matchBreakdownScore": {
+    "description": "Score label for individual factor"
+  },
+  "matchBreakdownWeight": "Weight",
+  "@matchBreakdownWeight": {
+    "description": "Weight percentage label for individual factor"
+  },
+  "matchBreakdownPrimaryMusclesDesc": "Pectorals, Deltoids",
+  "@matchBreakdownPrimaryMusclesDesc": {
+    "description": "Description for primary muscles match"
+  },
+  "matchBreakdownEquipmentDesc": "Barbell → Dumbbell (compatible)",
+  "@matchBreakdownEquipmentDesc": {
+    "description": "Description for equipment match"
+  },
+  "matchBreakdownMovementPatternDesc": "Push pattern match",
+  "@matchBreakdownMovementPatternDesc": {
+    "description": "Description for movement pattern match"
+  },
+  "matchBreakdownSecondaryMusclesDesc": "Different activation",
+  "@matchBreakdownSecondaryMusclesDesc": {
+    "description": "Description for secondary muscles match"
+  },
+  "matchBreakdownCategoryDesc": "Chest vs Shoulders",
+  "@matchBreakdownCategoryDesc": {
+    "description": "Description for category match"
+  },
+  "reportError": "Report Error",
+  "@reportError": {
+    "description": "Button to report an error in exercise data"
+  },
+  "reportErrorTitle": "Report Exercise Error",
+  "@reportErrorTitle": {
+    "description": "Title for report error dialog"
+  },
+  "reportErrorDescription": "Found incorrect information? Let us know and we'll review it.",
+  "@reportErrorDescription": {
+    "description": "Description in report error dialog"
+  },
+  "selectFieldToCorrect": "Select field to correct",
+  "@selectFieldToCorrect": {
+    "description": "Label for field selection dropdown"
+  },
+  "currentValue": "Current value",
+  "@currentValue": {
+    "description": "Label showing current field value"
+  },
+  "newValue": "New value",
+  "@newValue": {
+    "description": "Label for new corrected value input"
+  },
+  "reasonForChange": "Reason for change",
+  "@reasonForChange": {
+    "description": "Label for reason text input"
+  },
+  "reasonHint": "Explain why this change is needed (min 10 characters)",
+  "@reasonHint": {
+    "description": "Hint text for reason input field"
+  },
+  "submitCorrection": "Submit Correction",
+  "@submitCorrection": {
+    "description": "Button to submit patch"
+  },
+  "patchSubmittedSuccess": "Correction submitted! We'll review it soon.",
+  "@patchSubmittedSuccess": {
+    "description": "Success message after patch submission"
+  },
+  "patchSubmittedLocalSuccess": "Correction applied locally. Your view is updated immediately.",
+  "@patchSubmittedLocalSuccess": {
+    "description": "Success message for local patch application"
+  },
+  "patchSubmissionError": "Failed to submit correction. Please try again.",
+  "@patchSubmissionError": {
+    "description": "Error message for patch submission failure"
+  },
+  "reasonTooShort": "Reason must be at least 10 characters",
+  "@reasonTooShort": {
+    "description": "Validation error for short reason"
+  },
+  "duplicatePatchError": "You already have a pending correction for this field",
+  "@duplicatePatchError": {
+    "description": "Error when user tries to submit duplicate patch"
+  },
+  "patchStatusPending": "Pending Review",
+  "@patchStatusPending": {
+    "description": "Status label for pending patch"
+  },
+  "patchStatusApproved": "Approved",
+  "@patchStatusApproved": {
+    "description": "Status label for approved patch"
+  },
+  "patchStatusRejected": "Rejected",
+  "@patchStatusRejected": {
+    "description": "Status label for rejected patch"
+  },
+  "patchStatusAutoRejected": "Auto-Rejected",
+  "@patchStatusAutoRejected": {
+    "description": "Status label for automatically rejected patch"
+  },
+  "patchStatusExpired": "Expired",
+  "@patchStatusExpired": {
+    "description": "Status label for expired patch"
+  },
+  "myCorrections": "My Corrections",
+  "@myCorrections": {
+    "description": "Title for user's patch history screen"
+  },
+  "noPatchesYet": "No corrections submitted yet",
+  "@noPatchesYet": {
+    "description": "Empty state message when user has no patches"
+  },
+  "noPatchesDescription": "Found an error? Report it and help improve the database!",
+  "@noPatchesDescription": {
+    "description": "Empty state description"
+  },
+  "patchesCount": "{count} correction(s)",
+  "@patchesCount": {
+    "description": "Count of user patches",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pendingPatchesCount": "{count} pending",
+  "@pendingPatchesCount": {
+    "description": "Count of pending patches",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "patchApprovedMessage": "Your correction was approved!",
+  "@patchApprovedMessage": {
+    "description": "Message shown when patch is approved"
+  },
+  "patchRejectedMessage": "Your correction was rejected",
+  "@patchRejectedMessage": {
+    "description": "Message shown when patch is rejected"
+  },
+  "patchExpiredMessage": "This correction expired after 30 days",
+  "@patchExpiredMessage": {
+    "description": "Message shown for expired patch"
+  },
+  "adminNote": "Admin note",
+  "@adminNote": {
+    "description": "Label for admin note field"
+  },
+  "rejectReason": "Rejection reason",
+  "@rejectReason": {
+    "description": "Label for rejection reason"
+  },
+  "daysUntilExpiration": "Expires in {days} day(s)",
+  "@daysUntilExpiration": {
+    "description": "Days until patch expiration",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "patchExpired": "Expired",
+  "@patchExpired": {
+    "description": "Label for expired patch"
+  },
+  "viewPatchDetails": "View Details",
+  "@viewPatchDetails": {
+    "description": "Button to view patch details"
+  },
+  "patchDetailsTitle": "Correction Details",
+  "@patchDetailsTitle": {
+    "description": "Title for patch details screen"
+  },
+  "exerciseName": "Exercise",
+  "@exerciseName": {
+    "description": "Label for exercise name"
+  },
+  "fieldName": "Field",
+  "@fieldName": {
+    "description": "Label for field name"
+  },
+  "oldValue": "Old value",
+  "@oldValue": {
+    "description": "Label for old value"
+  },
+  "submittedAt": "Submitted",
+  "@submittedAt": {
+    "description": "Label for submission timestamp"
+  },
+  "reviewedAt": "Reviewed",
+  "@reviewedAt": {
+    "description": "Label for review timestamp"
+  },
+  "reviewedBy": "Reviewed by",
+  "@reviewedBy": {
+    "description": "Label for reviewer"
+  },
+  "pendingReview": "Pending admin review",
+  "@pendingReview": {
+    "description": "Status message for pending patch"
+  },
+  "approvedAndApplied": "Approved and applied to database",
+  "@approvedAndApplied": {
+    "description": "Status message for approved patch"
+  },
+  "rejectedNotApplied": "Rejected - not applied",
+  "@rejectedNotApplied": {
+    "description": "Status message for rejected patch"
+  },
+  "expiredNotReviewed": "Expired without review",
+  "@expiredNotReviewed": {
+    "description": "Status message for expired patch"
+  },
+  "reportExerciseError": "Report Exercise Error",
+  "@reportExerciseError": {
+    "description": "Title for patch submission dialog"
+  },
+  "reportErrorSubtitle": "Help improve our exercise database",
+  "@reportErrorSubtitle": {
+    "description": "Subtitle for patch submission dialog"
+  },
+  "selectFieldToCorrect": "Select field to correct",
+  "@selectFieldToCorrect": {
+    "description": "Label for field selector dropdown"
+  },
+  "pleaseSelectField": "Please select a field",
+  "@pleaseSelectField": {
+    "description": "Validation error for empty field selection"
+  },
+  "currentValue": "Current value",
+  "@currentValue": {
+    "description": "Label for current field value"
+  },
+  "newValue": "New value",
+  "@newValue": {
+    "description": "Label for new field value input"
+  },
+  "enterCorrectedValue": "Enter the corrected value",
+  "@enterCorrectedValue": {
+    "description": "Hint text for new value input"
+  },
+  "pleaseEnterNewValue": "Please enter a new value",
+  "@pleaseEnterNewValue": {
+    "description": "Validation error for empty new value"
+  },
+  "newValueMustDiffer": "New value must be different from current",
+  "@newValueMustDiffer": {
+    "description": "Validation error when new value equals current"
+  },
+  "reason": "Reason",
+  "@reason": {
+    "description": "Label for reason input field"
+  },
+  "explainWhyCorrection": "Explain why this correction is needed",
+  "@explainWhyCorrection": {
+    "description": "Hint text for reason input"
+  },
+  "pleaseProvideReason": "Please provide a reason",
+  "@pleaseProvideReason": {
+    "description": "Validation error for empty reason"
+  },
+  "reasonTooShort": "Reason must be at least 10 characters",
+  "@reasonTooShort": {
+    "description": "Validation error for short reason"
+  },
+  "submitCorrection": "Submit Correction",
+  "@submitCorrection": {
+    "description": "Button text to submit patch"
+  },
+  "patchSubmittedSuccess": "Correction submitted successfully! It will be reviewed by admins.",
+  "@patchSubmittedSuccess": {
+    "description": "Success message after patch submission"
+  },
+  "patchSubmissionError": "Failed to submit correction",
+  "@patchSubmissionError": {
+    "description": "Error message prefix for patch submission failure"
   }
 }
