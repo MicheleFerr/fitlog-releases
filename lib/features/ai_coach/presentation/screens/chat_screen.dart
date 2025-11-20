@@ -79,6 +79,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ],
         ),
         actions: [
+          // Back navigation button (show only when tree has parent)
+          if (chatState.tree?.getParentNode() != null)
+            IconButton(
+              icon: SemanticIcon(
+                icon: AppIcons.arrowBack,
+                semanticLabel: 'Back to parent',
+                size: AppIconSize.medium,
+              ),
+              onPressed: () {
+                ref.read(chatNotifierProvider(userId).notifier).navigateToParent();
+              },
+            ),
           // Clear history button
           IconButton(
             icon: SemanticIcon(

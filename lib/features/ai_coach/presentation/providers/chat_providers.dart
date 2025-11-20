@@ -9,6 +9,7 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversation_tree.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/usecases/send_chat_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/usecases/get_conversation_history.dart';
@@ -138,12 +139,14 @@ class ChatState {
   final bool isLoading;
   final bool isStreaming;
   final String? error;
+  final ConversationTree? tree;
 
   const ChatState({
     this.messages = const [],
     this.isLoading = false,
     this.isStreaming = false,
     this.error,
+    this.tree,
   });
 
   ChatState copyWith({
@@ -151,12 +154,14 @@ class ChatState {
     bool? isLoading,
     bool? isStreaming,
     String? error,
+    ConversationTree? tree,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
       isLoading: isLoading ?? this.isLoading,
       isStreaming: isStreaming ?? this.isStreaming,
       error: error ?? this.error,
+      tree: tree ?? this.tree,
     );
   }
 }
@@ -166,12 +171,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
   final SendChatMessage sendChatMessageUseCase;
   final GetConversationHistory getConversationHistoryUseCase;
   final ClearConversationHistory clearConversationHistoryUseCase;
+  final ChatRepository chatRepository;
   final String userId;
 
   ChatNotifier({
     required this.sendChatMessageUseCase,
     required this.getConversationHistoryUseCase,
     required this.clearConversationHistoryUseCase,
+    required this.chatRepository,
     required this.userId,
   }) : super(const ChatState()) {
     _loadHistory();
@@ -181,10 +188,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
   Future<void> _loadHistory() async {
     state = state.copyWith(isLoading: true);
 
+    // Load messages
     final result = await getConversationHistoryUseCase.call(
       userId: userId,
       limit: 50,
     );
+
+    // Load tree
+    final treeResult = await chatRepository.loadTree(userId: userId);
 
     result.fold(
       (failure) {
@@ -194,9 +205,22 @@ class ChatNotifier extends StateNotifier<ChatState> {
         );
       },
       (messages) {
-        state = state.copyWith(
-          messages: messages,
-          isLoading: false,
+        treeResult.fold(
+          (failure) {
+            // Tree load failed, but continue with messages
+            state = state.copyWith(
+              messages: messages,
+              isLoading: false,
+            );
+          },
+          (tree) {
+            // Both loaded successfully
+            state = state.copyWith(
+              messages: messages,
+              tree: tree,
+              isLoading: false,
+            );
+          },
         );
       },
     );
@@ -263,6 +287,34 @@ class ChatNotifier extends StateNotifier<ChatState> {
       },
     );
   }
+
+  /// Navigate to parent node in conversation tree
+  Future<void> navigateToParent() async {
+    final currentTree = state.tree;
+    if (currentTree == null) return;
+
+    // Navigate to parent in tree
+    final newTree = currentTree.navigateToParent();
+    if (newTree == null) return; // Already at root
+
+    // Save updated tree
+    final saveResult = await chatRepository.saveTree(newTree);
+
+    saveResult.fold(
+      (failure) {
+        // Keep existing state on error
+        state = state.copyWith(error: failure.message);
+      },
+      (_) {
+        // Update state with new tree and current path messages
+        state = state.copyWith(
+          tree: newTree,
+          messages: newTree.getCurrentPath(),
+          error: null,
+        );
+      },
+    );
+  }
 }
 
 /// Chat state notifier provider
@@ -271,11 +323,13 @@ final chatNotifierProvider = StateNotifierProvider.family<ChatNotifier, ChatStat
     final sendMessageUseCase = ref.watch(sendChatMessageProvider);
     final getHistoryUseCase = ref.watch(getConversationHistoryProvider);
     final clearHistoryUseCase = ref.watch(clearConversationHistoryProvider);
+    final repository = ref.watch(chatRepositoryProvider);
 
     return ChatNotifier(
       sendChatMessageUseCase: sendMessageUseCase,
       getConversationHistoryUseCase: getHistoryUseCase,
       clearConversationHistoryUseCase: clearHistoryUseCase,
+      chatRepository: repository,
       userId: userId,
     );
   },
