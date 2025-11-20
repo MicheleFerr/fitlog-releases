@@ -15,6 +15,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/inline_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -84,6 +85,12 @@ class MessageBubble extends StatelessWidget {
                               : context.colors.onSurface,
                         ),
                       ),
+
+                      // Inline chart (for assistant messages with chart metadata)
+                      if (!isUser &&
+                          message.metadata != null &&
+                          message.metadata!.containsKey('chartType'))
+                        InlineChart.fromMetadata(message.metadata!),
 
                       // Typing indicator (for streaming messages)
                       if (showTypingIndicator) ...[

@@ -193,7 +193,16 @@ class ChatBotDatasource {
       );
     }
 
-    // 7. Emit final message (isStreaming=false) with follow-up chips
+    // 6.5. Generate chart metadata for visual responses (Phase 2.2)
+    Map<String, dynamic>? metadata;
+
+    if (intent == UserIntent.progression || intent == UserIntent.volume) {
+      // Note: Using empty workouts list for now (Phase 2.2 uses mock data)
+      // TODO: Pass real workouts from _fetchAnalyzerData in Phase 2.4
+      metadata = await _generateChartMetadata(intent, analyzerData, <Workout>[]);
+    }
+
+    // 7. Emit final message (isStreaming=false) with follow-up chips and chart metadata
     yield AIMessage(
       id: messageId,
       content: fullResponse,
@@ -203,6 +212,7 @@ class ChatBotDatasource {
       followUpChips: followUpChips,
       conversationDepth: 0, // TODO: Track depth in Task 5
       parentIntent: intent.toString(), // Root intent
+      metadata: metadata, // Chart data for inline rendering
     );
   }
 
@@ -621,5 +631,81 @@ class ChatBotDatasource {
           ? '$months ${months == 1 ? 'mese' : 'mesi'} fa'
           : '$months ${months == 1 ? 'month' : 'months'} ago';
     }
+  }
+
+  // ========================================================================
+  // Chart Metadata Generation (Phase 2.2 - Rich Media Responses)
+  // ========================================================================
+
+  /// Generate chart metadata for inline visualization in AI messages
+  ///
+  /// **Supported Intents**:
+  /// - `progression`: Line chart showing PR trends over time
+  /// - `volume`: Bar chart showing weekly volume comparison
+  ///
+  /// **Returns**: Map with chartType and chartData, or null if no chart needed
+  Future<Map<String, dynamic>?> _generateChartMetadata(
+    UserIntent intent,
+    Map<String, String> analyzerData,
+    List<Workout> workouts,
+  ) async {
+    try {
+      if (intent == UserIntent.progression) {
+        // Generate progression chart data (mock for now - TODO: use real workout PRs)
+        // Simulate 8 weeks of bench press progression
+        final now = DateTime.now();
+        final data = <Map<String, dynamic>>[];
+
+        // Mock progression data (realistic trend: +2-5kg per week)
+        var currentWeight = 80.0;
+        for (var i = 7; i >= 0; i--) {
+          final date = now.subtract(Duration(days: i * 7)); // Weekly data points
+          data.add({
+            'date': date.toIso8601String(),
+            'value': currentWeight,
+          });
+          currentWeight += (2.0 + (i % 2) * 2.0); // +2kg or +4kg progression
+        }
+
+        return {
+          'chartType': 'line',
+          'chartData': {
+            'title': 'Bench Press Progression', // TODO: Extract exercise name from analyzerData
+            'unit': 'kg',
+            'data': data,
+          },
+        };
+      } else if (intent == UserIntent.volume) {
+        // Generate volume chart data (mock - TODO: use real workout volume)
+        // Simulate 4 weeks of volume comparison
+        final now = DateTime.now();
+        final data = <Map<String, dynamic>>[];
+
+        // Mock volume data (weekly total volume in kg)
+        final volumes = [8500.0, 9200.0, 8800.0, 9500.0];
+        for (var i = 3; i >= 0; i--) {
+          final weekStart = now.subtract(Duration(days: i * 7));
+          data.add({
+            'date': weekStart.toIso8601String(),
+            'value': volumes[3 - i],
+            'label': 'W${4 - i}', // Week label (W1, W2, W3, W4)
+          });
+        }
+
+        return {
+          'chartType': 'bar',
+          'chartData': {
+            'title': null, // No title for volume chart (embedded in message)
+            'unit': 'kg',
+            'data': data,
+          },
+        };
+      }
+    } catch (e) {
+      // Chart generation failed → return null (no chart, just text response)
+      return null;
+    }
+
+    return null;
   }
 }
