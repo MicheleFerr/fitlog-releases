@@ -39,7 +39,7 @@ dependencies:
   # Utilities
   uuid: ^4.5.1
   fuzzy_bolt: ^2.0.0  # Fuzzy matching for exercise search
-  
+
   # Background & Timer
   flutter_background_service: ^5.0.5
   audioplayers: ^6.5.1  # Current latest (^6.5.2 not yet published)
@@ -50,6 +50,7 @@ dependencies:
   health: ^13.2.1  # Latest version with HealthKit + Health Connect support
   permission_handler: ^11.0.1
   device_info_plus: ^12.2.0  # For Android API level checks (Task 5.6)
+  speech_to_text: ^7.1.0  # Voice input for AI Coach (Phase 3.1)
   
   # Navigation & UI
   go_router: ^12.1.3

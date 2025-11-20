@@ -17606,6 +17606,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get onboardingGotIt => 'Perfetto!';
 
   @override
+  String get voiceInputTap => 'Tocca per parlare';
+
+  @override
+  String get voiceInputListening => 'Ascolto...';
+
+  @override
+  String get voiceInputProcessing => 'Elaborazione...';
+
+  @override
+  String get voiceInputError => 'Riconoscimento vocale non disponibile';
+
+  @override
+  String get voiceInputPermissionDenied => 'Permesso microfono negato';
+
+  @override
   String get aiCoachQuestionProgress => 'Come sto progredendo?';
 
   @override

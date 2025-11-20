@@ -4,24 +4,28 @@
 /// 🎯 Feature: ai_coach
 /// 🔧 Type: widget
 ///
-/// Chat Input - Message input field with send button
+/// Chat Input - Message input field with voice and send button
 ///
 /// **Features**:
 /// - Multi-line text input
+/// - Voice input button with speech recognition (Phase 3.1)
 /// - Send button (enabled only when text is not empty)
 /// - Haptic feedback on send
 /// - Disabled state during streaming
+/// - Voice states: idle, listening, processing, error
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/voice_input_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Chat input widget
-class ChatInput extends StatefulWidget {
+class ChatInput extends ConsumerStatefulWidget {
   final TextEditingController controller;
   final Function(String) onSend;
   final bool enabled;
@@ -34,10 +38,10 @@ class ChatInput extends StatefulWidget {
   });
 
   @override
-  State<ChatInput> createState() => _ChatInputState();
+  ConsumerState<ChatInput> createState() => _ChatInputState();
 }
 
-class _ChatInputState extends State<ChatInput> {
+class _ChatInputState extends ConsumerState<ChatInput> {
   bool _hasText = false;
 
   @override
@@ -74,8 +78,78 @@ class _ChatInputState extends State<ChatInput> {
     widget.onSend(message);
   }
 
+  void _handleVoiceButtonTap() {
+    if (!widget.enabled) return;
+
+    final voiceState = ref.read(voiceInputProvider);
+    final voiceNotifier = ref.read(voiceInputProvider.notifier);
+
+    // Haptic feedback
+    HapticFeedback.lightImpact();
+
+    if (voiceState.state == VoiceInputState.idle) {
+      // Start listening
+      voiceNotifier.startListening();
+    } else if (voiceState.state == VoiceInputState.listening) {
+      // Stop listening
+      voiceNotifier.stopListening();
+    }
+  }
+
+  Widget _buildListeningAnimation(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.8, end: 1.2),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: SemanticIcon(
+            icon: AppIcons.mic,
+            semanticLabel: context.l10n.voiceInputListening,
+            size: AppIconSize.medium,
+            color: context.colors.onPrimary,
+          ),
+        );
+      },
+      onEnd: () {
+        // Restart animation if still listening
+        if (mounted &&
+            ref.read(voiceInputProvider).state == VoiceInputState.listening) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Watch voice input state
+    final voiceState = ref.watch(voiceInputProvider);
+
+    // Auto-fill text field when voice recognition completes
+    ref.listen<VoiceInputNotifierState>(
+      voiceInputProvider,
+      (previous, next) {
+        // When processing completes with text, auto-fill the text field
+        if (previous?.state == VoiceInputState.processing &&
+            next.state == VoiceInputState.idle &&
+            next.recognizedText.isNotEmpty) {
+          widget.controller.text = next.recognizedText;
+        }
+
+        // Show error snackbar if error occurred
+        if (next.state == VoiceInputState.error && next.errorMessage != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(next.errorMessage!),
+              backgroundColor: context.colors.error,
+            ),
+          );
+        }
+      },
+    );
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -131,6 +205,52 @@ class _ChatInputState extends State<ChatInput> {
                   fillColor: context.colors.surfaceContainerHighest,
                 ),
                 onSubmitted: (_) => _handleSend(),
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            // Voice input button
+            Material(
+              color: voiceState.state == VoiceInputState.listening
+                  ? context.colors.primary
+                  : context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                onTap: widget.enabled ? _handleVoiceButtonTap : null,
+                borderRadius: BorderRadius.circular(24),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 48,
+                  height: 48,
+                  alignment: Alignment.center,
+                  child: voiceState.state == VoiceInputState.listening
+                      ? _buildListeningAnimation(context)
+                      : voiceState.state == VoiceInputState.processing
+                          ? SizedBox(
+                              width: AppIconSize.medium,
+                              height: AppIconSize.medium,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  context.colors.primary,
+                                ),
+                              ),
+                            )
+                          : SemanticIcon(
+                              icon: AppIcons.mic,
+                              semanticLabel: voiceState.state == VoiceInputState.idle
+                                  ? context.l10n.voiceInputTap
+                                  : voiceState.state == VoiceInputState.error
+                                      ? context.l10n.voiceInputError
+                                      : context.l10n.voiceInputProcessing,
+                              size: AppIconSize.medium,
+                              color: widget.enabled
+                                  ? context.colors.onSurfaceVariant
+                                  : context.colors.onSurfaceVariant
+                                      .withValues(alpha: 0.5),
+                            ),
+                ),
               ),
             ),
 

@@ -31230,6 +31230,36 @@ abstract class AppLocalizations {
   /// **'Got it!'**
   String get onboardingGotIt;
 
+  /// Voice input button hint (idle state)
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to speak'**
+  String get voiceInputTap;
+
+  /// Voice input status (listening state)
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get voiceInputListening;
+
+  /// Voice input status (processing state)
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get voiceInputProcessing;
+
+  /// Voice input error message
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition not available'**
+  String get voiceInputError;
+
+  /// Voice input permission denied error
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission denied'**
+  String get voiceInputPermissionDenied;
+
   /// Suggested question about progression
   ///
   /// In en, this message translates to:

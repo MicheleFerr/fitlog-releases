@@ -21250,6 +21250,26 @@
   "@onboardingGotIt": {
     "description": "Onboarding dismissal button"
   },
+  "voiceInputTap": "Tap to speak",
+  "@voiceInputTap": {
+    "description": "Voice input button hint (idle state)"
+  },
+  "voiceInputListening": "Listening...",
+  "@voiceInputListening": {
+    "description": "Voice input status (listening state)"
+  },
+  "voiceInputProcessing": "Processing...",
+  "@voiceInputProcessing": {
+    "description": "Voice input status (processing state)"
+  },
+  "voiceInputError": "Speech recognition not available",
+  "@voiceInputError": {
+    "description": "Voice input error message"
+  },
+  "voiceInputPermissionDenied": "Microphone permission denied",
+  "@voiceInputPermissionDenied": {
+    "description": "Voice input permission denied error"
+  },
   "aiCoachQuestionProgress": "How am I progressing?",
   "@aiCoachQuestionProgress": {
     "description": "Suggested question about progression"

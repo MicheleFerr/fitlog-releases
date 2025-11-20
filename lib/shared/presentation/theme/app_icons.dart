@@ -430,6 +430,9 @@ class AppIcons {
   /// 🧪 Experiment
   static const IconData experiment = Icons.science_outlined;
 
+  /// 🎤 Voice input/Microphone (AI Coach Phase 3.1)
+  static const IconData mic = Icons.mic;
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🎨 SEMANTIC DUPLICATE VARIANTS (Phase 2)
   // High-value variants (≥10 total usages) - Consolidating scattered icon styles

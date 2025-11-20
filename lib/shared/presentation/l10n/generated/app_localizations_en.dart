@@ -17432,6 +17432,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingGotIt => 'Got it!';
 
   @override
+  String get voiceInputTap => 'Tap to speak';
+
+  @override
+  String get voiceInputListening => 'Listening...';
+
+  @override
+  String get voiceInputProcessing => 'Processing...';
+
+  @override
+  String get voiceInputError => 'Speech recognition not available';
+
+  @override
+  String get voiceInputPermissionDenied => 'Microphone permission denied';
+
+  @override
   String get aiCoachQuestionProgress => 'How am I progressing?';
 
   @override

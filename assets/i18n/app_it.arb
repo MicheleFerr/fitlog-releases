@@ -10614,6 +10614,26 @@
   "@onboardingGotIt": {
     "description": "Pulsante chiusura onboarding"
   },
+  "voiceInputTap": "Tocca per parlare",
+  "@voiceInputTap": {
+    "description": "Suggerimento pulsante input vocale (stato idle)"
+  },
+  "voiceInputListening": "Ascolto...",
+  "@voiceInputListening": {
+    "description": "Stato input vocale (in ascolto)"
+  },
+  "voiceInputProcessing": "Elaborazione...",
+  "@voiceInputProcessing": {
+    "description": "Stato input vocale (elaborazione)"
+  },
+  "voiceInputError": "Riconoscimento vocale non disponibile",
+  "@voiceInputError": {
+    "description": "Messaggio errore input vocale"
+  },
+  "voiceInputPermissionDenied": "Permesso microfono negato",
+  "@voiceInputPermissionDenied": {
+    "description": "Errore permesso microfono negato"
+  },
   "aiCoachQuestionProgress": "Come sto progredendo?",
   "@aiCoachQuestionProgress": {
     "description": "Domanda suggerita sui progressi"
