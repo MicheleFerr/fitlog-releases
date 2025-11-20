@@ -19,6 +19,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
@@ -404,11 +405,9 @@ class _AnalyticsFeedbackWidgetState
     // Se submission è success, mostra snackbar e resetta form
     final state = ref.read(analyticsFeedbackNotifierProvider);
     if (state.hasValue && !state.hasError && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.analyticsFeedbackSuccess),
-          backgroundColor: context.colors.success,
-        ),
+      SnackBarService.showSuccess(
+        context,
+        context.l10n.analyticsFeedbackSuccess,
       );
 
       // Reset form

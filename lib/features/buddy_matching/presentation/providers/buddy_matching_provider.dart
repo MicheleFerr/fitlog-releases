@@ -22,10 +22,13 @@ import 'package:gymbro_flutter_new/features/buddy_matching/domain/repositories/b
 import 'package:gymbro_flutter_new/features/buddy_matching/data/repositories/firebase_buddy_matching_repository.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/data/services/demo_profiles_loader.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/data/services/location_service.dart';
+import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 
 // Repository Provider
 final buddyMatchingRepositoryProvider = Provider<BuddyMatchingRepository>((ref) {
-  return FirebaseBuddyMatchingRepository();
+  // Inject unified repository for Firestore persistence
+  final unifiedRepository = ref.watch(unifiedFeedbackRepositoryProvider);
+  return FirebaseBuddyMatchingRepository(unifiedRepository: unifiedRepository);
 });
 
 // Current User Provider

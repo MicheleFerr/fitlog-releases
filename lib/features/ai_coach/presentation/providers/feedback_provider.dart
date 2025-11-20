@@ -10,6 +10,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/feedback_data.dart';
+import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 import 'package:uuid/uuid.dart';
 
 /// Feedback State
@@ -256,7 +257,9 @@ class FeedbackNotifier extends StateNotifier<AsyncValue<FeedbackState>> {
 
 /// Provider: Feedback Repository
 final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {
-  return FeedbackRepository();
+  // Inject unified repository for Firestore persistence
+  final unifiedRepository = ref.watch(unifiedFeedbackRepositoryProvider);
+  return FeedbackRepository(unifiedRepository);
 });
 
 /// Provider: Feedback Notifier

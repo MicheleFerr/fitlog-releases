@@ -15,10 +15,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/repositories/feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/feedback/data/repositories/firebase_feedback_repository.dart';
+import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 
 /// Provider for FeedbackRepository instance
 final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {
-  return FirebaseFeedbackRepository();
+  // Inject unified repository for Firestore persistence
+  final unifiedRepository = ref.watch(unifiedFeedbackRepositoryProvider);
+  return FirebaseFeedbackRepository(unifiedRepository: unifiedRepository);
 });
 
 /// Provider for current user ID

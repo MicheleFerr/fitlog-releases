@@ -24,16 +24,22 @@ import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/ice_breaker.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/repositories/buddy_matching_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/italian_city.dart';
+import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_feedback.dart';
+import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedback_type.dart';
+import 'package:gymbro_flutter_new/features/feedback/domain/repositories/i_unified_feedback_repository.dart';
 
 class FirebaseBuddyMatchingRepository implements BuddyMatchingRepository {
 
   FirebaseBuddyMatchingRepository({
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
+    IUnifiedFeedbackRepository? unifiedRepository,
   })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _auth = auth ?? FirebaseAuth.instance;
+        _auth = auth ?? FirebaseAuth.instance,
+        _unifiedRepository = unifiedRepository;
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
+  final IUnifiedFeedbackRepository? _unifiedRepository;
 
   // 🚀 FIRESTORE OPTIMIZATION: Cache current user profile to prevent N+1 queries
   // Prevents fetching user profile on every stream emission in getPotentialMatches
@@ -710,6 +716,7 @@ class FirebaseBuddyMatchingRepository implements BuddyMatchingRepository {
 
   @override
   Future<void> reportUser(String reporterId, String reportedUserId, ReportReason reason, {String? description}) async {
+    // Save to old collection (backward compatibility)
     await _firestore.collection('buddy_reports').add({
       'reporterId': reporterId,
       'reportedUserId': reportedUserId,
@@ -718,7 +725,80 @@ class FirebaseBuddyMatchingRepository implements BuddyMatchingRepository {
       'createdAt': FieldValue.serverTimestamp(),
       'status': 'pending',
     });
+
     await incrementReportCount(reportedUserId);
+
+    // ALSO save to unified feedback system (new)
+    if (_unifiedRepository != null) {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final unifiedFeedback = UnifiedFeedback(
+          id: '',
+          userId: reporterId,
+          type: UnifiedFeedbackType.buddyReport,
+          status: UnifiedFeedbackStatus.open,
+          severity: _mapReportReasonToSeverity(reason),
+          message: description ?? _generateDefaultReportMessage(reason),
+          createdAt: DateTime.now(),
+          metadata: {
+            'reportedUserId': reportedUserId,
+            'reason': reason.name,
+            'description': description ?? '',
+            'reporterEmail': user.email ?? '',
+          },
+          adminNotes: null,
+          resolvedAt: null,
+          updatedAt: null,
+        );
+
+        // Fire and forget - don't block
+        _unifiedRepository!.submitFeedback(unifiedFeedback).then(
+          (result) => result.fold(
+            (failure) {
+              // Log error but don't throw (backward compatibility)
+              // ignore: avoid_print
+              print('⚠️ Buddy report to unified system failed: ${failure.message}');
+            },
+            (_) {
+              // Success - no action needed
+            },
+          ),
+        );
+      }
+    }
+  }
+
+  /// Map ReportReason to FeedbackSeverity
+  FeedbackSeverity _mapReportReasonToSeverity(ReportReason reason) {
+    switch (reason) {
+      case ReportReason.inappropriatePhotos:
+      case ReportReason.harassment:
+      case ReportReason.underage:
+        return FeedbackSeverity.high;
+      case ReportReason.spam:
+      case ReportReason.fakeProfile:
+        return FeedbackSeverity.medium;
+      case ReportReason.other:
+        return FeedbackSeverity.low;
+    }
+  }
+
+  /// Generate default message for report
+  String _generateDefaultReportMessage(ReportReason reason) {
+    switch (reason) {
+      case ReportReason.inappropriatePhotos:
+        return 'User reported for inappropriate photos';
+      case ReportReason.harassment:
+        return 'User reported for harassment';
+      case ReportReason.spam:
+        return 'User reported for spam';
+      case ReportReason.fakeProfile:
+        return 'User reported for fake profile';
+      case ReportReason.underage:
+        return 'User reported for being underage';
+      case ReportReason.other:
+        return 'User reported for other reason';
+    }
   }
 
   @override

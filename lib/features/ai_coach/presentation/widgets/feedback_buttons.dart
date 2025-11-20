@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/feedback_da
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/dismiss_reason_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -76,11 +77,9 @@ class _FeedbackButtonsState extends ConsumerState<FeedbackButtons> {
 
       if (mounted) {
         // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.feedbackThankYou),
-            duration: const Duration(seconds: 2),
-          ),
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.feedbackThankYou,
         );
       }
     } finally {
@@ -115,11 +114,9 @@ class _FeedbackButtonsState extends ConsumerState<FeedbackButtons> {
 
       if (mounted) {
         // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.feedbackThankYou),
-            duration: const Duration(seconds: 2),
-          ),
+        SnackBarService.showSuccess(
+          context,
+          context.l10n.feedbackThankYou,
         );
       }
     } finally {

@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/analytic
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 
 // ========================================
 // REPOSITORY PROVIDER
@@ -29,7 +30,9 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/ana
 /// Provider del repository feedback
 final analyticsFeedbackRepositoryProvider =
     Provider<AnalyticsFeedbackRepository>((ref) {
-  return AnalyticsFeedbackRepository();
+  // Inject unified repository for Firestore persistence
+  final unifiedRepository = ref.watch(unifiedFeedbackRepositoryProvider);
+  return AnalyticsFeedbackRepository(unifiedRepository: unifiedRepository);
 });
 
 // ========================================
