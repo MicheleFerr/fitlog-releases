@@ -25,6 +25,7 @@ library;
 import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversation_tree.dart';
 
 /// Repository interface for AI Coach chat functionality
 ///
@@ -150,5 +151,69 @@ abstract class ChatRepository {
   Future<Either<Failure, String>> getConversationContext({
     required String userId,
     int messageCount = 10,
+  });
+
+  // ========================================================================
+  // Conversation Tree Navigation (NEW)
+  // ========================================================================
+
+  /// Save conversation tree to persistent storage
+  ///
+  /// **Parameters**:
+  /// - `tree`: ConversationTree to save
+  ///
+  /// **Side Effects**:
+  /// - Updates Hive cache with tree structure
+  /// - Triggers Firestore sync (background)
+  ///
+  /// **Use Case**: Persist tree state after user navigates or adds message
+  Future<Either<Failure, void>> saveTree(ConversationTree tree);
+
+  /// Load conversation tree from persistent storage
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to load tree for
+  ///
+  /// **Returns**: ConversationTree (empty if no tree exists)
+  ///
+  /// **Data Flow**:
+  /// 1. Query Hive cache (instant)
+  /// 2. If cache miss → fetch from Firestore
+  /// 3. Update Hive cache with latest tree
+  ///
+  /// **Use Case**: Initialize chat screen with tree state
+  Future<Either<Failure, ConversationTree>> loadTree({
+    required String userId,
+  });
+
+  /// Watch conversation tree for real-time updates
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to watch
+  ///
+  /// **Returns**: Stream of ConversationTree (emits on every tree update)
+  ///
+  /// **Data Flow**:
+  /// 1. Listen to Hive box changes
+  /// 2. Emit updated tree on every add/navigate
+  /// 3. Auto-cancel when screen disposed
+  ///
+  /// **Use Case**: Reactive tree UI (auto-update navigation controls)
+  Stream<Either<Failure, ConversationTree>> watchTree({
+    required String userId,
+  });
+
+  /// Clear conversation tree for user
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to clear tree for
+  ///
+  /// **Side Effects**:
+  /// - Deletes tree from Hive cache
+  /// - Triggers Firestore delete (background)
+  ///
+  /// **Use Case**: "Start Fresh" button (clears tree + messages)
+  Future<Either<Failure, void>> clearTree({
+    required String userId,
   });
 }

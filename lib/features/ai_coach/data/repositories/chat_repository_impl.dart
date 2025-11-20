@@ -23,6 +23,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversation_tree.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/chatbot_datasource.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/hive_chat_local_datasource.dart';
@@ -257,6 +258,93 @@ class ChatRepositoryImpl implements ChatRepository {
       }
 
       return Left(CacheFailure('Failed to get conversation context'));
+    }
+  }
+
+  // ========================================================================
+  // Conversation Tree Navigation
+  // ========================================================================
+
+  @override
+  Future<Either<Failure, void>> saveTree(ConversationTree tree) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🌲 [ChatBot] Saving conversation tree for user: ${tree.userId}');
+      }
+
+      await localDatasource.saveTree(tree);
+
+      return const Right(null);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [ChatBot] Error saving tree: $e');
+      }
+
+      return Left(CacheFailure('Failed to save conversation tree'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ConversationTree>> loadTree({
+    required String userId,
+  }) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🌲 [ChatBot] Loading conversation tree for user: $userId');
+      }
+
+      final tree = await localDatasource.loadTree(userId: userId);
+
+      return Right(tree);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [ChatBot] Error loading tree: $e');
+      }
+
+      return Left(CacheFailure('Failed to load conversation tree'));
+    }
+  }
+
+  @override
+  Stream<Either<Failure, ConversationTree>> watchTree({
+    required String userId,
+  }) async* {
+    try {
+      if (kDebugMode) {
+        debugPrint('🌲 [ChatBot] Watching conversation tree for user: $userId');
+      }
+
+      // Stream updates from Hive (reactive)
+      await for (final tree in localDatasource.watchTree(userId: userId)) {
+        yield Right(tree);
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [ChatBot] Error watching tree: $e');
+      }
+
+      yield Left(CacheFailure('Failed to watch conversation tree updates'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearTree({
+    required String userId,
+  }) async {
+    try {
+      if (kDebugMode) {
+        debugPrint('🌲 [ChatBot] Clearing conversation tree for user: $userId');
+      }
+
+      await localDatasource.clearTree(userId: userId);
+
+      return const Right(null);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [ChatBot] Error clearing tree: $e');
+      }
+
+      return Left(CacheFailure('Failed to clear conversation tree'));
     }
   }
 }

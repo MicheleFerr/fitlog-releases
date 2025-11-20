@@ -28,6 +28,7 @@ library;
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversation_tree.dart';
 
 /// Local datasource for chat message persistence
 ///
@@ -49,14 +50,19 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.
 /// ```
 class HiveChatLocalDatasource {
   static const String _boxName = 'chat_messages';
+  static const String _treeBoxName = 'chat_trees'; // NEW: Tree persistence
   static const int _maxMessagesPerUser = 500; // Prevent unbounded growth
 
   Box<Map<dynamic, dynamic>>? _box;
+  Box<Map<dynamic, dynamic>>? _treeBox; // NEW: Tree box
 
   /// Initialize Hive box (call once at app startup)
   Future<void> init() async {
     if (_box == null || !_box!.isOpen) {
       _box = await Hive.openBox<Map>(_boxName);
+    }
+    if (_treeBox == null || !_treeBox!.isOpen) {
+      _treeBox = await Hive.openBox<Map>(_treeBoxName);
     }
   }
 
@@ -235,9 +241,95 @@ class HiveChatLocalDatasource {
     }
   }
 
+  // ========================================================================
+  // Conversation Tree Persistence (NEW)
+  // ========================================================================
+
+  /// Save conversation tree to Hive cache
+  ///
+  /// **Parameters**:
+  /// - `tree`: ConversationTree to save
+  ///
+  /// **Storage Key**: `tree_{userId}`
+  Future<void> saveTree(ConversationTree tree) async {
+    await _ensureInitialized();
+
+    final key = 'tree_${tree.userId}';
+    final json = tree.toJson();
+
+    await _treeBox!.put(key, json);
+  }
+
+  /// Load conversation tree from Hive cache
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to load tree for
+  ///
+  /// **Returns**: ConversationTree (empty if no tree exists)
+  Future<ConversationTree> loadTree({required String userId}) async {
+    await _ensureInitialized();
+
+    final key = 'tree_$userId';
+    final json = _treeBox!.get(key);
+
+    if (json == null) {
+      // No tree exists → return empty tree
+      return ConversationTree.empty(userId: userId);
+    }
+
+    return ConversationTree.fromJson(Map<String, dynamic>.from(json));
+  }
+
+  /// Watch conversation tree for real-time updates
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to watch
+  ///
+  /// **Returns**: Stream of ConversationTree
+  ///
+  /// **Behavior**: Emits latest tree whenever it changes in Hive
+  Stream<ConversationTree> watchTree({required String userId}) async* {
+    await _ensureInitialized();
+
+    final key = 'tree_$userId';
+
+    // Emit initial tree
+    yield await loadTree(userId: userId);
+
+    // Watch for changes
+    await for (final event in _treeBox!.watch(key: key)) {
+      if (event.value == null) {
+        // Tree deleted → emit empty
+        yield ConversationTree.empty(userId: userId);
+      } else {
+        // Tree updated → emit new tree
+        final json = Map<String, dynamic>.from(event.value as Map);
+        yield ConversationTree.fromJson(json);
+      }
+    }
+  }
+
+  /// Clear conversation tree from Hive cache
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to clear tree for
+  Future<void> clearTree({required String userId}) async {
+    await _ensureInitialized();
+
+    final key = 'tree_$userId';
+    await _treeBox!.delete(key);
+  }
+
   /// Close Hive box (call at app shutdown)
   Future<void> close() async {
     await _box?.close();
     _box = null;
+    await _treeBox?.close();
+    _treeBox = null;
+  }
+
+  /// Ensure Hive boxes are initialized
+  Future<void> _ensureInitialized() async {
+    await init();
   }
 }
