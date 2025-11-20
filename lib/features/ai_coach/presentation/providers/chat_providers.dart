@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/services/tone_adapter.dart';
 
 // ============================================================================
 // Datasource Providers (Singleton)
@@ -38,6 +39,32 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_an
 /// AI Coach analytics provider (event tracking)
 final aiCoachAnalyticsProvider = Provider<AICoachAnalytics>((ref) {
   return AICoachAnalytics();
+});
+
+/// Tone adapter provider (adaptive tone based on user profile - Phase 3.2)
+final toneAdapterProvider = Provider<ToneAdapter>((ref) {
+  return ToneAdapter();
+});
+
+/// Tone profile provider - Derives tone profile from user data (Phase 3.2)
+///
+/// TODO: Integrate with UserProfile when experienceLevel and fitnessGoals fields added
+/// For now, returns default beginner profile
+final toneProfileProvider = Provider<ToneProfile>((ref) {
+  // TODO: Watch userProfileProvider when experience/goals fields added:
+  // final userProfile = ref.watch(userProfileProvider).valueOrNull;
+  // if (userProfile == null) return ToneProfile.defaultProfile;
+  //
+  // return ToneProfile(
+  //   experienceLevel: userProfile.experienceLevel ?? ExperienceLevel.beginner,
+  //   primaryGoal: userProfile.primaryFitnessGoal,
+  //   isEncouraging: true,
+  //   isDetailed: userProfile.experienceLevel != ExperienceLevel.advanced,
+  //   isTechnical: userProfile.experienceLevel == ExperienceLevel.advanced,
+  // );
+
+  // Default: Beginner-friendly tone for all users
+  return ToneProfile.beginnerProfile;
 });
 
 /// Intent detector provider (pattern-based classification)
@@ -87,6 +114,8 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
   final entityExtractor = ref.watch(simpleEntityExtractorProvider);
   final analyticsRepository = ref.watch(analyticsRepositoryProvider);
   final aiCoachAnalytics = ref.watch(aiCoachAnalyticsProvider);
+  final toneAdapter = ref.watch(toneAdapterProvider);
+  final toneProfile = ref.watch(toneProfileProvider);
 
   return ChatBotDatasource(
     intentDetector: intentDetector,
@@ -97,6 +126,8 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
     entityExtractor: entityExtractor,
     analyticsRepository: analyticsRepository,
     aiCoachAnalytics: aiCoachAnalytics,
+    toneAdapter: toneAdapter,
+    toneProfile: toneProfile,
   );
 });
 

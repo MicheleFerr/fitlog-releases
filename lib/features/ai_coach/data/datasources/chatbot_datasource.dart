@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/intent_det
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/response_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/simple_entity_extractor.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/services/tone_adapter.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hybrid_exercise_repository.dart';
@@ -65,6 +66,8 @@ class ChatBotDatasource {
   final SimpleEntityExtractor entityExtractor;
   final AnalyticsRepository analyticsRepository;
   final AICoachAnalytics aiCoachAnalytics;
+  final ToneAdapter toneAdapter;
+  final ToneProfile toneProfile;
   final Uuid _uuid = const Uuid();
 
   ChatBotDatasource({
@@ -76,6 +79,8 @@ class ChatBotDatasource {
     required this.entityExtractor,
     required this.analyticsRepository,
     required this.aiCoachAnalytics,
+    required this.toneAdapter,
+    required this.toneProfile,
   });
 
   /// Send message and stream bot response
@@ -121,13 +126,16 @@ class ChatBotDatasource {
     };
 
     // 5. Generate response from templates
-    final fullResponse = responseRepository.getResponse(
+    var fullResponse = responseRepository.getResponse(
       intent: intent,
       context: responseContext,
       locale: locale,
     );
 
-    // 5. Stream response token-by-token (typewriter effect)
+    // 5.1. Apply tone adaptation (Phase 3.2)
+    fullResponse = _applyToneAdaptation(fullResponse, intent);
+
+    // 5.2. Stream response token-by-token (typewriter effect)
     final messageId = _uuid.v4();
     final buffer = StringBuffer();
 
@@ -718,5 +726,42 @@ class ChatBotDatasource {
     }
 
     return null;
+  }
+
+  /// Apply tone adaptation to response (Phase 3.2)
+  ///
+  /// Modifies the bot response based on user's tone profile:
+  /// - Beginner: Add encouraging phrases, simplify technical terms
+  /// - Intermediate: Balanced tone
+  /// - Advanced: Concise, technical language
+  ///
+  /// **Examples**:
+  /// - Beginner + Strength intent → "Great job! Focus on compound movements..."
+  /// - Advanced + Strength intent → "Prioritize compound movements..."
+  String _applyToneAdaptation(String baseResponse, UserIntent intent) {
+    toneAdapter.logToneAdaptation(toneProfile, intent.toString());
+
+    // Apply encouraging phrases for beginners
+    if (toneProfile.isEncouraging &&
+        toneProfile.experienceLevel == ExperienceLevel.beginner) {
+      final encouragingPhrases = toneAdapter.getEncouragingPhrases(toneProfile);
+
+      // Add random encouraging phrase at start (33% chance)
+      if (encouragingPhrases.isNotEmpty &&
+          DateTime.now().millisecond % 3 == 0) {
+        final randomPhrase = encouragingPhrases[
+            DateTime.now().millisecond % encouragingPhrases.length];
+        return '$randomPhrase $baseResponse';
+      }
+    }
+
+    // TODO: Replace technical terms for beginners using vocabulary map
+    // final vocabulary = toneAdapter.getVocabulary(toneProfile);
+    // var adaptedResponse = baseResponse;
+    // vocabulary.forEach((technical, simple) {
+    //   adaptedResponse = adaptedResponse.replaceAll(technical, simple);
+    // });
+
+    return baseResponse;
   }
 }
