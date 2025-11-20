@@ -116,11 +116,11 @@ abstract class AppLocalizations {
   /// **'Track workouts, time your rest periods, and sync with Apple Health.'**
   String get welcomeDescription;
 
-  /// Title for the onboarding welcome step
+  /// AI Coach onboarding welcome title
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Your Workout Hub'**
-  String get onboardingWelcomeTitle;
+  /// **'Welcome, {name}!'**
+  String onboardingWelcomeTitle(String name);
 
   /// Description for the onboarding welcome step
   ///
@@ -31122,6 +31122,114 @@ abstract class AppLocalizations {
   /// **'Ask me about your workouts, progression, and recovery'**
   String get aiCoachChatDescription;
 
+  /// AI Coach onboarding welcome subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal AI fitness coach'**
+  String get onboardingWelcomeSubtitle;
+
+  /// AI Coach capabilities section title
+  ///
+  /// In en, this message translates to:
+  /// **'What I can help you with:'**
+  String get onboardingCapabilitiesTitle;
+
+  /// Progression capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Progression Tracking'**
+  String get onboardingProgressionTitle;
+
+  /// Progression capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"How am I progressing?\" or \"Show my PRs\"'**
+  String get onboardingProgressionExample;
+
+  /// Volume capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Analysis'**
+  String get onboardingVolumeTitle;
+
+  /// Volume capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Am I training too much?\" or \"Optimal volume?\"'**
+  String get onboardingVolumeExample;
+
+  /// Recovery capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Insights'**
+  String get onboardingRecoveryTitle;
+
+  /// Recovery capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Should I rest?\" or \"Am I recovered?\"'**
+  String get onboardingRecoveryExample;
+
+  /// Balance capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Balance'**
+  String get onboardingBalanceTitle;
+
+  /// Balance capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Are my muscles balanced?\"'**
+  String get onboardingBalanceExample;
+
+  /// Form capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Form & Technique'**
+  String get onboardingFormTitle;
+
+  /// Form capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Form tips\" or \"How to squat?\"'**
+  String get onboardingFormExample;
+
+  /// Motivation capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Motivation Boost'**
+  String get onboardingMotivationTitle;
+
+  /// Motivation capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Need motivation\" or \"Show my wins\"'**
+  String get onboardingMotivationExample;
+
+  /// Plan capability title
+  ///
+  /// In en, this message translates to:
+  /// **'Program Planning'**
+  String get onboardingPlanTitle;
+
+  /// Plan capability example
+  ///
+  /// In en, this message translates to:
+  /// **'\"Need a new program?\" or \"Optimal frequency?\"'**
+  String get onboardingPlanExample;
+
+  /// Pattern-based explanation for onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'💡 I analyze your real workout data locally using pattern-based insights. No AI cloud services needed!'**
+  String get onboardingPatternExplanation;
+
+  /// Onboarding dismissal button
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get onboardingGotIt;
+
   /// Suggested question about progression
   ///
   /// In en, this message translates to:
@@ -31637,6 +31745,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to process patch'**
   String get patchActionError;
+
+  /// Loading message for patch list
+  ///
+  /// In en, this message translates to:
+  /// **'Loading patches...'**
+  String get loadingPatches;
+
+  /// Empty state title when no patches exist
+  ///
+  /// In en, this message translates to:
+  /// **'No patches to review'**
+  String get noPatchesToReview;
+
+  /// Empty state subtitle when all patches reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'All patches have been reviewed'**
+  String get allPatchesReviewed;
+
+  /// Error state title when patch loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading patches'**
+  String get errorLoadingPatches;
 }
 
 class _AppLocalizationsDelegate

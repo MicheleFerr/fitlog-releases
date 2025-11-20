@@ -21169,6 +21169,87 @@
       }
     }
   },
+  "onboardingWelcomeTitle": "Welcome, {name}!",
+  "@onboardingWelcomeTitle": {
+    "description": "AI Coach onboarding welcome title",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingWelcomeSubtitle": "Your personal AI fitness coach",
+  "@onboardingWelcomeSubtitle": {
+    "description": "AI Coach onboarding welcome subtitle"
+  },
+  "onboardingCapabilitiesTitle": "What I can help you with:",
+  "@onboardingCapabilitiesTitle": {
+    "description": "AI Coach capabilities section title"
+  },
+  "onboardingProgressionTitle": "Progression Tracking",
+  "@onboardingProgressionTitle": {
+    "description": "Progression capability title"
+  },
+  "onboardingProgressionExample": "\"How am I progressing?\" or \"Show my PRs\"",
+  "@onboardingProgressionExample": {
+    "description": "Progression capability example"
+  },
+  "onboardingVolumeTitle": "Volume Analysis",
+  "@onboardingVolumeTitle": {
+    "description": "Volume capability title"
+  },
+  "onboardingVolumeExample": "\"Am I training too much?\" or \"Optimal volume?\"",
+  "@onboardingVolumeExample": {
+    "description": "Volume capability example"
+  },
+  "onboardingRecoveryTitle": "Recovery Insights",
+  "@onboardingRecoveryTitle": {
+    "description": "Recovery capability title"
+  },
+  "onboardingRecoveryExample": "\"Should I rest?\" or \"Am I recovered?\"",
+  "@onboardingRecoveryExample": {
+    "description": "Recovery capability example"
+  },
+  "onboardingBalanceTitle": "Muscle Balance",
+  "@onboardingBalanceTitle": {
+    "description": "Balance capability title"
+  },
+  "onboardingBalanceExample": "\"Are my muscles balanced?\"",
+  "@onboardingBalanceExample": {
+    "description": "Balance capability example"
+  },
+  "onboardingFormTitle": "Form & Technique",
+  "@onboardingFormTitle": {
+    "description": "Form capability title"
+  },
+  "onboardingFormExample": "\"Form tips\" or \"How to squat?\"",
+  "@onboardingFormExample": {
+    "description": "Form capability example"
+  },
+  "onboardingMotivationTitle": "Motivation Boost",
+  "@onboardingMotivationTitle": {
+    "description": "Motivation capability title"
+  },
+  "onboardingMotivationExample": "\"Need motivation\" or \"Show my wins\"",
+  "@onboardingMotivationExample": {
+    "description": "Motivation capability example"
+  },
+  "onboardingPlanTitle": "Program Planning",
+  "@onboardingPlanTitle": {
+    "description": "Plan capability title"
+  },
+  "onboardingPlanExample": "\"Need a new program?\" or \"Optimal frequency?\"",
+  "@onboardingPlanExample": {
+    "description": "Plan capability example"
+  },
+  "onboardingPatternExplanation": "💡 I analyze your real workout data locally using pattern-based insights. No AI cloud services needed!",
+  "@onboardingPatternExplanation": {
+    "description": "Pattern-based explanation for onboarding"
+  },
+  "onboardingGotIt": "Got it!",
+  "@onboardingGotIt": {
+    "description": "Onboarding dismissal button"
+  },
   "aiCoachQuestionProgress": "How am I progressing?",
   "@aiCoachQuestionProgress": {
     "description": "Suggested question about progression"
@@ -21583,5 +21664,21 @@
   "patchActionError": "Failed to process patch",
   "@patchActionError": {
     "description": "Error message for patch action failure"
+  },
+  "loadingPatches": "Loading patches...",
+  "@loadingPatches": {
+    "description": "Loading message for patch list"
+  },
+  "noPatchesToReview": "No patches to review",
+  "@noPatchesToReview": {
+    "description": "Empty state title when no patches exist"
+  },
+  "allPatchesReviewed": "All patches have been reviewed",
+  "@allPatchesReviewed": {
+    "description": "Empty state subtitle when all patches reviewed"
+  },
+  "errorLoadingPatches": "Error loading patches",
+  "@errorLoadingPatches": {
+    "description": "Error state title when patch loading fails"
   }
 }

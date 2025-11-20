@@ -10533,6 +10533,87 @@
       }
     }
   },
+  "onboardingWelcomeTitle": "Benvenuto, {name}!",
+  "@onboardingWelcomeTitle": {
+    "description": "Titolo benvenuto onboarding AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingWelcomeSubtitle": "Il tuo coach fitness AI personale",
+  "@onboardingWelcomeSubtitle": {
+    "description": "Sottotitolo benvenuto onboarding AI Coach"
+  },
+  "onboardingCapabilitiesTitle": "In cosa posso aiutarti:",
+  "@onboardingCapabilitiesTitle": {
+    "description": "Titolo sezione capacità AI Coach"
+  },
+  "onboardingProgressionTitle": "Monitoraggio Progressione",
+  "@onboardingProgressionTitle": {
+    "description": "Titolo capacità progressione"
+  },
+  "onboardingProgressionExample": "\"Come sto progredendo?\" o \"Mostrami i record\"",
+  "@onboardingProgressionExample": {
+    "description": "Esempio capacità progressione"
+  },
+  "onboardingVolumeTitle": "Analisi Volume",
+  "@onboardingVolumeTitle": {
+    "description": "Titolo capacità volume"
+  },
+  "onboardingVolumeExample": "\"Mi sto allenando troppo?\" o \"Volume ottimale?\"",
+  "@onboardingVolumeExample": {
+    "description": "Esempio capacità volume"
+  },
+  "onboardingRecoveryTitle": "Analisi Recupero",
+  "@onboardingRecoveryTitle": {
+    "description": "Titolo capacità recupero"
+  },
+  "onboardingRecoveryExample": "\"Devo riposare?\" o \"Sono recuperato?\"",
+  "@onboardingRecoveryExample": {
+    "description": "Esempio capacità recupero"
+  },
+  "onboardingBalanceTitle": "Equilibrio Muscolare",
+  "@onboardingBalanceTitle": {
+    "description": "Titolo capacità equilibrio"
+  },
+  "onboardingBalanceExample": "\"I miei muscoli sono bilanciati?\"",
+  "@onboardingBalanceExample": {
+    "description": "Esempio capacità equilibrio"
+  },
+  "onboardingFormTitle": "Forma & Tecnica",
+  "@onboardingFormTitle": {
+    "description": "Titolo capacità forma"
+  },
+  "onboardingFormExample": "\"Consigli sulla tecnica\" o \"Come fare squat?\"",
+  "@onboardingFormExample": {
+    "description": "Esempio capacità forma"
+  },
+  "onboardingMotivationTitle": "Spinta Motivazionale",
+  "@onboardingMotivationTitle": {
+    "description": "Titolo capacità motivazione"
+  },
+  "onboardingMotivationExample": "\"Ho bisogno di motivazione\" o \"Mostrami i successi\"",
+  "@onboardingMotivationExample": {
+    "description": "Esempio capacità motivazione"
+  },
+  "onboardingPlanTitle": "Pianificazione Programma",
+  "@onboardingPlanTitle": {
+    "description": "Titolo capacità piano"
+  },
+  "onboardingPlanExample": "\"Serve un nuovo programma?\" o \"Frequenza ottimale?\"",
+  "@onboardingPlanExample": {
+    "description": "Esempio capacità piano"
+  },
+  "onboardingPatternExplanation": "💡 Analizzo i tuoi dati di allenamento localmente usando analisi basate su pattern. Nessun servizio AI cloud necessario!",
+  "@onboardingPatternExplanation": {
+    "description": "Spiegazione pattern-based per onboarding"
+  },
+  "onboardingGotIt": "Perfetto!",
+  "@onboardingGotIt": {
+    "description": "Pulsante chiusura onboarding"
+  },
   "aiCoachQuestionProgress": "Come sto progredendo?",
   "@aiCoachQuestionProgress": {
     "description": "Domanda suggerita sui progressi"
@@ -10947,5 +11028,21 @@
   "patchActionError": "Errore nell'elaborazione della patch",
   "@patchActionError": {
     "description": "Messaggio errore azione patch fallita"
+  },
+  "loadingPatches": "Caricamento patch...",
+  "@loadingPatches": {
+    "description": "Messaggio caricamento lista patch"
+  },
+  "noPatchesToReview": "Nessuna patch da revisionare",
+  "@noPatchesToReview": {
+    "description": "Titolo stato vuoto quando non esistono patch"
+  },
+  "allPatchesReviewed": "Tutte le patch sono state revisionate",
+  "@allPatchesReviewed": {
+    "description": "Sottotitolo stato vuoto quando tutte le patch revisionate"
+  },
+  "errorLoadingPatches": "Errore nel caricamento delle patch",
+  "@errorLoadingPatches": {
+    "description": "Titolo stato errore quando caricamento patch fallisce"
   }
 }

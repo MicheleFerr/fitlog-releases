@@ -19,7 +19,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.';
 
   @override
-  String get onboardingWelcomeTitle => 'Benvenuto nel Tuo Hub di Allenamento';
+  String onboardingWelcomeTitle(String name) {
+    return 'Benvenuto, $name!';
+  }
 
   @override
   String get onboardingWelcomeDescription =>
@@ -17543,6 +17545,67 @@ class AppLocalizationsIt extends AppLocalizations {
       'Chiedimi dei tuoi allenamenti, progressi e recupero';
 
   @override
+  String get onboardingWelcomeSubtitle => 'Il tuo coach fitness AI personale';
+
+  @override
+  String get onboardingCapabilitiesTitle => 'In cosa posso aiutarti:';
+
+  @override
+  String get onboardingProgressionTitle => 'Monitoraggio Progressione';
+
+  @override
+  String get onboardingProgressionExample =>
+      '\"Come sto progredendo?\" o \"Mostrami i record\"';
+
+  @override
+  String get onboardingVolumeTitle => 'Analisi Volume';
+
+  @override
+  String get onboardingVolumeExample =>
+      '\"Mi sto allenando troppo?\" o \"Volume ottimale?\"';
+
+  @override
+  String get onboardingRecoveryTitle => 'Analisi Recupero';
+
+  @override
+  String get onboardingRecoveryExample =>
+      '\"Devo riposare?\" o \"Sono recuperato?\"';
+
+  @override
+  String get onboardingBalanceTitle => 'Equilibrio Muscolare';
+
+  @override
+  String get onboardingBalanceExample => '\"I miei muscoli sono bilanciati?\"';
+
+  @override
+  String get onboardingFormTitle => 'Forma & Tecnica';
+
+  @override
+  String get onboardingFormExample =>
+      '\"Consigli sulla tecnica\" o \"Come fare squat?\"';
+
+  @override
+  String get onboardingMotivationTitle => 'Spinta Motivazionale';
+
+  @override
+  String get onboardingMotivationExample =>
+      '\"Ho bisogno di motivazione\" o \"Mostrami i successi\"';
+
+  @override
+  String get onboardingPlanTitle => 'Pianificazione Programma';
+
+  @override
+  String get onboardingPlanExample =>
+      '\"Serve un nuovo programma?\" o \"Frequenza ottimale?\"';
+
+  @override
+  String get onboardingPatternExplanation =>
+      '💡 Analizzo i tuoi dati di allenamento localmente usando analisi basate su pattern. Nessun servizio AI cloud necessario!';
+
+  @override
+  String get onboardingGotIt => 'Perfetto!';
+
+  @override
   String get aiCoachQuestionProgress => 'Come sto progredendo?';
 
   @override
@@ -17818,4 +17881,16 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get patchActionError => 'Errore nell\'elaborazione della patch';
+
+  @override
+  String get loadingPatches => 'Caricamento patch...';
+
+  @override
+  String get noPatchesToReview => 'Nessuna patch da revisionare';
+
+  @override
+  String get allPatchesReviewed => 'Tutte le patch sono state revisionate';
+
+  @override
+  String get errorLoadingPatches => 'Errore nel caricamento delle patch';
 }

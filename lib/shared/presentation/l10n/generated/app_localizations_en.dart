@@ -19,7 +19,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Track workouts, time your rest periods, and sync with Apple Health.';
 
   @override
-  String get onboardingWelcomeTitle => 'Welcome to Your Workout Hub';
+  String onboardingWelcomeTitle(String name) {
+    return 'Welcome, $name!';
+  }
 
   @override
   String get onboardingWelcomeDescription =>
@@ -17370,6 +17372,66 @@ class AppLocalizationsEn extends AppLocalizations {
       'Ask me about your workouts, progression, and recovery';
 
   @override
+  String get onboardingWelcomeSubtitle => 'Your personal AI fitness coach';
+
+  @override
+  String get onboardingCapabilitiesTitle => 'What I can help you with:';
+
+  @override
+  String get onboardingProgressionTitle => 'Progression Tracking';
+
+  @override
+  String get onboardingProgressionExample =>
+      '\"How am I progressing?\" or \"Show my PRs\"';
+
+  @override
+  String get onboardingVolumeTitle => 'Volume Analysis';
+
+  @override
+  String get onboardingVolumeExample =>
+      '\"Am I training too much?\" or \"Optimal volume?\"';
+
+  @override
+  String get onboardingRecoveryTitle => 'Recovery Insights';
+
+  @override
+  String get onboardingRecoveryExample =>
+      '\"Should I rest?\" or \"Am I recovered?\"';
+
+  @override
+  String get onboardingBalanceTitle => 'Muscle Balance';
+
+  @override
+  String get onboardingBalanceExample => '\"Are my muscles balanced?\"';
+
+  @override
+  String get onboardingFormTitle => 'Form & Technique';
+
+  @override
+  String get onboardingFormExample => '\"Form tips\" or \"How to squat?\"';
+
+  @override
+  String get onboardingMotivationTitle => 'Motivation Boost';
+
+  @override
+  String get onboardingMotivationExample =>
+      '\"Need motivation\" or \"Show my wins\"';
+
+  @override
+  String get onboardingPlanTitle => 'Program Planning';
+
+  @override
+  String get onboardingPlanExample =>
+      '\"Need a new program?\" or \"Optimal frequency?\"';
+
+  @override
+  String get onboardingPatternExplanation =>
+      '💡 I analyze your real workout data locally using pattern-based insights. No AI cloud services needed!';
+
+  @override
+  String get onboardingGotIt => 'Got it!';
+
+  @override
   String get aiCoachQuestionProgress => 'How am I progressing?';
 
   @override
@@ -17639,4 +17701,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get patchActionError => 'Failed to process patch';
+
+  @override
+  String get loadingPatches => 'Loading patches...';
+
+  @override
+  String get noPatchesToReview => 'No patches to review';
+
+  @override
+  String get allPatchesReviewed => 'All patches have been reviewed';
+
+  @override
+  String get errorLoadingPatches => 'Error loading patches';
 }

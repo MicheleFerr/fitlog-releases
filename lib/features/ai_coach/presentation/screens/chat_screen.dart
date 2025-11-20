@@ -32,6 +32,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/message_bubble.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_input.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/suggestion_chips.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/onboarding_modal.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -55,10 +56,55 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Check onboarding status after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowOnboarding();
+    });
+  }
+
+  @override
   void dispose() {
     _scrollController.dispose();
     _textController.dispose();
     super.dispose();
+  }
+
+  /// Check if user has seen onboarding and show modal if not
+  Future<void> _checkAndShowOnboarding() async {
+    if (!mounted) return;
+
+    // Get user ID
+    const userId = 'test-user';
+
+    // Get user profile for display name
+    final userProfile = ref.read(userProfileProvider);
+    final displayName = userProfile.valueOrNull?.displayName ?? 'GymBro';
+    final firstName = displayName.split(' ').first;
+
+    // Check onboarding status
+    final datasource = ref.read(hiveChatLocalDatasourceProvider);
+    final hasSeenOnboarding = await datasource.hasSeenOnboarding(userId: userId);
+
+    // Show onboarding if not seen
+    if (!hasSeenOnboarding && mounted) {
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => OnboardingModal(
+          userName: firstName,
+          onDismiss: () async {
+            // Mark onboarding as seen
+            await datasource.markOnboardingSeen(userId: userId);
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+      );
+    }
   }
 
   @override

@@ -51,10 +51,12 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversatio
 class HiveChatLocalDatasource {
   static const String _boxName = 'chat_messages';
   static const String _treeBoxName = 'chat_trees'; // NEW: Tree persistence
+  static const String _prefsBoxName = 'chat_prefs'; // NEW: User preferences (onboarding, etc.)
   static const int _maxMessagesPerUser = 500; // Prevent unbounded growth
 
   Box<Map<dynamic, dynamic>>? _box;
   Box<Map<dynamic, dynamic>>? _treeBox; // NEW: Tree box
+  Box<Map<dynamic, dynamic>>? _prefsBox; // NEW: Preferences box
 
   /// Initialize Hive box (call once at app startup)
   Future<void> init() async {
@@ -63,6 +65,9 @@ class HiveChatLocalDatasource {
     }
     if (_treeBox == null || !_treeBox!.isOpen) {
       _treeBox = await Hive.openBox<Map>(_treeBoxName);
+    }
+    if (_prefsBox == null || !_prefsBox!.isOpen) {
+      _prefsBox = await Hive.openBox<Map>(_prefsBoxName);
     }
   }
 
@@ -320,12 +325,53 @@ class HiveChatLocalDatasource {
     await _treeBox!.delete(key);
   }
 
+  // ========================================================================
+  // Onboarding & User Preferences (NEW - Phase 2.1)
+  // ========================================================================
+
+  /// Check if user has seen onboarding flow
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to check
+  ///
+  /// **Returns**: true if user has completed onboarding, false otherwise
+  ///
+  /// **Storage Key**: `onboarding_{userId}`
+  Future<bool> hasSeenOnboarding({required String userId}) async {
+    await _ensureInitialized();
+
+    final key = 'onboarding_$userId';
+    final value = _prefsBox!.get(key);
+
+    return value?['seen'] == true;
+  }
+
+  /// Mark onboarding as seen for user
+  ///
+  /// **Parameters**:
+  /// - `userId`: User ID to mark as seen
+  ///
+  /// **Side Effects**: Writes to preferences box
+  ///
+  /// **Use Case**: Call when user completes onboarding flow
+  Future<void> markOnboardingSeen({required String userId}) async {
+    await _ensureInitialized();
+
+    final key = 'onboarding_$userId';
+    await _prefsBox!.put(key, {
+      'seen': true,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
   /// Close Hive box (call at app shutdown)
   Future<void> close() async {
     await _box?.close();
     _box = null;
     await _treeBox?.close();
     _treeBox = null;
+    await _prefsBox?.close();
+    _prefsBox = null;
   }
 
   /// Ensure Hive boxes are initialized
