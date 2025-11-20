@@ -174,6 +174,7 @@ class ResponseRepository {
       case UserIntent.greeting:
       case UserIntent.unknown:
       case UserIntent.prQuery:
+      case UserIntent.help:
         return []; // No follow-ups for these intents
     }
   }
@@ -318,6 +319,8 @@ class ResponseRepository {
         return _getPlanTemplates(locale);
       case UserIntent.prQuery:
         return _getPRQueryTemplates(locale);
+      case UserIntent.help:
+        return _getHelpTemplates(locale);
       case UserIntent.unknown:
         return _getUnknownTemplates(locale);
     }
@@ -569,23 +572,78 @@ class ResponseRepository {
     ];
   }
 
-  List<ResponseTemplate> _getUnknownTemplates(String locale) {
+  List<ResponseTemplate> _getHelpTemplates(String locale) {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Non ho capito bene. Posso aiutarti con: progressi, volume, recupero, equilibrio muscolare, tecnica, motivazione.",
-        ),
-        const ResponseTemplate(
-          text: "Prova a riformulare. Ad esempio: 'Come sto progredendo?' o 'Devo riposare?'",
+          text: "🤖 Ecco cosa posso fare per te:\n\n"
+              "📈 **Progressione**: \"Come sto progredendo?\", \"Mostrami i miei record\"\n"
+              "💪 **Volume**: \"Sto allenandomi troppo?\", \"Volume ottimale?\"\n"
+              "😴 **Recupero**: \"Devo riposare?\", \"Sono recuperato?\"\n"
+              "⚖️ **Equilibrio**: \"I miei muscoli sono bilanciati?\"\n"
+              "🎯 **Tecnica**: \"Consigli sulla tecnica\", \"Come fare squat?\"\n"
+              "🔥 **Motivazione**: \"Ho bisogno di motivazione\"\n"
+              "📅 **Piano**: \"Serve un nuovo programma?\"\n\n"
+              "💡 **Tip**: Fai domande naturali, rispondo in base ai tuoi dati di allenamento!",
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "I didn't quite understand. I can help with: progress, volume, recovery, balance, form, motivation.",
+        text: "🤖 Here's what I can do for you:\n\n"
+            "📈 **Progression**: \"How am I progressing?\", \"Show my PRs\"\n"
+            "💪 **Volume**: \"Am I training too much?\", \"Optimal volume?\"\n"
+            "😴 **Recovery**: \"Should I rest?\", \"Am I recovered?\"\n"
+            "⚖️ **Balance**: \"Are my muscles balanced?\"\n"
+            "🎯 **Form**: \"Form tips\", \"How to squat?\"\n"
+            "🔥 **Motivation**: \"Need motivation\"\n"
+            "📅 **Plan**: \"Need a new program?\"\n\n"
+            "💡 **Tip**: Ask natural questions, I'll answer based on your workout data!",
+      ),
+    ];
+  }
+
+  List<ResponseTemplate> _getUnknownTemplates(String locale) {
+    if (locale == 'it') {
+      return [
+        const ResponseTemplate(
+          text: "🤔 Non ho capito bene la tua richiesta.\n\n"
+              "Posso aiutarti con: **progressi**, **volume**, **recupero**, **equilibrio muscolare**, **tecnica**, **motivazione**.\n\n"
+              "❓ Prova a riformulare, ad esempio:\n"
+              "• \"Come sto progredendo?\"\n"
+              "• \"Devo riposare?\"\n"
+              "• \"Qual è il mio massimale di panca?\"\n\n"
+              "💡 Scrivi **'aiuto'** per vedere tutte le mie capacità.",
+        ),
+        const ResponseTemplate(
+          text: "⚠️ Non sono sicuro di cosa intendi.\n\n"
+              "Posso rispondere a domande su:\n"
+              "• Progressione e record personali\n"
+              "• Volume di allenamento\n"
+              "• Recupero e riposo\n"
+              "• Equilibrio muscolare\n\n"
+              "🔄 Prova a riformulare o scrivi **'aiuto'** per la lista completa.",
+        ),
+      ];
+    }
+    return [
+      const ResponseTemplate(
+        text: "🤔 I didn't quite understand your request.\n\n"
+            "I can help with: **progress**, **volume**, **recovery**, **muscle balance**, **form**, **motivation**.\n\n"
+            "❓ Try rephrasing, for example:\n"
+            "• \"How am I progressing?\"\n"
+            "• \"Should I rest?\"\n"
+            "• \"What's my bench press max?\"\n\n"
+            "💡 Type **'help'** to see all my capabilities.",
       ),
       const ResponseTemplate(
-        text: "Try rephrasing. For example: 'How am I progressing?' or 'Should I rest?'",
+        text: "⚠️ I'm not sure what you mean.\n\n"
+            "I can answer questions about:\n"
+            "• Progression and personal records\n"
+            "• Training volume\n"
+            "• Recovery and rest\n"
+            "• Muscle balance\n\n"
+            "🔄 Try rephrasing or type **'help'** for the complete list.",
       ),
     ];
   }

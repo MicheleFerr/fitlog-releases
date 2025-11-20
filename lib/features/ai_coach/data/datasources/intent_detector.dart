@@ -35,6 +35,7 @@ enum UserIntent {
   plan,         // "Need a workout plan"
   prQuery,      // "What's my max on bench press?" (Personal Record query)
   greeting,     // "Hi", "Hello"
+  help,         // "Help", "What can you do?"
   unknown,      // Fallback
 }
 
@@ -98,6 +99,10 @@ class IntentDetector {
 
     if (_isPRQueryIntent(normalized)) {
       return UserIntent.prQuery;
+    }
+
+    if (_isHelpIntent(normalized)) {
+      return UserIntent.help;
     }
 
     // Fallback
@@ -244,6 +249,24 @@ class IntentDetector {
       // Question patterns
       'qual è il mio max', 'qual è il massimale',
       'what is my max', 'what\'s my max',
+    ];
+
+    return _containsAnyKeyword(message, keywords);
+  }
+
+  /// Check if message is asking for help
+  ///
+  /// **Examples**:
+  /// - "help", "aiuto", "help me"
+  /// - "what can you do?", "cosa puoi fare?"
+  /// - "show me your capabilities", "mostrami le tue capacità"
+  bool _isHelpIntent(String message) {
+    final keywords = [
+      'help', 'aiuto', 'help me', 'aiutami',
+      'what can you do', 'cosa puoi fare',
+      'capabilities', 'capacità', 'features', 'funzioni',
+      'commands', 'comandi', 'options', 'opzioni',
+      'how to use', 'come usare', 'how does this work',
     ];
 
     return _containsAnyKeyword(message, keywords);
