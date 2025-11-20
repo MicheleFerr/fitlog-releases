@@ -565,7 +565,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cacheSize => 'Dimensione Cache';
 
   @override
-  String get lastUpdate => 'Ultimo Aggiornamento';
+  String get lastUpdate => 'Ultimo aggiornamento';
 
   @override
   String get loading => 'Caricamento...';
@@ -4497,7 +4497,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get technique => 'Tecnica';
 
   @override
-  String get pending => 'In Sospeso';
+  String get pending => 'In Attesa';
 
   @override
   String get approved => 'Approvato';
@@ -7342,7 +7342,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get restBetweenSets => 'Riposo tra Serie';
 
   @override
-  String get completed => 'Completato';
+  String get completed => 'Completati';
 
   @override
   String get set => 'serie';
@@ -17908,4 +17908,92 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get errorLoadingPatches => 'Errore nel caricamento delle patch';
+
+  @override
+  String get feedbackDashboard => 'Dashboard Feedback';
+
+  @override
+  String get totalFeedback => 'Feedback Totali';
+
+  @override
+  String get allTypes => 'Tutti i Tipi';
+
+  @override
+  String get allStatuses => 'Tutti gli Stati';
+
+  @override
+  String get allPriorities => 'Tutte le Priorità';
+
+  @override
+  String get searchFeedback => 'Cerca feedback...';
+
+  @override
+  String get statusOpen => 'Aperto';
+
+  @override
+  String get statusReviewing => 'In Revisione';
+
+  @override
+  String get statusResolved => 'Risolto';
+
+  @override
+  String get statusDismissed => 'Archiviato';
+
+  @override
+  String get statusClosed => 'Chiuso';
+
+  @override
+  String get severityLow => 'Bassa';
+
+  @override
+  String get severityMedium => 'Media';
+
+  @override
+  String get severityHigh => 'Alta';
+
+  @override
+  String get severityCritical => 'Critica';
+
+  @override
+  String get typeExercise => 'Esercizio';
+
+  @override
+  String get typeAiInsight => 'AI Coach';
+
+  @override
+  String get typeAnalytics => 'Analytics';
+
+  @override
+  String get typeBuddyReport => 'Segnalazione Utente';
+
+  @override
+  String get typeGeneral => 'Generale';
+
+  @override
+  String get typeExercisePatch => 'Correzione Esercizio';
+
+  @override
+  String get submitted => 'Inviato';
+
+  @override
+  String get user => 'Utente';
+
+  @override
+  String get noFeedbackFound => 'Nessun feedback trovato';
+
+  @override
+  String get noFeedbackSubmittedYet => 'Nessun feedback inviato';
+
+  @override
+  String get noFeedbackSubmittedDescription =>
+      'Non hai ancora inviato alcun feedback. Quando lo farai, apparirà qui.';
+
+  @override
+  String get yourMessage => 'Il tuo messaggio';
+
+  @override
+  String get adminResponded => 'Admin ha risposto';
+
+  @override
+  String get adminResponse => 'Risposta Admin';
 }

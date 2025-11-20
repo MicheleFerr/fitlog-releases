@@ -563,7 +563,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cacheSize => 'Cache Size';
 
   @override
-  String get lastUpdate => 'Last Update';
+  String get lastUpdate => 'Last update';
 
   @override
   String get loading => 'Loading...';
@@ -17728,4 +17728,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingPatches => 'Error loading patches';
+
+  @override
+  String get feedbackDashboard => 'Feedback Dashboard';
+
+  @override
+  String get totalFeedback => 'Total Feedback';
+
+  @override
+  String get allTypes => 'All Types';
+
+  @override
+  String get allStatuses => 'All Statuses';
+
+  @override
+  String get allPriorities => 'All Priorities';
+
+  @override
+  String get searchFeedback => 'Search feedback...';
+
+  @override
+  String get statusOpen => 'Open';
+
+  @override
+  String get statusReviewing => 'Reviewing';
+
+  @override
+  String get statusResolved => 'Resolved';
+
+  @override
+  String get statusDismissed => 'Dismissed';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get severityLow => 'Low';
+
+  @override
+  String get severityMedium => 'Medium';
+
+  @override
+  String get severityHigh => 'High';
+
+  @override
+  String get severityCritical => 'Critical';
+
+  @override
+  String get typeExercise => 'Exercise';
+
+  @override
+  String get typeAiInsight => 'AI Insight';
+
+  @override
+  String get typeAnalytics => 'Analytics';
+
+  @override
+  String get typeBuddyReport => 'User Report';
+
+  @override
+  String get typeGeneral => 'General';
+
+  @override
+  String get typeExercisePatch => 'Exercise Patch';
+
+  @override
+  String get submitted => 'Submitted';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get noFeedbackFound => 'No feedback found';
+
+  @override
+  String get noFeedbackSubmittedYet => 'No feedback submitted yet';
+
+  @override
+  String get noFeedbackSubmittedDescription =>
+      'You haven\'t submitted any feedback yet. When you do, it will appear here.';
+
+  @override
+  String get yourMessage => 'Your message';
+
+  @override
+  String get adminResponded => 'Admin responded';
+
+  @override
+  String get adminResponse => 'Admin Response';
 }

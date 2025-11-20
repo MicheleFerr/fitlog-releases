@@ -21700,5 +21700,157 @@
   "errorLoadingPatches": "Error loading patches",
   "@errorLoadingPatches": {
     "description": "Error state title when patch loading fails"
+  },
+  "feedbackDashboard": "Feedback Dashboard",
+  "@feedbackDashboard": {
+    "description": "Title for admin feedback dashboard screen"
+  },
+  "myFeedback": "My Feedback",
+  "@myFeedback": {
+    "description": "Title for user feedback history screen"
+  },
+  "overview": "Overview",
+  "@overview": {
+    "description": "Section title for statistics overview"
+  },
+  "totalFeedback": "Total Feedback",
+  "@totalFeedback": {
+    "description": "Label for total feedback count statistic"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Label for pending feedback count"
+  },
+  "criticalIssues": "Critical Issues",
+  "@criticalIssues": {
+    "description": "Label for critical/high priority feedback count"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Label for completed feedback count"
+  },
+  "filters": "Filters",
+  "@filters": {
+    "description": "Section title for filter options"
+  },
+  "allTypes": "All Types",
+  "@allTypes": {
+    "description": "Filter option to show all feedback types"
+  },
+  "allStatuses": "All Statuses",
+  "@allStatuses": {
+    "description": "Filter option to show all statuses"
+  },
+  "allPriorities": "All Priorities",
+  "@allPriorities": {
+    "description": "Filter option to show all severity levels"
+  },
+  "searchFeedback": "Search feedback...",
+  "@searchFeedback": {
+    "description": "Hint text for feedback search field"
+  },
+  "statusOpen": "Open",
+  "@statusOpen": {
+    "description": "Feedback status: newly submitted"
+  },
+  "statusReviewing": "Reviewing",
+  "@statusReviewing": {
+    "description": "Feedback status: under admin review"
+  },
+  "statusResolved": "Resolved",
+  "@statusResolved": {
+    "description": "Feedback status: issue resolved"
+  },
+  "statusDismissed": "Dismissed",
+  "@statusDismissed": {
+    "description": "Feedback status: dismissed by admin"
+  },
+  "statusClosed": "Closed",
+  "@statusClosed": {
+    "description": "Feedback status: closed without action"
+  },
+  "severityLow": "Low",
+  "@severityLow": {
+    "description": "Feedback severity: low priority"
+  },
+  "severityMedium": "Medium",
+  "@severityMedium": {
+    "description": "Feedback severity: medium priority"
+  },
+  "severityHigh": "High",
+  "@severityHigh": {
+    "description": "Feedback severity: high priority"
+  },
+  "severityCritical": "Critical",
+  "@severityCritical": {
+    "description": "Feedback severity: critical priority"
+  },
+  "typeExercise": "Exercise",
+  "@typeExercise": {
+    "description": "Feedback type: exercise feedback"
+  },
+  "typeAiInsight": "AI Insight",
+  "@typeAiInsight": {
+    "description": "Feedback type: AI coach feedback"
+  },
+  "typeAnalytics": "Analytics",
+  "@typeAnalytics": {
+    "description": "Feedback type: analytics page feedback"
+  },
+  "typeBuddyReport": "User Report",
+  "@typeBuddyReport": {
+    "description": "Feedback type: buddy report"
+  },
+  "typeGeneral": "General",
+  "@typeGeneral": {
+    "description": "Feedback type: general feedback"
+  },
+  "typeExercisePatch": "Exercise Patch",
+  "@typeExercisePatch": {
+    "description": "Feedback type: exercise correction patch"
+  },
+  "submitted": "Submitted",
+  "@submitted": {
+    "description": "Label for submission timestamp"
+  },
+  "lastUpdate": "Last update",
+  "@lastUpdate": {
+    "description": "Label for last update timestamp"
+  },
+  "user": "User",
+  "@user": {
+    "description": "Label for user information"
+  },
+  "details": "Details",
+  "@details": {
+    "description": "Button text to view feedback details"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Button text to close dialog"
+  },
+  "noFeedbackFound": "No feedback found",
+  "@noFeedbackFound": {
+    "description": "Message when no feedback matches filters"
+  },
+  "noFeedbackSubmittedYet": "No feedback submitted yet",
+  "@noFeedbackSubmittedYet": {
+    "description": "Empty state title when user has no feedback"
+  },
+  "noFeedbackSubmittedDescription": "You haven't submitted any feedback yet. When you do, it will appear here.",
+  "@noFeedbackSubmittedDescription": {
+    "description": "Empty state description for no feedback"
+  },
+  "yourMessage": "Your message",
+  "@yourMessage": {
+    "description": "Label for user's feedback message"
+  },
+  "adminResponded": "Admin responded",
+  "@adminResponded": {
+    "description": "Badge text indicating admin has replied"
+  },
+  "adminResponse": "Admin Response",
+  "@adminResponse": {
+    "description": "Section title for admin's response"
   }
 }

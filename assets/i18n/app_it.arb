@@ -11064,5 +11064,157 @@
   "errorLoadingPatches": "Errore nel caricamento delle patch",
   "@errorLoadingPatches": {
     "description": "Titolo stato errore quando caricamento patch fallisce"
+  },
+  "feedbackDashboard": "Dashboard Feedback",
+  "@feedbackDashboard": {
+    "description": "Titolo schermata dashboard feedback admin"
+  },
+  "myFeedback": "I Miei Feedback",
+  "@myFeedback": {
+    "description": "Titolo schermata storico feedback utente"
+  },
+  "overview": "Panoramica",
+  "@overview": {
+    "description": "Titolo sezione panoramica statistiche"
+  },
+  "totalFeedback": "Feedback Totali",
+  "@totalFeedback": {
+    "description": "Etichetta conteggio totale feedback"
+  },
+  "pending": "In Attesa",
+  "@pending": {
+    "description": "Etichetta conteggio feedback in attesa"
+  },
+  "criticalIssues": "Problemi Critici",
+  "@criticalIssues": {
+    "description": "Etichetta conteggio feedback critici/alta priorità"
+  },
+  "completed": "Completati",
+  "@completed": {
+    "description": "Etichetta conteggio feedback completati"
+  },
+  "filters": "Filtri",
+  "@filters": {
+    "description": "Titolo sezione opzioni filtro"
+  },
+  "allTypes": "Tutti i Tipi",
+  "@allTypes": {
+    "description": "Opzione filtro per mostrare tutti i tipi di feedback"
+  },
+  "allStatuses": "Tutti gli Stati",
+  "@allStatuses": {
+    "description": "Opzione filtro per mostrare tutti gli stati"
+  },
+  "allPriorities": "Tutte le Priorità",
+  "@allPriorities": {
+    "description": "Opzione filtro per mostrare tutti i livelli di severità"
+  },
+  "searchFeedback": "Cerca feedback...",
+  "@searchFeedback": {
+    "description": "Hint text per campo ricerca feedback"
+  },
+  "statusOpen": "Aperto",
+  "@statusOpen": {
+    "description": "Stato feedback: appena inviato"
+  },
+  "statusReviewing": "In Revisione",
+  "@statusReviewing": {
+    "description": "Stato feedback: sotto revisione admin"
+  },
+  "statusResolved": "Risolto",
+  "@statusResolved": {
+    "description": "Stato feedback: problema risolto"
+  },
+  "statusDismissed": "Archiviato",
+  "@statusDismissed": {
+    "description": "Stato feedback: archiviato da admin"
+  },
+  "statusClosed": "Chiuso",
+  "@statusClosed": {
+    "description": "Stato feedback: chiuso senza azione"
+  },
+  "severityLow": "Bassa",
+  "@severityLow": {
+    "description": "Severità feedback: priorità bassa"
+  },
+  "severityMedium": "Media",
+  "@severityMedium": {
+    "description": "Severità feedback: priorità media"
+  },
+  "severityHigh": "Alta",
+  "@severityHigh": {
+    "description": "Severità feedback: priorità alta"
+  },
+  "severityCritical": "Critica",
+  "@severityCritical": {
+    "description": "Severità feedback: priorità critica"
+  },
+  "typeExercise": "Esercizio",
+  "@typeExercise": {
+    "description": "Tipo feedback: feedback esercizio"
+  },
+  "typeAiInsight": "AI Coach",
+  "@typeAiInsight": {
+    "description": "Tipo feedback: feedback AI coach"
+  },
+  "typeAnalytics": "Analytics",
+  "@typeAnalytics": {
+    "description": "Tipo feedback: feedback pagina analytics"
+  },
+  "typeBuddyReport": "Segnalazione Utente",
+  "@typeBuddyReport": {
+    "description": "Tipo feedback: segnalazione buddy"
+  },
+  "typeGeneral": "Generale",
+  "@typeGeneral": {
+    "description": "Tipo feedback: feedback generale"
+  },
+  "typeExercisePatch": "Correzione Esercizio",
+  "@typeExercisePatch": {
+    "description": "Tipo feedback: patch correzione esercizio"
+  },
+  "submitted": "Inviato",
+  "@submitted": {
+    "description": "Etichetta timestamp invio"
+  },
+  "lastUpdate": "Ultimo aggiornamento",
+  "@lastUpdate": {
+    "description": "Etichetta timestamp ultimo aggiornamento"
+  },
+  "user": "Utente",
+  "@user": {
+    "description": "Etichetta informazioni utente"
+  },
+  "details": "Dettagli",
+  "@details": {
+    "description": "Testo pulsante visualizza dettagli feedback"
+  },
+  "close": "Chiudi",
+  "@close": {
+    "description": "Testo pulsante chiudi dialog"
+  },
+  "noFeedbackFound": "Nessun feedback trovato",
+  "@noFeedbackFound": {
+    "description": "Messaggio quando nessun feedback corrisponde ai filtri"
+  },
+  "noFeedbackSubmittedYet": "Nessun feedback inviato",
+  "@noFeedbackSubmittedYet": {
+    "description": "Titolo stato vuoto quando utente non ha feedback"
+  },
+  "noFeedbackSubmittedDescription": "Non hai ancora inviato alcun feedback. Quando lo farai, apparirà qui.",
+  "@noFeedbackSubmittedDescription": {
+    "description": "Descrizione stato vuoto per nessun feedback"
+  },
+  "yourMessage": "Il tuo messaggio",
+  "@yourMessage": {
+    "description": "Etichetta messaggio feedback utente"
+  },
+  "adminResponded": "Admin ha risposto",
+  "@adminResponded": {
+    "description": "Badge testo indicante risposta admin"
+  },
+  "adminResponse": "Risposta Admin",
+  "@adminResponse": {
+    "description": "Titolo sezione risposta admin"
   }
 }

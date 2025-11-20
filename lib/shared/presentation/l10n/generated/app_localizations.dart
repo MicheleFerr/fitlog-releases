@@ -1094,10 +1094,10 @@ abstract class AppLocalizations {
   /// **'Cache Size'**
   String get cacheSize;
 
-  /// Last update stat label
+  /// Label for last update timestamp
   ///
   /// In en, this message translates to:
-  /// **'Last Update'**
+  /// **'Last update'**
   String get lastUpdate;
 
   /// Loading status text
@@ -1436,7 +1436,7 @@ abstract class AppLocalizations {
   /// **'Your current export limits:'**
   String get yourCurrentLimits;
 
-  /// Close button
+  /// Button text to close dialog
   ///
   /// In en, this message translates to:
   /// **'Close'**
@@ -5015,7 +5015,7 @@ abstract class AppLocalizations {
   /// **'Pre-Activation'**
   String get preActivation;
 
-  /// Filters section title
+  /// Section title for filter options
   ///
   /// In en, this message translates to:
   /// **'Filters'**
@@ -5843,7 +5843,7 @@ abstract class AppLocalizations {
   /// **'Core Muscles'**
   String get coreFull;
 
-  /// Overview tab label
+  /// Section title for statistics overview
   ///
   /// In en, this message translates to:
   /// **'Overview'**
@@ -7775,7 +7775,7 @@ abstract class AppLocalizations {
   /// **'Operation Error'**
   String get operationError;
 
-  /// Label for details section
+  /// Button text to view feedback details
   ///
   /// In en, this message translates to:
   /// **'Details'**
@@ -8285,7 +8285,7 @@ abstract class AppLocalizations {
   /// **'Technique'**
   String get technique;
 
-  /// Status label for pending items
+  /// Label for pending feedback count
   ///
   /// In en, this message translates to:
   /// **'Pending'**
@@ -12965,7 +12965,7 @@ abstract class AppLocalizations {
   /// **'Rest Between Sets'**
   String get restBetweenSets;
 
-  /// Label indicating something is completed
+  /// Label for completed feedback count
   ///
   /// In en, this message translates to:
   /// **'Completed'**
@@ -16260,7 +16260,7 @@ abstract class AppLocalizations {
   /// **'Dismiss'**
   String get dismissAnomaly;
 
-  /// Title for feedback history screen
+  /// Title for user feedback history screen
   ///
   /// In en, this message translates to:
   /// **'My Feedback'**
@@ -18078,7 +18078,7 @@ abstract class AppLocalizations {
   /// **'Total Feedback'**
   String get feedbackTotal;
 
-  /// Critical issues count label
+  /// Label for critical/high priority feedback count
   ///
   /// In en, this message translates to:
   /// **'Critical Issues'**
@@ -31799,6 +31799,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading patches'**
   String get errorLoadingPatches;
+
+  /// Title for admin feedback dashboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback Dashboard'**
+  String get feedbackDashboard;
+
+  /// Label for total feedback count statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Total Feedback'**
+  String get totalFeedback;
+
+  /// Filter option to show all feedback types
+  ///
+  /// In en, this message translates to:
+  /// **'All Types'**
+  String get allTypes;
+
+  /// Filter option to show all statuses
+  ///
+  /// In en, this message translates to:
+  /// **'All Statuses'**
+  String get allStatuses;
+
+  /// Filter option to show all severity levels
+  ///
+  /// In en, this message translates to:
+  /// **'All Priorities'**
+  String get allPriorities;
+
+  /// Hint text for feedback search field
+  ///
+  /// In en, this message translates to:
+  /// **'Search feedback...'**
+  String get searchFeedback;
+
+  /// Feedback status: newly submitted
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get statusOpen;
+
+  /// Feedback status: under admin review
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewing'**
+  String get statusReviewing;
+
+  /// Feedback status: issue resolved
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get statusResolved;
+
+  /// Feedback status: dismissed by admin
+  ///
+  /// In en, this message translates to:
+  /// **'Dismissed'**
+  String get statusDismissed;
+
+  /// Feedback status: closed without action
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get statusClosed;
+
+  /// Feedback severity: low priority
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get severityLow;
+
+  /// Feedback severity: medium priority
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get severityMedium;
+
+  /// Feedback severity: high priority
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get severityHigh;
+
+  /// Feedback severity: critical priority
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get severityCritical;
+
+  /// Feedback type: exercise feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get typeExercise;
+
+  /// Feedback type: AI coach feedback
+  ///
+  /// In en, this message translates to:
+  /// **'AI Insight'**
+  String get typeAiInsight;
+
+  /// Feedback type: analytics page feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get typeAnalytics;
+
+  /// Feedback type: buddy report
+  ///
+  /// In en, this message translates to:
+  /// **'User Report'**
+  String get typeBuddyReport;
+
+  /// Feedback type: general feedback
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get typeGeneral;
+
+  /// Feedback type: exercise correction patch
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Patch'**
+  String get typeExercisePatch;
+
+  /// Label for submission timestamp
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get submitted;
+
+  /// Label for user information
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// Message when no feedback matches filters
+  ///
+  /// In en, this message translates to:
+  /// **'No feedback found'**
+  String get noFeedbackFound;
+
+  /// Empty state title when user has no feedback
+  ///
+  /// In en, this message translates to:
+  /// **'No feedback submitted yet'**
+  String get noFeedbackSubmittedYet;
+
+  /// Empty state description for no feedback
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t submitted any feedback yet. When you do, it will appear here.'**
+  String get noFeedbackSubmittedDescription;
+
+  /// Label for user's feedback message
+  ///
+  /// In en, this message translates to:
+  /// **'Your message'**
+  String get yourMessage;
+
+  /// Badge text indicating admin has replied
+  ///
+  /// In en, this message translates to:
+  /// **'Admin responded'**
+  String get adminResponded;
+
+  /// Section title for admin's response
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Response'**
+  String get adminResponse;
 }
 
 class _AppLocalizationsDelegate
