@@ -14,6 +14,8 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercis
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
   const ExerciseFeedbackScreen({super.key});
@@ -22,7 +24,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(feedbackStatsProvider);
     final allFeedbackAsync = ref.watch(allFeedbackProvider);
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
 
     debugPrint('🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback');
 
@@ -109,7 +111,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildStatsCards(BuildContext context, FeedbackStats stats) {
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
     return Row(
       children: [
         Expanded(
@@ -165,7 +167,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Text(emoji, style: const TextStyle(fontSize: 20)),
+                Text(emoji, style: context.textTheme.titleMedium),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -238,7 +240,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: severityColor,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 SizedBox(width: 12),
@@ -280,7 +282,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final critical = ref.watch(criticalFeedbackProvider);
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +325,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final open = ref.watch(feedbackByStatusProvider('OPEN'));
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,7 +362,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildFeedbackCard(BuildContext context, ExerciseFeedback feedback) {
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
     final typeEmojis = {
       'BUG': '🐛',
       'SUGGESTION': '💡',
@@ -399,7 +401,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
               children: [
                 Text(
                   typeEmojis[feedback.feedbackType] ?? '•',
-                  style: const TextStyle(fontSize: 18),
+                  style: context.textTheme.titleSmall,
                 ),
                 SizedBox(width: 8),
                 Expanded(
@@ -481,7 +483,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(),
+          const LoadingIndicator(),
           const SizedBox(height: 16),
           Text(l10n.feedbackLoadingMessage),
         ],

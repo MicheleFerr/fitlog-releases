@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
 
@@ -52,7 +53,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       'OTHER': '❓',
     };
 
-    final l10n = context.l10n;
+    AppLocalizations l10n = context.l10n;
 
     Color severityColor;
     String severityLabel;
@@ -94,7 +95,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
           children: [
             Text(
               typeEmojis[widget.feedback.feedbackType] ?? '•',
-              style: const TextStyle(fontSize: 20),
+              style: context.textTheme.titleMedium,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -117,10 +118,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
             ),
             child: Text(
               widget.feedback.status,
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 color: statusColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
               ),
             ),
           ),
@@ -379,10 +379,9 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 color: color,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -455,7 +454,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: context.textTheme.labelMedium?.copyWith(
           color: isSelected ? color : context.colors.onSurface,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),

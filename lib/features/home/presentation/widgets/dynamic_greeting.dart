@@ -17,13 +17,13 @@ class DynamicGreeting extends ConsumerWidget {
     IconData icon;
 
     if (hour < 12) {
-      greeting = l10n.goodMorning;
+      greeting = l10n.goodMorning('');
       icon = AppIcons.wbSunny;
     } else if (hour < 17) {
-      greeting = l10n.goodAfternoon;
+      greeting = l10n.goodAfternoon('');
       icon = AppIcons.wbSunnyOutlined;
     } else {
-      greeting = l10n.goodEvening;
+      greeting = l10n.goodEvening('');
       icon = AppIcons.nightlightRound;
     }
 

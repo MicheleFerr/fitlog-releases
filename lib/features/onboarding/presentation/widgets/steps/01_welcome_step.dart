@@ -169,7 +169,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                   child: Column(
                     children: [
                       Text(
-                        l10n.onboardingWelcomeTitle,
+                        l10n.onboardingWelcomeTitle(''),
                         style: theme.textTheme.headlineMedium?.copyWith(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
