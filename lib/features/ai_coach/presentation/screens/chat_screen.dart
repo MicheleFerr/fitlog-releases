@@ -27,10 +27,12 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/message_bubble.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_input.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/suggestion_chips.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -166,6 +168,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return MessageBubble(
           message: message,
           showTypingIndicator: message.isStreaming,
+          onChipTap: (chip) => _handleChipTap(context, userId, chip),
         );
       },
     );
@@ -173,6 +176,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   /// Build empty state
   Widget _buildEmptyState(BuildContext context, String userId) {
+    // Watch user profile to get display name
+    final userProfile = ref.watch(userProfileProvider);
+
+    // Get user's first name (extract from display name or use fallback)
+    final displayName = userProfile.valueOrNull?.displayName ?? 'GymBro';
+    final firstName = displayName.split(' ').first;
+
+    // Get time-based greeting
+    final greeting = _getTimeBasedGreeting(context, firstName);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -187,9 +200,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              context.l10n.aiCoachChatWelcome,
+              greeting,
               textAlign: TextAlign.center,
-              style: context.textTheme.titleMedium,
+              style: context.textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
@@ -251,6 +264,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     await ref.read(chatNotifierProvider(userId).notifier).sendMessage(message);
   }
 
+  /// Handle follow-up chip tap
+  Future<void> _handleChipTap(BuildContext context, String userId, FollowUpChip chip) async {
+    // Get locale from context (default to 'en' if not available)
+    final locale = Localizations.localeOf(context).languageCode;
+
+    // Get response repository from provider
+    final responseRepository = ref.read(responseRepositoryProvider);
+
+    // Convert chip intent to full question for intent detection
+    final fullQuestion = responseRepository.getFullQuestionForChip(chip.intent, locale);
+
+    // Send the full question as a message
+    await _sendMessage(context, userId, fullQuestion);
+  }
+
   /// Show clear history confirmation dialog
   Future<void> _showClearHistoryDialog(BuildContext context, String userId) async {
     final confirmed = await showDialog<bool>(
@@ -273,6 +301,29 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     if (confirmed == true && mounted) {
       await ref.read(chatNotifierProvider(userId).notifier).clearHistory();
+    }
+  }
+
+  /// Get time-based greeting
+  ///
+  /// **Logic**:
+  /// - Morning: 5:00 AM - 11:59 AM
+  /// - Afternoon: 12:00 PM - 5:59 PM
+  /// - Evening: 6:00 PM - 4:59 AM
+  ///
+  /// **Returns**: Localized greeting with user's name
+  String _getTimeBasedGreeting(BuildContext context, String name) {
+    final hour = DateTime.now().hour;
+
+    if (hour >= 5 && hour < 12) {
+      // Morning: 5 AM - 11:59 AM
+      return context.l10n.goodMorning(name);
+    } else if (hour >= 12 && hour < 18) {
+      // Afternoon: 12 PM - 5:59 PM
+      return context.l10n.goodAfternoon(name);
+    } else {
+      // Evening: 6 PM - 4:59 AM
+      return context.l10n.goodEvening(name);
     }
   }
 }

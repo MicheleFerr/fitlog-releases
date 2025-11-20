@@ -21142,6 +21142,33 @@
   "@aiCoachChatDescription": {
     "description": "AI Coach chat empty state description"
   },
+  "goodMorning": "Good morning, {name}!",
+  "@goodMorning": {
+    "description": "Morning greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodAfternoon": "Good afternoon, {name}!",
+  "@goodAfternoon": {
+    "description": "Afternoon greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodEvening": "Good evening, {name}!",
+  "@goodEvening": {
+    "description": "Evening greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "aiCoachQuestionProgress": "How am I progressing?",
   "@aiCoachQuestionProgress": {
     "description": "Suggested question about progression"
@@ -21492,5 +21519,69 @@
   "patchSubmissionError": "Failed to submit correction",
   "@patchSubmissionError": {
     "description": "Error message prefix for patch submission failure"
+  },
+  "exercisePatchReview": "Exercise Patch Review",
+  "@exercisePatchReview": {
+    "description": "Title for admin patch review screen"
+  },
+  "pendingPatches": "Pending Patches",
+  "@pendingPatches": {
+    "description": "Section title for pending patches"
+  },
+  "reviewedPatches": "Reviewed Patches",
+  "@reviewedPatches": {
+    "description": "Section title for reviewed patches"
+  },
+  "noPatches": "No patches to review",
+  "@noPatches": {
+    "description": "Empty state message for patches"
+  },
+  "allCaughtUp": "All caught up!",
+  "@allCaughtUp": {
+    "description": "Empty state title when no patches"
+  },
+  "noPatchesDescription": "There are no exercise corrections pending review",
+  "@noPatchesDescription": {
+    "description": "Empty state description for no patches"
+  },
+  "pendingCount": "Pending",
+  "@pendingCount": {
+    "description": "Label for pending count stat"
+  },
+  "approvedCount": "Approved",
+  "@approvedCount": {
+    "description": "Label for approved count stat"
+  },
+  "rejectedCount": "Rejected",
+  "@rejectedCount": {
+    "description": "Label for rejected count stat"
+  },
+  "expiredCount": "Expired",
+  "@expiredCount": {
+    "description": "Label for expired count stat"
+  },
+  "refreshPatches": "Refresh patches",
+  "@refreshPatches": {
+    "description": "Tooltip for refresh button"
+  },
+  "approvePatch": "Approve",
+  "@approvePatch": {
+    "description": "Button text to approve patch"
+  },
+  "rejectPatch": "Reject",
+  "@rejectPatch": {
+    "description": "Button text to reject patch"
+  },
+  "patchApproved": "Patch approved successfully",
+  "@patchApproved": {
+    "description": "Success message for patch approval"
+  },
+  "patchRejected": "Patch rejected successfully",
+  "@patchRejected": {
+    "description": "Success message for patch rejection"
+  },
+  "patchActionError": "Failed to process patch",
+  "@patchActionError": {
+    "description": "Error message for patch action failure"
   }
 }

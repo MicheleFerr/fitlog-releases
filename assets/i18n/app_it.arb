@@ -10506,6 +10506,33 @@
   "@aiCoachChatDescription": {
     "description": "Descrizione stato vuoto chat AI Coach"
   },
+  "goodMorning": "Buongiorno, {name}!",
+  "@goodMorning": {
+    "description": "Saluto mattutino per AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodAfternoon": "Buon pomeriggio, {name}!",
+  "@goodAfternoon": {
+    "description": "Saluto pomeridiano per AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodEvening": "Buonasera, {name}!",
+  "@goodEvening": {
+    "description": "Saluto serale per AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "aiCoachQuestionProgress": "Come sto progredendo?",
   "@aiCoachQuestionProgress": {
     "description": "Domanda suggerita sui progressi"
@@ -10856,5 +10883,69 @@
   "patchSubmissionError": "Errore nell'invio della correzione",
   "@patchSubmissionError": {
     "description": "Prefisso messaggio errore per invio patch fallito"
+  },
+  "exercisePatchReview": "Revisione Correzioni Esercizi",
+  "@exercisePatchReview": {
+    "description": "Titolo schermata revisione patch admin"
+  },
+  "pendingPatches": "Patch In Attesa",
+  "@pendingPatches": {
+    "description": "Titolo sezione patch in sospeso"
+  },
+  "reviewedPatches": "Patch Revisionate",
+  "@reviewedPatches": {
+    "description": "Titolo sezione patch revisionate"
+  },
+  "noPatches": "Nessuna patch da revisionare",
+  "@noPatches": {
+    "description": "Messaggio stato vuoto per patch"
+  },
+  "allCaughtUp": "Tutto fatto!",
+  "@allCaughtUp": {
+    "description": "Titolo stato vuoto quando non ci sono patch"
+  },
+  "noPatchesDescription": "Non ci sono correzioni agli esercizi in attesa di revisione",
+  "@noPatchesDescription": {
+    "description": "Descrizione stato vuoto per nessuna patch"
+  },
+  "pendingCount": "In Attesa",
+  "@pendingCount": {
+    "description": "Etichetta conteggio in attesa"
+  },
+  "approvedCount": "Approvate",
+  "@approvedCount": {
+    "description": "Etichetta conteggio approvate"
+  },
+  "rejectedCount": "Rifiutate",
+  "@rejectedCount": {
+    "description": "Etichetta conteggio rifiutate"
+  },
+  "expiredCount": "Scadute",
+  "@expiredCount": {
+    "description": "Etichetta conteggio scadute"
+  },
+  "refreshPatches": "Aggiorna patch",
+  "@refreshPatches": {
+    "description": "Tooltip pulsante refresh"
+  },
+  "approvePatch": "Approva",
+  "@approvePatch": {
+    "description": "Testo pulsante approva patch"
+  },
+  "rejectPatch": "Rifiuta",
+  "@rejectPatch": {
+    "description": "Testo pulsante rifiuta patch"
+  },
+  "patchApproved": "Patch approvata con successo",
+  "@patchApproved": {
+    "description": "Messaggio successo approvazione patch"
+  },
+  "patchRejected": "Patch rifiutata con successo",
+  "@patchRejected": {
+    "description": "Messaggio successo rifiuto patch"
+  },
+  "patchActionError": "Errore nell'elaborazione della patch",
+  "@patchActionError": {
+    "description": "Messaggio errore azione patch fallita"
   }
 }

@@ -2140,13 +2140,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recovery => 'Recovery';
 
   @override
-  String get goodMorning => 'Good morning! 🌅';
+  String goodMorning(String name) {
+    return 'Good morning, $name!';
+  }
 
   @override
-  String get goodAfternoon => 'Good afternoon! ☀️';
+  String goodAfternoon(String name) {
+    return 'Good afternoon, $name!';
+  }
 
   @override
-  String get goodEvening => 'Good evening! 🌙';
+  String goodEvening(String name) {
+    return 'Good evening, $name!';
+  }
 
   @override
   String get readyToDominate => 'Ready to dominate?';
@@ -17500,7 +17506,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPatchesDescription =>
-      'Found an error? Report it and help improve the database!';
+      'There are no exercise corrections pending review';
 
   @override
   String patchesCount(int count) {
@@ -17588,4 +17594,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pleaseProvideReason => 'Please provide a reason';
+
+  @override
+  String get exercisePatchReview => 'Exercise Patch Review';
+
+  @override
+  String get pendingPatches => 'Pending Patches';
+
+  @override
+  String get reviewedPatches => 'Reviewed Patches';
+
+  @override
+  String get noPatches => 'No patches to review';
+
+  @override
+  String get allCaughtUp => 'All caught up!';
+
+  @override
+  String get pendingCount => 'Pending';
+
+  @override
+  String get approvedCount => 'Approved';
+
+  @override
+  String get rejectedCount => 'Rejected';
+
+  @override
+  String get expiredCount => 'Expired';
+
+  @override
+  String get refreshPatches => 'Refresh patches';
+
+  @override
+  String get approvePatch => 'Approve';
+
+  @override
+  String get rejectPatch => 'Reject';
+
+  @override
+  String get patchApproved => 'Patch approved successfully';
+
+  @override
+  String get patchRejected => 'Patch rejected successfully';
+
+  @override
+  String get patchActionError => 'Failed to process patch';
 }

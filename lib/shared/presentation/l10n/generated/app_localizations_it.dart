@@ -2157,13 +2157,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get recovery => 'Recupero';
 
   @override
-  String get goodMorning => 'Buongiorno! 🌅';
+  String goodMorning(String name) {
+    return 'Buongiorno, $name!';
+  }
 
   @override
-  String get goodAfternoon => 'Buon pomeriggio! ☀️';
+  String goodAfternoon(String name) {
+    return 'Buon pomeriggio, $name!';
+  }
 
   @override
-  String get goodEvening => 'Buonasera! 🌙';
+  String goodEvening(String name) {
+    return 'Buonasera, $name!';
+  }
 
   @override
   String get readyToDominate => 'Pronto per dominare?';
@@ -17675,7 +17681,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noPatchesDescription =>
-      'Hai trovato un errore? Segnalalo e aiutaci a migliorare il database!';
+      'Non ci sono correzioni agli esercizi in attesa di revisione';
 
   @override
   String patchesCount(int count) {
@@ -17767,4 +17773,49 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get pleaseProvideReason => 'Fornisci una motivazione';
+
+  @override
+  String get exercisePatchReview => 'Revisione Correzioni Esercizi';
+
+  @override
+  String get pendingPatches => 'Patch In Attesa';
+
+  @override
+  String get reviewedPatches => 'Patch Revisionate';
+
+  @override
+  String get noPatches => 'Nessuna patch da revisionare';
+
+  @override
+  String get allCaughtUp => 'Tutto fatto!';
+
+  @override
+  String get pendingCount => 'In Attesa';
+
+  @override
+  String get approvedCount => 'Approvate';
+
+  @override
+  String get rejectedCount => 'Rifiutate';
+
+  @override
+  String get expiredCount => 'Scadute';
+
+  @override
+  String get refreshPatches => 'Aggiorna patch';
+
+  @override
+  String get approvePatch => 'Approva';
+
+  @override
+  String get rejectPatch => 'Rifiuta';
+
+  @override
+  String get patchApproved => 'Patch approvata con successo';
+
+  @override
+  String get patchRejected => 'Patch rifiutata con successo';
+
+  @override
+  String get patchActionError => 'Errore nell\'elaborazione della patch';
 }

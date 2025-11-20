@@ -4079,23 +4079,23 @@ abstract class AppLocalizations {
   /// **'Recovery'**
   String get recovery;
 
-  /// Morning greeting
+  /// Morning greeting for AI Coach
   ///
   /// In en, this message translates to:
-  /// **'Good morning! 🌅'**
-  String get goodMorning;
+  /// **'Good morning, {name}!'**
+  String goodMorning(String name);
 
-  /// Afternoon greeting
+  /// Afternoon greeting for AI Coach
   ///
   /// In en, this message translates to:
-  /// **'Good afternoon! ☀️'**
-  String get goodAfternoon;
+  /// **'Good afternoon, {name}!'**
+  String goodAfternoon(String name);
 
-  /// Evening greeting
+  /// Evening greeting for AI Coach
   ///
   /// In en, this message translates to:
-  /// **'Good evening! 🌙'**
-  String get goodEvening;
+  /// **'Good evening, {name}!'**
+  String goodEvening(String name);
 
   /// Motivational subtitle under greeting
   ///
@@ -31380,10 +31380,10 @@ abstract class AppLocalizations {
   /// **'No corrections submitted yet'**
   String get noPatchesYet;
 
-  /// Empty state description
+  /// Empty state description for no patches
   ///
   /// In en, this message translates to:
-  /// **'Found an error? Report it and help improve the database!'**
+  /// **'There are no exercise corrections pending review'**
   String get noPatchesDescription;
 
   /// Count of user patches
@@ -31547,6 +31547,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please provide a reason'**
   String get pleaseProvideReason;
+
+  /// Title for admin patch review screen
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Patch Review'**
+  String get exercisePatchReview;
+
+  /// Section title for pending patches
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Patches'**
+  String get pendingPatches;
+
+  /// Section title for reviewed patches
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed Patches'**
+  String get reviewedPatches;
+
+  /// Empty state message for patches
+  ///
+  /// In en, this message translates to:
+  /// **'No patches to review'**
+  String get noPatches;
+
+  /// Empty state title when no patches
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up!'**
+  String get allCaughtUp;
+
+  /// Label for pending count stat
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pendingCount;
+
+  /// Label for approved count stat
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approvedCount;
+
+  /// Label for rejected count stat
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejectedCount;
+
+  /// Label for expired count stat
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expiredCount;
+
+  /// Tooltip for refresh button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh patches'**
+  String get refreshPatches;
+
+  /// Button text to approve patch
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approvePatch;
+
+  /// Button text to reject patch
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectPatch;
+
+  /// Success message for patch approval
+  ///
+  /// In en, this message translates to:
+  /// **'Patch approved successfully'**
+  String get patchApproved;
+
+  /// Success message for patch rejection
+  ///
+  /// In en, this message translates to:
+  /// **'Patch rejected successfully'**
+  String get patchRejected;
+
+  /// Error message for patch action failure
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to process patch'**
+  String get patchActionError;
 }
 
 class _AppLocalizationsDelegate
