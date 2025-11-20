@@ -121,6 +121,14 @@ class MessageBubble extends ConsumerWidget {
                         ),
                       ],
 
+                      // Reasoning section for transparency (Phase 3.3)
+                      if (!isUser &&
+                          message.metadata != null &&
+                          message.metadata!.containsKey('reasoning')) ...[
+                        const SizedBox(height: 12),
+                        _buildReasoningSection(context),
+                      ],
+
                       // Typing indicator (for streaming messages)
                       if (showTypingIndicator) ...[
                         const SizedBox(height: 4),
@@ -375,6 +383,107 @@ class MessageBubble extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Build reasoning section for transparency (Phase 3.3)
+  ///
+  /// Shows expandable "Why?" section with:
+  /// - Data sources used
+  /// - Analysis methods
+  /// - Reasoning logic
+  Widget _buildReasoningSection(BuildContext context) {
+    final reasoning = message.metadata!['reasoning'] as List<dynamic>;
+    final dataSource = message.metadata!['dataSource'] as String?;
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+        title: Row(
+          children: [
+            Icon(
+              AppIcons.info,
+              size: AppIconSize.small,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Why this answer?',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Data source
+              if (dataSource != null) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      AppIcons.storage,
+                      size: AppIconSize.tiny,
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        dataSource,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+              ],
+
+              // Reasoning points
+              ...reasoning.asMap().entries.map((entry) {
+                final index = entry.key;
+                final point = entry.value as String;
+
+                return Padding(
+                  padding: EdgeInsets.only(bottom: index < reasoning.length - 1 ? 8 : 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 6),
+                        width: 4,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: context.colors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          point,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurface,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+        ],
       ),
     );
   }

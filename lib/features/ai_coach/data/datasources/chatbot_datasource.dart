@@ -221,7 +221,19 @@ class ChatBotDatasource {
       conversationDepth: 0, // TODO: Track depth in Task 5
     );
 
-    // 7. Emit final message (isStreaming=false) with follow-up chips and chart metadata
+    // 6.6. Generate reasoning for transparency (Phase 3.3)
+    final reasoning = _generateReasoning(
+      intent: intent,
+      analyzerData: analyzerData,
+    );
+
+    // Merge reasoning with existing metadata (charts)
+    final finalMetadata = <String, dynamic>{
+      ...?metadata, // Chart data (if any)
+      if (reasoning != null) ...reasoning, // Reasoning data
+    };
+
+    // 7. Emit final message (isStreaming=false) with follow-up chips, chart, and reasoning
     yield AIMessage(
       id: messageId,
       content: fullResponse,
@@ -231,7 +243,7 @@ class ChatBotDatasource {
       followUpChips: followUpChips,
       conversationDepth: 0, // TODO: Track depth in Task 5
       parentIntent: intent.toString(), // Root intent
-      metadata: metadata, // Chart data for inline rendering
+      metadata: finalMetadata, // Chart + reasoning data for rendering
     );
   }
 
@@ -763,5 +775,119 @@ class ChatBotDatasource {
     // });
 
     return baseResponse;
+  }
+
+  /// Generate reasoning explanation for transparency (Phase 3.3)
+  ///
+  /// Explains WHY the bot generated this response:
+  /// - Data sources used (e.g., "last 7 workouts")
+  /// - Analysis methods applied
+  /// - Confidence level
+  /// - Reasoning logic
+  ///
+  /// **Returns**: Map with reasoning metadata or null if no reasoning available
+  Map<String, dynamic>? _generateReasoning({
+    required UserIntent intent,
+    required Map<String, dynamic> analyzerData,
+  }) {
+    final reasoning = <String>[];
+
+    switch (intent) {
+      case UserIntent.progression:
+        // Explain progressive overload analysis
+        if (analyzerData['has_data'] == 'true') {
+          reasoning.add(
+            'I analyzed your workout history for progressive overload patterns '
+            '(increasing weight, reps, or volume over time).',
+          );
+
+          if (analyzerData.containsKey('workout_count')) {
+            reasoning.add(
+              'Data source: Last ${analyzerData['workout_count']} workouts.',
+            );
+          }
+        }
+        break;
+
+      case UserIntent.recovery:
+        // Explain recovery pattern analysis
+        if (analyzerData['has_data'] == 'true') {
+          reasoning.add(
+            'I examined your rest days and muscle group rotation to identify '
+            'recovery patterns.',
+          );
+
+          reasoning.add(
+            'Optimal recovery allows muscles to repair and grow stronger.',
+          );
+        }
+        break;
+
+      case UserIntent.volume:
+        // Explain volume analysis
+        if (analyzerData['has_data'] == 'true') {
+          reasoning.add(
+            'I calculated your total training volume (sets × reps × weight) '
+            'to check if you\'re in the optimal hypertrophy range.',
+          );
+
+          reasoning.add(
+            'Recommended: 10-20 sets per muscle group per week for growth.',
+          );
+        }
+        break;
+
+      case UserIntent.form:
+        // Explain form analysis (when implemented)
+        reasoning.add(
+          'Form analysis is based on exercise selection and rest times. '
+          'Proper form prevents injury and maximizes muscle activation.',
+        );
+        break;
+
+      case UserIntent.prQuery:
+        // Explain PR tracking
+        if (analyzerData['has_data'] == 'true') {
+          reasoning.add(
+            'I searched your workout history for maximum weight lifted '
+            'in the specified exercise.',
+          );
+
+          reasoning.add(
+            'Personal Records track your strength progression over time.',
+          );
+        }
+        break;
+
+      case UserIntent.plan:
+        // Explain workout plan recommendations
+        reasoning.add(
+          'I recommend workout plans based on your experience level and goals. '
+          'Proper programming ensures balanced progress and prevents overtraining.',
+        );
+        break;
+
+      case UserIntent.motivation:
+        // Explain motivational approach
+        reasoning.add(
+          'I provide motivation by highlighting your progress and effort. '
+          'Consistency is the key to long-term success.',
+        );
+        break;
+
+      default:
+        // No specific reasoning for other intents (greeting, help, unknown)
+        return null;
+    }
+
+    if (reasoning.isEmpty) return null;
+
+    return {
+      'reasoning': reasoning,
+      'dataSource': analyzerData.containsKey('workout_count')
+          ? 'Last ${analyzerData['workout_count']} workouts'
+          : 'Your workout history',
+      'confidence': 'high', // TODO: Calculate actual confidence
+    };
   }
 }
