@@ -2839,10 +2839,10 @@ abstract class AppLocalizations {
   /// **'Paused Workout'**
   String get pausedWorkout;
 
-  /// Continue button text
+  /// Button text to continue to next step
   ///
   /// In en, this message translates to:
-  /// **'CONTINUE'**
+  /// **'Continue'**
   String get continueButton;
 
   /// Resume button
@@ -2977,7 +2977,7 @@ abstract class AppLocalizations {
   /// **'Consistency'**
   String get consistency;
 
-  /// Total workouts count label
+  /// Label for total workouts count
   ///
   /// In en, this message translates to:
   /// **'Total Workouts'**
@@ -5159,7 +5159,7 @@ abstract class AppLocalizations {
   /// **'Critical Error'**
   String get criticalError;
 
-  /// Button to go back to previous screen
+  /// Button text to go back
   ///
   /// In en, this message translates to:
   /// **'Go Back'**
@@ -7355,7 +7355,7 @@ abstract class AppLocalizations {
   /// **'Error loading history'**
   String get errorLoadingHistory;
 
-  /// Statistics section header
+  /// Section title for routine statistics
   ///
   /// In en, this message translates to:
   /// **'Statistics'**
@@ -16716,7 +16716,7 @@ abstract class AppLocalizations {
   /// **'Ready to create your first routine?'**
   String get routineOnboardingReadyCTA;
 
-  /// Routine Center title on home screen
+  /// Title for routine center screen
   ///
   /// In en, this message translates to:
   /// **'Routine Center'**
@@ -16746,16 +16746,16 @@ abstract class AppLocalizations {
   /// **'Routine Name *'**
   String get routineNameLabel;
 
-  /// Routine name field hint
+  /// Hint text for routine name input
   ///
   /// In en, this message translates to:
-  /// **'e.g., Summer Shred 2025'**
+  /// **'e.g. Summer Bulk 2025'**
   String get routineNameHint;
 
-  /// Routine name required validation
+  /// Error message when routine name is empty
   ///
   /// In en, this message translates to:
-  /// **'Please enter a name'**
+  /// **'Routine name is required'**
   String get routineNameRequired;
 
   /// Routine name minimum length validation
@@ -24228,10 +24228,10 @@ abstract class AppLocalizations {
   /// **'Total weight lifted'**
   String get totalWeightLifted;
 
-  /// Auto-generated for trainingDays
+  /// Label for training days section
   ///
   /// In en, this message translates to:
-  /// **'Training days'**
+  /// **'Training Days'**
   String get trainingDays;
 
   /// Auto-generated for unableToGetLocation
@@ -25200,7 +25200,7 @@ abstract class AppLocalizations {
   /// **'Volume Progress'**
   String get volumeProgress;
 
-  /// From quick wins migration - 2 occurrences
+  /// Button text to create new routine
   ///
   /// In en, this message translates to:
   /// **'Create Routine'**
@@ -25812,10 +25812,10 @@ abstract class AppLocalizations {
   /// **'Loading routine analytics...'**
   String get loadingRoutineAnalytics;
 
-  /// From quick wins migration - 1 occurrences
+  /// Message when user has no active routine
   ///
   /// In en, this message translates to:
-  /// **'No Active Routine'**
+  /// **'No active routine'**
   String get noActiveRoutine;
 
   /// From quick wins migration - 1 occurrences
@@ -28248,7 +28248,7 @@ abstract class AppLocalizations {
   /// **'Create New Routine'**
   String get createNewRoutine;
 
-  /// No description provided for @noRoutinesYet.
+  /// Empty state title when user has no routines
   ///
   /// In en, this message translates to:
   /// **'No routines yet'**
@@ -28296,7 +28296,7 @@ abstract class AppLocalizations {
   /// **'Routine restored'**
   String get routineUnarchived;
 
-  /// No description provided for @routineDeleted.
+  /// Success message after deleting routine
   ///
   /// In en, this message translates to:
   /// **'Routine deleted'**
@@ -28344,7 +28344,7 @@ abstract class AppLocalizations {
   /// **'Please check Firebase permissions or contact support'**
   String get checkFirebasePermissions;
 
-  /// No description provided for @errorLoadingRoutines.
+  /// Error message when routines fail to load
   ///
   /// In en, this message translates to:
   /// **'Error loading routines'**
@@ -31973,6 +31973,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Admin Response'**
   String get adminResponse;
+
+  /// Empty state description for no routines
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first routine to get started'**
+  String get createYourFirstRoutine;
+
+  /// Message prompting user to select routine
+  ///
+  /// In en, this message translates to:
+  /// **'Select a routine below to activate it'**
+  String get selectRoutineBelow;
+
+  /// Label for currently active routine
+  ///
+  /// In en, this message translates to:
+  /// **'Active Routine'**
+  String get activeRoutine;
+
+  /// Unit for training frequency
+  ///
+  /// In en, this message translates to:
+  /// **'days/week'**
+  String get daysPerWeek;
+
+  /// Button text to activate a routine
+  ///
+  /// In en, this message translates to:
+  /// **'Activate'**
+  String get activate;
+
+  /// Loading message when activating routine
+  ///
+  /// In en, this message translates to:
+  /// **'Activating routine...'**
+  String get activatingRoutine;
+
+  /// Placeholder message for unimplemented create routine
+  ///
+  /// In en, this message translates to:
+  /// **'Create routine feature coming soon'**
+  String get createRoutineComingSoon;
+
+  /// Placeholder message for unimplemented view details
+  ///
+  /// In en, this message translates to:
+  /// **'View details feature coming soon'**
+  String get viewDetailsComingSoon;
+
+  /// Placeholder message for unimplemented delete routine
+  ///
+  /// In en, this message translates to:
+  /// **'Delete feature coming soon'**
+  String get deleteComingSoon;
+
+  /// Title for preset selection step
+  ///
+  /// In en, this message translates to:
+  /// **'Select Preset'**
+  String get selectPreset;
+
+  /// Description for preset selection step
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a training split that matches your goals'**
+  String get selectPresetDescription;
+
+  /// Placeholder message for unimplemented step 2
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2 feature coming soon'**
+  String get step2ComingSoon;
+
+  /// Title for routine configuration step
+  ///
+  /// In en, this message translates to:
+  /// **'Configure Routine'**
+  String get configureRoutine;
+
+  /// Description for routine configuration step
+  ///
+  /// In en, this message translates to:
+  /// **'Select training days and assign workout templates'**
+  String get configureRoutineDescription;
+
+  /// Label for routine name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Name'**
+  String get routineName;
+
+  /// Label for template assignment section
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Templates'**
+  String get assignTemplates;
+
+  /// Placeholder text for unassigned template
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to assign template'**
+  String get tapToAssignTemplate;
+
+  /// Placeholder message for unimplemented template picker
+  ///
+  /// In en, this message translates to:
+  /// **'Template picker coming soon'**
+  String get templatePickerComingSoon;
+
+  /// Error message when user is not authenticated
+  ///
+  /// In en, this message translates to:
+  /// **'User not logged in'**
+  String get userNotLoggedIn;
+
+  /// Success message after creating routine
+  ///
+  /// In en, this message translates to:
+  /// **'Routine created successfully!'**
+  String get routineCreated;
+
+  /// Error message when preset is missing
+  ///
+  /// In en, this message translates to:
+  /// **'No preset selected'**
+  String get noPresetSelected;
+
+  /// Section title for basic routine information
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get basicInfo;
+
+  /// Label for routine preset type
+  ///
+  /// In en, this message translates to:
+  /// **'Preset Type'**
+  String get presetType;
+
+  /// Description for Push/Pull/Legs 6-day preset
+  ///
+  /// In en, this message translates to:
+  /// **'Train 6 days per week with a push/pull/legs split. Ideal for intermediate lifters who want high frequency and volume.'**
+  String get presetPpl6DayDescription;
+
+  /// Description for Upper/Lower 4-day preset
+  ///
+  /// In en, this message translates to:
+  /// **'Alternate between upper and lower body workouts 4 days per week. Perfect for beginners building strength.'**
+  String get presetUpperLower4DayDescription;
+
+  /// Description for Full Body 3-day preset
+  ///
+  /// In en, this message translates to:
+  /// **'Work your entire body 3 times per week. Great for beginners or those with limited time.'**
+  String get presetFullBody3DayDescription;
+
+  /// Description for Bro Split 5-day preset
+  ///
+  /// In en, this message translates to:
+  /// **'Isolate one muscle group per day, 5 days per week. Traditional bodybuilding approach for advanced lifters.'**
+  String get presetBroSplit5DayDescription;
+
+  /// Description for Custom preset
+  ///
+  /// In en, this message translates to:
+  /// **'Create your own custom training schedule. Choose your training days and muscle groups.'**
+  String get presetCustomDescription;
+
+  /// Label for creation date
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get createdAt;
+
+  /// Section title for workout schedule
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Schedule'**
+  String get workoutSchedule;
+
+  /// Label for completed days count
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Days'**
+  String get completedDays;
+
+  /// Title for delete routine dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Routine'**
+  String get deleteRoutine;
+
+  /// Confirmation message for deleting routine
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this routine? This action cannot be undone.'**
+  String get deleteRoutineConfirmation;
+
+  /// Success message after activating routine
+  ///
+  /// In en, this message translates to:
+  /// **'Routine activated'**
+  String get routineActivated;
+
+  /// Success message after deactivating routine
+  ///
+  /// In en, this message translates to:
+  /// **'Routine deactivated'**
+  String get routineDeactivated;
+
+  /// Button text to deactivate routine
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate'**
+  String get deactivate;
+
+  /// Message when day has no template
+  ///
+  /// In en, this message translates to:
+  /// **'No template assigned'**
+  String get noTemplateAssigned;
+
+  /// Title for template picker modal
+  ///
+  /// In en, this message translates to:
+  /// **'Select Template'**
+  String get selectTemplate;
+
+  /// Section header for public templates
+  ///
+  /// In en, this message translates to:
+  /// **'Public Templates'**
+  String get publicTemplates;
+
+  /// Message when no templates exist
+  ///
+  /// In en, this message translates to:
+  /// **'No templates available'**
+  String get noTemplatesAvailable;
+
+  /// Hint message for empty templates list
+  ///
+  /// In en, this message translates to:
+  /// **'Create a template first to assign to this day'**
+  String get createTemplateFirst;
+
+  /// Template category: powerlifting
+  ///
+  /// In en, this message translates to:
+  /// **'Powerlifting'**
+  String get powerlifting;
+
+  /// Template category: bodybuilding
+  ///
+  /// In en, this message translates to:
+  /// **'Bodybuilding'**
+  String get bodybuilding;
+
+  /// Template category: crossfit
+  ///
+  /// In en, this message translates to:
+  /// **'CrossFit'**
+  String get crossfit;
+
+  /// Template category: calisthenics
+  ///
+  /// In en, this message translates to:
+  /// **'Calisthenics'**
+  String get calisthenics;
+
+  /// Template category: mixed
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get mixed;
+
+  /// Preposition for progress (e.g., '3 out of 6')
+  ///
+  /// In en, this message translates to:
+  /// **'out of'**
+  String get outOf;
+
+  /// Validation error for routine name exceeding max length
+  ///
+  /// In en, this message translates to:
+  /// **'Routine name is too long (max 50 characters)'**
+  String get routineNameTooLong;
+
+  /// Hint text for routine name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter routine name'**
+  String get enterRoutineName;
+
+  /// Success message when routine is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Routine updated successfully'**
+  String get routineUpdated;
+
+  /// Step indicator for first step of two-step process
+  ///
+  /// In en, this message translates to:
+  /// **'1/2'**
+  String get stepOneOfTwo;
+
+  /// Step indicator for second step of two-step process
+  ///
+  /// In en, this message translates to:
+  /// **'2/2'**
+  String get stepTwoOfTwo;
+
+  /// Instruction text to select a routine preset
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a preset'**
+  String get choosePreset;
 }
 
 class _AppLocalizationsDelegate

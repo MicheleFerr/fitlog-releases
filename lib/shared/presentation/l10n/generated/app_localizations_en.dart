@@ -1486,7 +1486,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pausedWorkout => 'Paused Workout';
 
   @override
-  String get continueButton => 'CONTINUE';
+  String get continueButton => 'Continue';
 
   @override
   String get resume => 'Resume';
@@ -9402,10 +9402,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineNameLabel => 'Routine Name *';
 
   @override
-  String get routineNameHint => 'e.g., Summer Shred 2025';
+  String get routineNameHint => 'e.g. Summer Bulk 2025';
 
   @override
-  String get routineNameRequired => 'Please enter a name';
+  String get routineNameRequired => 'Routine name is required';
 
   @override
   String get routineNameMinLength => 'Name must be at least 3 characters';
@@ -13640,7 +13640,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalWeightLifted => 'Total weight lifted';
 
   @override
-  String get trainingDays => 'Training days';
+  String get trainingDays => 'Training Days';
 
   @override
   String get unableToGetLocation => 'Unable to get location';
@@ -14497,7 +14497,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingRoutineAnalytics => 'Loading routine analytics...';
 
   @override
-  String get noActiveRoutine => 'No Active Routine';
+  String get noActiveRoutine => 'No active routine';
 
   @override
   String get createAndActivateARoutineToSeeAnalyticsH =>
@@ -17816,4 +17816,174 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminResponse => 'Admin Response';
+
+  @override
+  String get createYourFirstRoutine =>
+      'Create your first routine to get started';
+
+  @override
+  String get selectRoutineBelow => 'Select a routine below to activate it';
+
+  @override
+  String get activeRoutine => 'Active Routine';
+
+  @override
+  String get daysPerWeek => 'days/week';
+
+  @override
+  String get activate => 'Activate';
+
+  @override
+  String get activatingRoutine => 'Activating routine...';
+
+  @override
+  String get createRoutineComingSoon => 'Create routine feature coming soon';
+
+  @override
+  String get viewDetailsComingSoon => 'View details feature coming soon';
+
+  @override
+  String get deleteComingSoon => 'Delete feature coming soon';
+
+  @override
+  String get selectPreset => 'Select Preset';
+
+  @override
+  String get selectPresetDescription =>
+      'Choose a training split that matches your goals';
+
+  @override
+  String get step2ComingSoon => 'Step 2 feature coming soon';
+
+  @override
+  String get configureRoutine => 'Configure Routine';
+
+  @override
+  String get configureRoutineDescription =>
+      'Select training days and assign workout templates';
+
+  @override
+  String get routineName => 'Routine Name';
+
+  @override
+  String get assignTemplates => 'Assign Templates';
+
+  @override
+  String get tapToAssignTemplate => 'Tap to assign template';
+
+  @override
+  String get templatePickerComingSoon => 'Template picker coming soon';
+
+  @override
+  String get userNotLoggedIn => 'User not logged in';
+
+  @override
+  String get routineCreated => 'Routine created successfully!';
+
+  @override
+  String get noPresetSelected => 'No preset selected';
+
+  @override
+  String get basicInfo => 'Basic Info';
+
+  @override
+  String get presetType => 'Preset Type';
+
+  @override
+  String get presetPpl6DayDescription =>
+      'Train 6 days per week with a push/pull/legs split. Ideal for intermediate lifters who want high frequency and volume.';
+
+  @override
+  String get presetUpperLower4DayDescription =>
+      'Alternate between upper and lower body workouts 4 days per week. Perfect for beginners building strength.';
+
+  @override
+  String get presetFullBody3DayDescription =>
+      'Work your entire body 3 times per week. Great for beginners or those with limited time.';
+
+  @override
+  String get presetBroSplit5DayDescription =>
+      'Isolate one muscle group per day, 5 days per week. Traditional bodybuilding approach for advanced lifters.';
+
+  @override
+  String get presetCustomDescription =>
+      'Create your own custom training schedule. Choose your training days and muscle groups.';
+
+  @override
+  String get createdAt => 'Created';
+
+  @override
+  String get workoutSchedule => 'Workout Schedule';
+
+  @override
+  String get completedDays => 'Completed Days';
+
+  @override
+  String get deleteRoutine => 'Delete Routine';
+
+  @override
+  String get deleteRoutineConfirmation =>
+      'Are you sure you want to delete this routine? This action cannot be undone.';
+
+  @override
+  String get routineActivated => 'Routine activated';
+
+  @override
+  String get routineDeactivated => 'Routine deactivated';
+
+  @override
+  String get deactivate => 'Deactivate';
+
+  @override
+  String get noTemplateAssigned => 'No template assigned';
+
+  @override
+  String get selectTemplate => 'Select Template';
+
+  @override
+  String get publicTemplates => 'Public Templates';
+
+  @override
+  String get noTemplatesAvailable => 'No templates available';
+
+  @override
+  String get createTemplateFirst =>
+      'Create a template first to assign to this day';
+
+  @override
+  String get powerlifting => 'Powerlifting';
+
+  @override
+  String get bodybuilding => 'Bodybuilding';
+
+  @override
+  String get crossfit => 'CrossFit';
+
+  @override
+  String get calisthenics => 'Calisthenics';
+
+  @override
+  String get mixed => 'Mixed';
+
+  @override
+  String get outOf => 'out of';
+
+  @override
+  String get routineNameTooLong =>
+      'Routine name is too long (max 50 characters)';
+
+  @override
+  String get enterRoutineName => 'Enter routine name';
+
+  @override
+  String get routineUpdated => 'Routine updated successfully';
+
+  @override
+  String get stepOneOfTwo => '1/2';
+
+  @override
+  String get stepTwoOfTwo => '2/2';
+
+  @override
+  String get choosePreset => 'Choose a preset';
 }

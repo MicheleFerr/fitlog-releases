@@ -3,7 +3,7 @@
   "appTitle": "FitLog Pro",
   "welcome": "Pronto per allenarti?",
   "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
-  "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
+  "onboardingWelcomeTitle": "Benvenuto, {name}!",
   "onboardingWelcomeDescription": "Traccia i tuoi progressi, raggiungi i tuoi obiettivi con il tracker di allenamenti più completo",
   "onboardingSkip": "Salta",
   "onboardingBack": "Indietro",
@@ -296,7 +296,7 @@
   "cacheStatistics": "Statistiche Cache",
   "cachedExercises": "Esercizi in Cache",
   "cacheSize": "Dimensione Cache",
-  "lastUpdate": "Ultimo Aggiornamento",
+  "lastUpdate": "Ultimo aggiornamento",
   "loading": "Caricamento...",
   "ago": "fa",
   "clearCache": "Pulisci Cache",
@@ -314,7 +314,7 @@
   "newWorkout": "Nuovo Allenamento",
   "workoutName": "Nome Allenamento",
   "workoutNameHint": "es. Sessione Mattutina",
-  "exerciseName": "Nome Esercizio",
+  "exerciseName": "Esercizio",
   "exerciseNameHint": "es. Panca Piana",
   "importWorkoutTemplate": "Importa Scheda Allenamento",
   "exportTemplates": "Esporta Schede",
@@ -592,7 +592,7 @@
   "loadFromJson": "Carica da JSON",
   "activeWorkout": "Allenamento Attivo",
   "pausedWorkout": "Allenamento in Pausa",
-  "continueButton": "CONTINUA",
+  "continueButton": "Continua",
   "resume": "Riprendi",
   "end": "TERMINA",
   "endWorkoutConfirm": "Sei sicuro di voler terminare l'allenamento corrente?",
@@ -740,7 +740,7 @@
   "middayTime": "Mezzogiorno (12:30)",
   "afternoonTime": "Pomeriggio (16:00)",
   "eveningTime": "Sera (19:00)",
-  "customTime": "Orario Personalizzato",
+  "customTime": "Ora personalizzata",
   "newWeightPR": "Nuovo Record di Peso!",
   "newRepsPR": "Nuovo Record di Ripetizioni!",
   "newOneRMPR": "Nuovo Record 1RM!",
@@ -795,9 +795,9 @@
   "specificWarmup": "Riscaldamento Specifico",
   "safetyAndTechnique": "Sicurezza e Tecnica",
   "recovery": "Recupero",
-  "goodMorning": "Buongiorno! 🌅",
-  "goodAfternoon": "Buon pomeriggio! ☀️",
-  "goodEvening": "Buonasera! 🌙",
+  "goodMorning": "Buongiorno, {name}!",
+  "goodAfternoon": "Buon pomeriggio, {name}!",
+  "goodEvening": "Buonasera, {name}!",
   "readyToDominate": "Pronto per dominare?",
   "workoutActive": "ALLENAMENTO ATTIVO",
   "workoutPaused": "IN PAUSA",
@@ -965,7 +965,7 @@
   "weakPassword": "Password Troppo Debole",
   "authenticationError": "Errore di Autenticazione",
   "criticalError": "Errore Critico",
-  "goBack": "Torna Indietro",
+  "goBack": "Indietro",
   "startNewCycle": "Inizia nuovo ciclo",
   "continueRoutine": "Continua la tua routine",
   "resumeAfterDays": "Riprendi dopo {days} {days, plural, =1{giorno} other{giorni}}",
@@ -1242,7 +1242,7 @@
   "effortLabel": "Sforzo",
   "importedTemplate": "Template Importato",
   "noExercisesFoundInJSON": "Nessun esercizio trovato nel JSON",
-  "exercise": "Esercizio",
+  "exercise": "esercizio",
   "roundNumber": "Round {number}",
   "editRoundData": "Modifica dati round",
   "weightKg": "Peso (kg)",
@@ -1350,7 +1350,7 @@
   "lastPerformed": "Ultimo eseguito",
   "personalRecord": "Record Personale",
   "exerciseNotes": "Note Esercizio",
-  "set": "Serie",
+  "set": "serie",
   "setNumber": "Serie {number}",
   "previousSet": "Serie Precedente",
   "nextSet": "Prossima Serie",
@@ -1603,13 +1603,13 @@
   "rejectionReasonHint": "Spiega perché questa correzione viene rifiutata",
   "suggestedBy": "Suggerito da",
   "correctionType": "Tipo di Correzione",
-  "currentValue": "Valore Attuale",
+  "currentValue": "Valore attuale",
   "proposedValue": "Valore Proposto",
-  "submittedAt": "Inviato il",
-  "reviewedBy": "Revisionato da",
+  "submittedAt": "Inviata",
+  "reviewedBy": "Revisionata da",
   "exerciseImage": "Immagine Esercizio",
   "muscleFocus": "Focus Muscolare",
-  "pending": "In Sospeso",
+  "pending": "In Attesa",
   "approved": "Approvato",
   "rejected": "Rifiutato",
   "fix": "Correggi",
@@ -1643,7 +1643,7 @@
   "importWarning": "Questo sovrascriverà gli esercizi esistenti!",
   "selectFile": "Seleziona File",
   "selectField": "Seleziona Campo",
-  "newValue": "Nuovo Valore",
+  "newValue": "Nuovo valore",
   "apply": "Applica",
   "confirmDeleteMultiple": "Eliminare {count} esercizi?",
   "exerciseNameRequired": "Il nome dell'esercizio è obbligatorio",
@@ -1774,7 +1774,7 @@
     "description": "Button to add a new set"
   },
   "@sets": {
-    "description": "Label for sets section"
+    "description": "Forma plurale di serie esercizio"
   },
   "@weight": {
     "description": "Weight metric label"
@@ -2697,12 +2697,12 @@
   "@restBetweenSets": {
     "description": "Title for rest timer screen"
   },
-  "completed": "Completato",
+  "completed": "Completati",
   "@completed": {
-    "description": "Label indicating something is completed"
+    "description": "Etichetta conteggio feedback completati"
   },
   "@set": {
-    "description": "Singular form of set (as in workout set)"
+    "description": "Forma singolare di serie esercizio"
   },
   "complete": "Completa",
   "execute": "Esegui",
@@ -3517,7 +3517,7 @@
   "routineOnboardingReadyCTA": "Pronto a creare la tua prima routine?",
   "routineCenter": "Centro Routine",
   "@routineCenter": {
-    "description": "Routine Center title on home screen"
+    "description": "Titolo schermata centro routine"
   },
   "routineCenterDescription": "Routine multi-periodo con tracciamento intelligente",
   "@routineCenterDescription": {
@@ -3535,13 +3535,13 @@
   "@routineNameLabel": {
     "description": "Routine name field label"
   },
-  "routineNameHint": "es., Estate Definizione 2025",
+  "routineNameHint": "es. Bulk Estivo 2025",
   "@routineNameHint": {
-    "description": "Routine name field hint"
+    "description": "Testo suggerimento input nome routine"
   },
-  "routineNameRequired": "Inserisci un nome",
+  "routineNameRequired": "Nome routine richiesto",
   "@routineNameRequired": {
-    "description": "Routine name required validation"
+    "description": "Messaggio errore quando nome routine è vuoto"
   },
   "routineNameMinLength": "Il nome deve essere di almeno 3 caratteri",
   "@routineNameMinLength": {
@@ -4082,7 +4082,7 @@
     "description": "Weight progression chart title"
   },
   "@volumeProgression": {
-    "description": "Volume progression chart title"
+    "description": "Titolo grafico progressione volume"
   },
   "repsProgression": "Progressione Ripetizioni",
   "@repsProgression": {
@@ -4093,7 +4093,7 @@
     "description": "RPE/Effort progression chart title"
   },
   "@personalRecord": {
-    "description": "Etichetta che indica che la serie attuale è un record personale"
+    "description": "Etichetta completa record personale"
   },
   "averageWeight": "Peso Medio",
   "@averageWeight": {
@@ -4105,7 +4105,7 @@
   },
   "totalSessions": "Sessioni Totali",
   "@totalSessions": {
-    "description": "Total sessions label"
+    "description": "Etichetta statistica migrazione"
   },
   "exerciseStats": "Statistiche Esercizio",
   "@exerciseStats": {
@@ -4126,7 +4126,7 @@
     "description": "Hint to select an exercise"
   },
   "@maxWeight": {
-    "description": "Maximum weight label"
+    "description": "Etichetta record peso massimo"
   },
   "avgReps": "Reps Medie",
   "@avgReps": {
@@ -4134,7 +4134,7 @@
   },
   "lastWorkout": "Ultimo Allenamento",
   "@lastWorkout": {
-    "description": "Last workout date label"
+    "description": "Etichetta data ultimo allenamento"
   },
   "viewProgress": "Vedi Progressi",
   "@viewProgress": {
@@ -4335,7 +4335,7 @@
     "description": "Message when no plates are needed"
   },
   "@close": {
-    "description": "Close button"
+    "description": "Testo pulsante chiudi dialog"
   },
   "resetSettingsConfirmation": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
   "@resetSettingsConfirmation": {
@@ -4363,7 +4363,7 @@
   "historyViewSettings": "Impostazioni Vista Cronologia",
   "viewMode": "Modalità Vista",
   "viewModeList": "Vista Lista",
-  "viewModeCompact": "Vista Compatta",
+  "viewModeCompact": "Compatta",
   "viewModeCalendar": "Vista Calendario",
   "viewModeStats": "Vista Statistiche",
   "historyDisplayOptions": "Opzioni Visualizzazione",
@@ -4437,7 +4437,7 @@
     "description": "Flagged exercises section header"
   },
   "@statistics": {
-    "description": "Statistics section header"
+    "description": "Titolo sezione statistiche routine"
   },
   "@recommendations": {
     "description": "Recommendations section header"
@@ -4456,7 +4456,7 @@
   },
   "criticalIssues": "Problemi Critici",
   "@criticalIssues": {
-    "description": "Critical issues count label"
+    "description": "Etichetta conteggio feedback critici/alta priorità"
   },
   "daysThreshold": ">90 giorni",
   "@daysThreshold": {
@@ -6236,7 +6236,7 @@
   "timeRange": "Time range",
   "toggleToShowInMatching": "Toggle a mostra in accoppiamento",
   "totalWeightLifted": "Totale peso sollevato",
-  "trainingDays": "Training days",
+  "trainingDays": "Giorni di Allenamento",
   "unableToGetLocation": "Unable a get location",
   "unknownLocation": "Unknown location",
   "updateLocation": "Update location",
@@ -6511,10 +6511,9 @@
     "description": "From quick wins migration - 2 occurrences",
     "context": "Found in: lib/features/analytics/presentation/tabs/analytics_progress_tab.dart, lib/features/analytics/presentation/widgets/enhanced_progress_indicators.dart"
   },
-  "createRoutine": "Create Routine",
+  "createRoutine": "Crea Routine",
   "@createRoutine": {
-    "description": "From quick wins migration - 2 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart, lib/features/routine/presentation/widgets/smart_cta_button/smart_cta_button.dart"
+    "description": "Testo pulsante crea nuova routine"
   },
   "nessunEsercizioTrovato": "Nessun esercizio trovato",
   "@nessunEsercizioTrovato": {
@@ -6976,10 +6975,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
   },
-  "noWorkoutDataYet": "Nessun dato di allenamento",
+  "noWorkoutDataYet": "Nessun dato allenamento ancora",
   "@noWorkoutDataYet": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+    "description": "Stato vuoto grafico volume"
   },
   "completeSomeWorkoutsToSeeYournanalyticsA": "Complete some workouts to see your\\nanalytics and progress!",
   "@completeSomeWorkoutsToSeeYournanalyticsA": {
@@ -7021,10 +7019,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
   },
-  "noActiveRoutine": "No Active Routine",
+  "noActiveRoutine": "Nessuna routine attiva",
   "@noActiveRoutine": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+    "description": "Messaggio quando utente non ha routine attiva"
   },
   "createAndActivateARoutineToSeeAnalyticsH": "Create and activate a routine to see analytics here",
   "@createAndActivateARoutineToSeeAnalyticsH": {
@@ -7456,10 +7453,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
   },
-  "scoreBreakdown": "Score Breakdown",
+  "scoreBreakdown": "Dettaglio Punteggio",
   "@scoreBreakdown": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+    "description": "Titolo sezione dettaglio punteggio"
   },
   "statsTemporarilyUnavailable": "Stats temporarily unavailable",
   "@statsTemporarilyUnavailable": {
@@ -8638,9 +8634,9 @@
       }
     }
   },
-  "pleaseWait": "Attendere prego",
+  "pleaseWait": "Attendere prego, potrebbe richiedere qualche istante",
   "@pleaseWait": {
-    "description": "Generic please wait message"
+    "description": "Messaggio durante migrazione"
   },
   "accountTier": "Livello account: {tier}",
   "@accountTier": {
@@ -8798,7 +8794,7 @@
   "failedToLoadTemplate": "Impossibile caricare il template",
   "alternativesComingSoon": "Alternative in arrivo",
   "checkFirebasePermissions": "Controlla i permessi Firebase o contatta il supporto",
-  "errorLoadingRoutines": "Errore nel caricamento delle routine",
+  "errorLoadingRoutines": "Errore caricamento routine",
   "suggestionLevel": "Livello suggerimento",
   "noExercises": "Nessun esercizio",
   "@noExercises": {
@@ -9930,11 +9926,10 @@
   "@migrationInProgress": {
     "description": "Testo stato durante migrazione"
   },
-  "migrationComplete": "Migrazione completata!",
+  "migrationComplete": "Migrazione Completata",
   "@migrationComplete": {
-    "description": "Messaggio di successo dopo migrazione"
+    "description": "Titolo dopo migrazione riuscita"
   },
-  "customTime": "Ora personalizzata",
   "@customTime": {
     "description": "Etichetta per ora notifica personalizzata"
   },
@@ -10154,14 +10149,6 @@
   "@migratingWorkouts": {
     "description": "Titolo durante migrazione"
   },
-  "pleaseWait": "Attendere prego, potrebbe richiedere qualche istante",
-  "@pleaseWait": {
-    "description": "Messaggio durante migrazione"
-  },
-  "migrationComplete": "Migrazione Completata",
-  "@migrationComplete": {
-    "description": "Titolo dopo migrazione riuscita"
-  },
   "workoutsProcessed": "Allenamenti Processati",
   "@workoutsProcessed": {
     "description": "Etichetta statistica migrazione"
@@ -10170,11 +10157,6 @@
   "@uniqueExercises": {
     "description": "Etichetta statistica migrazione"
   },
-  "totalSessions": "Sessioni Totali",
-  "@totalSessions": {
-    "description": "Etichetta statistica migrazione"
-  },
-  "totalSets": "Serie Totali",
   "@totalSets": {
     "description": "Etichetta statistica migrazione"
   },
@@ -10186,7 +10168,6 @@
   "@migrationFailed": {
     "description": "Titolo quando migrazione fallisce"
   },
-  "retry": "Riprova",
   "@retry": {
     "description": "Testo pulsante riprova"
   },
@@ -10210,11 +10191,6 @@
   "@tryDifferentTimeframe": {
     "description": "Suggerimento quando non ci sono dati nell'intervallo corrente"
   },
-  "maxWeight": "Peso Massimo",
-  "@maxWeight": {
-    "description": "Etichetta record peso massimo"
-  },
-  "estimated1RM": "1RM Stimato",
   "@estimated1RM": {
     "description": "Etichetta massimale una ripetizione stimato"
   },
@@ -10222,11 +10198,6 @@
   "@volumeRecord": {
     "description": "Etichetta record volume totale"
   },
-  "volumeProgression": "Progressione Volume",
-  "@volumeProgression": {
-    "description": "Titolo grafico progressione volume"
-  },
-  "personalRecords": "Record Personali",
   "@personalRecords": {
     "description": "Titolo sezione record personali"
   },
@@ -10254,11 +10225,6 @@
   "@activityStatistics": {
     "description": "Titolo sezione statistiche attività"
   },
-  "lastWorkout": "Ultimo Allenamento",
-  "@lastWorkout": {
-    "description": "Etichetta data ultimo allenamento"
-  },
-  "weeklyFrequency": "Frequenza Settimanale",
   "@weeklyFrequency": {
     "description": "Etichetta frequenza allenamento settimanale"
   },
@@ -10266,15 +10232,12 @@
   "@averageLast4Weeks": {
     "description": "Periodo frequenza settimanale"
   },
-  "totalWorkouts": "Allenamenti Totali",
   "@totalWorkouts": {
-    "description": "Etichetta conteggio allenamenti totali"
+    "description": "Label numero totale allenamenti"
   },
-  "today": "Oggi",
   "@today": {
     "description": "Riferimento temporale oggi"
   },
-  "yesterday": "Ieri",
   "@yesterday": {
     "description": "Riferimento temporale ieri"
   },
@@ -10298,29 +10261,13 @@
   "@completeWorkoutToSeeHistory": {
     "description": "Prompt per completare primo allenamento"
   },
-  "personalRecord": "Record Personale",
-  "@personalRecord": {
-    "description": "Etichetta completa record personale"
-  },
   "pr": "RP",
   "@pr": {
     "description": "Badge abbreviazione record personale"
   },
-  "noWorkoutDataYet": "Nessun dato allenamento ancora",
-  "@noWorkoutDataYet": {
-    "description": "Stato vuoto grafico volume"
-  },
   "records": "Record",
   "@records": {
     "description": "Etichetta tab record"
-  },
-  "set": "serie",
-  "@set": {
-    "description": "Forma singolare di serie esercizio"
-  },
-  "sets": "serie",
-  "@sets": {
-    "description": "Forma plurale di serie esercizio"
   },
   "expandAll": "Espandi Tutto",
   "@expandAll": {
@@ -10330,23 +10277,18 @@
   "@collapseAll": {
     "description": "Pulsante per comprimere tutti gli accordion gruppi muscolari"
   },
-  "muscleGroupChest": "Petto",
   "@muscleGroupChest": {
     "description": "Nome gruppo muscolare petto"
   },
-  "muscleGroupBack": "Schiena",
   "@muscleGroupBack": {
     "description": "Nome gruppo muscolare schiena"
   },
-  "muscleGroupLegs": "Gambe",
   "@muscleGroupLegs": {
     "description": "Nome gruppo muscolare gambe"
   },
-  "muscleGroupShoulders": "Spalle",
   "@muscleGroupShoulders": {
     "description": "Nome gruppo muscolare spalle"
   },
-  "muscleGroupArms": "Braccia",
   "@muscleGroupArms": {
     "description": "Nome gruppo muscolare braccia"
   },
@@ -10354,11 +10296,9 @@
   "@muscleGroupCore": {
     "description": "Nome gruppo muscolare core"
   },
-  "exercise": "esercizio",
   "@exercise": {
     "description": "Forma singolare di esercizio"
   },
-  "exercises": "esercizi",
   "@exercises": {
     "description": "Forma plurale di esercizi"
   },
@@ -10406,7 +10346,6 @@
   "@yesReportToAdmin": {
     "description": "Pulsante per confermare la segnalazione all'admin"
   },
-  "viewModeCompact": "Compatta",
   "@viewModeCompact": {
     "description": "Modalità vista compatta (info minime)"
   },
@@ -10418,7 +10357,6 @@
   "@viewModeByDate": {
     "description": "Modalità vista organizzata cronologicamente"
   },
-  "viewMode": "Modalità Vista",
   "@viewMode": {
     "description": "Etichetta per selettore modalità vista"
   },
@@ -10490,10 +10428,6 @@
   "@restDaysPerWeek": {
     "description": "Unità giorni riposo per settimana"
   },
-  "scoreBreakdown": "Dettaglio Punteggio",
-  "@scoreBreakdown": {
-    "description": "Titolo sezione dettaglio punteggio"
-  },
   "weeklyStats": "Statistiche Settimanali (Ultime 4 Settimane)",
   "@weeklyStats": {
     "description": "Titolo sezione statistiche settimanali"
@@ -10506,7 +10440,6 @@
   "@aiCoachChatDescription": {
     "description": "Descrizione stato vuoto chat AI Coach"
   },
-  "goodMorning": "Buongiorno, {name}!",
   "@goodMorning": {
     "description": "Saluto mattutino per AI Coach",
     "placeholders": {
@@ -10515,7 +10448,6 @@
       }
     }
   },
-  "goodAfternoon": "Buon pomeriggio, {name}!",
   "@goodAfternoon": {
     "description": "Saluto pomeridiano per AI Coach",
     "placeholders": {
@@ -10524,7 +10456,6 @@
       }
     }
   },
-  "goodEvening": "Buonasera, {name}!",
   "@goodEvening": {
     "description": "Saluto serale per AI Coach",
     "placeholders": {
@@ -10533,7 +10464,6 @@
       }
     }
   },
-  "onboardingWelcomeTitle": "Benvenuto, {name}!",
   "@onboardingWelcomeTitle": {
     "description": "Titolo benvenuto onboarding AI Coach",
     "placeholders": {
@@ -10658,7 +10588,6 @@
   "@typeMessage": {
     "description": "Placeholder input chat"
   },
-  "favorites": "Preferiti",
   "@favorites": {
     "description": "Etichetta filtro per esercizi preferiti"
   },
@@ -10750,13 +10679,11 @@
   "@selectFieldToCorrect": {
     "description": "Etichetta per dropdown selezione campo"
   },
-  "currentValue": "Valore attuale",
   "@currentValue": {
-    "description": "Etichetta che mostra il valore attuale del campo"
+    "description": "Etichetta per valore campo attuale"
   },
-  "newValue": "Nuovo valore",
   "@newValue": {
-    "description": "Etichetta per input nuovo valore corretto"
+    "description": "Etichetta per input nuovo valore"
   },
   "reasonForChange": "Motivo della modifica",
   "@reasonForChange": {
@@ -10768,9 +10695,9 @@
   },
   "submitCorrection": "Invia Correzione",
   "@submitCorrection": {
-    "description": "Pulsante per inviare la patch"
+    "description": "Testo pulsante per inviare patch"
   },
-  "patchSubmittedSuccess": "Correzione inviata! La verificheremo presto.",
+  "patchSubmittedSuccess": "Correzione inviata con successo! Sarà revisionata dagli admin.",
   "@patchSubmittedSuccess": {
     "description": "Messaggio di successo dopo invio patch"
   },
@@ -10778,13 +10705,13 @@
   "@patchSubmittedLocalSuccess": {
     "description": "Messaggio di successo per applicazione patch locale"
   },
-  "patchSubmissionError": "Invio correzione fallito. Riprova.",
+  "patchSubmissionError": "Errore nell'invio della correzione",
   "@patchSubmissionError": {
-    "description": "Messaggio di errore per fallimento invio patch"
+    "description": "Prefisso messaggio errore per invio patch fallito"
   },
-  "reasonTooShort": "Il motivo deve essere di almeno 10 caratteri",
+  "reasonTooShort": "La motivazione deve essere di almeno 10 caratteri",
   "@reasonTooShort": {
-    "description": "Errore di validazione per motivo troppo breve"
+    "description": "Errore validazione per motivazione troppo corta"
   },
   "duplicatePatchError": "Hai già una correzione in attesa per questo campo",
   "@duplicatePatchError": {
@@ -10818,9 +10745,9 @@
   "@noPatchesYet": {
     "description": "Messaggio stato vuoto quando l'utente non ha patch"
   },
-  "noPatchesDescription": "Hai trovato un errore? Segnalalo e aiutaci a migliorare il database!",
+  "noPatchesDescription": "Non ci sono correzioni agli esercizi in attesa di revisione",
   "@noPatchesDescription": {
-    "description": "Descrizione stato vuoto"
+    "description": "Descrizione stato vuoto per nessuna patch"
   },
   "patchesCount": "{count} correzione/i",
   "@patchesCount": {
@@ -10881,7 +10808,6 @@
   "@patchDetailsTitle": {
     "description": "Titolo per schermata dettagli patch"
   },
-  "exerciseName": "Esercizio",
   "@exerciseName": {
     "description": "Etichetta per nome esercizio"
   },
@@ -10893,7 +10819,6 @@
   "@oldValue": {
     "description": "Etichetta per valore vecchio"
   },
-  "submittedAt": "Inviata",
   "@submittedAt": {
     "description": "Etichetta per timestamp invio"
   },
@@ -10901,7 +10826,6 @@
   "@reviewedAt": {
     "description": "Etichetta per timestamp revisione"
   },
-  "reviewedBy": "Revisionata da",
   "@reviewedBy": {
     "description": "Etichetta per revisore"
   },
@@ -10929,21 +10853,9 @@
   "@reportErrorSubtitle": {
     "description": "Sottotitolo per dialog invio patch"
   },
-  "selectFieldToCorrect": "Seleziona campo da correggere",
-  "@selectFieldToCorrect": {
-    "description": "Etichetta per dropdown selezione campo"
-  },
   "pleaseSelectField": "Seleziona un campo",
   "@pleaseSelectField": {
     "description": "Errore validazione per selezione campo vuota"
-  },
-  "currentValue": "Valore attuale",
-  "@currentValue": {
-    "description": "Etichetta per valore campo attuale"
-  },
-  "newValue": "Nuovo valore",
-  "@newValue": {
-    "description": "Etichetta per input nuovo valore"
   },
   "enterCorrectedValue": "Inserisci il valore corretto",
   "@enterCorrectedValue": {
@@ -10969,22 +10881,6 @@
   "@pleaseProvideReason": {
     "description": "Errore validazione per motivazione vuota"
   },
-  "reasonTooShort": "La motivazione deve essere di almeno 10 caratteri",
-  "@reasonTooShort": {
-    "description": "Errore validazione per motivazione troppo corta"
-  },
-  "submitCorrection": "Invia Correzione",
-  "@submitCorrection": {
-    "description": "Testo pulsante per inviare patch"
-  },
-  "patchSubmittedSuccess": "Correzione inviata con successo! Sarà revisionata dagli admin.",
-  "@patchSubmittedSuccess": {
-    "description": "Messaggio di successo dopo invio patch"
-  },
-  "patchSubmissionError": "Errore nell'invio della correzione",
-  "@patchSubmissionError": {
-    "description": "Prefisso messaggio errore per invio patch fallito"
-  },
   "exercisePatchReview": "Revisione Correzioni Esercizi",
   "@exercisePatchReview": {
     "description": "Titolo schermata revisione patch admin"
@@ -11004,10 +10900,6 @@
   "allCaughtUp": "Tutto fatto!",
   "@allCaughtUp": {
     "description": "Titolo stato vuoto quando non ci sono patch"
-  },
-  "noPatchesDescription": "Non ci sono correzioni agli esercizi in attesa di revisione",
-  "@noPatchesDescription": {
-    "description": "Descrizione stato vuoto per nessuna patch"
   },
   "pendingCount": "In Attesa",
   "@pendingCount": {
@@ -11069,11 +10961,9 @@
   "@feedbackDashboard": {
     "description": "Titolo schermata dashboard feedback admin"
   },
-  "myFeedback": "I Miei Feedback",
   "@myFeedback": {
     "description": "Titolo schermata storico feedback utente"
   },
-  "overview": "Panoramica",
   "@overview": {
     "description": "Titolo sezione panoramica statistiche"
   },
@@ -11081,19 +10971,9 @@
   "@totalFeedback": {
     "description": "Etichetta conteggio totale feedback"
   },
-  "pending": "In Attesa",
   "@pending": {
     "description": "Etichetta conteggio feedback in attesa"
   },
-  "criticalIssues": "Problemi Critici",
-  "@criticalIssues": {
-    "description": "Etichetta conteggio feedback critici/alta priorità"
-  },
-  "completed": "Completati",
-  "@completed": {
-    "description": "Etichetta conteggio feedback completati"
-  },
-  "filters": "Filtri",
   "@filters": {
     "description": "Titolo sezione opzioni filtro"
   },
@@ -11177,7 +11057,6 @@
   "@submitted": {
     "description": "Etichetta timestamp invio"
   },
-  "lastUpdate": "Ultimo aggiornamento",
   "@lastUpdate": {
     "description": "Etichetta timestamp ultimo aggiornamento"
   },
@@ -11185,13 +11064,8 @@
   "@user": {
     "description": "Etichetta informazioni utente"
   },
-  "details": "Dettagli",
   "@details": {
     "description": "Testo pulsante visualizza dettagli feedback"
-  },
-  "close": "Chiudi",
-  "@close": {
-    "description": "Testo pulsante chiudi dialog"
   },
   "noFeedbackFound": "Nessun feedback trovato",
   "@noFeedbackFound": {
@@ -11216,5 +11090,235 @@
   "adminResponse": "Risposta Admin",
   "@adminResponse": {
     "description": "Titolo sezione risposta admin"
+  },
+  "@errorLoadingRoutines": {
+    "description": "Messaggio errore quando caricamento routine fallisce"
+  },
+  "@noRoutinesYet": {
+    "description": "Titolo stato vuoto quando utente non ha routine"
+  },
+  "createYourFirstRoutine": "Crea la tua prima routine per iniziare",
+  "@createYourFirstRoutine": {
+    "description": "Descrizione stato vuoto per nessuna routine"
+  },
+  "selectRoutineBelow": "Seleziona una routine qui sotto per attivarla",
+  "@selectRoutineBelow": {
+    "description": "Messaggio che invita utente a selezionare routine"
+  },
+  "activeRoutine": "Routine Attiva",
+  "@activeRoutine": {
+    "description": "Etichetta per routine attualmente attiva"
+  },
+  "daysPerWeek": "giorni/settimana",
+  "@daysPerWeek": {
+    "description": "Unità per frequenza allenamento"
+  },
+  "activate": "Attiva",
+  "@activate": {
+    "description": "Testo pulsante per attivare una routine"
+  },
+  "activatingRoutine": "Attivazione routine...",
+  "@activatingRoutine": {
+    "description": "Messaggio caricamento durante attivazione routine"
+  },
+  "createRoutineComingSoon": "Funzione creazione routine in arrivo",
+  "@createRoutineComingSoon": {
+    "description": "Messaggio placeholder per creazione routine non implementata"
+  },
+  "viewDetailsComingSoon": "Funzione dettagli in arrivo",
+  "@viewDetailsComingSoon": {
+    "description": "Messaggio placeholder per visualizza dettagli non implementata"
+  },
+  "deleteComingSoon": "Funzione eliminazione in arrivo",
+  "@deleteComingSoon": {
+    "description": "Messaggio placeholder per eliminazione routine non implementata"
+  },
+  "selectPreset": "Seleziona Preset",
+  "@selectPreset": {
+    "description": "Titolo step selezione preset"
+  },
+  "selectPresetDescription": "Scegli uno split di allenamento che corrisponde ai tuoi obiettivi",
+  "@selectPresetDescription": {
+    "description": "Descrizione step selezione preset"
+  },
+  "step2ComingSoon": "Funzione step 2 in arrivo",
+  "@step2ComingSoon": {
+    "description": "Messaggio placeholder per step 2 non implementato"
+  },
+  "@continueButton": {
+    "description": "Testo pulsante per continuare allo step successivo"
+  },
+  "configureRoutine": "Configura Routine",
+  "@configureRoutine": {
+    "description": "Titolo step configurazione routine"
+  },
+  "configureRoutineDescription": "Seleziona giorni di allenamento e assegna template workout",
+  "@configureRoutineDescription": {
+    "description": "Descrizione step configurazione routine"
+  },
+  "routineName": "Nome Routine",
+  "@routineName": {
+    "description": "Etichetta campo input nome routine"
+  },
+  "@trainingDays": {
+    "description": "Etichetta sezione giorni allenamento"
+  },
+  "assignTemplates": "Assegna Template",
+  "@assignTemplates": {
+    "description": "Etichetta sezione assegnazione template"
+  },
+  "tapToAssignTemplate": "Tocca per assegnare template",
+  "@tapToAssignTemplate": {
+    "description": "Testo placeholder template non assegnato"
+  },
+  "templatePickerComingSoon": "Selettore template in arrivo",
+  "@templatePickerComingSoon": {
+    "description": "Messaggio placeholder selettore template non implementato"
+  },
+  "userNotLoggedIn": "Utente non autenticato",
+  "@userNotLoggedIn": {
+    "description": "Messaggio errore quando utente non è autenticato"
+  },
+  "routineCreated": "Routine creata con successo!",
+  "@routineCreated": {
+    "description": "Messaggio successo dopo creazione routine"
+  },
+  "noPresetSelected": "Nessun preset selezionato",
+  "@noPresetSelected": {
+    "description": "Messaggio errore quando preset manca"
+  },
+  "@goBack": {
+    "description": "Testo pulsante per tornare indietro"
+  },
+  "basicInfo": "Informazioni Base",
+  "@basicInfo": {
+    "description": "Titolo sezione informazioni base routine"
+  },
+  "presetType": "Tipo Preset",
+  "@presetType": {
+    "description": "Label tipo preset routine"
+  },
+  "presetPpl6DayDescription": "Allenati 6 giorni a settimana con una divisione spinta/tirata/gambe. Ideale per atleti intermedi che vogliono alta frequenza e volume.",
+  "@presetPpl6DayDescription": {
+    "description": "Descrizione preset Push/Pull/Legs 6 giorni"
+  },
+  "presetUpperLower4DayDescription": "Alterna allenamenti parte alta e bassa del corpo 4 giorni a settimana. Perfetto per principianti che costruiscono forza.",
+  "@presetUpperLower4DayDescription": {
+    "description": "Descrizione preset Upper/Lower 4 giorni"
+  },
+  "presetFullBody3DayDescription": "Allena tutto il corpo 3 volte a settimana. Ottimo per principianti o chi ha poco tempo.",
+  "@presetFullBody3DayDescription": {
+    "description": "Descrizione preset Full Body 3 giorni"
+  },
+  "presetBroSplit5DayDescription": "Isola un gruppo muscolare al giorno, 5 giorni a settimana. Approccio bodybuilding tradizionale per atleti avanzati.",
+  "@presetBroSplit5DayDescription": {
+    "description": "Descrizione preset Bro Split 5 giorni"
+  },
+  "presetCustomDescription": "Crea il tuo programma di allenamento personalizzato. Scegli i giorni e i gruppi muscolari.",
+  "@presetCustomDescription": {
+    "description": "Descrizione preset Custom"
+  },
+  "createdAt": "Creata",
+  "@createdAt": {
+    "description": "Label data creazione routine"
+  },
+  "workoutSchedule": "Programma Allenamento",
+  "@workoutSchedule": {
+    "description": "Titolo sezione programma allenamento"
+  },
+  "completedDays": "Giorni Completati",
+  "@completedDays": {
+    "description": "Label numero giorni completati"
+  },
+  "deleteRoutine": "Elimina Routine",
+  "@deleteRoutine": {
+    "description": "Titolo dialog conferma eliminazione"
+  },
+  "deleteRoutineConfirmation": "Sei sicuro di voler eliminare questa routine? Questa azione non può essere annullata.",
+  "@deleteRoutineConfirmation": {
+    "description": "Messaggio conferma eliminazione routine"
+  },
+  "routineActivated": "Routine attivata",
+  "@routineActivated": {
+    "description": "Messaggio successo attivazione routine"
+  },
+  "routineDeactivated": "Routine disattivata",
+  "@routineDeactivated": {
+    "description": "Messaggio successo disattivazione routine"
+  },
+  "@routineDeleted": {
+    "description": "Messaggio successo eliminazione routine"
+  },
+  "deactivate": "Disattiva",
+  "@deactivate": {
+    "description": "Testo pulsante disattiva routine"
+  },
+  "noTemplateAssigned": "Nessun template assegnato",
+  "@noTemplateAssigned": {
+    "description": "Testo quando giorno non ha template assegnato"
+  },
+  "selectTemplate": "Seleziona Template",
+  "@selectTemplate": {
+    "description": "Titolo modale selezione template"
+  },
+  "publicTemplates": "Template Pubblici",
+  "@publicTemplates": {
+    "description": "Intestazione sezione template pubblici"
+  },
+  "noTemplatesAvailable": "Nessun template disponibile",
+  "@noTemplatesAvailable": {
+    "description": "Messaggio quando non esistono template"
+  },
+  "createTemplateFirst": "Crea prima un template da assegnare a questo giorno",
+  "@createTemplateFirst": {
+    "description": "Messaggio suggerimento lista template vuota"
+  },
+  "powerlifting": "Powerlifting",
+  "@powerlifting": {
+    "description": "Categoria template: powerlifting"
+  },
+  "bodybuilding": "Bodybuilding",
+  "@bodybuilding": {
+    "description": "Categoria template: bodybuilding"
+  },
+  "crossfit": "CrossFit",
+  "@crossfit": {
+    "description": "Categoria template: crossfit"
+  },
+  "calisthenics": "Calisthenics",
+  "@calisthenics": {
+    "description": "Categoria template: calisthenics"
+  },
+  "mixed": "Misto",
+  "@mixed": {
+    "description": "Categoria template: misto"
+  },
+  "outOf": "su",
+  "@outOf": {
+    "description": "Preposizione per il progresso (es. '3 su 6')"
+  },
+  "routineNameTooLong": "Nome routine troppo lungo (max 50 caratteri)",
+  "@routineNameTooLong": {
+    "description": "Errore di validazione per nome routine che supera lunghezza massima"
+  },
+  "enterRoutineName": "Inserisci nome routine",
+  "@enterRoutineName": {
+    "description": "Testo suggerimento per campo input nome routine"
+  },
+  "routineUpdated": "Routine aggiornata con successo",
+  "@routineUpdated": {
+    "description": "Messaggio di successo quando routine è aggiornata"
+  },
+  "stepOneOfTwo": "1/2",
+  "@stepOneOfTwo": {
+    "description": "Indicatore passo per primo passo di processo in due fasi"
+  },
+  "stepTwoOfTwo": "2/2",
+  "@stepTwoOfTwo": {
+    "description": "Indicatore passo per secondo passo di processo in due fasi"
+  },
+  "choosePreset": "Scegli un preset",
+  "@choosePreset": {
+    "description": "Testo di istruzione per selezionare un preset di routine"
   }
 }

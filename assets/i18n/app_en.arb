@@ -12,9 +12,14 @@
   "@welcomeDescription": {
     "description": "Welcome description on login screen"
   },
-  "onboardingWelcomeTitle": "Welcome to Your Workout Hub",
+  "onboardingWelcomeTitle": "Welcome, {name}!",
   "@onboardingWelcomeTitle": {
-    "description": "Title for the onboarding welcome step"
+    "description": "AI Coach onboarding welcome title",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "onboardingWelcomeDescription": "Track your progress, achieve your goals with the most comprehensive workout tracker",
   "@onboardingWelcomeDescription": {
@@ -694,9 +699,9 @@
   "@cacheSize": {
     "description": "Cache size label"
   },
-  "lastUpdate": "Last Update",
+  "lastUpdate": "Last update",
   "@lastUpdate": {
-    "description": "Last update stat label"
+    "description": "Label for last update timestamp"
   },
   "loading": "Loading...",
   "@loading": {
@@ -766,9 +771,9 @@
   "@workoutNameHint": {
     "description": "Hint text for workout name input"
   },
-  "exerciseName": "Exercise Name",
+  "exerciseName": "Exercise",
   "@exerciseName": {
-    "description": "Exercise name field label"
+    "description": "Label for exercise name"
   },
   "exerciseNameHint": "e.g., Bench Press",
   "@exerciseNameHint": {
@@ -930,7 +935,7 @@
   },
   "close": "Close",
   "@close": {
-    "description": "Close button"
+    "description": "Button text to close dialog"
   },
   "fullscreen": "Fullscreen",
   "@fullscreen": {
@@ -1170,7 +1175,7 @@
   },
   "sets": "sets",
   "@sets": {
-    "description": "Label for sets (lowercase)"
+    "description": "Plural form of exercise sets"
   },
   "addSet": "Add Set",
   "@addSet": {
@@ -1266,7 +1271,7 @@
   },
   "exercises": "exercises",
   "@exercises": {
-    "description": "Exercises label (plural)"
+    "description": "Plural form of exercises"
   },
   "progress": "Progress",
   "@progress": {
@@ -1874,9 +1879,9 @@
   "@pausedWorkout": {
     "description": "Paused workout banner title"
   },
-  "continueButton": "CONTINUE",
+  "continueButton": "Continue",
   "@continueButton": {
-    "description": "Continue button text"
+    "description": "Button text to continue to next step"
   },
   "resume": "Resume",
   "@resume": {
@@ -1974,7 +1979,7 @@
   },
   "totalWorkouts": "Total Workouts",
   "@totalWorkouts": {
-    "description": "Total workouts statistic"
+    "description": "Label for total workouts count"
   },
   "completedSessions": "Completed Sessions",
   "@completedSessions": {
@@ -1994,7 +1999,7 @@
   },
   "personalRecords": "Personal Records",
   "@personalRecords": {
-    "description": "Section title for personal records"
+    "description": "Personal records section title"
   },
   "newPRs": "New PRs",
   "@newPRs": {
@@ -2533,9 +2538,9 @@
   "@eveningTime": {
     "description": "Evening time option for notifications"
   },
-  "customTime": "Custom Time",
+  "customTime": "Custom time",
   "@customTime": {
-    "description": "Custom time option for notifications"
+    "description": "Label for custom notification time"
   },
   "newWeightPR": "New Weight PR!",
   "@newWeightPR": {
@@ -2774,17 +2779,32 @@
   "@recovery": {
     "description": "Recovery group title"
   },
-  "goodMorning": "Good morning! 🌅",
+  "goodMorning": "Good morning, {name}!",
   "@goodMorning": {
-    "description": "Morning greeting"
+    "description": "Morning greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
-  "goodAfternoon": "Good afternoon! ☀️",
+  "goodAfternoon": "Good afternoon, {name}!",
   "@goodAfternoon": {
-    "description": "Afternoon greeting"
+    "description": "Afternoon greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
-  "goodEvening": "Good evening! 🌙",
+  "goodEvening": "Good evening, {name}!",
   "@goodEvening": {
-    "description": "Evening greeting"
+    "description": "Evening greeting for AI Coach",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "readyToDominate": "Ready to dominate?",
   "@readyToDominate": {
@@ -3345,23 +3365,23 @@
   },
   "muscleGroupLegs": "Legs",
   "@muscleGroupLegs": {
-    "description": "Muscle group name for legs"
+    "description": "Legs muscle group name"
   },
   "muscleGroupChest": "Chest",
   "@muscleGroupChest": {
-    "description": "Muscle group name for chest"
+    "description": "Chest muscle group name"
   },
   "muscleGroupBack": "Back",
   "@muscleGroupBack": {
-    "description": "Muscle group name for back"
+    "description": "Back muscle group name"
   },
   "muscleGroupShoulders": "Shoulders",
   "@muscleGroupShoulders": {
-    "description": "Muscle group name for shoulders"
+    "description": "Shoulders muscle group name"
   },
   "muscleGroupArms": "Arms",
   "@muscleGroupArms": {
-    "description": "Muscle group name for arms"
+    "description": "Arms muscle group name"
   },
   "muscleGroupOther": "Other",
   "@muscleGroupOther": {
@@ -3405,7 +3425,7 @@
   },
   "weeklyFrequency": "Weekly Frequency",
   "@weeklyFrequency": {
-    "description": "Weekly frequency label"
+    "description": "Weekly training frequency label"
   },
   "excellentProgress": "Excellent Progress!",
   "@excellentProgress": {
@@ -3505,7 +3525,7 @@
   },
   "filters": "Filters",
   "@filters": {
-    "description": "Filters section title"
+    "description": "Section title for filter options"
   },
   "addToWorkout": "Add to Workout",
   "@addToWorkout": {
@@ -3601,7 +3621,7 @@
   },
   "goBack": "Go Back",
   "@goBack": {
-    "description": "Button to go back to previous screen"
+    "description": "Button text to go back"
   },
   "startNewCycle": "Start new cycle",
   "@startNewCycle": {
@@ -4044,7 +4064,7 @@
   },
   "totalSets": "Total Sets",
   "@totalSets": {
-    "description": "Label for total number of sets"
+    "description": "Migration stat label"
   },
   "avgVolumePerWorkout": "Avg Volume Per Workout",
   "@avgVolumePerWorkout": {
@@ -4136,7 +4156,7 @@
   },
   "overview": "Overview",
   "@overview": {
-    "description": "Overview tab label"
+    "description": "Section title for statistics overview"
   },
   "strength": "Strength",
   "@strength": {
@@ -4180,15 +4200,15 @@
   },
   "maxWeight": "Max Weight",
   "@maxWeight": {
-    "description": "Label for maximum weight lifted"
+    "description": "Max weight personal record label"
   },
   "maxReps": "Max Reps",
   "@maxReps": {
     "description": "Maximum reps statistic"
   },
-  "estimated1RM": "Est. 1RM",
+  "estimated1RM": "Estimated 1RM",
   "@estimated1RM": {
-    "description": "Estimated one rep max"
+    "description": "Estimated one-rep max label"
   },
   "volumeProgression": "Volume Progression",
   "@volumeProgression": {
@@ -4807,7 +4827,7 @@
   },
   "importedTemplate": "Imported Template",
   "noExercisesFoundInJSON": "No exercises found in JSON",
-  "exercise": "Exercise",
+  "exercise": "exercise",
   "roundNumber": "Round {number}",
   "@roundNumber": {
     "description": "Round number label",
@@ -5200,7 +5220,7 @@
   },
   "statistics": "Statistics",
   "@statistics": {
-    "description": "Statistics section header"
+    "description": "Section title for routine statistics"
   },
   "avgWeight": "Avg Weight",
   "@avgWeight": {
@@ -5220,11 +5240,11 @@
   },
   "today": "Today",
   "@today": {
-    "description": "Label for today's date"
+    "description": "Today time reference"
   },
   "yesterday": "Yesterday",
   "@yesterday": {
-    "description": "Label for yesterday's date"
+    "description": "Yesterday time reference"
   },
   "workoutDatabase": "Workout Database",
   "@workoutDatabase": {
@@ -5496,7 +5516,7 @@
   },
   "details": "Details",
   "@details": {
-    "description": "Label for details section"
+    "description": "Button text to view feedback details"
   },
   "initializeDescription": "This will load all exercises from the local JSON file into Firebase. This operation may take several minutes.",
   "@initializeDescription": {
@@ -5798,21 +5818,21 @@
   "@correctionType": {
     "description": "Label for type of correction"
   },
-  "currentValue": "Current Value",
+  "currentValue": "Current value",
   "@currentValue": {
-    "description": "Label for current value in correction"
+    "description": "Label for current field value"
   },
   "proposedValue": "Proposed Value",
   "@proposedValue": {
     "description": "Label for proposed value in correction"
   },
-  "submittedAt": "Submitted At",
+  "submittedAt": "Submitted",
   "@submittedAt": {
     "description": "Label for submission timestamp"
   },
   "reviewedBy": "Reviewed by",
   "@reviewedBy": {
-    "description": "Label for who reviewed the correction"
+    "description": "Label for reviewer"
   },
   "exerciseImage": "Exercise Image",
   "@exerciseImage": {
@@ -5848,7 +5868,7 @@
   },
   "pending": "Pending",
   "@pending": {
-    "description": "Status label for pending items"
+    "description": "Label for pending feedback count"
   },
   "approved": "Approved",
   "@approved": {
@@ -5992,9 +6012,9 @@
   "@selectField": {
     "description": "Select field to bulk edit"
   },
-  "newValue": "New Value",
+  "newValue": "New value",
   "@newValue": {
-    "description": "New value for bulk edit"
+    "description": "Label for new field value input"
   },
   "apply": "Apply",
   "@apply": {
@@ -8512,11 +8532,11 @@
   },
   "completed": "Completed",
   "@completed": {
-    "description": "Label indicating something is completed"
+    "description": "Label for completed feedback count"
   },
-  "set": "Set",
+  "set": "set",
   "@set": {
-    "description": "Singular form of set (as in workout set)"
+    "description": "Singular form of exercise set"
   },
   "complete": "Complete",
   "execute": "Execute",
@@ -10798,7 +10818,7 @@
   },
   "myFeedback": "My Feedback",
   "@myFeedback": {
-    "description": "Title for feedback history screen"
+    "description": "Title for user feedback history screen"
   },
   "feedbackHistory": "Feedback History",
   "@feedbackHistory": {
@@ -11117,7 +11137,7 @@
   },
   "routineCenter": "Routine Center",
   "@routineCenter": {
-    "description": "Routine Center title on home screen"
+    "description": "Title for routine center screen"
   },
   "routineCenterDescription": "Multi-period routines with smart tracking",
   "@routineCenterDescription": {
@@ -11135,13 +11155,13 @@
   "@routineNameLabel": {
     "description": "Routine name field label"
   },
-  "routineNameHint": "e.g., Summer Shred 2025",
+  "routineNameHint": "e.g. Summer Bulk 2025",
   "@routineNameHint": {
-    "description": "Routine name field hint"
+    "description": "Hint text for routine name input"
   },
-  "routineNameRequired": "Please enter a name",
+  "routineNameRequired": "Routine name is required",
   "@routineNameRequired": {
-    "description": "Routine name required validation"
+    "description": "Error message when routine name is empty"
   },
   "routineNameMinLength": "Name must be at least 3 characters",
   "@routineNameMinLength": {
@@ -11738,7 +11758,7 @@
   },
   "personalRecord": "Personal Record",
   "@personalRecord": {
-    "description": "Label indicating current streak is a personal best"
+    "description": "Personal record full label"
   },
   "averageWeight": "Avg Weight",
   "@averageWeight": {
@@ -11750,7 +11770,7 @@
   },
   "totalSessions": "Total Sessions",
   "@totalSessions": {
-    "description": "Label for total number of workout sessions"
+    "description": "Migration stat label"
   },
   "exerciseStats": "Exercise Statistics",
   "@exerciseStats": {
@@ -11998,15 +12018,15 @@
   },
   "viewMode": "View Mode",
   "@viewMode": {
-    "description": "Label for view mode setting"
+    "description": "Label for view mode selector"
   },
   "viewModeList": "List View",
   "@viewModeList": {
     "description": "List view mode option"
   },
-  "viewModeCompact": "Compact View",
+  "viewModeCompact": "Compact",
   "@viewModeCompact": {
-    "description": "Compact view mode option"
+    "description": "Compact view mode (minimal info)"
   },
   "viewModeCalendar": "Calendar View",
   "@viewModeCalendar": {
@@ -12118,7 +12138,7 @@
   },
   "criticalIssues": "Critical Issues",
   "@criticalIssues": {
-    "description": "Critical issues count label"
+    "description": "Label for critical/high priority feedback count"
   },
   "daysThreshold": ">90 days",
   "@daysThreshold": {
@@ -13724,7 +13744,7 @@
   },
   "favorites": "Favorites",
   "@favorites": {
-    "description": "Label for favorite exercises filter"
+    "description": "Filter label for favorite exercises"
   },
   "allCategories": "All categories",
   "@allCategories": {
@@ -16397,9 +16417,9 @@
   "@totalWeightLifted": {
     "description": "Auto-generated for totalWeightLifted"
   },
-  "trainingDays": "Training days",
+  "trainingDays": "Training Days",
   "@trainingDays": {
-    "description": "Auto-generated for trainingDays"
+    "description": "Label for training days section"
   },
   "unableToGetLocation": "Unable to get location",
   "@unableToGetLocation": {
@@ -17175,8 +17195,7 @@
   },
   "createRoutine": "Create Routine",
   "@createRoutine": {
-    "description": "From quick wins migration - 2 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart, lib/features/routine/presentation/widgets/smart_cta_button/smart_cta_button.dart"
+    "description": "Button text to create new routine"
   },
   "nessunEsercizioTrovato": "Nessun esercizio trovato",
   "@nessunEsercizioTrovato": {
@@ -17640,8 +17659,7 @@
   },
   "noWorkoutDataYet": "No workout data yet",
   "@noWorkoutDataYet": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/analytics_screen.dart"
+    "description": "Empty state for volume chart"
   },
   "completeSomeWorkoutsToSeeYournanalyticsA": "Complete some workouts to see your\\nanalytics and progress!",
   "@completeSomeWorkoutsToSeeYournanalyticsA": {
@@ -17683,10 +17701,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
   },
-  "noActiveRoutine": "No Active Routine",
+  "noActiveRoutine": "No active routine",
   "@noActiveRoutine": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/tabs/analytics_routine_tab.dart"
+    "description": "Message when user has no active routine"
   },
   "createAndActivateARoutineToSeeAnalyticsH": "Create and activate a routine to see analytics here",
   "@createAndActivateARoutineToSeeAnalyticsH": {
@@ -18120,8 +18137,7 @@
   },
   "scoreBreakdown": "Score Breakdown",
   "@scoreBreakdown": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/enhanced_volume_progress_chart.dart"
+    "description": "Score breakdown section title"
   },
   "statsTemporarilyUnavailable": "Stats temporarily unavailable",
   "@statsTemporarilyUnavailable": {
@@ -19306,9 +19322,9 @@
       }
     }
   },
-  "pleaseWait": "Please wait",
+  "pleaseWait": "Please wait, this may take a moment",
   "@pleaseWait": {
-    "description": "Generic please wait message"
+    "description": "Message during migration"
   },
   "accountTier": "Account tier: {tier}",
   "@accountTier": {
@@ -20566,13 +20582,9 @@
   "@migrationInProgress": {
     "description": "Status text during migration"
   },
-  "migrationComplete": "Migration complete!",
+  "migrationComplete": "Migration Complete",
   "@migrationComplete": {
-    "description": "Success message after migration"
-  },
-  "customTime": "Custom time",
-  "@customTime": {
-    "description": "Label for custom notification time"
+    "description": "Title after successful migration"
   },
   "useDefaultTime": "Use default time",
   "@useDefaultTime": {
@@ -20790,28 +20802,12 @@
   "@migratingWorkouts": {
     "description": "Title during migration"
   },
-  "pleaseWait": "Please wait, this may take a moment",
-  "@pleaseWait": {
-    "description": "Message during migration"
-  },
-  "migrationComplete": "Migration Complete",
-  "@migrationComplete": {
-    "description": "Title after successful migration"
-  },
   "workoutsProcessed": "Workouts Processed",
   "@workoutsProcessed": {
     "description": "Migration stat label"
   },
   "uniqueExercises": "Unique Exercises",
   "@uniqueExercises": {
-    "description": "Migration stat label"
-  },
-  "totalSessions": "Total Sessions",
-  "@totalSessions": {
-    "description": "Migration stat label"
-  },
-  "totalSets": "Total Sets",
-  "@totalSets": {
     "description": "Migration stat label"
   },
   "skipped": "Skipped",
@@ -20821,10 +20817,6 @@
   "migrationFailed": "Migration Failed",
   "@migrationFailed": {
     "description": "Title when migration fails"
-  },
-  "retry": "Retry",
-  "@retry": {
-    "description": "Retry button text"
   },
   "noResultsFound": "No results found",
   "@noResultsFound": {
@@ -20846,25 +20838,9 @@
   "@tryDifferentTimeframe": {
     "description": "Suggestion when no data in current timeframe"
   },
-  "maxWeight": "Max Weight",
-  "@maxWeight": {
-    "description": "Max weight personal record label"
-  },
-  "estimated1RM": "Estimated 1RM",
-  "@estimated1RM": {
-    "description": "Estimated one-rep max label"
-  },
   "volumeRecord": "Volume Record",
   "@volumeRecord": {
     "description": "Total volume record label"
-  },
-  "volumeProgression": "Volume Progression",
-  "@volumeProgression": {
-    "description": "Volume progression chart title"
-  },
-  "personalRecords": "Personal Records",
-  "@personalRecords": {
-    "description": "Personal records section title"
   },
   "heaviestSingleSet": "Heaviest single set",
   "@heaviestSingleSet": {
@@ -20890,29 +20866,9 @@
   "@activityStatistics": {
     "description": "Activity statistics section title"
   },
-  "lastWorkout": "Last Workout",
-  "@lastWorkout": {
-    "description": "Last workout date label"
-  },
-  "weeklyFrequency": "Weekly Frequency",
-  "@weeklyFrequency": {
-    "description": "Weekly training frequency label"
-  },
   "averageLast4Weeks": "Average (last 4 weeks)",
   "@averageLast4Weeks": {
     "description": "Weekly frequency time period"
-  },
-  "totalWorkouts": "Total Workouts",
-  "@totalWorkouts": {
-    "description": "Total workouts count label"
-  },
-  "today": "Today",
-  "@today": {
-    "description": "Today time reference"
-  },
-  "yesterday": "Yesterday",
-  "@yesterday": {
-    "description": "Yesterday time reference"
   },
   "noRecordsYet": "No records yet",
   "@noRecordsYet": {
@@ -20934,29 +20890,13 @@
   "@completeWorkoutToSeeHistory": {
     "description": "Prompt to complete first workout"
   },
-  "personalRecord": "Personal Record",
-  "@personalRecord": {
-    "description": "Personal record full label"
-  },
   "pr": "PR",
   "@pr": {
     "description": "Personal record abbreviation badge"
   },
-  "noWorkoutDataYet": "No workout data yet",
-  "@noWorkoutDataYet": {
-    "description": "Empty state for volume chart"
-  },
   "records": "Records",
   "@records": {
     "description": "Records tab label"
-  },
-  "set": "set",
-  "@set": {
-    "description": "Singular form of exercise set"
-  },
-  "sets": "sets",
-  "@sets": {
-    "description": "Plural form of exercise sets"
   },
   "expandAll": "Expand All",
   "@expandAll": {
@@ -20966,37 +20906,12 @@
   "@collapseAll": {
     "description": "Button to collapse all muscle group accordions"
   },
-  "muscleGroupChest": "Chest",
-  "@muscleGroupChest": {
-    "description": "Chest muscle group name"
-  },
-  "muscleGroupBack": "Back",
-  "@muscleGroupBack": {
-    "description": "Back muscle group name"
-  },
-  "muscleGroupLegs": "Legs",
-  "@muscleGroupLegs": {
-    "description": "Legs muscle group name"
-  },
-  "muscleGroupShoulders": "Shoulders",
-  "@muscleGroupShoulders": {
-    "description": "Shoulders muscle group name"
-  },
-  "muscleGroupArms": "Arms",
-  "@muscleGroupArms": {
-    "description": "Arms muscle group name"
-  },
   "muscleGroupCore": "Core",
   "@muscleGroupCore": {
     "description": "Core muscle group name"
   },
-  "exercise": "exercise",
   "@exercise": {
     "description": "Singular form of exercise"
-  },
-  "exercises": "exercises",
-  "@exercises": {
-    "description": "Plural form of exercises"
   },
   "correctionSavedLocally": "Correction saved locally",
   "@correctionSavedLocally": {
@@ -21042,10 +20957,6 @@
   "@yesReportToAdmin": {
     "description": "Button to confirm reporting to admin"
   },
-  "viewModeCompact": "Compact",
-  "@viewModeCompact": {
-    "description": "Compact view mode (minimal info)"
-  },
   "viewModeByMuscleGroup": "By Muscle Group",
   "@viewModeByMuscleGroup": {
     "description": "View mode grouped by muscle group"
@@ -21053,10 +20964,6 @@
   "viewModeByDate": "By Date",
   "@viewModeByDate": {
     "description": "View mode organized chronologically"
-  },
-  "viewMode": "View Mode",
-  "@viewMode": {
-    "description": "Label for view mode selector"
   },
   "consistencyScore": "Consistency Score",
   "@consistencyScore": {
@@ -21126,10 +21033,6 @@
   "@restDaysPerWeek": {
     "description": "Rest days per week unit"
   },
-  "scoreBreakdown": "Score Breakdown",
-  "@scoreBreakdown": {
-    "description": "Score breakdown section title"
-  },
   "weeklyStats": "Weekly Stats (Last 4 Weeks)",
   "@weeklyStats": {
     "description": "Weekly statistics section title"
@@ -21141,42 +21044,6 @@
   "aiCoachChatDescription": "Ask me about your workouts, progression, and recovery",
   "@aiCoachChatDescription": {
     "description": "AI Coach chat empty state description"
-  },
-  "goodMorning": "Good morning, {name}!",
-  "@goodMorning": {
-    "description": "Morning greeting for AI Coach",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "goodAfternoon": "Good afternoon, {name}!",
-  "@goodAfternoon": {
-    "description": "Afternoon greeting for AI Coach",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "goodEvening": "Good evening, {name}!",
-  "@goodEvening": {
-    "description": "Evening greeting for AI Coach",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "onboardingWelcomeTitle": "Welcome, {name}!",
-  "@onboardingWelcomeTitle": {
-    "description": "AI Coach onboarding welcome title",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
   },
   "onboardingWelcomeSubtitle": "Your personal AI fitness coach",
   "@onboardingWelcomeSubtitle": {
@@ -21294,10 +21161,6 @@
   "@typeMessage": {
     "description": "Chat input placeholder"
   },
-  "favorites": "Favorites",
-  "@favorites": {
-    "description": "Filter label for favorite exercises"
-  },
   "mostUsed": "Most Used",
   "@mostUsed": {
     "description": "Filter label for most frequently used exercises"
@@ -21384,15 +21247,7 @@
   },
   "selectFieldToCorrect": "Select field to correct",
   "@selectFieldToCorrect": {
-    "description": "Label for field selection dropdown"
-  },
-  "currentValue": "Current value",
-  "@currentValue": {
-    "description": "Label showing current field value"
-  },
-  "newValue": "New value",
-  "@newValue": {
-    "description": "Label for new corrected value input"
+    "description": "Label for field selector dropdown"
   },
   "reasonForChange": "Reason for change",
   "@reasonForChange": {
@@ -21404,9 +21259,9 @@
   },
   "submitCorrection": "Submit Correction",
   "@submitCorrection": {
-    "description": "Button to submit patch"
+    "description": "Button text to submit patch"
   },
-  "patchSubmittedSuccess": "Correction submitted! We'll review it soon.",
+  "patchSubmittedSuccess": "Correction submitted successfully! It will be reviewed by admins.",
   "@patchSubmittedSuccess": {
     "description": "Success message after patch submission"
   },
@@ -21414,9 +21269,9 @@
   "@patchSubmittedLocalSuccess": {
     "description": "Success message for local patch application"
   },
-  "patchSubmissionError": "Failed to submit correction. Please try again.",
+  "patchSubmissionError": "Failed to submit correction",
   "@patchSubmissionError": {
-    "description": "Error message for patch submission failure"
+    "description": "Error message prefix for patch submission failure"
   },
   "reasonTooShort": "Reason must be at least 10 characters",
   "@reasonTooShort": {
@@ -21454,9 +21309,9 @@
   "@noPatchesYet": {
     "description": "Empty state message when user has no patches"
   },
-  "noPatchesDescription": "Found an error? Report it and help improve the database!",
+  "noPatchesDescription": "There are no exercise corrections pending review",
   "@noPatchesDescription": {
-    "description": "Empty state description"
+    "description": "Empty state description for no patches"
   },
   "patchesCount": "{count} correction(s)",
   "@patchesCount": {
@@ -21517,10 +21372,6 @@
   "@patchDetailsTitle": {
     "description": "Title for patch details screen"
   },
-  "exerciseName": "Exercise",
-  "@exerciseName": {
-    "description": "Label for exercise name"
-  },
   "fieldName": "Field",
   "@fieldName": {
     "description": "Label for field name"
@@ -21529,17 +21380,9 @@
   "@oldValue": {
     "description": "Label for old value"
   },
-  "submittedAt": "Submitted",
-  "@submittedAt": {
-    "description": "Label for submission timestamp"
-  },
   "reviewedAt": "Reviewed",
   "@reviewedAt": {
     "description": "Label for review timestamp"
-  },
-  "reviewedBy": "Reviewed by",
-  "@reviewedBy": {
-    "description": "Label for reviewer"
   },
   "pendingReview": "Pending admin review",
   "@pendingReview": {
@@ -21565,21 +21408,9 @@
   "@reportErrorSubtitle": {
     "description": "Subtitle for patch submission dialog"
   },
-  "selectFieldToCorrect": "Select field to correct",
-  "@selectFieldToCorrect": {
-    "description": "Label for field selector dropdown"
-  },
   "pleaseSelectField": "Please select a field",
   "@pleaseSelectField": {
     "description": "Validation error for empty field selection"
-  },
-  "currentValue": "Current value",
-  "@currentValue": {
-    "description": "Label for current field value"
-  },
-  "newValue": "New value",
-  "@newValue": {
-    "description": "Label for new field value input"
   },
   "enterCorrectedValue": "Enter the corrected value",
   "@enterCorrectedValue": {
@@ -21605,22 +21436,6 @@
   "@pleaseProvideReason": {
     "description": "Validation error for empty reason"
   },
-  "reasonTooShort": "Reason must be at least 10 characters",
-  "@reasonTooShort": {
-    "description": "Validation error for short reason"
-  },
-  "submitCorrection": "Submit Correction",
-  "@submitCorrection": {
-    "description": "Button text to submit patch"
-  },
-  "patchSubmittedSuccess": "Correction submitted successfully! It will be reviewed by admins.",
-  "@patchSubmittedSuccess": {
-    "description": "Success message after patch submission"
-  },
-  "patchSubmissionError": "Failed to submit correction",
-  "@patchSubmissionError": {
-    "description": "Error message prefix for patch submission failure"
-  },
   "exercisePatchReview": "Exercise Patch Review",
   "@exercisePatchReview": {
     "description": "Title for admin patch review screen"
@@ -21640,10 +21455,6 @@
   "allCaughtUp": "All caught up!",
   "@allCaughtUp": {
     "description": "Empty state title when no patches"
-  },
-  "noPatchesDescription": "There are no exercise corrections pending review",
-  "@noPatchesDescription": {
-    "description": "Empty state description for no patches"
   },
   "pendingCount": "Pending",
   "@pendingCount": {
@@ -21705,33 +21516,9 @@
   "@feedbackDashboard": {
     "description": "Title for admin feedback dashboard screen"
   },
-  "myFeedback": "My Feedback",
-  "@myFeedback": {
-    "description": "Title for user feedback history screen"
-  },
-  "overview": "Overview",
-  "@overview": {
-    "description": "Section title for statistics overview"
-  },
   "totalFeedback": "Total Feedback",
   "@totalFeedback": {
     "description": "Label for total feedback count statistic"
-  },
-  "pending": "Pending",
-  "@pending": {
-    "description": "Label for pending feedback count"
-  },
-  "criticalIssues": "Critical Issues",
-  "@criticalIssues": {
-    "description": "Label for critical/high priority feedback count"
-  },
-  "completed": "Completed",
-  "@completed": {
-    "description": "Label for completed feedback count"
-  },
-  "filters": "Filters",
-  "@filters": {
-    "description": "Section title for filter options"
   },
   "allTypes": "All Types",
   "@allTypes": {
@@ -21813,21 +21600,9 @@
   "@submitted": {
     "description": "Label for submission timestamp"
   },
-  "lastUpdate": "Last update",
-  "@lastUpdate": {
-    "description": "Label for last update timestamp"
-  },
   "user": "User",
   "@user": {
     "description": "Label for user information"
-  },
-  "details": "Details",
-  "@details": {
-    "description": "Button text to view feedback details"
-  },
-  "close": "Close",
-  "@close": {
-    "description": "Button text to close dialog"
   },
   "noFeedbackFound": "No feedback found",
   "@noFeedbackFound": {
@@ -21852,5 +21627,226 @@
   "adminResponse": "Admin Response",
   "@adminResponse": {
     "description": "Section title for admin's response"
+  },
+  "@errorLoadingRoutines": {
+    "description": "Error message when routines fail to load"
+  },
+  "@noRoutinesYet": {
+    "description": "Empty state title when user has no routines"
+  },
+  "createYourFirstRoutine": "Create your first routine to get started",
+  "@createYourFirstRoutine": {
+    "description": "Empty state description for no routines"
+  },
+  "selectRoutineBelow": "Select a routine below to activate it",
+  "@selectRoutineBelow": {
+    "description": "Message prompting user to select routine"
+  },
+  "activeRoutine": "Active Routine",
+  "@activeRoutine": {
+    "description": "Label for currently active routine"
+  },
+  "daysPerWeek": "days/week",
+  "@daysPerWeek": {
+    "description": "Unit for training frequency"
+  },
+  "activate": "Activate",
+  "@activate": {
+    "description": "Button text to activate a routine"
+  },
+  "activatingRoutine": "Activating routine...",
+  "@activatingRoutine": {
+    "description": "Loading message when activating routine"
+  },
+  "createRoutineComingSoon": "Create routine feature coming soon",
+  "@createRoutineComingSoon": {
+    "description": "Placeholder message for unimplemented create routine"
+  },
+  "viewDetailsComingSoon": "View details feature coming soon",
+  "@viewDetailsComingSoon": {
+    "description": "Placeholder message for unimplemented view details"
+  },
+  "deleteComingSoon": "Delete feature coming soon",
+  "@deleteComingSoon": {
+    "description": "Placeholder message for unimplemented delete routine"
+  },
+  "selectPreset": "Select Preset",
+  "@selectPreset": {
+    "description": "Title for preset selection step"
+  },
+  "selectPresetDescription": "Choose a training split that matches your goals",
+  "@selectPresetDescription": {
+    "description": "Description for preset selection step"
+  },
+  "step2ComingSoon": "Step 2 feature coming soon",
+  "@step2ComingSoon": {
+    "description": "Placeholder message for unimplemented step 2"
+  },
+  "configureRoutine": "Configure Routine",
+  "@configureRoutine": {
+    "description": "Title for routine configuration step"
+  },
+  "configureRoutineDescription": "Select training days and assign workout templates",
+  "@configureRoutineDescription": {
+    "description": "Description for routine configuration step"
+  },
+  "routineName": "Routine Name",
+  "@routineName": {
+    "description": "Label for routine name input field"
+  },
+  "assignTemplates": "Assign Templates",
+  "@assignTemplates": {
+    "description": "Label for template assignment section"
+  },
+  "tapToAssignTemplate": "Tap to assign template",
+  "@tapToAssignTemplate": {
+    "description": "Placeholder text for unassigned template"
+  },
+  "templatePickerComingSoon": "Template picker coming soon",
+  "@templatePickerComingSoon": {
+    "description": "Placeholder message for unimplemented template picker"
+  },
+  "userNotLoggedIn": "User not logged in",
+  "@userNotLoggedIn": {
+    "description": "Error message when user is not authenticated"
+  },
+  "routineCreated": "Routine created successfully!",
+  "@routineCreated": {
+    "description": "Success message after creating routine"
+  },
+  "noPresetSelected": "No preset selected",
+  "@noPresetSelected": {
+    "description": "Error message when preset is missing"
+  },
+  "basicInfo": "Basic Info",
+  "@basicInfo": {
+    "description": "Section title for basic routine information"
+  },
+  "presetType": "Preset Type",
+  "@presetType": {
+    "description": "Label for routine preset type"
+  },
+  "presetPpl6DayDescription": "Train 6 days per week with a push/pull/legs split. Ideal for intermediate lifters who want high frequency and volume.",
+  "@presetPpl6DayDescription": {
+    "description": "Description for Push/Pull/Legs 6-day preset"
+  },
+  "presetUpperLower4DayDescription": "Alternate between upper and lower body workouts 4 days per week. Perfect for beginners building strength.",
+  "@presetUpperLower4DayDescription": {
+    "description": "Description for Upper/Lower 4-day preset"
+  },
+  "presetFullBody3DayDescription": "Work your entire body 3 times per week. Great for beginners or those with limited time.",
+  "@presetFullBody3DayDescription": {
+    "description": "Description for Full Body 3-day preset"
+  },
+  "presetBroSplit5DayDescription": "Isolate one muscle group per day, 5 days per week. Traditional bodybuilding approach for advanced lifters.",
+  "@presetBroSplit5DayDescription": {
+    "description": "Description for Bro Split 5-day preset"
+  },
+  "presetCustomDescription": "Create your own custom training schedule. Choose your training days and muscle groups.",
+  "@presetCustomDescription": {
+    "description": "Description for Custom preset"
+  },
+  "createdAt": "Created",
+  "@createdAt": {
+    "description": "Label for creation date"
+  },
+  "workoutSchedule": "Workout Schedule",
+  "@workoutSchedule": {
+    "description": "Section title for workout schedule"
+  },
+  "completedDays": "Completed Days",
+  "@completedDays": {
+    "description": "Label for completed days count"
+  },
+  "deleteRoutine": "Delete Routine",
+  "@deleteRoutine": {
+    "description": "Title for delete routine dialog"
+  },
+  "deleteRoutineConfirmation": "Are you sure you want to delete this routine? This action cannot be undone.",
+  "@deleteRoutineConfirmation": {
+    "description": "Confirmation message for deleting routine"
+  },
+  "routineActivated": "Routine activated",
+  "@routineActivated": {
+    "description": "Success message after activating routine"
+  },
+  "routineDeactivated": "Routine deactivated",
+  "@routineDeactivated": {
+    "description": "Success message after deactivating routine"
+  },
+  "@routineDeleted": {
+    "description": "Success message after deleting routine"
+  },
+  "deactivate": "Deactivate",
+  "@deactivate": {
+    "description": "Button text to deactivate routine"
+  },
+  "noTemplateAssigned": "No template assigned",
+  "@noTemplateAssigned": {
+    "description": "Message when day has no template"
+  },
+  "selectTemplate": "Select Template",
+  "@selectTemplate": {
+    "description": "Title for template picker modal"
+  },
+  "publicTemplates": "Public Templates",
+  "@publicTemplates": {
+    "description": "Section header for public templates"
+  },
+  "noTemplatesAvailable": "No templates available",
+  "@noTemplatesAvailable": {
+    "description": "Message when no templates exist"
+  },
+  "createTemplateFirst": "Create a template first to assign to this day",
+  "@createTemplateFirst": {
+    "description": "Hint message for empty templates list"
+  },
+  "powerlifting": "Powerlifting",
+  "@powerlifting": {
+    "description": "Template category: powerlifting"
+  },
+  "bodybuilding": "Bodybuilding",
+  "@bodybuilding": {
+    "description": "Template category: bodybuilding"
+  },
+  "crossfit": "CrossFit",
+  "@crossfit": {
+    "description": "Template category: crossfit"
+  },
+  "calisthenics": "Calisthenics",
+  "@calisthenics": {
+    "description": "Template category: calisthenics"
+  },
+  "mixed": "Mixed",
+  "@mixed": {
+    "description": "Template category: mixed"
+  },
+  "outOf": "out of",
+  "@outOf": {
+    "description": "Preposition for progress (e.g., '3 out of 6')"
+  },
+  "routineNameTooLong": "Routine name is too long (max 50 characters)",
+  "@routineNameTooLong": {
+    "description": "Validation error for routine name exceeding max length"
+  },
+  "enterRoutineName": "Enter routine name",
+  "@enterRoutineName": {
+    "description": "Hint text for routine name input field"
+  },
+  "routineUpdated": "Routine updated successfully",
+  "@routineUpdated": {
+    "description": "Success message when routine is updated"
+  },
+  "stepOneOfTwo": "1/2",
+  "@stepOneOfTwo": {
+    "description": "Step indicator for first step of two-step process"
+  },
+  "stepTwoOfTwo": "2/2",
+  "@stepTwoOfTwo": {
+    "description": "Step indicator for second step of two-step process"
+  },
+  "choosePreset": "Choose a preset",
+  "@choosePreset": {
+    "description": "Instruction text to select a routine preset"
   }
 }

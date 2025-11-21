@@ -1502,7 +1502,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pausedWorkout => 'Allenamento in Pausa';
 
   @override
-  String get continueButton => 'CONTINUA';
+  String get continueButton => 'Continua';
 
   @override
   String get resume => 'Riprendi';
@@ -2771,7 +2771,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get criticalError => 'Errore Critico';
 
   @override
-  String get goBack => 'Torna Indietro';
+  String get goBack => 'Indietro';
 
   @override
   String get startNewCycle => 'Inizia nuovo ciclo';
@@ -9498,10 +9498,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get routineNameLabel => 'Nome Routine *';
 
   @override
-  String get routineNameHint => 'es., Estate Definizione 2025';
+  String get routineNameHint => 'es. Bulk Estivo 2025';
 
   @override
-  String get routineNameRequired => 'Inserisci un nome';
+  String get routineNameRequired => 'Nome routine richiesto';
 
   @override
   String get routineNameMinLength =>
@@ -13788,7 +13788,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get totalWeightLifted => 'Totale peso sollevato';
 
   @override
-  String get trainingDays => 'Training days';
+  String get trainingDays => 'Giorni di Allenamento';
 
   @override
   String get unableToGetLocation => 'Unable a get location';
@@ -14325,7 +14325,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get volumeProgress => 'Volume Progress';
 
   @override
-  String get createRoutine => 'Create Routine';
+  String get createRoutine => 'Crea Routine';
 
   @override
   String get nessunEsercizioTrovato => 'Nessun esercizio trovato';
@@ -14650,7 +14650,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loadingRoutineAnalytics => 'Loading routine analytics...';
 
   @override
-  String get noActiveRoutine => 'No Active Routine';
+  String get noActiveRoutine => 'Nessuna routine attiva';
 
   @override
   String get createAndActivateARoutineToSeeAnalyticsH =>
@@ -16022,7 +16022,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Controlla i permessi Firebase o contatta il supporto';
 
   @override
-  String get errorLoadingRoutines => 'Errore nel caricamento delle routine';
+  String get errorLoadingRoutines => 'Errore caricamento routine';
 
   @override
   String get suggestionLevel => 'Livello suggerimento';
@@ -17996,4 +17996,174 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get adminResponse => 'Risposta Admin';
+
+  @override
+  String get createYourFirstRoutine => 'Crea la tua prima routine per iniziare';
+
+  @override
+  String get selectRoutineBelow =>
+      'Seleziona una routine qui sotto per attivarla';
+
+  @override
+  String get activeRoutine => 'Routine Attiva';
+
+  @override
+  String get daysPerWeek => 'giorni/settimana';
+
+  @override
+  String get activate => 'Attiva';
+
+  @override
+  String get activatingRoutine => 'Attivazione routine...';
+
+  @override
+  String get createRoutineComingSoon => 'Funzione creazione routine in arrivo';
+
+  @override
+  String get viewDetailsComingSoon => 'Funzione dettagli in arrivo';
+
+  @override
+  String get deleteComingSoon => 'Funzione eliminazione in arrivo';
+
+  @override
+  String get selectPreset => 'Seleziona Preset';
+
+  @override
+  String get selectPresetDescription =>
+      'Scegli uno split di allenamento che corrisponde ai tuoi obiettivi';
+
+  @override
+  String get step2ComingSoon => 'Funzione step 2 in arrivo';
+
+  @override
+  String get configureRoutine => 'Configura Routine';
+
+  @override
+  String get configureRoutineDescription =>
+      'Seleziona giorni di allenamento e assegna template workout';
+
+  @override
+  String get routineName => 'Nome Routine';
+
+  @override
+  String get assignTemplates => 'Assegna Template';
+
+  @override
+  String get tapToAssignTemplate => 'Tocca per assegnare template';
+
+  @override
+  String get templatePickerComingSoon => 'Selettore template in arrivo';
+
+  @override
+  String get userNotLoggedIn => 'Utente non autenticato';
+
+  @override
+  String get routineCreated => 'Routine creata con successo!';
+
+  @override
+  String get noPresetSelected => 'Nessun preset selezionato';
+
+  @override
+  String get basicInfo => 'Informazioni Base';
+
+  @override
+  String get presetType => 'Tipo Preset';
+
+  @override
+  String get presetPpl6DayDescription =>
+      'Allenati 6 giorni a settimana con una divisione spinta/tirata/gambe. Ideale per atleti intermedi che vogliono alta frequenza e volume.';
+
+  @override
+  String get presetUpperLower4DayDescription =>
+      'Alterna allenamenti parte alta e bassa del corpo 4 giorni a settimana. Perfetto per principianti che costruiscono forza.';
+
+  @override
+  String get presetFullBody3DayDescription =>
+      'Allena tutto il corpo 3 volte a settimana. Ottimo per principianti o chi ha poco tempo.';
+
+  @override
+  String get presetBroSplit5DayDescription =>
+      'Isola un gruppo muscolare al giorno, 5 giorni a settimana. Approccio bodybuilding tradizionale per atleti avanzati.';
+
+  @override
+  String get presetCustomDescription =>
+      'Crea il tuo programma di allenamento personalizzato. Scegli i giorni e i gruppi muscolari.';
+
+  @override
+  String get createdAt => 'Creata';
+
+  @override
+  String get workoutSchedule => 'Programma Allenamento';
+
+  @override
+  String get completedDays => 'Giorni Completati';
+
+  @override
+  String get deleteRoutine => 'Elimina Routine';
+
+  @override
+  String get deleteRoutineConfirmation =>
+      'Sei sicuro di voler eliminare questa routine? Questa azione non può essere annullata.';
+
+  @override
+  String get routineActivated => 'Routine attivata';
+
+  @override
+  String get routineDeactivated => 'Routine disattivata';
+
+  @override
+  String get deactivate => 'Disattiva';
+
+  @override
+  String get noTemplateAssigned => 'Nessun template assegnato';
+
+  @override
+  String get selectTemplate => 'Seleziona Template';
+
+  @override
+  String get publicTemplates => 'Template Pubblici';
+
+  @override
+  String get noTemplatesAvailable => 'Nessun template disponibile';
+
+  @override
+  String get createTemplateFirst =>
+      'Crea prima un template da assegnare a questo giorno';
+
+  @override
+  String get powerlifting => 'Powerlifting';
+
+  @override
+  String get bodybuilding => 'Bodybuilding';
+
+  @override
+  String get crossfit => 'CrossFit';
+
+  @override
+  String get calisthenics => 'Calisthenics';
+
+  @override
+  String get mixed => 'Misto';
+
+  @override
+  String get outOf => 'su';
+
+  @override
+  String get routineNameTooLong =>
+      'Nome routine troppo lungo (max 50 caratteri)';
+
+  @override
+  String get enterRoutineName => 'Inserisci nome routine';
+
+  @override
+  String get routineUpdated => 'Routine aggiornata con successo';
+
+  @override
+  String get stepOneOfTwo => '1/2';
+
+  @override
+  String get stepTwoOfTwo => '2/2';
+
+  @override
+  String get choosePreset => 'Scegli un preset';
 }
