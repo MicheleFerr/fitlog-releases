@@ -37,8 +37,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
-/// Modal for displaying weekly workout details with calendar
-class WeeklyModal extends StatelessWidget {
+/// Modal for displaying weekly workout details with calendar and goal setter
+class WeeklyModal extends StatefulWidget {
   const WeeklyModal({
     required this.exerciseHistories,
     required this.weeklyWorkouts,
@@ -48,6 +48,14 @@ class WeeklyModal extends StatelessWidget {
   final List<ExerciseHistory> exerciseHistories;
   final int weeklyWorkouts;
 
+  @override
+  State<WeeklyModal> createState() => _WeeklyModalState();
+}
+
+class _WeeklyModalState extends State<WeeklyModal> {
+  // Weekly goal (default: 5 workouts/week)
+  double _weeklyGoal = 5.0;
+
   /// Get workout dates for this week (last 7 days)
   List<DateTime?> _getThisWeekWorkouts() {
     final now = DateTime.now();
@@ -55,7 +63,7 @@ class WeeklyModal extends StatelessWidget {
     final weekAgo = today.subtract(const Duration(days: 6));
 
     final workoutDates = <DateTime>{};
-    for (final history in exerciseHistories) {
+    for (final history in widget.exerciseHistories) {
       for (final session in history.sessions) {
         final dateOnly = DateTime(
           session.date.year,
@@ -79,18 +87,17 @@ class WeeklyModal extends StatelessWidget {
     return weekDays;
   }
 
-  /// Get consistency percentage (workouts / 5 goal * 100)
+  /// Get consistency percentage (workouts / goal * 100)
   double _getConsistencyPercentage() {
-    const goal = 5;
-    return (weeklyWorkouts / goal * 100).clamp(0, 100);
+    return (widget.weeklyWorkouts / _weeklyGoal * 100).clamp(0, 100);
   }
 
   /// Get motivational message
   String _getMotivationalMessage() {
-    if (weeklyWorkouts >= 5) return 'Excellent consistency! You hit your weekly goal! 🎯';
-    if (weeklyWorkouts >= 4) return 'Almost there! One more workout to hit your goal! 💪';
-    if (weeklyWorkouts >= 3) return 'Good progress! Keep the momentum going! 📈';
-    if (weeklyWorkouts >= 2) return 'You\'re on track! Don\'t stop now! 🔥';
+    if (widget.weeklyWorkouts >= _weeklyGoal) return 'Excellent consistency! You hit your weekly goal! 🎯';
+    if (widget.weeklyWorkouts >= _weeklyGoal - 1) return 'Almost there! One more workout to hit your goal! 💪';
+    if (widget.weeklyWorkouts >= _weeklyGoal - 2) return 'Good progress! Keep the momentum going! 📈';
+    if (widget.weeklyWorkouts >= 2) return 'You\'re on track! Don\'t stop now! 🔥';
     return 'Every journey starts with a single step! Let\'s go! 🚀';
   }
 
@@ -137,6 +144,10 @@ class WeeklyModal extends StatelessWidget {
               _buildTipsSection(context),
               const SizedBox(height: 24),
 
+              // Weekly goal setter
+              _buildWeeklyGoalSetter(context),
+              const SizedBox(height: 24),
+
               // Close button
               _buildCloseButton(context),
             ],
@@ -172,8 +183,8 @@ class WeeklyModal extends StatelessWidget {
 
   /// Weekly workout card
   Widget _buildWeeklyCard(BuildContext context) {
-    const goal = 5;
-    final isGoalMet = weeklyWorkouts >= goal;
+    final goal = _weeklyGoal.round();
+    final isGoalMet = widget.weeklyWorkouts >= goal;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -233,7 +244,7 @@ class WeeklyModal extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$weeklyWorkouts / $goal workouts',
+                  '${widget.weeklyWorkouts} / $goal workouts',
                   style: context.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onPrimaryContainer,
@@ -491,6 +502,120 @@ class WeeklyModal extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// Weekly goal setter (slider 1-7)
+  Widget _buildWeeklyGoalSetter(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SemanticIcon(
+                icon: AppIcons.flag,
+                semanticLabel: 'Weekly Goal',
+                size: AppIconSize.medium,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Weekly Goal',
+                style: context.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Goal display
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  '${_weeklyGoal.round()}',
+                  style: context.textTheme.displayMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: context.colors.primary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'workouts per week',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Slider
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: context.colors.primary,
+              inactiveTrackColor: context.colors.surfaceContainerHighest,
+              thumbColor: context.colors.primary,
+              overlayColor: context.colors.primary.withValues(alpha: 0.2),
+              valueIndicatorColor: context.colors.primary,
+              valueIndicatorTextStyle: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.onPrimary,
+              ),
+            ),
+            child: Slider(
+              value: _weeklyGoal,
+              min: 1,
+              max: 7,
+              divisions: 6,
+              label: '${_weeklyGoal.round()} workouts',
+              onChanged: (value) {
+                setState(() => _weeklyGoal = value);
+                HapticFeedback.selectionClick();
+              },
+            ),
+          ),
+
+          // Progress indicator
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: widget.weeklyWorkouts / _weeklyGoal,
+                  backgroundColor: context.colors.surfaceContainerHighest,
+                  color: widget.weeklyWorkouts >= _weeklyGoal
+                      ? context.colors.success
+                      : context.colors.primary,
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '${widget.weeklyWorkouts} / ${_weeklyGoal.round()}',
+                style: context.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: widget.weeklyWorkouts >= _weeklyGoal
+                      ? context.colors.success
+                      : context.colors.primary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

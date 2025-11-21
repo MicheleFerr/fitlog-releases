@@ -37,7 +37,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extens
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal for displaying workout streak details with calendar heatmap
-class StreakModal extends StatelessWidget {
+class StreakModal extends StatefulWidget {
   const StreakModal({
     required this.exerciseHistories,
     super.key,
@@ -45,13 +45,42 @@ class StreakModal extends StatelessWidget {
 
   final List<ExerciseHistory> exerciseHistories;
 
+  @override
+  State<StreakModal> createState() => _StreakModalState();
+}
+
+class _StreakModalState extends State<StreakModal> {
+  // Calendar zoom state
+  int _selectedDays = 30; // Default: 30 days (1 month)
+
+  // Available zoom levels
+  static const List<int> _zoomLevels = [7, 15, 30, 60, 90, 180, 360];
+
+  /// Zoom in (decrease days)
+  void _zoomIn() {
+    final currentIndex = _zoomLevels.indexOf(_selectedDays);
+    if (currentIndex > 0) {
+      setState(() => _selectedDays = _zoomLevels[currentIndex - 1]);
+      HapticFeedback.selectionClick();
+    }
+  }
+
+  /// Zoom out (increase days)
+  void _zoomOut() {
+    final currentIndex = _zoomLevels.indexOf(_selectedDays);
+    if (currentIndex < _zoomLevels.length - 1) {
+      setState(() => _selectedDays = _zoomLevels[currentIndex + 1]);
+      HapticFeedback.selectionClick();
+    }
+  }
+
   /// Calculate current streak (consecutive days with workouts)
   int _calculateCurrentStreak() {
-    if (exerciseHistories.isEmpty) return 0;
+    if (widget.exerciseHistories.isEmpty) return 0;
 
     // Get all unique workout dates (across all exercises)
     final allDates = <DateTime>{};
-    for (final history in exerciseHistories) {
+    for (final history in widget.exerciseHistories) {
       for (final session in history.sessions) {
         // Normalize to date only (remove time)
         final dateOnly = DateTime(
@@ -98,11 +127,11 @@ class StreakModal extends StatelessWidget {
 
   /// Calculate longest streak (personal record)
   int _calculateLongestStreak() {
-    if (exerciseHistories.isEmpty) return 0;
+    if (widget.exerciseHistories.isEmpty) return 0;
 
     // Get all unique workout dates
     final allDates = <DateTime>{};
-    for (final history in exerciseHistories) {
+    for (final history in widget.exerciseHistories) {
       for (final session in history.sessions) {
         final dateOnly = DateTime(
           session.date.year,
@@ -144,7 +173,7 @@ class StreakModal extends StatelessWidget {
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
 
     final workoutDates = <DateTime>{};
-    for (final history in exerciseHistories) {
+    for (final history in widget.exerciseHistories) {
       for (final session in history.sessions) {
         final dateOnly = DateTime(
           session.date.year,
@@ -160,21 +189,21 @@ class StreakModal extends StatelessWidget {
     return workoutDates.length;
   }
 
-  /// Get workout dates for last 30 days (for calendar heatmap)
-  Set<DateTime> _getLast30DaysWorkouts() {
+  /// Get workout dates for last N days (for calendar heatmap)
+  Set<DateTime> _getLastNDaysWorkouts(int days) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final thirtyDaysAgo = today.subtract(const Duration(days: 29));
+    final startDate = today.subtract(Duration(days: days - 1));
 
     final workoutDates = <DateTime>{};
-    for (final history in exerciseHistories) {
+    for (final history in widget.exerciseHistories) {
       for (final session in history.sessions) {
         final dateOnly = DateTime(
           session.date.year,
           session.date.month,
           session.date.day,
         );
-        if (dateOnly.isAfter(thirtyDaysAgo.subtract(const Duration(days: 1))) &&
+        if (dateOnly.isAfter(startDate.subtract(const Duration(days: 1))) &&
             !dateOnly.isAfter(today)) {
           workoutDates.add(dateOnly);
         }
@@ -199,7 +228,7 @@ class StreakModal extends StatelessWidget {
     final currentStreak = _calculateCurrentStreak();
     final longestStreak = _calculateLongestStreak();
     final monthlyWorkouts = _calculateMonthlyWorkouts();
-    final workoutDates = _getLast30DaysWorkouts();
+    final workoutDates = _getLastNDaysWorkouts(_selectedDays);
     final motivationalMessage = _getMotivationalMessage(currentStreak);
 
     return DecoratedBox(
@@ -243,8 +272,8 @@ class StreakModal extends StatelessWidget {
               _buildMotivationalBanner(context, motivationalMessage),
               const SizedBox(height: 24),
 
-              // Calendar Heatmap (last 30 days)
-              _buildCalendarHeatmap(context, workoutDates),
+              // Calendar Heatmap (dynamic days)
+              _buildCalendarHeatmap(context, workoutDates, _selectedDays),
               const SizedBox(height: 24),
 
               // Stats section
@@ -401,20 +430,64 @@ class StreakModal extends StatelessWidget {
     );
   }
 
-  /// Calendar heatmap (GitHub-style contribution graph for last 30 days)
-  Widget _buildCalendarHeatmap(BuildContext context, Set<DateTime> workoutDates) {
+  /// Calendar heatmap (GitHub-style contribution graph with zoom controls)
+  Widget _buildCalendarHeatmap(BuildContext context, Set<DateTime> workoutDates, int days) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final thirtyDaysAgo = today.subtract(const Duration(days: 29));
+    final startDate = today.subtract(Duration(days: days - 1));
+
+    // Check if zoom buttons should be enabled
+    final canZoomIn = _zoomLevels.indexOf(_selectedDays) > 0;
+    final canZoomOut = _zoomLevels.indexOf(_selectedDays) < _zoomLevels.length - 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Last 30 Days',
-          style: context.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+        // Title + Zoom controls
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                'Last $days Days',
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Zoom in button (-)
+                IconButton(
+                  onPressed: canZoomIn ? _zoomIn : null,
+                  icon: SemanticIcon(
+                    icon: AppIcons.remove,
+                    semanticLabel: 'Zoom in',
+                    size: AppIconSize.small,
+                    color: canZoomIn ? context.colors.primary : context.colors.onSurfaceVariant,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: context.colors.surfaceContainerHighest,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Zoom out button (+)
+                IconButton(
+                  onPressed: canZoomOut ? _zoomOut : null,
+                  icon: SemanticIcon(
+                    icon: AppIcons.add,
+                    semanticLabel: 'Zoom out',
+                    size: AppIconSize.small,
+                    color: canZoomOut ? context.colors.primary : context.colors.onSurfaceVariant,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: context.colors.surfaceContainerHighest,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: 12),
 
@@ -428,9 +501,9 @@ class StreakModal extends StatelessWidget {
             crossAxisSpacing: 4,
             childAspectRatio: 1,
           ),
-          itemCount: 30,
+          itemCount: days,
           itemBuilder: (context, index) {
-            final date = thirtyDaysAgo.add(Duration(days: index));
+            final date = startDate.add(Duration(days: index));
             final hasWorkout = workoutDates.contains(date);
             final isToday = date.isAtSameMomentAs(today);
 
@@ -533,7 +606,7 @@ class StreakModal extends StatelessWidget {
             context,
             icon: AppIcons.workout,
             label: 'Total Exercises',
-            value: '${exerciseHistories.length}',
+            value: '${widget.exerciseHistories.length}',
           ),
         ],
       ),

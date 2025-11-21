@@ -7,12 +7,11 @@
 /// 🎨 Theme: ✅ ENFORCED (context.colors.*)
 /// 📱 Platform: Universal
 ///
-/// VOLUME MODAL - Volume progression tracking with weekly goal setter
+/// VOLUME MODAL - Volume progression tracking and visualization
 ///
 /// This modal provides:
 /// - Volume progression explanation (+/- % from last week)
 /// - Weekly comparison chart (last 4 weeks)
-/// - Weekly goal setter (slider 1-7 workouts/week)
 /// - Volume trend visualization
 /// - Motivational insights based on progression
 ///
@@ -37,7 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
-/// Modal for displaying volume progression details with weekly goal setter
+/// Modal for displaying volume progression details and trends
 class VolumeModal extends StatefulWidget {
   const VolumeModal({
     required this.exerciseHistories,
@@ -53,9 +52,6 @@ class VolumeModal extends StatefulWidget {
 }
 
 class _VolumeModalState extends State<VolumeModal> {
-  // Weekly goal (default: 5 workouts/week)
-  double _weeklyGoal = 5.0;
-
   /// Calculate workouts for last N weeks
   List<int> _calculateWeeklyWorkouts(int weeks) {
     final now = DateTime.now();
@@ -97,7 +93,6 @@ class _VolumeModalState extends State<VolumeModal> {
   @override
   Widget build(BuildContext context) {
     final weeklyWorkouts = _calculateWeeklyWorkouts(4);
-    final currentWeek = weeklyWorkouts.isNotEmpty ? weeklyWorkouts.last : 0;
     final insightMessage = _getInsightMessage(widget.volumeProgression);
 
     return DecoratedBox(
@@ -131,10 +126,6 @@ class _VolumeModalState extends State<VolumeModal> {
 
               // Insight message
               _buildInsightBanner(context, insightMessage),
-              const SizedBox(height: 24),
-
-              // Weekly goal setter
-              _buildWeeklyGoalSetter(context, currentWeek),
               const SizedBox(height: 24),
 
               // Close button
@@ -409,120 +400,6 @@ class _VolumeModalState extends State<VolumeModal> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Weekly goal setter (slider 1-7)
-  Widget _buildWeeklyGoalSetter(BuildContext context, int currentWeek) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.colors.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.colors.primary.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SemanticIcon(
-                icon: AppIcons.flag,
-                semanticLabel: 'Weekly Goal',
-                size: AppIconSize.medium,
-                color: context.colors.primary,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Weekly Goal',
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Goal display
-          Center(
-            child: Column(
-              children: [
-                Text(
-                  '${_weeklyGoal.round()}',
-                  style: context.textTheme.displayMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.primary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'workouts per week',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Slider
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: context.colors.primary,
-              inactiveTrackColor: context.colors.surfaceContainerHighest,
-              thumbColor: context.colors.primary,
-              overlayColor: context.colors.primary.withValues(alpha: 0.2),
-              valueIndicatorColor: context.colors.primary,
-              valueIndicatorTextStyle: context.textTheme.labelSmall?.copyWith(
-                color: context.colors.onPrimary,
-              ),
-            ),
-            child: Slider(
-              value: _weeklyGoal,
-              min: 1,
-              max: 7,
-              divisions: 6,
-              label: '${_weeklyGoal.round()} workouts',
-              onChanged: (value) {
-                setState(() => _weeklyGoal = value);
-                HapticFeedback.selectionClick();
-              },
-            ),
-          ),
-
-          // Progress indicator
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: currentWeek / _weeklyGoal,
-                  backgroundColor: context.colors.surfaceContainerHighest,
-                  color: currentWeek >= _weeklyGoal
-                      ? context.colors.success
-                      : context.colors.primary,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '$currentWeek / ${_weeklyGoal.round()}',
-                style: context.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: currentWeek >= _weeklyGoal
-                      ? context.colors.success
-                      : context.colors.primary,
-                ),
-              ),
-            ],
           ),
         ],
       ),
