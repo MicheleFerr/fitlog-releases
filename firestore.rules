@@ -1064,14 +1064,80 @@ service cloud.firestore {
 
 
     // ==========================================
-    // FLEXIBLE ROUTINES
+    // FLEXIBLE ROUTINES (v1.0 - DEPRECATED)
     // ==========================================
     match /flexibleRoutines/{routineId} {
       // Users can read/write their own routines
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
-      
+
       // Users can create routines for themselves
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ==========================================
+    // ROUTINES (v2.0 - CURRENT)
+    // ==========================================
+    match /routines/{routineId} {
+      // Helper: Validate required fields on create
+      function isValidRoutineCreate() {
+        return request.resource.data.keys().hasAll([
+          'id', 'userId', 'name', 'presetType', 'trainingDays',
+          'workoutSchedule', 'isActive', 'completedDays', 'totalWorkouts',
+          'createdAt', 'updatedAt'
+        ])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.id is string
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.presetType in ['ppl_6_day', 'upper_lower_4_day', 'full_body_3_day', 'bro_split_5_day', 'custom']
+        && request.resource.data.trainingDays is list
+        && request.resource.data.workoutSchedule is map
+        && request.resource.data.isActive is bool
+        && request.resource.data.completedDays is list
+        && request.resource.data.totalWorkouts is int
+        && request.resource.data.totalWorkouts >= 0;
+      }
+
+      // Helper: Validate required fields on update
+      function isValidRoutineUpdate() {
+        return request.resource.data.userId == resource.data.userId  // userId cannot change
+        && request.resource.data.id == resource.data.id;  // id cannot change
+      }
+
+      // READ: Users can only read their own routines
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+
+      // CREATE: Users can create routines for themselves with validation
+      // Automatically deactivates all other routines (handled by repository)
+      allow create: if isAuthenticated()
+        && isOwner(request.resource.data.userId)
+        && isValidRoutineCreate();
+
+      // UPDATE: Users can only update their own routines
+      // userId and id fields are immutable
+      allow update: if isAuthenticated()
+        && isOwner(resource.data.userId)
+        && isValidRoutineUpdate();
+
+      // DELETE: Users can only delete their own routines
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+    }
+
+    // ==========================================
+    // ROUTINE BACKUPS (v1.0 → v2.0 Migration)
+    // ==========================================
+    match /routine_backups_v1/{routineId} {
+      // READ: Users can read their own backups
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+
+      // CREATE: Only system/migration service can create backups
+      allow create: if isAuthenticated();
+
+      // UPDATE: Not allowed (backups are immutable)
+      allow update: if false;
+
+      // DELETE: Users can delete their own backups after successful rollback
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
     }
 
     // ==========================================
@@ -1377,6 +1443,21 @@ service cloud.firestore {
       allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
       allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // Muscle Group Feedback - User corrections for exercise muscle groups (admin access too)
+    match /muscle_group_feedback/{feedbackId} {
+      // Users can read their own feedback, admins can read all
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+
+      // Users can create feedback for themselves
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own feedback
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Only users can delete their own feedback
       allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
 
