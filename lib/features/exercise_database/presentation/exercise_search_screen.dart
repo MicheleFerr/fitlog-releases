@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -49,7 +50,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   String? _selectedType;
 
   bool _showFilters = false;
-  bool _showMuscleGroupsFilter = false;
+  bool _showSearch = false; // Search bar visibility controlled by FAB
+  // Muscle groups filter removed - keeping equipment and difficulty only
   bool _showDifficultyFilter = false;
   bool _showEquipmentFilter = false;
 
@@ -337,6 +339,21 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     });
   }
 
+  /// Toggle search bar visibility
+  void _toggleSearch() {
+    setState(() {
+      _showSearch = !_showSearch;
+      if (!_showSearch) {
+        // Clear search when closing
+        _searchController.clear();
+        _searchQuery = '';
+        _useFuzzyResults = false;
+        _fuzzyResults = [];
+        _searchDebounce?.cancel();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use fuzzy search for active queries, fallback to JSON repository for browsing
@@ -373,49 +390,51 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       ),
       body: Column(
         children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: l10n.searchExercisesHint,
-                prefixIcon: _isSearching
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: Padding(
+          // Search Bar (shown when FAB is tapped)
+          if (_showSearch) ...[
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+              child: TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: l10n.searchExercisesHint,
+                  prefixIcon: _isSearching
+                      ? const Padding(
                           padding: EdgeInsets.all(12.0),
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      )
-                    : const Icon(AppIcons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(AppIcons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchQuery = '';
-                            _useFuzzyResults = false;
-                            _fuzzyResults = [];
-                          });
-                          _searchDebounce?.cancel();
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                          child: LoadingIndicator(size: 20),
+                        )
+                      : const Icon(AppIcons.search),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(AppIcons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {
+                              _searchQuery = '';
+                              _useFuzzyResults = false;
+                              _fuzzyResults = [];
+                            });
+                            _searchDebounce?.cancel();
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: context.colors.surface,
                 ),
+                onChanged: (value) {
+                  setState(() => _searchQuery = value.toLowerCase());
+                  // Trigger fuzzy search
+                  _performFuzzySearch(value);
+                },
               ),
-              onChanged: (value) {
-                setState(() => _searchQuery = value.toLowerCase());
-                // Trigger fuzzy search
-                _performFuzzySearch(value);
-              },
             ),
-          ),
-          
+          ],
+
           // Filters Section
           if (_showFilters) ...[
             Container(
@@ -484,7 +503,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
 
                       return _buildSearchResults(filteredExercises);
                     },
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => const Center(child: LoadingIndicator()),
                     error: (error, stack) => _buildErrorState(error),
                   ),
           ),
@@ -520,6 +539,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
             )
           : null,
+
+      // FAB for search (always visible)
+      floatingActionButton: FloatingActionButton(
+        onPressed: _toggleSearch,
+        tooltip: _showSearch ? l10n.close : l10n.search,
+        child: Icon(_showSearch ? AppIcons.close : AppIcons.search),
+      ),
     );
   }
 
@@ -932,18 +958,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   Widget _buildAdvancedFilters(List<Exercise> exercises) {
     final l10n = context.l10n;
 
-    // Extract unique muscle groups and map to localized names
-    final muscleGroupsMap = <String, String>{};
-    for (final exercise in exercises) {
-      for (final muscleCode in exercise.focus) {
-        final normalized = _normalizedMuscleCode(muscleCode);
-        final localizedName = _getMuscleGroupLocalizedName(muscleCode);
-        muscleGroupsMap[normalized] = localizedName;
-      }
-    }
-    // Sort by localized name
-    final muscleGroupOptions = muscleGroupsMap.entries.toList()
-      ..sort((a, b) => a.value.compareTo(b.value));
+    // Note: Muscle groups filter removed per user request
+    // Keeping only equipment and difficulty filters
 
     final equipmentOptions = exercises
         .map((e) => e.attrezzatura)
@@ -958,73 +974,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Muscle Groups Filter (Collapsible)
-        InkWell(
-          onTap: () => setState(() => _showMuscleGroupsFilter = !_showMuscleGroupsFilter),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(
-                  _showMuscleGroupsFilter ? AppIcons.expandMore : AppIcons.chevronRight,
-                  size: 20,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  l10n.muscleGroups,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (_selectedMuscleGroups.isNotEmpty) ...[
-                  SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: context.colors.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_selectedMuscleGroups.length}',
-                      style: TextStyle(
-                        color: context.colors.onPrimary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-        if (_showMuscleGroupsFilter) ...[
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: muscleGroupOptions.map((entry) {
-              final muscleCode = entry.key;
-              final localizedName = entry.value;
-              final isSelected = _selectedMuscleGroups.contains(muscleCode);
-              return FilterChip(
-                label: Text(localizedName),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedMuscleGroups.add(muscleCode);
-                    } else {
-                      _selectedMuscleGroups.remove(muscleCode);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 12),
-        ],
-
         // Difficulty Filter (Collapsible)
         InkWell(
           onTap: () => setState(() => _showDifficultyFilter = !_showDifficultyFilter),
@@ -1053,9 +1002,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                     child: Text(
                       '${_selectedDifficulty.length}',
-                      style: TextStyle(
+                      style: context.textTheme.labelSmall?.copyWith(
                         color: context.colors.onPrimary,
-                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -1117,9 +1065,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                     child: Text(
                       '${_selectedEquipment.length}',
-                      style: TextStyle(
+                      style: context.textTheme.labelSmall?.copyWith(
                         color: context.colors.onPrimary,
-                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -1183,7 +1130,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 child: Center(
                   child: Text(
                     exercise.attrezzaturaIcon,
-                    style: const TextStyle(fontSize: 20),
+                    style: context.textTheme.titleMedium,
                   ),
                 ),
               );
@@ -1194,17 +1141,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 width: 40,
                 height: 40,
                 color: context.colors.surfaceContainerHighest,
-                child: Center(
-                  child: SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  ),
+                child: const Center(
+                  child: LoadingIndicator(size: 16),
                 ),
               );
             },
@@ -1226,7 +1164,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         leading: _buildExerciseLeading(exercise, isSelected),
         title: Text(
           exercise.nome,
-          style: TextStyle(
+          style: context.textTheme.bodyLarge?.copyWith(
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -1245,8 +1183,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                   child: Text(
                     exercise.difficolta,
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: context.textTheme.labelSmall?.copyWith(
                       color: _getDifficultyColor(exercise.difficolta),
                       fontWeight: FontWeight.bold,
                     ),
@@ -1330,7 +1267,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             Expanded(
               child: Text(
                 exercise.nome,
-                style: TextStyle(
+                style: context.textTheme.bodyLarge?.copyWith(
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -1348,8 +1285,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
               child: Text(
                 '$matchPercentage%',
-                style: TextStyle(
-                  fontSize: 10,
+                style: context.textTheme.labelSmall?.copyWith(
                   color: matchColor,
                   fontWeight: FontWeight.bold,
                 ),
@@ -1385,15 +1321,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                           width: 1,
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('⭐', style: TextStyle(fontSize: 10)),
-                          SizedBox(width: 2),
+                          Text('⭐', style: context.textTheme.labelSmall),
+                          const SizedBox(width: 2),
                           Text(
                             'Frequente',
-                            style: TextStyle(
-                              fontSize: 9,
+                            style: context.textTheme.labelSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -1412,15 +1347,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                           width: 1,
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('🔥', style: TextStyle(fontSize: 10)),
-                          SizedBox(width: 2),
+                          Text('🔥', style: context.textTheme.labelSmall),
+                          const SizedBox(width: 2),
                           Text(
                             'Recente',
-                            style: TextStyle(
-                              fontSize: 9,
+                            style: context.textTheme.labelSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -1443,8 +1377,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                   child: Text(
                     exercise.difficolta,
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: context.textTheme.labelSmall?.copyWith(
                       color: _getDifficultyColor(exercise.difficolta),
                       fontWeight: FontWeight.bold,
                     ),
@@ -1677,13 +1610,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     required bool isActive,
   }) {
     return FilterChip(
-      avatar: Text(icon, style: const TextStyle(fontSize: 16)),
+      avatar: Text(icon, style: context.textTheme.bodyMedium),
       label: Text(label),
       selected: isActive,
       onSelected: (_) => onTap(),
       selectedColor: context.colors.primaryContainer,
       checkmarkColor: context.colors.primary,
-      labelStyle: TextStyle(
+      labelStyle: context.textTheme.labelMedium?.copyWith(
         fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
         color: isActive
           ? context.colors.onPrimaryContainer
