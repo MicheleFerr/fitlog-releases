@@ -12,7 +12,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/floating_search_fab.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -37,6 +36,13 @@ enum SortBy {
   /// Sort by most recent workout (newest first)
   recent,
 }
+
+/// Provider for search bar visibility state
+///
+/// **Purpose**: Controls whether search bar is visible in analytics screen
+/// **Behavior**: Persistent within session (resets on screen exit)
+/// **Default**: false (hidden)
+final searchBarVisibilityProvider = StateProvider.autoDispose<bool>((ref) => false);
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -64,6 +70,27 @@ class AnalyticsScreen extends ConsumerWidget {
           },
         ),
         actions: [
+          // Search toggle button (Task: New UX)
+          Consumer(
+            builder: (context, ref, child) {
+              final isSearchVisible = ref.watch(searchBarVisibilityProvider);
+
+              return IconButton(
+                icon: SemanticIcon.button(
+                  icon: isSearchVisible ? AppIcons.close : AppIcons.search,
+                  semanticLabel: isSearchVisible ? context.l10n.close : context.l10n.search,
+                ),
+                tooltip: isSearchVisible ? context.l10n.close : context.l10n.search,
+                onPressed: () {
+                  // Toggle search bar visibility
+                  ref.read(searchBarVisibilityProvider.notifier).state = !isSearchVisible;
+
+                  // Haptic feedback
+                  HapticFeedback.lightImpact();
+                },
+              );
+            },
+          ),
           // View mode selector
           Consumer(
             builder: (context, ref, child) {
@@ -186,24 +213,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<String> _searchQuery = ValueNotifier<String>('');
   final ScrollController _scrollController = ScrollController();
-  final ValueNotifier<double> _scrollOffset = ValueNotifier<double>(0.0);
-  final ValueNotifier<bool> _showFab = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> _fabExpanded = ValueNotifier<bool>(false); // Task 4.2
-  final FocusNode _fabSearchFocus = FocusNode(); // Task 4.2
   Timer? _debounce;
   SortBy _sortBy = SortBy.mostUsed; // Default: sort by most used
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  /// Scroll listener - tracks offset and triggers FAB visibility
-  void _onScroll() {
-    _scrollOffset.value = _scrollController.offset;
-    _showFab.value = _scrollController.offset > 50.0; // AppAnimations.scrollFabThreshold
-  }
 
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
@@ -219,10 +230,6 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
     _searchQuery.dispose();
     _searchController.dispose();
     _scrollController.dispose();
-    _scrollOffset.dispose();
-    _showFab.dispose();
-    _fabExpanded.dispose(); // Task 4.2
-    _fabSearchFocus.dispose(); // Task 4.2
     super.dispose();
   }
 
@@ -331,60 +338,54 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
             return Column(
               children: [
-        // Quick stats summary card + Search bar (slide up together on scroll)
-        ValueListenableBuilder<double>(
-          valueListenable: _scrollOffset,
-          builder: (context, offset, child) {
-            // Calculate slide offset: 0 at 0px, -200 at 200px+ (slides up and out)
-            final slideOffset = offset >= 200.0
-                ? -200.0
-                : -offset;
+        // Stats bar (always visible, no scroll-away animation)
+        _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
 
-            return Transform.translate(
-              offset: Offset(0, slideOffset),
-              child: child,
+        // Search bar (conditional with slide animation)
+        Consumer(
+          builder: (context, ref, child) {
+            final isSearchVisible = ref.watch(searchBarVisibilityProvider);
+
+            return AnimatedSize(
+              duration: AppAnimations.normal,
+              curve: AppAnimations.decelerate,
+              child: isSearchVisible
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                      child: TextField(
+                        controller: _searchController,
+                        autofocus: true, // Auto-focus when appears
+                        decoration: InputDecoration(
+                          hintText: context.l10n.searchExercises,
+                          prefixIcon: SemanticIcon(
+                            icon: AppIcons.search,
+                            semanticLabel: context.l10n.search,
+                            size: AppIconSize.medium,
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                          suffixIcon: searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: SemanticIcon.button(
+                                    icon: AppIcons.close,
+                                    semanticLabel: context.l10n.clear,
+                                  ),
+                                  onPressed: () {
+                                    _debounce?.cancel();
+                                    _searchController.clear();
+                                    _searchQuery.value = ''; // ValueNotifier update
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onChanged: _onSearchChanged,
+                      ),
+                    )
+                  : const SizedBox.shrink(), // Hidden state: no height
             );
           },
-          child: Column(
-            children: [
-              // Stats bar
-              _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
-
-              // Search bar
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: context.l10n.searchExercises,
-              prefixIcon: SemanticIcon(
-                icon: AppIcons.search,
-                semanticLabel: context.l10n.search,
-                size: AppIconSize.medium,
-                color: context.colors.onSurfaceVariant,
-              ),
-              suffixIcon: searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: SemanticIcon.button(
-                        icon: AppIcons.close,
-                        semanticLabel: context.l10n.clear,
-                      ),
-                      onPressed: () {
-                        _debounce?.cancel();
-                        _searchController.clear();
-                        _searchQuery.value = ''; // ValueNotifier update
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onChanged: _onSearchChanged,
-          ),
-              ),
-            ],
-          ),
         ),
 
         // Sort & Filter chips with live counters
@@ -456,110 +457,10 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
           }, // Close ValueListenableBuilder builder
         ), // Close ValueListenableBuilder
 
-        // Floating search button (appears on scroll - hidden when expanded)
-        ValueListenableBuilder<bool>(
-          valueListenable: _fabExpanded,
-          builder: (context, expanded, child) {
-            return expanded
-                ? const SizedBox.shrink() // Hide FAB when expanded
-                : FloatingSearchFab(
-                    showFab: _showFab,
-                    onTap: _onFabTap,
-                  );
-          },
-        ),
-
-        // Expanded search bar (Task 4.2) - shows when FAB expanded
-        ValueListenableBuilder<bool>(
-          valueListenable: _fabExpanded,
-          builder: (context, expanded, child) {
-            return AnimatedPositioned(
-              duration: AppAnimations.normal, // 300ms
-              curve: AppAnimations.decelerate,
-              top: 16,
-              left: expanded ? 16 : MediaQuery.of(context).size.width,
-              right: 16,
-              child: AnimatedOpacity(
-                opacity: expanded ? 1.0 : 0.0,
-                duration: AppAnimations.normal,
-                curve: AppAnimations.decelerate,
-                child: Material(
-                  elevation: 4,
-                  borderRadius: BorderRadius.circular(16),
-                  color: context.colors.surface,
-                  child: TextField(
-                    controller: _searchController,
-                    focusNode: _fabSearchFocus,
-                    onChanged: _onSearchChanged,
-                    decoration: InputDecoration(
-                      hintText: context.l10n.searchExercises,
-                      prefixIcon: SemanticIcon(
-                        icon: AppIcons.search,
-                        semanticLabel: context.l10n.search,
-                        size: AppIconSize.medium,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: SemanticIcon.button(
-                          icon: AppIcons.close,
-                          semanticLabel: context.l10n.close,
-                        ),
-                        onPressed: _onFabSearchClose,
-                        tooltip: context.l10n.close,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: context.colors.surface,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
       ],
     ); // Close Stack
   }
 
-  /// Handle FAB tap - expand to search TextField (Task 4.2 + 4.3)
-  void _onFabTap() {
-    // Expand FAB to show search TextField
-    _fabExpanded.value = true;
-
-    // Auto-scroll to top (Task 4.3)
-    _scrollController.animateTo(
-      0,
-      duration: AppAnimations.fast, // 150ms
-      curve: AppAnimations.decelerate,
-    );
-
-    // Auto-focus TextField after animation completes
-    Future.delayed(AppAnimations.fast, () {
-      if (mounted) {
-        _fabSearchFocus.requestFocus();
-      }
-    });
-  }
-
-  /// Handle FAB search close (Task 4.2)
-  void _onFabSearchClose() {
-    // Clear search
-    _searchController.clear();
-    _searchQuery.value = '';
-
-    // Collapse FAB
-    _fabExpanded.value = false;
-
-    // Remove focus
-    _fabSearchFocus.unfocus();
-  }
 
   /// Build accordion list of exercises grouped by muscle group
   ///
