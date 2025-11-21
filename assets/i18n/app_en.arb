@@ -4218,6 +4218,14 @@
   "@weekly": {
     "description": "Weekly period label"
   },
+  "weeklyGoalTitle": "Weekly Goal",
+  "@weeklyGoalTitle": {
+    "description": "Title for weekly workout goal dialog"
+  },
+  "weeklyGoalQuestion": "How many workouts per week do you want to do?",
+  "@weeklyGoalQuestion": {
+    "description": "Question for setting weekly workout goal"
+  },
   "monthly": "Monthly",
   "@monthly": {
     "description": "Monthly period label"

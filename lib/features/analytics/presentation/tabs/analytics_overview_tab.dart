@@ -5,13 +5,15 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/compact_stat_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+
+/// Provider for weekly workout goal (default: 5 workouts per week)
+final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 
@@ -45,6 +47,83 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     }
   }
 
+  /// Show dialog to set weekly workout goal
+  void _showWeeklyGoalDialog(BuildContext context, WidgetRef ref) {
+    final currentGoal = ref.read(weeklyWorkoutGoalProvider);
+    int selectedGoal = currentGoal;
+
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final theme = Theme.of(context);
+            final l10n = AppLocalizations.of(context);
+
+            return AlertDialog(
+              title: Text(l10n.weeklyGoalTitle),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l10n.weeklyGoalQuestion),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(7, (index) {
+                      final goal = index + 1;
+                      final isSelected = goal == selectedGoal;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedGoal = goal;
+                          });
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$goal',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: isSelected
+                                    ? theme.colorScheme.onPrimary
+                                    : theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(l10n.cancel),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(weeklyWorkoutGoalProvider.notifier).state = selectedGoal;
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(l10n.save),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -52,6 +131,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
     // Watch memoized stats provider - this is cached!
     final stats = ref.watch(periodAnalyticsStatsProvider(_selectedPeriod));
+    final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -96,9 +176,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             floating: true, // Reappears when scrolling up
             delegate: _MinimalStatsBarDelegate(
               stats: stats,
+              workouts: widget.workouts,
+              weeklyGoal: weeklyGoal,
               l10n: l10n,
               minHeight: 0, // Fully slides up
               maxHeight: 100, // ~100px height when visible
+              onWeeklyGoalTap: () => _showWeeklyGoalDialog(context, ref),
             ),
           ),
 
@@ -1375,15 +1458,42 @@ class MuscleGroupStats {
 class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
   _MinimalStatsBarDelegate({
     required this.stats,
+    required this.workouts,
+    required this.weeklyGoal,
     required this.l10n,
     required this.minHeight,
     required this.maxHeight,
+    required this.onWeeklyGoalTap,
   });
 
   final dynamic stats;
+  final List<Workout> workouts;
+  final int weeklyGoal;
   final AppLocalizations l10n;
   final double minHeight;
   final double maxHeight;
+  final VoidCallback onWeeklyGoalTap;
+
+  /// Calculate workouts in the last 7 days
+  int _calculateWeeklyWorkouts() {
+    final now = DateTime.now();
+    final weekAgo = now.subtract(const Duration(days: 7));
+
+    final weeklyDates = <DateTime>{};
+    for (final workout in workouts) {
+      final workoutDate = workout.endTime ?? workout.createdAt;
+      if (workoutDate.isAfter(weekAgo)) {
+        final dateOnly = DateTime(
+          workoutDate.year,
+          workoutDate.month,
+          workoutDate.day,
+        );
+        weeklyDates.add(dateOnly);
+      }
+    }
+
+    return weeklyDates.length;
+  }
 
   @override
   double get minExtent => minHeight;
@@ -1435,14 +1545,15 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
                 theme.colorScheme.secondary,
               ),
             ),
-            // Workouts
+            // Weekly Workouts (tappable to set goal)
             Expanded(
               child: _buildMinimalStat(
                 context,
                 AppIcons.calendar,
-                '${stats.totalWorkouts}',
-                l10n.totalWorkouts,
+                '${_calculateWeeklyWorkouts()}/$weeklyGoal',
+                l10n.weekly,
                 theme.colorScheme.primary,
+                onTap: onWeeklyGoalTap,
               ),
             ),
             // Consistency
@@ -1466,10 +1577,11 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
     IconData icon,
     String value,
     String label,
-    Color color,
-  ) {
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     final theme = Theme.of(context);
-    return Column(
+    final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: AppIconSize.small, color: color),
@@ -1492,6 +1604,16 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
         ),
       ],
     );
+
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: content,
+      );
+    }
+
+    return content;
   }
 
   String _formatVolumeShort(double volume) {
@@ -1503,6 +1625,8 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(_MinimalStatsBarDelegate oldDelegate) {
-    return stats != oldDelegate.stats;
+    return stats != oldDelegate.stats ||
+        workouts != oldDelegate.workouts ||
+        weeklyGoal != oldDelegate.weeklyGoal;
   }
 }

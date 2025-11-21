@@ -1095,6 +1095,8 @@
   "estimated1RM": "1RM Stimato",
   "volumeProgression": "Progressione Volume",
   "weekly": "Settimanale",
+  "weeklyGoalTitle": "Obiettivo Settimanale",
+  "weeklyGoalQuestion": "Quanti allenamenti a settimana vuoi fare?",
   "monthly": "Mensile",
   "volumeStatistics": "Statistiche Volume",
   "pleaseLogin": "Effettua l'accesso",

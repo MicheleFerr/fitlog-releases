@@ -5939,6 +5939,18 @@ abstract class AppLocalizations {
   /// **'Weekly'**
   String get weekly;
 
+  /// Title for weekly workout goal dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Goal'**
+  String get weeklyGoalTitle;
+
+  /// Question for setting weekly workout goal
+  ///
+  /// In en, this message translates to:
+  /// **'How many workouts per week do you want to do?'**
+  String get weeklyGoalQuestion;
+
   /// Monthly period label
   ///
   /// In en, this message translates to:

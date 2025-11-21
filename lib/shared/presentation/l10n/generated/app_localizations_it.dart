@@ -3206,6 +3206,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weekly => 'Settimanale';
 
   @override
+  String get weeklyGoalTitle => 'Obiettivo Settimanale';
+
+  @override
+  String get weeklyGoalQuestion => 'Quanti allenamenti a settimana vuoi fare?';
+
+  @override
   String get monthly => 'Mensile';
 
   @override
