@@ -22152,5 +22152,13 @@
   "errorLoadingConsistencyScore": "Error loading consistency score",
   "@errorLoadingConsistencyScore": {
     "description": "Error message when consistency score fails to load"
+  },
+  "errorOpeningLink": "Error opening link",
+  "@errorOpeningLink": {
+    "description": "Error message when a link fails to open"
+  },
+  "cannotOpenLink": "Cannot open link",
+  "@cannotOpenLink": {
+    "description": "Error message when a link cannot be opened"
   }
 }

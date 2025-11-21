@@ -11690,5 +11690,13 @@
   "errorLoadingConsistencyScore": "Errore caricamento punteggio coerenza",
   "@errorLoadingConsistencyScore": {
     "description": "Error message when consistency score fails to load"
+  },
+  "errorOpeningLink": "Errore apertura link",
+  "@errorOpeningLink": {
+    "description": "Error message when a link fails to open"
+  },
+  "cannotOpenLink": "Impossibile aprire il link",
+  "@cannotOpenLink": {
+    "description": "Error message when a link cannot be opened"
   }
 }

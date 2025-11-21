@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_modal_content.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// AI Coach card with minimal design (progressive disclosure pattern)
 ///
@@ -184,7 +186,7 @@ class _MinimalAICoachCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: context.colors.surface.withValues(alpha: 0.2),
               width: 1,
             ),
           ),
@@ -326,7 +328,11 @@ class _MinimalAICoachCard extends StatelessWidget {
                       flex: 2,
                       child: FilledButton.icon(
                         onPressed: onChatTap,
-                        icon: const Icon(AppIcons.chat, size: 18),
+                        icon: const SemanticIcon(
+  icon: AppIcons.chat,
+  semanticLabel: 'Chat',
+  size: AppIconSize.small,
+),
                         label: Text(l10n.aiCoach),
                         style: FilledButton.styleFrom(
                           backgroundColor: colorScheme.primary,
@@ -510,10 +516,12 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.analytics,
-            size: 64,
-            color: colorScheme.primary.withValues(alpha: 0.8),
+          SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+  size: AppIconSize.medium,
+  color: colorScheme.primary.withValues(alpha: 0.8,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -534,7 +542,10 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
                 child: const ChatModalContent(),
               );
             },
-            icon: const Icon(AppIcons.chat),
+            icon: const SemanticIcon(
+  icon: AppIcons.chat,
+  semanticLabel: 'Chat',
+),
             label: Text(l10n.aiCoach),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -690,7 +701,7 @@ class _CompactInsightCard extends StatelessWidget {
                         child: Text(
                           _getSeverityLabel(severity, l10n),
                           style: theme.textTheme.labelSmall?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 10,
                           ),
@@ -700,10 +711,12 @@ class _CompactInsightCard extends StatelessWidget {
                   ),
                 ),
                 // Forward arrow
-                Icon(
-                  AppIcons.forwardIos,
-                  size: 16,
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
+                SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurface.withValues(alpha: 0.4,
+),
                 ),
               ],
             ),
@@ -760,7 +773,10 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
               ),
               IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(AppIcons.close),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
               ),
             ],
           ),
@@ -791,7 +807,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
                     ),
                     child: Row(
                       children: [
-                        Icon(AppIcons.recommend, size: 20, color: cardColor),
+                        SemanticIcon(
+  icon: AppIcons.recommend,
+  semanticLabel: 'Recommend',
+  size: AppIconSize.small,
+  color: cardColor,
+),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -919,7 +940,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
       children: [
         Row(
           children: [
-            Icon(AppIcons.barChart, size: 20, color: color),
+            SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.small,
+  color: color,
+),
             const SizedBox(width: 8),
             Text(
               title,
@@ -936,7 +962,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(AppIcons.fiberManualRecord, size: 8, color: color),
+                  SemanticIcon(
+  icon: AppIcons.fiberManualRecord,
+  semanticLabel: 'Fiber manual record',
+  size: AppIconSize.medium,
+  color: color,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -968,7 +999,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
       children: [
         Row(
           children: [
-            Icon(AppIcons.ai, size: 20, color: color),
+            SemanticIcon(
+  icon: AppIcons.ai,
+  semanticLabel: 'Ai',
+  size: AppIconSize.small,
+  color: color,
+),
             const SizedBox(width: 8),
             Text(
               '🎯 $title',
@@ -1036,7 +1072,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
               children: [
                 Row(
                   children: [
-                    Icon(AppIcons.playArrow, size: 16, color: color),
+                    SemanticIcon(
+  icon: AppIcons.playArrow,
+  semanticLabel: 'Play arrow',
+  size: AppIconSize.tiny,
+  color: color,
+),
                     const SizedBox(width: 6),
                     Text(
                       l10n.howToImplement,
@@ -1061,7 +1102,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(AppIcons.timeline, size: 16, color: context.successColor),
+              SemanticIcon(
+  icon: AppIcons.timeline,
+  semanticLabel: 'Timeline',
+  size: AppIconSize.tiny,
+  color: context.successColor,
+),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -1101,7 +1147,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
         ),
         child: Row(
           children: [
-            Icon(AppIcons.science, size: 20, color: colorScheme.primary),
+            SemanticIcon(
+  icon: AppIcons.science,
+  semanticLabel: 'Science',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -1113,7 +1164,12 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
                 ),
               ),
             ),
-            Icon(AppIcons.openInNew, size: 16, color: colorScheme.primary),
+            SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
           ],
         ),
       ),
@@ -1164,7 +1220,7 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
           if (context.mounted) {
             SnackBarService.showError(
               context,
-              'Cannot open link: ${uri.toString()}',
+              context.l10n.cannotOpenLink,
             );
           }
         }
@@ -1172,7 +1228,7 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
         if (context.mounted) {
           SnackBarService.showError(
             context,
-            'Error opening link: $e',
+            context.l10n.errorOpeningLink,
           );
         }
       }
@@ -1347,11 +1403,14 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
                 height: 16,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Icon(AppIcons.swapHoriz),
+            : const SemanticIcon(
+  icon: AppIcons.swapHoriz,
+  semanticLabel: 'Swap horiz',
+),
         label: Text(_isReplacingExercise ? l10n.processing : buttonText),
         style: FilledButton.styleFrom(
           backgroundColor: cardColor,
-          foregroundColor: _getTextColor(cardColor),
+          foregroundColor: _getTextColor(context, cardColor),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
       ),
@@ -1456,8 +1515,9 @@ class _InsightDetailsModalState extends ConsumerState<InsightDetailsModal> {
     };
   }
 
-  Color _getTextColor(Color backgroundColor) {
+  Color _getTextColor(BuildContext context, Color backgroundColor) {
     final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black87 : Colors.white;
+    final colorScheme = Theme.of(context).colorScheme;
+    return luminance > 0.5 ? colorScheme.onSurface.withValues(alpha: 0.87) : colorScheme.surface;
   }
 }

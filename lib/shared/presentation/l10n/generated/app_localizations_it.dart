@@ -18409,4 +18409,10 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get errorLoadingConsistencyScore =>
       'Errore caricamento punteggio coerenza';
+
+  @override
+  String get errorOpeningLink => 'Errore apertura link';
+
+  @override
+  String get cannotOpenLink => 'Impossibile aprire il link';
 }

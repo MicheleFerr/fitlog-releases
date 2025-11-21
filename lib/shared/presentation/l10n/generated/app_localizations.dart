@@ -32699,6 +32699,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading consistency score'**
   String get errorLoadingConsistencyScore;
+
+  /// Error message when a link fails to open
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening link'**
+  String get errorOpeningLink;
+
+  /// Error message when a link cannot be opened
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot open link'**
+  String get cannotOpenLink;
 }
 
 class _AppLocalizationsDelegate

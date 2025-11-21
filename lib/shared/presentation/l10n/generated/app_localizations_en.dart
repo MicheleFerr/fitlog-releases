@@ -18230,4 +18230,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingConsistencyScore => 'Error loading consistency score';
+
+  @override
+  String get errorOpeningLink => 'Error opening link';
+
+  @override
+  String get cannotOpenLink => 'Cannot open link';
 }
