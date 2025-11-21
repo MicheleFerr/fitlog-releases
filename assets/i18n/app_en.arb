@@ -21942,5 +21942,130 @@
   "insight": "Insight",
   "@insight": {
     "description": "Semantic label for insight/tip icon"
+  },
+  "weeklyConsistencyExcellent": "Excellent consistency! You hit your weekly goal! 🎯",
+  "@weeklyConsistencyExcellent": {
+    "description": "Motivational message for hitting weekly goal"
+  },
+  "weeklyConsistencyAlmost": "Almost there! One more workout to hit your goal! 💪",
+  "@weeklyConsistencyAlmost": {
+    "description": "Motivational message for almost hitting goal"
+  },
+  "weeklyConsistencyGood": "Good progress! Keep the momentum going! 📈",
+  "@weeklyConsistencyGood": {
+    "description": "Motivational message for good progress"
+  },
+  "weeklyConsistencyOnTrack": "You're on track! Don't stop now! 🔥",
+  "@weeklyConsistencyOnTrack": {
+    "description": "Motivational message for being on track"
+  },
+  "weeklyConsistencyStart": "Every journey starts with a single step! Let's go! 🚀",
+  "@weeklyConsistencyStart": {
+    "description": "Motivational message for starting journey"
+  },
+  "weeklyDetails": "Weekly Details",
+  "@weeklyDetails": {
+    "description": "Title for weekly details modal"
+  },
+  "weeklyWorkouts": "Weekly Workouts",
+  "@weeklyWorkouts": {
+    "description": "Semantic label for weekly workouts icon"
+  },
+  "thisWeekShort": "This Week",
+  "@thisWeekShort": {
+    "description": "Short label for current week"
+  },
+  "workoutsCount": "{count} / {goal} workouts",
+  "@workoutsCount": {
+    "description": "Format for displaying workout count vs goal",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAchieved": "Goal!",
+  "@goalAchieved": {
+    "description": "Badge text when goal is achieved"
+  },
+  "mondayShort": "Mon",
+  "@mondayShort": {
+    "description": "Short form for Monday"
+  },
+  "tuesdayShort": "Tue",
+  "@tuesdayShort": {
+    "description": "Short form for Tuesday"
+  },
+  "wednesdayShort": "Wed",
+  "@wednesdayShort": {
+    "description": "Short form for Wednesday"
+  },
+  "thursdayShort": "Thu",
+  "@thursdayShort": {
+    "description": "Short form for Thursday"
+  },
+  "fridayShort": "Fri",
+  "@fridayShort": {
+    "description": "Short form for Friday"
+  },
+  "saturdayShort": "Sat",
+  "@saturdayShort": {
+    "description": "Short form for Saturday"
+  },
+  "sundayShort": "Sun",
+  "@sundayShort": {
+    "description": "Short form for Sunday"
+  },
+  "lastSevenDays": "Last 7 Days",
+  "@lastSevenDays": {
+    "description": "Title for last 7 days chart"
+  },
+  "consistency": "Consistency",
+  "@consistency": {
+    "description": "Label for consistency metric"
+  },
+  "motivation": "Motivation",
+  "@motivation": {
+    "description": "Semantic label for motivation icon"
+  },
+  "tips": "Tips",
+  "@tips": {
+    "description": "Semantic label for tips icon"
+  },
+  "consistencyTips": "Consistency Tips",
+  "@consistencyTips": {
+    "description": "Title for consistency tips section"
+  },
+  "tipScheduleWorkouts": "Schedule workouts like appointments",
+  "@tipScheduleWorkouts": {
+    "description": "Tip about scheduling workouts"
+  },
+  "tipStartSmall": "Start small: consistency > intensity",
+  "@tipStartSmall": {
+    "description": "Tip about starting small and prioritizing consistency"
+  },
+  "tipRestDays": "Rest days are part of progress!",
+  "@tipRestDays": {
+    "description": "Tip about rest days being important"
+  },
+  "weeklyGoal": "Weekly Goal",
+  "@weeklyGoal": {
+    "description": "Label for weekly goal setting"
+  },
+  "workoutsPerWeek": "workouts per week",
+  "@workoutsPerWeek": {
+    "description": "Unit label for weekly goal"
+  },
+  "workoutsGoalLabel": "{count} workouts",
+  "@workoutsGoalLabel": {
+    "description": "Label showing number of workouts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

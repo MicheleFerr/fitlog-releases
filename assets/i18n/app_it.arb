@@ -11408,5 +11408,130 @@
   "insight": "Suggerimento",
   "@insight": {
     "description": "Etichetta semantica per icona suggerimento/consiglio"
+  },
+  "weeklyConsistencyExcellent": "Eccellente costanza! Hai raggiunto il tuo obiettivo settimanale! 🎯",
+  "@weeklyConsistencyExcellent": {
+    "description": "Messaggio motivazionale per raggiungimento obiettivo settimanale"
+  },
+  "weeklyConsistencyAlmost": "Quasi! Ancora un allenamento per raggiungere l'obiettivo! 💪",
+  "@weeklyConsistencyAlmost": {
+    "description": "Messaggio motivazionale per quasi raggiungimento obiettivo"
+  },
+  "weeklyConsistencyGood": "Buoni progressi! Continua così! 📈",
+  "@weeklyConsistencyGood": {
+    "description": "Messaggio motivazionale per buoni progressi"
+  },
+  "weeklyConsistencyOnTrack": "Sei sulla buona strada! Non fermarti! 🔥",
+  "@weeklyConsistencyOnTrack": {
+    "description": "Messaggio motivazionale per essere sulla buona strada"
+  },
+  "weeklyConsistencyStart": "Ogni viaggio inizia con un singolo passo! Andiamo! 🚀",
+  "@weeklyConsistencyStart": {
+    "description": "Messaggio motivazionale per iniziare il viaggio"
+  },
+  "weeklyDetails": "Dettagli Settimanali",
+  "@weeklyDetails": {
+    "description": "Titolo per modal dettagli settimanali"
+  },
+  "weeklyWorkouts": "Allenamenti Settimanali",
+  "@weeklyWorkouts": {
+    "description": "Etichetta semantica per icona allenamenti settimanali"
+  },
+  "thisWeekShort": "Questa Settimana",
+  "@thisWeekShort": {
+    "description": "Etichetta breve per settimana corrente"
+  },
+  "workoutsCount": "{count} / {goal} allenamenti",
+  "@workoutsCount": {
+    "description": "Formato per visualizzare conteggio allenamenti vs obiettivo",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "goalAchieved": "Obiettivo!",
+  "@goalAchieved": {
+    "description": "Testo badge quando obiettivo è raggiunto"
+  },
+  "mondayShort": "Lun",
+  "@mondayShort": {
+    "description": "Forma breve per Lunedì"
+  },
+  "tuesdayShort": "Mar",
+  "@tuesdayShort": {
+    "description": "Forma breve per Martedì"
+  },
+  "wednesdayShort": "Mer",
+  "@wednesdayShort": {
+    "description": "Forma breve per Mercoledì"
+  },
+  "thursdayShort": "Gio",
+  "@thursdayShort": {
+    "description": "Forma breve per Giovedì"
+  },
+  "fridayShort": "Ven",
+  "@fridayShort": {
+    "description": "Forma breve per Venerdì"
+  },
+  "saturdayShort": "Sab",
+  "@saturdayShort": {
+    "description": "Forma breve per Sabato"
+  },
+  "sundayShort": "Dom",
+  "@sundayShort": {
+    "description": "Forma breve per Domenica"
+  },
+  "lastSevenDays": "Ultimi 7 Giorni",
+  "@lastSevenDays": {
+    "description": "Titolo per grafico ultimi 7 giorni"
+  },
+  "consistency": "Costanza",
+  "@consistency": {
+    "description": "Etichetta per metrica costanza"
+  },
+  "motivation": "Motivazione",
+  "@motivation": {
+    "description": "Etichetta semantica per icona motivazione"
+  },
+  "tips": "Suggerimenti",
+  "@tips": {
+    "description": "Etichetta semantica per icona suggerimenti"
+  },
+  "consistencyTips": "Suggerimenti sulla Costanza",
+  "@consistencyTips": {
+    "description": "Titolo per sezione suggerimenti costanza"
+  },
+  "tipScheduleWorkouts": "Programma gli allenamenti come appuntamenti",
+  "@tipScheduleWorkouts": {
+    "description": "Suggerimento sulla programmazione allenamenti"
+  },
+  "tipStartSmall": "Inizia gradualmente: costanza > intensità",
+  "@tipStartSmall": {
+    "description": "Suggerimento su iniziare gradualmente e prioritizzare costanza"
+  },
+  "tipRestDays": "I giorni di riposo fanno parte del progresso!",
+  "@tipRestDays": {
+    "description": "Suggerimento sull'importanza dei giorni di riposo"
+  },
+  "weeklyGoal": "Obiettivo Settimanale",
+  "@weeklyGoal": {
+    "description": "Etichetta per impostazione obiettivo settimanale"
+  },
+  "workoutsPerWeek": "allenamenti a settimana",
+  "@workoutsPerWeek": {
+    "description": "Etichetta unità per obiettivo settimanale"
+  },
+  "workoutsGoalLabel": "{count} allenamenti",
+  "@workoutsGoalLabel": {
+    "description": "Etichetta che mostra numero allenamenti",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

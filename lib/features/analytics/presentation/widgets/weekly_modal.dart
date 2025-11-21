@@ -93,19 +93,19 @@ class _WeeklyModalState extends State<WeeklyModal> {
   }
 
   /// Get motivational message
-  String _getMotivationalMessage() {
-    if (widget.weeklyWorkouts >= _weeklyGoal) return 'Excellent consistency! You hit your weekly goal! 🎯';
-    if (widget.weeklyWorkouts >= _weeklyGoal - 1) return 'Almost there! One more workout to hit your goal! 💪';
-    if (widget.weeklyWorkouts >= _weeklyGoal - 2) return 'Good progress! Keep the momentum going! 📈';
-    if (widget.weeklyWorkouts >= 2) return 'You\'re on track! Don\'t stop now! 🔥';
-    return 'Every journey starts with a single step! Let\'s go! 🚀';
+  String _getMotivationalMessage(BuildContext context) {
+    if (widget.weeklyWorkouts >= _weeklyGoal) return context.l10n.weeklyConsistencyExcellent;
+    if (widget.weeklyWorkouts >= _weeklyGoal - 1) return context.l10n.weeklyConsistencyAlmost;
+    if (widget.weeklyWorkouts >= _weeklyGoal - 2) return context.l10n.weeklyConsistencyGood;
+    if (widget.weeklyWorkouts >= 2) return context.l10n.weeklyConsistencyOnTrack;
+    return context.l10n.weeklyConsistencyStart;
   }
 
   @override
   Widget build(BuildContext context) {
     final weekDays = _getThisWeekWorkouts();
     final consistencyPercent = _getConsistencyPercentage();
-    final motivationalMessage = _getMotivationalMessage();
+    final motivationalMessage = _getMotivationalMessage(context);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -163,7 +163,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
       children: [
         Expanded(
           child: Text(
-            '📅 Weekly Details',
+            '📅 ${context.l10n.weeklyDetails}',
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -224,7 +224,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
             ),
             child: SemanticIcon(
               icon: AppIcons.calendar,
-              semanticLabel: 'Weekly Workouts',
+              semanticLabel: context.l10n.weeklyWorkouts,
               size: AppIconSize.large,
               color: isGoalMet ? context.colors.success : context.colors.primary,
             ),
@@ -237,14 +237,14 @@ class _WeeklyModalState extends State<WeeklyModal> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'This Week',
+                  context.l10n.thisWeekShort,
                   style: context.textTheme.labelMedium?.copyWith(
                     color: context.colors.onPrimaryContainer,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${widget.weeklyWorkouts} / $goal workouts',
+                  context.l10n.workoutsCount(widget.weeklyWorkouts, goal),
                   style: context.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: context.colors.onPrimaryContainer,
@@ -272,7 +272,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Goal!',
+                    context.l10n.goalAchieved,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSuccess,
                       fontWeight: FontWeight.bold,
@@ -290,13 +290,21 @@ class _WeeklyModalState extends State<WeeklyModal> {
   Widget _buildWeeklyCalendar(BuildContext context, List<DateTime?> weekDays) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final weekDayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final weekDayNames = [
+      context.l10n.mondayShort,
+      context.l10n.tuesdayShort,
+      context.l10n.wednesdayShort,
+      context.l10n.thursdayShort,
+      context.l10n.fridayShort,
+      context.l10n.saturdayShort,
+      context.l10n.sundayShort,
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Last 7 Days',
+          context.l10n.lastSevenDays,
           style: context.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -381,7 +389,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Consistency',
+                context.l10n.consistency,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -424,7 +432,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
         children: [
           SemanticIcon(
             icon: AppIcons.trendUp,
-            semanticLabel: 'Motivation',
+            semanticLabel: context.l10n.motivation,
             size: AppIconSize.medium,
             color: context.colors.onSuccessContainer,
           ),
@@ -458,13 +466,13 @@ class _WeeklyModalState extends State<WeeklyModal> {
             children: [
               SemanticIcon(
                 icon: AppIcons.lightbulb,
-                semanticLabel: 'Tips',
+                semanticLabel: context.l10n.tips,
                 size: AppIconSize.medium,
                 color: context.colors.primary,
               ),
               const SizedBox(width: 12),
               Text(
-                'Consistency Tips',
+                context.l10n.consistencyTips,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -473,11 +481,11 @@ class _WeeklyModalState extends State<WeeklyModal> {
           ),
           const SizedBox(height: 12),
 
-          _buildTipItem(context, 'Schedule workouts like appointments'),
+          _buildTipItem(context, context.l10n.tipScheduleWorkouts),
           const SizedBox(height: 8),
-          _buildTipItem(context, 'Start small: consistency > intensity'),
+          _buildTipItem(context, context.l10n.tipStartSmall),
           const SizedBox(height: 8),
-          _buildTipItem(context, 'Rest days are part of progress!'),
+          _buildTipItem(context, context.l10n.tipRestDays),
         ],
       ),
     );
@@ -524,13 +532,13 @@ class _WeeklyModalState extends State<WeeklyModal> {
             children: [
               SemanticIcon(
                 icon: AppIcons.flag,
-                semanticLabel: 'Weekly Goal',
+                semanticLabel: context.l10n.weeklyGoal,
                 size: AppIconSize.medium,
                 color: context.colors.primary,
               ),
               const SizedBox(width: 12),
               Text(
-                'Weekly Goal',
+                context.l10n.weeklyGoal,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -552,7 +560,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'workouts per week',
+                  context.l10n.workoutsPerWeek,
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -579,7 +587,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
               min: 1,
               max: 7,
               divisions: 6,
-              label: '${_weeklyGoal.round()} workouts',
+              label: context.l10n.workoutsGoalLabel(_weeklyGoal.round()),
               onChanged: (value) {
                 setState(() => _weeklyGoal = value);
                 HapticFeedback.selectionClick();
@@ -604,7 +612,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
               ),
               const SizedBox(width: 12),
               Text(
-                '${widget.weeklyWorkouts} / ${_weeklyGoal.round()}',
+                context.l10n.workoutsCount(widget.weeklyWorkouts, _weeklyGoal.round()),
                 style: context.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.weeklyWorkouts >= _weeklyGoal

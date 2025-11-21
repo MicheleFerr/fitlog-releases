@@ -1573,7 +1573,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get totalVolume => 'Volume Totale';
 
   @override
-  String get consistency => 'Consistenza';
+  String get consistency => 'Costanza';
 
   @override
   String get totalWorkouts => 'Allenamenti Totali';
@@ -5960,8 +5960,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noRecentWorkouts => 'Nessun allenamento recente';
 
   @override
-  String workoutsCount(int count) {
-    return '$count allenamenti';
+  String workoutsCount(int count, int goal) {
+    return '$count / $goal allenamenti';
   }
 
   @override
@@ -10905,7 +10905,7 @@ class AppLocalizationsIt extends AppLocalizations {
       '1-2 minuti di riposo prima delle serie di lavoro';
 
   @override
-  String get tips => 'Consigli';
+  String get tips => 'Suggerimenti';
 
   @override
   String get backHint => 'Torna alla schermata precedente';
@@ -17536,7 +17536,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weeklyAverage => 'Media Settimanale';
 
   @override
-  String get workoutsPerWeek => 'allenamenti/settimana';
+  String get workoutsPerWeek => 'allenamenti a settimana';
 
   @override
   String get restDaysPerWeek => 'giorni riposo/settimana';
@@ -18217,4 +18217,62 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get avgPerWorkout => 'Media per Allenamento';
+
+  @override
+  String get weeklyConsistencyExcellent =>
+      'Eccellente costanza! Hai raggiunto il tuo obiettivo settimanale! 🎯';
+
+  @override
+  String get weeklyConsistencyAlmost =>
+      'Quasi! Ancora un allenamento per raggiungere l\'obiettivo! 💪';
+
+  @override
+  String get weeklyConsistencyGood => 'Buoni progressi! Continua così! 📈';
+
+  @override
+  String get weeklyConsistencyOnTrack =>
+      'Sei sulla buona strada! Non fermarti! 🔥';
+
+  @override
+  String get weeklyConsistencyStart =>
+      'Ogni viaggio inizia con un singolo passo! Andiamo! 🚀';
+
+  @override
+  String get weeklyDetails => 'Dettagli Settimanali';
+
+  @override
+  String get weeklyWorkouts => 'Allenamenti Settimanali';
+
+  @override
+  String get thisWeekShort => 'Questa Settimana';
+
+  @override
+  String get goalAchieved => 'Obiettivo!';
+
+  @override
+  String get lastSevenDays => 'Ultimi 7 Giorni';
+
+  @override
+  String get motivation => 'Motivazione';
+
+  @override
+  String get consistencyTips => 'Suggerimenti sulla Costanza';
+
+  @override
+  String get tipScheduleWorkouts =>
+      'Programma gli allenamenti come appuntamenti';
+
+  @override
+  String get tipStartSmall => 'Inizia gradualmente: costanza > intensità';
+
+  @override
+  String get tipRestDays => 'I giorni di riposo fanno parte del progresso!';
+
+  @override
+  String get weeklyGoal => 'Obiettivo Settimanale';
+
+  @override
+  String workoutsGoalLabel(int count) {
+    return '$count allenamenti';
+  }
 }

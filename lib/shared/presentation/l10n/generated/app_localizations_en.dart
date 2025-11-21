@@ -5909,8 +5909,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRecentWorkouts => 'No recent workouts';
 
   @override
-  String workoutsCount(int count) {
-    return '$count workouts';
+  String workoutsCount(int count, int goal) {
+    return '$count / $goal workouts';
   }
 
   @override
@@ -17364,7 +17364,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weeklyAverage => 'Weekly Average';
 
   @override
-  String get workoutsPerWeek => 'workouts/week';
+  String get workoutsPerWeek => 'workouts per week';
 
   @override
   String get restDaysPerWeek => 'rest days/week';
@@ -18039,4 +18039,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get avgPerWorkout => 'Avg per Workout';
+
+  @override
+  String get weeklyConsistencyExcellent =>
+      'Excellent consistency! You hit your weekly goal! 🎯';
+
+  @override
+  String get weeklyConsistencyAlmost =>
+      'Almost there! One more workout to hit your goal! 💪';
+
+  @override
+  String get weeklyConsistencyGood =>
+      'Good progress! Keep the momentum going! 📈';
+
+  @override
+  String get weeklyConsistencyOnTrack =>
+      'You\'re on track! Don\'t stop now! 🔥';
+
+  @override
+  String get weeklyConsistencyStart =>
+      'Every journey starts with a single step! Let\'s go! 🚀';
+
+  @override
+  String get weeklyDetails => 'Weekly Details';
+
+  @override
+  String get weeklyWorkouts => 'Weekly Workouts';
+
+  @override
+  String get thisWeekShort => 'This Week';
+
+  @override
+  String get goalAchieved => 'Goal!';
+
+  @override
+  String get lastSevenDays => 'Last 7 Days';
+
+  @override
+  String get motivation => 'Motivation';
+
+  @override
+  String get consistencyTips => 'Consistency Tips';
+
+  @override
+  String get tipScheduleWorkouts => 'Schedule workouts like appointments';
+
+  @override
+  String get tipStartSmall => 'Start small: consistency > intensity';
+
+  @override
+  String get tipRestDays => 'Rest days are part of progress!';
+
+  @override
+  String get weeklyGoal => 'Weekly Goal';
+
+  @override
+  String workoutsGoalLabel(int count) {
+    return '$count workouts';
+  }
 }

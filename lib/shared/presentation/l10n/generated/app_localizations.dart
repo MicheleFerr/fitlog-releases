@@ -2971,7 +2971,7 @@ abstract class AppLocalizations {
   /// **'Total Volume'**
   String get totalVolume;
 
-  /// Consistency metric label
+  /// Label for consistency metric
   ///
   /// In en, this message translates to:
   /// **'Consistency'**
@@ -3211,43 +3211,43 @@ abstract class AppLocalizations {
   /// **'Sunday'**
   String get sunday;
 
-  /// Monday short abbreviation
+  /// Short form for Monday
   ///
   /// In en, this message translates to:
   /// **'Mon'**
   String get mondayShort;
 
-  /// Tuesday short abbreviation
+  /// Short form for Tuesday
   ///
   /// In en, this message translates to:
   /// **'Tue'**
   String get tuesdayShort;
 
-  /// Wednesday short abbreviation
+  /// Short form for Wednesday
   ///
   /// In en, this message translates to:
   /// **'Wed'**
   String get wednesdayShort;
 
-  /// Thursday short abbreviation
+  /// Short form for Thursday
   ///
   /// In en, this message translates to:
   /// **'Thu'**
   String get thursdayShort;
 
-  /// Friday short abbreviation
+  /// Short form for Friday
   ///
   /// In en, this message translates to:
   /// **'Fri'**
   String get fridayShort;
 
-  /// Saturday short abbreviation
+  /// Short form for Saturday
   ///
   /// In en, this message translates to:
   /// **'Sat'**
   String get saturdayShort;
 
-  /// Sunday short abbreviation
+  /// Short form for Sunday
   ///
   /// In en, this message translates to:
   /// **'Sun'**
@@ -10751,11 +10751,11 @@ abstract class AppLocalizations {
   /// **'No recent workouts'**
   String get noRecentWorkouts;
 
-  /// Label showing workout count
+  /// Format for displaying workout count vs goal
   ///
   /// In en, this message translates to:
-  /// **'{count} workouts'**
-  String workoutsCount(int count);
+  /// **'{count} / {goal} workouts'**
+  String workoutsCount(int count, int goal);
 
   /// Label showing reps count
   ///
@@ -19164,7 +19164,7 @@ abstract class AppLocalizations {
   /// **'1-2 minutes rest before starting working sets'**
   String get warmupPhase4Description;
 
-  /// Section title for tips
+  /// Semantic label for tips icon
   ///
   /// In en, this message translates to:
   /// **'Tips'**
@@ -31104,10 +31104,10 @@ abstract class AppLocalizations {
   /// **'Weekly Average'**
   String get weeklyAverage;
 
-  /// Workouts per week unit
+  /// Unit label for weekly goal
   ///
   /// In en, this message translates to:
-  /// **'workouts/week'**
+  /// **'workouts per week'**
   String get workoutsPerWeek;
 
   /// Rest days per week unit
@@ -32375,6 +32375,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Avg per Workout'**
   String get avgPerWorkout;
+
+  /// Motivational message for hitting weekly goal
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent consistency! You hit your weekly goal! 🎯'**
+  String get weeklyConsistencyExcellent;
+
+  /// Motivational message for almost hitting goal
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there! One more workout to hit your goal! 💪'**
+  String get weeklyConsistencyAlmost;
+
+  /// Motivational message for good progress
+  ///
+  /// In en, this message translates to:
+  /// **'Good progress! Keep the momentum going! 📈'**
+  String get weeklyConsistencyGood;
+
+  /// Motivational message for being on track
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re on track! Don\'t stop now! 🔥'**
+  String get weeklyConsistencyOnTrack;
+
+  /// Motivational message for starting journey
+  ///
+  /// In en, this message translates to:
+  /// **'Every journey starts with a single step! Let\'s go! 🚀'**
+  String get weeklyConsistencyStart;
+
+  /// Title for weekly details modal
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Details'**
+  String get weeklyDetails;
+
+  /// Semantic label for weekly workouts icon
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Workouts'**
+  String get weeklyWorkouts;
+
+  /// Short label for current week
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeekShort;
+
+  /// Badge text when goal is achieved
+  ///
+  /// In en, this message translates to:
+  /// **'Goal!'**
+  String get goalAchieved;
+
+  /// Title for last 7 days chart
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 Days'**
+  String get lastSevenDays;
+
+  /// Semantic label for motivation icon
+  ///
+  /// In en, this message translates to:
+  /// **'Motivation'**
+  String get motivation;
+
+  /// Title for consistency tips section
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Tips'**
+  String get consistencyTips;
+
+  /// Tip about scheduling workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule workouts like appointments'**
+  String get tipScheduleWorkouts;
+
+  /// Tip about starting small and prioritizing consistency
+  ///
+  /// In en, this message translates to:
+  /// **'Start small: consistency > intensity'**
+  String get tipStartSmall;
+
+  /// Tip about rest days being important
+  ///
+  /// In en, this message translates to:
+  /// **'Rest days are part of progress!'**
+  String get tipRestDays;
+
+  /// Label for weekly goal setting
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Goal'**
+  String get weeklyGoal;
+
+  /// Label showing number of workouts
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workouts'**
+  String workoutsGoalLabel(int count);
 }
 
 class _AppLocalizationsDelegate
