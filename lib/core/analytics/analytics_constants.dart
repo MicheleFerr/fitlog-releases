@@ -196,6 +196,32 @@ class AnalyticsEvents {
   /// Sync failed
   static const String syncFailed = 'sync_failed';
 
+  // ===== EXERCISE PATCH EVENTS =====
+
+  /// Exercise patch submitted by user
+  static const String patchSubmitted = 'patch_submitted';
+
+  /// Exercise patch submission failed
+  static const String patchSubmissionFailed = 'patch_submission_failed';
+
+  /// Exercise patch approved by admin
+  static const String patchApproved = 'patch_approved';
+
+  /// Exercise patch rejected by admin
+  static const String patchRejected = 'patch_rejected';
+
+  /// User viewed their submitted patches
+  static const String myPatchesViewed = 'my_patches_viewed';
+
+  /// Admin viewed patch review queue
+  static const String patchReviewOpened = 'patch_review_opened';
+
+  /// Patch conflict detected
+  static const String patchConflictDetected = 'patch_conflict_detected';
+
+  /// Duplicate patch submission blocked
+  static const String duplicatePatchBlocked = 'duplicate_patch_blocked';
+
   // ===== ECOMMERCE =====
 
   /// In-app purchase
@@ -376,6 +402,38 @@ class AnalyticsParameters {
 
   /// Export format (pdf, csv, json)
   static const String exportFormat = 'export_format';
+
+  // ===== EXERCISE PATCH PARAMETERS =====
+
+  /// Patch ID
+  static const String patchId = 'patch_id';
+
+  /// Exercise ID being patched
+  static const String patchExerciseId = 'patch_exercise_id';
+
+  /// Exercise name being patched
+  static const String patchExerciseName = 'patch_exercise_name';
+
+  /// Field being corrected (nome, noteTecniche, etc.)
+  static const String patchFieldName = 'patch_field_name';
+
+  /// Patch status (pending, approved, rejected)
+  static const String patchStatus = 'patch_status';
+
+  /// Conflict severity (low, medium, high)
+  static const String conflictSeverity = 'conflict_severity';
+
+  /// Conflict type (stale_value, duplicate_field, etc.)
+  static const String conflictType = 'conflict_type';
+
+  /// Admin note (reason for approval/rejection)
+  static const String adminNote = 'admin_note';
+
+  /// Submission time (milliseconds since epoch)
+  static const String submissionTime = 'submission_time';
+
+  /// Review time (milliseconds since epoch)
+  static const String reviewTime = 'review_time';
 
   // ===== ECOMMERCE PARAMETERS =====
 
@@ -574,4 +632,21 @@ class AnalyticsTraces {
 
   /// Sign out operation
   static const String signOut = 'sign_out';
+
+  // ===== EXERCISE PATCH OPERATIONS =====
+
+  /// Submit exercise patch
+  static const String submitPatch = 'submit_patch';
+
+  /// Review exercise patch
+  static const String reviewPatch = 'review_patch';
+
+  /// Analyze patch conflicts
+  static const String analyzePatchConflicts = 'analyze_patch_conflicts';
+
+  /// Load user patches
+  static const String loadUserPatches = 'load_user_patches';
+
+  /// Load admin patch queue
+  static const String loadAdminPatchQueue = 'load_admin_patch_queue';
 }

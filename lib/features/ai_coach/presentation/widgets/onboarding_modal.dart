@@ -140,7 +140,7 @@ class OnboardingModal extends StatelessWidget {
                       example: context.l10n.onboardingBalanceExample,
                     ),
                     _CapabilityItem(
-                      icon: AppIcons.form,
+                      icon: AppIcons.editNote,
                       title: context.l10n.onboardingFormTitle,
                       example: context.l10n.onboardingFormExample,
                     ),
