@@ -786,6 +786,13 @@ class _QuickStatsSummary extends StatelessWidget {
               suffix: streak == 1 ? 'giorno' : 'giorni',
               color: context.colors.onPrimaryContainer,
               trend: null,
+              onTap: () {
+                // TODO: Show Streak BottomSheet with contribution graph and history
+                HapticFeedback.lightImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('🔥 Streak details coming soon!')),
+                );
+              },
             ),
           ),
           const SizedBox(width: 6),
@@ -804,6 +811,13 @@ class _QuickStatsSummary extends StatelessWidget {
               trendColor: volumeProgression >= 0
                   ? context.colors.success
                   : context.colors.error,
+              onTap: () {
+                // TODO: Show Volume BottomSheet with trend chart and weekly average
+                HapticFeedback.lightImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('📊 Volume details coming soon!')),
+                );
+              },
             ),
           ),
           const SizedBox(width: 6),
@@ -817,6 +831,13 @@ class _QuickStatsSummary extends StatelessWidget {
               suffix: '/5 allenamenti',
               color: context.colors.onPrimaryContainer,
               trend: null,
+              onTap: () {
+                // TODO: Show Weekly Goal BottomSheet with calendar and goal setter
+                HapticFeedback.lightImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('📅 Weekly goal settings coming soon!')),
+                );
+              },
             ),
           ),
           const SizedBox(width: 6),
@@ -830,6 +851,13 @@ class _QuickStatsSummary extends StatelessWidget {
               suffix: recentPRs == 1 ? 'nuovo' : 'nuovi',
               color: context.colors.onPrimaryContainer,
               trend: null,
+              onTap: () {
+                // TODO: Show PR List BottomSheet with all recent PRs
+                HapticFeedback.lightImpact();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('🏆 PR list coming soon!')),
+                );
+              },
             ),
           ),
         ],
@@ -932,6 +960,7 @@ class _HybridStatItem extends StatelessWidget {
     required this.color,
     this.trend,
     this.trendColor,
+    this.onTap, // NEW: Tap callback for interactive stats
   });
 
   final IconData icon;
@@ -941,16 +970,22 @@ class _HybridStatItem extends StatelessWidget {
   final Color color;
   final String? trend; // 'up', 'down', or null
   final Color? trendColor;
+  final VoidCallback? onTap; // NEW: Optional tap callback
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: context.colors.surface.withValues(alpha: 0.3),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: context.colors.surface.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header: Icon + Label
@@ -1015,12 +1050,14 @@ class _HybridStatItem extends StatelessWidget {
           ),
         ],
       ),
+        ),
+      ),
     );
   }
 }
 
 /// Exercise history card - shows exercise name, PR, sessions count
-class _ExerciseHistoryCard extends ConsumerWidget {
+class _ExerciseHistoryCard extends ConsumerWidget{
   const _ExerciseHistoryCard({required this.history});
 
   final ExerciseHistory history;
