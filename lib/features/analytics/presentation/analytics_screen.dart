@@ -331,34 +331,29 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
             return Column(
               children: [
-        // Quick stats summary card (collapsible on scroll)
+        // Quick stats summary card + Search bar (slide up together on scroll)
         ValueListenableBuilder<double>(
           valueListenable: _scrollOffset,
           builder: (context, offset, child) {
-            // Calculate opacity: 1.0 at 0px, 0.0 at 100px+
-            final opacity = offset >= AppAnimations.scrollCollapseThreshold
-                ? 0.0
-                : 1.0 - (offset / AppAnimations.scrollCollapseThreshold);
+            // Calculate slide offset: 0 at 0px, -200 at 200px+ (slides up and out)
+            final slideOffset = offset >= 200.0
+                ? -200.0
+                : -offset;
 
-            return AnimatedOpacity(
-              opacity: opacity,
-              duration: AppAnimations.normal, // 300ms
-              curve: AppAnimations.decelerate, // easeOutCubic
-              child: AnimatedContainer(
-                height: opacity > 0 ? null : 0, // Collapse height
-                duration: AppAnimations.normal,
-                curve: AppAnimations.decelerate,
-                child: child,
-              ),
+            return Transform.translate(
+              offset: Offset(0, slideOffset),
+              child: child,
             );
           },
-          child: _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
-        ),
+          child: Column(
+            children: [
+              // Stats bar
+              _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
 
-        // Search bar
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: TextField(
+              // Search bar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
               hintText: context.l10n.searchExercises,
@@ -386,6 +381,9 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
               ),
             ),
             onChanged: _onSearchChanged,
+          ),
+              ),
+            ],
           ),
         ),
 
