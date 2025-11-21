@@ -216,12 +216,41 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   Timer? _debounce;
   SortBy _sortBy = SortBy.mostUsed; // Default: sort by most used
 
+  // Scroll-away behavior state
+  bool _showBars = true; // Show stats + search + chips
+  double _lastScrollOffset = 0.0;
+  static const double _scrollThreshold = 20.0; // Minimum scroll to trigger
+
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
       _searchQuery.value = query; // ValueNotifier update (no setState needed)
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  /// Handle scroll to show/hide bars
+  void _onScroll() {
+    final currentScroll = _scrollController.offset;
+    final scrollDelta = currentScroll - _lastScrollOffset;
+
+    // Only trigger if scrolled beyond threshold
+    if (scrollDelta.abs() > _scrollThreshold) {
+      final shouldShow = scrollDelta < 0; // Scroll up = show, down = hide
+
+      // Only update if state changed (avoid unnecessary rebuilds)
+      if (shouldShow != _showBars) {
+        safeSetState(() => _showBars = shouldShow);
+      }
+
+      _lastScrollOffset = currentScroll;
+    }
   }
 
   @override
@@ -338,18 +367,24 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
             return Column(
               children: [
-        // Stats bar (always visible, no scroll-away animation)
-        _QuickStatsSummary(exerciseHistories: widget.exerciseHistories),
+        // Stats bar (with scroll-away animation)
+        AnimatedSize(
+          duration: AppAnimations.fast,
+          curve: AppAnimations.decelerate,
+          child: _showBars
+              ? _QuickStatsSummary(exerciseHistories: widget.exerciseHistories)
+              : const SizedBox.shrink(),
+        ),
 
-        // Search bar (conditional with slide animation)
+        // Search bar (conditional with slide animation + scroll-away)
         Consumer(
           builder: (context, ref, child) {
             final isSearchVisible = ref.watch(searchBarVisibilityProvider);
 
             return AnimatedSize(
-              duration: AppAnimations.normal,
+              duration: AppAnimations.fast,
               curve: AppAnimations.decelerate,
-              child: isSearchVisible
+              child: (_showBars && isSearchVisible)
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                       child: TextField(
@@ -388,11 +423,17 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
           },
         ),
 
-        // Sort & Filter chips with live counters
-        _SortFilterChips(
-          sortBy: _sortBy,
-          filterCounts: _filterCounts,
-          onSortChanged: (newSort) => safeSetState(() => _sortBy = newSort),
+        // Sort & Filter chips with live counters (with scroll-away animation)
+        AnimatedSize(
+          duration: AppAnimations.fast,
+          curve: AppAnimations.decelerate,
+          child: _showBars
+              ? _SortFilterChips(
+                  sortBy: _sortBy,
+                  filterCounts: _filterCounts,
+                  onSortChanged: (newSort) => safeSetState(() => _sortBy = newSort),
+                )
+              : const SizedBox.shrink(),
         ),
 
         // Results list
@@ -755,7 +796,7 @@ class _QuickStatsSummary extends StatelessWidget {
     final recentPRs = _calculateRecentPRs();
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
