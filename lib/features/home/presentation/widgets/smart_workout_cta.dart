@@ -47,8 +47,9 @@ class SmartWorkoutCTA extends ConsumerWidget {
             context.l10n.smartWorkoutCTAErrorLoading,
           ),
           data: (routine) {
-            // Guard 1: Check if routine exists and has uncompleted workout
-            if (routine == null || !routine.hasUncompletedWorkout()) {
+            // ⚠️ v2.0 STUB: Day-level tracking not implemented in v2.0
+            // Guard 1: Check if routine exists
+            if (routine == null) {
               return _buildDisabledState(
                 context,
                 theme,
@@ -56,16 +57,17 @@ class SmartWorkoutCTA extends ConsumerWidget {
               );
             }
 
-            // Guard 2: Get next uncompleted workout
-            final nextWorkout = routine.getNextUncompletedWorkout();
-            if (nextWorkout == null || nextWorkout.templateId == null) {
-              return _buildDisabledState(
-                context,
-                theme,
-                context.l10n.smartWorkoutCTAIncompleteRoutine,
-              );
-            }
+            // v2.0: No day-level tracking - show disabled state
+            // TODO: Reimplement when v2.0 adds day-level tracking
+            return _buildDisabledState(
+              context,
+              theme,
+              'v2.0: Day tracking coming soon', // Temporary message
+            );
 
+            // ⚠️ v2.0 STUB: Dead code commented out (unreachable after return above)
+            // TODO v3.0: Restore when day-level tracking implemented
+            /*
             // ✅ Ready to show active CTA
             return _buildActiveState(
               context,
@@ -74,6 +76,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
               nextWorkout.templateId!,
               routine, // Pass routine for cleanup if template deleted
             );
+            */
           },
         );
       },
@@ -149,11 +152,12 @@ class SmartWorkoutCTA extends ConsumerWidget {
         // Find the template
         final template = templates.where((t) => t.id == templateId).firstOrNull;
         if (template == null) {
-          // Template deleted by user → auto-cleanup routine
-          ref.read(flexibleRoutineNotifierProvider.notifier).removeInvalidTemplateId(
-            routine: routine,
-            invalidTemplateId: templateId,
-          );
+          // ⚠️ v2.0 STUB: Auto-cleanup not implemented in v2.0 simplified schema
+          // TODO: Reimplement removeInvalidTemplateId when v2.0 adds routine management features
+          // ref.read(flexibleRoutineNotifierProvider.notifier).removeInvalidTemplateId(
+          //   routine: routine,
+          //   invalidTemplateId: templateId,
+          // );
 
           return _buildDisabledState(
             context,
@@ -423,16 +427,15 @@ class SmartWorkoutCTA extends ConsumerWidget {
 
     final routine = routineAsync.value;
 
+    // ⚠️ v2.0 STUB: Day-level tracking not implemented
     // Guard 2: Routine null check
-    if (routine == null || !routine.hasUncompletedWorkout()) {
+    if (routine == null) {
       return;
     }
 
-    // Guard 3: getNextUncompletedWorkout() null check
-    final nextWorkoutFresh = routine.getNextUncompletedWorkout();
-    if (nextWorkoutFresh == null || nextWorkoutFresh.templateId == null) {
-      return;
-    }
+    // v2.0: No day-level tracking - early return
+    // TODO: Reimplement when v2.0 adds day-level tracking
+    return;
 
     // Fetch template to get exercises
     final templatesAsync = ref.read(customWorkoutTemplatesProvider);

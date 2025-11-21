@@ -11533,5 +11533,116 @@
         "type": "int"
       }
     }
+  },
+  "prToday": "Oggi",
+  "@prToday": {
+    "description": "Etichetta per PR raggiunto oggi"
+  },
+  "prYesterday": "Ieri",
+  "@prYesterday": {
+    "description": "Etichetta per PR raggiunto ieri"
+  },
+  "prDaysAgo": "{days} giorni fa",
+  "@prDaysAgo": {
+    "description": "Etichetta per PR raggiunto X giorni fa",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "warning": "Attenzione",
+  "@warning": {
+    "description": "Etichetta semantica per icona avviso"
+  },
+  "resetAllPRsQuestion": "Resettare tutti i PR?",
+  "@resetAllPRsQuestion": {
+    "description": "Titolo dialog per conferma reset PR"
+  },
+  "resetAllPRsMessage": "Questo cancellerà permanentemente tutti i dati dei record personali. La cronologia allenamenti rimarrà, ma il tracciamento PR ripartirà da zero. \n\nQuesta azione non può essere annullata.",
+  "@resetAllPRsMessage": {
+    "description": "Messaggio dialog che spiega conseguenze reset PR"
+  },
+  "prResetComingSoon": "🔄 Funzionalità reset PR in arrivo presto!",
+  "@prResetComingSoon": {
+    "description": "Messaggio placeholder per funzionalità reset PR"
+  },
+  "resetAll": "Resetta Tutto",
+  "@resetAll": {
+    "description": "Testo pulsante per resettare tutti i PR"
+  },
+  "prDetails": "Dettagli PR",
+  "@prDetails": {
+    "description": "Titolo per modal dettagli PR"
+  },
+  "personalRecords": "Record Personali",
+  "@personalRecords": {
+    "description": "Etichetta semantica per icona record personali"
+  },
+  "recentPRsLastSevenDays": "PR Recenti (Ultimi 7 Giorni)",
+  "@recentPRsLastSevenDays": {
+    "description": "Titolo per sezione PR recenti"
+  },
+  "prAchievements": "{count} {count, plural, =1{traguardo} other{traguardi}}",
+  "@prAchievements": {
+    "description": "Formato per visualizzare conteggio traguardi PR",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "newBadge": "Nuovo!",
+  "@newBadge": {
+    "description": "Testo badge per nuovo PR"
+  },
+  "whatIsPR": "Cos'è un PR?",
+  "@whatIsPR": {
+    "description": "Titolo per sezione spiegazione PR"
+  },
+  "prExplanation": "PR (Record Personale) è la tua migliore performance per un esercizio, misurato con l'1RM stimato (massimale su una ripetizione). Tracciamo automaticamente i tuoi PR mentre ti alleni, così puoi vedere i tuoi progressi nel tempo.",
+  "@prExplanation": {
+    "description": "Spiegazione del significato di PR"
+  },
+  "noPRsYet": "Nessun PR Ancora",
+  "@noPRsYet": {
+    "description": "Titolo per stato vuoto quando non esistono PR"
+  },
+  "noPRsYetMessage": "Inizia a tracciare i tuoi allenamenti per vedere i tuoi record personali qui!",
+  "@noPRsYetMessage": {
+    "description": "Messaggio che spiega come ottenere PR"
+  },
+  "allPersonalRecords": "Tutti i Record Personali",
+  "@allPersonalRecords": {
+    "description": "Titolo per sezione tutti i PR"
+  },
+  "pr": "PR",
+  "@pr": {
+    "description": "Etichetta semantica per icona PR"
+  },
+  "newLabel": "NUOVO",
+  "@newLabel": {
+    "description": "Etichetta per badge nuovo PR"
+  },
+  "resetPRs": "Resetta PR",
+  "@resetPRs": {
+    "description": "Titolo per sezione reset PR"
+  },
+  "resetPRsMessage": "Vuoi ricominciare da capo? Puoi resettare tutti i record personali. Questo NON cancellerà la cronologia allenamenti.",
+  "@resetPRsMessage": {
+    "description": "Messaggio che spiega opzione reset PR"
+  },
+  "reset": "Resetta",
+  "@reset": {
+    "description": "Etichetta semantica per icona reset"
+  },
+  "resetAllPRsButton": "Resetta Tutti i PR ({count} record)",
+  "@resetAllPRsButton": {
+    "description": "Etichetta pulsante per resettare tutti i PR con conteggio",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -10,11 +10,23 @@ library;
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
 
+/// ⚠️ v2.0 STUB: Extension methods temporarily disabled
+///
 /// Extension methods for FlexibleRoutine to support notification service
 extension FlexibleRoutineExtensions on FlexibleRoutine {
+  /// ⚠️ v2.0 STUB: getWorkoutForDate disabled - schedule property not in v2.0
+  ///
   /// Get workout name for a specific date
   /// Returns null if no workout is scheduled for that date
+  ///
+  /// **v2.0 STATUS**: Always returns null - schedule property removed from v2.0 schema
+  /// **TODO v3.0**: Reimplement using workoutSchedule when day-level tracking added
   String? getWorkoutForDate(DateTime date) {
+    // v2.0: Return null - no schedule property
+    return null;
+
+    // v1.0 implementation commented out
+    /*
     // Format date as string key for schedule lookup
     final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
@@ -24,6 +36,7 @@ extension FlexibleRoutineExtensions on FlexibleRoutine {
     // Return template ID as workout name if scheduled, null if rest day
     // TODO: Fetch actual workout name from template repository
     return scheduledDay?.templateId;
+    */
   }
 }
 

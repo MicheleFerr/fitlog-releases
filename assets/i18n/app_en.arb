@@ -22067,5 +22067,116 @@
         "type": "int"
       }
     }
+  },
+  "prToday": "Today",
+  "@prToday": {
+    "description": "Label for PR achieved today"
+  },
+  "prYesterday": "Yesterday",
+  "@prYesterday": {
+    "description": "Label for PR achieved yesterday"
+  },
+  "prDaysAgo": "{days} days ago",
+  "@prDaysAgo": {
+    "description": "Label for PR achieved X days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "warning": "Warning",
+  "@warning": {
+    "description": "Semantic label for warning icon"
+  },
+  "resetAllPRsQuestion": "Reset All PRs?",
+  "@resetAllPRsQuestion": {
+    "description": "Dialog title asking to confirm PR reset"
+  },
+  "resetAllPRsMessage": "This will permanently delete all personal record data. Your workout history will remain, but PR tracking will start fresh. \n\nThis action cannot be undone.",
+  "@resetAllPRsMessage": {
+    "description": "Dialog message explaining PR reset consequences"
+  },
+  "prResetComingSoon": "🔄 PR reset functionality coming soon!",
+  "@prResetComingSoon": {
+    "description": "Placeholder message for PR reset feature"
+  },
+  "resetAll": "Reset All",
+  "@resetAll": {
+    "description": "Button text to reset all PRs"
+  },
+  "prDetails": "PR Details",
+  "@prDetails": {
+    "description": "Title for PR details modal"
+  },
+  "personalRecords": "Personal Records",
+  "@personalRecords": {
+    "description": "Semantic label for personal records icon"
+  },
+  "recentPRsLastSevenDays": "Recent PRs (Last 7 Days)",
+  "@recentPRsLastSevenDays": {
+    "description": "Title for recent PRs section"
+  },
+  "prAchievements": "{count} {count, plural, =1{achievement} other{achievements}}",
+  "@prAchievements": {
+    "description": "Format for displaying PR achievement count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "newBadge": "New!",
+  "@newBadge": {
+    "description": "Badge text for new PR"
+  },
+  "whatIsPR": "What is a PR?",
+  "@whatIsPR": {
+    "description": "Title for PR explanation section"
+  },
+  "prExplanation": "PR (Personal Record) is your best performance for an exercise, measured by estimated 1RM (one-rep max). We automatically track your PRs as you train, so you can see your progress over time.",
+  "@prExplanation": {
+    "description": "Explanation of what PR means"
+  },
+  "noPRsYet": "No PRs Yet",
+  "@noPRsYet": {
+    "description": "Title for empty state when no PRs exist"
+  },
+  "noPRsYetMessage": "Start tracking your workouts to see your personal records here!",
+  "@noPRsYetMessage": {
+    "description": "Message explaining how to get PRs"
+  },
+  "allPersonalRecords": "All Personal Records",
+  "@allPersonalRecords": {
+    "description": "Title for all PRs section"
+  },
+  "pr": "PR",
+  "@pr": {
+    "description": "Semantic label for PR icon"
+  },
+  "newLabel": "NEW",
+  "@newLabel": {
+    "description": "Label for new PR badge"
+  },
+  "resetPRs": "Reset PRs",
+  "@resetPRs": {
+    "description": "Title for reset PRs section"
+  },
+  "resetPRsMessage": "Need to start fresh? You can reset all personal records. This will NOT delete your workout history.",
+  "@resetPRsMessage": {
+    "description": "Message explaining PR reset option"
+  },
+  "reset": "Reset",
+  "@reset": {
+    "description": "Semantic label for reset icon"
+  },
+  "resetAllPRsButton": "Reset All PRs ({count} records)",
+  "@resetAllPRsButton": {
+    "description": "Button label for resetting all PRs with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

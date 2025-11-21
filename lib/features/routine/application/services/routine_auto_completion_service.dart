@@ -94,21 +94,37 @@ class RoutineAutoCompletionService {
   /// Notification service for routine completions
   final RoutineNotificationService _notificationService = RoutineNotificationService();
 
+  /// ⚠️ v2.0 STUB: Auto-completion disabled - day-level tracking not in v2.0
+  ///
   /// Try to auto-complete routine day when workout is completed
   ///
-  /// Returns:
-  /// - RoutineAutoCompletionResult with completion status
+  /// **v2.0 STATUS**: This entire service is stubbed out because:
+  /// - No ScheduledDay concept in v2.0 schema
+  /// - No completeDayWorkout() method in repository
+  /// - No day-level tracking (only completedDays: List<DateTime>)
+  /// - RoutineMatchingService returns no-op results
   ///
-  /// Behavior:
-  /// - If no active routine → skip silently (return skipped)
-  /// - If workout template doesn't match any scheduled day → skip silently
-  /// - If single match → auto-complete and show success toast
-  /// - If swap opportunity detected → show swap dialog
-  /// - If multiple matches → return candidates for UI selection
+  /// **TODO v3.0**: Reimplement when day-level tracking added
+  ///
+  /// Returns:
+  /// - RoutineAutoCompletionResult.skipped('v2.0: Day-level tracking not implemented')
   Future<RoutineAutoCompletionResult> tryAutoCompleteRoutineDay({
     required Workout completedWorkout,
     BuildContext? context,
   }) async {
+    if (kDebugMode) {
+      debugPrint(
+        '⚠️ [RoutineAutoCompletion] v2.0 STUB: Auto-completion disabled (day-level tracking not implemented)',
+      );
+    }
+
+    // v2.0: Return skipped immediately - no day-level tracking
+    return RoutineAutoCompletionResult.skipped(
+      'v2.0: Day-level tracking not implemented',
+    );
+
+    // v1.0 implementation commented out - restore when v2.0 adds day-level tracking
+    /*
     try {
       // 1. Get active routine (if exists)
       final activeRoutineAsync = _ref.read(activeFlexibleRoutineProvider);
@@ -369,11 +385,17 @@ class RoutineAutoCompletionService {
 
       return RoutineAutoCompletionResult.skipped('Error: $e');
     }
+    */
   }
 
+  /// ⚠️ v2.0 STUB: Manual completion disabled - day-level tracking not in v2.0
+  ///
   /// Manual completion with user-selected date
   ///
   /// Used when multiple candidate dates exist and user picks one.
+  ///
+  /// **v2.0 STATUS**: Stubbed out - no completeDayWorkout() method
+  /// **TODO v3.0**: Reimplement when day-level tracking added
   Future<void> completeRoutineDayManually({
     required String routineId,
     required DateTime selectedDate,
@@ -382,6 +404,17 @@ class RoutineAutoCompletionService {
     required String routineName,
     BuildContext? context,
   }) async {
+    if (kDebugMode) {
+      debugPrint(
+        '⚠️ [RoutineAutoCompletion] v2.0 STUB: Manual completion disabled (day-level tracking not implemented)',
+      );
+    }
+
+    // v2.0: No-op - no day-level tracking
+    return;
+
+    // v1.0 implementation commented out
+    /*
     try {
       await _repository.completeDayWorkout(
         routineId: routineId,
@@ -424,6 +457,7 @@ class RoutineAutoCompletionService {
 
       rethrow;
     }
+    */
   }
 
   /// Format date for UI display

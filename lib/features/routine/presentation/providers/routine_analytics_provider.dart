@@ -96,11 +96,16 @@ final routineAnalyticsProvider = FutureProvider.autoDispose.family<RoutineAnalyt
   },
 );
 
-/// Calculate overall adherence metrics for a routine
+/// ⚠️ v2.0 STUB: Calculate overall adherence metrics for a routine
+///
+/// **v2.0 STATUS**: Stubbed out - schedule and skipTracker removed from v2.0
+/// **TODO v3.0**: Reimplement using new v2.0 workout tracking data
 RoutineAdherenceMetrics _calculateAdherenceMetrics(FlexibleRoutine routine) {
-  final schedule = routine.schedule;
-  final skipTracker = routine.skipTracker;
+  // v2.0: Return empty metrics - no schedule/skipTracker data
+  return RoutineAdherenceMetrics.empty();
 
+  // ⚠️ v1.0 implementation commented out (incompatible with v2.0)
+  /*
   // Calculate total planned days (non-rest days in schedule)
   int totalPlannedDays = 0;
   int completedDays = 0;
@@ -170,16 +175,19 @@ RoutineAdherenceMetrics _calculateAdherenceMetrics(FlexibleRoutine routine) {
     recoveryRate: recoveryRate,
     avgDaysBetweenWorkouts: avgDaysBetweenWorkouts,
   );
+  */
 }
 
-/// Calculate schedule match data points
+/// ⚠️ v2.0 STUB: Calculate schedule match data points
+///
+/// **v2.0 STATUS**: Stubbed out - schedule and startDate removed from v2.0
+/// **TODO v3.0**: Reimplement using new v2.0 workout completion tracking
 List<ScheduleMatchData> _calculateScheduleMatchData(FlexibleRoutine routine) {
-  final schedule = routine.schedule;
-  final List<ScheduleMatchData> matchData = [];
+  // v2.0: Return empty list - no schedule data
+  return <ScheduleMatchData>[];
 
-  final now = DateTime.now();
-  final startDate = routine.startDate;
-
+  // ⚠️ v1.0 implementation commented out (incompatible with v2.0)
+  /*
   // Only analyze days up to today
   for (final entry in schedule.entries) {
     final dayKey = entry.key;
@@ -234,6 +242,7 @@ List<ScheduleMatchData> _calculateScheduleMatchData(FlexibleRoutine routine) {
   matchData.sort((a, b) => a.date.compareTo(b.date));
 
   return matchData;
+  */
 }
 
 /// Calculate weekly adherence summaries
@@ -496,8 +505,10 @@ List<RoutineInsight> _generateInsights(
   return insights;
 }
 
-/// Calculate current consecutive streak
+/// ⚠️ v2.0 STUB: Calculate current consecutive streak
 int _calculateCurrentStreak(FlexibleRoutine routine) {
+  return 0; // v2.0: Return 0 - no schedule data
+  /*
   final schedule = routine.schedule;
   final now = DateTime.now();
 
@@ -528,10 +539,13 @@ int _calculateCurrentStreak(FlexibleRoutine routine) {
   }
 
   return streak;
+  */
 }
 
-/// Calculate longest streak in routine history
+/// ⚠️ v2.0 STUB: Calculate longest streak in routine history
 int _calculateLongestStreak(FlexibleRoutine routine) {
+  return 0; // v2.0: Return 0 - no schedule data
+  /*
   final schedule = routine.schedule;
 
   // Get all non-rest days, sorted by date
@@ -563,10 +577,13 @@ int _calculateLongestStreak(FlexibleRoutine routine) {
   }
 
   return longestStreak;
+  */
 }
 
-/// Calculate average days between workouts
+/// ⚠️ v2.0 STUB: Calculate average days between workouts
 double _calculateAvgDaysBetweenWorkouts(FlexibleRoutine routine) {
+  return 0.0; // v2.0: Return 0 - no schedule data
+  /*
   final schedule = routine.schedule;
 
   // Get all completed workout dates
@@ -592,6 +609,7 @@ double _calculateAvgDaysBetweenWorkouts(FlexibleRoutine routine) {
   }
 
   return totalDays / (completedDates.length - 1);
+  */
 }
 
 /// Get Monday of the week containing the given date

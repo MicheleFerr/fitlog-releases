@@ -198,10 +198,16 @@ extension RoutinePatternExtensions on RoutinePattern {
     return null;
   }
 
-  /// Generate full schedule for a date range
-  List<ScheduledDay> generateSchedule(DateTime startDate, DateTime endDate) {
-    final schedule = <ScheduledDay>[];
+  /// ⚠️ v2.0 STUB: Generate full schedule for a date range
+  ///
+  /// **v2.0 STATUS**: Stubbed out - ScheduledDay removed from v2.0
+  /// **TODO v3.0**: Reimplement with new v2.0 schedule structure
+  List<dynamic> generateSchedule(DateTime startDate, DateTime endDate) {
+    // v2.0: Return empty list - ScheduledDay no longer exists
+    return <dynamic>[];
 
+    // ⚠️ v1.0 implementation commented out (incompatible with v2.0)
+    /*
     if (sequence.isEmpty) return schedule;
 
     DateTime current = startDate;
@@ -231,6 +237,7 @@ extension RoutinePatternExtensions on RoutinePattern {
     }
 
     return schedule;
+    */
   }
 
   /// Internal method to get template for day index

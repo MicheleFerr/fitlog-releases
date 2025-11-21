@@ -155,26 +155,18 @@ final activeFlexibleRoutinesProvider =
   final routinesAsync = ref.watch(userFlexibleRoutinesProvider);
 
   return routinesAsync.when(
-    data: (routines) => routines
-        .where((r) => !r.isArchived && !r.isCompleted)
-        .toList(),
+    data: (routines) => routines, // v2.0: No isArchived/isCompleted filtering
     loading: () => [],
     error: (_, __) => [],
   );
 });
 
 /// Provider for archived routines only
+/// ⚠️ **v2.0 STUB**: Always returns empty - archiving not implemented in v2.0
 final archivedFlexibleRoutinesProvider =
     Provider<List<FlexibleRoutine>>((ref) {
-  final routinesAsync = ref.watch(userFlexibleRoutinesProvider);
-
-  return routinesAsync.when(
-    data: (routines) => routines
-        .where((r) => r.isArchived)
-        .toList(),
-    loading: () => [],
-    error: (_, __) => [],
-  );
+  // v2.0 simplified schema doesn't support isArchived
+  return [];
 });
 
 /// Provider to check if user has any active routines

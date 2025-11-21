@@ -54,18 +54,24 @@ class ConversationContext {
 
   /// Get last user message
   AIMessage? get lastUserMessage {
-    return _history.reversed.firstWhere(
-      (msg) => msg.role == MessageRole.user,
-      orElse: () => AIMessage.user(content: ''),
-    );
+    try {
+      return _history.reversed.firstWhere(
+        (msg) => msg.role == MessageRole.user,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Get last assistant message
   AIMessage? get lastAssistantMessage {
-    return _history.reversed.firstWhere(
-      (msg) => msg.role == MessageRole.assistant,
-      orElse: () => AIMessage.assistant(content: ''),
-    );
+    try {
+      return _history.reversed.firstWhere(
+        (msg) => msg.role == MessageRole.assistant,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Enrich query with conversation context

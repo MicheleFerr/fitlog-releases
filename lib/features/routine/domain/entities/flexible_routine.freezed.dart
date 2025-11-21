@@ -14,644 +14,56 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ScheduledDay _$ScheduledDayFromJson(Map<String, dynamic> json) {
-  return _ScheduledDay.fromJson(json);
-}
-
-/// @nodoc
-mixin _$ScheduledDay {
-  DateTime get date => throw _privateConstructorUsedError;
-  DayStatus get status => throw _privateConstructorUsedError;
-
-  /// Template ID if workout day, null if rest
-  String? get templateId => throw _privateConstructorUsedError;
-
-  /// Workout ID if completed
-  String? get workoutId => throw _privateConstructorUsedError;
-
-  /// Skip reason if skipped
-  String? get skipReason => throw _privateConstructorUsedError;
-
-  /// Original date if this is a recovery day
-  DateTime? get originalDate => throw _privateConstructorUsedError;
-
-  /// Notes for this day
-  String? get notes => throw _privateConstructorUsedError;
-
-  /// ✅ NEW: Is this a recovery for missed workout?
-  bool get isRecovery => throw _privateConstructorUsedError;
-
-  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
-  DateTime? get originalMissedDate => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ScheduledDayCopyWith<ScheduledDay> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ScheduledDayCopyWith<$Res> {
-  factory $ScheduledDayCopyWith(
-          ScheduledDay value, $Res Function(ScheduledDay) then) =
-      _$ScheduledDayCopyWithImpl<$Res, ScheduledDay>;
-  @useResult
-  $Res call(
-      {DateTime date,
-      DayStatus status,
-      String? templateId,
-      String? workoutId,
-      String? skipReason,
-      DateTime? originalDate,
-      String? notes,
-      bool isRecovery,
-      DateTime? originalMissedDate});
-}
-
-/// @nodoc
-class _$ScheduledDayCopyWithImpl<$Res, $Val extends ScheduledDay>
-    implements $ScheduledDayCopyWith<$Res> {
-  _$ScheduledDayCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? date = null,
-    Object? status = null,
-    Object? templateId = freezed,
-    Object? workoutId = freezed,
-    Object? skipReason = freezed,
-    Object? originalDate = freezed,
-    Object? notes = freezed,
-    Object? isRecovery = null,
-    Object? originalMissedDate = freezed,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as DayStatus,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutId: freezed == workoutId
-          ? _value.workoutId
-          : workoutId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      skipReason: freezed == skipReason
-          ? _value.skipReason
-          : skipReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      originalDate: freezed == originalDate
-          ? _value.originalDate
-          : originalDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isRecovery: null == isRecovery
-          ? _value.isRecovery
-          : isRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      originalMissedDate: freezed == originalMissedDate
-          ? _value.originalMissedDate
-          : originalMissedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$ScheduledDayImplCopyWith<$Res>
-    implements $ScheduledDayCopyWith<$Res> {
-  factory _$$ScheduledDayImplCopyWith(
-          _$ScheduledDayImpl value, $Res Function(_$ScheduledDayImpl) then) =
-      __$$ScheduledDayImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {DateTime date,
-      DayStatus status,
-      String? templateId,
-      String? workoutId,
-      String? skipReason,
-      DateTime? originalDate,
-      String? notes,
-      bool isRecovery,
-      DateTime? originalMissedDate});
-}
-
-/// @nodoc
-class __$$ScheduledDayImplCopyWithImpl<$Res>
-    extends _$ScheduledDayCopyWithImpl<$Res, _$ScheduledDayImpl>
-    implements _$$ScheduledDayImplCopyWith<$Res> {
-  __$$ScheduledDayImplCopyWithImpl(
-      _$ScheduledDayImpl _value, $Res Function(_$ScheduledDayImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? date = null,
-    Object? status = null,
-    Object? templateId = freezed,
-    Object? workoutId = freezed,
-    Object? skipReason = freezed,
-    Object? originalDate = freezed,
-    Object? notes = freezed,
-    Object? isRecovery = null,
-    Object? originalMissedDate = freezed,
-  }) {
-    return _then(_$ScheduledDayImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as DayStatus,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutId: freezed == workoutId
-          ? _value.workoutId
-          : workoutId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      skipReason: freezed == skipReason
-          ? _value.skipReason
-          : skipReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      originalDate: freezed == originalDate
-          ? _value.originalDate
-          : originalDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isRecovery: null == isRecovery
-          ? _value.isRecovery
-          : isRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      originalMissedDate: freezed == originalMissedDate
-          ? _value.originalMissedDate
-          : originalMissedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$ScheduledDayImpl implements _ScheduledDay {
-  const _$ScheduledDayImpl(
-      {required this.date,
-      required this.status,
-      this.templateId,
-      this.workoutId,
-      this.skipReason,
-      this.originalDate,
-      this.notes,
-      this.isRecovery = false,
-      this.originalMissedDate});
-
-  factory _$ScheduledDayImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ScheduledDayImplFromJson(json);
-
-  @override
-  final DateTime date;
-  @override
-  final DayStatus status;
-
-  /// Template ID if workout day, null if rest
-  @override
-  final String? templateId;
-
-  /// Workout ID if completed
-  @override
-  final String? workoutId;
-
-  /// Skip reason if skipped
-  @override
-  final String? skipReason;
-
-  /// Original date if this is a recovery day
-  @override
-  final DateTime? originalDate;
-
-  /// Notes for this day
-  @override
-  final String? notes;
-
-  /// ✅ NEW: Is this a recovery for missed workout?
-  @override
-  @JsonKey()
-  final bool isRecovery;
-
-  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
-  @override
-  final DateTime? originalMissedDate;
-
-  @override
-  String toString() {
-    return 'ScheduledDay(date: $date, status: $status, templateId: $templateId, workoutId: $workoutId, skipReason: $skipReason, originalDate: $originalDate, notes: $notes, isRecovery: $isRecovery, originalMissedDate: $originalMissedDate)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ScheduledDayImpl &&
-            (identical(other.date, date) || other.date == date) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.templateId, templateId) ||
-                other.templateId == templateId) &&
-            (identical(other.workoutId, workoutId) ||
-                other.workoutId == workoutId) &&
-            (identical(other.skipReason, skipReason) ||
-                other.skipReason == skipReason) &&
-            (identical(other.originalDate, originalDate) ||
-                other.originalDate == originalDate) &&
-            (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.isRecovery, isRecovery) ||
-                other.isRecovery == isRecovery) &&
-            (identical(other.originalMissedDate, originalMissedDate) ||
-                other.originalMissedDate == originalMissedDate));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      date,
-      status,
-      templateId,
-      workoutId,
-      skipReason,
-      originalDate,
-      notes,
-      isRecovery,
-      originalMissedDate);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ScheduledDayImplCopyWith<_$ScheduledDayImpl> get copyWith =>
-      __$$ScheduledDayImplCopyWithImpl<_$ScheduledDayImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ScheduledDayImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _ScheduledDay implements ScheduledDay {
-  const factory _ScheduledDay(
-      {required final DateTime date,
-      required final DayStatus status,
-      final String? templateId,
-      final String? workoutId,
-      final String? skipReason,
-      final DateTime? originalDate,
-      final String? notes,
-      final bool isRecovery,
-      final DateTime? originalMissedDate}) = _$ScheduledDayImpl;
-
-  factory _ScheduledDay.fromJson(Map<String, dynamic> json) =
-      _$ScheduledDayImpl.fromJson;
-
-  @override
-  DateTime get date;
-  @override
-  DayStatus get status;
-  @override
-
-  /// Template ID if workout day, null if rest
-  String? get templateId;
-  @override
-
-  /// Workout ID if completed
-  String? get workoutId;
-  @override
-
-  /// Skip reason if skipped
-  String? get skipReason;
-  @override
-
-  /// Original date if this is a recovery day
-  DateTime? get originalDate;
-  @override
-
-  /// Notes for this day
-  String? get notes;
-  @override
-
-  /// ✅ NEW: Is this a recovery for missed workout?
-  bool get isRecovery;
-  @override
-
-  /// ✅ NEW: Date of the original missed workout (for recovery tracking)
-  DateTime? get originalMissedDate;
-  @override
-  @JsonKey(ignore: true)
-  _$$ScheduledDayImplCopyWith<_$ScheduledDayImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-RecoverySettings _$RecoverySettingsFromJson(Map<String, dynamic> json) {
-  return _RecoverySettings.fromJson(json);
-}
-
-/// @nodoc
-mixin _$RecoverySettings {
-  /// Allow automatic recovery suggestions
-  bool get suggestRecovery => throw _privateConstructorUsedError;
-
-  /// Allow recovery on rest days
-  bool get allowRecoveryOnRestDays => throw _privateConstructorUsedError;
-
-  /// Maximum days to suggest recovery for
-  int get maxRecoveryDays => throw _privateConstructorUsedError;
-
-  /// Notify user about skipped workouts
-  bool get notifyOnSkip => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $RecoverySettingsCopyWith<RecoverySettings> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RecoverySettingsCopyWith<$Res> {
-  factory $RecoverySettingsCopyWith(
-          RecoverySettings value, $Res Function(RecoverySettings) then) =
-      _$RecoverySettingsCopyWithImpl<$Res, RecoverySettings>;
-  @useResult
-  $Res call(
-      {bool suggestRecovery,
-      bool allowRecoveryOnRestDays,
-      int maxRecoveryDays,
-      bool notifyOnSkip});
-}
-
-/// @nodoc
-class _$RecoverySettingsCopyWithImpl<$Res, $Val extends RecoverySettings>
-    implements $RecoverySettingsCopyWith<$Res> {
-  _$RecoverySettingsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? suggestRecovery = null,
-    Object? allowRecoveryOnRestDays = null,
-    Object? maxRecoveryDays = null,
-    Object? notifyOnSkip = null,
-  }) {
-    return _then(_value.copyWith(
-      suggestRecovery: null == suggestRecovery
-          ? _value.suggestRecovery
-          : suggestRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      allowRecoveryOnRestDays: null == allowRecoveryOnRestDays
-          ? _value.allowRecoveryOnRestDays
-          : allowRecoveryOnRestDays // ignore: cast_nullable_to_non_nullable
-              as bool,
-      maxRecoveryDays: null == maxRecoveryDays
-          ? _value.maxRecoveryDays
-          : maxRecoveryDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      notifyOnSkip: null == notifyOnSkip
-          ? _value.notifyOnSkip
-          : notifyOnSkip // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$RecoverySettingsImplCopyWith<$Res>
-    implements $RecoverySettingsCopyWith<$Res> {
-  factory _$$RecoverySettingsImplCopyWith(_$RecoverySettingsImpl value,
-          $Res Function(_$RecoverySettingsImpl) then) =
-      __$$RecoverySettingsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {bool suggestRecovery,
-      bool allowRecoveryOnRestDays,
-      int maxRecoveryDays,
-      bool notifyOnSkip});
-}
-
-/// @nodoc
-class __$$RecoverySettingsImplCopyWithImpl<$Res>
-    extends _$RecoverySettingsCopyWithImpl<$Res, _$RecoverySettingsImpl>
-    implements _$$RecoverySettingsImplCopyWith<$Res> {
-  __$$RecoverySettingsImplCopyWithImpl(_$RecoverySettingsImpl _value,
-      $Res Function(_$RecoverySettingsImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? suggestRecovery = null,
-    Object? allowRecoveryOnRestDays = null,
-    Object? maxRecoveryDays = null,
-    Object? notifyOnSkip = null,
-  }) {
-    return _then(_$RecoverySettingsImpl(
-      suggestRecovery: null == suggestRecovery
-          ? _value.suggestRecovery
-          : suggestRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      allowRecoveryOnRestDays: null == allowRecoveryOnRestDays
-          ? _value.allowRecoveryOnRestDays
-          : allowRecoveryOnRestDays // ignore: cast_nullable_to_non_nullable
-              as bool,
-      maxRecoveryDays: null == maxRecoveryDays
-          ? _value.maxRecoveryDays
-          : maxRecoveryDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      notifyOnSkip: null == notifyOnSkip
-          ? _value.notifyOnSkip
-          : notifyOnSkip // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$RecoverySettingsImpl implements _RecoverySettings {
-  const _$RecoverySettingsImpl(
-      {this.suggestRecovery = true,
-      this.allowRecoveryOnRestDays = true,
-      this.maxRecoveryDays = 7,
-      this.notifyOnSkip = true});
-
-  factory _$RecoverySettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RecoverySettingsImplFromJson(json);
-
-  /// Allow automatic recovery suggestions
-  @override
-  @JsonKey()
-  final bool suggestRecovery;
-
-  /// Allow recovery on rest days
-  @override
-  @JsonKey()
-  final bool allowRecoveryOnRestDays;
-
-  /// Maximum days to suggest recovery for
-  @override
-  @JsonKey()
-  final int maxRecoveryDays;
-
-  /// Notify user about skipped workouts
-  @override
-  @JsonKey()
-  final bool notifyOnSkip;
-
-  @override
-  String toString() {
-    return 'RecoverySettings(suggestRecovery: $suggestRecovery, allowRecoveryOnRestDays: $allowRecoveryOnRestDays, maxRecoveryDays: $maxRecoveryDays, notifyOnSkip: $notifyOnSkip)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$RecoverySettingsImpl &&
-            (identical(other.suggestRecovery, suggestRecovery) ||
-                other.suggestRecovery == suggestRecovery) &&
-            (identical(
-                    other.allowRecoveryOnRestDays, allowRecoveryOnRestDays) ||
-                other.allowRecoveryOnRestDays == allowRecoveryOnRestDays) &&
-            (identical(other.maxRecoveryDays, maxRecoveryDays) ||
-                other.maxRecoveryDays == maxRecoveryDays) &&
-            (identical(other.notifyOnSkip, notifyOnSkip) ||
-                other.notifyOnSkip == notifyOnSkip));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, suggestRecovery,
-      allowRecoveryOnRestDays, maxRecoveryDays, notifyOnSkip);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$RecoverySettingsImplCopyWith<_$RecoverySettingsImpl> get copyWith =>
-      __$$RecoverySettingsImplCopyWithImpl<_$RecoverySettingsImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RecoverySettingsImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _RecoverySettings implements RecoverySettings {
-  const factory _RecoverySettings(
-      {final bool suggestRecovery,
-      final bool allowRecoveryOnRestDays,
-      final int maxRecoveryDays,
-      final bool notifyOnSkip}) = _$RecoverySettingsImpl;
-
-  factory _RecoverySettings.fromJson(Map<String, dynamic> json) =
-      _$RecoverySettingsImpl.fromJson;
-
-  @override
-
-  /// Allow automatic recovery suggestions
-  bool get suggestRecovery;
-  @override
-
-  /// Allow recovery on rest days
-  bool get allowRecoveryOnRestDays;
-  @override
-
-  /// Maximum days to suggest recovery for
-  int get maxRecoveryDays;
-  @override
-
-  /// Notify user about skipped workouts
-  bool get notifyOnSkip;
-  @override
-  @JsonKey(ignore: true)
-  _$$RecoverySettingsImplCopyWith<_$RecoverySettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
 FlexibleRoutine _$FlexibleRoutineFromJson(Map<String, dynamic> json) {
   return _FlexibleRoutine.fromJson(json);
 }
 
 /// @nodoc
 mixin _$FlexibleRoutine {
-// === CORE IDENTIFIER ===
+  /// Unique routine identifier (Firestore document ID)
   String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError; // === BASIC INFO ===
-  String get name => throw _privateConstructorUsedError;
-  String get description =>
-      throw _privateConstructorUsedError; // === ROUTINE PERIOD ===
-  RoutineType get type => throw _privateConstructorUsedError;
-  DateTime get startDate => throw _privateConstructorUsedError;
-  DateTime get endDate =>
-      throw _privateConstructorUsedError; // === PATTERN & SCHEDULING ===
-  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-  RoutinePattern get pattern => throw _privateConstructorUsedError;
 
-  /// Map of date → scheduled day details
-  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-  Map<String, ScheduledDay> get schedule =>
-      throw _privateConstructorUsedError; // String key for JSON serialization
-// === SKIP & RECOVERY TRACKING ===
-  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-  SkipTracker get skipTracker => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-  RecoverySettings get recoverySettings =>
-      throw _privateConstructorUsedError; // === ROUTINE STATE ===
-  bool get isActive =>
-      throw _privateConstructorUsedError; // Is this the current active routine
-  bool get isArchived =>
-      throw _privateConstructorUsedError; // Archived routines
-  bool get isCompleted =>
-      throw _privateConstructorUsedError; // Routine period ended
-// === METADATA ===
+  /// User who owns this routine (for multi-user support)
+  String get userId => throw _privateConstructorUsedError;
+
+  /// Routine name (user-defined, e.g., "My PPL Routine")
+  String get name => throw _privateConstructorUsedError;
+
+  /// Optional description/notes
+  String get description => throw _privateConstructorUsedError;
+
+  /// Preset type (ppl6Day, upperLower4Day, etc.)
+  /// Determines default training days and template suggestions
+  RoutinePreset get presetType => throw _privateConstructorUsedError;
+
+  /// Training days as Set of weekday integers
+  /// Monday = 1, Sunday = 7
+  /// Example: {1, 2, 3, 4, 5, 6} for 6-day routine
+  Set<int> get trainingDays => throw _privateConstructorUsedError;
+
+  /// Workout schedule mapping day → template ID
+  /// Key: weekday (1-7), Value: template ID (Firestore ref)
+  /// Example: {1: "template_123", 2: "template_456", ...}
+  Map<int, String> get workoutSchedule => throw _privateConstructorUsedError;
+
+  /// Whether this routine is currently active
+  /// Only one routine can be active per user at a time
+  bool get isActive => throw _privateConstructorUsedError;
+
+  /// Completed workout days (ISO 8601 date strings)
+  /// Example: {"2025-01-20", "2025-01-22", ...}
+  /// Used for streak tracking and analytics
+  Set<String> get completedDays => throw _privateConstructorUsedError;
+
+  /// Total number of workouts completed in this routine
+  /// Incremented each time a workout is marked complete
+  int get totalWorkouts => throw _privateConstructorUsedError;
+
+  /// Routine creation timestamp
   DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime? get updatedAt =>
-      throw _privateConstructorUsedError; // === STATISTICS ===
-  int get totalWorkoutDays =>
-      throw _privateConstructorUsedError; // Total scheduled workouts in period
-  int get completedDays => throw _privateConstructorUsedError; // Days completed
-  DateTime? get lastWorkoutDate =>
-      throw _privateConstructorUsedError; // Last time user completed a workout
-// === SYNC FLAGS ===
-  bool get isSyncPending => throw _privateConstructorUsedError;
+
+  /// Last update timestamp (modified whenever routine changes)
+  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -670,31 +82,14 @@ abstract class $FlexibleRoutineCopyWith<$Res> {
       String userId,
       String name,
       String description,
-      RoutineType type,
-      DateTime startDate,
-      DateTime endDate,
-      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-      RoutinePattern pattern,
-      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-      Map<String, ScheduledDay> schedule,
-      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-      SkipTracker skipTracker,
-      @JsonKey(
-          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-      RecoverySettings recoverySettings,
+      RoutinePreset presetType,
+      Set<int> trainingDays,
+      Map<int, String> workoutSchedule,
       bool isActive,
-      bool isArchived,
-      bool isCompleted,
+      Set<String> completedDays,
+      int totalWorkouts,
       DateTime createdAt,
-      DateTime? updatedAt,
-      int totalWorkoutDays,
-      int completedDays,
-      DateTime? lastWorkoutDate,
-      bool isSyncPending});
-
-  $RoutinePatternCopyWith<$Res> get pattern;
-  $SkipTrackerCopyWith<$Res> get skipTracker;
-  $RecoverySettingsCopyWith<$Res> get recoverySettings;
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -714,22 +109,14 @@ class _$FlexibleRoutineCopyWithImpl<$Res, $Val extends FlexibleRoutine>
     Object? userId = null,
     Object? name = null,
     Object? description = null,
-    Object? type = null,
-    Object? startDate = null,
-    Object? endDate = null,
-    Object? pattern = null,
-    Object? schedule = null,
-    Object? skipTracker = null,
-    Object? recoverySettings = null,
+    Object? presetType = null,
+    Object? trainingDays = null,
+    Object? workoutSchedule = null,
     Object? isActive = null,
-    Object? isArchived = null,
-    Object? isCompleted = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? totalWorkoutDays = null,
     Object? completedDays = null,
-    Object? lastWorkoutDate = freezed,
-    Object? isSyncPending = null,
+    Object? totalWorkouts = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -748,95 +135,39 @@ class _$FlexibleRoutineCopyWithImpl<$Res, $Val extends FlexibleRoutine>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as RoutineType,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      pattern: null == pattern
-          ? _value.pattern
-          : pattern // ignore: cast_nullable_to_non_nullable
-              as RoutinePattern,
-      schedule: null == schedule
-          ? _value.schedule
-          : schedule // ignore: cast_nullable_to_non_nullable
-              as Map<String, ScheduledDay>,
-      skipTracker: null == skipTracker
-          ? _value.skipTracker
-          : skipTracker // ignore: cast_nullable_to_non_nullable
-              as SkipTracker,
-      recoverySettings: null == recoverySettings
-          ? _value.recoverySettings
-          : recoverySettings // ignore: cast_nullable_to_non_nullable
-              as RecoverySettings,
+      presetType: null == presetType
+          ? _value.presetType
+          : presetType // ignore: cast_nullable_to_non_nullable
+              as RoutinePreset,
+      trainingDays: null == trainingDays
+          ? _value.trainingDays
+          : trainingDays // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
+      workoutSchedule: null == workoutSchedule
+          ? _value.workoutSchedule
+          : workoutSchedule // ignore: cast_nullable_to_non_nullable
+              as Map<int, String>,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      isArchived: null == isArchived
-          ? _value.isArchived
-          : isArchived // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isCompleted: null == isCompleted
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
+      completedDays: null == completedDays
+          ? _value.completedDays
+          : completedDays // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      totalWorkouts: null == totalWorkouts
+          ? _value.totalWorkouts
+          : totalWorkouts // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      updatedAt: freezed == updatedAt
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      totalWorkoutDays: null == totalWorkoutDays
-          ? _value.totalWorkoutDays
-          : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      completedDays: null == completedDays
-          ? _value.completedDays
-          : completedDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isSyncPending: null == isSyncPending
-          ? _value.isSyncPending
-          : isSyncPending // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as DateTime,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RoutinePatternCopyWith<$Res> get pattern {
-    return $RoutinePatternCopyWith<$Res>(_value.pattern, (value) {
-      return _then(_value.copyWith(pattern: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $SkipTrackerCopyWith<$Res> get skipTracker {
-    return $SkipTrackerCopyWith<$Res>(_value.skipTracker, (value) {
-      return _then(_value.copyWith(skipTracker: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RecoverySettingsCopyWith<$Res> get recoverySettings {
-    return $RecoverySettingsCopyWith<$Res>(_value.recoverySettings, (value) {
-      return _then(_value.copyWith(recoverySettings: value) as $Val);
-    });
   }
 }
 
@@ -853,34 +184,14 @@ abstract class _$$FlexibleRoutineImplCopyWith<$Res>
       String userId,
       String name,
       String description,
-      RoutineType type,
-      DateTime startDate,
-      DateTime endDate,
-      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-      RoutinePattern pattern,
-      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-      Map<String, ScheduledDay> schedule,
-      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-      SkipTracker skipTracker,
-      @JsonKey(
-          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-      RecoverySettings recoverySettings,
+      RoutinePreset presetType,
+      Set<int> trainingDays,
+      Map<int, String> workoutSchedule,
       bool isActive,
-      bool isArchived,
-      bool isCompleted,
+      Set<String> completedDays,
+      int totalWorkouts,
       DateTime createdAt,
-      DateTime? updatedAt,
-      int totalWorkoutDays,
-      int completedDays,
-      DateTime? lastWorkoutDate,
-      bool isSyncPending});
-
-  @override
-  $RoutinePatternCopyWith<$Res> get pattern;
-  @override
-  $SkipTrackerCopyWith<$Res> get skipTracker;
-  @override
-  $RecoverySettingsCopyWith<$Res> get recoverySettings;
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -898,22 +209,14 @@ class __$$FlexibleRoutineImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? name = null,
     Object? description = null,
-    Object? type = null,
-    Object? startDate = null,
-    Object? endDate = null,
-    Object? pattern = null,
-    Object? schedule = null,
-    Object? skipTracker = null,
-    Object? recoverySettings = null,
+    Object? presetType = null,
+    Object? trainingDays = null,
+    Object? workoutSchedule = null,
     Object? isActive = null,
-    Object? isArchived = null,
-    Object? isCompleted = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? totalWorkoutDays = null,
     Object? completedDays = null,
-    Object? lastWorkoutDate = freezed,
-    Object? isSyncPending = null,
+    Object? totalWorkouts = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_$FlexibleRoutineImpl(
       id: null == id
@@ -932,70 +235,38 @@ class __$$FlexibleRoutineImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as RoutineType,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      pattern: null == pattern
-          ? _value.pattern
-          : pattern // ignore: cast_nullable_to_non_nullable
-              as RoutinePattern,
-      schedule: null == schedule
-          ? _value._schedule
-          : schedule // ignore: cast_nullable_to_non_nullable
-              as Map<String, ScheduledDay>,
-      skipTracker: null == skipTracker
-          ? _value.skipTracker
-          : skipTracker // ignore: cast_nullable_to_non_nullable
-              as SkipTracker,
-      recoverySettings: null == recoverySettings
-          ? _value.recoverySettings
-          : recoverySettings // ignore: cast_nullable_to_non_nullable
-              as RecoverySettings,
+      presetType: null == presetType
+          ? _value.presetType
+          : presetType // ignore: cast_nullable_to_non_nullable
+              as RoutinePreset,
+      trainingDays: null == trainingDays
+          ? _value._trainingDays
+          : trainingDays // ignore: cast_nullable_to_non_nullable
+              as Set<int>,
+      workoutSchedule: null == workoutSchedule
+          ? _value._workoutSchedule
+          : workoutSchedule // ignore: cast_nullable_to_non_nullable
+              as Map<int, String>,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      isArchived: null == isArchived
-          ? _value.isArchived
-          : isArchived // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isCompleted: null == isCompleted
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
+      completedDays: null == completedDays
+          ? _value._completedDays
+          : completedDays // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      totalWorkouts: null == totalWorkouts
+          ? _value.totalWorkouts
+          : totalWorkouts // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      updatedAt: freezed == updatedAt
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      totalWorkoutDays: null == totalWorkoutDays
-          ? _value.totalWorkoutDays
-          : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      completedDays: null == completedDays
-          ? _value.completedDays
-          : completedDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isSyncPending: null == isSyncPending
-          ? _value.isSyncPending
-          : isSyncPending // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as DateTime,
     ));
   }
 }
@@ -1006,116 +277,114 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
   const _$FlexibleRoutineImpl(
       {required this.id,
       required this.userId,
-      this.name = 'My Routine',
+      required this.name,
       this.description = '',
-      required this.type,
-      required this.startDate,
-      required this.endDate,
-      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-      required this.pattern,
-      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-      required final Map<String, ScheduledDay> schedule,
-      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-      required this.skipTracker,
-      @JsonKey(
-          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-      required this.recoverySettings,
+      required this.presetType,
+      required final Set<int> trainingDays,
+      required final Map<int, String> workoutSchedule,
       this.isActive = true,
-      this.isArchived = false,
-      this.isCompleted = false,
+      final Set<String> completedDays = const {},
+      this.totalWorkouts = 0,
       required this.createdAt,
-      this.updatedAt,
-      this.totalWorkoutDays = 0,
-      this.completedDays = 0,
-      this.lastWorkoutDate,
-      this.isSyncPending = false})
-      : _schedule = schedule;
+      required this.updatedAt})
+      : _trainingDays = trainingDays,
+        _workoutSchedule = workoutSchedule,
+        _completedDays = completedDays;
 
   factory _$FlexibleRoutineImpl.fromJson(Map<String, dynamic> json) =>
       _$$FlexibleRoutineImplFromJson(json);
 
-// === CORE IDENTIFIER ===
+  /// Unique routine identifier (Firestore document ID)
   @override
   final String id;
+
+  /// User who owns this routine (for multi-user support)
   @override
   final String userId;
-// === BASIC INFO ===
+
+  /// Routine name (user-defined, e.g., "My PPL Routine")
   @override
-  @JsonKey()
   final String name;
+
+  /// Optional description/notes
   @override
   @JsonKey()
   final String description;
-// === ROUTINE PERIOD ===
-  @override
-  final RoutineType type;
-  @override
-  final DateTime startDate;
-  @override
-  final DateTime endDate;
-// === PATTERN & SCHEDULING ===
-  @override
-  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-  final RoutinePattern pattern;
 
-  /// Map of date → scheduled day details
-  final Map<String, ScheduledDay> _schedule;
-
-  /// Map of date → scheduled day details
+  /// Preset type (ppl6Day, upperLower4Day, etc.)
+  /// Determines default training days and template suggestions
   @override
-  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-  Map<String, ScheduledDay> get schedule {
-    if (_schedule is EqualUnmodifiableMapView) return _schedule;
+  final RoutinePreset presetType;
+
+  /// Training days as Set of weekday integers
+  /// Monday = 1, Sunday = 7
+  /// Example: {1, 2, 3, 4, 5, 6} for 6-day routine
+  final Set<int> _trainingDays;
+
+  /// Training days as Set of weekday integers
+  /// Monday = 1, Sunday = 7
+  /// Example: {1, 2, 3, 4, 5, 6} for 6-day routine
+  @override
+  Set<int> get trainingDays {
+    if (_trainingDays is EqualUnmodifiableSetView) return _trainingDays;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_schedule);
+    return EqualUnmodifiableSetView(_trainingDays);
   }
 
-// String key for JSON serialization
-// === SKIP & RECOVERY TRACKING ===
+  /// Workout schedule mapping day → template ID
+  /// Key: weekday (1-7), Value: template ID (Firestore ref)
+  /// Example: {1: "template_123", 2: "template_456", ...}
+  final Map<int, String> _workoutSchedule;
+
+  /// Workout schedule mapping day → template ID
+  /// Key: weekday (1-7), Value: template ID (Firestore ref)
+  /// Example: {1: "template_123", 2: "template_456", ...}
   @override
-  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-  final SkipTracker skipTracker;
-  @override
-  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-  final RecoverySettings recoverySettings;
-// === ROUTINE STATE ===
+  Map<int, String> get workoutSchedule {
+    if (_workoutSchedule is EqualUnmodifiableMapView) return _workoutSchedule;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_workoutSchedule);
+  }
+
+  /// Whether this routine is currently active
+  /// Only one routine can be active per user at a time
   @override
   @JsonKey()
   final bool isActive;
-// Is this the current active routine
+
+  /// Completed workout days (ISO 8601 date strings)
+  /// Example: {"2025-01-20", "2025-01-22", ...}
+  /// Used for streak tracking and analytics
+  final Set<String> _completedDays;
+
+  /// Completed workout days (ISO 8601 date strings)
+  /// Example: {"2025-01-20", "2025-01-22", ...}
+  /// Used for streak tracking and analytics
   @override
   @JsonKey()
-  final bool isArchived;
-// Archived routines
+  Set<String> get completedDays {
+    if (_completedDays is EqualUnmodifiableSetView) return _completedDays;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_completedDays);
+  }
+
+  /// Total number of workouts completed in this routine
+  /// Incremented each time a workout is marked complete
   @override
   @JsonKey()
-  final bool isCompleted;
-// Routine period ended
-// === METADATA ===
+  final int totalWorkouts;
+
+  /// Routine creation timestamp
   @override
   final DateTime createdAt;
+
+  /// Last update timestamp (modified whenever routine changes)
   @override
-  final DateTime? updatedAt;
-// === STATISTICS ===
-  @override
-  @JsonKey()
-  final int totalWorkoutDays;
-// Total scheduled workouts in period
-  @override
-  @JsonKey()
-  final int completedDays;
-// Days completed
-  @override
-  final DateTime? lastWorkoutDate;
-// Last time user completed a workout
-// === SYNC FLAGS ===
-  @override
-  @JsonKey()
-  final bool isSyncPending;
+  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'FlexibleRoutine(id: $id, userId: $userId, name: $name, description: $description, type: $type, startDate: $startDate, endDate: $endDate, pattern: $pattern, schedule: $schedule, skipTracker: $skipTracker, recoverySettings: $recoverySettings, isActive: $isActive, isArchived: $isArchived, isCompleted: $isCompleted, createdAt: $createdAt, updatedAt: $updatedAt, totalWorkoutDays: $totalWorkoutDays, completedDays: $completedDays, lastWorkoutDate: $lastWorkoutDate, isSyncPending: $isSyncPending)';
+    return 'FlexibleRoutine(id: $id, userId: $userId, name: $name, description: $description, presetType: $presetType, trainingDays: $trainingDays, workoutSchedule: $workoutSchedule, isActive: $isActive, completedDays: $completedDays, totalWorkouts: $totalWorkouts, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -1128,61 +397,40 @@ class _$FlexibleRoutineImpl implements _FlexibleRoutine {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.pattern, pattern) || other.pattern == pattern) &&
-            const DeepCollectionEquality().equals(other._schedule, _schedule) &&
-            (identical(other.skipTracker, skipTracker) ||
-                other.skipTracker == skipTracker) &&
-            (identical(other.recoverySettings, recoverySettings) ||
-                other.recoverySettings == recoverySettings) &&
+            (identical(other.presetType, presetType) ||
+                other.presetType == presetType) &&
+            const DeepCollectionEquality()
+                .equals(other._trainingDays, _trainingDays) &&
+            const DeepCollectionEquality()
+                .equals(other._workoutSchedule, _workoutSchedule) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
-            (identical(other.isArchived, isArchived) ||
-                other.isArchived == isArchived) &&
-            (identical(other.isCompleted, isCompleted) ||
-                other.isCompleted == isCompleted) &&
+            const DeepCollectionEquality()
+                .equals(other._completedDays, _completedDays) &&
+            (identical(other.totalWorkouts, totalWorkouts) ||
+                other.totalWorkouts == totalWorkouts) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.totalWorkoutDays, totalWorkoutDays) ||
-                other.totalWorkoutDays == totalWorkoutDays) &&
-            (identical(other.completedDays, completedDays) ||
-                other.completedDays == completedDays) &&
-            (identical(other.lastWorkoutDate, lastWorkoutDate) ||
-                other.lastWorkoutDate == lastWorkoutDate) &&
-            (identical(other.isSyncPending, isSyncPending) ||
-                other.isSyncPending == isSyncPending));
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        userId,
-        name,
-        description,
-        type,
-        startDate,
-        endDate,
-        pattern,
-        const DeepCollectionEquality().hash(_schedule),
-        skipTracker,
-        recoverySettings,
-        isActive,
-        isArchived,
-        isCompleted,
-        createdAt,
-        updatedAt,
-        totalWorkoutDays,
-        completedDays,
-        lastWorkoutDate,
-        isSyncPending
-      ]);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      userId,
+      name,
+      description,
+      presetType,
+      const DeepCollectionEquality().hash(_trainingDays),
+      const DeepCollectionEquality().hash(_workoutSchedule),
+      isActive,
+      const DeepCollectionEquality().hash(_completedDays),
+      totalWorkouts,
+      createdAt,
+      updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -1203,82 +451,77 @@ abstract class _FlexibleRoutine implements FlexibleRoutine {
   const factory _FlexibleRoutine(
       {required final String id,
       required final String userId,
-      final String name,
+      required final String name,
       final String description,
-      required final RoutineType type,
-      required final DateTime startDate,
-      required final DateTime endDate,
-      @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-      required final RoutinePattern pattern,
-      @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-      required final Map<String, ScheduledDay> schedule,
-      @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-      required final SkipTracker skipTracker,
-      @JsonKey(
-          fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-      required final RecoverySettings recoverySettings,
+      required final RoutinePreset presetType,
+      required final Set<int> trainingDays,
+      required final Map<int, String> workoutSchedule,
       final bool isActive,
-      final bool isArchived,
-      final bool isCompleted,
+      final Set<String> completedDays,
+      final int totalWorkouts,
       required final DateTime createdAt,
-      final DateTime? updatedAt,
-      final int totalWorkoutDays,
-      final int completedDays,
-      final DateTime? lastWorkoutDate,
-      final bool isSyncPending}) = _$FlexibleRoutineImpl;
+      required final DateTime updatedAt}) = _$FlexibleRoutineImpl;
 
   factory _FlexibleRoutine.fromJson(Map<String, dynamic> json) =
       _$FlexibleRoutineImpl.fromJson;
 
-  @override // === CORE IDENTIFIER ===
-  String get id;
-  @override
-  String get userId;
-  @override // === BASIC INFO ===
-  String get name;
-  @override
-  String get description;
-  @override // === ROUTINE PERIOD ===
-  RoutineType get type;
-  @override
-  DateTime get startDate;
-  @override
-  DateTime get endDate;
-  @override // === PATTERN & SCHEDULING ===
-  @JsonKey(fromJson: _patternFromJson, toJson: _patternToJson)
-  RoutinePattern get pattern;
   @override
 
-  /// Map of date → scheduled day details
-  @JsonKey(fromJson: _scheduleFromJson, toJson: _scheduleToJson)
-  Map<String, ScheduledDay> get schedule;
-  @override // String key for JSON serialization
-// === SKIP & RECOVERY TRACKING ===
-  @JsonKey(fromJson: _skipTrackerFromJson, toJson: _skipTrackerToJson)
-  SkipTracker get skipTracker;
+  /// Unique routine identifier (Firestore document ID)
+  String get id;
   @override
-  @JsonKey(fromJson: _recoverySettingsFromJson, toJson: _recoverySettingsToJson)
-  RecoverySettings get recoverySettings;
-  @override // === ROUTINE STATE ===
+
+  /// User who owns this routine (for multi-user support)
+  String get userId;
+  @override
+
+  /// Routine name (user-defined, e.g., "My PPL Routine")
+  String get name;
+  @override
+
+  /// Optional description/notes
+  String get description;
+  @override
+
+  /// Preset type (ppl6Day, upperLower4Day, etc.)
+  /// Determines default training days and template suggestions
+  RoutinePreset get presetType;
+  @override
+
+  /// Training days as Set of weekday integers
+  /// Monday = 1, Sunday = 7
+  /// Example: {1, 2, 3, 4, 5, 6} for 6-day routine
+  Set<int> get trainingDays;
+  @override
+
+  /// Workout schedule mapping day → template ID
+  /// Key: weekday (1-7), Value: template ID (Firestore ref)
+  /// Example: {1: "template_123", 2: "template_456", ...}
+  Map<int, String> get workoutSchedule;
+  @override
+
+  /// Whether this routine is currently active
+  /// Only one routine can be active per user at a time
   bool get isActive;
-  @override // Is this the current active routine
-  bool get isArchived;
-  @override // Archived routines
-  bool get isCompleted;
-  @override // Routine period ended
-// === METADATA ===
+  @override
+
+  /// Completed workout days (ISO 8601 date strings)
+  /// Example: {"2025-01-20", "2025-01-22", ...}
+  /// Used for streak tracking and analytics
+  Set<String> get completedDays;
+  @override
+
+  /// Total number of workouts completed in this routine
+  /// Incremented each time a workout is marked complete
+  int get totalWorkouts;
+  @override
+
+  /// Routine creation timestamp
   DateTime get createdAt;
   @override
-  DateTime? get updatedAt;
-  @override // === STATISTICS ===
-  int get totalWorkoutDays;
-  @override // Total scheduled workouts in period
-  int get completedDays;
-  @override // Days completed
-  DateTime? get lastWorkoutDate;
-  @override // Last time user completed a workout
-// === SYNC FLAGS ===
-  bool get isSyncPending;
+
+  /// Last update timestamp (modified whenever routine changes)
+  DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$FlexibleRoutineImplCopyWith<_$FlexibleRoutineImpl> get copyWith =>

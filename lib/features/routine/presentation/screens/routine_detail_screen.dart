@@ -3,647 +3,430 @@
 /// 📁 Layer: features/routine/presentation/screens
 /// 🎯 Feature: flexible_routine
 /// 🔧 Type: screen
-/// 🌍 Localization: ✅ YES (context.l10n)
-/// 🎨 Theme: ✅ YES (context.colors)
+/// 🌍 Localization: Required (context.l10n)
 /// 📱 Platform: Universal
 ///
-/// ROUTINE DETAIL SCREEN - Detailed view of a flexible routine
+/// ROUTINE DETAIL SCREEN - Display Routine Details & Management
 ///
 /// Features:
-/// - Routine header with stats
-/// - Calendar view with day statuses
-/// - Daily workout card
-/// - Skip/Recovery actions
-/// - Progress tracking
+/// - Display routine name, preset type, training days
+/// - Show workout schedule (day → template assignments)
+/// - Statistics: total workouts, completed days, last workout date
+/// - Action buttons: Activate/Deactivate, Delete (with confirmation)
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_preset.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/calendar_view.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/daily_workout_card.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/stats_dashboard.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/day_detail_sheet.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/dialogs/skip_day_dialog.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/widgets/dialogs/recovery_picker_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:intl/intl.dart';
 
-/// Detail screen for a specific flexible routine
+/// Routine Detail Screen - Display routine details and management options
 class RoutineDetailScreen extends ConsumerWidget {
-
   const RoutineDetailScreen({
     super.key,
-    required this.routineId,
+    required this.routine,
   });
-  final String routineId;
+
+  /// Route name for navigation
+  static const String routeName = '/routine-detail';
+
+  /// Routine to display
+  final FlexibleRoutine routine;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routineAsync = ref.watch(routineByIdProvider(routineId));
-
     return Scaffold(
-      body: routineAsync.when(
-        data: (routine) {
-          if (routine == null) {
-            return _buildNotFound(context);
-          }
-          return _buildContent(context, ref, routine);
-        },
-        loading: () => const Center(child: LoadingIndicator()),
-        error: (error, stack) => _buildError(context, error),
+      appBar: AppBar(
+        title: Text(routine.name),
+        actions: [
+          // Delete button
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () => _showDeleteConfirmation(context, ref),
+            tooltip: context.l10n.delete,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header card - Active status badge
+            if (routine.isActive)
+              Card(
+                color: context.colors.primaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        color: context.colors.primary,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        context.l10n.activeRoutine,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 16),
+
+            // Basic info section
+            Text(
+              context.l10n.basicInfo,
+              style: context.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.fitness_center,
+                      label: context.l10n.presetType,
+                      value: routine.presetType.displayName,
+                    ),
+                    const Divider(height: 24),
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.calendar_today,
+                      label: context.l10n.trainingDays,
+                      value: '${routine.trainingDays.length} ${context.l10n.daysPerWeek}',
+                    ),
+                    const Divider(height: 24),
+                    _buildInfoRow(
+                      context,
+                      icon: Icons.access_time,
+                      label: context.l10n.createdAt,
+                      value: _formatDate(routine.createdAt),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Workout schedule section
+            Text(
+              context.l10n.workoutSchedule,
+              style: context.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
+            _buildWorkoutSchedule(context),
+
+            const SizedBox(height: 24),
+
+            // Statistics section
+            Text(
+              context.l10n.statistics,
+              style: context.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 12),
+            _buildStatistics(context),
+
+            const SizedBox(height: 24),
+
+            // Action buttons
+            _buildActionButtons(context, ref),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) {
-    return CustomScrollView(
-      slivers: [
-        // Header with routine info
-        _buildHeader(context, ref, routine),
-
-        // Stats dashboard
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: StatsDashboard(routine: routine),
-          ),
-        ),
-
-        // Calendar view
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: CalendarView(
-              routine: routine,
-              onDayTap: (date) => _handleDayTap(context, ref, routine, date),
-            ),
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-        // Today's workout card
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: DailyWorkoutCard(
-              routine: routine,
-              date: DateTime.now(),
-              onComplete: () => _completeDay(context, ref, routine, DateTime.now()),
-              onSkip: () => _skipDay(context, ref, routine, DateTime.now()),
-            ),
-          ),
-        ),
-
-        // 🆕 FIXED: Show "Missed Workouts" only if ACTUALLY behind schedule (count-based)
-        //
-        // OLD LOGIC (❌ WRONG):
-        // - Showed "Missed Workouts" if any day had status=skipped
-        // - Ignored if workout was done on different day
-        //
-        // NEW LOGIC (✅ CORRECT):
-        // - Shows "Missed Workouts" ONLY if workoutsBehindSchedule > 0
-        // - workoutsBehindSchedule = max(0, workoutsDue - workoutsCompleted)
-        // - If user did all workouts (even on different days), no "missed" message
-        //
-        // Example:
-        // - Day 6 skipped, day 7 workout done instead
-        // - workoutsBehindSchedule = 0 (2 due, 2 completed)
-        // - No "Missed Workouts" shown ✅
-        //
-        // Only show if truly behind:
-        // - 2 workouts due, 1 completed → 1 missed ❌
-        if (routine.workoutsBehindSchedule > 0 && routine.skipTracker.unrecoveredSkips.isNotEmpty) ...[
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
-              child: Text(
-                'Missed Workouts',
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: context.colors.error,
+  /// Build info row (icon + label + value)
+  Widget _buildInfoRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: context.colors.primary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.onSurfaceVariant,
                 ),
               ),
-            ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: context.textTheme.bodyLarge,
+              ),
+            ],
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final skip = routine.skipTracker.unrecoveredSkips[index];
-                return _buildSkipCard(context, ref, routine, skip);
-              },
-              childCount: routine.skipTracker.unrecoveredSkips.length,
-            ),
-          ),
-        ],
-
-        // Bottom spacing
-        const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ),
       ],
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) {
-    return SliverAppBar(
-      expandedHeight: 200,
-      pinned: true,
-      backgroundColor: context.colors.surface,
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text(
-          routine.name,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colors.onSurface,
-          ),
-        ),
-        background: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                context.colors.primaryContainer.withValues(alpha: 0.3),
-                context.colors.primaryContainer.withValues(alpha: 0.1),
-              ],
+  /// Build workout schedule cards (day → template)
+  Widget _buildWorkoutSchedule(BuildContext context) {
+    final sortedDays = routine.trainingDays.toList()..sort();
+
+    return Column(
+      children: sortedDays.map((day) {
+        final dayName = _getDayName(context, day);
+        final templateId = routine.workoutSchedule[day];
+
+        return Card(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: context.colors.primaryContainer,
+              child: Text(
+                dayName.substring(0, 3).toUpperCase(),
+                style: TextStyle(
+                  color: context.colors.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            title: Text(dayName),
+            subtitle: Text(
+              templateId ?? context.l10n.noTemplateAssigned,
+              style: TextStyle(
+                fontStyle: templateId == null ? FontStyle.italic : null,
+              ),
             ),
           ),
-          child: SafeArea(
+        );
+      }).toList(),
+    );
+  }
+
+  /// Build statistics cards
+  Widget _buildStatistics(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Card(
+            color: context.colors.primaryContainer,
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 48), // Space for title
-                  Row(
-                    children: [
-                      _buildInfoChip(
-                        context,
-                        icon: AppIcons.calendar,
-                        label: _formatDateRange(context, routine.startDate, routine.endDate),
-                      ),
-                      SizedBox(width: 8),
-                      _buildInfoChip(
-                        context,
-                        icon: AppIcons.workout,
-                        label: '${routine.totalWorkoutDays} workouts',
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  if (routine.isActive)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: context.colors.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            AppIcons.complete,
-                            size: 16,
-                            color: context.colors.onPrimary,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            'ACTIVE',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colors.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Text(
+                    '${routine.totalWorkouts}',
+                    style: context.textTheme.headlineMedium?.copyWith(
+                      color: context.colors.primary,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    context.l10n.totalWorkouts,
+                    style: context.textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),
           ),
         ),
-      ),
-      actions: [
-        // More actions menu
-        IconButton(
-          onPressed: () => _showMoreActions(context, ref, routine),
-          icon: Icon(AppIcons.moreVert),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Card(
+            color: context.colors.secondaryContainer,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    '${routine.completedDays.length}',
+                    style: context.textTheme.headlineMedium?.copyWith(
+                      color: context.colors.secondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    context.l10n.completedDays,
+                    style: context.textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildInfoChip(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: context.colors.surface.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: context.colors.outlineVariant.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: context.colors.primary),
-          SizedBox(width: 4),
-          Text(
-            label,
-            style: context.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: context.colors.onSurface,
+  /// Build action buttons (Activate/Deactivate, Delete)
+  Widget _buildActionButtons(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Activate/Deactivate button
+        if (!routine.isActive)
+          FilledButton.icon(
+            onPressed: () => _activateRoutine(context, ref),
+            icon: const Icon(Icons.play_arrow),
+            label: Text(context.l10n.activate),
+          )
+        else
+          OutlinedButton.icon(
+            onPressed: () => _deactivateRoutine(context, ref),
+            icon: const Icon(Icons.pause),
+            label: Text(context.l10n.deactivate),
+          ),
+      ],
+    );
+  }
+
+  /// Get weekday name by number (1=Monday, 7=Sunday)
+  String _getDayName(BuildContext context, int day) {
+    switch (day) {
+      case 1:
+        return context.l10n.monday;
+      case 2:
+        return context.l10n.tuesday;
+      case 3:
+        return context.l10n.wednesday;
+      case 4:
+        return context.l10n.thursday;
+      case 5:
+        return context.l10n.friday;
+      case 6:
+        return context.l10n.saturday;
+      case 7:
+        return context.l10n.sunday;
+      default:
+        return '';
+    }
+  }
+
+  /// Format date to readable string
+  String _formatDate(DateTime date) {
+    return DateFormat.yMMMd().format(date);
+  }
+
+  /// Show delete confirmation dialog
+  void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
+    showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.deleteRoutine),
+        content: Text(context.l10n.deleteRoutineConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.error,
             ),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSkipCard(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-    SkipEntry skip,
-  ) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: context.colors.errorContainer,
-          child: Icon(
-            AppIcons.eventBusy,
-            color: context.colors.error,
-          ),
-        ),
-        title: Text(
-          _formatDate(context, skip.date),
-          style: context.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: skip.reason != null
-            ? Text('Reason: ${skip.reason}')
-            : const Text('No reason provided'),
-        trailing: TextButton(
-          onPressed: () => _recoverDay(context, ref, routine, skip.date),
-          child: Text('Recover'),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotFound(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: context.colors.error,
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Routine not found',
-            style: context.textTheme.titleLarge?.copyWith(
-              color: context.colors.error,
-            ),
-          ),
-          SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => context.pop(),
-            child: const Text('Go Back'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildError(BuildContext context, Object error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
-              color: context.colors.error,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Error loading routine',
-              style: context.textTheme.titleMedium?.copyWith(
-                color: context.colors.error,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: context.textTheme.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => context.pop(),
-              child: const Text('Go Back'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // === ACTIONS ===
-
-  void _handleDayTap(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-    DateTime date,
-  ) {
-    final day = routine.getDayInfo(date);
-    if (day == null) return;
-
-    // Show rich day detail sheet with stats and history
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DayDetailSheet(
-        routine: routine,
-        date: date,
-        dayInfo: day,
-      ),
-    );
-  }
-
-  Future<void> _completeDay(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-    DateTime date,
-  ) async {
-    final day = routine.getDayInfo(date);
-    if (day == null || day.templateId == null) return;
-
-    final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-    final success = await notifier.completeDayWorkout(
-      routineId: routine.id,
-      date: date,
-      workoutId: day.templateId!,
-    );
-
-    if (context.mounted) {
-      if (success) {
-        SnackBarService.showSuccess(context, 'Day completed! 💪');
-      } else {
-        SnackBarService.showError(context, 'Failed to complete day');
+    ).then((confirmed) {
+      if (confirmed == true && context.mounted) {
+        _deleteRoutine(context, ref);
       }
-    }
+    });
   }
 
-  Future<void> _skipDay(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-    DateTime date,
-  ) async {
-    // Show skip reason dialog
-    final result = await SkipDayDialog.show(
-      context,
-      date: date,
-      routine: routine,
-    );
+  /// Activate routine
+  Future<void> _activateRoutine(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = context.l10n;
+    final errorColor = context.colors.error;
 
-    // User cancelled
-    if (result == null) return;
+    await ref.read(flexibleRoutineNotifierProvider.notifier).activateRoutine(routine.id);
 
-    // Proceed with skip
-    final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-    final success = await notifier.skipDay(
-      routineId: routine.id,
-      date: date,
-      reason: result.note ?? result.reason,
-    );
-
-    if (context.mounted) {
-      if (success) {
-        SnackBarService.showInfo(context, 'Day skipped');
-      } else {
-        SnackBarService.showError(context, 'Failed to skip day');
-      }
-    }
-  }
-
-  Future<void> _recoverDay(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-    DateTime originalDate,
-  ) async {
-    // Show recovery date picker dialog
-    final recoveryDate = await RecoveryPickerDialog.show(
-      context,
-      originalDate: originalDate,
-      routine: routine,
-    );
-
-    // User cancelled
-    if (recoveryDate == null) return;
-
-    // Proceed with recovery
-    final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-    final success = await notifier.recoverDay(
-      routineId: routine.id,
-      originalDate: originalDate,
-      recoveryDate: recoveryDate,
-    );
-
-    if (context.mounted) {
-      if (success) {
-        SnackBarService.showSuccess(context, 'Day recovered! 🔥');
-      } else {
-        SnackBarService.showError(context, 'Failed to recover day');
-      }
-    }
-  }
-
-  void _showMoreActions(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) {
-    // Check if current user is admin
-    final currentUser = FirebaseAuth.instance.currentUser;
-    final isAdmin = currentUser?.email == 'ferrara-michele@hotmail.it';
-
-    showModalBottomSheet(
-      context: context,
-      builder: (modalContext) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // TODO: Edit Schedule feature not yet implemented
-            // ListTile(
-            //   leading: Icon(
-            //     AppIcons.editCalendar,
-            //     color: context.colors.primary,
-            //   ),
-            //   title: const Text('Edit Schedule'),
-            //   subtitle: const Text('Change workout templates for each day'),
-            //   onTap: () {
-            //     Navigator.pop(modalContext);
-            //     _editSchedule(context, ref, routine);
-            //   },
-            // ),
-            // const Divider(),
-
-            // Admin-only: Regenerate Schedule button
-            if (isAdmin) ...[
-              ListTile(
-                leading: Icon(
-                  AppIcons.refresh,
-                  color: context.colors.primary,
-                ),
-                title: Text('Rigenera Schedule'),
-                subtitle: Text('Rigenera lo schedule con la logica di rotazione corretta'),
-                onTap: () {
-                  Navigator.pop(modalContext);
-                  _regenerateSchedule(context, ref, routine);
-                },
-              ),
-              const Divider(),
-            ],
-
-            ListTile(
-              leading: Icon(AppIcons.archive),
-              title: Text('Archive'),
-              onTap: () {
-                Navigator.pop(modalContext);
-                // TODO: Archive action
-              },
-            ),
-            ListTile(
-              leading: Icon(AppIcons.delete, color: context.colors.error),
-              title: Text(
-                'Delete',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.error,
-                ),
-              ),
-              onTap: () {
-                Navigator.pop(modalContext);
-                // TODO: Delete action
-              },
-            ),
-          ],
+    final state = ref.read(flexibleRoutineNotifierProvider);
+    if (state.errorMessage != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage!),
+          backgroundColor: errorColor,
         ),
-      ),
-    );
-  }
-
-  Future<void> _editSchedule(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) async {
-    // Navigate to edit schedule screen (simplified version)
-    SnackBarService.showInfo(
-      context,
-      'Edit Schedule feature coming soon! You\'ll be able to change workout templates for each day.',
-    );
-    // TODO: Implement full edit schedule screen
-  }
-
-  /// Admin-only: Regenerate schedule with correct rotation logic
-  /// This is useful when the routine was created before the rotation fix was implemented
-  Future<void> _regenerateSchedule(
-    BuildContext context,
-    WidgetRef ref,
-    FlexibleRoutine routine,
-  ) async {
-    try {
-      // Show loading indicator
-      SnackBarService.showInfo(
-        context,
-        'Rigenerazione schedule in corso...',
       );
-
-      // Regenerate schedule with correct rotation logic
-      final updatedRoutine = routine.generateSchedule();
-
-      // Save to Firestore via notifier
-      await ref.read(flexibleRoutineNotifierProvider.notifier).updateRoutine(updatedRoutine);
-
-      // Show success message
-      if (context.mounted) {
-        SnackBarService.showSuccess(
-          context,
-          'Schedule rigenerato con successo! 🎉',
-        );
-      }
-
-      // Invalidate providers to refresh UI
-      ref.invalidate(routineByIdProvider(routine.id));
-      ref.invalidate(userFlexibleRoutinesProvider);
-      ref.invalidate(activeFlexibleRoutineProvider);
-    } catch (e) {
-      // Show error message
-      if (context.mounted) {
-        SnackBarService.showError(
-          context,
-          'Errore durante la rigenerazione dello schedule: $e',
-        );
-      }
+      return;
     }
+
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.routineActivated)),
+    );
+    navigator.pop(); // Go back to Routine Center
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
-    final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('MMM d, y', locale);
-    return dateFormat.format(date);
-  }
+  /// Deactivate routine
+  Future<void> _deactivateRoutine(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = context.l10n;
+    final errorColor = context.colors.error;
 
-  String _formatDateRange(BuildContext context, DateTime start, DateTime end) {
-    return '${_formatDate(context, start)} - ${_formatDate(context, end)}';
-  }
+    await ref.read(flexibleRoutineNotifierProvider.notifier).deactivateAllRoutines();
 
-  String _formatDayStatus(DayStatus status) {
-    switch (status) {
-      case DayStatus.scheduled:
-        return 'Scheduled';
-      case DayStatus.completed:
-        return 'Completed';
-      case DayStatus.skipped:
-        return 'Skipped';
-      case DayStatus.recovered:
-        return 'Recovered';
-      case DayStatus.rest:
-        return 'Rest Day';
+    final state = ref.read(flexibleRoutineNotifierProvider);
+    if (state.errorMessage != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage!),
+          backgroundColor: errorColor,
+        ),
+      );
+      return;
     }
+
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.routineDeactivated)),
+    );
+    navigator.pop(); // Go back to Routine Center
+  }
+
+  /// Delete routine
+  Future<void> _deleteRoutine(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = context.l10n;
+    final errorColor = context.colors.error;
+
+    await ref.read(flexibleRoutineNotifierProvider.notifier).deleteRoutine(routine.id);
+
+    final state = ref.read(flexibleRoutineNotifierProvider);
+    if (state.errorMessage != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage!),
+          backgroundColor: errorColor,
+        ),
+      );
+      return;
+    }
+
+    messenger.showSnackBar(
+      SnackBar(content: Text(l10n.routineDeleted)),
+    );
+    navigator.pop(); // Go back to Routine Center
   }
 }

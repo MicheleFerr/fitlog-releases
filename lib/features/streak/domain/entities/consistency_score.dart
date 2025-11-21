@@ -24,33 +24,27 @@ enum OvertrainingRisk {
 @freezed
 class ConsistencyScore with _$ConsistencyScore {
   const factory ConsistencyScore({
-    /// Overall consistency score (0-100)
-    @Default(0) int overallScore,
+    // NEW: Binary indicators (100% validated thresholds)
+    /// Frequency is optimal (>=3 workouts per week)
+    @Default(false) bool frequencyOptimal,
 
-    /// Score rating text (Excellent, Good, Fair, Poor)
-    @Default('Not Available') String scoreRating,
+    /// Rest is optimal (1-2 rest days per week)
+    @Default(false) bool restOptimal,
 
-    /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
-    @Default('Not Available') String rating,
+    /// Progression is positive (volume increasing over time)
+    @Default(false) bool progressionPositive,
 
-    /// Risk level (Low, Medium, High) - string version
-    @Default('Unknown') String riskLevel,
-
-    /// Overtraining risk level (enum)
-    @Default(OvertrainingRisk.low) OvertrainingRisk overtrainingRisk,
-
+    // EXISTING: Detailed scores (keep for breakdown view)
     /// Frequency score component (0-100) - changed to int for widget compatibility
     @Default(0) int frequencyScore,
 
     /// Rest score component (0-100) - changed to int for widget compatibility
     @Default(0) int restScore,
 
-    /// Volume score component (0-100) - changed to int for widget compatibility
-    @Default(0) int volumeScore,
-
     /// Progression score component (0-100) - changed to int for widget compatibility
     @Default(0) int progressionScore,
 
+    // EXISTING: Statistics
     /// Weekly statistics (aggregated 7-day metrics)
     required WeeklyStats weeklyStats,
 
@@ -71,21 +65,43 @@ class ConsistencyScore with _$ConsistencyScore {
 
     /// Timestamp of calculation
     DateTime? calculatedAt,
+
+    // DEPRECATED: Keep for backward compatibility (1 version)
+    /// Overall consistency score (0-100)
+    @Deprecated('Use frequencyOptimal, restOptimal, progressionPositive instead')
+    int? overallScore,
+
+    /// Score rating text (Excellent, Good, Fair, Poor)
+    @Deprecated('Use binary indicators instead')
+    String? scoreRating,
+
+    /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
+    @Deprecated('Use binary indicators instead')
+    String? rating,
+
+    /// Risk level (Low, Medium, High) - string version
+    @Deprecated('Use binary indicators instead')
+    String? riskLevel,
+
+    /// Overtraining risk level (enum)
+    @Deprecated('Insufficient indicators - requires HR monitoring')
+    OvertrainingRisk? overtrainingRisk,
+
+    /// Volume score component (0-100) - changed to int for widget compatibility
+    @Deprecated('Total volume too generic - needs per-muscle-group')
+    int? volumeScore,
   }) = _ConsistencyScore;
 
   factory ConsistencyScore.fromJson(Map<String, dynamic> json) =>
       _$ConsistencyScoreFromJson(json);
 
-  /// Factory for empty/default score
+  /// Creates empty score with all indicators false
   factory ConsistencyScore.empty() => ConsistencyScore(
-        overallScore: 0,
-        scoreRating: 'Not Available',
-        rating: 'Not Available',
-        riskLevel: 'Unknown',
-        overtrainingRisk: OvertrainingRisk.low,
+        frequencyOptimal: false,
+        restOptimal: false,
+        progressionPositive: false,
         frequencyScore: 0,
         restScore: 0,
-        volumeScore: 0,
         progressionScore: 0,
         weeklyStats: WeeklyStats.empty(),
         workoutsCompleted: 0,

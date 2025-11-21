@@ -8,15 +8,11 @@ import 'dart:async' as _i5;
 import 'package:flutter_riverpod/flutter_riverpod.dart' as _i4;
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart'
     as _i6;
-import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_pattern.dart'
-    as _i7;
-import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart'
-    as _i8;
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i3;
-import 'package:state_notifier/state_notifier.dart' as _i9;
+import 'package:state_notifier/state_notifier.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -31,9 +27,8 @@ import 'package:state_notifier/state_notifier.dart' as _i9;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeFlexibleRoutineState_0 extends _i1.SmartFake
-    implements _i2.FlexibleRoutineState {
-  _FakeFlexibleRoutineState_0(
+class _FakeRoutineState_0 extends _i1.SmartFake implements _i2.RoutineState {
+  _FakeRoutineState_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -76,22 +71,22 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
       ) as bool);
 
   @override
-  _i5.Stream<_i2.FlexibleRoutineState> get stream => (super.noSuchMethod(
+  _i5.Stream<_i2.RoutineState> get stream => (super.noSuchMethod(
         Invocation.getter(#stream),
-        returnValue: _i5.Stream<_i2.FlexibleRoutineState>.empty(),
-      ) as _i5.Stream<_i2.FlexibleRoutineState>);
+        returnValue: _i5.Stream<_i2.RoutineState>.empty(),
+      ) as _i5.Stream<_i2.RoutineState>);
 
   @override
-  _i2.FlexibleRoutineState get state => (super.noSuchMethod(
+  _i2.RoutineState get state => (super.noSuchMethod(
         Invocation.getter(#state),
-        returnValue: _FakeFlexibleRoutineState_0(
+        returnValue: _FakeRoutineState_0(
           this,
           Invocation.getter(#state),
         ),
-      ) as _i2.FlexibleRoutineState);
+      ) as _i2.RoutineState);
 
   @override
-  set state(_i2.FlexibleRoutineState? value) => super.noSuchMethod(
+  set state(_i2.RoutineState? value) => super.noSuchMethod(
         Invocation.setter(
           #state,
           value,
@@ -100,13 +95,13 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
       );
 
   @override
-  _i2.FlexibleRoutineState get debugState => (super.noSuchMethod(
+  _i2.RoutineState get debugState => (super.noSuchMethod(
         Invocation.getter(#debugState),
-        returnValue: _FakeFlexibleRoutineState_0(
+        returnValue: _FakeRoutineState_0(
           this,
           Invocation.getter(#debugState),
         ),
-      ) as _i2.FlexibleRoutineState);
+      ) as _i2.RoutineState);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -115,269 +110,88 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
       ) as bool);
 
   @override
-  _i5.Future<bool> createRoutine({
-    required String? name,
-    required _i6.RoutineType? type,
-    required DateTime? startDate,
-    required DateTime? endDate,
-    required _i7.RoutinePattern? pattern,
-    List<String>? templateIds = const [],
-    String? description,
-  }) =>
+  _i5.Future<void> createRoutine(_i6.FlexibleRoutine? routine) =>
       (super.noSuchMethod(
         Invocation.method(
           #createRoutine,
-          [],
-          {
-            #name: name,
-            #type: type,
-            #startDate: startDate,
-            #endDate: endDate,
-            #pattern: pattern,
-            #templateIds: templateIds,
-            #description: description,
-          },
+          [routine],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> updateRoutine(_i6.FlexibleRoutine? routine) =>
+  _i5.Future<void> updateRoutine(_i6.FlexibleRoutine? routine) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateRoutine,
           [routine],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> deleteRoutine(String? routineId) => (super.noSuchMethod(
+  _i5.Future<void> deleteRoutine(String? routineId) => (super.noSuchMethod(
         Invocation.method(
           #deleteRoutine,
           [routineId],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> activateRoutine(String? routineId) => (super.noSuchMethod(
+  _i5.Future<void> activateRoutine(String? routineId) => (super.noSuchMethod(
         Invocation.method(
           #activateRoutine,
           [routineId],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> deactivateCurrentRoutine() => (super.noSuchMethod(
+  _i5.Future<void> deactivateAllRoutines() => (super.noSuchMethod(
         Invocation.method(
-          #deactivateCurrentRoutine,
+          #deactivateAllRoutines,
           [],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> archiveRoutine(String? routineId) => (super.noSuchMethod(
+  void clearError() => super.noSuchMethod(
         Invocation.method(
-          #archiveRoutine,
-          [routineId],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> unarchiveRoutine(String? routineId) => (super.noSuchMethod(
-        Invocation.method(
-          #unarchiveRoutine,
-          [routineId],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> completeRoutine(String? routineId) => (super.noSuchMethod(
-        Invocation.method(
-          #completeRoutine,
-          [routineId],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> completeDayWorkout({
-    required String? routineId,
-    required DateTime? date,
-    required String? workoutId,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #completeDayWorkout,
-          [],
-          {
-            #routineId: routineId,
-            #date: date,
-            #workoutId: workoutId,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> completeDayManual({
-    required String? routineId,
-    required DateTime? date,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #completeDayManual,
-          [],
-          {
-            #routineId: routineId,
-            #date: date,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> skipDay({
-    required String? routineId,
-    required DateTime? date,
-    String? reason,
-    String? notes,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #skipDay,
-          [],
-          {
-            #routineId: routineId,
-            #date: date,
-            #reason: reason,
-            #notes: notes,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> recoverDay({
-    required String? routineId,
-    required DateTime? originalDate,
-    required DateTime? recoveryDate,
-    String? notes,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #recoverDay,
-          [],
-          {
-            #routineId: routineId,
-            #originalDate: originalDate,
-            #recoveryDate: recoveryDate,
-            #notes: notes,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> performRecoveryWorkout({
-    required String? routineId,
-    required String? workoutId,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #performRecoveryWorkout,
-          [],
-          {
-            #routineId: routineId,
-            #workoutId: workoutId,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<bool> autoDetectAndMarkAsRecovery({
-    required String? routineId,
-    required String? completedTemplateId,
-    required DateTime? completionDate,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #autoDetectAndMarkAsRecovery,
-          [],
-          {
-            #routineId: routineId,
-            #completedTemplateId: completedTemplateId,
-            #completionDate: completionDate,
-          },
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  _i5.Future<_i6.FlexibleRoutine?> getRoutineById(String? routineId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getRoutineById,
-          [routineId],
-        ),
-        returnValue: _i5.Future<_i6.FlexibleRoutine?>.value(),
-      ) as _i5.Future<_i6.FlexibleRoutine?>);
-
-  @override
-  _i5.Future<_i8.RoutineStatistics?> getRoutineStatistics(String? routineId) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getRoutineStatistics,
-          [routineId],
-        ),
-        returnValue: _i5.Future<_i8.RoutineStatistics?>.value(),
-      ) as _i5.Future<_i8.RoutineStatistics?>);
-
-  @override
-  _i5.Future<bool> hasActiveRoutines() => (super.noSuchMethod(
-        Invocation.method(
-          #hasActiveRoutines,
-          [],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
-
-  @override
-  void clearMessages() => super.noSuchMethod(
-        Invocation.method(
-          #clearMessages,
+          #clearError,
           [],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i5.Future<bool> removeInvalidTemplateId({
-    required _i6.FlexibleRoutine? routine,
-    required String? invalidTemplateId,
-  }) =>
-      (super.noSuchMethod(
+  void clearSuccess() => super.noSuchMethod(
         Invocation.method(
-          #removeInvalidTemplateId,
+          #clearSuccess,
           [],
-          {
-            #routine: routine,
-            #invalidTemplateId: invalidTemplateId,
-          },
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void reset() => super.noSuchMethod(
+        Invocation.method(
+          #reset,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   bool updateShouldNotify(
-    _i2.FlexibleRoutineState? old,
-    _i2.FlexibleRoutineState? current,
+    _i2.RoutineState? old,
+    _i2.RoutineState? current,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -392,7 +206,7 @@ class MockFlexibleRoutineNotifier extends _i1.Mock
 
   @override
   _i4.RemoveListener addListener(
-    _i9.Listener<_i2.FlexibleRoutineState>? listener, {
+    _i7.Listener<_i2.RoutineState>? listener, {
     bool? fireImmediately = true,
   }) =>
       (super.noSuchMethod(

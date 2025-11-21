@@ -1411,7 +1411,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get restTimeSuggestion => 'Suggerimento Recupero';
 
   @override
-  String get reset => 'Ripristina';
+  String get reset => 'Resetta';
 
   @override
   String get settingsResetSuccess =>
@@ -12797,7 +12797,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get keepData => 'Mantieni dati';
 
   @override
-  String get resetAll => 'Resetta tutto';
+  String get resetAll => 'Resetta Tutto';
 
   @override
   String get countingModeChanged => 'Formato counting aggiornato!';
@@ -13572,7 +13572,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noMatchesFound => 'Nessun corrispondenze found';
 
   @override
-  String get noPRsYet => 'Nessun p rs ancora';
+  String get noPRsYet => 'Nessun PR Ancora';
 
   @override
   String get noWorkoutsFound => 'Nessun workouts found';
@@ -17434,7 +17434,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Completa un allenamento per vedere la cronologia';
 
   @override
-  String get pr => 'RP';
+  String get pr => 'PR';
 
   @override
   String get records => 'Record';
@@ -18274,5 +18274,75 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String workoutsGoalLabel(int count) {
     return '$count allenamenti';
+  }
+
+  @override
+  String get prToday => 'Oggi';
+
+  @override
+  String get prYesterday => 'Ieri';
+
+  @override
+  String prDaysAgo(int days) {
+    return '$days giorni fa';
+  }
+
+  @override
+  String get resetAllPRsQuestion => 'Resettare tutti i PR?';
+
+  @override
+  String get resetAllPRsMessage =>
+      'Questo cancellerà permanentemente tutti i dati dei record personali. La cronologia allenamenti rimarrà, ma il tracciamento PR ripartirà da zero. \n\nQuesta azione non può essere annullata.';
+
+  @override
+  String get prResetComingSoon => '🔄 Funzionalità reset PR in arrivo presto!';
+
+  @override
+  String get prDetails => 'Dettagli PR';
+
+  @override
+  String get recentPRsLastSevenDays => 'PR Recenti (Ultimi 7 Giorni)';
+
+  @override
+  String prAchievements(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'traguardi',
+      one: 'traguardo',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get newBadge => 'Nuovo!';
+
+  @override
+  String get whatIsPR => 'Cos\'è un PR?';
+
+  @override
+  String get prExplanation =>
+      'PR (Record Personale) è la tua migliore performance per un esercizio, misurato con l\'1RM stimato (massimale su una ripetizione). Tracciamo automaticamente i tuoi PR mentre ti alleni, così puoi vedere i tuoi progressi nel tempo.';
+
+  @override
+  String get noPRsYetMessage =>
+      'Inizia a tracciare i tuoi allenamenti per vedere i tuoi record personali qui!';
+
+  @override
+  String get allPersonalRecords => 'Tutti i Record Personali';
+
+  @override
+  String get newLabel => 'NUOVO';
+
+  @override
+  String get resetPRs => 'Resetta PR';
+
+  @override
+  String get resetPRsMessage =>
+      'Vuoi ricominciare da capo? Puoi resettare tutti i record personali. Questo NON cancellerà la cronologia allenamenti.';
+
+  @override
+  String resetAllPRsButton(int count) {
+    return 'Resetta Tutti i PR ($count record)';
   }
 }

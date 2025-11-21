@@ -6,89 +6,28 @@ part of 'flexible_routine.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ScheduledDayImpl _$$ScheduledDayImplFromJson(Map<String, dynamic> json) =>
-    _$ScheduledDayImpl(
-      date: DateTime.parse(json['date'] as String),
-      status: $enumDecode(_$DayStatusEnumMap, json['status']),
-      templateId: json['templateId'] as String?,
-      workoutId: json['workoutId'] as String?,
-      skipReason: json['skipReason'] as String?,
-      originalDate: json['originalDate'] == null
-          ? null
-          : DateTime.parse(json['originalDate'] as String),
-      notes: json['notes'] as String?,
-      isRecovery: json['isRecovery'] as bool? ?? false,
-      originalMissedDate: json['originalMissedDate'] == null
-          ? null
-          : DateTime.parse(json['originalMissedDate'] as String),
-    );
-
-Map<String, dynamic> _$$ScheduledDayImplToJson(_$ScheduledDayImpl instance) =>
-    <String, dynamic>{
-      'date': instance.date.toIso8601String(),
-      'status': _$DayStatusEnumMap[instance.status]!,
-      'templateId': instance.templateId,
-      'workoutId': instance.workoutId,
-      'skipReason': instance.skipReason,
-      'originalDate': instance.originalDate?.toIso8601String(),
-      'notes': instance.notes,
-      'isRecovery': instance.isRecovery,
-      'originalMissedDate': instance.originalMissedDate?.toIso8601String(),
-    };
-
-const _$DayStatusEnumMap = {
-  DayStatus.scheduled: 'scheduled',
-  DayStatus.completed: 'completed',
-  DayStatus.skipped: 'skipped',
-  DayStatus.recovered: 'recovered',
-  DayStatus.rest: 'rest',
-};
-
-_$RecoverySettingsImpl _$$RecoverySettingsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RecoverySettingsImpl(
-      suggestRecovery: json['suggestRecovery'] as bool? ?? true,
-      allowRecoveryOnRestDays: json['allowRecoveryOnRestDays'] as bool? ?? true,
-      maxRecoveryDays: (json['maxRecoveryDays'] as num?)?.toInt() ?? 7,
-      notifyOnSkip: json['notifyOnSkip'] as bool? ?? true,
-    );
-
-Map<String, dynamic> _$$RecoverySettingsImplToJson(
-        _$RecoverySettingsImpl instance) =>
-    <String, dynamic>{
-      'suggestRecovery': instance.suggestRecovery,
-      'allowRecoveryOnRestDays': instance.allowRecoveryOnRestDays,
-      'maxRecoveryDays': instance.maxRecoveryDays,
-      'notifyOnSkip': instance.notifyOnSkip,
-    };
-
 _$FlexibleRoutineImpl _$$FlexibleRoutineImplFromJson(
         Map<String, dynamic> json) =>
     _$FlexibleRoutineImpl(
       id: json['id'] as String,
       userId: json['userId'] as String,
-      name: json['name'] as String? ?? 'My Routine',
+      name: json['name'] as String,
       description: json['description'] as String? ?? '',
-      type: $enumDecode(_$RoutineTypeEnumMap, json['type']),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      pattern: _patternFromJson(json['pattern']),
-      schedule: _scheduleFromJson(json['schedule']),
-      skipTracker: _skipTrackerFromJson(json['skipTracker']),
-      recoverySettings: _recoverySettingsFromJson(json['recoverySettings']),
+      presetType: $enumDecode(_$RoutinePresetEnumMap, json['presetType']),
+      trainingDays: (json['trainingDays'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toSet(),
+      workoutSchedule: (json['workoutSchedule'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(int.parse(k), e as String),
+      ),
       isActive: json['isActive'] as bool? ?? true,
-      isArchived: json['isArchived'] as bool? ?? false,
-      isCompleted: json['isCompleted'] as bool? ?? false,
+      completedDays: (json['completedDays'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toSet() ??
+          const {},
+      totalWorkouts: (json['totalWorkouts'] as num?)?.toInt() ?? 0,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      totalWorkoutDays: (json['totalWorkoutDays'] as num?)?.toInt() ?? 0,
-      completedDays: (json['completedDays'] as num?)?.toInt() ?? 0,
-      lastWorkoutDate: json['lastWorkoutDate'] == null
-          ? null
-          : DateTime.parse(json['lastWorkoutDate'] as String),
-      isSyncPending: json['isSyncPending'] as bool? ?? false,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$$FlexibleRoutineImplToJson(
@@ -98,28 +37,21 @@ Map<String, dynamic> _$$FlexibleRoutineImplToJson(
       'userId': instance.userId,
       'name': instance.name,
       'description': instance.description,
-      'type': _$RoutineTypeEnumMap[instance.type]!,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
-      'pattern': _patternToJson(instance.pattern),
-      'schedule': _scheduleToJson(instance.schedule),
-      'skipTracker': _skipTrackerToJson(instance.skipTracker),
-      'recoverySettings': _recoverySettingsToJson(instance.recoverySettings),
+      'presetType': _$RoutinePresetEnumMap[instance.presetType]!,
+      'trainingDays': instance.trainingDays.toList(),
+      'workoutSchedule':
+          instance.workoutSchedule.map((k, e) => MapEntry(k.toString(), e)),
       'isActive': instance.isActive,
-      'isArchived': instance.isArchived,
-      'isCompleted': instance.isCompleted,
+      'completedDays': instance.completedDays.toList(),
+      'totalWorkouts': instance.totalWorkouts,
       'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-      'totalWorkoutDays': instance.totalWorkoutDays,
-      'completedDays': instance.completedDays,
-      'lastWorkoutDate': instance.lastWorkoutDate?.toIso8601String(),
-      'isSyncPending': instance.isSyncPending,
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
-const _$RoutineTypeEnumMap = {
-  RoutineType.weekly: 'weekly',
-  RoutineType.monthly: 'monthly',
-  RoutineType.bimonthly: 'bimonthly',
-  RoutineType.semester: 'semester',
-  RoutineType.custom: 'custom',
+const _$RoutinePresetEnumMap = {
+  RoutinePreset.ppl6Day: 'ppl_6_day',
+  RoutinePreset.upperLower4Day: 'upper_lower_4_day',
+  RoutinePreset.fullBody3Day: 'full_body_3_day',
+  RoutinePreset.broSplit5Day: 'bro_split_5_day',
+  RoutinePreset.custom: 'custom',
 };

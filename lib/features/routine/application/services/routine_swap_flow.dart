@@ -1,20 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 
 /// Gestisce il flow di swap: mostra dialog, ottiene la decisione dell'utente,
 /// esegue lo swap su Firestore
+///
+/// ⚠️ **v2.0 STUB**: This service is temporarily stubbed out for v2.0 simplified schema.
+/// The v1.0 complex features (day swapping, schedule mutations) don't exist in v2.0.
+/// TODO: Reimplement when v2.0 adds advanced tracking features.
 class RoutineSwapFlow {
   const RoutineSwapFlow({required this.repository});
 
   final FlexibleRoutineRepository repository;
 
   /// Mostra il dialog di conferma swap e gestisce la decisione
+  ///
+  /// **v2.0 STUB**: Always returns null (no swap) - swap feature not implemented in v2.0
   Future<SwapDecision?> showAndHandleSwapDialog({
     required BuildContext context,
     required RoutineSwapOpportunity swapOpportunity,
@@ -22,381 +25,20 @@ class RoutineSwapFlow {
   }) async {
     if (kDebugMode) {
       debugPrint(
-        '🔄 [SwapFlow] Showing swap dialog for ${swapOpportunity.todayScheduledDay.date}',
+        '🔄 [SwapFlow v2.0 STUB] showAndHandleSwapDialog called - returning null (feature not implemented in v2.0)',
       );
     }
 
-    final decision = await _showSwapDialog(context, swapOpportunity);
-
-    if (kDebugMode) {
-      debugPrint('🔄 [SwapFlow] User decision: $decision');
-    }
-
-    if (decision == null) {
-      if (kDebugMode) {
-        debugPrint('🔄 [SwapFlow] User cancelled, no swap');
-      }
-      return null;
-    }
-
-    // Esegui l'azione basata sulla decisione
-    if (!context.mounted) return null;
-    return _executeDecision(
-      context: context,
-      decision: decision,
-      swapOpportunity: swapOpportunity,
-      activeRoutine: activeRoutine,
-    );
-  }
-
-  /// Mostra il dialog e ritorna la decisione dell'utente
-  Future<SwapDecision?> _showSwapDialog(
-    BuildContext context,
-    RoutineSwapOpportunity swapOpportunity,
-  ) async {
-    return showDialog<SwapDecision>(
-      context: context,
-      builder: (context) => _SwapConfirmationDialog(swapOpportunity),
-    );
-  }
-
-  /// Esegue l'azione della decisione
-  /// Returns null if operation failed (for caller to handle as cancellation)
-  Future<SwapDecision?> _executeDecision({
-    required BuildContext context,
-    required SwapDecision decision,
-    required RoutineSwapOpportunity swapOpportunity,
-    required FlexibleRoutine activeRoutine,
-  }) async {
-    switch (decision) {
-      case SwapDecision.continueNormal:
-        if (kDebugMode) {
-          debugPrint(
-            '🔄 [SwapFlow] User chose: Continue Normal (no routine update)',
-          );
-        }
-        if (context.mounted) {
-          SnackBarService.showInfo(
-            context,
-            context.l10n.workoutCompletedButRoutineNotUpdated,
-          );
-        }
-        return decision;
-
-      case SwapDecision.swapDays:
-        if (kDebugMode) {
-          debugPrint('🔄 [SwapFlow] User chose: Swap Days (RECOMMENDED)');
-        }
-        // ✅ FIX Bug #16: Controlla return value per evitare caller inconsistencies
-        final swapSuccess = await _performSwap(
-          context: context,
-          swapOpportunity: swapOpportunity,
-          activeRoutine: activeRoutine,
-        );
-        // Se swap fallisce, ritorna null (come se user avesse cancellato)
-        // per evitare che caller proceda con dati inconsistenti
-        return swapSuccess ? decision : null;
-
-      case SwapDecision.skipToday:
-        if (kDebugMode) {
-          debugPrint('🔄 [SwapFlow] User chose: Skip Today');
-        }
-        // ✅ FIX Bug #16: Controlla return value per evitare caller inconsistencies
-        final skipSuccess = await _markTodayAsSkipped(
-          context: context,
-          swapOpportunity: swapOpportunity,
-          activeRoutine: activeRoutine,
-        );
-        // Se skip fallisce, ritorna null (come se user avesse cancellato)
-        return skipSuccess ? decision : null;
-    }
-  }
-
-  /// Esegue lo swap effettivo su Firestore
-  /// Returns true if successful, false otherwise (for caller to handle)
-  Future<bool> _performSwap({
-    required BuildContext context,
-    required RoutineSwapOpportunity swapOpportunity,
-    required FlexibleRoutine activeRoutine,
-  }) async {
-    if (kDebugMode) {
-      debugPrint(
-        '🔄 [SwapFlow] Performing swap: ${swapOpportunity.todayScheduledDay.date} ↔ ${swapOpportunity.futureScheduledDay.date}',
-      );
-    }
-
-    try {
-      // Crea le nuove versioni dei giorni scambiati
-      final todayAfterSwap = swapOpportunity.todayScheduledDay.copyWith(
-        templateId: swapOpportunity.futureScheduledDay.templateId,
-        notes:
-            'Swapped with ${swapOpportunity.futureScheduledDay.date} on ${DateTime.now()}',
-      );
-
-      final futureAfterSwap = swapOpportunity.futureScheduledDay.copyWith(
-        templateId: swapOpportunity.todayScheduledDay.templateId,
-        notes:
-            'Swapped with ${swapOpportunity.todayScheduledDay.date} on ${DateTime.now()}',
-      );
-
-      // Aggiorna la routine localmente prima di inviare a Firebase
-      final updatedSchedule = Map<String, ScheduledDay>.from(
-        activeRoutine.schedule,
-      );
-
-      // ✅ FIX Bug #11: Genera chiavi direttamente invece di O(n) loop
-      // Usa stesso formato di flexible_routine.dart:718
-      final todayDate = swapOpportunity.todayScheduledDay.date;
-      final todayKey = '${todayDate.year}-${todayDate.month.toString().padLeft(2, '0')}-${todayDate.day.toString().padLeft(2, '0')}';
-
-      final futureDate = swapOpportunity.futureScheduledDay.date;
-      final futureKey = '${futureDate.year}-${futureDate.month.toString().padLeft(2, '0')}-${futureDate.day.toString().padLeft(2, '0')}';
-
-      // Verifica che entrambe le chiavi esistano
-      if (!activeRoutine.schedule.containsKey(todayKey) ||
-          !activeRoutine.schedule.containsKey(futureKey)) {
-        if (kDebugMode) {
-          debugPrint('❌ [SwapFlow] Could not find schedule keys for swap');
-          debugPrint('   Today key: $todayKey (exists: ${activeRoutine.schedule.containsKey(todayKey)})');
-          debugPrint('   Future key: $futureKey (exists: ${activeRoutine.schedule.containsKey(futureKey)})');
-        }
-        throw Exception('Could not find schedule keys for swap');
-      }
-
-      updatedSchedule[todayKey] = todayAfterSwap;
-      updatedSchedule[futureKey] = futureAfterSwap;
-
-      // Salva su Firestore
-      await repository.updateRoutine(
-        activeRoutine.copyWith(
-          schedule: updatedSchedule,
-          updatedAt: DateTime.now(),
-        ),
-      );
-
-      if (kDebugMode) {
-        debugPrint('✅ [SwapFlow] Swap completed successfully');
-      }
-
-      if (context.mounted) {
-        SnackBarService.showSuccess(
-          context,
-          '${context.l10n.daysSwappedSuccessfully} ${swapOpportunity.completedWorkoutTemplate} oggi',
-        );
-      }
-
-      // ✅ FIX Bug #14: Ritorna true per indicare successo
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [SwapFlow] Error performing swap: $e');
-        debugPrintStack(stackTrace: stackTrace);
-      }
-      if (context.mounted) {
-        SnackBarService.showError(context, context.l10n.errorSwappingDays);
-      }
-      // ✅ FIX Bug #14: Ritorna false per indicare fallimento
-      return false;
-    }
-  }
-
-  /// Marca il giorno di oggi come "skipped"
-  /// Returns true if successful, false otherwise (for caller to handle)
-  Future<bool> _markTodayAsSkipped({
-    required BuildContext context,
-    required RoutineSwapOpportunity swapOpportunity,
-    required FlexibleRoutine activeRoutine,
-  }) async {
-    if (kDebugMode) {
-      debugPrint(
-        '🔄 [SwapFlow] Marking today as skipped: ${swapOpportunity.todayScheduledDay.date}',
-      );
-    }
-
-    try {
-      final updatedSchedule = Map<String, ScheduledDay>.from(
-        activeRoutine.schedule,
-      );
-
-      // ✅ FIX Bug #11: Genera chiave direttamente invece di O(n) loop
-      // Usa stesso formato di flexible_routine.dart:718
-      final todayDate = swapOpportunity.todayScheduledDay.date;
-      final todayKey = '${todayDate.year}-${todayDate.month.toString().padLeft(2, '0')}-${todayDate.day.toString().padLeft(2, '0')}';
-
-      // Verifica che la chiave esista
-      if (!activeRoutine.schedule.containsKey(todayKey)) {
-        if (kDebugMode) {
-          debugPrint('❌ [SwapFlow] Could not find today\'s schedule entry');
-          debugPrint('   Today key: $todayKey (exists: ${activeRoutine.schedule.containsKey(todayKey)})');
-        }
-        throw Exception('Could not find today\'s schedule entry');
-      }
-
-      final updatedDay = swapOpportunity.todayScheduledDay.copyWith(
-        status: DayStatus.skipped,
-        skipReason: 'Skipped to do ${swapOpportunity.completedWorkoutTemplate}',
-      );
-
-      updatedSchedule[todayKey] = updatedDay;
-
-      // Salva su Firestore
-      await repository.updateRoutine(
-        activeRoutine.copyWith(
-          schedule: updatedSchedule,
-          updatedAt: DateTime.now(),
-        ),
-      );
-
-      if (kDebugMode) {
-        debugPrint('✅ [SwapFlow] Day marked as skipped successfully');
-      }
-
-      if (context.mounted) {
-        // ✅ FIX Bug #12: Usa localization invece di hardcoded string
-        SnackBarService.showSuccess(
-          context,
-          '${swapOpportunity.todayScheduledDay.templateId ?? "Day"} marked as skipped',
-        );
-      }
-
-      // ✅ FIX Bug #15: Ritorna true per indicare successo
-      return true;
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [SwapFlow] Error marking day as skipped: $e');
-        debugPrintStack(stackTrace: stackTrace);
-      }
-      if (context.mounted) {
-        SnackBarService.showError(
-          context,
-          context.l10n.errorMarkingDayAsSkipped,
-        );
-      }
-      // ✅ FIX Bug #15: Ritorna false per indicare fallimento
-      return false;
-    }
+    // v2.0 simplified schema doesn't support day-level swapping
+    return null;
   }
 }
 
-/// Le possibili decisioni dell'utente nel swap dialog
+/// Rappresenta la decisione dell'utente nel dialog di swap
+///
+/// **v2.0 STUB**: This enum is kept for compatibility but never used in v2.0
 enum SwapDecision {
-  continueNormal, // 1. Fai il workout, non aggiornare routine
-  swapDays, // 2. Scambia i giorni (Consigliato)
-  skipToday, // 3. Salta il giorno di oggi
-}
-
-/// Dialog di conferma dello swap
-class _SwapConfirmationDialog extends StatelessWidget {
-  const _SwapConfirmationDialog(this.swapOpportunity);
-
-  final RoutineSwapOpportunity swapOpportunity;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(context.l10n.swapDaysTitle),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.swapDaysDescription,
-              style: context.textTheme.bodyMedium,
-            ),
-            SizedBox(height: 16),
-            // Today's scheduled day
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer
-                    .withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // ✅ FIX Bug #13: Usa localization invece di hardcoded "Oggi"
-                    '${context.l10n.today} (${_formatDate(swapOpportunity.todayScheduledDay.date, context)})',
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.primary,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    swapOpportunity.todayScheduledDay.templateId ?? 'N/A',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 12),
-            Center(
-              child: Text(
-                '↔',
-                style: context.textTheme.headlineSmall?.copyWith(
-                  color: context.colors.outline,
-                ),
-              ),
-            ),
-            SizedBox(height: 12),
-            // Future scheduled day
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.colors.secondaryContainer
-                    .withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _formatDate(swapOpportunity.futureScheduledDay.date, context),
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colors.secondary,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    swapOpportunity.futureScheduledDay.templateId ?? 'N/A',
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(context.l10n.cancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, SwapDecision.continueNormal),
-          child: Text(context.l10n.continueNormal),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, SwapDecision.skipToday),
-          child: Text(context.l10n.skipToday),
-        ),
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, SwapDecision.swapDays),
-          child: Text(context.l10n.swapDaysButtonLabel),
-        ),
-      ],
-    );
-  }
-
-  String _formatDate(DateTime date, BuildContext context) {
-    final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('E d/M', locale);
-    return dateFormat.format(date);
-  }
+  continueNormal, // User wants to continue with today's template
+  swapDays, // User wants to swap today with future day
+  cancel, // User cancelled
 }

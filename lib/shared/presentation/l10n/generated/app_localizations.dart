@@ -2665,7 +2665,7 @@ abstract class AppLocalizations {
   /// **'Rest Time Suggestion'**
   String get restTimeSuggestion;
 
-  /// Reset button
+  /// Semantic label for reset icon
   ///
   /// In en, this message translates to:
   /// **'Reset'**
@@ -3007,7 +3007,7 @@ abstract class AppLocalizations {
   /// **'Per Session'**
   String get perSession;
 
-  /// Personal records section title
+  /// Semantic label for personal records icon
   ///
   /// In en, this message translates to:
   /// **'Personal Records'**
@@ -8273,7 +8273,7 @@ abstract class AppLocalizations {
   /// **'Tip'**
   String get tip;
 
-  /// Warning dialog title
+  /// Semantic label for warning icon
   ///
   /// In en, this message translates to:
   /// **'Warning'**
@@ -22344,10 +22344,10 @@ abstract class AppLocalizations {
   /// **'Keep data'**
   String get keepData;
 
-  /// Button to reset all data when changing format
+  /// Button text to reset all PRs
   ///
   /// In en, this message translates to:
-  /// **'Reset all'**
+  /// **'Reset All'**
   String get resetAll;
 
   /// Success message after counting mode change
@@ -23796,10 +23796,10 @@ abstract class AppLocalizations {
   /// **'No matches found'**
   String get noMatchesFound;
 
-  /// Auto-generated for noPRsYet
+  /// Title for empty state when no PRs exist
   ///
   /// In en, this message translates to:
-  /// **'No p rs yet'**
+  /// **'No PRs Yet'**
   String get noPRsYet;
 
   /// Auto-generated for noWorkoutsFound
@@ -30906,7 +30906,7 @@ abstract class AppLocalizations {
   /// **'Complete a workout to see history'**
   String get completeWorkoutToSeeHistory;
 
-  /// Personal record abbreviation badge
+  /// Semantic label for PR icon
   ///
   /// In en, this message translates to:
   /// **'PR'**
@@ -32477,6 +32477,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} workouts'**
   String workoutsGoalLabel(int count);
+
+  /// Label for PR achieved today
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get prToday;
+
+  /// Label for PR achieved yesterday
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get prYesterday;
+
+  /// Label for PR achieved X days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days ago'**
+  String prDaysAgo(int days);
+
+  /// Dialog title asking to confirm PR reset
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All PRs?'**
+  String get resetAllPRsQuestion;
+
+  /// Dialog message explaining PR reset consequences
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all personal record data. Your workout history will remain, but PR tracking will start fresh. \n\nThis action cannot be undone.'**
+  String get resetAllPRsMessage;
+
+  /// Placeholder message for PR reset feature
+  ///
+  /// In en, this message translates to:
+  /// **'🔄 PR reset functionality coming soon!'**
+  String get prResetComingSoon;
+
+  /// Title for PR details modal
+  ///
+  /// In en, this message translates to:
+  /// **'PR Details'**
+  String get prDetails;
+
+  /// Title for recent PRs section
+  ///
+  /// In en, this message translates to:
+  /// **'Recent PRs (Last 7 Days)'**
+  String get recentPRsLastSevenDays;
+
+  /// Format for displaying PR achievement count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{achievement} other{achievements}}'**
+  String prAchievements(int count);
+
+  /// Badge text for new PR
+  ///
+  /// In en, this message translates to:
+  /// **'New!'**
+  String get newBadge;
+
+  /// Title for PR explanation section
+  ///
+  /// In en, this message translates to:
+  /// **'What is a PR?'**
+  String get whatIsPR;
+
+  /// Explanation of what PR means
+  ///
+  /// In en, this message translates to:
+  /// **'PR (Personal Record) is your best performance for an exercise, measured by estimated 1RM (one-rep max). We automatically track your PRs as you train, so you can see your progress over time.'**
+  String get prExplanation;
+
+  /// Message explaining how to get PRs
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your workouts to see your personal records here!'**
+  String get noPRsYetMessage;
+
+  /// Title for all PRs section
+  ///
+  /// In en, this message translates to:
+  /// **'All Personal Records'**
+  String get allPersonalRecords;
+
+  /// Label for new PR badge
+  ///
+  /// In en, this message translates to:
+  /// **'NEW'**
+  String get newLabel;
+
+  /// Title for reset PRs section
+  ///
+  /// In en, this message translates to:
+  /// **'Reset PRs'**
+  String get resetPRs;
+
+  /// Message explaining PR reset option
+  ///
+  /// In en, this message translates to:
+  /// **'Need to start fresh? You can reset all personal records. This will NOT delete your workout history.'**
+  String get resetPRsMessage;
+
+  /// Button label for resetting all PRs with count
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All PRs ({count} records)'**
+  String resetAllPRsButton(int count);
 }
 
 class _AppLocalizationsDelegate

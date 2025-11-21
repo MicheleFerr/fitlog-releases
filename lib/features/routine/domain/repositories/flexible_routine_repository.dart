@@ -7,14 +7,18 @@
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
 ///
-/// FLEXIBLE ROUTINE REPOSITORY INTERFACE - Contract for flexible routine data operations
+/// FLEXIBLE ROUTINE REPOSITORY INTERFACE - v2.0 Simplified Schema
 ///
 /// This interface defines:
 /// - CRUD operations for flexible routines
 /// - Active routine management
-/// - Multi-routine support
-/// - Skip & recovery operations
-/// - Sync operations
+/// - Real-time streams
+///
+/// ⚠️ **v2.0 CHANGES**: Removed v1.0 complex features:
+/// - Day-level operations (completeDay, skipDay, recoverDay) - not in v2.0 schema
+/// - Archive/Complete states (isArchived, isCompleted) - not in v2.0 schema
+/// - RoutineType filtering - not in v2.0 schema
+/// - RoutineStatistics - simplified to use v2.0 properties only
 ///
 /// Implementations:
 /// - FirebaseFlexibleRoutineRepository (Firebase + offline cache)
@@ -26,18 +30,6 @@ import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_rou
 abstract class FlexibleRoutineRepository {
   // === CRUD OPERATIONS ===
 
-  /// Get a specific routine by ID
-  Future<FlexibleRoutine?> getRoutineById(String routineId);
-
-  /// Get all routines for a user (active, paused, archived)
-  Future<List<FlexibleRoutine>> getUserRoutines(String userId);
-
-  /// Get only active routines
-  Future<List<FlexibleRoutine>> getActiveRoutines(String userId);
-
-  /// Get archived routines
-  Future<List<FlexibleRoutine>> getArchivedRoutines(String userId);
-
   /// Create a new routine
   Future<void> createRoutine(FlexibleRoutine routine);
 
@@ -47,17 +39,37 @@ abstract class FlexibleRoutineRepository {
   /// Delete a routine
   Future<void> deleteRoutine(String routineId);
 
-  // === ACTIVE ROUTINE MANAGEMENT ===
+  /// Get a specific routine by ID
+  Future<FlexibleRoutine?> getRoutineById(String routineId);
 
-  /// Get the user's currently active routine
-  /// Returns null if no active routine exists
+  // === QUERY OPERATIONS ===
+
+  /// Get all routines for a user
+  Future<List<FlexibleRoutine>> getUserRoutines(String userId);
+
+  // === ACTIVATION MANAGEMENT ===
+
+  /// Activate a routine (deactivates all others automatically)
+  Future<void> activateRoutine(String userId, String routineId);
+
+  /// Deactivate a routine
+  Future<void> deactivateRoutine(String routineId);
+
+  /// Deactivate all routines for a user
+  Future<void> deactivateAllRoutines(String userId);
+
+  // === HELPER METHODS ===
+
+  /// Get active routine (one-time fetch, not stream)
   Future<FlexibleRoutine?> getActiveRoutine(String userId);
 
-  /// Set a routine as active (deactivates all others)
-  Future<void> activateRoutine(String routineId, String userId);
+  /// Check if user has any active routines
+  Future<bool> hasActiveRoutines(String userId);
 
-  /// Deactivate the current active routine
-  Future<void> deactivateCurrentRoutine(String userId);
+  /// Get statistics for a routine
+  Future<RoutineStatistics?> getRoutineStatistics(String routineId);
+
+  // === STREAM OPERATIONS (Real-time) ===
 
   /// Stream the user's active routine (real-time updates)
   Stream<FlexibleRoutine?> watchActiveRoutine(String userId);
@@ -67,157 +79,51 @@ abstract class FlexibleRoutineRepository {
 
   /// Stream a specific routine by ID (real-time updates)
   Stream<FlexibleRoutine?> watchRoutineById(String routineId);
-
-  // === ROUTINE STATE OPERATIONS ===
-
-  /// Archive a routine (keeps it but marks as inactive)
-  Future<void> archiveRoutine(String routineId);
-
-  /// Unarchive a routine
-  Future<void> unarchiveRoutine(String routineId);
-
-  /// Mark routine as completed (period ended)
-  Future<void> completeRoutine(String routineId);
-
-  // === DAY OPERATIONS ===
-
-  /// Mark a specific day as completed
-  Future<void> completeDayWorkout({
-    required String routineId,
-    required DateTime date,
-    required String workoutId,
-  });
-
-  /// Mark a specific day as skipped
-  Future<void> skipDay({
-    required String routineId,
-    required DateTime date,
-    String? reason,
-    String? notes,
-  });
-
-  /// Recover a skipped day on another date
-  Future<void> recoverDay({
-    required String routineId,
-    required DateTime originalDate,
-    required DateTime recoveryDate,
-    String? notes,
-  });
-
-  /// ✅ NEW: Perform missed workout recovery with atomic batch write
-  ///
-  /// Completes today's workout as recovery and marks yesterday as skipped
-  /// in a single atomic operation. Uses UTC-normalized dates for timezone safety.
-  ///
-  /// Parameters:
-  /// - routineId: ID of the active routine
-  /// - workoutId: ID of the workout to complete as recovery
-  /// - userId: ID of the user
-  ///
-  /// Returns: true if recovery succeeded, false otherwise
-  Future<bool> performMissedWorkoutRecovery({
-    required String routineId,
-    required String workoutId,
-    required String userId,
-  });
-
-  // === QUERY OPERATIONS ===
-
-  /// Get routines within a date range
-  Future<List<FlexibleRoutine>> getRoutinesInDateRange({
-    required String userId,
-    required DateTime startDate,
-    required DateTime endDate,
-  });
-
-  /// Get routines by type
-  Future<List<FlexibleRoutine>> getRoutinesByType({
-    required String userId,
-    required RoutineType type,
-  });
-
-  /// Check if user has any active routines
-  Future<bool> hasActiveRoutines(String userId);
-
-  /// Get routine statistics
-  Future<RoutineStatistics> getRoutineStatistics(String routineId);
-
-  // === SYNC OPERATIONS ===
-
-  /// Sync pending changes to the server
-  Future<void> syncPendingChanges(String userId);
-
-  /// Batch update multiple routines
-  Future<void> batchUpdateRoutines(List<FlexibleRoutine> routines);
 }
 
-/// Statistics for a routine
+/// Statistics for a routine (v2.0 simplified)
+///
+/// **v2.0 CHANGES**: Only uses properties available in v2.0 schema
 class RoutineStatistics {
-
   const RoutineStatistics({
-    required this.totalDays,
-    required this.completedDays,
-    required this.skippedDays,
-    required this.recoveredDays,
-    required this.restDays,
+    required this.totalTrainingDays,
+    required this.totalWorkouts,
+    required this.completedWorkouts,
     required this.completionRate,
-    required this.adherenceRate,
-    required this.skipRate,
-    required this.currentStreak,
-    required this.longestStreak,
-    this.lastWorkoutDate,
-    this.mostSkippedDay,
-    this.mostCompletedDay,
+    required this.createdAt,
+    required this.lastModified,
   });
 
-  /// Calculate statistics from a routine
+  /// Calculate statistics from a routine (v2.0 compatible)
   factory RoutineStatistics.fromRoutine(FlexibleRoutine routine) {
-    final schedule = routine.schedule.values;
+    final totalTrainingDays = routine.trainingDays.length;
+    final totalWorkouts = routine.totalWorkouts;
+    final completedWorkouts = routine.completedDays.length;
 
-    final totalDays = routine.durationInDays;
-    final completedDays = routine.completedDays;
-    final skippedDays = routine.skipTracker.totalSkips;
-    final recoveredDays = routine.skipTracker.totalRecoveries;
-    final restDays =
-        schedule.where((day) => day.status == DayStatus.rest).length;
-
-    final completionRate = routine.progressPercentage * 100;
-    final adherenceRate = routine.adherenceRate;
-    final skipRate = routine.skipRate;
-
-    final currentStreak = routine.currentStreak;
-    final longestStreak = routine.skipTracker.longestSkipStreak;
+    final completionRate = totalWorkouts > 0
+        ? (completedWorkouts / totalWorkouts) * 100
+        : 0.0;
 
     return RoutineStatistics(
-      totalDays: totalDays,
-      completedDays: completedDays,
-      skippedDays: skippedDays,
-      recoveredDays: recoveredDays,
-      restDays: restDays,
+      totalTrainingDays: totalTrainingDays,
+      totalWorkouts: totalWorkouts,
+      completedWorkouts: completedWorkouts,
       completionRate: completionRate,
-      adherenceRate: adherenceRate,
-      skipRate: skipRate,
-      currentStreak: currentStreak,
-      longestStreak: longestStreak,
-      lastWorkoutDate: routine.lastWorkoutDate,
+      createdAt: routine.createdAt,
+      lastModified: routine.updatedAt,
     );
   }
-  final int totalDays;
-  final int completedDays;
-  final int skippedDays;
-  final int recoveredDays;
-  final int restDays;
+
+  final int totalTrainingDays;
+  final int totalWorkouts;
+  final int completedWorkouts;
   final double completionRate;
-  final double adherenceRate;
-  final double skipRate;
-  final int currentStreak;
-  final int longestStreak;
-  final DateTime? lastWorkoutDate;
-  final String? mostSkippedDay;
-  final String? mostCompletedDay;
+  final DateTime createdAt;
+  final DateTime lastModified;
 
   /// Get summary string
-  String get summary {
-    return 'Completed: $completedDays/$totalDays • Adherence: ${adherenceRate.toInt()}% • Skip Rate: ${skipRate.toInt()}%';
+  @override
+  String toString() {
+    return 'Completed: $completedWorkouts/$totalWorkouts • Completion Rate: ${completionRate.toStringAsFixed(0)}%';
   }
 }

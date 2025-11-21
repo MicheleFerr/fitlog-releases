@@ -1,12 +1,17 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 /// Service che analizza workout completati e rileva opportunità di swap
 /// nella routine attiva.
+///
+/// ⚠️ **v2.0 STUB**: This service is temporarily stubbed out for v2.0 simplified schema.
+/// The v1.0 complex features (ScheduledDay, DayStatus, swap opportunities) don't exist in v2.0.
+/// TODO: Reimplement when v2.0 adds advanced tracking features.
 class RoutineMatchingService {
   /// Risultato dell'analisi di matching
+  ///
+  /// **v2.0 STUB**: Always returns `noMatch` - advanced matching not implemented in v2.0
   Future<RoutineMatchResult> analyzeWorkoutForRoutine({
     required Workout completedWorkout,
     required FlexibleRoutine activeRoutine,
@@ -14,238 +19,17 @@ class RoutineMatchingService {
   }) async {
     if (kDebugMode) {
       debugPrint(
-        '🔍 [RoutineMatching] Analyzing workout: ${completedWorkout.templateId}',
+        '🔍 [RoutineMatching v2.0 STUB] analyzeWorkoutForRoutine called - returning noMatch (feature not implemented in v2.0)',
       );
     }
 
-    // Validazione: il workout ha un template?
-    if (completedWorkout.templateId == null ||
-        completedWorkout.templateId!.isEmpty) {
-      if (kDebugMode) {
-        debugPrint('ℹ️ [RoutineMatching] Workout has no templateId, skipping');
-      }
-      return const RoutineMatchResult.noTemplate();
-    }
-
-    // Trova tutti i giorni che corrispondono a questo template
-    final matchingDays = _findMatchingDays(
-      routine: activeRoutine,
-      templateId: completedWorkout.templateId!,
-      completionTime: completionTime,
-    );
-
-    if (kDebugMode) {
-      debugPrint(
-        '🔍 [RoutineMatching] Found ${matchingDays.length} matching days',
-      );
-    }
-
-    // Nessun match
-    if (matchingDays.isEmpty) {
-      return const RoutineMatchResult.noMatch();
-    }
-
-    // Un match perfetto - auto-complete
-    if (matchingDays.length == 1) {
-      if (kDebugMode) {
-        debugPrint('✅ [RoutineMatching] Single match found, auto-completing');
-      }
-      return RoutineMatchResult.simpleMatch(matchingDays.first);
-    }
-
-    // Multipli match - controlla se c'è un'opportunità di swap
-    if (kDebugMode) {
-      debugPrint('⚠️ [RoutineMatching] Multiple matches found, checking swap');
-    }
-
-    final swapOpportunity = _detectSwapOpportunity(
-      routine: activeRoutine,
-      completedWorkout: completedWorkout,
-      matchingDays: matchingDays,
-      completionTime: completionTime,
-    );
-
-    if (swapOpportunity != null) {
-      if (kDebugMode) {
-        debugPrint(
-          '🔄 [RoutineMatching] Swap opportunity detected: swap ${swapOpportunity.todayScheduledDay.date} with ${swapOpportunity.futureScheduledDay.date}',
-        );
-      }
-      return RoutineMatchResult.swapOpportunity(swapOpportunity);
-    }
-
-    // Multipli match ma nessuno è "oggi" - user needs to select
-    if (kDebugMode) {
-      debugPrint(
-        '❓ [RoutineMatching] Multiple matches but no swap - need user selection',
-      );
-    }
-    return RoutineMatchResult.multipleMatches(matchingDays);
-  }
-
-  /// Trova tutti i giorni nella routine che hanno questo template
-  /// entro una finestra temporale ragionevole (±14 giorni)
-  List<DateTime> _findMatchingDays({
-    required FlexibleRoutine routine,
-    required String templateId,
-    required DateTime completionTime,
-  }) {
-    final candidates = <DateTime>[];
-
-    for (final entry in routine.schedule.entries) {
-      final scheduledDay = entry.value;
-
-      // Filtro 1: Il templateId deve corrispondere (case-insensitive)
-      if (scheduledDay.templateId?.toLowerCase() != templateId.toLowerCase()) {
-        continue;
-      }
-
-      // Filtro 2: Status deve essere "actionable" (scheduled, skipped, recovered)
-      if (scheduledDay.status != DayStatus.scheduled &&
-          scheduledDay.status != DayStatus.skipped &&
-          scheduledDay.status != DayStatus.recovered) {
-        continue;
-      }
-
-      // Filtro 3: Finestra temporale ±14 giorni
-      // ✅ FIX: Normalizza entrambe le date a mezzanotte per confronto corretto
-      final scheduledDateNormalized = DateTime(
-        scheduledDay.date.year,
-        scheduledDay.date.month,
-        scheduledDay.date.day,
-      );
-      final completionDateNormalized = DateTime(
-        completionTime.year,
-        completionTime.month,
-        completionTime.day,
-      );
-      final daysDifference = scheduledDateNormalized
-          .difference(completionDateNormalized)
-          .inDays
-          .abs();
-      if (daysDifference > 14) {
-        continue;
-      }
-
-      candidates.add(scheduledDay.date);
-    }
-
-    // Ordina per vicinanza alla completion time
-    candidates.sort((a, b) {
-      final diffA = a.difference(completionTime).inDays.abs();
-      final diffB = b.difference(completionTime).inDays.abs();
-      return diffA.compareTo(diffB);
-    });
-
-    return candidates;
-  }
-
-  /// Rileva un'opportunità di swap intelligente
-  /// Situazione: Oggi dovrebbe fare X, ma vuole fare Y (schedulato per domani)
-  RoutineSwapOpportunity? _detectSwapOpportunity({
-    required FlexibleRoutine routine,
-    required Workout completedWorkout,
-    required List<DateTime> matchingDays,
-    required DateTime completionTime,
-  }) {
-    // Normalizza la completion time a mezzanotte (per confronto giornaliero)
-    final completionDate = DateTime(
-      completionTime.year,
-      completionTime.month,
-      completionTime.day,
-    );
-
-    // Cosa dovrebbe fare oggi la routine?
-    final todayScheduledDay = routine.schedule.entries
-        .where((e) {
-          final dayDate = DateTime(
-            e.value.date.year,
-            e.value.date.month,
-            e.value.date.day,
-          );
-          return dayDate == completionDate;
-        })
-        .map((e) => e.value)
-        .firstOrNull;
-
-    if (todayScheduledDay == null) {
-      if (kDebugMode) {
-        debugPrint(
-          '❌ [Swap Detection] No scheduled day for today, cannot swap',
-        );
-      }
-      return null;
-    }
-
-    // Il template di oggi è diverso da quello completato? (case-insensitive)
-    if (todayScheduledDay.templateId?.toLowerCase() == completedWorkout.templateId?.toLowerCase()) {
-      if (kDebugMode) {
-        debugPrint(
-          '❌ [Swap Detection] Today template matches completed workout, no swap needed',
-        );
-      }
-      return null;
-    }
-
-    // Cerca un giorno futuro che contenga il template completato
-    // e che sia "actionable"
-    final futureSwapDay = matchingDays.firstWhereOrNull((candidateDate) {
-      final candidateDateNormalized = DateTime(
-        candidateDate.year,
-        candidateDate.month,
-        candidateDate.day,
-      );
-      // Deve essere nel futuro
-      return candidateDateNormalized.isAfter(completionDate);
-    });
-
-    if (futureSwapDay == null) {
-      if (kDebugMode) {
-        debugPrint('❌ [Swap Detection] No future matching day found');
-      }
-      return null;
-    }
-
-    // Retrieve lo ScheduledDay futuro
-    // ✅ FIX: Usa firstWhereOrNull invece di firstWhere per evitare StateError crash
-    final futureScheduledDayEntry = routine.schedule.entries.firstWhereOrNull((e) {
-      final eDate = DateTime(
-        e.value.date.year,
-        e.value.date.month,
-        e.value.date.day,
-      );
-      final fDate = DateTime(
-        futureSwapDay.year,
-        futureSwapDay.month,
-        futureSwapDay.day,
-      );
-      return eDate == fDate;
-    });
-
-    if (futureScheduledDayEntry == null) {
-      if (kDebugMode) {
-        debugPrint('❌ [Swap Detection] Future scheduled day not found in schedule');
-      }
-      return null;
-    }
-
-    final futureScheduledDay = futureScheduledDayEntry.value;
-
-    if (kDebugMode) {
-      debugPrint(
-        '✅ [Swap Detection] Swap opportunity: ${todayScheduledDay.date} (${todayScheduledDay.templateId}) ↔ ${futureScheduledDay.date} (${futureScheduledDay.templateId})',
-      );
-    }
-
-    return RoutineSwapOpportunity(
-      todayScheduledDay: todayScheduledDay,
-      futureScheduledDay: futureScheduledDay,
-      completedWorkoutTemplate: completedWorkout.templateId!,
-    );
+    // v2.0 simplified schema doesn't support day-level tracking
+    // Return noMatch to skip complex swap logic
+    return const RoutineMatchResult.noMatch();
   }
 }
 
-/// Risultato dell'analisi di matching
+/// Risultato dell'analisi di matching tra workout e routine
 sealed class RoutineMatchResult {
   const RoutineMatchResult();
 
@@ -303,23 +87,25 @@ class _SwapOpportunity extends RoutineMatchResult {
 }
 
 /// Rappresenta un'opportunità di swap tra due giorni della routine
+///
+/// **v2.0 STUB**: This class is kept for compatibility but never instantiated in v2.0
 class RoutineSwapOpportunity {
   const RoutineSwapOpportunity({
-    required this.todayScheduledDay,
-    required this.futureScheduledDay,
+    required this.todayTemplateId,
+    required this.futureTemplateId,
     required this.completedWorkoutTemplate,
   });
 
-  /// Il giorno di oggi (dovrebbe avere un template diverso)
-  final ScheduledDay todayScheduledDay;
+  /// Il template ID di oggi (dovrebbe essere diverso da quello completato)
+  final String todayTemplateId;
 
-  /// Il giorno futuro (dovrebbe avere il template del workout completato)
-  final ScheduledDay futureScheduledDay;
+  /// Il template ID futuro (dovrebbe corrispondere al workout completato)
+  final String futureTemplateId;
 
   /// Il template del workout appena completato
   final String completedWorkoutTemplate;
 
   @override
   String toString() =>
-      'SwapOpportunity: ${todayScheduledDay.date} ↔ ${futureScheduledDay.date}';
+      'SwapOpportunity: $todayTemplateId ↔ $futureTemplateId';
 }

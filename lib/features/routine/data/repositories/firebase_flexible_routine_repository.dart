@@ -7,18 +7,20 @@
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
 ///
-/// FIREBASE FLEXIBLE ROUTINE REPOSITORY - Firebase implementation
+/// FIREBASE FLEXIBLE ROUTINE REPOSITORY - v2.0 Simplified Implementation
 ///
 /// This repository handles:
 /// - Firebase Firestore operations
 /// - Real-time sync with Stream
-/// - Offline caching
-/// - Batch operations
-/// - Error handling
+/// - Active routine management
+///
+/// ⚠️ **v2.0 SIMPLIFIED**: Removed v1.0 complex features:
+/// - Day-level operations (completeDay, skipDay, recoverDay)
+/// - Archive/Complete states
+/// - Complex statistics queries
 ///
 /// Dependencies:
 /// - Cloud Firestore
-/// - RxDart for stream operations
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,16 +28,16 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 
-/// Firebase implementation of FlexibleRoutineRepository
+/// Firebase implementation of FlexibleRoutineRepository (v2.0 simplified)
 class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
-
   FirebaseFlexibleRoutineRepository({
     FirebaseFirestore? firestore,
   }) : _firestore = firestore ?? FirebaseFirestore.instance;
+
   final FirebaseFirestore _firestore;
 
   /// Collection name in Firestore
-  static const String _collectionName = 'flexibleRoutines';
+  static const String _collectionName = 'routines';
 
   /// Get collection reference
   CollectionReference<Map<String, dynamic>> get _collection =>
@@ -44,92 +46,32 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
   // === CRUD OPERATIONS ===
 
   @override
-  Future<FlexibleRoutine?> getRoutineById(String routineId) async {
-    try {
-      final doc = await _collection.doc(routineId).get();
-
-      if (!doc.exists) return null;
-
-      final data = doc.data();
-      if (data == null) return null;
-
-      return FlexibleRoutine.fromJson(data);
-    } catch (e) {
-      throw _handleError(e, 'getRoutineById');
-    }
-  }
-
-  @override
-  Future<List<FlexibleRoutine>> getUserRoutines(String userId) async {
-    try {
-      final query = await _collection
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
-          .toList();
-    } catch (e) {
-      throw _handleError(e, 'getUserRoutines');
-    }
-  }
-
-  @override
-  Future<List<FlexibleRoutine>> getActiveRoutines(String userId) async {
-    try {
-      final query = await _collection
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .where('isArchived', isEqualTo: false)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
-          .toList();
-    } catch (e) {
-      throw _handleError(e, 'getActiveRoutines');
-    }
-  }
-
-  @override
-  Future<List<FlexibleRoutine>> getArchivedRoutines(String userId) async {
-    try {
-      final query = await _collection
-          .where('userId', isEqualTo: userId)
-          .where('isArchived', isEqualTo: true)
-          .orderBy('updatedAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
-          .toList();
-    } catch (e) {
-      throw _handleError(e, 'getArchivedRoutines');
-    }
-  }
-
-  @override
   Future<void> createRoutine(FlexibleRoutine routine) async {
     try {
       await _collection.doc(routine.id).set(routine.toJson());
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Created routine: ${routine.id}');
+      }
     } catch (e) {
-      throw _handleError(e, 'createRoutine');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to create routine: $e');
+      }
+      rethrow;
     }
   }
 
   @override
   Future<void> updateRoutine(FlexibleRoutine routine) async {
     try {
-      final updatedRoutine = routine.copyWith(
-        updatedAt: DateTime.now(),
-        isSyncPending: false,
-      );
-
-      await _collection.doc(routine.id).update(updatedRoutine.toJson());
+      await _collection.doc(routine.id).update(routine.toJson());
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Updated routine: ${routine.id}');
+      }
     } catch (e) {
-      throw _handleError(e, 'updateRoutine');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to update routine: $e');
+      }
+      rethrow;
     }
   }
 
@@ -137,493 +79,215 @@ class FirebaseFlexibleRoutineRepository implements FlexibleRoutineRepository {
   Future<void> deleteRoutine(String routineId) async {
     try {
       await _collection.doc(routineId).delete();
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Deleted routine: $routineId');
+      }
     } catch (e) {
-      throw _handleError(e, 'deleteRoutine');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to delete routine: $e');
+      }
+      rethrow;
     }
   }
 
-  // === ACTIVE ROUTINE MANAGEMENT ===
-
   @override
-  Future<FlexibleRoutine?> getActiveRoutine(String userId) async {
+  Future<FlexibleRoutine?> getRoutineById(String routineId) async {
     try {
-      if (kDebugMode) {
-        debugPrint('🔍 [getActiveRoutine] START - userId: $userId');
-      }
-
-      final snapshot = await _collection
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .where('isArchived', isEqualTo: false)
-          .limit(1)
-          .get();
-
-      if (kDebugMode) {
-        debugPrint('🔍 [getActiveRoutine] Query completed: ${snapshot.docs.length} docs');
-      }
-
-      if (snapshot.docs.isEmpty) {
-        if (kDebugMode) {
-          debugPrint('⚠️ [getActiveRoutine] No active routine found');
-        }
+      final doc = await _collection.doc(routineId).get();
+      if (!doc.exists || doc.data() == null) {
         return null;
       }
-
-      final routine = FlexibleRoutine.fromJson(snapshot.docs.first.data());
-      if (kDebugMode) {
-        debugPrint('✅ [getActiveRoutine] Found routine: ${routine.name}');
-      }
-      return routine;
+      return FlexibleRoutine.fromJson(doc.data()!);
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('❌ [getActiveRoutine] Error: $e');
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to get routine: $e');
       }
-      throw _handleError(e, 'getActiveRoutine');
-    }
-  }
-
-  @override
-  Future<void> activateRoutine(String routineId, String userId) async {
-    try {
-      final batch = _firestore.batch();
-
-      // Deactivate all other routines
-      final existingActive = await _collection
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      for (final doc in existingActive.docs) {
-        batch.update(doc.reference, {
-          'isActive': false,
-          'updatedAt': DateTime.now().toIso8601String(),
-        });
-      }
-
-      // Activate the target routine
-      batch.update(_collection.doc(routineId), {
-        'isActive': true,
-        'isArchived': false,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-
-      await batch.commit();
-    } catch (e) {
-      throw _handleError(e, 'activateRoutine');
-    }
-  }
-
-  @override
-  Future<void> deactivateCurrentRoutine(String userId) async {
-    try {
-      final activeRoutine = await getActiveRoutine(userId);
-      if (activeRoutine == null) return;
-
-      await _collection.doc(activeRoutine.id).update({
-        'isActive': false,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      throw _handleError(e, 'deactivateCurrentRoutine');
-    }
-  }
-
-  @override
-  Stream<FlexibleRoutine?> watchActiveRoutine(String userId) {
-    try {
-      if (kDebugMode) {
-        debugPrint('🔍 [watchActiveRoutine] START - userId: $userId');
-      }
-
-      return _collection
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .where('isArchived', isEqualTo: false)
-          .limit(1)
-          .snapshots()
-          .map((snapshot) {
-        if (kDebugMode) {
-          debugPrint('🔍 [watchActiveRoutine] Snapshot received: ${snapshot.docs.length} docs');
-        }
-
-        if (snapshot.docs.isEmpty) {
-          if (kDebugMode) {
-            debugPrint('⚠️ [watchActiveRoutine] No active routine found, returning null');
-          }
-          return null;
-        }
-
-        final routine = FlexibleRoutine.fromJson(snapshot.docs.first.data());
-        if (kDebugMode) {
-          debugPrint('✅ [watchActiveRoutine] Active routine found: ${routine.name} (id: ${routine.id})');
-        }
-        return routine;
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ [watchActiveRoutine] Error: $e');
-      }
-      throw _handleError(e, 'watchActiveRoutine');
-    }
-  }
-
-  @override
-  Stream<List<FlexibleRoutine>> watchUserRoutines(String userId) {
-    try {
-      return _collection
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map((snapshot) {
-        return snapshot.docs
-            .map((doc) => FlexibleRoutine.fromJson(doc.data()))
-            .toList();
-      });
-    } catch (e) {
-      throw _handleError(e, 'watchUserRoutines');
-    }
-  }
-
-  @override
-  Stream<FlexibleRoutine?> watchRoutineById(String routineId) {
-    try {
-      return _collection.doc(routineId).snapshots().map((snapshot) {
-        if (!snapshot.exists) return null;
-        final data = snapshot.data();
-        if (data == null) return null;
-        return FlexibleRoutine.fromJson(data);
-      });
-    } catch (e) {
-      throw _handleError(e, 'watchRoutineById');
-    }
-  }
-
-  // === ROUTINE STATE OPERATIONS ===
-
-  @override
-  Future<void> archiveRoutine(String routineId) async {
-    try {
-      await _collection.doc(routineId).update({
-        'isArchived': true,
-        'isActive': false,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      throw _handleError(e, 'archiveRoutine');
-    }
-  }
-
-  @override
-  Future<void> unarchiveRoutine(String routineId) async {
-    try {
-      await _collection.doc(routineId).update({
-        'isArchived': false,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      throw _handleError(e, 'unarchiveRoutine');
-    }
-  }
-
-  @override
-  Future<void> completeRoutine(String routineId) async {
-    try {
-      await _collection.doc(routineId).update({
-        'isCompleted': true,
-        'isActive': false,
-        'updatedAt': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      throw _handleError(e, 'completeRoutine');
-    }
-  }
-
-  // === DAY OPERATIONS ===
-
-  @override
-  Future<void> completeDayWorkout({
-    required String routineId,
-    required DateTime date,
-    required String workoutId,
-  }) async {
-    try {
-      final routine = await getRoutineById(routineId);
-      if (routine == null) {
-        throw Exception('Routine not found: $routineId');
-      }
-
-      final updatedRoutine = routine.completeDay(date, workoutId);
-      await updateRoutine(updatedRoutine);
-    } catch (e) {
-      throw _handleError(e, 'completeDayWorkout');
-    }
-  }
-
-  @override
-  Future<void> skipDay({
-    required String routineId,
-    required DateTime date,
-    String? reason,
-    String? notes,
-  }) async {
-    try {
-      final routine = await getRoutineById(routineId);
-      if (routine == null) {
-        throw Exception('Routine not found: $routineId');
-      }
-
-      final updatedRoutine = routine.skipDay(date, reason);
-      await updateRoutine(updatedRoutine);
-    } catch (e) {
-      throw _handleError(e, 'skipDay');
-    }
-  }
-
-  @override
-  Future<void> recoverDay({
-    required String routineId,
-    required DateTime originalDate,
-    required DateTime recoveryDate,
-    String? notes,
-  }) async {
-    try {
-      final routine = await getRoutineById(routineId);
-      if (routine == null) {
-        throw Exception('Routine not found: $routineId');
-      }
-
-      final updatedRoutine = routine.recoverDay(originalDate, recoveryDate);
-      await updateRoutine(updatedRoutine);
-    } catch (e) {
-      throw _handleError(e, 'recoverDay');
-    }
-  }
-
-  /// ✅ NEW: Perform missed workout recovery with atomic batch write
-  ///
-  /// Completes today's workout as recovery and marks yesterday as skipped
-  /// in a single atomic operation.
-  @override
-  Future<bool> performMissedWorkoutRecovery({
-    required String routineId,
-    required String workoutId,
-    required String userId,
-  }) async {
-    try {
-      // Get the routine
-      final routine = await getRoutineById(routineId);
-      if (routine == null) {
-        throw Exception('Routine not found: $routineId');
-      }
-
-      // ✅ FIX Bug #26: Usa local dates (no UTC) per consistency con entity _dateKey()
-      // Normalizza a mezzanotte locale (stesso formato di flexible_routine.dart)
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final yesterday = today.subtract(const Duration(days: 1));
-
-      // Format dates as Firestore keys (YYYY-MM-DD) - stesso formato di entity
-      final todayKey =
-          '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-      final yesterdayKey =
-          '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-
-      // Get today's and yesterday's scheduled days
-      final todayDay = routine.schedule[todayKey];
-      final yesterdayDay = routine.schedule[yesterdayKey];
-
-      // Validate: Yesterday must have been scheduled
-      if (yesterdayDay == null || yesterdayDay.templateId == null) {
-        return false; // No scheduled workout yesterday
-      }
-
-      // ✅ FIX Bug #28: Idempotency check - se yesterday è già recovery, non riscrivere
-      if (yesterdayDay.status == DayStatus.completed &&
-          (yesterdayDay.isRecovery ?? false)) {
-        return false; // Already marked as recovery
-      }
-
-      // Validate: Today must not already be completed
-      if (todayDay != null &&
-          todayDay.status == DayStatus.completed) {
-        return false; // Already completed today
-      }
-
-      // Create updated schedule
-      final updatedSchedule = Map<String, ScheduledDay>.from(routine.schedule);
-
-      // ✅ CRITICAL FIX: Mark YESTERDAY as recovery (completed), not today
-      // This ensures:
-      // - The originally skipped workout gets marked as recovered
-      // - Rest days remain unchanged (not marked as completed)
-      // - User sees green checkmark on the day they should have worked out
-      updatedSchedule[yesterdayKey] = yesterdayDay.copyWith(
-        status: DayStatus.completed,
-        isRecovery: true,
-        originalMissedDate: yesterday, // ✅ FIX Bug #26: usa local date, no UTC
-      );
-
-      // Create updated routine with new schedule
-      final updatedRoutine = routine.copyWith(
-        schedule: updatedSchedule,
-        updatedAt: DateTime.now(),
-      );
-
-      // Use atomic batch write for all-or-nothing guarantee
-      final batch = _firestore.batch();
-      batch.update(
-        _collection.doc(routineId),
-        updatedRoutine.toJson(),
-      );
-
-      await batch.commit();
-
-      return true;
-    } catch (e) {
-      throw _handleError(e, 'performMissedWorkoutRecovery');
+      rethrow;
     }
   }
 
   // === QUERY OPERATIONS ===
 
   @override
-  Future<List<FlexibleRoutine>> getRoutinesInDateRange({
-    required String userId,
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
+  Future<List<FlexibleRoutine>> getUserRoutines(String userId) async {
     try {
-      // Get all user routines and filter by date range
-      final allRoutines = await getUserRoutines(userId);
+      final querySnapshot = await _collection
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      // ✅ FIX Bug #27: Normalizza date a mezzanotte per confronto consistency
-      final startDateNormalized = DateTime(startDate.year, startDate.month, startDate.day);
-      final endDateNormalized = DateTime(endDate.year, endDate.month, endDate.day);
-
-      return allRoutines.where((routine) {
-        final routineStart = DateTime(routine.startDate.year, routine.startDate.month, routine.startDate.day);
-        final routineEnd = DateTime(routine.endDate.year, routine.endDate.month, routine.endDate.day);
-
-        return routineStart.isBefore(endDateNormalized.add(const Duration(days: 1))) &&
-            routineEnd.isAfter(startDateNormalized.subtract(const Duration(days: 1)));
-      }).toList();
+      return querySnapshot.docs
+          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
+          .toList();
     } catch (e) {
-      throw _handleError(e, 'getRoutinesInDateRange');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to get user routines: $e');
+      }
+      rethrow;
+    }
+  }
+
+  // === ACTIVATION MANAGEMENT ===
+
+  @override
+  Future<void> activateRoutine(String userId, String routineId) async {
+    try {
+      // Step 1: Deactivate all other routines
+      await deactivateAllRoutines(userId);
+
+      // Step 2: Activate this routine
+      await _collection.doc(routineId).update({'isActive': true});
+
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Activated routine: $routineId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to activate routine: $e');
+      }
+      rethrow;
     }
   }
 
   @override
-  Future<List<FlexibleRoutine>> getRoutinesByType({
-    required String userId,
-    required RoutineType type,
-  }) async {
+  Future<void> deactivateRoutine(String routineId) async {
     try {
-      final query = await _collection
+      await _collection.doc(routineId).update({'isActive': false});
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Deactivated routine: $routineId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to deactivate routine: $e');
+      }
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deactivateAllRoutines(String userId) async {
+    try {
+      final routines = await getUserRoutines(userId);
+      final batch = _firestore.batch();
+
+      for (final routine in routines) {
+        if (routine.isActive) {
+          batch.update(
+            _collection.doc(routine.id),
+            {'isActive': false},
+          );
+        }
+      }
+
+      await batch.commit();
+      if (kDebugMode) {
+        debugPrint('✅ [FirebaseRoutineRepo] Deactivated all routines for user: $userId');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to deactivate all routines: $e');
+      }
+      rethrow;
+    }
+  }
+
+  // === HELPER METHODS ===
+
+  @override
+  Future<FlexibleRoutine?> getActiveRoutine(String userId) async {
+    try {
+      final querySnapshot = await _collection
           .where('userId', isEqualTo: userId)
-          .where('type', isEqualTo: type.name)
-          .orderBy('createdAt', descending: true)
+          .where('isActive', isEqualTo: true)
+          .limit(1)
           .get();
 
-      return query.docs
-          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
-          .toList();
+      if (querySnapshot.docs.isEmpty) {
+        return null;
+      }
+      return FlexibleRoutine.fromJson(querySnapshot.docs.first.data());
     } catch (e) {
-      throw _handleError(e, 'getRoutinesByType');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to get active routine: $e');
+      }
+      rethrow;
     }
   }
 
   @override
   Future<bool> hasActiveRoutines(String userId) async {
     try {
-      final query = await _collection
+      final querySnapshot = await _collection
           .where('userId', isEqualTo: userId)
           .where('isActive', isEqualTo: true)
-          .where('isArchived', isEqualTo: false)
           .limit(1)
           .get();
 
-      return query.docs.isNotEmpty;
+      return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      throw _handleError(e, 'hasActiveRoutines');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to check active routines: $e');
+      }
+      return false;
     }
   }
 
   @override
-  Future<RoutineStatistics> getRoutineStatistics(String routineId) async {
+  Future<RoutineStatistics?> getRoutineStatistics(String routineId) async {
     try {
       final routine = await getRoutineById(routineId);
       if (routine == null) {
-        throw Exception('Routine not found: $routineId');
+        return null;
       }
-
       return RoutineStatistics.fromRoutine(routine);
     } catch (e) {
-      throw _handleError(e, 'getRoutineStatistics');
+      if (kDebugMode) {
+        debugPrint('❌ [FirebaseRoutineRepo] Failed to get routine statistics: $e');
+      }
+      return null;
     }
   }
 
-  // === SYNC OPERATIONS ===
+  // === STREAM OPERATIONS (Real-time) ===
 
   @override
-  Future<void> syncPendingChanges(String userId) async {
-    try {
-      // Get all routines with pending sync
-      final allRoutines = await getUserRoutines(userId);
-      final pendingRoutines = allRoutines.where((r) => r.isSyncPending).toList();
-
-      if (pendingRoutines.isEmpty) return;
-
-      // Batch update all pending routines
-      await batchUpdateRoutines(pendingRoutines);
-    } catch (e) {
-      throw _handleError(e, 'syncPendingChanges');
-    }
+  Stream<FlexibleRoutine?> watchActiveRoutine(String userId) {
+    return _collection
+        .where('userId', isEqualTo: userId)
+        .where('isActive', isEqualTo: true)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return null;
+      }
+      return FlexibleRoutine.fromJson(snapshot.docs.first.data());
+    });
   }
 
   @override
-  Future<void> batchUpdateRoutines(List<FlexibleRoutine> routines) async {
-    try {
-      final batch = _firestore.batch();
-
-      for (final routine in routines) {
-        final updatedRoutine = routine.copyWith(
-          updatedAt: DateTime.now(),
-          isSyncPending: false,
-        );
-
-        batch.update(
-          _collection.doc(routine.id),
-          updatedRoutine.toJson(),
-        );
-      }
-
-      await batch.commit();
-    } catch (e) {
-      throw _handleError(e, 'batchUpdateRoutines');
-    }
+  Stream<List<FlexibleRoutine>> watchUserRoutines(String userId) {
+    return _collection
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => FlexibleRoutine.fromJson(doc.data()))
+          .toList();
+    });
   }
 
-  // === ERROR HANDLING ===
-
-  /// Handle Firebase errors and convert to meaningful exceptions
-  Exception _handleError(Object error, String operation) {
-    if (error is FirebaseException) {
-      switch (error.code) {
-        case 'permission-denied':
-          return Exception(
-              'Permission denied: You do not have access to this routine.');
-        case 'not-found':
-          return Exception('Routine not found.');
-        case 'already-exists':
-          return Exception('A routine with this ID already exists.');
-        case 'unavailable':
-          return Exception(
-              'Firestore service is temporarily unavailable. Please try again.');
-        default:
-          return Exception('Firebase error in $operation: ${error.message}');
+  @override
+  Stream<FlexibleRoutine?> watchRoutineById(String routineId) {
+    return _collection
+        .doc(routineId)
+        .snapshots()
+        .map((snapshot) {
+      if (!snapshot.exists || snapshot.data() == null) {
+        return null;
       }
-    }
-
-    return Exception('Error in $operation: ${error.toString()}');
+      return FlexibleRoutine.fromJson(snapshot.data()!);
+    });
   }
 }

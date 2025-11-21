@@ -749,13 +749,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Icon(
-                                  AppIcons.info,
-                                  size: 18,
-                                  color: context.colors.primary.withOpacity(
+                                SemanticIcon(
+                                  icon: AppIcons.info,
+                                  semanticLabel: 'Information',
+                                  size: AppIconSize.small,
+                                  color: context.colors.primary.withValues(alpha: 
                                     0.7,
-                                  ),
-                                ),
+                                )
                               ],
                             ),
                           ),
@@ -795,11 +795,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          AppIcons.autoAwesome,
-                                          size: 14,
+                                        SemanticIcon(
+                                          icon: AppIcons.autoAwesome,
+                                          semanticLabel: 'AI suggestion',
+                                          size: AppIconSize.tiny,
                                           color: context.colors.primary,
-                                        ),
+                                        )
                                         SizedBox(width: 4),
                                         Text(
                                           'APRE ${widget.exercise.apreProtocol ?? 6}',
@@ -844,16 +845,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          widget.exercise.restTime != null
-                                              ? AppIcons.timer
-                                              : AppIcons.timerOffOutlined,
-                                          size: 14,
-                                          color:
-                                              widget.exercise.restTime != null
+                                        SemanticIcon(
+                                          icon: AppIcons.timer,
+                                          semanticLabel: 'Rest timer',
+                                          size: AppIconSize.tiny,
+                                          color: widget.exercise.restTime != null
                                               ? context.colors.primary
                                               : context.colors.onSurfaceVariant,
-                                        ),
+                                        )
                                         SizedBox(width: 4),
                                         Text(
                                           widget.exercise.restTime != null
@@ -872,16 +871,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                           ),
                                         ),
                                         SizedBox(width: 2),
-                                        Icon(
-                                          AppIcons.edit,
-                                          size: 10,
-                                          color:
-                                              widget.exercise.restTime != null
+                                        SemanticIcon(
+                                          icon: AppIcons.edit,
+                                          semanticLabel: 'Edit',
+                                          size: AppIconSize.tiny,
+                                          color: widget.exercise.restTime != null
                                               ? context.colors.primary
-                                                    .withValues(alpha: 0.7)
-                                              : context.colors.onSurfaceVariant
-                                                    .withValues(alpha: 0.7),
-                                        ),
+                                                    .withValues(alpha: 0.7,
+                                        )
                                       ],
                                     ),
                                   ),
@@ -913,11 +910,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          AppIcons.unfoldLess,
-                                          size: 14,
+                                        SemanticIcon(
+                                          icon: AppIcons.unfoldLess,
+                                          semanticLabel: 'Collapse',
+                                          size: AppIconSize.tiny,
                                           color: context.colors.tertiary,
-                                        ),
+                                        )
                                         SizedBox(width: 4),
                                         Text(
                                           '${_autoCollapseState.countdown}',
@@ -927,12 +925,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                           ),
                                         ),
                                         SizedBox(width: 2),
-                                        Icon(
-                                          AppIcons.close,
-                                          size: 10,
+                                        SemanticIcon(
+                                          icon: AppIcons.close,
+                                          semanticLabel: 'Close',
+                                          size: AppIconSize.tiny,
                                           color: context.colors.tertiary
-                                              .withValues(alpha: 0.7),
-                                        ),
+                                              .withValues(alpha: 0.7,
+                                        )
                                       ],
                                     ),
                                   ),
@@ -1049,14 +1048,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           value: 'auto_adjustment',
                           child: Row(
                             children: [
-                              Icon(
-                                AppIcons.autoAwesome,
-                                size: 20,
-                                color:
-                                    widget.exercise.autoAdjustmentType != null
+                              SemanticIcon(
+                                icon: AppIcons.autoAwesome,
+                                semanticLabel: 'AI suggestion',
+                                size: AppIconSize.small,
+                                color: widget.exercise.autoAdjustmentType != null
                                     ? context.colors.primary
                                     : null,
-                              ),
+                              )
                               SizedBox(width: 8),
                               Text(
                                 context.l10n.autoAdjustment,
@@ -1102,7 +1101,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(AppIcons.delete, size: 20, color: context.errorColor),
+                              SemanticIcon(
+                                icon: AppIcons.delete,
+                                semanticLabel: 'Delete',
+                                size: AppIconSize.small,
+                                color: context.errorColor,
+                              )
                               SizedBox(width: 8),
                               Text(
                                 'Delete',
@@ -1119,7 +1123,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(AppIcons.edit, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.edit,
+                                  semanticLabel: 'Edit',
+                                  size: AppIconSize.small,
+                                )
                                 SizedBox(width: 8),
                                 Text(context.l10n.exerciseListEdit),
                               ],
@@ -1129,7 +1137,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'change_exercise',
                             child: Row(
                               children: [
-                                Icon(AppIcons.swapHoriz, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.swapHoriz,
+                                  semanticLabel: 'Change exercise',
+                                  size: AppIconSize.small,
+                                )
                                 SizedBox(width: 8),
                                 Text(context.l10n.exerciseChangeVariation),
                               ],
@@ -1139,7 +1151,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'duplicate',
                             child: Row(
                               children: [
-                                Icon(AppIcons.copy, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.copy,
+                                  semanticLabel: 'Duplicate',
+                                  size: AppIconSize.small,
+                                )
                                 SizedBox(width: 8),
                                 Text(context.l10n.exerciseListDuplicate),
                               ],
@@ -1153,7 +1169,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'insight',
                             child: Row(
                               children: [
-                                Icon(AppIcons.insights, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.insights,
+                                  semanticLabel: 'View insights',
+                                  size: AppIconSize.small,
+                                )
                                 SizedBox(width: 8),
                                 Text(context.l10n.exerciseListInsight),
                               ],
@@ -1180,7 +1200,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'community_advice',
                             child: Row(
                               children: [
-                                Icon(AppIcons.tip, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.tip,
+                                  semanticLabel: 'Tips',
+                                  size: AppIconSize.small,
+                                )
                                 SizedBox(width: 8),
                                 Text(context.l10n.communityAdvice),
                               ],
@@ -1222,9 +1246,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           turns: _isEditingNotes
                               ? 0.125
                               : 0, // 45 degree rotation
-                          child: Icon(
-                            _isEditingNotes ? AppIcons.edit : AppIcons.note,
-                            size: 16,
+                          child: SemanticIcon(
+                            icon: _isEditingNotes ? AppIcons.edit : AppIcons.note,
+                            semanticLabel: _isEditingNotes ? 'Edit note' : 'Note',
+                            size: AppIconSize.tiny,
                             color: _isEditingNotes
                                 ? context.colors.primary
                                 : context.colors.onSurfaceVariant,
@@ -1335,11 +1360,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     children: [
-                      Icon(
-                        AppIcons.workout,
+                      SemanticIcon(
+                        icon: AppIcons.workout,
+                        semanticLabel: 'Workout',
+                        size: AppIconSize.tiny,
                         color: context.colors.onSurfaceVariant,
-                        size: 16,
-                      ),
+                      )
                       SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.length} ${widget.exercise.sets.length == 1 ? 'set' : 'sets'}',
@@ -1371,11 +1397,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     children: [
-                      Icon(
-                        AppIcons.complete,
+                      SemanticIcon(
+                        icon: AppIcons.complete,
+                        semanticLabel: 'Complete',
+                        size: AppIconSize.tiny,
                         color: context.successColor,
-                        size: 16,
-                      ),
+                      )
                       SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.where((s) => s.isCompleted).length} sets completati',
@@ -1447,10 +1474,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             color: colorScheme.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            AppIcons.workout,
+          child: SemanticIcon(
+            icon: AppIcons.workout,
+            semanticLabel: 'Workout',
             color: colorScheme.primary,
-            size: 20,
+            size: AppIconSize.small,
           ),
         ),
       );
@@ -1486,7 +1514,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(icon, color: color, size: 20),
+      child: SemanticIcon(
+        icon: icon,
+        semanticLabel: 'Suggestion',
+        color: color,
+        size: AppIconSize.small,
+      ),
     );
   }
 
@@ -1580,13 +1613,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcons.speed,
-              size: 14,
+            SemanticIcon(
+              icon: AppIcons.speed,
+              semanticLabel: 'Speed',
+              size: AppIconSize.tiny,
               color: isDefault
                   ? context.colors.onSurfaceVariant
                   : context.colors.primary,
-            ),
+            )
             SizedBox(width: 4),
             Text(
               _formatTutDisplay(tutText),
@@ -1665,11 +1699,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.playCircleOutline,
-                  size: 20,
+                SemanticIcon(
+                  icon: AppIcons.playCircleOutline,
+                  semanticLabel: 'Playcircleoutline',
+                  size: AppIconSize.small,
                   color: context.colors.tertiary,
-                ),
+                )
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -1680,11 +1715,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                   ),
                 ),
-                Icon(
-                  AppIcons.forwardIos,
-                  size: 14,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forwardios',
+                  size: AppIconSize.tiny,
                   color: context.colors.tertiary,
-                ),
+                )
               ],
             ),
           ),
@@ -1708,11 +1744,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             ),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.playCircleOutline,
-                  size: 20,
+                SemanticIcon(
+                  icon: AppIcons.playCircleOutline,
+                  semanticLabel: 'Playcircleoutline',
+                  size: AppIconSize.small,
                   color: context.colors.primary,
-                ),
+                )
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -1723,11 +1760,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                   ),
                 ),
-                Icon(
-                  AppIcons.forwardIos,
-                  size: 14,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forwardios',
+                  size: AppIconSize.tiny,
                   color: context.colors.primary,
-                ),
+                )
               ],
             ),
           ),
@@ -1746,11 +1784,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         ),
         child: Row(
           children: [
-            Icon(
-              AppIcons.addCircleOutline,
-              size: 18,
+            SemanticIcon(
+              icon: AppIcons.addCircleOutline,
+              semanticLabel: 'Addcircleoutline',
+              size: AppIconSize.small,
               color: context.colors.onSurfaceVariant,
-            ),
+            )
             SizedBox(width: 8),
             Text(
               'No sets yet - tap to add',
@@ -1844,11 +1883,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                AppIcons.addCircleOutline,
-                                size: 20,
+                              SemanticIcon(
+                                icon: AppIcons.addCircleOutline,
+                                semanticLabel: 'Addcircleoutline',
+                                size: AppIconSize.small,
                                 color: context.colors.primary,
-                              ),
+                              )
                               SizedBox(width: 8),
                               Text(
                                 context.l10n.addSet,
@@ -1905,11 +1945,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  AppIcons.unfoldLess,
-                                  size: 20,
+                                SemanticIcon(
+                                  icon: AppIcons.unfoldLess,
+                                  semanticLabel: 'Collapse',
+                                  size: AppIconSize.small,
                                   color: context.colors.secondary,
-                                ),
+                                )
                                 SizedBox(width: 8),
                                 Text(
                                   context.l10n.collapseExercise,
@@ -1944,11 +1985,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          AppIcons.addCircleOutline,
-                          size: 20,
+                        SemanticIcon(
+                          icon: AppIcons.addCircleOutline,
+                          semanticLabel: 'Addcircleoutline',
+                          size: AppIconSize.small,
                           color: context.colors.primary,
-                        ),
+                        )
                         SizedBox(width: 8),
                         Text(
                           context.l10n.addSet,
@@ -2703,12 +2745,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       children: [
-                        Icon(
-                          AppIcons.timerOff,
+                        SemanticIcon(
+                          icon: AppIcons.timerOff,
+                          semanticLabel: 'Timeroff',
                           color: selectedTime == null
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
-                        ),
+                        )
                         SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -2733,10 +2776,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
                         ),
                         if (selectedTime == null)
-                          Icon(
-                            AppIcons.complete,
+                          SemanticIcon(
+                            icon: AppIcons.complete,
+                            semanticLabel: 'Complete',
                             color: context.colors.primary,
-                          ),
+                          )
                       ],
                     ),
                   ),
@@ -3162,7 +3206,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
       child: Column(
         children: [
-          Icon(icon, size: 20, color: color),
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: 'Icon',
+            size: AppIconSize.small,
+            color: color,
+          )
           const SizedBox(height: 4),
           Text(
             value,
@@ -3905,11 +3954,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
               SizedBox(width: 4),
-              Icon(
-                AppIcons.chevronRight,
-                size: 14,
-                color: context.colors.primary.withValues(alpha: 0.7),
-              ),
+              SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Chevronright',
+                size: AppIconSize.tiny,
+                color: context.colors.primary.withValues(alpha: 0.7,
+              )
             ],
           ),
         ),
@@ -4077,11 +4127,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              AppIcons.workout,
-                              size: 48,
+                            SemanticIcon(
+                              icon: AppIcons.workout,
+                              semanticLabel: 'Workout',
+                              size: AppIconSize.medium,
                               color: context.colors.outline,
-                            ),
+                            )
                             SizedBox(height: 16),
                             Text(
                               'Nessun allenamento precedente',
@@ -4452,7 +4503,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 16, color: color),
+              SemanticIcon(
+                icon: icon,
+                semanticLabel: 'Icon',
+                size: AppIconSize.tiny,
+                color: color,
+              )
               const SizedBox(width: 6),
               Text(
                 label,
@@ -5416,11 +5472,12 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    _showMetadataBanner ? AppIcons.expandLess : AppIcons.expandMore,
+                  SemanticIcon(
+                    icon: AppIcons.expandLess,
+                    semanticLabel: 'Collapse',
+                    size: AppIconSize.small,
                     color: context.colors.primary,
-                    size: 20,
-                  ),
+                  )
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -5433,11 +5490,12 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
                       ),
                     ),
                   ),
-                  Icon(
-                    AppIcons.info,
+                  SemanticIcon(
+                    icon: AppIcons.info,
+                    semanticLabel: 'Information',
+                    size: AppIconSize.small,
                     color: context.colors.primary,
-                    size: 18,
-                  ),
+                  )
                 ],
               ),
             ),

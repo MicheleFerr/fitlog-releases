@@ -20,33 +20,25 @@ ConsistencyScore _$ConsistencyScoreFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ConsistencyScore {
-  /// Overall consistency score (0-100)
-  int get overallScore => throw _privateConstructorUsedError;
+// NEW: Binary indicators (100% validated thresholds)
+  /// Frequency is optimal (>=3 workouts per week)
+  bool get frequencyOptimal => throw _privateConstructorUsedError;
 
-  /// Score rating text (Excellent, Good, Fair, Poor)
-  String get scoreRating => throw _privateConstructorUsedError;
+  /// Rest is optimal (1-2 rest days per week)
+  bool get restOptimal => throw _privateConstructorUsedError;
 
-  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
-  String get rating => throw _privateConstructorUsedError;
-
-  /// Risk level (Low, Medium, High) - string version
-  String get riskLevel => throw _privateConstructorUsedError;
-
-  /// Overtraining risk level (enum)
-  OvertrainingRisk get overtrainingRisk => throw _privateConstructorUsedError;
-
+  /// Progression is positive (volume increasing over time)
+  bool get progressionPositive =>
+      throw _privateConstructorUsedError; // EXISTING: Detailed scores (keep for breakdown view)
   /// Frequency score component (0-100) - changed to int for widget compatibility
   int get frequencyScore => throw _privateConstructorUsedError;
 
   /// Rest score component (0-100) - changed to int for widget compatibility
   int get restScore => throw _privateConstructorUsedError;
 
-  /// Volume score component (0-100) - changed to int for widget compatibility
-  int get volumeScore => throw _privateConstructorUsedError;
-
   /// Progression score component (0-100) - changed to int for widget compatibility
-  int get progressionScore => throw _privateConstructorUsedError;
-
+  int get progressionScore =>
+      throw _privateConstructorUsedError; // EXISTING: Statistics
   /// Weekly statistics (aggregated 7-day metrics)
   WeeklyStats get weeklyStats => throw _privateConstructorUsedError;
 
@@ -66,7 +58,31 @@ mixin _$ConsistencyScore {
   int get currentStreak => throw _privateConstructorUsedError;
 
   /// Timestamp of calculation
-  DateTime? get calculatedAt => throw _privateConstructorUsedError;
+  DateTime? get calculatedAt =>
+      throw _privateConstructorUsedError; // DEPRECATED: Keep for backward compatibility (1 version)
+  /// Overall consistency score (0-100)
+  @Deprecated('Use frequencyOptimal, restOptimal, progressionPositive instead')
+  int? get overallScore => throw _privateConstructorUsedError;
+
+  /// Score rating text (Excellent, Good, Fair, Poor)
+  @Deprecated('Use binary indicators instead')
+  String? get scoreRating => throw _privateConstructorUsedError;
+
+  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
+  @Deprecated('Use binary indicators instead')
+  String? get rating => throw _privateConstructorUsedError;
+
+  /// Risk level (Low, Medium, High) - string version
+  @Deprecated('Use binary indicators instead')
+  String? get riskLevel => throw _privateConstructorUsedError;
+
+  /// Overtraining risk level (enum)
+  @Deprecated('Insufficient indicators - requires HR monitoring')
+  OvertrainingRisk? get overtrainingRisk => throw _privateConstructorUsedError;
+
+  /// Volume score component (0-100) - changed to int for widget compatibility
+  @Deprecated('Total volume too generic - needs per-muscle-group')
+  int? get volumeScore => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -81,14 +97,11 @@ abstract class $ConsistencyScoreCopyWith<$Res> {
       _$ConsistencyScoreCopyWithImpl<$Res, ConsistencyScore>;
   @useResult
   $Res call(
-      {int overallScore,
-      String scoreRating,
-      String rating,
-      String riskLevel,
-      OvertrainingRisk overtrainingRisk,
+      {bool frequencyOptimal,
+      bool restOptimal,
+      bool progressionPositive,
       int frequencyScore,
       int restScore,
-      int volumeScore,
       int progressionScore,
       WeeklyStats weeklyStats,
       int workoutsCompleted,
@@ -96,7 +109,17 @@ abstract class $ConsistencyScoreCopyWith<$Res> {
       double avgFrequency,
       int longestStreak,
       int currentStreak,
-      DateTime? calculatedAt});
+      DateTime? calculatedAt,
+      @Deprecated(
+          'Use frequencyOptimal, restOptimal, progressionPositive instead')
+      int? overallScore,
+      @Deprecated('Use binary indicators instead') String? scoreRating,
+      @Deprecated('Use binary indicators instead') String? rating,
+      @Deprecated('Use binary indicators instead') String? riskLevel,
+      @Deprecated('Insufficient indicators - requires HR monitoring')
+      OvertrainingRisk? overtrainingRisk,
+      @Deprecated('Total volume too generic - needs per-muscle-group')
+      int? volumeScore});
 
   $WeeklyStatsCopyWith<$Res> get weeklyStats;
 }
@@ -114,14 +137,11 @@ class _$ConsistencyScoreCopyWithImpl<$Res, $Val extends ConsistencyScore>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? overallScore = null,
-    Object? scoreRating = null,
-    Object? rating = null,
-    Object? riskLevel = null,
-    Object? overtrainingRisk = null,
+    Object? frequencyOptimal = null,
+    Object? restOptimal = null,
+    Object? progressionPositive = null,
     Object? frequencyScore = null,
     Object? restScore = null,
-    Object? volumeScore = null,
     Object? progressionScore = null,
     Object? weeklyStats = null,
     Object? workoutsCompleted = null,
@@ -130,28 +150,26 @@ class _$ConsistencyScoreCopyWithImpl<$Res, $Val extends ConsistencyScore>
     Object? longestStreak = null,
     Object? currentStreak = null,
     Object? calculatedAt = freezed,
+    Object? overallScore = freezed,
+    Object? scoreRating = freezed,
+    Object? rating = freezed,
+    Object? riskLevel = freezed,
+    Object? overtrainingRisk = freezed,
+    Object? volumeScore = freezed,
   }) {
     return _then(_value.copyWith(
-      overallScore: null == overallScore
-          ? _value.overallScore
-          : overallScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      scoreRating: null == scoreRating
-          ? _value.scoreRating
-          : scoreRating // ignore: cast_nullable_to_non_nullable
-              as String,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as String,
-      riskLevel: null == riskLevel
-          ? _value.riskLevel
-          : riskLevel // ignore: cast_nullable_to_non_nullable
-              as String,
-      overtrainingRisk: null == overtrainingRisk
-          ? _value.overtrainingRisk
-          : overtrainingRisk // ignore: cast_nullable_to_non_nullable
-              as OvertrainingRisk,
+      frequencyOptimal: null == frequencyOptimal
+          ? _value.frequencyOptimal
+          : frequencyOptimal // ignore: cast_nullable_to_non_nullable
+              as bool,
+      restOptimal: null == restOptimal
+          ? _value.restOptimal
+          : restOptimal // ignore: cast_nullable_to_non_nullable
+              as bool,
+      progressionPositive: null == progressionPositive
+          ? _value.progressionPositive
+          : progressionPositive // ignore: cast_nullable_to_non_nullable
+              as bool,
       frequencyScore: null == frequencyScore
           ? _value.frequencyScore
           : frequencyScore // ignore: cast_nullable_to_non_nullable
@@ -159,10 +177,6 @@ class _$ConsistencyScoreCopyWithImpl<$Res, $Val extends ConsistencyScore>
       restScore: null == restScore
           ? _value.restScore
           : restScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeScore: null == volumeScore
-          ? _value.volumeScore
-          : volumeScore // ignore: cast_nullable_to_non_nullable
               as int,
       progressionScore: null == progressionScore
           ? _value.progressionScore
@@ -196,6 +210,30 @@ class _$ConsistencyScoreCopyWithImpl<$Res, $Val extends ConsistencyScore>
           ? _value.calculatedAt
           : calculatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      overallScore: freezed == overallScore
+          ? _value.overallScore
+          : overallScore // ignore: cast_nullable_to_non_nullable
+              as int?,
+      scoreRating: freezed == scoreRating
+          ? _value.scoreRating
+          : scoreRating // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rating: freezed == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as String?,
+      riskLevel: freezed == riskLevel
+          ? _value.riskLevel
+          : riskLevel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      overtrainingRisk: freezed == overtrainingRisk
+          ? _value.overtrainingRisk
+          : overtrainingRisk // ignore: cast_nullable_to_non_nullable
+              as OvertrainingRisk?,
+      volumeScore: freezed == volumeScore
+          ? _value.volumeScore
+          : volumeScore // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 
@@ -217,14 +255,11 @@ abstract class _$$ConsistencyScoreImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int overallScore,
-      String scoreRating,
-      String rating,
-      String riskLevel,
-      OvertrainingRisk overtrainingRisk,
+      {bool frequencyOptimal,
+      bool restOptimal,
+      bool progressionPositive,
       int frequencyScore,
       int restScore,
-      int volumeScore,
       int progressionScore,
       WeeklyStats weeklyStats,
       int workoutsCompleted,
@@ -232,7 +267,17 @@ abstract class _$$ConsistencyScoreImplCopyWith<$Res>
       double avgFrequency,
       int longestStreak,
       int currentStreak,
-      DateTime? calculatedAt});
+      DateTime? calculatedAt,
+      @Deprecated(
+          'Use frequencyOptimal, restOptimal, progressionPositive instead')
+      int? overallScore,
+      @Deprecated('Use binary indicators instead') String? scoreRating,
+      @Deprecated('Use binary indicators instead') String? rating,
+      @Deprecated('Use binary indicators instead') String? riskLevel,
+      @Deprecated('Insufficient indicators - requires HR monitoring')
+      OvertrainingRisk? overtrainingRisk,
+      @Deprecated('Total volume too generic - needs per-muscle-group')
+      int? volumeScore});
 
   @override
   $WeeklyStatsCopyWith<$Res> get weeklyStats;
@@ -249,14 +294,11 @@ class __$$ConsistencyScoreImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? overallScore = null,
-    Object? scoreRating = null,
-    Object? rating = null,
-    Object? riskLevel = null,
-    Object? overtrainingRisk = null,
+    Object? frequencyOptimal = null,
+    Object? restOptimal = null,
+    Object? progressionPositive = null,
     Object? frequencyScore = null,
     Object? restScore = null,
-    Object? volumeScore = null,
     Object? progressionScore = null,
     Object? weeklyStats = null,
     Object? workoutsCompleted = null,
@@ -265,28 +307,26 @@ class __$$ConsistencyScoreImplCopyWithImpl<$Res>
     Object? longestStreak = null,
     Object? currentStreak = null,
     Object? calculatedAt = freezed,
+    Object? overallScore = freezed,
+    Object? scoreRating = freezed,
+    Object? rating = freezed,
+    Object? riskLevel = freezed,
+    Object? overtrainingRisk = freezed,
+    Object? volumeScore = freezed,
   }) {
     return _then(_$ConsistencyScoreImpl(
-      overallScore: null == overallScore
-          ? _value.overallScore
-          : overallScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      scoreRating: null == scoreRating
-          ? _value.scoreRating
-          : scoreRating // ignore: cast_nullable_to_non_nullable
-              as String,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as String,
-      riskLevel: null == riskLevel
-          ? _value.riskLevel
-          : riskLevel // ignore: cast_nullable_to_non_nullable
-              as String,
-      overtrainingRisk: null == overtrainingRisk
-          ? _value.overtrainingRisk
-          : overtrainingRisk // ignore: cast_nullable_to_non_nullable
-              as OvertrainingRisk,
+      frequencyOptimal: null == frequencyOptimal
+          ? _value.frequencyOptimal
+          : frequencyOptimal // ignore: cast_nullable_to_non_nullable
+              as bool,
+      restOptimal: null == restOptimal
+          ? _value.restOptimal
+          : restOptimal // ignore: cast_nullable_to_non_nullable
+              as bool,
+      progressionPositive: null == progressionPositive
+          ? _value.progressionPositive
+          : progressionPositive // ignore: cast_nullable_to_non_nullable
+              as bool,
       frequencyScore: null == frequencyScore
           ? _value.frequencyScore
           : frequencyScore // ignore: cast_nullable_to_non_nullable
@@ -294,10 +334,6 @@ class __$$ConsistencyScoreImplCopyWithImpl<$Res>
       restScore: null == restScore
           ? _value.restScore
           : restScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeScore: null == volumeScore
-          ? _value.volumeScore
-          : volumeScore // ignore: cast_nullable_to_non_nullable
               as int,
       progressionScore: null == progressionScore
           ? _value.progressionScore
@@ -331,6 +367,30 @@ class __$$ConsistencyScoreImplCopyWithImpl<$Res>
           ? _value.calculatedAt
           : calculatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      overallScore: freezed == overallScore
+          ? _value.overallScore
+          : overallScore // ignore: cast_nullable_to_non_nullable
+              as int?,
+      scoreRating: freezed == scoreRating
+          ? _value.scoreRating
+          : scoreRating // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rating: freezed == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as String?,
+      riskLevel: freezed == riskLevel
+          ? _value.riskLevel
+          : riskLevel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      overtrainingRisk: freezed == overtrainingRisk
+          ? _value.overtrainingRisk
+          : overtrainingRisk // ignore: cast_nullable_to_non_nullable
+              as OvertrainingRisk?,
+      volumeScore: freezed == volumeScore
+          ? _value.volumeScore
+          : volumeScore // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -339,14 +399,11 @@ class __$$ConsistencyScoreImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsistencyScoreImpl implements _ConsistencyScore {
   const _$ConsistencyScoreImpl(
-      {this.overallScore = 0,
-      this.scoreRating = 'Not Available',
-      this.rating = 'Not Available',
-      this.riskLevel = 'Unknown',
-      this.overtrainingRisk = OvertrainingRisk.low,
+      {this.frequencyOptimal = false,
+      this.restOptimal = false,
+      this.progressionPositive = false,
       this.frequencyScore = 0,
       this.restScore = 0,
-      this.volumeScore = 0,
       this.progressionScore = 0,
       required this.weeklyStats,
       this.workoutsCompleted = 0,
@@ -354,36 +411,37 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
       this.avgFrequency = 0.0,
       this.longestStreak = 0,
       this.currentStreak = 0,
-      this.calculatedAt});
+      this.calculatedAt,
+      @Deprecated(
+          'Use frequencyOptimal, restOptimal, progressionPositive instead')
+      this.overallScore,
+      @Deprecated('Use binary indicators instead') this.scoreRating,
+      @Deprecated('Use binary indicators instead') this.rating,
+      @Deprecated('Use binary indicators instead') this.riskLevel,
+      @Deprecated('Insufficient indicators - requires HR monitoring')
+      this.overtrainingRisk,
+      @Deprecated('Total volume too generic - needs per-muscle-group')
+      this.volumeScore});
 
   factory _$ConsistencyScoreImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsistencyScoreImplFromJson(json);
 
-  /// Overall consistency score (0-100)
+// NEW: Binary indicators (100% validated thresholds)
+  /// Frequency is optimal (>=3 workouts per week)
   @override
   @JsonKey()
-  final int overallScore;
+  final bool frequencyOptimal;
 
-  /// Score rating text (Excellent, Good, Fair, Poor)
+  /// Rest is optimal (1-2 rest days per week)
   @override
   @JsonKey()
-  final String scoreRating;
+  final bool restOptimal;
 
-  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
+  /// Progression is positive (volume increasing over time)
   @override
   @JsonKey()
-  final String rating;
-
-  /// Risk level (Low, Medium, High) - string version
-  @override
-  @JsonKey()
-  final String riskLevel;
-
-  /// Overtraining risk level (enum)
-  @override
-  @JsonKey()
-  final OvertrainingRisk overtrainingRisk;
-
+  final bool progressionPositive;
+// EXISTING: Detailed scores (keep for breakdown view)
   /// Frequency score component (0-100) - changed to int for widget compatibility
   @override
   @JsonKey()
@@ -394,16 +452,11 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
   @JsonKey()
   final int restScore;
 
-  /// Volume score component (0-100) - changed to int for widget compatibility
-  @override
-  @JsonKey()
-  final int volumeScore;
-
   /// Progression score component (0-100) - changed to int for widget compatibility
   @override
   @JsonKey()
   final int progressionScore;
-
+// EXISTING: Statistics
   /// Weekly statistics (aggregated 7-day metrics)
   @override
   final WeeklyStats weeklyStats;
@@ -436,10 +489,40 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
   /// Timestamp of calculation
   @override
   final DateTime? calculatedAt;
+// DEPRECATED: Keep for backward compatibility (1 version)
+  /// Overall consistency score (0-100)
+  @override
+  @Deprecated('Use frequencyOptimal, restOptimal, progressionPositive instead')
+  final int? overallScore;
+
+  /// Score rating text (Excellent, Good, Fair, Poor)
+  @override
+  @Deprecated('Use binary indicators instead')
+  final String? scoreRating;
+
+  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
+  @override
+  @Deprecated('Use binary indicators instead')
+  final String? rating;
+
+  /// Risk level (Low, Medium, High) - string version
+  @override
+  @Deprecated('Use binary indicators instead')
+  final String? riskLevel;
+
+  /// Overtraining risk level (enum)
+  @override
+  @Deprecated('Insufficient indicators - requires HR monitoring')
+  final OvertrainingRisk? overtrainingRisk;
+
+  /// Volume score component (0-100) - changed to int for widget compatibility
+  @override
+  @Deprecated('Total volume too generic - needs per-muscle-group')
+  final int? volumeScore;
 
   @override
   String toString() {
-    return 'ConsistencyScore(overallScore: $overallScore, scoreRating: $scoreRating, rating: $rating, riskLevel: $riskLevel, overtrainingRisk: $overtrainingRisk, frequencyScore: $frequencyScore, restScore: $restScore, volumeScore: $volumeScore, progressionScore: $progressionScore, weeklyStats: $weeklyStats, workoutsCompleted: $workoutsCompleted, workoutsSkipped: $workoutsSkipped, avgFrequency: $avgFrequency, longestStreak: $longestStreak, currentStreak: $currentStreak, calculatedAt: $calculatedAt)';
+    return 'ConsistencyScore(frequencyOptimal: $frequencyOptimal, restOptimal: $restOptimal, progressionPositive: $progressionPositive, frequencyScore: $frequencyScore, restScore: $restScore, progressionScore: $progressionScore, weeklyStats: $weeklyStats, workoutsCompleted: $workoutsCompleted, workoutsSkipped: $workoutsSkipped, avgFrequency: $avgFrequency, longestStreak: $longestStreak, currentStreak: $currentStreak, calculatedAt: $calculatedAt, overallScore: $overallScore, scoreRating: $scoreRating, rating: $rating, riskLevel: $riskLevel, overtrainingRisk: $overtrainingRisk, volumeScore: $volumeScore)';
   }
 
   @override
@@ -447,21 +530,16 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsistencyScoreImpl &&
-            (identical(other.overallScore, overallScore) ||
-                other.overallScore == overallScore) &&
-            (identical(other.scoreRating, scoreRating) ||
-                other.scoreRating == scoreRating) &&
-            (identical(other.rating, rating) || other.rating == rating) &&
-            (identical(other.riskLevel, riskLevel) ||
-                other.riskLevel == riskLevel) &&
-            (identical(other.overtrainingRisk, overtrainingRisk) ||
-                other.overtrainingRisk == overtrainingRisk) &&
+            (identical(other.frequencyOptimal, frequencyOptimal) ||
+                other.frequencyOptimal == frequencyOptimal) &&
+            (identical(other.restOptimal, restOptimal) ||
+                other.restOptimal == restOptimal) &&
+            (identical(other.progressionPositive, progressionPositive) ||
+                other.progressionPositive == progressionPositive) &&
             (identical(other.frequencyScore, frequencyScore) ||
                 other.frequencyScore == frequencyScore) &&
             (identical(other.restScore, restScore) ||
                 other.restScore == restScore) &&
-            (identical(other.volumeScore, volumeScore) ||
-                other.volumeScore == volumeScore) &&
             (identical(other.progressionScore, progressionScore) ||
                 other.progressionScore == progressionScore) &&
             (identical(other.weeklyStats, weeklyStats) ||
@@ -477,29 +555,44 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
             (identical(other.currentStreak, currentStreak) ||
                 other.currentStreak == currentStreak) &&
             (identical(other.calculatedAt, calculatedAt) ||
-                other.calculatedAt == calculatedAt));
+                other.calculatedAt == calculatedAt) &&
+            (identical(other.overallScore, overallScore) ||
+                other.overallScore == overallScore) &&
+            (identical(other.scoreRating, scoreRating) ||
+                other.scoreRating == scoreRating) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            (identical(other.riskLevel, riskLevel) ||
+                other.riskLevel == riskLevel) &&
+            (identical(other.overtrainingRisk, overtrainingRisk) ||
+                other.overtrainingRisk == overtrainingRisk) &&
+            (identical(other.volumeScore, volumeScore) ||
+                other.volumeScore == volumeScore));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      overallScore,
-      scoreRating,
-      rating,
-      riskLevel,
-      overtrainingRisk,
-      frequencyScore,
-      restScore,
-      volumeScore,
-      progressionScore,
-      weeklyStats,
-      workoutsCompleted,
-      workoutsSkipped,
-      avgFrequency,
-      longestStreak,
-      currentStreak,
-      calculatedAt);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        frequencyOptimal,
+        restOptimal,
+        progressionPositive,
+        frequencyScore,
+        restScore,
+        progressionScore,
+        weeklyStats,
+        workoutsCompleted,
+        workoutsSkipped,
+        avgFrequency,
+        longestStreak,
+        currentStreak,
+        calculatedAt,
+        overallScore,
+        scoreRating,
+        rating,
+        riskLevel,
+        overtrainingRisk,
+        volumeScore
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -518,14 +611,11 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
 
 abstract class _ConsistencyScore implements ConsistencyScore {
   const factory _ConsistencyScore(
-      {final int overallScore,
-      final String scoreRating,
-      final String rating,
-      final String riskLevel,
-      final OvertrainingRisk overtrainingRisk,
+      {final bool frequencyOptimal,
+      final bool restOptimal,
+      final bool progressionPositive,
       final int frequencyScore,
       final int restScore,
-      final int volumeScore,
       final int progressionScore,
       required final WeeklyStats weeklyStats,
       final int workoutsCompleted,
@@ -533,33 +623,33 @@ abstract class _ConsistencyScore implements ConsistencyScore {
       final double avgFrequency,
       final int longestStreak,
       final int currentStreak,
-      final DateTime? calculatedAt}) = _$ConsistencyScoreImpl;
+      final DateTime? calculatedAt,
+      @Deprecated(
+          'Use frequencyOptimal, restOptimal, progressionPositive instead')
+      final int? overallScore,
+      @Deprecated('Use binary indicators instead') final String? scoreRating,
+      @Deprecated('Use binary indicators instead') final String? rating,
+      @Deprecated('Use binary indicators instead') final String? riskLevel,
+      @Deprecated('Insufficient indicators - requires HR monitoring')
+      final OvertrainingRisk? overtrainingRisk,
+      @Deprecated('Total volume too generic - needs per-muscle-group')
+      final int? volumeScore}) = _$ConsistencyScoreImpl;
 
   factory _ConsistencyScore.fromJson(Map<String, dynamic> json) =
       _$ConsistencyScoreImpl.fromJson;
 
+  @override // NEW: Binary indicators (100% validated thresholds)
+  /// Frequency is optimal (>=3 workouts per week)
+  bool get frequencyOptimal;
   @override
 
-  /// Overall consistency score (0-100)
-  int get overallScore;
+  /// Rest is optimal (1-2 rest days per week)
+  bool get restOptimal;
   @override
 
-  /// Score rating text (Excellent, Good, Fair, Poor)
-  String get scoreRating;
-  @override
-
-  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
-  String get rating;
-  @override
-
-  /// Risk level (Low, Medium, High) - string version
-  String get riskLevel;
-  @override
-
-  /// Overtraining risk level (enum)
-  OvertrainingRisk get overtrainingRisk;
-  @override
-
+  /// Progression is positive (volume increasing over time)
+  bool get progressionPositive;
+  @override // EXISTING: Detailed scores (keep for breakdown view)
   /// Frequency score component (0-100) - changed to int for widget compatibility
   int get frequencyScore;
   @override
@@ -568,14 +658,9 @@ abstract class _ConsistencyScore implements ConsistencyScore {
   int get restScore;
   @override
 
-  /// Volume score component (0-100) - changed to int for widget compatibility
-  int get volumeScore;
-  @override
-
   /// Progression score component (0-100) - changed to int for widget compatibility
   int get progressionScore;
-  @override
-
+  @override // EXISTING: Statistics
   /// Weekly statistics (aggregated 7-day metrics)
   WeeklyStats get weeklyStats;
   @override
@@ -602,6 +687,35 @@ abstract class _ConsistencyScore implements ConsistencyScore {
 
   /// Timestamp of calculation
   DateTime? get calculatedAt;
+  @override // DEPRECATED: Keep for backward compatibility (1 version)
+  /// Overall consistency score (0-100)
+  @Deprecated('Use frequencyOptimal, restOptimal, progressionPositive instead')
+  int? get overallScore;
+  @override
+
+  /// Score rating text (Excellent, Good, Fair, Poor)
+  @Deprecated('Use binary indicators instead')
+  String? get scoreRating;
+  @override
+
+  /// Score rating (Excellent, Good, Fair, Poor) - DEPRECATED, use scoreRating
+  @Deprecated('Use binary indicators instead')
+  String? get rating;
+  @override
+
+  /// Risk level (Low, Medium, High) - string version
+  @Deprecated('Use binary indicators instead')
+  String? get riskLevel;
+  @override
+
+  /// Overtraining risk level (enum)
+  @Deprecated('Insufficient indicators - requires HR monitoring')
+  OvertrainingRisk? get overtrainingRisk;
+  @override
+
+  /// Volume score component (0-100) - changed to int for widget compatibility
+  @Deprecated('Total volume too generic - needs per-muscle-group')
+  int? get volumeScore;
   @override
   @JsonKey(ignore: true)
   _$$ConsistencyScoreImplCopyWith<_$ConsistencyScoreImpl> get copyWith =>

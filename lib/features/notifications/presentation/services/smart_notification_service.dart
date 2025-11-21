@@ -60,7 +60,9 @@ class SmartNotificationService {
 
     final notifications = <WorkoutNotification>[];
     final now = DateTime.now();
-    final endDate = routine.endDate ?? now.add(const Duration(days: 30));
+    // ⚠️ v2.0 STUB: endDate property removed from v2.0 schema
+    // Using default 30-day window instead
+    final endDate = now.add(const Duration(days: 30)); // routine.endDate ?? now.add(const Duration(days: 30));
 
     // Schedule notifications for the next 30 days or until end date
     for (var date = now;
@@ -144,11 +146,21 @@ class SmartNotificationService {
     return notificationTime;
   }
 
+  /// ⚠️ v2.0 STUB: Recovery notifications disabled - skipTracker not in v2.0
+  ///
   /// Generate recovery notifications for skipped workouts
+  ///
+  /// **v2.0 STATUS**: Stubbed out - skipTracker property removed from v2.0 schema
+  /// **TODO v3.0**: Reimplement when skip tracking added back
   List<WorkoutNotification> _generateRecoveryNotifications(
     FlexibleRoutine routine,
     DateTime referenceDate,
   ) {
+    // v2.0: Return empty - no skip tracking
+    return [];
+
+    // v1.0 implementation commented out
+    /*
     final notifications = <WorkoutNotification>[];
     final skippedDays = routine.skipTracker.getSkippedDays();
 
@@ -183,6 +195,7 @@ class SmartNotificationService {
     }
 
     return notifications;
+    */
   }
 
   /// Group consecutive skipped days

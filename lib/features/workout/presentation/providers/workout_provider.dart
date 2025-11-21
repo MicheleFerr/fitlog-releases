@@ -936,12 +936,15 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           );
 
           if (activeRoutine != null) {
-            final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-            final isRecovery = await notifier.autoDetectAndMarkAsRecovery(
-              routineId: activeRoutine.id,
-              completedTemplateId: workout.templateId!,
-              completionDate: workout.endTime ?? DateTime.now(),
-            );
+            // ⚠️ v2.0 STUB: Recovery detection not implemented in v2.0 simplified schema
+            // final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+            // final isRecovery = await notifier.autoDetectAndMarkAsRecovery(
+            //   routineId: activeRoutine.id,
+            //   completedTemplateId: workout.templateId!,
+            //   completionDate: workout.endTime ?? DateTime.now(),
+            // );
+
+            final isRecovery = false; // v2.0: Always false (feature not implemented)
 
             if (isRecovery) {
               debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');

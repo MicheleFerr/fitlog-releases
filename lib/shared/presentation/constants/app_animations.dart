@@ -71,4 +71,10 @@ class AppAnimations {
   /// Large icon size (32dp)
   /// Use for: Featured actions, headers
   static const double iconSizeLarge = 32.0;
+
+  // === Scroll Behaviors ===
+
+  /// Scroll distance threshold for collapsing app bar (120dp)
+  /// Use for: Determining when to collapse/expand scrollable app bars
+  static const double scrollCollapseThreshold = 120.0;
 }

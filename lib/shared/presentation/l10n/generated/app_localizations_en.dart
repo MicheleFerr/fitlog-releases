@@ -12657,7 +12657,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get keepData => 'Keep data';
 
   @override
-  String get resetAll => 'Reset all';
+  String get resetAll => 'Reset All';
 
   @override
   String get countingModeChanged => 'Counting format updated!';
@@ -13425,7 +13425,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noMatchesFound => 'No matches found';
 
   @override
-  String get noPRsYet => 'No p rs yet';
+  String get noPRsYet => 'No PRs Yet';
 
   @override
   String get noWorkoutsFound => 'No workouts found';
@@ -18096,5 +18096,75 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String workoutsGoalLabel(int count) {
     return '$count workouts';
+  }
+
+  @override
+  String get prToday => 'Today';
+
+  @override
+  String get prYesterday => 'Yesterday';
+
+  @override
+  String prDaysAgo(int days) {
+    return '$days days ago';
+  }
+
+  @override
+  String get resetAllPRsQuestion => 'Reset All PRs?';
+
+  @override
+  String get resetAllPRsMessage =>
+      'This will permanently delete all personal record data. Your workout history will remain, but PR tracking will start fresh. \n\nThis action cannot be undone.';
+
+  @override
+  String get prResetComingSoon => '🔄 PR reset functionality coming soon!';
+
+  @override
+  String get prDetails => 'PR Details';
+
+  @override
+  String get recentPRsLastSevenDays => 'Recent PRs (Last 7 Days)';
+
+  @override
+  String prAchievements(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'achievements',
+      one: 'achievement',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get newBadge => 'New!';
+
+  @override
+  String get whatIsPR => 'What is a PR?';
+
+  @override
+  String get prExplanation =>
+      'PR (Personal Record) is your best performance for an exercise, measured by estimated 1RM (one-rep max). We automatically track your PRs as you train, so you can see your progress over time.';
+
+  @override
+  String get noPRsYetMessage =>
+      'Start tracking your workouts to see your personal records here!';
+
+  @override
+  String get allPersonalRecords => 'All Personal Records';
+
+  @override
+  String get newLabel => 'NEW';
+
+  @override
+  String get resetPRs => 'Reset PRs';
+
+  @override
+  String get resetPRsMessage =>
+      'Need to start fresh? You can reset all personal records. This will NOT delete your workout history.';
+
+  @override
+  String resetAllPRsButton(int count) {
+    return 'Reset All PRs ($count records)';
   }
 }
