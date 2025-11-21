@@ -21,13 +21,16 @@ ConsistencyScore _$ConsistencyScoreFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ConsistencyScore {
 // NEW: Binary indicators (100% validated thresholds)
-  /// Frequency is optimal (>=3 workouts per week)
+  /// Frequency is optimal (3-5 workouts per week)
+  /// Source: Schoenfeld et al. 2019 (PMID: 30558493)
   bool get frequencyOptimal => throw _privateConstructorUsedError;
 
-  /// Rest is optimal (1-2 rest days per week)
+  /// Rest is optimal (2-3 rest days per week)
+  /// Source: UCLA Health 2024 - <2 days = 5.2x injury risk
   bool get restOptimal => throw _privateConstructorUsedError;
 
-  /// Progression is positive (volume increasing over time)
+  /// Progression is positive (>5% improvement)
+  /// Source: NASM 2023 - Progressive overload guidelines
   bool get progressionPositive =>
       throw _privateConstructorUsedError; // EXISTING: Detailed scores (keep for breakdown view)
   /// Frequency score component (0-100) - changed to int for widget compatibility
@@ -427,17 +430,20 @@ class _$ConsistencyScoreImpl implements _ConsistencyScore {
       _$$ConsistencyScoreImplFromJson(json);
 
 // NEW: Binary indicators (100% validated thresholds)
-  /// Frequency is optimal (>=3 workouts per week)
+  /// Frequency is optimal (3-5 workouts per week)
+  /// Source: Schoenfeld et al. 2019 (PMID: 30558493)
   @override
   @JsonKey()
   final bool frequencyOptimal;
 
-  /// Rest is optimal (1-2 rest days per week)
+  /// Rest is optimal (2-3 rest days per week)
+  /// Source: UCLA Health 2024 - <2 days = 5.2x injury risk
   @override
   @JsonKey()
   final bool restOptimal;
 
-  /// Progression is positive (volume increasing over time)
+  /// Progression is positive (>5% improvement)
+  /// Source: NASM 2023 - Progressive overload guidelines
   @override
   @JsonKey()
   final bool progressionPositive;
@@ -639,15 +645,18 @@ abstract class _ConsistencyScore implements ConsistencyScore {
       _$ConsistencyScoreImpl.fromJson;
 
   @override // NEW: Binary indicators (100% validated thresholds)
-  /// Frequency is optimal (>=3 workouts per week)
+  /// Frequency is optimal (3-5 workouts per week)
+  /// Source: Schoenfeld et al. 2019 (PMID: 30558493)
   bool get frequencyOptimal;
   @override
 
-  /// Rest is optimal (1-2 rest days per week)
+  /// Rest is optimal (2-3 rest days per week)
+  /// Source: UCLA Health 2024 - <2 days = 5.2x injury risk
   bool get restOptimal;
   @override
 
-  /// Progression is positive (volume increasing over time)
+  /// Progression is positive (>5% improvement)
+  /// Source: NASM 2023 - Progressive overload guidelines
   bool get progressionPositive;
   @override // EXISTING: Detailed scores (keep for breakdown view)
   /// Frequency score component (0-100) - changed to int for widget compatibility

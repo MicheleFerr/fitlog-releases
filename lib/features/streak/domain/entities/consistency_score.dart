@@ -25,13 +25,16 @@ enum OvertrainingRisk {
 class ConsistencyScore with _$ConsistencyScore {
   const factory ConsistencyScore({
     // NEW: Binary indicators (100% validated thresholds)
-    /// Frequency is optimal (>=3 workouts per week)
+    /// Frequency is optimal (3-5 workouts per week)
+    /// Source: Schoenfeld et al. 2019 (PMID: 30558493)
     @Default(false) bool frequencyOptimal,
 
-    /// Rest is optimal (1-2 rest days per week)
+    /// Rest is optimal (2-3 rest days per week)
+    /// Source: UCLA Health 2024 - <2 days = 5.2x injury risk
     @Default(false) bool restOptimal,
 
-    /// Progression is positive (volume increasing over time)
+    /// Progression is positive (>5% improvement)
+    /// Source: NASM 2023 - Progressive overload guidelines
     @Default(false) bool progressionPositive,
 
     // EXISTING: Detailed scores (keep for breakdown view)
