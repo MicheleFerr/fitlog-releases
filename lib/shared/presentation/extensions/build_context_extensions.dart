@@ -28,7 +28,7 @@ extension BuildContextExtensions on BuildContext {
   /// Esempio:
   /// ```dart
   /// Container(color: context.colors.primary)
-  /// Text(style: TextStyle(color: context.colors.onSurface))
+  /// Text('Hello', style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onSurface))
   /// ```
   ColorScheme get colors => Theme.of(this).colorScheme;
 
@@ -134,7 +134,7 @@ extension BuildContextExtensions on BuildContext {
 /// ```dart
 /// Container(
 ///   color: context.successColor,
-///   child: Text('✓ Saved', style: TextStyle(color: context.textOnSuccess)),
+///   child: Text('✓ Saved', style: context.textTheme.bodyMedium?.copyWith(color: context.textOnSuccess)),
 /// )
 /// ```
 extension SemanticColors on BuildContext {
@@ -155,13 +155,13 @@ extension SemanticColors on BuildContext {
   Color get infoColor => colors.primary;
 
   /// Testo su sfondo success (white on green = WCAG AAA contrast)
-  Color get textOnSuccess => Colors.white;
+  Color get textOnSuccess => colors.surface;
 
   /// Testo su sfondo error (garantito contrasto)
   Color get textOnError => colors.onError;
 
   /// Testo su sfondo warning (garantito contrasto)
-  Color get textOnWarning => Colors.white;
+  Color get textOnWarning => colors.surface;
 
   /// Testo su sfondo info (garantito contrasto)
   Color get textOnInfo => colors.onPrimary;

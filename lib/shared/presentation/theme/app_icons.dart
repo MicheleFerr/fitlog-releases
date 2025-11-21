@@ -1,14 +1,24 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🎨 Centralized icon constants for GymBro app
 ///
 /// **Usage**:
 /// ```dart
-/// Icon(AppIcons.workout)
-/// Icon(AppIcons.timer)
-/// Icon(AppIcons.complete)
+/// SemanticIcon(
+///   icon: AppIcons.workout,
+///   semanticLabel: 'Workout',
+/// )
+/// SemanticIcon(
+///   icon: AppIcons.timer,
+///   semanticLabel: 'Timer',
+/// )
+/// SemanticIcon(
+///   icon: AppIcons.complete,
+///   semanticLabel: 'Complete',
+/// )
 /// ```
 ///
 /// **Benefits**:

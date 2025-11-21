@@ -41,40 +41,28 @@ class ConsistencyScoreCalculator {
     // Calculate weekly statistics
     final weeklyStats = _calculateWeeklyStats(workouts);
 
-    // Calculate component scores
+    // Calculate detailed scores (keep existing logic for breakdown view)
     final frequencyScore = _calculateFrequencyScore(weeklyStats.avgWorkoutsPerWeek);
     final restScore = _calculateRestScore(weeklyStats.avgRestDaysPerWeek);
-    final volumeScore = _calculateVolumeScore(workouts);
     final progressionScore = _calculateProgressionScore(workouts);
 
-    // Calculate overall score (weighted average)
-    final overallScore = _calculateOverallScore(
-      frequencyScore: frequencyScore,
-      restScore: restScore,
-      volumeScore: volumeScore,
-      progressionScore: progressionScore,
-    );
-
-    // Determine score rating
-    final scoreRating = _getScoreRating(overallScore);
-
-    // Calculate overtraining risk
-    final overtrainingRisk = _calculateOvertrainingRisk(
-      avgWorkoutsPerWeek: weeklyStats.avgWorkoutsPerWeek,
-      avgRestDaysPerWeek: weeklyStats.avgRestDaysPerWeek,
-      volumeTrend: _getVolumeTrend(workouts),
-    );
+    // NEW: Calculate binary indicators (100% validated thresholds)
+    final frequencyOptimal = isFrequencyOptimal(weeklyStats.avgWorkoutsPerWeek);
+    final restOptimal = isRestOptimal(weeklyStats.avgRestDaysPerWeek);
+    final progressionPositive = isProgressionPositive(workouts);
 
     return ConsistencyScore(
-      overallScore: overallScore,
-      scoreRating: scoreRating,
-      rating: scoreRating, // Backward compatibility
-      riskLevel: _getRiskLevelString(overtrainingRisk),
-      overtrainingRisk: overtrainingRisk,
+      // NEW: Binary indicators
+      frequencyOptimal: frequencyOptimal,
+      restOptimal: restOptimal,
+      progressionPositive: progressionPositive,
+
+      // EXISTING: Detailed scores
       frequencyScore: frequencyScore,
       restScore: restScore,
-      volumeScore: volumeScore,
       progressionScore: progressionScore,
+
+      // EXISTING: Statistics
       weeklyStats: weeklyStats,
       workoutsCompleted: workouts.length,
       workoutsSkipped: 0, // TODO: Calculate from scheduled vs completed
@@ -82,6 +70,14 @@ class ConsistencyScoreCalculator {
       longestStreak: longestStreak,
       currentStreak: currentStreak,
       calculatedAt: DateTime.now(),
+
+      // DEPRECATED: Set to null (backward compatibility for 1 version)
+      overallScore: null,
+      scoreRating: null,
+      rating: null,
+      riskLevel: null,
+      overtrainingRisk: null,
+      volumeScore: null,
     );
   }
 
@@ -180,27 +176,6 @@ class ConsistencyScoreCalculator {
     return (100 - penalty).clamp(0, 100);
   }
 
-  /// Calculate volume score (0-100)
-  ///
-  /// Based on total volume trend over time
-  /// Increasing or stable volume = higher score
-  int _calculateVolumeScore(List<Workout> workouts) {
-    if (workouts.length < 3) {
-      return 50; // Not enough data, neutral score
-    }
-
-    final volumeTrend = _getVolumeTrend(workouts);
-
-    if (volumeTrend > 0.1) {
-      return 100; // Increasing volume (good progression)
-    } else if (volumeTrend >= -0.1) {
-      return 80; // Stable volume (maintaining)
-    } else if (volumeTrend >= -0.3) {
-      return 60; // Slightly decreasing (warning)
-    } else {
-      return 40; // Significantly decreasing (concern)
-    }
-  }
 
   /// Calculate progression score (0-100)
   ///
@@ -255,60 +230,6 @@ class ConsistencyScoreCalculator {
     }
   }
 
-  /// Calculate overall score as weighted average
-  int _calculateOverallScore({
-    required int frequencyScore,
-    required int restScore,
-    required int volumeScore,
-    required int progressionScore,
-  }) {
-    // Weights for each component
-    const frequencyWeight = 0.30; // 30% - most important
-    const restWeight = 0.25; // 25% - recovery crucial
-    const volumeWeight = 0.25; // 25% - workload important
-    const progressionWeight = 0.20; // 20% - long-term indicator
-
-    final weighted = (frequencyScore * frequencyWeight) +
-        (restScore * restWeight) +
-        (volumeScore * volumeWeight) +
-        (progressionScore * progressionWeight);
-
-    return weighted.round().clamp(0, 100);
-  }
-
-  /// Calculate volume trend from workout history
-  ///
-  /// Returns positive value for increasing trend, negative for decreasing
-  double _getVolumeTrend(List<Workout> workouts) {
-    if (workouts.length < 3) {
-      return 0.0;
-    }
-
-    // Calculate total volume per workout (sum of all sets)
-    final volumes = workouts.map((workout) {
-      return workout.exercises.fold<double>(
-        0.0,
-        (sum, exercise) => sum + exercise.sets.fold<double>(
-          0.0,
-          (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
-        ),
-      );
-    }).toList();
-
-    // Compare recent half vs older half
-    final midPoint = volumes.length ~/ 2;
-    final olderHalf = volumes.sublist(0, midPoint);
-    final recentHalf = volumes.sublist(midPoint);
-
-    final olderAvg = olderHalf.reduce((a, b) => a + b) / olderHalf.length;
-    final recentAvg = recentHalf.reduce((a, b) => a + b) / recentHalf.length;
-
-    if (olderAvg == 0) {
-      return 0.0;
-    }
-
-    return (recentAvg - olderAvg) / olderAvg; // Return ratio of change
-  }
 
   /// Check if frequency is in optimal range (3-5 workouts/week)
   ///
@@ -382,54 +303,4 @@ class ConsistencyScoreCalculator {
     return (recentAvg - olderAvg) / olderAvg; // Return ratio of change
   }
 
-  /// Calculate overtraining risk level
-  OvertrainingRisk _calculateOvertrainingRisk({
-    required double avgWorkoutsPerWeek,
-    required double avgRestDaysPerWeek,
-    required double volumeTrend,
-  }) {
-    // Risk factors
-    final tooManyWorkouts = avgWorkoutsPerWeek > 6.0;
-    final tooFewRestDays = avgRestDaysPerWeek < 1.0;
-    final rapidVolumeIncrease = volumeTrend > 0.5; // >50% increase
-
-    final riskFactors = [
-      if (tooManyWorkouts) 1,
-      if (tooFewRestDays) 1,
-      if (rapidVolumeIncrease) 1,
-    ].fold(0, (sum, factor) => sum + factor);
-
-    if (riskFactors >= 2) {
-      return OvertrainingRisk.high;
-    } else if (riskFactors == 1) {
-      return OvertrainingRisk.medium;
-    } else {
-      return OvertrainingRisk.low;
-    }
-  }
-
-  /// Get score rating text
-  String _getScoreRating(int score) {
-    if (score >= 85) {
-      return 'Excellent';
-    } else if (score >= 70) {
-      return 'Good';
-    } else if (score >= 50) {
-      return 'Fair';
-    } else {
-      return 'Poor';
-    }
-  }
-
-  /// Get risk level string from enum
-  String _getRiskLevelString(OvertrainingRisk risk) {
-    switch (risk) {
-      case OvertrainingRisk.low:
-        return 'Low';
-      case OvertrainingRisk.medium:
-        return 'Medium';
-      case OvertrainingRisk.high:
-        return 'High';
-    }
-  }
 }

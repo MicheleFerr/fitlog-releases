@@ -94,6 +94,58 @@ void main() {
       });
     });
   });
+
+  group('calculateScore', () {
+    test('returns score with binary indicators set correctly', () {
+      // Create 10 workouts with:
+      // - 4 workouts/week (optimal frequency)
+      // - 3 rest days/week (optimal rest)
+      // - 10% improvement (positive progression)
+      final workouts = _createOptimalWorkouts();
+
+      final score = calculator.calculateScore(
+        workouts: workouts,
+        currentStreak: 5,
+        longestStreak: 12,
+      );
+
+      // Binary indicators should all be true
+      expect(score.frequencyOptimal, true);
+      expect(score.restOptimal, true);
+      expect(score.progressionPositive, true);
+
+      // Detailed scores should be present
+      expect(score.frequencyScore, greaterThan(70));
+      expect(score.restScore, greaterThan(70));
+      expect(score.progressionScore, greaterThan(70));
+
+      // Deprecated fields should be null
+      expect(score.overallScore, isNull);
+      expect(score.scoreRating, isNull);
+      expect(score.overtrainingRisk, isNull);
+      expect(score.volumeScore, isNull);
+    });
+
+    test('returns empty score for no workouts', () {
+      final score = calculator.calculateScore(
+        workouts: [],
+        currentStreak: 0,
+        longestStreak: 0,
+      );
+
+      expect(score.frequencyOptimal, false);
+      expect(score.restOptimal, false);
+      expect(score.progressionPositive, false);
+    });
+  });
+}
+
+/// Helper: Create workouts with optimal patterns
+List<Workout> _createOptimalWorkouts() {
+  // 10 workouts over 17 days = ~4.1 workouts/week (optimal)
+  // 17 - 10 = 7 rest days over 17 days = ~2.9 rest days/week (optimal)
+  // 10% improvement in weight (positive progression)
+  return _createWorkoutsWithImprovement(0.10, count: 10);
 }
 
 /// Helper: Create workouts with specific improvement trend
@@ -101,13 +153,18 @@ List<Workout> _createWorkoutsWithImprovement(double ratio, {int count = 10}) {
   const baseWeight = 50.0;
   final midPoint = count ~/ 2;
 
+  // Spread workouts over ~17 days for optimal frequency
+  // 10 workouts / 17 days ≈ 4.1 workouts/week
+  final workoutDays = [0, 2, 4, 5, 7, 9, 11, 13, 15, 16];
+
   return List.generate(count, (i) {
     final isRecentHalf = i >= midPoint;
     final weight = isRecentHalf
         ? baseWeight * (1 + ratio) // Recent half has improvement
         : baseWeight;                // Older half baseline
 
-    final workoutDate = DateTime.now().subtract(Duration(days: count - i));
+    final daysBack = workoutDays[i];
+    final workoutDate = DateTime.now().subtract(Duration(days: daysBack));
 
     return Workout(
       id: 'workout_$i',
