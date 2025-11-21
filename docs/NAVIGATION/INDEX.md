@@ -219,11 +219,23 @@ These cover initial setup and configuration:
 5. Test: [`APRE_CASI_USO.md`](../APRE/APRE_CASI_USO.md) - Scenarios & test cases
 
 **Routine Center & Smart Workout CTA**:
-1. Read: [`UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md) - **Current system** (FlexibleRoutine-based, Nov 2025)
-2. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) - Routine architecture
-3. **NEW**: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md) - ✅ **Simplified 2-level system** (Nov 2024, -211 lines, zero dependencies)
-4. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
-5. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD 4-level system (deprecated Oct 2025)
+1. **🆕 START HERE**: [`UX_FLOWS/routine_center/ROUTINE_CENTER_V2_IMPLEMENTATION.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_V2_IMPLEMENTATION.md) - ✅ **v2.0 Complete Implementation** (Jan 2025, 37/37 tasks, 100% test coverage)
+   - FlexibleRoutine entity (12 fields, 67% complexity reduction)
+   - 5 preset templates (PPL, Upper/Lower, Full Body, Bro Split, Custom)
+   - Smart template scoring (Jaccard similarity 0.0-1.0)
+   - 111 tests (Unit + Widget + Integration + E2E)
+   - Full localization (EN + IT, 23 keys)
+2. **🎨 NEW**: [`UX_FLOWS/routine_center/FASE_1_PRESET_TEMPLATES_UI_ENHANCEMENT.md`](../UX_FLOWS/routine_center/FASE_1_PRESET_TEMPLATES_UI_ENHANCEMENT.md) - ✅ **FASE 1 Complete** (Jan 2025, 5 tasks, design system compliant)
+   - Enhanced preset cards with gradient headers
+   - Difficulty badges (Beginner/Intermediate/Advanced)
+   - Duration estimates + frequency display
+   - Localized descriptions (EN + IT, 5 keys)
+   - Full Material 3 design system compliance
+3. Read: [`UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md) - **Current system** (FlexibleRoutine-based, Nov 2025)
+4. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md) - Routine architecture
+5. **SIMPLIFIED**: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md) - ✅ **Simplified 2-level system** (Nov 2024, -211 lines, zero dependencies)
+6. Reference: [`UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md`](../UX_FLOWS/routine_center/ROUTINE_CENTER_IMPROVEMENTS_PLAN.md) - Future improvements
+7. Historical: [`UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md`](../UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SYSTEM_REPORT_DEPRECATED.md) - ⚠️ OLD 4-level system (deprecated Oct 2025)
 
 **AI Coach Feature (Feature Gating System)**:
 1. Read: [`AI_COACH_COMPREHENSIVE_DOCUMENTATION.md`](../AI_COACH_COMPREHENSIVE_DOCUMENTATION.md) - **Complete system** (800+ lines, Jan 2025)
@@ -317,6 +329,7 @@ These cover initial setup and configuration:
 - `ERROR_KB.md`
 
 ### UX Flows & System Reports
+- `UX_FLOWS/routine_center/ROUTINE_CENTER_V2_IMPLEMENTATION.md` ✅ **NEW!** 🎯 **START HERE** (v2.0 Complete Implementation - 37/37 tasks, 100% test coverage, Jan 2025)
 - `UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md` 🎯 **UPDATED!** (Smart Workout CTA - FlexibleRoutine-based system, Nov 2025)
 - `UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` 📋 (Routine Center architecture & complete system)
 - `UX_FLOWS/routine_center/WORKOUT_SUGGESTION_SIMPLIFIED_ARCHITECTURE.md` ✅ **NEW!** (Simplified 2-level prediction system, Nov 2024, -211 lines, zero deps)

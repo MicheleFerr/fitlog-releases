@@ -15,7 +15,7 @@
 
 **⚠️ OBBLIGATORIO**: Prima di qualsiasi modifica, leggi [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) → trova docs feature → leggi → implementa
 
-**Documentazione chiave**: `DESIGN_GUIDELINES.md` (design system), `TIMER_SYSTEM_DOCUMENTATION.md` (timer), `ANALYTICS_SYSTEM_DOCUMENTATION.md` (analytics), `USER_PROFILE_DOCUMENTATION.md` (auth), `WORKOUT_SYSTEM_OVERVIEW.md` (workout), `ROUTINE_CENTER_V2_IMPLEMENTATION.md` (routine v2.0 - START HERE), `APRE_INDEX.md` (APRE), `AI_COACH_COMPREHENSIVE_DOCUMENTATION.md` (AI coach feature gating)
+**Documentazione chiave**: `DESIGN_GUIDELINES.md` (design system), `TIMER_SYSTEM_DOCUMENTATION.md` (timer), `ANALYTICS_SYSTEM_DOCUMENTATION.md` (analytics), `USER_PROFILE_DOCUMENTATION.md` (auth), `WORKOUT_SYSTEM_OVERVIEW.md` (workout), `ROUTINE_CENTER_V2_IMPLEMENTATION.md` (routine v2.0 - START HERE), `FASE_1_PRESET_TEMPLATES_UI_ENHANCEMENT.md` (routine preset UI), `APRE_INDEX.md` (APRE), `AI_COACH_COMPREHENSIVE_DOCUMENTATION.md` (AI coach feature gating)
 
 **Workflow**: INDEX.md → Trova feature → Leggi docs → Implementa → Aggiorna docs → Commit
 
