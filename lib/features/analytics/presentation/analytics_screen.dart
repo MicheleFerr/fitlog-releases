@@ -446,6 +446,8 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
                           return _buildAccordionList(filteredHistories);
                         case ExerciseViewMode.byDate:
                           return _buildTimelineList(filteredHistories);
+                        case ExerciseViewMode.byMajorWorkouts:
+                          return _buildFlatList(filteredHistories); // Filter to major workouts only
                       }
                     },
                   ),
@@ -855,7 +857,7 @@ class _QuickStatsSummary extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -865,7 +867,7 @@ class _QuickStatsSummary extends StatelessWidget {
             context.colors.secondaryContainer,
           ],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -874,73 +876,62 @@ class _QuickStatsSummary extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          // Row 1: Streak + Volume Trend
-          Row(
-            children: [
-              // Streak (left half)
-              Expanded(
-                child: _HybridStatItem(
-                  icon: AppIcons.streak,
-                  label: 'Streak',
-                  value: '$streak',
-                  suffix: streak == 1 ? 'giorno' : 'giorni',
-                  color: context.colors.onPrimaryContainer,
-                  trend: null,
-                ),
-              ),
-              const SizedBox(width: 12),
-
-              // Volume trend (right half)
-              Expanded(
-                child: _HybridStatItem(
-                  icon: AppIcons.trendUp,
-                  label: 'Volume',
-                  value: volumeProgression >= 0
-                      ? '+${volumeProgression.toStringAsFixed(0)}'
-                      : volumeProgression.toStringAsFixed(0),
-                  suffix: '%',
-                  color: context.colors.onPrimaryContainer,
-                  trend: volumeProgression >= 0 ? 'up' : 'down',
-                  trendColor: volumeProgression >= 0
-                      ? context.colors.success
-                      : context.colors.error,
-                ),
-              ),
-            ],
+          // Streak
+          Expanded(
+            child: _HybridStatItem(
+              icon: AppIcons.streak,
+              label: 'Streak',
+              value: '$streak',
+              suffix: streak == 1 ? 'giorno' : 'giorni',
+              color: context.colors.onPrimaryContainer,
+              trend: null,
+            ),
           ),
+          const SizedBox(width: 6),
 
-          const SizedBox(height: 12),
+          // Volume
+          Expanded(
+            child: _HybridStatItem(
+              icon: AppIcons.trendUp,
+              label: 'Volume',
+              value: volumeProgression >= 0
+                  ? '+${volumeProgression.toStringAsFixed(0)}'
+                  : volumeProgression.toStringAsFixed(0),
+              suffix: '%',
+              color: context.colors.onPrimaryContainer,
+              trend: volumeProgression >= 0 ? 'up' : 'down',
+              trendColor: volumeProgression >= 0
+                  ? context.colors.success
+                  : context.colors.error,
+            ),
+          ),
+          const SizedBox(width: 6),
 
-          // Row 2: Weekly Goal + Recent PRs
-          Row(
-            children: [
-              // Weekly goal (left half)
-              Expanded(
-                child: _HybridStatItem(
-                  icon: AppIcons.calendar,
-                  label: 'Settimana',
-                  value: '$weeklyWorkouts',
-                  suffix: '/5 allenamenti',
-                  color: context.colors.onPrimaryContainer,
-                  trend: null,
-                ),
-              ),
-              const SizedBox(width: 12),
+          // Settimana
+          Expanded(
+            child: _HybridStatItem(
+              icon: AppIcons.calendar,
+              label: 'Settimana',
+              value: '$weeklyWorkouts',
+              suffix: '/5 allenamenti',
+              color: context.colors.onPrimaryContainer,
+              trend: null,
+            ),
+          ),
+          const SizedBox(width: 6),
 
-              // Recent PRs (right half)
-              Expanded(
-                child: _HybridStatItem(
-                  icon: AppIcons.achievement,
-                  label: 'PR (7 giorni)',
-                  value: '$recentPRs',
-                  suffix: recentPRs == 1 ? 'nuovo' : 'nuovi',
-                  color: context.colors.onPrimaryContainer,
-                  trend: null,
-                ),
-              ),
-            ],
+          // PR
+          Expanded(
+            child: _HybridStatItem(
+              icon: AppIcons.achievement,
+              label: 'PR (7 giorni)',
+              value: '$recentPRs',
+              suffix: recentPRs == 1 ? 'nuovo' : 'nuovi',
+              color: context.colors.onPrimaryContainer,
+              trend: null,
+            ),
           ),
         ],
       ),
@@ -1055,10 +1046,10 @@ class _HybridStatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: context.colors.surface.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1069,16 +1060,16 @@ class _HybridStatItem extends StatelessWidget {
               SemanticIcon(
                 icon: icon,
                 semanticLabel: label,
-                size: AppIconSize.small,
+                size: AppIconSize.tiny,
                 color: color.withValues(alpha: 0.7),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   label,
                   style: context.textTheme.labelSmall?.copyWith(
                     color: color.withValues(alpha: 0.7),
-                    fontSize: 11,
+                    fontSize: 9,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1094,7 +1085,7 @@ class _HybridStatItem extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
 
           // Value + Suffix
           Row(
@@ -1103,19 +1094,19 @@ class _HybridStatItem extends StatelessWidget {
             children: [
               Text(
                 value,
-                style: context.textTheme.headlineMedium?.copyWith(
+                style: context.textTheme.titleLarge?.copyWith(
                   color: color,
                   fontWeight: FontWeight.bold,
-                  fontSize: 28,
+                  fontSize: 18,
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 2),
               Flexible(
                 child: Text(
                   suffix,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: color.withValues(alpha: 0.6),
-                    fontSize: 12,
+                    fontSize: 9,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
