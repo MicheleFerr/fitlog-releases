@@ -10,6 +10,8 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/mem
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class AnalyticsOverviewTab extends ConsumerStatefulWidget {
 
@@ -50,93 +52,71 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
     // Watch memoized stats provider - this is cached!
     final stats = ref.watch(periodAnalyticsStatsProvider(_selectedPeriod));
-    
+
     return RefreshIndicator(
       onRefresh: () async {
         // Refresh will be handled by parent
         await Future.delayed(const Duration(seconds: 1));
       },
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Period Selector
-          _buildPeriodSelector(context),
-          const SizedBox(height: 20),
+      child: CustomScrollView(
+        slivers: [
+          // Fixed Header with Period Selector and Hero Card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                children: [
+                  // Period Selector
+                  _buildPeriodSelector(context),
+                  const SizedBox(height: 20),
 
-          // Hero Card - Period Summary
-          HeroStatCard(
-            title: _getPeriodTitle(context, _selectedPeriod),
-            value: '${stats.totalWorkouts}',
-            subtitle: '${stats.totalVolume.round()} kg total volume',
-            icon: AppIcons.workout,
-            gradientColors: [
-              theme.colorScheme.primary,
-              theme.colorScheme.primary.withValues(alpha: 0.7),
-            ],
-            onTap: () {
-              // Navigate to detailed view
-            },
+                  // Hero Card - Period Summary
+                  HeroStatCard(
+                    title: _getPeriodTitle(context, _selectedPeriod),
+                    value: '${stats.totalWorkouts}',
+                    subtitle: '${stats.totalVolume.round()} kg total volume',
+                    icon: AppIcons.workout,
+                    gradientColors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.primary.withValues(alpha: 0.7),
+                    ],
+                    onTap: () {
+                      // Navigate to detailed view
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
 
-          // Stats Grid
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.2,
-            children: [
-              CompactStatCard(
-                value: '${stats.totalWorkouts}',
-                label: l10n.totalWorkouts,
-                icon: AppIcons.calendar,
-                color: Colors.blue,
-                subtitle: _getPeriodSubtitle(context, _selectedPeriod),
-                trend: _buildTrend(stats.workoutTrend),
-                tooltipTitle: l10n.totalWorkouts,
-                tooltipDescription: l10n.workoutFrequencyTooltip,
-              ),
-              CompactStatCard(
-                value: _formatVolume(stats.totalVolume),
-                label: l10n.totalVolume,
-                icon: AppIcons.workout,
-                color: Colors.orange,
-                subtitle: _getPeriodSubtitle(context, _selectedPeriod),
-                trend: _buildTrend(stats.volumeTrend),
-                tooltipTitle: l10n.totalVolume,
-                tooltipDescription: l10n.totalVolumeTooltip,
-              ),
-              CompactStatCard(
-                value: '${stats.currentStreak}',
-                label: l10n.dayStreak,
-                icon: AppIcons.streak,
-                color: Colors.red,
-                subtitle: stats.currentStreak > 0 ? l10n.keepItUp : l10n.startToday,
-                tooltipTitle: l10n.dayStreak,
-                tooltipDescription: l10n.currentStreakTooltip,
-              ),
-              CompactStatCard(
-                value: '${stats.consistency}%',
-                label: l10n.consistency,
-                icon: AppIcons.insights,
-                color: Colors.green,
-                subtitle: l10n.last30Days,
-                tooltipTitle: l10n.consistency,
-                tooltipDescription: l10n.consistencyTooltip,
-              ),
-            ],
+          // Minimal Stats Bar - Slides up when scrolling
+          SliverPersistentHeader(
+            pinned: false, // Slides up with scroll
+            floating: true, // Reappears when scrolling up
+            delegate: _MinimalStatsBarDelegate(
+              stats: stats,
+              l10n: l10n,
+              minHeight: 0, // Fully slides up
+              maxHeight: 100, // ~100px height when visible
+            ),
           ),
-          const SizedBox(height: 20),
-          
-          // Recent Workouts Section
-          _buildRecentWorkouts(context, filteredWorkouts),
-          SizedBox(height: 20),
-          
-          // Quick Actions
-          _buildQuickActions(context),
-          SizedBox(height: 100), // Space for bottom navigation
+
+          // Scrollable Content
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                const SizedBox(height: 20),
+                // Recent Workouts Section
+                _buildRecentWorkouts(context, filteredWorkouts),
+                const SizedBox(height: 20),
+                // Quick Actions
+                _buildQuickActions(context),
+                const SizedBox(height: 100), // Space for bottom navigation
+              ]),
+            ),
+          ),
         ],
       ),
     );
@@ -361,7 +341,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
   }
   
   Widget _buildTrend(double value) {
-    final color = value > 0 ? Colors.green : value < 0 ? Colors.red : Colors.grey;
+    final theme = Theme.of(context);
+    final color = value > 0
+        ? theme.colorScheme.tertiary
+        : value < 0
+            ? theme.colorScheme.error
+            : theme.colorScheme.outline;
     final icon = value > 0 ? AppIcons.trendUp : value < 0 ? AppIcons.trendDown : AppIcons.remove;
     
     return Container(
@@ -373,12 +358,11 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: color),
+          Icon(icon, size: AppIconSize.tiny, color: color),
           const SizedBox(width: 2),
           Text(
             '${value.abs().toStringAsFixed(0)}%',
-            style: TextStyle(
-              fontSize: 11,
+            style: theme.textTheme.labelSmall?.copyWith(
               color: color,
               fontWeight: FontWeight.bold,
             ),
@@ -928,7 +912,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
               // Activities list
               Expanded(
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(child: LoadingIndicator())
                     : filteredActivities.isEmpty
                         ? Center(
                             child: Column(
@@ -977,8 +961,8 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       onSelected: (_) => onTap(),
       selectedColor: theme.colorScheme.primaryContainer,
       checkmarkColor: theme.colorScheme.onPrimaryContainer,
-      labelStyle: TextStyle(
-        color: isSelected 
+      labelStyle: theme.textTheme.labelLarge?.copyWith(
+        color: isSelected
             ? theme.colorScheme.onPrimaryContainer
             : theme.colorScheme.onSurfaceVariant,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -1287,7 +1271,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 20, color: theme.colorScheme.primary),
+        Icon(icon, size: AppIconSize.small, color: theme.colorScheme.primary),
         const SizedBox(height: 4),
         Text(
           label,
@@ -1310,7 +1294,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: theme.colorScheme.onSurfaceVariant),
+          Icon(icon, size: AppIconSize.tiny, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 4),
           Text(
             label,
@@ -1385,4 +1369,140 @@ class MuscleGroupStats {
   int totalSets = 0;
   double totalVolume = 0;
   Set<String> exercises = {};
+}
+
+// Delegate for minimal stats bar with slide-up animation
+class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
+  _MinimalStatsBarDelegate({
+    required this.stats,
+    required this.l10n,
+    required this.minHeight,
+    required this.maxHeight,
+  });
+
+  final dynamic stats;
+  final AppLocalizations l10n;
+  final double minHeight;
+  final double maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final theme = Theme.of(context);
+    final progress = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
+    final opacity = 1.0 - progress;
+
+    return Opacity(
+      opacity: opacity,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          boxShadow: shrinkOffset > 0
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          children: [
+            // Streak
+            Expanded(
+              child: _buildMinimalStat(
+                context,
+                AppIcons.streak,
+                '${stats.currentStreak}',
+                l10n.dayStreak,
+                theme.colorScheme.error,
+              ),
+            ),
+            // Volume
+            Expanded(
+              child: _buildMinimalStat(
+                context,
+                AppIcons.workout,
+                _formatVolumeShort(stats.totalVolume),
+                l10n.totalVolume,
+                theme.colorScheme.secondary,
+              ),
+            ),
+            // Workouts
+            Expanded(
+              child: _buildMinimalStat(
+                context,
+                AppIcons.calendar,
+                '${stats.totalWorkouts}',
+                l10n.totalWorkouts,
+                theme.colorScheme.primary,
+              ),
+            ),
+            // Consistency
+            Expanded(
+              child: _buildMinimalStat(
+                context,
+                AppIcons.insights,
+                '${stats.consistency}%',
+                l10n.consistency,
+                theme.colorScheme.tertiary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMinimalStat(
+    BuildContext context,
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: AppIconSize.small, color: color),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontSize: 10,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  String _formatVolumeShort(double volume) {
+    if (volume >= 1000) {
+      return '${(volume / 1000).toStringAsFixed(1)}k';
+    }
+    return volume.round().toString();
+  }
+
+  @override
+  bool shouldRebuild(_MinimalStatsBarDelegate oldDelegate) {
+    return stats != oldDelegate.stats;
+  }
 }
