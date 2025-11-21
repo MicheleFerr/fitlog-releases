@@ -12,6 +12,10 @@ import 'package:gymbro_flutter_new/features/analytics/domain/enums/exercise_view
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_expansion_tile.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/muscle_group_correction_sheet.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/feedback_submission_dialog.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/streak_modal.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_modal.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_modal.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_modal.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -828,10 +832,14 @@ class _QuickStatsSummary extends StatelessWidget {
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
-                // TODO: Show Streak BottomSheet with contribution graph and history
                 HapticFeedback.lightImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('🔥 Streak details coming soon!')),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => StreakModal(
+                    exerciseHistories: exerciseHistories,
+                  ),
                 );
               },
             ),
@@ -853,10 +861,15 @@ class _QuickStatsSummary extends StatelessWidget {
                   ? context.colors.success
                   : context.colors.error,
               onTap: () {
-                // TODO: Show Volume BottomSheet with trend chart and weekly average
                 HapticFeedback.lightImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('📊 Volume details coming soon!')),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => VolumeModal(
+                    exerciseHistories: exerciseHistories,
+                    volumeProgression: volumeProgression,
+                  ),
                 );
               },
             ),
@@ -873,10 +886,15 @@ class _QuickStatsSummary extends StatelessWidget {
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
-                // TODO: Show Weekly Goal BottomSheet with calendar and goal setter
                 HapticFeedback.lightImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('📅 Weekly goal settings coming soon!')),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => WeeklyModal(
+                    exerciseHistories: exerciseHistories,
+                    weeklyWorkouts: weeklyWorkouts,
+                  ),
                 );
               },
             ),
@@ -893,10 +911,15 @@ class _QuickStatsSummary extends StatelessWidget {
               color: context.colors.onPrimaryContainer,
               trend: null,
               onTap: () {
-                // TODO: Show PR List BottomSheet with all recent PRs
                 HapticFeedback.lightImpact();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('🏆 PR list coming soon!')),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => PRModal(
+                    exerciseHistories: exerciseHistories,
+                    recentPRCount: recentPRs,
+                  ),
                 );
               },
             ),
