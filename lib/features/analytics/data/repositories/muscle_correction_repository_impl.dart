@@ -27,7 +27,7 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart' hide State;
-import 'package:gymbro_flutter_new/core/data/hive_box_manager.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/local/hive_muscle_correction_adapter.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle_correction_repository.dart';
@@ -37,7 +37,7 @@ import 'package:hive/hive.dart';
 /// Implementation of muscle correction repository
 ///
 /// **Dependencies**:
-/// - HiveBoxManager: Local storage access
+/// - HiveBoxManagerEnhanced: Local storage access (initialized version)
 /// - FirebaseFirestore: Remote storage access
 /// - FirebaseAuth: User authentication (via instance)
 class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
@@ -46,7 +46,7 @@ class MuscleCorrectionRepositoryImpl implements MuscleCorrectionRepository {
     required this.firestore,
   });
 
-  final HiveBoxManager hiveBoxManager;
+  final HiveBoxManagerEnhanced hiveBoxManager;
   final FirebaseFirestore firestore;
 
   /// Hive box name for corrections storage

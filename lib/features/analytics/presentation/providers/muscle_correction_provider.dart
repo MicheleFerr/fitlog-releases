@@ -15,7 +15,7 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/core/data/hive_box_manager.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/muscle_correction_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle_correction_repository.dart';
@@ -23,12 +23,12 @@ import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle
 /// Provider for MuscleCorrectionRepository instance
 ///
 /// **Dependencies**:
-/// - HiveBoxManager (singleton)
+/// - HiveBoxManagerEnhanced (singleton)
 /// - FirebaseFirestore (singleton)
 final muscleCorrectionRepositoryProvider =
     Provider<MuscleCorrectionRepository>((ref) {
   return MuscleCorrectionRepositoryImpl(
-    hiveBoxManager: HiveBoxManager(),
+    hiveBoxManager: HiveBoxManagerEnhanced(),
     firestore: FirebaseFirestore.instance,
   );
 });
