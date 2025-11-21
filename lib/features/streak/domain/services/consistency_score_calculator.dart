@@ -310,6 +310,78 @@ class ConsistencyScoreCalculator {
     return (recentAvg - olderAvg) / olderAvg; // Return ratio of change
   }
 
+  /// Check if frequency is in optimal range (3-5 workouts/week)
+  ///
+  /// Evidence: Schoenfeld et al. 2019 (PMID: 30558493)
+  /// - 2x/week vs 3x/week: identical results if volume equated
+  /// - Range 3-5 validated for general population hypertrophy
+  /// - Ralston et al. 2018 (PMID: 30076500): ES 0.03, p=0.78 (no difference)
+  bool isFrequencyOptimal(double avgWorkoutsPerWeek) {
+    return avgWorkoutsPerWeek >= _optimalFrequencyMin &&
+        avgWorkoutsPerWeek <= _optimalFrequencyMax;
+  }
+
+  /// Check if rest is in optimal range (2-3 rest days/week)
+  ///
+  /// Evidence: UCLA Health 2024
+  /// - <2 rest days = 5.2x injury risk increase
+  /// - ACE Guidelines: 2-3 days optimal for general population
+  /// - UCHealth: 1-2 days for advanced, 2-3 for beginners
+  bool isRestOptimal(double avgRestDaysPerWeek) {
+    return avgRestDaysPerWeek >= _optimalRestDaysMin &&
+        avgRestDaysPerWeek <= _optimalRestDaysMax;
+  }
+
+  /// Check if progression is positive (>5% improvement)
+  ///
+  /// Evidence: NASM 2023 - Progressive Overload Guidelines
+  /// - Optimal increment: +5-10% per week
+  /// - Threshold: >5% improvement indicates positive progression
+  /// - Maintaining ±5% acceptable, >5% is active progress
+  bool isProgressionPositive(List<Workout> workouts) {
+    if (workouts.length < _minWorkoutsForProgression) {
+      return false; // Not enough data to determine progression
+    }
+
+    final improvement = _calculateProgressionRatio(workouts);
+    return improvement >= 0.05; // >5% improvement threshold
+  }
+
+  /// Calculate progression ratio (recent vs older average)
+  ///
+  /// Returns positive value for improvement, negative for regression
+  double _calculateProgressionRatio(List<Workout> workouts) {
+    if (workouts.length < 2) return 0.0;
+
+    // Calculate average weight per set for each workout
+    final avgWeights = workouts.map((workout) {
+      final totalWeight = workout.exercises.fold<double>(
+        0.0,
+        (sum, exercise) => sum + exercise.sets.fold<double>(
+          0.0,
+          (setSum, set) => setSum + ((set.weight ?? 0.0) * (set.reps ?? 0)),
+        ),
+      );
+      final totalSets = workout.exercises.fold<int>(
+        0,
+        (sum, exercise) => sum + exercise.sets.length,
+      );
+      return totalSets > 0 ? totalWeight / totalSets : 0.0;
+    }).toList();
+
+    // Compare recent 50% vs older 50%
+    final midPoint = avgWeights.length ~/ 2;
+    final olderHalf = avgWeights.sublist(0, midPoint);
+    final recentHalf = avgWeights.sublist(midPoint);
+
+    final olderAvg = olderHalf.reduce((a, b) => a + b) / olderHalf.length;
+    final recentAvg = recentHalf.reduce((a, b) => a + b) / recentHalf.length;
+
+    if (olderAvg == 0) return 0.0;
+
+    return (recentAvg - olderAvg) / olderAvg; // Return ratio of change
+  }
+
   /// Calculate overtraining risk level
   OvertrainingRisk _calculateOvertrainingRisk({
     required double avgWorkoutsPerWeek,
