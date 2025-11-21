@@ -52,16 +52,18 @@ class VolumeModal extends StatefulWidget {
 }
 
 class _VolumeModalState extends State<VolumeModal> {
-  /// Calculate workouts for last N weeks
-  List<int> _calculateWeeklyWorkouts(int weeks) {
+  /// Calculate workouts and volume for last N weeks
+  List<({int workouts, double volume})> _calculateWeeklyData(int weeks) {
     final now = DateTime.now();
-    final weeklyWorkouts = <int>[];
+    final weeklyData = <({int workouts, double volume})>[];
 
     for (int i = 0; i < weeks; i++) {
       final weekStart = now.subtract(Duration(days: 7 * (i + 1)));
       final weekEnd = now.subtract(Duration(days: 7 * i));
 
       final workoutDates = <DateTime>{};
+      double totalVolume = 0.0;
+
       for (final history in widget.exerciseHistories) {
         for (final session in history.sessions) {
           final dateOnly = DateTime(
@@ -71,14 +73,19 @@ class _VolumeModalState extends State<VolumeModal> {
           );
           if (dateOnly.isAfter(weekStart) && !dateOnly.isAfter(weekEnd)) {
             workoutDates.add(dateOnly);
+
+            // Calculate volume for this session (weight × reps × sets)
+            for (final set in session.sets) {
+              totalVolume += (set.weight ?? 0.0) * (set.reps ?? 0);
+            }
           }
         }
       }
 
-      weeklyWorkouts.insert(0, workoutDates.length);
+      weeklyData.insert(0, (workouts: workoutDates.length, volume: totalVolume));
     }
 
-    return weeklyWorkouts;
+    return weeklyData;
   }
 
   /// Get insight message based on progression
@@ -92,7 +99,7 @@ class _VolumeModalState extends State<VolumeModal> {
 
   @override
   Widget build(BuildContext context) {
-    final weeklyWorkouts = _calculateWeeklyWorkouts(4);
+    final weeklyData = _calculateWeeklyData(4);
     final insightMessage = _getInsightMessage(widget.volumeProgression);
 
     return DecoratedBox(
@@ -121,7 +128,7 @@ class _VolumeModalState extends State<VolumeModal> {
               const SizedBox(height: 24),
 
               // Weekly comparison chart
-              _buildWeeklyChart(context, weeklyWorkouts),
+              _buildWeeklyChart(context, weeklyData),
               const SizedBox(height: 24),
 
               // Insight message
@@ -283,11 +290,11 @@ class _VolumeModalState extends State<VolumeModal> {
     );
   }
 
-  /// Weekly comparison chart (last 4 weeks)
-  Widget _buildWeeklyChart(BuildContext context, List<int> weeklyWorkouts) {
-    final maxWorkouts = weeklyWorkouts.isEmpty
+  /// Weekly comparison chart (last 4 weeks) with tap handlers
+  Widget _buildWeeklyChart(BuildContext context, List<({int workouts, double volume})> weeklyData) {
+    final maxWorkouts = weeklyData.isEmpty
         ? 7
-        : weeklyWorkouts.reduce((a, b) => a > b ? a : b).toDouble();
+        : weeklyData.map((d) => d.workouts).reduce((a, b) => a > b ? a : b).toDouble();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,63 +312,169 @@ class _VolumeModalState extends State<VolumeModal> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: List.generate(4, (index) {
-            if (index >= weeklyWorkouts.length) return const SizedBox.shrink();
+            if (index >= weeklyData.length) return const SizedBox.shrink();
 
-            final workouts = weeklyWorkouts[index];
+            final data = weeklyData[index];
+            final workouts = data.workouts;
+            final volume = data.volume;
             final heightPercent = maxWorkouts > 0 ? workouts / maxWorkouts : 0;
-            final isCurrentWeek = index == weeklyWorkouts.length - 1;
+            final isCurrentWeek = index == weeklyData.length - 1;
 
-            return Column(
-              children: [
-                // Value
-                Text(
-                  '$workouts',
-                  style: context.textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isCurrentWeek
-                        ? context.colors.primary
-                        : context.colors.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // Bar
-                Container(
-                  width: 60,
-                  height: (120 * heightPercent).toDouble(),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: isCurrentWeek
-                          ? [
-                              context.colors.primary,
-                              context.colors.primaryContainer,
-                            ]
-                          : [
-                              context.colors.surfaceContainerHighest,
-                              context.colors.surfaceContainer,
-                            ],
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(8),
+            return GestureDetector(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                _showVolumeDetails(context, index, workouts, volume, isCurrentWeek);
+              },
+              child: Column(
+                children: [
+                  // Value
+                  Text(
+                    '$workouts',
+                    style: context.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isCurrentWeek
+                          ? context.colors.primary
+                          : context.colors.onSurfaceVariant,
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
-                // Week label
-                Text(
-                  index == weeklyWorkouts.length - 1
-                      ? 'This Week'
-                      : 'Week ${weeklyWorkouts.length - index}',
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
+                  // Bar
+                  Container(
+                    width: 60,
+                    height: (120 * heightPercent).toDouble(),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: isCurrentWeek
+                            ? [
+                                context.colors.primary,
+                                context.colors.primaryContainer,
+                              ]
+                            : [
+                                context.colors.surfaceContainerHighest,
+                                context.colors.surfaceContainer,
+                              ],
+                      ),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+
+                  // Week label
+                  Text(
+                    index == weeklyData.length - 1
+                        ? 'This Week'
+                        : 'Week ${weeklyData.length - index}',
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             );
           }),
+        ),
+      ],
+    );
+  }
+
+  /// Show volume details dialog when tapping on a bar
+  void _showVolumeDetails(BuildContext context, int weekIndex, int workouts, double volume, bool isCurrentWeek) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            SemanticIcon(
+              icon: AppIcons.barChart,
+              semanticLabel: 'Volume Details',
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                isCurrentWeek ? 'This Week Details' : 'Week ${4 - weekIndex} Details',
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Workouts count
+            _buildDetailRow(
+              context,
+              icon: AppIcons.workout,
+              label: 'Total Workouts',
+              value: '$workouts',
+            ),
+            const SizedBox(height: 16),
+
+            // Total volume
+            _buildDetailRow(
+              context,
+              icon: AppIcons.trendUp,
+              label: 'Total Volume',
+              value: '${volume.toStringAsFixed(1)} kg',
+            ),
+            const SizedBox(height: 16),
+
+            // Average per workout
+            if (workouts > 0)
+              _buildDetailRow(
+                context,
+                icon: AppIcons.barChart,
+                label: 'Avg per Workout',
+                value: '${(volume / workouts).toStringAsFixed(1)} kg',
+              ),
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+            },
+            child: Text(context.l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Helper to build detail row in dialog
+  Widget _buildDetailRow(BuildContext context, {required IconData icon, required String label, required String value}) {
+    return Row(
+      children: [
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: label,
+          size: AppIconSize.small,
+          color: context.colors.primary,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            label,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        Text(
+          value,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
