@@ -1567,10 +1567,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get detailedAnalytics => 'Analisi Dettagliate';
 
   @override
-  String get thisWeek => 'Questa settimana';
+  String get thisWeek => 'Questa Settimana';
 
   @override
-  String get totalVolume => 'totale';
+  String get totalVolume => 'Volume Totale';
 
   @override
   String get consistency => 'Consistenza';
@@ -3231,7 +3231,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get highPriority => 'Alta Priorità';
 
   @override
-  String get insight => 'Insight';
+  String get insight => 'Suggerimento';
 
   @override
   String get recommendation => 'Raccomandazione';
@@ -12595,7 +12595,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get generalTip => 'Consiglio Generale';
 
   @override
-  String get volumeExplanation => 'Volume Totale';
+  String get volumeExplanation =>
+      'Il volume è la quantità totale di lavoro che svolgi nei tuoi allenamenti. Tracciamo la frequenza settimanale per mostrare la tua progressione nel tempo. Una progressione positiva significa che stai facendo più allenamenti rispetto alla settimana scorsa!';
 
   @override
   String get volumeExplanationDesc =>
@@ -13839,7 +13840,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get viewWorkout => 'Visualizza allenamento';
 
   @override
-  String get volumeDetails => 'Volume details';
+  String get volumeDetails => 'Dettagli Volume';
 
   @override
   String get volumePerDay => 'Volume per day';
@@ -18172,4 +18173,48 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get choosePreset => 'Scegli un preset';
+
+  @override
+  String get volumeProgressionExceptional =>
+      'Crescita eccezionale! Stai stracciando i tuoi obiettivi! 🚀';
+
+  @override
+  String get volumeProgressionGreat => 'Ottimi progressi! Continua così! 💪';
+
+  @override
+  String get volumeProgressionSteady =>
+      'Miglioramento costante! Sei sulla strada giusta! 📈';
+
+  @override
+  String get volumeProgressionMinorDip =>
+      'Piccolo calo, ma ce la fai! Resta costante! 💫';
+
+  @override
+  String get volumeProgressionRefocus =>
+      'Tempo di rifocalizzarsi! Ricorda i tuoi obiettivi! 🎯';
+
+  @override
+  String get volumeTrend => 'Trend Volume';
+
+  @override
+  String get whatIsVolume => 'Cos\'è il Volume?';
+
+  @override
+  String get lastFourWeeks => 'Ultime 4 Settimane';
+
+  @override
+  String weekNumber(int number) {
+    return 'Settimana $number';
+  }
+
+  @override
+  String get thisWeekDetails => 'Dettagli Questa Settimana';
+
+  @override
+  String weekNumberDetails(int number) {
+    return 'Dettagli Settimana $number';
+  }
+
+  @override
+  String get avgPerWorkout => 'Media per Allenamento';
 }

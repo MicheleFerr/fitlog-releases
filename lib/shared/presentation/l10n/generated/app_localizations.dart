@@ -2959,16 +2959,16 @@ abstract class AppLocalizations {
   /// **'Detailed Analytics'**
   String get detailedAnalytics;
 
-  /// This week label for workout count
+  /// Label for current week in charts
   ///
   /// In en, this message translates to:
   /// **'This Week'**
   String get thisWeek;
 
-  /// Label for total training volume
+  /// Label for total volume (weight lifted)
   ///
   /// In en, this message translates to:
-  /// **'total'**
+  /// **'Total Volume'**
   String get totalVolume;
 
   /// Consistency metric label
@@ -2977,7 +2977,7 @@ abstract class AppLocalizations {
   /// **'Consistency'**
   String get consistency;
 
-  /// Label for total workouts count
+  /// Label for total number of workouts
   ///
   /// In en, this message translates to:
   /// **'Total Workouts'**
@@ -5927,7 +5927,7 @@ abstract class AppLocalizations {
   /// **'Estimated 1RM'**
   String get estimated1RM;
 
-  /// Volume progression chart title
+  /// Label for volume progression metric
   ///
   /// In en, this message translates to:
   /// **'Volume Progression'**
@@ -5987,7 +5987,7 @@ abstract class AppLocalizations {
   /// **'High Priority'**
   String get highPriority;
 
-  /// Insight label
+  /// Semantic label for insight/tip icon
   ///
   /// In en, this message translates to:
   /// **'Insight'**
@@ -21996,10 +21996,10 @@ abstract class AppLocalizations {
   /// **'General Tip'**
   String get generalTip;
 
-  /// Volume metric explanation title
+  /// Explanation of what volume means in fitness context
   ///
   /// In en, this message translates to:
-  /// **'Total Volume'**
+  /// **'Volume is the total amount of work you perform in your workouts. We track your weekly workout frequency to show your progression over time. Positive progression means you\'re doing more workouts than last week!'**
   String get volumeExplanation;
 
   /// Volume metric explanation description
@@ -24330,10 +24330,10 @@ abstract class AppLocalizations {
   /// **'View workout'**
   String get viewWorkout;
 
-  /// Auto-generated for volumeDetails
+  /// Title for volume details dialog
   ///
   /// In en, this message translates to:
-  /// **'Volume details'**
+  /// **'Volume Details'**
   String get volumeDetails;
 
   /// Auto-generated for volumePerDay
@@ -32303,6 +32303,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a preset'**
   String get choosePreset;
+
+  /// Motivational message for exceptional volume progression (>20%)
+  ///
+  /// In en, this message translates to:
+  /// **'Exceptional growth! You\'re crushing your goals! 🚀'**
+  String get volumeProgressionExceptional;
+
+  /// Motivational message for great volume progression (10-20%)
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress! Keep up the momentum! 💪'**
+  String get volumeProgressionGreat;
+
+  /// Motivational message for steady volume progression (0-10%)
+  ///
+  /// In en, this message translates to:
+  /// **'Steady improvement! You\'re on the right track! 📈'**
+  String get volumeProgressionSteady;
+
+  /// Motivational message for minor volume dip (-10 to 0%)
+  ///
+  /// In en, this message translates to:
+  /// **'Minor dip, but you\'ve got this! Stay consistent! 💫'**
+  String get volumeProgressionMinorDip;
+
+  /// Motivational message for significant volume drop (<-10%)
+  ///
+  /// In en, this message translates to:
+  /// **'Time to refocus! Remember your goals! 🎯'**
+  String get volumeProgressionRefocus;
+
+  /// Semantic label for volume trend icon
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Trend'**
+  String get volumeTrend;
+
+  /// Title for volume explanation section
+  ///
+  /// In en, this message translates to:
+  /// **'What is Volume?'**
+  String get whatIsVolume;
+
+  /// Title for 4-week comparison chart
+  ///
+  /// In en, this message translates to:
+  /// **'Last 4 Weeks'**
+  String get lastFourWeeks;
+
+  /// Label for a specific week number
+  ///
+  /// In en, this message translates to:
+  /// **'Week {number}'**
+  String weekNumber(int number);
+
+  /// Title for current week volume details
+  ///
+  /// In en, this message translates to:
+  /// **'This Week Details'**
+  String get thisWeekDetails;
+
+  /// Title for specific week volume details
+  ///
+  /// In en, this message translates to:
+  /// **'Week {number} Details'**
+  String weekNumberDetails(int number);
+
+  /// Label for average volume per workout
+  ///
+  /// In en, this message translates to:
+  /// **'Avg per Workout'**
+  String get avgPerWorkout;
 }
 
 class _AppLocalizationsDelegate

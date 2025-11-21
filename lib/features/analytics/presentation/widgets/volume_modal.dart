@@ -89,18 +89,18 @@ class _VolumeModalState extends State<VolumeModal> {
   }
 
   /// Get insight message based on progression
-  String _getInsightMessage(double progression) {
-    if (progression > 20) return 'Exceptional growth! You\'re crushing your goals! 🚀';
-    if (progression > 10) return 'Great progress! Keep up the momentum! 💪';
-    if (progression > 0) return 'Steady improvement! You\'re on the right track! 📈';
-    if (progression > -10) return 'Minor dip, but you\'ve got this! Stay consistent! 💫';
-    return 'Time to refocus! Remember your goals! 🎯';
+  String _getInsightMessage(BuildContext context, double progression) {
+    if (progression > 20) return context.l10n.volumeProgressionExceptional;
+    if (progression > 10) return context.l10n.volumeProgressionGreat;
+    if (progression > 0) return context.l10n.volumeProgressionSteady;
+    if (progression > -10) return context.l10n.volumeProgressionMinorDip;
+    return context.l10n.volumeProgressionRefocus;
   }
 
   @override
   Widget build(BuildContext context) {
     final weeklyData = _calculateWeeklyData(4);
-    final insightMessage = _getInsightMessage(widget.volumeProgression);
+    final insightMessage = _getInsightMessage(context, widget.volumeProgression);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class _VolumeModalState extends State<VolumeModal> {
       children: [
         Expanded(
           child: Text(
-            '📊 Volume Details',
+            '📊 ${context.l10n.volumeDetails}',
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -210,7 +210,7 @@ class _VolumeModalState extends State<VolumeModal> {
             ),
             child: SemanticIcon(
               icon: isPositive ? AppIcons.trendUp : AppIcons.trendDown,
-              semanticLabel: 'Volume Trend',
+              semanticLabel: context.l10n.volumeTrend,
               size: AppIconSize.large,
               color: isPositive ? context.colors.success : context.colors.error,
             ),
@@ -223,7 +223,7 @@ class _VolumeModalState extends State<VolumeModal> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Volume Progression',
+                  context.l10n.volumeProgression,
                   style: context.textTheme.labelMedium?.copyWith(
                     color: isPositive
                         ? context.colors.onSuccessContainer
@@ -263,13 +263,13 @@ class _VolumeModalState extends State<VolumeModal> {
             children: [
               SemanticIcon(
                 icon: AppIcons.info,
-                semanticLabel: 'Information',
+                semanticLabel: context.l10n.info,
                 size: AppIconSize.medium,
                 color: context.colors.primary,
               ),
               const SizedBox(width: 12),
               Text(
-                'What is Volume?',
+                context.l10n.whatIsVolume,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -278,9 +278,7 @@ class _VolumeModalState extends State<VolumeModal> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Volume is the total amount of work you perform in your workouts. '
-            'We track your weekly workout frequency to show your progression over time. '
-            'Positive progression means you\'re doing more workouts than last week!',
+            context.l10n.volumeExplanation,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
@@ -300,7 +298,7 @@ class _VolumeModalState extends State<VolumeModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Last 4 Weeks',
+          context.l10n.lastFourWeeks,
           style: context.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -367,8 +365,8 @@ class _VolumeModalState extends State<VolumeModal> {
                   // Week label
                   Text(
                     index == weeklyData.length - 1
-                        ? 'This Week'
-                        : 'Week ${weeklyData.length - index}',
+                        ? context.l10n.thisWeek
+                        : context.l10n.weekNumber(weeklyData.length - index),
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSurfaceVariant,
                     ),
@@ -391,14 +389,14 @@ class _VolumeModalState extends State<VolumeModal> {
           children: [
             SemanticIcon(
               icon: AppIcons.barChart,
-              semanticLabel: 'Volume Details',
+              semanticLabel: context.l10n.volumeDetails,
               size: AppIconSize.medium,
               color: context.colors.primary,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                isCurrentWeek ? 'This Week Details' : 'Week ${4 - weekIndex} Details',
+                isCurrentWeek ? context.l10n.thisWeekDetails : context.l10n.weekNumberDetails(4 - weekIndex),
                 style: context.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -414,7 +412,7 @@ class _VolumeModalState extends State<VolumeModal> {
             _buildDetailRow(
               context,
               icon: AppIcons.workout,
-              label: 'Total Workouts',
+              label: context.l10n.totalWorkouts,
               value: '$workouts',
             ),
             const SizedBox(height: 16),
@@ -423,7 +421,7 @@ class _VolumeModalState extends State<VolumeModal> {
             _buildDetailRow(
               context,
               icon: AppIcons.trendUp,
-              label: 'Total Volume',
+              label: context.l10n.totalVolume,
               value: '${volume.toStringAsFixed(1)} kg',
             ),
             const SizedBox(height: 16),
@@ -433,7 +431,7 @@ class _VolumeModalState extends State<VolumeModal> {
               _buildDetailRow(
                 context,
                 icon: AppIcons.barChart,
-                label: 'Avg per Workout',
+                label: context.l10n.avgPerWorkout,
                 value: '${(volume / workouts).toStringAsFixed(1)} kg',
               ),
           ],
@@ -496,7 +494,7 @@ class _VolumeModalState extends State<VolumeModal> {
         children: [
           SemanticIcon(
             icon: isPositive ? AppIcons.trendUp : AppIcons.info,
-            semanticLabel: 'Insight',
+            semanticLabel: context.l10n.insight,
             size: AppIconSize.medium,
             color: isPositive
                 ? context.colors.onSuccessContainer

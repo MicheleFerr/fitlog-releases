@@ -21856,5 +21856,91 @@
   "choosePreset": "Choose a preset",
   "@choosePreset": {
     "description": "Instruction text to select a routine preset"
+  },
+  "volumeProgressionExceptional": "Exceptional growth! You're crushing your goals! 🚀",
+  "@volumeProgressionExceptional": {
+    "description": "Motivational message for exceptional volume progression (>20%)"
+  },
+  "volumeProgressionGreat": "Great progress! Keep up the momentum! 💪",
+  "@volumeProgressionGreat": {
+    "description": "Motivational message for great volume progression (10-20%)"
+  },
+  "volumeProgressionSteady": "Steady improvement! You're on the right track! 📈",
+  "@volumeProgressionSteady": {
+    "description": "Motivational message for steady volume progression (0-10%)"
+  },
+  "volumeProgressionMinorDip": "Minor dip, but you've got this! Stay consistent! 💫",
+  "@volumeProgressionMinorDip": {
+    "description": "Motivational message for minor volume dip (-10 to 0%)"
+  },
+  "volumeProgressionRefocus": "Time to refocus! Remember your goals! 🎯",
+  "@volumeProgressionRefocus": {
+    "description": "Motivational message for significant volume drop (<-10%)"
+  },
+  "volumeTrend": "Volume Trend",
+  "@volumeTrend": {
+    "description": "Semantic label for volume trend icon"
+  },
+  "volumeProgression": "Volume Progression",
+  "@volumeProgression": {
+    "description": "Label for volume progression metric"
+  },
+  "whatIsVolume": "What is Volume?",
+  "@whatIsVolume": {
+    "description": "Title for volume explanation section"
+  },
+  "volumeExplanation": "Volume is the total amount of work you perform in your workouts. We track your weekly workout frequency to show your progression over time. Positive progression means you're doing more workouts than last week!",
+  "@volumeExplanation": {
+    "description": "Explanation of what volume means in fitness context"
+  },
+  "lastFourWeeks": "Last 4 Weeks",
+  "@lastFourWeeks": {
+    "description": "Title for 4-week comparison chart"
+  },
+  "thisWeek": "This Week",
+  "@thisWeek": {
+    "description": "Label for current week in charts"
+  },
+  "weekNumber": "Week {number}",
+  "@weekNumber": {
+    "description": "Label for a specific week number",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeDetails": "Volume Details",
+  "@volumeDetails": {
+    "description": "Title for volume details dialog"
+  },
+  "thisWeekDetails": "This Week Details",
+  "@thisWeekDetails": {
+    "description": "Title for current week volume details"
+  },
+  "weekNumberDetails": "Week {number} Details",
+  "@weekNumberDetails": {
+    "description": "Title for specific week volume details",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWorkouts": "Total Workouts",
+  "@totalWorkouts": {
+    "description": "Label for total number of workouts"
+  },
+  "totalVolume": "Total Volume",
+  "@totalVolume": {
+    "description": "Label for total volume (weight lifted)"
+  },
+  "avgPerWorkout": "Avg per Workout",
+  "@avgPerWorkout": {
+    "description": "Label for average volume per workout"
+  },
+  "insight": "Insight",
+  "@insight": {
+    "description": "Semantic label for insight/tip icon"
   }
 }

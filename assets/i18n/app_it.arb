@@ -11322,5 +11322,91 @@
   "choosePreset": "Scegli un preset",
   "@choosePreset": {
     "description": "Testo di istruzione per selezionare un preset di routine"
+  },
+  "volumeProgressionExceptional": "Crescita eccezionale! Stai stracciando i tuoi obiettivi! 🚀",
+  "@volumeProgressionExceptional": {
+    "description": "Messaggio motivazionale per progressione volume eccezionale (>20%)"
+  },
+  "volumeProgressionGreat": "Ottimi progressi! Continua così! 💪",
+  "@volumeProgressionGreat": {
+    "description": "Messaggio motivazionale per ottima progressione volume (10-20%)"
+  },
+  "volumeProgressionSteady": "Miglioramento costante! Sei sulla strada giusta! 📈",
+  "@volumeProgressionSteady": {
+    "description": "Messaggio motivazionale per progressione volume costante (0-10%)"
+  },
+  "volumeProgressionMinorDip": "Piccolo calo, ma ce la fai! Resta costante! 💫",
+  "@volumeProgressionMinorDip": {
+    "description": "Messaggio motivazionale per piccolo calo volume (-10 a 0%)"
+  },
+  "volumeProgressionRefocus": "Tempo di rifocalizzarsi! Ricorda i tuoi obiettivi! 🎯",
+  "@volumeProgressionRefocus": {
+    "description": "Messaggio motivazionale per calo volume significativo (<-10%)"
+  },
+  "volumeTrend": "Trend Volume",
+  "@volumeTrend": {
+    "description": "Etichetta semantica per icona trend volume"
+  },
+  "volumeProgression": "Progressione Volume",
+  "@volumeProgression": {
+    "description": "Etichetta per metrica progressione volume"
+  },
+  "whatIsVolume": "Cos'è il Volume?",
+  "@whatIsVolume": {
+    "description": "Titolo per sezione spiegazione volume"
+  },
+  "volumeExplanation": "Il volume è la quantità totale di lavoro che svolgi nei tuoi allenamenti. Tracciamo la frequenza settimanale per mostrare la tua progressione nel tempo. Una progressione positiva significa che stai facendo più allenamenti rispetto alla settimana scorsa!",
+  "@volumeExplanation": {
+    "description": "Spiegazione del significato di volume nel contesto fitness"
+  },
+  "lastFourWeeks": "Ultime 4 Settimane",
+  "@lastFourWeeks": {
+    "description": "Titolo per grafico comparativo 4 settimane"
+  },
+  "thisWeek": "Questa Settimana",
+  "@thisWeek": {
+    "description": "Etichetta per settimana corrente nei grafici"
+  },
+  "weekNumber": "Settimana {number}",
+  "@weekNumber": {
+    "description": "Etichetta per numero settimana specifico",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeDetails": "Dettagli Volume",
+  "@volumeDetails": {
+    "description": "Titolo per dialog dettagli volume"
+  },
+  "thisWeekDetails": "Dettagli Questa Settimana",
+  "@thisWeekDetails": {
+    "description": "Titolo per dettagli volume settimana corrente"
+  },
+  "weekNumberDetails": "Dettagli Settimana {number}",
+  "@weekNumberDetails": {
+    "description": "Titolo per dettagli volume settimana specifica",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWorkouts": "Allenamenti Totali",
+  "@totalWorkouts": {
+    "description": "Etichetta per numero totale allenamenti"
+  },
+  "totalVolume": "Volume Totale",
+  "@totalVolume": {
+    "description": "Etichetta per volume totale (peso sollevato)"
+  },
+  "avgPerWorkout": "Media per Allenamento",
+  "@avgPerWorkout": {
+    "description": "Etichetta per media volume per allenamento"
+  },
+  "insight": "Suggerimento",
+  "@insight": {
+    "description": "Etichetta semantica per icona suggerimento/consiglio"
   }
 }

@@ -1553,7 +1553,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisWeek => 'This Week';
 
   @override
-  String get totalVolume => 'total';
+  String get totalVolume => 'Total Volume';
 
   @override
   String get consistency => 'Consistency';
@@ -12455,7 +12455,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get generalTip => 'General Tip';
 
   @override
-  String get volumeExplanation => 'Total Volume';
+  String get volumeExplanation =>
+      'Volume is the total amount of work you perform in your workouts. We track your weekly workout frequency to show your progression over time. Positive progression means you\'re doing more workouts than last week!';
 
   @override
   String get volumeExplanationDesc =>
@@ -13692,7 +13693,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewWorkout => 'View workout';
 
   @override
-  String get volumeDetails => 'Volume details';
+  String get volumeDetails => 'Volume Details';
 
   @override
   String get volumePerDay => 'Volume per day';
@@ -17993,4 +17994,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get choosePreset => 'Choose a preset';
+
+  @override
+  String get volumeProgressionExceptional =>
+      'Exceptional growth! You\'re crushing your goals! 🚀';
+
+  @override
+  String get volumeProgressionGreat =>
+      'Great progress! Keep up the momentum! 💪';
+
+  @override
+  String get volumeProgressionSteady =>
+      'Steady improvement! You\'re on the right track! 📈';
+
+  @override
+  String get volumeProgressionMinorDip =>
+      'Minor dip, but you\'ve got this! Stay consistent! 💫';
+
+  @override
+  String get volumeProgressionRefocus =>
+      'Time to refocus! Remember your goals! 🎯';
+
+  @override
+  String get volumeTrend => 'Volume Trend';
+
+  @override
+  String get whatIsVolume => 'What is Volume?';
+
+  @override
+  String get lastFourWeeks => 'Last 4 Weeks';
+
+  @override
+  String weekNumber(int number) {
+    return 'Week $number';
+  }
+
+  @override
+  String get thisWeekDetails => 'This Week Details';
+
+  @override
+  String weekNumberDetails(int number) {
+    return 'Week $number Details';
+  }
+
+  @override
+  String get avgPerWorkout => 'Avg per Workout';
 }
