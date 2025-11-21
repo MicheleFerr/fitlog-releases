@@ -56,13 +56,13 @@ class _PRInfo {
     return '${personalRecord.toStringAsFixed(1)} kg';
   }
 
-  String formatDate() {
+  String formatDate(BuildContext context) {
     final now = DateTime.now();
     final difference = now.difference(achievedDate).inDays;
 
-    if (difference == 0) return 'Today';
-    if (difference == 1) return 'Yesterday';
-    if (difference < 7) return '$difference days ago';
+    if (difference == 0) return context.l10n.prToday;
+    if (difference == 1) return context.l10n.prYesterday;
+    if (difference < 7) return context.l10n.prDaysAgo(difference);
     return DateFormat('MMM d, yyyy').format(achievedDate);
   }
 }
@@ -127,21 +127,19 @@ class PRModal extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         icon: SemanticIcon(
           icon: AppIcons.warning,
-          semanticLabel: 'Warning',
+          semanticLabel: context.l10n.warning,
           size: AppIconSize.large,
           color: context.colors.error,
         ),
-        title: Text('Reset All PRs?'),
+        title: Text(context.l10n.resetAllPRsQuestion),
         content: Text(
-          'This will permanently delete all personal record data. '
-          'Your workout history will remain, but PR tracking will start fresh. '
-          '\n\nThis action cannot be undone.',
+          context.l10n.resetAllPRsMessage,
           style: context.textTheme.bodyMedium,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -151,7 +149,7 @@ class PRModal extends StatelessWidget {
               Navigator.pop(context); // Close modal
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('🔄 PR reset functionality coming soon!'),
+                  content: Text(context.l10n.prResetComingSoon),
                   backgroundColor: context.colors.warning,
                 ),
               );
@@ -160,7 +158,7 @@ class PRModal extends StatelessWidget {
               backgroundColor: context.colors.error,
               foregroundColor: context.colors.onError,
             ),
-            child: Text('Reset All'),
+            child: Text(context.l10n.resetAll),
           ),
         ],
       ),
@@ -220,7 +218,7 @@ class PRModal extends StatelessWidget {
       children: [
         Expanded(
           child: Text(
-            '🏆 PR Details',
+            '🏆 ${context.l10n.prDetails}',
             style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -280,7 +278,7 @@ class PRModal extends StatelessWidget {
             ),
             child: SemanticIcon(
               icon: AppIcons.achievement,
-              semanticLabel: 'Personal Records',
+              semanticLabel: context.l10n.personalRecords,
               size: AppIconSize.large,
               color: hasRecentPRs
                   ? context.colors.success
@@ -295,7 +293,7 @@ class PRModal extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Recent PRs (Last 7 Days)',
+                  context.l10n.recentPRsLastSevenDays,
                   style: context.textTheme.labelMedium?.copyWith(
                     color: hasRecentPRs
                         ? context.colors.onSuccessContainer
@@ -304,7 +302,7 @@ class PRModal extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$recentPRCount ${recentPRCount == 1 ? 'achievement' : 'achievements'}',
+                  context.l10n.prAchievements(recentPRCount),
                   style: context.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: hasRecentPRs
@@ -334,7 +332,7 @@ class PRModal extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'New!',
+                    context.l10n.newBadge,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSuccess,
                       fontWeight: FontWeight.bold,
@@ -363,13 +361,13 @@ class PRModal extends StatelessWidget {
             children: [
               SemanticIcon(
                 icon: AppIcons.info,
-                semanticLabel: 'Information',
+                semanticLabel: context.l10n.info,
                 size: AppIconSize.medium,
                 color: context.colors.primary,
               ),
               const SizedBox(width: 12),
               Text(
-                'What is a PR?',
+                context.l10n.whatIsPR,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -378,8 +376,7 @@ class PRModal extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'PR (Personal Record) is your best performance for an exercise, measured by estimated 1RM (one-rep max). '
-            'We automatically track your PRs as you train, so you can see your progress over time.',
+            context.l10n.prExplanation,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
@@ -402,20 +399,20 @@ class PRModal extends StatelessWidget {
           children: [
             SemanticIcon(
               icon: AppIcons.achievement,
-              semanticLabel: 'No PRs Yet',
+              semanticLabel: context.l10n.noPRsYet,
               size: AppIconSize.xxlarge,
               color: context.colors.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
-              'No PRs Yet',
+              context.l10n.noPRsYet,
               style: context.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Start tracking your workouts to see your personal records here!',
+              context.l10n.noPRsYetMessage,
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
@@ -430,7 +427,7 @@ class PRModal extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'All Personal Records',
+          context.l10n.allPersonalRecords,
           style: context.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -465,7 +462,7 @@ class PRModal extends StatelessWidget {
           // Trophy icon (colored if recent)
           SemanticIcon(
             icon: AppIcons.achievement,
-            semanticLabel: 'PR',
+            semanticLabel: context.l10n.pr,
             size: AppIconSize.medium,
             color: pr.isRecent
                 ? context.colors.success
@@ -486,7 +483,7 @@ class PRModal extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  pr.formatDate(),
+                  pr.formatDate(context),
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -516,7 +513,7 @@ class PRModal extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'NEW',
+                    context.l10n.newLabel,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colors.onSuccess,
                       fontWeight: FontWeight.bold,
@@ -552,13 +549,13 @@ class PRModal extends StatelessWidget {
             children: [
               SemanticIcon(
                 icon: AppIcons.warning,
-                semanticLabel: 'Warning',
+                semanticLabel: context.l10n.warning,
                 size: AppIconSize.medium,
                 color: context.colors.error,
               ),
               const SizedBox(width: 12),
               Text(
-                'Reset PRs',
+                context.l10n.resetPRs,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: context.colors.error,
@@ -568,8 +565,7 @@ class PRModal extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Need to start fresh? You can reset all personal records. '
-            'This will NOT delete your workout history.',
+            context.l10n.resetPRsMessage,
             style: context.textTheme.bodySmall?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
@@ -582,11 +578,11 @@ class PRModal extends StatelessWidget {
             },
             icon: SemanticIcon(
               icon: AppIcons.refresh,
-              semanticLabel: 'Reset',
+              semanticLabel: context.l10n.reset,
               size: AppIconSize.buttonPrimary,
               color: context.colors.error,
             ),
-            label: Text('Reset All PRs ($totalPRs records)'),
+            label: Text(context.l10n.resetAllPRsButton(totalPRs)),
             style: OutlinedButton.styleFrom(
               foregroundColor: context.colors.error,
               side: BorderSide(color: context.colors.error),
