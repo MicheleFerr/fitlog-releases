@@ -223,7 +223,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
   // Scroll-away behavior state
   bool _showBars = true; // Show stats + search + chips
   double _lastScrollOffset = 0.0;
-  static const double _scrollThreshold = 20.0; // Minimum scroll to trigger
+  static const double _scrollThreshold = 100.0; // Minimum scroll to trigger (increased for stability)
 
   /// Debounced search handler - waits 300ms after user stops typing
   void _onSearchChanged(String query) {
@@ -373,7 +373,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
               children: [
         // Stats bar (with scroll-away animation)
         AnimatedSize(
-          duration: AppAnimations.fast,
+          duration: AppAnimations.normal,
           curve: AppAnimations.decelerate,
           child: _showBars
               ? _QuickStatsSummary(exerciseHistories: widget.exerciseHistories)
@@ -386,7 +386,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
             final isSearchVisible = ref.watch(searchBarVisibilityProvider);
 
             return AnimatedSize(
-              duration: AppAnimations.fast,
+              duration: AppAnimations.normal,
               curve: AppAnimations.decelerate,
               child: (_showBars && isSearchVisible)
                   ? Padding(
@@ -429,7 +429,7 @@ class _AnalyticsContentState extends ConsumerState<_AnalyticsContent>
 
         // Sort & Filter chips with live counters (with scroll-away animation)
         AnimatedSize(
-          duration: AppAnimations.fast,
+          duration: AppAnimations.normal,
           curve: AppAnimations.decelerate,
           child: _showBars
               ? _SortFilterChips(
