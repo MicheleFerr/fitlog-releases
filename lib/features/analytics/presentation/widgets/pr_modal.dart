@@ -259,7 +259,7 @@ class PRModal extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.shadow.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -325,9 +325,10 @@ class PRModal extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    AppIcons.trendUp,
-                    size: 16,
+                  SemanticIcon(
+                    icon: AppIcons.trendUp,
+                    semanticLabel: context.l10n.newBadge,
+                    size: AppIconSize.tiny,
                     color: context.colors.onSuccess,
                   ),
                   const SizedBox(width: 4),
