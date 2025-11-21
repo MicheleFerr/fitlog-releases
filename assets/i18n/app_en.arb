@@ -1275,7 +1275,7 @@
   },
   "progress": "Progress",
   "@progress": {
-    "description": "Progress label"
+    "description": "Label for progression indicator"
   },
   "workoutProgress": "Workout Progress",
   "@workoutProgress": {
@@ -1765,7 +1765,7 @@
   },
   "reset": "Reset",
   "@reset": {
-    "description": "Reset button"
+    "description": "Semantic label for reset icon"
   },
   "settingsResetSuccess": "Settings reset to defaults",
   "@settingsResetSuccess": {
@@ -1967,19 +1967,19 @@
   },
   "thisWeek": "This Week",
   "@thisWeek": {
-    "description": "This week label for workout count"
+    "description": "Label for current week in charts"
   },
-  "totalVolume": "total",
+  "totalVolume": "Total Volume",
   "@totalVolume": {
-    "description": "Label for total training volume"
+    "description": "Label for total volume (weight lifted)"
   },
   "consistency": "Consistency",
   "@consistency": {
-    "description": "Consistency metric label"
+    "description": "Label for consistency metric"
   },
   "totalWorkouts": "Total Workouts",
   "@totalWorkouts": {
-    "description": "Label for total workouts count"
+    "description": "Label for total number of workouts"
   },
   "completedSessions": "Completed Sessions",
   "@completedSessions": {
@@ -1999,7 +1999,7 @@
   },
   "personalRecords": "Personal Records",
   "@personalRecords": {
-    "description": "Personal records section title"
+    "description": "Semantic label for personal records icon"
   },
   "newPRs": "New PRs",
   "@newPRs": {
@@ -2033,9 +2033,9 @@
   "@nextMilestone": {
     "description": "Label for next streak milestone"
   },
-  "longestStreak": "Longest Streak",
+  "longestStreak": "Longest streak",
   "@longestStreak": {
-    "description": "Label for all-time longest streak"
+    "description": "Label for longest workout streak achieved"
   },
   "totalDays": "Total Days",
   "@totalDays": {
@@ -2043,7 +2043,7 @@
   },
   "days": "days",
   "@days": {
-    "description": "Unit for day count"
+    "description": "Unit for days count"
   },
   "errorLoadingData": "Error loading data",
   "@errorLoadingData": {
@@ -2159,31 +2159,31 @@
   },
   "mondayShort": "Mon",
   "@mondayShort": {
-    "description": "Monday short abbreviation"
+    "description": "Short form for Monday"
   },
   "tuesdayShort": "Tue",
   "@tuesdayShort": {
-    "description": "Tuesday short abbreviation"
+    "description": "Short form for Tuesday"
   },
   "wednesdayShort": "Wed",
   "@wednesdayShort": {
-    "description": "Wednesday short abbreviation"
+    "description": "Short form for Wednesday"
   },
   "thursdayShort": "Thu",
   "@thursdayShort": {
-    "description": "Thursday short abbreviation"
+    "description": "Short form for Thursday"
   },
   "fridayShort": "Fri",
   "@fridayShort": {
-    "description": "Friday short abbreviation"
+    "description": "Short form for Friday"
   },
   "saturdayShort": "Sat",
   "@saturdayShort": {
-    "description": "Saturday short abbreviation"
+    "description": "Short form for Saturday"
   },
   "sundayShort": "Sun",
   "@sundayShort": {
-    "description": "Sunday short abbreviation"
+    "description": "Short form for Sunday"
   },
   "filterStatistics": "Filter Statistics",
   "@filterStatistics": {
@@ -3387,9 +3387,9 @@
   "@muscleGroupOther": {
     "description": "Muscle group name for other"
   },
-  "perWeek": "/week",
+  "perWeek": "per week",
   "@perWeek": {
-    "description": "Per week suffix"
+    "description": "Unit for weekly frequency"
   },
   "target": "Target",
   "@target": {
@@ -4186,9 +4186,9 @@
   "@exerciseTrends": {
     "description": "Exercise trends section title"
   },
-  "currentStreak": "Current Streak",
+  "currentStreak": "Current streak",
   "@currentStreak": {
-    "description": "Current workout streak statistic"
+    "description": "Label for current workout streak"
   },
   "totalPRs": "Total PRs",
   "@totalPRs": {
@@ -4212,7 +4212,7 @@
   },
   "volumeProgression": "Volume Progression",
   "@volumeProgression": {
-    "description": "Volume progression chart title"
+    "description": "Label for volume progression metric"
   },
   "weekly": "Weekly",
   "@weekly": {
@@ -4252,7 +4252,7 @@
   },
   "insight": "Insight",
   "@insight": {
-    "description": "Insight label"
+    "description": "Semantic label for insight/tip icon"
   },
   "recommendation": "Recommendation",
   "@recommendation": {
@@ -5856,11 +5856,11 @@
   },
   "tip": "Tip",
   "@tip": {
-    "description": "Label for tip contribution type"
+    "description": "Label for actionable tip"
   },
   "warning": "Warning",
   "@warning": {
-    "description": "Warning dialog title"
+    "description": "Semantic label for warning icon"
   },
   "variant": "Variant",
   "@variant": {
@@ -7639,13 +7639,15 @@
   "@noRecentWorkouts": {
     "description": "Title for no recent workouts state"
   },
-  "workoutsCount": "{count} workouts",
+  "workoutsCount": "{count} / {goal} workouts",
   "@workoutsCount": {
-    "description": "Label showing workout count",
+    "description": "Format for displaying workout count vs goal",
     "placeholders": {
       "count": {
-        "type": "int",
-        "description": "Number of workouts"
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
       }
     }
   },
@@ -12978,7 +12980,7 @@
   },
   "tips": "Tips",
   "@tips": {
-    "description": "Section title for tips"
+    "description": "Semantic label for tips icon"
   },
   "backHint": "Navigate to previous screen",
   "@backHint": {
@@ -14875,9 +14877,9 @@
   "@generalTip": {
     "description": "General tip label"
   },
-  "volumeExplanation": "Total Volume",
+  "volumeExplanation": "Volume is the total amount of work you perform in your workouts. We track your weekly workout frequency to show your progression over time. Positive progression means you're doing more workouts than last week!",
   "@volumeExplanation": {
-    "description": "Volume metric explanation title"
+    "description": "Explanation of what volume means in fitness context"
   },
   "volumeExplanationDesc": "Total volume = Sets × Reps × Weight. Measures total training load.",
   "@volumeExplanationDesc": {
@@ -15131,9 +15133,9 @@
   "@keepData": {
     "description": "Button to keep existing data when changing format"
   },
-  "resetAll": "Reset all",
+  "resetAll": "Reset All",
   "@resetAll": {
-    "description": "Button to reset all data when changing format"
+    "description": "Button text to reset all PRs"
   },
   "countingModeChanged": "Counting format updated!",
   "@countingModeChanged": {
@@ -16129,9 +16131,9 @@
   "@noMatchesFound": {
     "description": "Auto-generated for noMatchesFound"
   },
-  "noPRsYet": "No p rs yet",
+  "noPRsYet": "No PRs Yet",
   "@noPRsYet": {
-    "description": "Auto-generated for noPRsYet"
+    "description": "Title for empty state when no PRs exist"
   },
   "noWorkoutsFound": "No workouts found",
   "@noWorkoutsFound": {
@@ -16485,9 +16487,9 @@
   "@viewWorkout": {
     "description": "Auto-generated for viewWorkout"
   },
-  "volumeDetails": "Volume details",
+  "volumeDetails": "Volume Details",
   "@volumeDetails": {
-    "description": "Auto-generated for volumeDetails"
+    "description": "Title for volume details dialog"
   },
   "volumePerDay": "Volume per day",
   "@volumePerDay": {
@@ -20900,7 +20902,7 @@
   },
   "pr": "PR",
   "@pr": {
-    "description": "Personal record abbreviation badge"
+    "description": "Semantic label for PR icon"
   },
   "records": "Records",
   "@records": {
@@ -21033,9 +21035,9 @@
   "@weeklyAverage": {
     "description": "Weekly average label"
   },
-  "workoutsPerWeek": "workouts/week",
+  "workoutsPerWeek": "workouts per week",
   "@workoutsPerWeek": {
-    "description": "Workouts per week unit"
+    "description": "Unit label for weekly goal"
   },
   "restDaysPerWeek": "rest days/week",
   "@restDaysPerWeek": {
@@ -21881,25 +21883,13 @@
   "@volumeTrend": {
     "description": "Semantic label for volume trend icon"
   },
-  "volumeProgression": "Volume Progression",
-  "@volumeProgression": {
-    "description": "Label for volume progression metric"
-  },
   "whatIsVolume": "What is Volume?",
   "@whatIsVolume": {
     "description": "Title for volume explanation section"
   },
-  "volumeExplanation": "Volume is the total amount of work you perform in your workouts. We track your weekly workout frequency to show your progression over time. Positive progression means you're doing more workouts than last week!",
-  "@volumeExplanation": {
-    "description": "Explanation of what volume means in fitness context"
-  },
   "lastFourWeeks": "Last 4 Weeks",
   "@lastFourWeeks": {
     "description": "Title for 4-week comparison chart"
-  },
-  "thisWeek": "This Week",
-  "@thisWeek": {
-    "description": "Label for current week in charts"
   },
   "weekNumber": "Week {number}",
   "@weekNumber": {
@@ -21909,10 +21899,6 @@
         "type": "int"
       }
     }
-  },
-  "volumeDetails": "Volume Details",
-  "@volumeDetails": {
-    "description": "Title for volume details dialog"
   },
   "thisWeekDetails": "This Week Details",
   "@thisWeekDetails": {
@@ -21927,21 +21913,9 @@
       }
     }
   },
-  "totalWorkouts": "Total Workouts",
-  "@totalWorkouts": {
-    "description": "Label for total number of workouts"
-  },
-  "totalVolume": "Total Volume",
-  "@totalVolume": {
-    "description": "Label for total volume (weight lifted)"
-  },
   "avgPerWorkout": "Avg per Workout",
   "@avgPerWorkout": {
     "description": "Label for average volume per workout"
-  },
-  "insight": "Insight",
-  "@insight": {
-    "description": "Semantic label for insight/tip icon"
   },
   "weeklyConsistencyExcellent": "Excellent consistency! You hit your weekly goal! 🎯",
   "@weeklyConsistencyExcellent": {
@@ -21975,65 +21949,17 @@
   "@thisWeekShort": {
     "description": "Short label for current week"
   },
-  "workoutsCount": "{count} / {goal} workouts",
-  "@workoutsCount": {
-    "description": "Format for displaying workout count vs goal",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "goal": {
-        "type": "int"
-      }
-    }
-  },
   "goalAchieved": "Goal!",
   "@goalAchieved": {
     "description": "Badge text when goal is achieved"
-  },
-  "mondayShort": "Mon",
-  "@mondayShort": {
-    "description": "Short form for Monday"
-  },
-  "tuesdayShort": "Tue",
-  "@tuesdayShort": {
-    "description": "Short form for Tuesday"
-  },
-  "wednesdayShort": "Wed",
-  "@wednesdayShort": {
-    "description": "Short form for Wednesday"
-  },
-  "thursdayShort": "Thu",
-  "@thursdayShort": {
-    "description": "Short form for Thursday"
-  },
-  "fridayShort": "Fri",
-  "@fridayShort": {
-    "description": "Short form for Friday"
-  },
-  "saturdayShort": "Sat",
-  "@saturdayShort": {
-    "description": "Short form for Saturday"
-  },
-  "sundayShort": "Sun",
-  "@sundayShort": {
-    "description": "Short form for Sunday"
   },
   "lastSevenDays": "Last 7 Days",
   "@lastSevenDays": {
     "description": "Title for last 7 days chart"
   },
-  "consistency": "Consistency",
-  "@consistency": {
-    "description": "Label for consistency metric"
-  },
   "motivation": "Motivation",
   "@motivation": {
     "description": "Semantic label for motivation icon"
-  },
-  "tips": "Tips",
-  "@tips": {
-    "description": "Semantic label for tips icon"
   },
   "consistencyTips": "Consistency Tips",
   "@consistencyTips": {
@@ -22054,10 +21980,6 @@
   "weeklyGoal": "Weekly Goal",
   "@weeklyGoal": {
     "description": "Label for weekly goal setting"
-  },
-  "workoutsPerWeek": "workouts per week",
-  "@workoutsPerWeek": {
-    "description": "Unit label for weekly goal"
   },
   "workoutsGoalLabel": "{count} workouts",
   "@workoutsGoalLabel": {
@@ -22085,10 +22007,6 @@
       }
     }
   },
-  "warning": "Warning",
-  "@warning": {
-    "description": "Semantic label for warning icon"
-  },
   "resetAllPRsQuestion": "Reset All PRs?",
   "@resetAllPRsQuestion": {
     "description": "Dialog title asking to confirm PR reset"
@@ -22101,17 +22019,9 @@
   "@prResetComingSoon": {
     "description": "Placeholder message for PR reset feature"
   },
-  "resetAll": "Reset All",
-  "@resetAll": {
-    "description": "Button text to reset all PRs"
-  },
   "prDetails": "PR Details",
   "@prDetails": {
     "description": "Title for PR details modal"
-  },
-  "personalRecords": "Personal Records",
-  "@personalRecords": {
-    "description": "Semantic label for personal records icon"
   },
   "recentPRsLastSevenDays": "Recent PRs (Last 7 Days)",
   "@recentPRsLastSevenDays": {
@@ -22138,10 +22048,6 @@
   "@prExplanation": {
     "description": "Explanation of what PR means"
   },
-  "noPRsYet": "No PRs Yet",
-  "@noPRsYet": {
-    "description": "Title for empty state when no PRs exist"
-  },
   "noPRsYetMessage": "Start tracking your workouts to see your personal records here!",
   "@noPRsYetMessage": {
     "description": "Message explaining how to get PRs"
@@ -22149,10 +22055,6 @@
   "allPersonalRecords": "All Personal Records",
   "@allPersonalRecords": {
     "description": "Title for all PRs section"
-  },
-  "pr": "PR",
-  "@pr": {
-    "description": "Semantic label for PR icon"
   },
   "newLabel": "NEW",
   "@newLabel": {
@@ -22166,10 +22068,6 @@
   "@resetPRsMessage": {
     "description": "Message explaining PR reset option"
   },
-  "reset": "Reset",
-  "@reset": {
-    "description": "Semantic label for reset icon"
-  },
   "resetAllPRsButton": "Reset All PRs ({count} records)",
   "@resetAllPRsButton": {
     "description": "Button label for resetting all PRs with count",
@@ -22178,5 +22076,77 @@
         "type": "int"
       }
     }
+  },
+  "consistencyIndicators": "Consistency Indicators",
+  "@consistencyIndicators": {
+    "description": "Header for consistency tracking indicators section"
+  },
+  "training": "Training",
+  "@training": {
+    "description": "Label for training frequency indicator"
+  },
+  "rest": "Rest",
+  "@rest": {
+    "description": "Label for rest days indicator"
+  },
+  "doingWell": "Doing well!",
+  "@doingWell": {
+    "description": "Badge text when 2-3 indicators are optimal"
+  },
+  "canImprove": "Can improve",
+  "@canImprove": {
+    "description": "Badge text when 1 indicator is optimal"
+  },
+  "reviewRoutine": "Review your routine",
+  "@reviewRoutine": {
+    "description": "Badge text when 0 indicators are optimal"
+  },
+  "frequencyOptimalTip": "Perfect! You're in the optimal range of 3-5 workouts per week.",
+  "@frequencyOptimalTip": {
+    "description": "Tip shown when training frequency is optimal"
+  },
+  "frequencyImproveTip": "Try to workout 3-5 times per week for best results according to research.",
+  "@frequencyImproveTip": {
+    "description": "Tip shown when training frequency needs improvement"
+  },
+  "restOptimalTip": "Great balance! You're recovering properly with 2-3 rest days per week.",
+  "@restOptimalTip": {
+    "description": "Tip shown when rest days are optimal"
+  },
+  "restImproveTip": "Aim for 2-3 rest days per week to prevent injuries and promote recovery.",
+  "@restImproveTip": {
+    "description": "Tip shown when rest days need improvement"
+  },
+  "progressionOptimalTip": "Excellent! You're making progress with >5% improvement.",
+  "@progressionOptimalTip": {
+    "description": "Tip shown when progression is positive"
+  },
+  "progressionImproveTip": "Try increasing weight or reps gradually (5-10% per week is optimal).",
+  "@progressionImproveTip": {
+    "description": "Tip shown when progression needs improvement"
+  },
+  "optimalRange": "Optimal range",
+  "@optimalRange": {
+    "description": "Label for optimal range information"
+  },
+  "source": "Source",
+  "@source": {
+    "description": "Label for scientific source citation"
+  },
+  "weeklyStatistics": "Weekly Statistics",
+  "@weeklyStatistics": {
+    "description": "Header for weekly statistics section"
+  },
+  "workoutsCompleted": "Workouts completed",
+  "@workoutsCompleted": {
+    "description": "Label for completed workouts count"
+  },
+  "restDays": "Rest days",
+  "@restDays": {
+    "description": "Label for rest days count"
+  },
+  "averageFrequency": "Average frequency",
+  "@averageFrequency": {
+    "description": "Label for average training frequency"
   }
 }

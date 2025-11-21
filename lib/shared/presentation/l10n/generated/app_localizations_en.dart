@@ -1601,7 +1601,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nextMilestone => 'Next Milestone';
 
   @override
-  String get longestStreak => 'Longest Streak';
+  String get longestStreak => 'Longest streak';
 
   @override
   String get totalDays => 'Total Days';
@@ -2573,7 +2573,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get muscleGroupOther => 'Other';
 
   @override
-  String get perWeek => '/week';
+  String get perWeek => 'per week';
 
   @override
   String get target => 'Target';
@@ -3162,7 +3162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseTrends => 'Exercise Trends';
 
   @override
-  String get currentStreak => 'Current Streak';
+  String get currentStreak => 'Current streak';
 
   @override
   String get totalPRs => 'Total PRs';
@@ -18167,4 +18167,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String resetAllPRsButton(int count) {
     return 'Reset All PRs ($count records)';
   }
+
+  @override
+  String get consistencyIndicators => 'Consistency Indicators';
+
+  @override
+  String get training => 'Training';
+
+  @override
+  String get rest => 'Rest';
+
+  @override
+  String get doingWell => 'Doing well!';
+
+  @override
+  String get canImprove => 'Can improve';
+
+  @override
+  String get reviewRoutine => 'Review your routine';
+
+  @override
+  String get frequencyOptimalTip =>
+      'Perfect! You\'re in the optimal range of 3-5 workouts per week.';
+
+  @override
+  String get frequencyImproveTip =>
+      'Try to workout 3-5 times per week for best results according to research.';
+
+  @override
+  String get restOptimalTip =>
+      'Great balance! You\'re recovering properly with 2-3 rest days per week.';
+
+  @override
+  String get restImproveTip =>
+      'Aim for 2-3 rest days per week to prevent injuries and promote recovery.';
+
+  @override
+  String get progressionOptimalTip =>
+      'Excellent! You\'re making progress with >5% improvement.';
+
+  @override
+  String get progressionImproveTip =>
+      'Try increasing weight or reps gradually (5-10% per week is optimal).';
+
+  @override
+  String get optimalRange => 'Optimal range';
+
+  @override
+  String get source => 'Source';
+
+  @override
+  String get weeklyStatistics => 'Weekly Statistics';
+
+  @override
+  String get workoutsCompleted => 'Workouts completed';
+
+  @override
+  String get restDays => 'Rest days';
+
+  @override
+  String get averageFrequency => 'Average frequency';
 }

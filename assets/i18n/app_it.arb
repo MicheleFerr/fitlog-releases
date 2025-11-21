@@ -563,7 +563,7 @@
   "accept": "Accetta",
   "dismiss": "Ignora",
   "restTimeSuggestion": "Suggerimento Recupero",
-  "reset": "Ripristina",
+  "reset": "Resetta",
   "settingsResetSuccess": "Impostazioni ripristinate ai valori predefiniti",
   "exportFunctioningComingSoon": "Funzionalità di esportazione in arrivo",
   "importFunctioningComingSoon": "Funzionalità di importazione in arrivo",
@@ -612,9 +612,9 @@
   "workoutAnalytics": "Analisi Allenamenti",
   "progressTracking": "Monitoraggio Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
-  "thisWeek": "Questa settimana",
-  "totalVolume": "totale",
-  "consistency": "Consistenza",
+  "thisWeek": "Questa Settimana",
+  "totalVolume": "Volume Totale",
+  "consistency": "Costanza",
   "totalWorkouts": "Allenamenti Totali",
   "completedSessions": "Sessioni Completate",
   "weightLifted": "Peso Sollevato",
@@ -629,7 +629,7 @@
   "workoutStreak": "Serie di Allenamenti",
   "dayStreak": "Serie Giorni",
   "nextMilestone": "Prossimo Traguardo",
-  "longestStreak": "Serie Più Lunga",
+  "longestStreak": "Streak massimo",
   "totalDays": "Giorni Totali",
   "days": "giorni",
   "errorLoadingData": "Errore nel caricamento dei dati",
@@ -907,7 +907,7 @@
   "muscleGroupShoulders": "Spalle",
   "muscleGroupArms": "Braccia",
   "muscleGroupOther": "Altro",
-  "perWeek": "/settimana",
+  "perWeek": "a settimana",
   "target": "Target",
   "frequency": "Frequenza",
   "noRecord": "Nessun record",
@@ -1087,7 +1087,7 @@
   "trainingInsights": "Insight di Allenamento",
   "recommendations": "Raccomandazioni",
   "exerciseTrends": "Tendenze Esercizi",
-  "currentStreak": "Serie Attuale",
+  "currentStreak": "Streak attuale",
   "totalPRs": "PR Totali",
   "volumeChange": "Cambio Volume",
   "maxWeight": "Peso Massimo",
@@ -1103,7 +1103,7 @@
   "startWorkoutToSeeAnalytics": "Inizia un allenamento per vedere le tue analisi",
   "recentWorkouts": "Allenamenti Recenti",
   "highPriority": "Alta Priorità",
-  "insight": "Insight",
+  "insight": "Suggerimento",
   "recommendation": "Raccomandazione",
   "expand": "Espandi",
   "collapse": "Comprimi",
@@ -2262,7 +2262,7 @@
   "viewStats": "Vedi Statistiche",
   "noRecentWorkoutsDesc": "Inizia un allenamento per vedere i tuoi progressi",
   "noRecentWorkouts": "Nessun allenamento recente",
-  "workoutsCount": "{count} allenamenti",
+  "workoutsCount": "{count} / {goal} allenamenti",
   "repsCount": "{count} reps",
   "noActivitiesInPeriod": "Nessuna attività in questo periodo",
   "noActivitiesForSelectedMuscleGroups": "Nessuna attività per i gruppi muscolari selezionati",
@@ -4084,7 +4084,7 @@
     "description": "Weight progression chart title"
   },
   "@volumeProgression": {
-    "description": "Titolo grafico progressione volume"
+    "description": "Etichetta per metrica progressione volume"
   },
   "repsProgression": "Progressione Ripetizioni",
   "@repsProgression": {
@@ -4347,7 +4347,7 @@
     "description": "Cancel button"
   },
   "@reset": {
-    "description": "Reset button"
+    "description": "Etichetta semantica per icona reset"
   },
   "settingsReset": "Impostazioni ripristinate ai valori predefiniti",
   "@settingsReset": {
@@ -4979,7 +4979,7 @@
   "warmupPhase3Description": "2-3 serie di riscaldamento con carico progressivo",
   "warmupPhase4Title": "Riposo & Recupero",
   "warmupPhase4Description": "1-2 minuti di riposo prima delle serie di lavoro",
-  "tips": "Consigli",
+  "tips": "Suggerimenti",
   "backHint": "Torna alla schermata precedente",
   "createTemplateHint": "Apri il modulo per creare un nuovo template di allenamento",
   "syncStatus": "Stato Sincronizzazione",
@@ -5462,7 +5462,7 @@
   "formula": "Formula",
   "example": "Esempio",
   "generalTip": "Consiglio Generale",
-  "volumeExplanation": "Volume Totale",
+  "volumeExplanation": "Il volume è la quantità totale di lavoro che svolgi nei tuoi allenamenti. Tracciamo la frequenza settimanale per mostrare la tua progressione nel tempo. Una progressione positiva significa che stai facendo più allenamenti rispetto alla settimana scorsa!",
   "volumeExplanationDesc": "Volume totale = Serie × Ripetizioni × Peso. Misura il carico totale di allenamento.",
   "volumeTip": "Aumenta gradualmente il volume del 5-10% a settimana per evitare sovrallenamento.",
   "intensityExplanation": "Intensità Allenamento",
@@ -5550,7 +5550,7 @@
   "countingModeWarningMessage": "Hai {count} serie completate con formato \"{fromMode}\".\n\nCambiare in \"{toMode}\" potrebbe invalidare i dati esistenti.",
   "countingModeWarningInfo": "Cambiare formato durante un workout non è consigliato. Considera di finire prima il workout.",
   "keepData": "Mantieni dati",
-  "resetAll": "Resetta tutto",
+  "resetAll": "Resetta Tutto",
   "countingModeChanged": "Formato counting aggiornato!",
   "analyticsFeedbackThankYou": "Grazie per il tuo feedback!",
   "@analyticsFeedbackThankYou": {
@@ -6164,7 +6164,7 @@
   "newPersonalRecordsAchieved": "Nuovo personale records achieved",
   "noComparisonData": "Nessun confronto dati",
   "noMatchesFound": "Nessun corrispondenze found",
-  "noPRsYet": "Nessun p rs ancora",
+  "noPRsYet": "Nessun PR Ancora",
   "noWorkoutsFound": "Nessun workouts found",
   "noWorkoutsFoundDescription": "Nessun workouts found descrizione",
   "noWorkoutsRecorded": "Nessun workouts recorded",
@@ -6253,7 +6253,7 @@
   "verifiedOnly": "Verified only",
   "viewProfile": "Visualizza profilo",
   "viewWorkout": "Visualizza allenamento",
-  "volumeDetails": "Volume details",
+  "volumeDetails": "Dettagli Volume",
   "volumePerDay": "Volume per day",
   "volumeSettings": "Volume settings",
   "vsLastWeek": "Vs ultimo week",
@@ -9298,7 +9298,7 @@
     "description": "Etichetta per giorni fino al prossimo traguardo"
   },
   "@longestStreak": {
-    "description": "Etichetta per serie più lunga di sempre"
+    "description": "Etichetta per streak allenamenti più lungo raggiunto"
   },
   "streakMessageNone": "Inizia la tua serie oggi!",
   "@streakMessageNone": {
@@ -10201,7 +10201,7 @@
     "description": "Etichetta record volume totale"
   },
   "@personalRecords": {
-    "description": "Titolo sezione record personali"
+    "description": "Etichetta semantica per icona record personali"
   },
   "heaviestSingleSet": "Serie più pesante",
   "@heaviestSingleSet": {
@@ -10235,7 +10235,7 @@
     "description": "Periodo frequenza settimanale"
   },
   "@totalWorkouts": {
-    "description": "Label numero totale allenamenti"
+    "description": "Etichetta per numero totale allenamenti"
   },
   "@today": {
     "description": "Riferimento temporale oggi"
@@ -10263,9 +10263,9 @@
   "@completeWorkoutToSeeHistory": {
     "description": "Prompt per completare primo allenamento"
   },
-  "pr": "RP",
+  "pr": "PR",
   "@pr": {
-    "description": "Badge abbreviazione record personale"
+    "description": "Etichetta semantica per icona PR"
   },
   "records": "Record",
   "@records": {
@@ -10422,9 +10422,9 @@
   "@weeklyAverage": {
     "description": "Etichetta media settimanale"
   },
-  "workoutsPerWeek": "allenamenti/settimana",
+  "workoutsPerWeek": "allenamenti a settimana",
   "@workoutsPerWeek": {
-    "description": "Unità allenamenti per settimana"
+    "description": "Etichetta unità per obiettivo settimanale"
   },
   "restDaysPerWeek": "giorni riposo/settimana",
   "@restDaysPerWeek": {
@@ -11347,15 +11347,10 @@
   "@volumeTrend": {
     "description": "Etichetta semantica per icona trend volume"
   },
-  "volumeProgression": "Progressione Volume",
-  "@volumeProgression": {
-    "description": "Etichetta per metrica progressione volume"
-  },
   "whatIsVolume": "Cos'è il Volume?",
   "@whatIsVolume": {
     "description": "Titolo per sezione spiegazione volume"
   },
-  "volumeExplanation": "Il volume è la quantità totale di lavoro che svolgi nei tuoi allenamenti. Tracciamo la frequenza settimanale per mostrare la tua progressione nel tempo. Una progressione positiva significa che stai facendo più allenamenti rispetto alla settimana scorsa!",
   "@volumeExplanation": {
     "description": "Spiegazione del significato di volume nel contesto fitness"
   },
@@ -11363,7 +11358,6 @@
   "@lastFourWeeks": {
     "description": "Titolo per grafico comparativo 4 settimane"
   },
-  "thisWeek": "Questa Settimana",
   "@thisWeek": {
     "description": "Etichetta per settimana corrente nei grafici"
   },
@@ -11376,7 +11370,6 @@
       }
     }
   },
-  "volumeDetails": "Dettagli Volume",
   "@volumeDetails": {
     "description": "Titolo per dialog dettagli volume"
   },
@@ -11393,11 +11386,6 @@
       }
     }
   },
-  "totalWorkouts": "Allenamenti Totali",
-  "@totalWorkouts": {
-    "description": "Etichetta per numero totale allenamenti"
-  },
-  "totalVolume": "Volume Totale",
   "@totalVolume": {
     "description": "Etichetta per volume totale (peso sollevato)"
   },
@@ -11405,7 +11393,6 @@
   "@avgPerWorkout": {
     "description": "Etichetta per media volume per allenamento"
   },
-  "insight": "Suggerimento",
   "@insight": {
     "description": "Etichetta semantica per icona suggerimento/consiglio"
   },
@@ -11441,7 +11428,6 @@
   "@thisWeekShort": {
     "description": "Etichetta breve per settimana corrente"
   },
-  "workoutsCount": "{count} / {goal} allenamenti",
   "@workoutsCount": {
     "description": "Formato per visualizzare conteggio allenamenti vs obiettivo",
     "placeholders": {
@@ -11457,31 +11443,24 @@
   "@goalAchieved": {
     "description": "Testo badge quando obiettivo è raggiunto"
   },
-  "mondayShort": "Lun",
   "@mondayShort": {
     "description": "Forma breve per Lunedì"
   },
-  "tuesdayShort": "Mar",
   "@tuesdayShort": {
     "description": "Forma breve per Martedì"
   },
-  "wednesdayShort": "Mer",
   "@wednesdayShort": {
     "description": "Forma breve per Mercoledì"
   },
-  "thursdayShort": "Gio",
   "@thursdayShort": {
     "description": "Forma breve per Giovedì"
   },
-  "fridayShort": "Ven",
   "@fridayShort": {
     "description": "Forma breve per Venerdì"
   },
-  "saturdayShort": "Sab",
   "@saturdayShort": {
     "description": "Forma breve per Sabato"
   },
-  "sundayShort": "Dom",
   "@sundayShort": {
     "description": "Forma breve per Domenica"
   },
@@ -11489,7 +11468,6 @@
   "@lastSevenDays": {
     "description": "Titolo per grafico ultimi 7 giorni"
   },
-  "consistency": "Costanza",
   "@consistency": {
     "description": "Etichetta per metrica costanza"
   },
@@ -11497,7 +11475,6 @@
   "@motivation": {
     "description": "Etichetta semantica per icona motivazione"
   },
-  "tips": "Suggerimenti",
   "@tips": {
     "description": "Etichetta semantica per icona suggerimenti"
   },
@@ -11520,10 +11497,6 @@
   "weeklyGoal": "Obiettivo Settimanale",
   "@weeklyGoal": {
     "description": "Etichetta per impostazione obiettivo settimanale"
-  },
-  "workoutsPerWeek": "allenamenti a settimana",
-  "@workoutsPerWeek": {
-    "description": "Etichetta unità per obiettivo settimanale"
   },
   "workoutsGoalLabel": "{count} allenamenti",
   "@workoutsGoalLabel": {
@@ -11551,7 +11524,6 @@
       }
     }
   },
-  "warning": "Attenzione",
   "@warning": {
     "description": "Etichetta semantica per icona avviso"
   },
@@ -11567,17 +11539,12 @@
   "@prResetComingSoon": {
     "description": "Messaggio placeholder per funzionalità reset PR"
   },
-  "resetAll": "Resetta Tutto",
   "@resetAll": {
     "description": "Testo pulsante per resettare tutti i PR"
   },
   "prDetails": "Dettagli PR",
   "@prDetails": {
     "description": "Titolo per modal dettagli PR"
-  },
-  "personalRecords": "Record Personali",
-  "@personalRecords": {
-    "description": "Etichetta semantica per icona record personali"
   },
   "recentPRsLastSevenDays": "PR Recenti (Ultimi 7 Giorni)",
   "@recentPRsLastSevenDays": {
@@ -11604,7 +11571,6 @@
   "@prExplanation": {
     "description": "Spiegazione del significato di PR"
   },
-  "noPRsYet": "Nessun PR Ancora",
   "@noPRsYet": {
     "description": "Titolo per stato vuoto quando non esistono PR"
   },
@@ -11615,10 +11581,6 @@
   "allPersonalRecords": "Tutti i Record Personali",
   "@allPersonalRecords": {
     "description": "Titolo per sezione tutti i PR"
-  },
-  "pr": "PR",
-  "@pr": {
-    "description": "Etichetta semantica per icona PR"
   },
   "newLabel": "NUOVO",
   "@newLabel": {
@@ -11632,10 +11594,6 @@
   "@resetPRsMessage": {
     "description": "Messaggio che spiega opzione reset PR"
   },
-  "reset": "Resetta",
-  "@reset": {
-    "description": "Etichetta semantica per icona reset"
-  },
   "resetAllPRsButton": "Resetta Tutti i PR ({count} record)",
   "@resetAllPRsButton": {
     "description": "Etichetta pulsante per resettare tutti i PR con conteggio",
@@ -11644,5 +11602,89 @@
         "type": "int"
       }
     }
+  },
+  "consistencyIndicators": "Indicatori Consistenza",
+  "@consistencyIndicators": {
+    "description": "Intestazione per sezione indicatori tracking consistenza"
+  },
+  "training": "Allenamento",
+  "@training": {
+    "description": "Etichetta per indicatore frequenza allenamento"
+  },
+  "rest": "Riposo",
+  "@rest": {
+    "description": "Etichetta per indicatore giorni di riposo"
+  },
+  "@progress": {
+    "description": "Etichetta per indicatore progressione"
+  },
+  "doingWell": "Stai andando bene!",
+  "@doingWell": {
+    "description": "Testo badge quando 2-3 indicatori sono ottimali"
+  },
+  "canImprove": "Puoi migliorare",
+  "@canImprove": {
+    "description": "Testo badge quando 1 indicatore è ottimale"
+  },
+  "reviewRoutine": "Rivedi la tua routine",
+  "@reviewRoutine": {
+    "description": "Testo badge quando 0 indicatori sono ottimali"
+  },
+  "frequencyOptimalTip": "Perfetto! Sei nel range ottimale di 3-5 allenamenti a settimana.",
+  "@frequencyOptimalTip": {
+    "description": "Suggerimento mostrato quando la frequenza di allenamento è ottimale"
+  },
+  "frequencyImproveTip": "Prova ad allenarti 3-5 volte a settimana per risultati migliori secondo la ricerca.",
+  "@frequencyImproveTip": {
+    "description": "Suggerimento mostrato quando la frequenza di allenamento necessita miglioramenti"
+  },
+  "restOptimalTip": "Ottimo equilibrio! Stai recuperando correttamente con 2-3 giorni di riposo a settimana.",
+  "@restOptimalTip": {
+    "description": "Suggerimento mostrato quando i giorni di riposo sono ottimali"
+  },
+  "restImproveTip": "Punta a 2-3 giorni di riposo a settimana per prevenire infortuni e favorire il recupero.",
+  "@restImproveTip": {
+    "description": "Suggerimento mostrato quando i giorni di riposo necessitano miglioramenti"
+  },
+  "progressionOptimalTip": "Eccellente! Stai progredendo con un miglioramento >5%.",
+  "@progressionOptimalTip": {
+    "description": "Suggerimento mostrato quando la progressione è positiva"
+  },
+  "progressionImproveTip": "Prova ad aumentare peso o ripetizioni gradualmente (5-10% a settimana è ottimale).",
+  "@progressionImproveTip": {
+    "description": "Suggerimento mostrato quando la progressione necessita miglioramenti"
+  },
+  "@perWeek": {
+    "description": "Unità per frequenza settimanale"
+  },
+  "optimalRange": "Range ottimale",
+  "@optimalRange": {
+    "description": "Etichetta per informazioni range ottimale"
+  },
+  "source": "Fonte",
+  "@source": {
+    "description": "Etichetta per citazione fonte scientifica"
+  },
+  "@tip": {
+    "description": "Etichetta per suggerimento attuabile"
+  },
+  "weeklyStatistics": "Statistiche Settimanali",
+  "@weeklyStatistics": {
+    "description": "Intestazione per sezione statistiche settimanali"
+  },
+  "workoutsCompleted": "Allenamenti completati",
+  "@workoutsCompleted": {
+    "description": "Etichetta per conteggio allenamenti completati"
+  },
+  "restDays": "Giorni di riposo",
+  "@restDays": {
+    "description": "Etichetta per conteggio giorni di riposo"
+  },
+  "@currentStreak": {
+    "description": "Etichetta per streak allenamenti corrente"
+  },
+  "averageFrequency": "Frequenza media",
+  "@averageFrequency": {
+    "description": "Etichetta per frequenza allenamento media"
   }
 }

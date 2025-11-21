@@ -1618,7 +1618,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get nextMilestone => 'Prossimo Traguardo';
 
   @override
-  String get longestStreak => 'Serie Più Lunga';
+  String get longestStreak => 'Streak massimo';
 
   @override
   String get totalDays => 'Giorni Totali';
@@ -2590,7 +2590,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get muscleGroupOther => 'Altro';
 
   @override
-  String get perWeek => '/settimana';
+  String get perWeek => 'a settimana';
 
   @override
   String get target => 'Target';
@@ -3182,7 +3182,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exerciseTrends => 'Tendenze Esercizi';
 
   @override
-  String get currentStreak => 'Serie Attuale';
+  String get currentStreak => 'Streak attuale';
 
   @override
   String get totalPRs => 'PR Totali';
@@ -18345,4 +18345,64 @@ class AppLocalizationsIt extends AppLocalizations {
   String resetAllPRsButton(int count) {
     return 'Resetta Tutti i PR ($count record)';
   }
+
+  @override
+  String get consistencyIndicators => 'Indicatori Consistenza';
+
+  @override
+  String get training => 'Allenamento';
+
+  @override
+  String get rest => 'Riposo';
+
+  @override
+  String get doingWell => 'Stai andando bene!';
+
+  @override
+  String get canImprove => 'Puoi migliorare';
+
+  @override
+  String get reviewRoutine => 'Rivedi la tua routine';
+
+  @override
+  String get frequencyOptimalTip =>
+      'Perfetto! Sei nel range ottimale di 3-5 allenamenti a settimana.';
+
+  @override
+  String get frequencyImproveTip =>
+      'Prova ad allenarti 3-5 volte a settimana per risultati migliori secondo la ricerca.';
+
+  @override
+  String get restOptimalTip =>
+      'Ottimo equilibrio! Stai recuperando correttamente con 2-3 giorni di riposo a settimana.';
+
+  @override
+  String get restImproveTip =>
+      'Punta a 2-3 giorni di riposo a settimana per prevenire infortuni e favorire il recupero.';
+
+  @override
+  String get progressionOptimalTip =>
+      'Eccellente! Stai progredendo con un miglioramento >5%.';
+
+  @override
+  String get progressionImproveTip =>
+      'Prova ad aumentare peso o ripetizioni gradualmente (5-10% a settimana è ottimale).';
+
+  @override
+  String get optimalRange => 'Range ottimale';
+
+  @override
+  String get source => 'Fonte';
+
+  @override
+  String get weeklyStatistics => 'Statistiche Settimanali';
+
+  @override
+  String get workoutsCompleted => 'Allenamenti completati';
+
+  @override
+  String get restDays => 'Giorni di riposo';
+
+  @override
+  String get averageFrequency => 'Frequenza media';
 }

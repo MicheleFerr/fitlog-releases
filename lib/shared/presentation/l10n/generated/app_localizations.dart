@@ -1946,7 +1946,7 @@ abstract class AppLocalizations {
   /// **'exercises'**
   String get exercises;
 
-  /// Progress label
+  /// Label for progression indicator
   ///
   /// In en, this message translates to:
   /// **'Progress'**
@@ -3061,10 +3061,10 @@ abstract class AppLocalizations {
   /// **'Next Milestone'**
   String get nextMilestone;
 
-  /// Label for all-time longest streak
+  /// Label for longest workout streak achieved
   ///
   /// In en, this message translates to:
-  /// **'Longest Streak'**
+  /// **'Longest streak'**
   String get longestStreak;
 
   /// Label for total workout days stat
@@ -3073,7 +3073,7 @@ abstract class AppLocalizations {
   /// **'Total Days'**
   String get totalDays;
 
-  /// Unit for day count
+  /// Unit for days count
   ///
   /// In en, this message translates to:
   /// **'days'**
@@ -4811,10 +4811,10 @@ abstract class AppLocalizations {
   /// **'Other'**
   String get muscleGroupOther;
 
-  /// Per week suffix
+  /// Unit for weekly frequency
   ///
   /// In en, this message translates to:
-  /// **'/week'**
+  /// **'per week'**
   String get perWeek;
 
   /// Target label
@@ -5891,10 +5891,10 @@ abstract class AppLocalizations {
   /// **'Exercise Trends'**
   String get exerciseTrends;
 
-  /// Current workout streak statistic
+  /// Label for current workout streak
   ///
   /// In en, this message translates to:
-  /// **'Current Streak'**
+  /// **'Current streak'**
   String get currentStreak;
 
   /// Total personal records statistic
@@ -8267,7 +8267,7 @@ abstract class AppLocalizations {
   /// **'Correction'**
   String get correction;
 
-  /// Label for tip contribution type
+  /// Label for actionable tip
   ///
   /// In en, this message translates to:
   /// **'Tip'**
@@ -32585,6 +32585,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset All PRs ({count} records)'**
   String resetAllPRsButton(int count);
+
+  /// Header for consistency tracking indicators section
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency Indicators'**
+  String get consistencyIndicators;
+
+  /// Label for training frequency indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Training'**
+  String get training;
+
+  /// Label for rest days indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Rest'**
+  String get rest;
+
+  /// Badge text when 2-3 indicators are optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Doing well!'**
+  String get doingWell;
+
+  /// Badge text when 1 indicator is optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Can improve'**
+  String get canImprove;
+
+  /// Badge text when 0 indicators are optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Review your routine'**
+  String get reviewRoutine;
+
+  /// Tip shown when training frequency is optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect! You\'re in the optimal range of 3-5 workouts per week.'**
+  String get frequencyOptimalTip;
+
+  /// Tip shown when training frequency needs improvement
+  ///
+  /// In en, this message translates to:
+  /// **'Try to workout 3-5 times per week for best results according to research.'**
+  String get frequencyImproveTip;
+
+  /// Tip shown when rest days are optimal
+  ///
+  /// In en, this message translates to:
+  /// **'Great balance! You\'re recovering properly with 2-3 rest days per week.'**
+  String get restOptimalTip;
+
+  /// Tip shown when rest days need improvement
+  ///
+  /// In en, this message translates to:
+  /// **'Aim for 2-3 rest days per week to prevent injuries and promote recovery.'**
+  String get restImproveTip;
+
+  /// Tip shown when progression is positive
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! You\'re making progress with >5% improvement.'**
+  String get progressionOptimalTip;
+
+  /// Tip shown when progression needs improvement
+  ///
+  /// In en, this message translates to:
+  /// **'Try increasing weight or reps gradually (5-10% per week is optimal).'**
+  String get progressionImproveTip;
+
+  /// Label for optimal range information
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal range'**
+  String get optimalRange;
+
+  /// Label for scientific source citation
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get source;
+
+  /// Header for weekly statistics section
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Statistics'**
+  String get weeklyStatistics;
+
+  /// Label for completed workouts count
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts completed'**
+  String get workoutsCompleted;
+
+  /// Label for rest days count
+  ///
+  /// In en, this message translates to:
+  /// **'Rest days'**
+  String get restDays;
+
+  /// Label for average training frequency
+  ///
+  /// In en, this message translates to:
+  /// **'Average frequency'**
+  String get averageFrequency;
 }
 
 class _AppLocalizationsDelegate
