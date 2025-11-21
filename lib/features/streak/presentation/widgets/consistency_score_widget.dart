@@ -31,7 +31,7 @@ class ConsistencyScoreWidget extends ConsumerWidget {
       loading: () => const LoadingIndicator(),
       error: (err, stack) => Center(
         child: Text(
-          'Error loading consistency score',
+          context.l10n.errorLoadingConsistencyScore,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colors.error,
           ),

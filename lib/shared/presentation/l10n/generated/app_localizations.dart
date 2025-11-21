@@ -32693,6 +32693,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Average frequency'**
   String get averageFrequency;
+
+  /// Error message when consistency score fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading consistency score'**
+  String get errorLoadingConsistencyScore;
 }
 
 class _AppLocalizationsDelegate

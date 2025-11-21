@@ -22148,5 +22148,9 @@
   "averageFrequency": "Average frequency",
   "@averageFrequency": {
     "description": "Label for average training frequency"
+  },
+  "errorLoadingConsistencyScore": "Error loading consistency score",
+  "@errorLoadingConsistencyScore": {
+    "description": "Error message when consistency score fails to load"
   }
 }

@@ -18405,4 +18405,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get averageFrequency => 'Frequenza media';
+
+  @override
+  String get errorLoadingConsistencyScore =>
+      'Errore caricamento punteggio coerenza';
 }

@@ -11686,5 +11686,9 @@
   "averageFrequency": "Frequenza media",
   "@averageFrequency": {
     "description": "Etichetta per frequenza allenamento media"
+  },
+  "errorLoadingConsistencyScore": "Errore caricamento punteggio coerenza",
+  "@errorLoadingConsistencyScore": {
+    "description": "Error message when consistency score fails to load"
   }
 }

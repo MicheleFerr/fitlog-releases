@@ -18227,4 +18227,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get averageFrequency => 'Average frequency';
+
+  @override
+  String get errorLoadingConsistencyScore => 'Error loading consistency score';
 }
