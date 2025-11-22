@@ -353,7 +353,10 @@ class AICoachCard extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Complete ${status.config.minWorkouts} workouts over ${status.config.minDays} days to unlock',
+                context.l10n.aiCoachUnlockRequirement(
+                  status.config.minWorkouts,
+                  status.config.minDays,
+                ),
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),

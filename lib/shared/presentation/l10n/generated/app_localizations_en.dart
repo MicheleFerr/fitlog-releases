@@ -18844,6 +18844,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'Equipment profiles - Under construction';
 
   @override
+  String aiCoachUnlockRequirement(int minWorkouts, int minDays) {
+    return 'Complete $minWorkouts workouts over $minDays days to unlock';
+  }
+
+  @override
   String get autoAdjustWeightTitle => 'Auto-Adjust Weight';
 
   @override

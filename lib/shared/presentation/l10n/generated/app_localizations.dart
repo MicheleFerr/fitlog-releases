@@ -33768,6 +33768,12 @@ abstract class AppLocalizations {
   /// **'Equipment profiles - Under construction'**
   String get equipmentProfilesUnderConstruction;
 
+  /// AI Coach unlock requirement message with workout and day counts
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {minWorkouts} workouts over {minDays} days to unlock'**
+  String aiCoachUnlockRequirement(int minWorkouts, int minDays);
+
   /// Auto-adjust weight feature title
   ///
   /// In en, this message translates to:

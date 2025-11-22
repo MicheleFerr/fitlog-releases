@@ -12831,6 +12831,18 @@
   "@equipmentProfilesUnderConstruction": {
     "description": "Messaggio profili attrezzatura in costruzione"
   },
+  "aiCoachUnlockRequirement": "Completa {minWorkouts} allenamenti in {minDays} giorni per sbloccare",
+  "@aiCoachUnlockRequirement": {
+    "description": "Messaggio requisito sblocco AI Coach con conteggio allenamenti e giorni",
+    "placeholders": {
+      "minWorkouts": {
+        "type": "int"
+      },
+      "minDays": {
+        "type": "int"
+      }
+    }
+  },
   "autoAdjustWeightTitle": "Auto-Regola Peso",
   "@autoAdjustWeightTitle": {
     "description": "Titolo funzione auto-regolazione peso"

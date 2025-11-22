@@ -23293,6 +23293,18 @@
   "@equipmentProfilesUnderConstruction": {
     "description": "Equipment profiles under construction message"
   },
+  "aiCoachUnlockRequirement": "Complete {minWorkouts} workouts over {minDays} days to unlock",
+  "@aiCoachUnlockRequirement": {
+    "description": "AI Coach unlock requirement message with workout and day counts",
+    "placeholders": {
+      "minWorkouts": {
+        "type": "int"
+      },
+      "minDays": {
+        "type": "int"
+      }
+    }
+  },
   "autoAdjustWeightTitle": "Auto-Adjust Weight",
   "@autoAdjustWeightTitle": {
     "description": "Auto-adjust weight feature title"

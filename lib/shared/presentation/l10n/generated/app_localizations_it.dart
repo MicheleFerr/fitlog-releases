@@ -19030,6 +19030,11 @@ class AppLocalizationsIt extends AppLocalizations {
       'Profili attrezzatura - In costruzione';
 
   @override
+  String aiCoachUnlockRequirement(int minWorkouts, int minDays) {
+    return 'Completa $minWorkouts allenamenti in $minDays giorni per sbloccare';
+  }
+
+  @override
   String get autoAdjustWeightTitle => 'Auto-Regola Peso';
 
   @override
