@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -49,7 +51,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         error: (error, _) {
           // Show error message
           if (mounted) {
-            SnackBarService.showError(context, error.toString());
+            SnackBarService.showError(context, context.l10n.error);
           }
         },
       );
@@ -61,7 +63,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(AppIcons.home),
+            icon: SemanticIcon(
+  icon: AppIcons.home,
+  semanticLabel: 'Home',
+),
             onPressed: () => context.goNamed('login'),
             tooltip: context.l10n.backToLogin,
           ),
@@ -84,10 +89,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    AppIcons.workout,
-                    size: 40,
-                    color: Theme.of(context).primaryColor,
+                  child: SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).primaryColor,
                   ),
                 ),
 
@@ -142,7 +149,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     width: 20,
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
-                                : Icon(AppIcons.gMobiledata, size: 24),
+                                : SemanticIcon(
+  icon: AppIcons.gMobiledata,
+  semanticLabel: 'G mobiledata',
+  size: AppIconSize.medium,
+),
                             label: Text(context.l10n.continueWithGoogle),
                           ),
                         ),
@@ -156,8 +167,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             child: FilledButton.icon(
                               onPressed: authController.isLoading ? null : _handleAppleSignUp,
                               style: FilledButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                foregroundColor: Colors.white,
+                                backgroundColor: context.colors.onSurface,
+                                foregroundColor: context.colors.surface,
                               ),
                               icon: authController.isLoading
                                   ? SizedBox(
@@ -165,7 +176,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                       width: 20,
                                       child: CircularProgressIndicator(strokeWidth: 2),
                                     )
-                                  : Icon(AppIcons.apple),
+                                  : SemanticIcon(
+  icon: AppIcons.apple,
+  semanticLabel: 'Apple',
+),
                               label: Text(context.l10n.continueWithApple),
                             ),
                           ),
@@ -202,7 +216,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.fullName,
                     hintText: context.l10n.fullNameHint,
-                    prefixIcon: Icon(AppIcons.person),
+                    prefixIcon: SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+),
                   ),
                   textInputAction: TextInputAction.next,
                   validator: (value) {
@@ -223,7 +240,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.emailLabel,
                     hintText: context.l10n.emailHint,
-                    prefixIcon: Icon(AppIcons.email),
+                    prefixIcon: SemanticIcon(
+  icon: AppIcons.email,
+  semanticLabel: 'Email',
+),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
@@ -245,7 +265,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.passwordLabel,
                     hintText: context.l10n.passwordHint,
-                    prefixIcon: Icon(AppIcons.lock),
+                    prefixIcon: SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+),
                     suffixIcon: IconButton(
                       icon: Icon(_obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff),
                       onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -271,7 +294,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.confirmPassword,
                     hintText: context.l10n.confirmPasswordHint,
-                    prefixIcon: Icon(AppIcons.lockOutline),
+                    prefixIcon: SemanticIcon(
+  icon: AppIcons.lockOutline,
+  semanticLabel: 'Lock outline',
+),
                     suffixIcon: IconButton(
                       icon: Icon(_obscureConfirmPassword ? AppIcons.visibility : AppIcons.visibilityOff),
                       onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
@@ -325,7 +351,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 // Google Sign Up Button
                 OutlinedButton.icon(
                   onPressed: authController.isLoading ? null : _handleGoogleSignUp,
-                  icon: Icon(AppIcons.gMobiledata, size: 24),
+                  icon: SemanticIcon(
+  icon: AppIcons.gMobiledata,
+  semanticLabel: 'G mobiledata',
+  size: AppIconSize.medium,
+),
                   label: Text(context.l10n.signUpWithGoogle),
                 ),
                 SizedBox(height: 16),
@@ -335,10 +365,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   OutlinedButton.icon(
                     onPressed: authController.isLoading ? null : _handleAppleSignUp,
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.black),
+                      side: BorderSide(color: context.colors.onSurface),
                     ),
-                    icon: Icon(AppIcons.apple, color: Colors.black),
-                    label: Text(context.l10n.signUpWithApple, style: const TextStyle(color: Colors.black)),
+                    icon: Icon(AppIcons.apple, color: context.colors.onSurface),
+                    label: Text(context.l10n.signUpWithApple, style: context.textTheme.labelLarge?.copyWith(color: context.colors.onSurface)),
                   ),
                 SizedBox(height: 32),
 
