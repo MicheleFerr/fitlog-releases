@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -44,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         error: (error, _) {
           // Show error message
           if (mounted) {
-            SnackBarService.showError(context, error.toString());
+            SnackBarService.showError(context, context.l10n.error);
           }
         },
       );
@@ -71,11 +73,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  AppIcons.workout,
-                  size: 60,
-                  color: context.colors.primary,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: context.colors.primary,
+),
               ),
               SizedBox(height: 16),
 
@@ -104,11 +107,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      Icon(
-                        AppIcons.wavingHand,
-                        size: 32,
-                        color: context.colors.primary,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.wavingHand,
+  semanticLabel: 'Waving hand',
+  size: AppIconSize.xlarge,
+  color: context.colors.primary,
+),
                       SizedBox(height: 16),
                       Text(
                         context.l10n.welcomeToGymBro,
@@ -142,7 +146,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.emailLabel,
                           hintText: context.l10n.emailHint,
-                          prefixIcon: Icon(AppIcons.email),
+                          prefixIcon: SemanticIcon(
+  icon: AppIcons.email,
+  semanticLabel: 'Email',
+),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -164,7 +171,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.passwordLabel,
                           hintText: context.l10n.passwordHint,
-                          prefixIcon: Icon(AppIcons.lock),
+                          prefixIcon: SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+),
                           suffixIcon: IconButton(
                             icon: Icon(_obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -207,7 +217,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       // Back to options
                       TextButton.icon(
                         onPressed: () => setState(() => _showLoginForm = false),
-                        icon: Icon(AppIcons.back),
+                        icon: SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
                         label: Text(context.l10n.backToOptions),
                       ),
                     ],
@@ -225,7 +238,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Icon(AppIcons.gMobiledata, size: 24),
+                        : SemanticIcon(
+  icon: AppIcons.gMobiledata,
+  semanticLabel: 'G mobiledata',
+  size: AppIconSize.medium,
+),
                     label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
@@ -239,8 +256,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: FilledButton.icon(
                       onPressed: authController.isLoading ? null : _signInWithApple,
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
+                        backgroundColor: context.colors.onSurface,
+                        foregroundColor: context.colors.surface,
                       ),
                       icon: authController.isLoading
                           ? SizedBox(
@@ -248,7 +265,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : Icon(AppIcons.apple),
+                          : SemanticIcon(
+  icon: AppIcons.apple,
+  semanticLabel: 'Apple',
+),
                       label: Text(context.l10n.signInWithApple),
                     ),
                   ),
@@ -260,7 +280,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => setState(() => _showLoginForm = true),
-                    icon: Icon(AppIcons.email),
+                    icon: SemanticIcon(
+  icon: AppIcons.email,
+  semanticLabel: 'Email',
+),
                     label: Text(context.l10n.signInWithEmail),
                   ),
                 ),
@@ -272,7 +295,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
-                    icon: Icon(AppIcons.personAdd),
+                    icon: SemanticIcon(
+  icon: AppIcons.personAdd,
+  semanticLabel: 'Person add',
+),
                     label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: context.colors.primary,
@@ -346,7 +372,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, e.toString());
+        SnackBarService.showError(context, context.l10n.error);
       }
     }
   }
