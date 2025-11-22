@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/mixins/tour_
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/onboarding_tour_overlay_enhanced.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Optimized homepage that consolidates the best features from both implementations
 /// while ensuring full compliance with localization and theming standards
@@ -327,10 +328,12 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ],
                             ),
                           ),
-                          Icon(
-                            AppIcons.forwardIos,
-                            size: 16,
-                            color: Theme.of(context).colorScheme.primary,
+                          SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.primary,
                           ),
                         ],
                       ),
@@ -458,17 +461,17 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.deepPurple.shade700,
-                                      Colors.deepPurple.shade900,
+                                      Colors.deepPurple[700]!,
+                                      Colors.deepPurple[900]!,
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       AppIcons.flagCircle,
-                                      color: Colors.white,
+                                      color: context.colors.surface,
                                       size: 24,
                                     ),
                                     const SizedBox(width: 12),
@@ -479,7 +482,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                           Text(
                                             '🔧 Exercise Feedback',
                                             style: context.textTheme.titleMedium?.copyWith(
-                                              color: Colors.white,
+                                              color: context.colors.surface,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -487,15 +490,15 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                           Text(
                                             context.l10n.userReportsAndBugs,
                                             style: context.textTheme.bodySmall?.copyWith(
-                                              color: Colors.white.withValues(alpha: 0.8),
+                                              color: context.colors.surface.withValues(alpha: 0.8),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    const Icon(
+                                    Icon(
                                       AppIcons.forwardIos,
-                                      color: Colors.white,
+                                      color: context.colors.surface,
                                       size: 16,
                                     ),
                                   ],
