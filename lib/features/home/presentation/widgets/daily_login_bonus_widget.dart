@@ -137,7 +137,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       Text(
                         context.l10n.claimBonus(bonusInfo.currentDayBonus),
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.amber.shade700,
+                          color: Colors.amber[700]!,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -165,7 +165,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber.shade700,
+                        color: Colors.amber[700]!,
                       ),
                     ),
                   ],
@@ -253,9 +253,9 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: isCompleted 
+                      gradient: isCompleted
                         ? LinearGradient(
-                            colors: [context.colors.success, context.colors.success.shade700],
+                            colors: [context.colors.success, Color.lerp(context.colors.success, Colors.black, 0.3)!],
                           )
                         : isToday
                           ? const LinearGradient(
@@ -302,7 +302,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       color: isCompleted
                         ? context.colors.success
                         : isToday
-                          ? Colors.amber.shade700
+                          ? Colors.amber[700]!
                           : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -338,7 +338,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       context.l10n.maxBonusReached,
                       style: TextStyle(
                         fontSize: 12,
-                        color: context.colors.success.shade700,
+                        color: Color.lerp(context.colors.success, Colors.black, 0.3)!,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
