@@ -18236,4 +18236,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cannotOpenLink => 'Cannot open link';
+
+  @override
+  String get buddyOnboardingWelcome => 'Welcome!';
+
+  @override
+  String get buddyOnboardingYourLevel => 'Your Level';
+
+  @override
+  String get buddyOnboardingYourGoals => 'Your Goals';
+
+  @override
+  String get buddyOnboardingYourSchedule => 'Your Schedule';
+
+  @override
+  String get buddyOnboardingYourLocation => 'Your Location';
+
+  @override
+  String get buddyOnboardingYourProfile => 'Your Profile';
+
+  @override
+  String get buddyOnboardingAllSet => 'All Set!';
+
+  @override
+  String get skipOnboardingTitle => 'Skip setup?';
+
+  @override
+  String get skipOnboardingMessage =>
+      'You can always modify your preferences later';
 }

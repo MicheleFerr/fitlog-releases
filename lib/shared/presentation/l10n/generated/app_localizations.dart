@@ -32711,6 +32711,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot open link'**
   String get cannotOpenLink;
+
+  /// Buddy onboarding step 1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome!'**
+  String get buddyOnboardingWelcome;
+
+  /// Buddy onboarding step 2 title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Level'**
+  String get buddyOnboardingYourLevel;
+
+  /// Buddy onboarding step 3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Goals'**
+  String get buddyOnboardingYourGoals;
+
+  /// Buddy onboarding step 4 title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Schedule'**
+  String get buddyOnboardingYourSchedule;
+
+  /// Buddy onboarding step 5 title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Location'**
+  String get buddyOnboardingYourLocation;
+
+  /// Buddy onboarding step 6 title
+  ///
+  /// In en, this message translates to:
+  /// **'Your Profile'**
+  String get buddyOnboardingYourProfile;
+
+  /// Buddy onboarding step 7 title (completion)
+  ///
+  /// In en, this message translates to:
+  /// **'All Set!'**
+  String get buddyOnboardingAllSet;
+
+  /// Dialog title when skipping buddy onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Skip setup?'**
+  String get skipOnboardingTitle;
+
+  /// Dialog message when skipping buddy onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'You can always modify your preferences later'**
+  String get skipOnboardingMessage;
 }
 
 class _AppLocalizationsDelegate

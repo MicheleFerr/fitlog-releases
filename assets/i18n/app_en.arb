@@ -22160,5 +22160,41 @@
   "cannotOpenLink": "Cannot open link",
   "@cannotOpenLink": {
     "description": "Error message when a link cannot be opened"
+  },
+  "buddyOnboardingWelcome": "Welcome!",
+  "@buddyOnboardingWelcome": {
+    "description": "Buddy onboarding step 1 title"
+  },
+  "buddyOnboardingYourLevel": "Your Level",
+  "@buddyOnboardingYourLevel": {
+    "description": "Buddy onboarding step 2 title"
+  },
+  "buddyOnboardingYourGoals": "Your Goals",
+  "@buddyOnboardingYourGoals": {
+    "description": "Buddy onboarding step 3 title"
+  },
+  "buddyOnboardingYourSchedule": "Your Schedule",
+  "@buddyOnboardingYourSchedule": {
+    "description": "Buddy onboarding step 4 title"
+  },
+  "buddyOnboardingYourLocation": "Your Location",
+  "@buddyOnboardingYourLocation": {
+    "description": "Buddy onboarding step 5 title"
+  },
+  "buddyOnboardingYourProfile": "Your Profile",
+  "@buddyOnboardingYourProfile": {
+    "description": "Buddy onboarding step 6 title"
+  },
+  "buddyOnboardingAllSet": "All Set!",
+  "@buddyOnboardingAllSet": {
+    "description": "Buddy onboarding step 7 title (completion)"
+  },
+  "skipOnboardingTitle": "Skip setup?",
+  "@skipOnboardingTitle": {
+    "description": "Dialog title when skipping buddy onboarding"
+  },
+  "skipOnboardingMessage": "You can always modify your preferences later",
+  "@skipOnboardingMessage": {
+    "description": "Dialog message when skipping buddy onboarding"
   }
 }

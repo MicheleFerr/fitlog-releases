@@ -11698,5 +11698,41 @@
   "cannotOpenLink": "Impossibile aprire il link",
   "@cannotOpenLink": {
     "description": "Error message when a link cannot be opened"
+  },
+  "buddyOnboardingWelcome": "Benvenuto!",
+  "@buddyOnboardingWelcome": {
+    "description": "Buddy onboarding step 1 title"
+  },
+  "buddyOnboardingYourLevel": "Il tuo livello",
+  "@buddyOnboardingYourLevel": {
+    "description": "Buddy onboarding step 2 title"
+  },
+  "buddyOnboardingYourGoals": "I tuoi obiettivi",
+  "@buddyOnboardingYourGoals": {
+    "description": "Buddy onboarding step 3 title"
+  },
+  "buddyOnboardingYourSchedule": "I tuoi orari",
+  "@buddyOnboardingYourSchedule": {
+    "description": "Buddy onboarding step 4 title"
+  },
+  "buddyOnboardingYourLocation": "La tua zona",
+  "@buddyOnboardingYourLocation": {
+    "description": "Buddy onboarding step 5 title"
+  },
+  "buddyOnboardingYourProfile": "Il tuo profilo",
+  "@buddyOnboardingYourProfile": {
+    "description": "Buddy onboarding step 6 title"
+  },
+  "buddyOnboardingAllSet": "Tutto pronto!",
+  "@buddyOnboardingAllSet": {
+    "description": "Buddy onboarding step 7 title (completion)"
+  },
+  "skipOnboardingTitle": "Salta configurazione?",
+  "@skipOnboardingTitle": {
+    "description": "Dialog title when skipping buddy onboarding"
+  },
+  "skipOnboardingMessage": "Puoi sempre modificare le tue preferenze successivamente",
+  "@skipOnboardingMessage": {
+    "description": "Dialog message when skipping buddy onboarding"
   }
 }

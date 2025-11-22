@@ -17,7 +17,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/providers/buddy_matching_provider.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/welcome_step.dart';
@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/profile_step.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/onboarding/complete_step.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class BuddyOnboardingScreen extends ConsumerStatefulWidget {
   const BuddyOnboardingScreen({super.key});
@@ -58,14 +59,14 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
 
-  final List<String> _stepTitles = [
-    'Benvenuto!',
-    'Il tuo livello',
-    'I tuoi obiettivi', 
-    'I tuoi orari',
-    'La tua zona',
-    'Il tuo profilo',
-    'Tutto pronto!',
+  List<String> _stepTitles(BuildContext context) => [
+    context.l10n.buddyOnboardingWelcome,
+    context.l10n.buddyOnboardingYourLevel,
+    context.l10n.buddyOnboardingYourGoals,
+    context.l10n.buddyOnboardingYourSchedule,
+    context.l10n.buddyOnboardingYourLocation,
+    context.l10n.buddyOnboardingYourProfile,
+    context.l10n.buddyOnboardingAllSet,
   ];
 
   @override
@@ -95,7 +96,6 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -103,8 +103,8 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
         child: Column(
           children: [
             // Progress header
-            _buildProgressHeader(context, theme, l10n),
-            
+            _buildProgressHeader(context, theme),
+
             // Content
             Expanded(
               child: PageView(
@@ -170,7 +170,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
     );
   }
 
-  Widget _buildProgressHeader(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildProgressHeader(BuildContext context, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -182,13 +182,16 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
               if (_currentStep > 0)
                 IconButton(
                   onPressed: _previousStep,
-                  icon: const Icon(AppIcons.back),
+                  icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
                 ),
               const Spacer(),
-              if (_currentStep < _stepTitles.length - 1)
+              if (_currentStep < _stepTitles(context).length - 1)
                 TextButton(
                   onPressed: _skipOnboarding,
-                  child: const Text('Salta'),
+                  child: Text(context.l10n.skip),
                 ),
             ],
           ),
@@ -212,7 +215,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
               ),
               const SizedBox(width: 16),
               Text(
-                '${_currentStep + 1} / ${_stepTitles.length}',
+                '${_currentStep + 1} / ${_stepTitles(context).length}',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
@@ -222,10 +225,10 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
           ),
           
           const SizedBox(height: 16),
-          
+
           // Step title
           Text(
-            _stepTitles[_currentStep],
+            _stepTitles(context)[_currentStep],
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -237,7 +240,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
   }
 
   void _nextStep() {
-    if (_currentStep < _stepTitles.length - 1) {
+    if (_currentStep < 6) { // 7 steps total (0-6)
       setState(() {
         _currentStep++;
       });
@@ -263,7 +266,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
   }
 
   void _updateProgress() {
-    _progressController.animateTo((_currentStep + 1) / _stepTitles.length);
+    _progressController.animateTo((_currentStep + 1) / 7); // 7 total steps
   }
 
   BuddyPreferences _buildPreferences() {
@@ -297,7 +300,7 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore nel salvataggio delle preferenze'),
+            content: Text(context.l10n.error),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -309,19 +312,19 @@ class _BuddyOnboardingScreenState extends ConsumerState<BuddyOnboardingScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Salta configurazione?'),
-        content: const Text('Puoi sempre modificare le tue preferenze successivamente'),
+        title: Text(context.l10n.skipOnboardingTitle),
+        content: Text(context.l10n.skipOnboardingMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annulla'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               _completeOnboarding();
             },
-            child: const Text('Salta'),
+            child: Text(context.l10n.skip),
           ),
         ],
       ),
