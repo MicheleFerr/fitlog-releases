@@ -180,7 +180,7 @@ class SnackBarService {
         Expanded(
           child: Text(
             message,
-            style: TextStyle(color: fgColor),
+            style: context.textTheme.bodyMedium?.copyWith(color: fgColor),
           ),
         ),
       ],

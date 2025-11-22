@@ -407,7 +407,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
   semanticLabel: 'Content copy rounded',
   size: AppIconSize.tiny,
 ),
-                  label: Text(AppLocalizations.of(context).copy, style: const TextStyle(fontSize: 12)),
+                  label: Text(AppLocalizations.of(context).copy, style: theme.textTheme.labelMedium),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     minimumSize: const Size(0, 0),
@@ -874,9 +874,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                             color: theme.colorScheme.tertiary,
                             fontSize: 24,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            suffix: Text('s', style: TextStyle(fontSize: 12)),
+                            suffix: Text('s', style: theme.textTheme.labelMedium),
                           ),
                           textInputAction: TextInputAction.done,
                           onChanged: (value) {

@@ -144,7 +144,7 @@ class ModalService {
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
               cancelText ?? context.l10n.cancel,
-              style: TextStyle(
+              style: context.textTheme.labelLarge?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
@@ -294,7 +294,7 @@ class ModalService {
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
               context.l10n.cancel,
-              style: TextStyle(
+              style: context.textTheme.labelLarge?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
@@ -324,7 +324,7 @@ class ModalService {
                 child: Text(
                   action.label,
                   style: action.isDangerous
-                      ? TextStyle(color: context.colors.error)
+                      ? context.textTheme.labelLarge?.copyWith(color: context.colors.error)
                       : null,
                 ),
               );

@@ -317,7 +317,7 @@ class _TooltipCard extends StatelessWidget {
                         onPressed: onDismiss,
                         child: Text(
                           'Skip',
-                          style: TextStyle(
+                          style: context.textTheme.labelLarge?.copyWith(
                             color: colors.onSurface.withValues(alpha: 0.6),
                           ),
                         ),

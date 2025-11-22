@@ -427,12 +427,11 @@ class _WorkoutHistoryEditorEnhancedState
             child: Center(
               child: Text(
                 (setIndex + 1).toString(),
-                style: TextStyle(
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: set.isCompleted
                       ? theme.colorScheme.onPrimary
                       : theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
                 ),
               ),
             ),

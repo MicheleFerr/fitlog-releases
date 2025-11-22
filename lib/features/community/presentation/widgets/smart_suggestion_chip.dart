@@ -193,12 +193,11 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                       Flexible(
                         child: Text(
                           widget.suggestion,
-                          style: TextStyle(
+                          style: theme.textTheme.labelLarge?.copyWith(
                             color: widget.isMinimal
                               ? theme.colorScheme.onSurfaceVariant
                               : theme.colorScheme.onPrimary,
                             fontWeight: FontWeight.w500,
-                            fontSize: 13,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

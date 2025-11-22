@@ -230,7 +230,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                       ),
                       child: Text(
                         _currentButtonText,
-                        style: TextStyle(
+                        style: theme.textTheme.titleMedium?.copyWith(
                           color: colorScheme.onPrimary,
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
@@ -288,7 +288,7 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
             // Flag
             Text(
               flag,
-              style: const TextStyle(fontSize: 32),
+              style: theme.textTheme.headlineSmall?.copyWith(fontSize: 32),
             ),
 
             const SizedBox(width: 20),

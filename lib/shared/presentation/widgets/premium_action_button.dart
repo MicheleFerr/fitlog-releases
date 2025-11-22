@@ -295,7 +295,7 @@ class CompactActionButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   badgeText!,
-                  style: TextStyle(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onError,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
