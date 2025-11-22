@@ -5,6 +5,10 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Heatmap calendar with zoom controls and detailed exercise view
 class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
@@ -191,7 +195,10 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Zoom out button
         IconButton(
           onPressed: isZoomedOut ? null : _zoomOut,
-          icon: const Icon(AppIcons.removeCircleOutline),
+          icon: const SemanticIcon(
+  icon: AppIcons.removeCircleOutline,
+  semanticLabel: 'Remove circle outline',
+),
           tooltip: l10n.zoomOut,
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -203,7 +210,11 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Reset zoom button
         TextButton.icon(
           onPressed: isDefault ? null : _resetZoom,
-          icon: const Icon(AppIcons.centerFocusStrong, size: 20),
+          icon: const SemanticIcon(
+  icon: AppIcons.centerFocusStrong,
+  semanticLabel: 'Center focus strong',
+  size: AppIconSize.small,
+),
           label: Text(l10n.resetZoom),
           style: TextButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -215,7 +226,10 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
         // Zoom in button
         IconButton(
           onPressed: isZoomedIn ? null : _zoomIn,
-          icon: const Icon(AppIcons.addCircleOutline),
+          icon: const SemanticIcon(
+  icon: AppIcons.addCircleOutline,
+  semanticLabel: 'Add circle outline',
+),
           tooltip: l10n.zoomIn,
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.surfaceContainer,
@@ -453,7 +467,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                             workoutData.exercises.length.toString(),
                             style: TextStyle(
                               fontSize: _cellSize / 2.5,
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -520,10 +534,10 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: workoutData != null
-                  ? const Center(
+                  ? Center(
                       child: Icon(
                         AppIcons.workout,
-                        color: Colors.white,
+                        color: context.colors.surface,
                         size: 20,
                       ),
                     )
@@ -599,17 +613,20 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
   }
   
   Color _getColorForLevel(WorkoutIntensityLevel level, ThemeData theme) {
+    // Use Material Green palette for intensity levels (MaterialColor has shades)
+    const successBase = Colors.green;
+
     switch (level) {
       case WorkoutIntensityLevel.none:
         return theme.colorScheme.surfaceContainerHighest;
       case WorkoutIntensityLevel.light:
-        return Colors.green.shade200;
+        return successBase[200]!;
       case WorkoutIntensityLevel.moderate:
-        return Colors.green.shade400;
+        return successBase[400]!;
       case WorkoutIntensityLevel.intense:
-        return Colors.green.shade600;
+        return successBase[600]!;
       case WorkoutIntensityLevel.extreme:
-        return Colors.green.shade800;
+        return successBase[800]!;
     }
   }
   
@@ -814,7 +831,10 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -823,22 +843,24 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                 Row(
                   children: [
                     Chip(
-                      avatar: Icon(
-                        AppIcons.workout,
-                        size: 16,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
+                      avatar: SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onPrimaryContainer,
+),
                       label: Text(l10n.exerciseCount(widget.workoutData.exercises.length)),
                       backgroundColor: theme.colorScheme.primaryContainer,
                     ),
                     if (widget.workoutData.totalMinutes > 0) ...[
                       const SizedBox(width: 8),
                       Chip(
-                        avatar: Icon(
-                          AppIcons.timer,
-                          size: 16,
-                          color: theme.colorScheme.onSecondaryContainer,
-                        ),
+                        avatar: SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSecondaryContainer,
+),
                         label: Text(l10n.durationMinutes(widget.workoutData.totalMinutes)),
                         backgroundColor: theme.colorScheme.secondaryContainer,
                       ),
@@ -977,7 +999,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                             color: set.isWarmup
                                                 ? Colors.orange.withValues(alpha: 0.2)
                                                 : theme.colorScheme.primaryContainer,
-                                            borderRadius: BorderRadius.circular(4),
+                                            borderRadius: BorderRadius.circular(8),
                                           ),
                                           child: Text(
                                             '${setIndex + 1}',
@@ -1017,20 +1039,22 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                             if (set.isDropSet)
                                               const Padding(
                                                 padding: EdgeInsets.only(left: 4),
-                                                child: Icon(
-                                                  AppIcons.arrowDownward,
-                                                  size: 14,
-                                                  color: Colors.orange,
-                                                ),
+                                                child: SemanticIcon(
+  icon: AppIcons.arrowDownward,
+  semanticLabel: 'Arrow downward',
+  size: AppIconSize.tiny,
+  color: Colors.orange,
+),
                                               ),
                                             if (set.isRestPause)
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 4),
-                                                child: Icon(
-                                                  AppIcons.pause,
-                                                  size: 14,
-                                                  color: Colors.blue,
-                                                ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4),
+                                                child: SemanticIcon(
+  icon: AppIcons.pause,
+  semanticLabel: 'Pause',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                                               ),
                                           ],
                                         ),
@@ -1044,10 +1068,12 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Icon(
-                                      AppIcons.note,
-                                      size: 16,
-                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    SemanticIcon(
+  icon: AppIcons.note,
+  semanticLabel: 'Note',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.6,
+),
                                     ),
                                     const SizedBox(width: 8),
                                     Expanded(
@@ -1077,18 +1103,18 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
   
   Widget _buildEffortIndicator(int effort, ThemeData theme) {
     final color = effort <= 3
-        ? Colors.green
+        ? context.colors.success
         : effort <= 6
             ? Colors.orange
             : effort <= 8
                 ? Colors.deepOrange
-                : Colors.red;
+                : context.colors.error;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         '$effort',
