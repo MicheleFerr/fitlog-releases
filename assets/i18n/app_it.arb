@@ -12843,6 +12843,23 @@
       }
     }
   },
+  "tap": "TOCCA",
+  "@tap": {
+    "description": "Testo di invito a toccare"
+  },
+  "xpGain": "+{xp}",
+  "@xpGain": {
+    "description": "Visualizzazione guadagno XP con segno più",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "xpLabel": "XP",
+  "@xpLabel": {
+    "description": "Etichetta punti esperienza"
+  },
   "autoAdjustWeightTitle": "Auto-Regola Peso",
   "@autoAdjustWeightTitle": {
     "description": "Titolo funzione auto-regolazione peso"

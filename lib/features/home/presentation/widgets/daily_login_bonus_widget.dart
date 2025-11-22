@@ -161,7 +161,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       size: 20,
                     ),
                     Text(
-                      'TAP',
+                      context.l10n.tap,
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -197,7 +197,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
             backgroundColor: context.colors.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
         );
@@ -295,11 +295,11 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '+$xp',
+                    context.l10n.xpGain(xp),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: isCompleted 
+                      color: isCompleted
                         ? context.colors.success
                         : isToday
                           ? Colors.amber.shade700
@@ -307,7 +307,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    'XP',
+                    context.l10n.xpLabel,
                     style: TextStyle(
                       fontSize: 9,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.4),

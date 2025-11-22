@@ -18849,6 +18849,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get tap => 'TAP';
+
+  @override
+  String xpGain(int xp) {
+    return '+$xp';
+  }
+
+  @override
+  String get xpLabel => 'XP';
+
+  @override
   String get autoAdjustWeightTitle => 'Auto-Adjust Weight';
 
   @override

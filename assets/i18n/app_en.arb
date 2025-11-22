@@ -23305,6 +23305,23 @@
       }
     }
   },
+  "tap": "TAP",
+  "@tap": {
+    "description": "Call to action text for tapping"
+  },
+  "xpGain": "+{xp}",
+  "@xpGain": {
+    "description": "XP gain display with plus sign",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "xpLabel": "XP",
+  "@xpLabel": {
+    "description": "Experience points label"
+  },
   "autoAdjustWeightTitle": "Auto-Adjust Weight",
   "@autoAdjustWeightTitle": {
     "description": "Auto-adjust weight feature title"

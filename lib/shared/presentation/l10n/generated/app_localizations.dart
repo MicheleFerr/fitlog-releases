@@ -33774,6 +33774,24 @@ abstract class AppLocalizations {
   /// **'Complete {minWorkouts} workouts over {minDays} days to unlock'**
   String aiCoachUnlockRequirement(int minWorkouts, int minDays);
 
+  /// Call to action text for tapping
+  ///
+  /// In en, this message translates to:
+  /// **'TAP'**
+  String get tap;
+
+  /// XP gain display with plus sign
+  ///
+  /// In en, this message translates to:
+  /// **'+{xp}'**
+  String xpGain(int xp);
+
+  /// Experience points label
+  ///
+  /// In en, this message translates to:
+  /// **'XP'**
+  String get xpLabel;
+
   /// Auto-adjust weight feature title
   ///
   /// In en, this message translates to:
