@@ -90,11 +90,11 @@ class FrequencyHeatmapData {
 
   /// Colore basato su intensità
   Color get color {
-    if (workoutCount == 0) return Colors.grey.shade200;
-    if (intensity < 0.3) return Colors.green.shade200;
-    if (intensity < 0.6) return Colors.green.shade400;
-    if (intensity < 0.8) return Colors.green.shade600;
-    return Colors.green.shade800;
+    if (workoutCount == 0) return Colors.grey[200]!;
+    if (intensity < 0.3) return Colors.green[200]!;
+    if (intensity < 0.6) return Colors.green[400]!;
+    if (intensity < 0.8) return Colors.green[600]!;
+    return Colors.green[800]!;
   }
 }
 
