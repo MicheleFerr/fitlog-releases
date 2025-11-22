@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutHistoryListItem extends StatelessWidget {
 
@@ -86,11 +88,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.calendar,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               DateFormat('dd MMM yyyy', 'it_IT').format(workout.createdAt),
@@ -100,11 +103,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                             ),
                             if (workout.duration != null) ...[
                               const SizedBox(width: 12),
-                              Icon(
-                                AppIcons.clock,
-                                size: 14,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                              SemanticIcon(
+  icon: AppIcons.clock,
+  semanticLabel: 'Clock',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                               const SizedBox(width: 4),
                               Text(
                                 _formatDuration(workout.duration!),
@@ -142,7 +146,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'view',
                         child: Row(
                           children: [
-                            Icon(AppIcons.visibility, size: 18, color: theme.colorScheme.primary),
+                            SemanticIcon(
+  icon: AppIcons.visibility,
+  semanticLabel: 'Show',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
                             const SizedBox(width: 8),
                             Text(l10n.viewWorkout),
                           ],
@@ -152,7 +161,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'edit',
                         child: Row(
                           children: [
-                            Icon(AppIcons.edit, size: 18, color: theme.colorScheme.secondary),
+                            SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.small,
+  color: theme.colorScheme.secondary,
+),
                             const SizedBox(width: 8),
                             Text(l10n.editWorkout),
                           ],
@@ -162,7 +176,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'duplicate',
                         child: Row(
                           children: [
-                            Icon(AppIcons.iconCopy, size: 18, color: theme.colorScheme.tertiary),
+                            SemanticIcon(
+  icon: AppIcons.iconCopy,
+  semanticLabel: 'Icon copy',
+  size: AppIconSize.small,
+  color: theme.colorScheme.tertiary,
+),
                             const SizedBox(width: 8),
                             Text(l10n.duplicateWorkout),
                           ],
@@ -173,7 +192,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(AppIcons.delete, size: 18, color: theme.colorScheme.error),
+                            SemanticIcon(
+  icon: AppIcons.delete,
+  semanticLabel: 'Delete',
+  size: AppIconSize.small,
+  color: theme.colorScheme.error,
+),
                             const SizedBox(width: 8),
                             Text(l10n.deleteWorkout),
                           ],
@@ -186,11 +210,12 @@ class WorkoutHistoryListItem extends StatelessWidget {
                         color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(
-                        AppIcons.moreVert,
-                        size: 18,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                      child: SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                     ),
                   ),
                 ],
@@ -365,7 +390,11 @@ class WorkoutHistoryListItem extends StatelessWidget {
         Expanded(
           child: OutlinedButton.icon(
             onPressed: onEdit,
-            icon: const Icon(AppIcons.edit, size: 16),
+            icon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+),
             label: Text(l10n.edit),
             style: OutlinedButton.styleFrom(
               foregroundColor: theme.colorScheme.secondary,
@@ -377,7 +406,11 @@ class WorkoutHistoryListItem extends StatelessWidget {
         Expanded(
           child: FilledButton.icon(
             onPressed: onDuplicate,
-            icon: const Icon(AppIcons.iconCopy, size: 16),
+            icon: const SemanticIcon(
+  icon: AppIcons.iconCopy,
+  semanticLabel: 'Icon copy',
+  size: AppIconSize.tiny,
+),
             label: Text(l10n.duplicate),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.tertiary,

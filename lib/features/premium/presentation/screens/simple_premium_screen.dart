@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Simple premium screen that works without crashes
 class SimplePremiumScreen extends ConsumerWidget {
@@ -29,7 +31,7 @@ class SimplePremiumScreen extends ConsumerWidget {
             children: [
               // Hero Section
               Container(
-                padding: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -43,11 +45,12 @@ class SimplePremiumScreen extends ConsumerWidget {
                 ),
                 child: Column(
                   children: [
-                    Icon(
-                      AppIcons.star,
-                      size: 60,
-                      color: theme.colorScheme.onPrimary,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onPrimary,
+),
                     const SizedBox(height: 16),
                     Text(
                       isPremium ? context.l10n.youArePremium : context.l10n.unlockPremium,
@@ -212,11 +215,12 @@ class SimplePremiumScreen extends ConsumerWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(
-                        AppIcons.complete,
-                        size: 48,
-                        color: theme.colorScheme.primary,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.primary,
+),
                       const SizedBox(height: 12),
                       Text(
                         context.l10n.thankYouForBeingPremium,
@@ -255,7 +259,7 @@ class SimplePremiumScreen extends ConsumerWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: theme.colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(12),

@@ -13,6 +13,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class PremiumActionButton extends StatefulWidget {
   
@@ -128,7 +129,7 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
 
     final backgroundColor = widget.backgroundColor ?? colorScheme.primary;
     final foregroundColor = widget.foregroundColor ??
-        (backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white);
+        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
 
     // Combine press animation + pulse animation
     return AnimatedBuilder(
@@ -241,7 +242,7 @@ class CompactActionButton extends StatelessWidget {
     
     final backgroundColor = this.backgroundColor ?? colorScheme.primary;
     final foregroundColor = this.foregroundColor ?? 
-        (backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white);
+        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
     
     return Stack(
       children: [
@@ -330,7 +331,7 @@ class PremiumBottomActionBar extends StatelessWidget {
         color: backgroundColor ?? colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),

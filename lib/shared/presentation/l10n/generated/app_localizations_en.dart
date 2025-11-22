@@ -946,7 +946,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exerciseCategory => 'Exercise Category';
 
   @override
-  String get sets => 'sets';
+  String get sets => 'Sets';
 
   @override
   String get addSet => 'Add Set';
@@ -1651,7 +1651,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get workouts => 'workouts';
+  String get workouts => 'Workouts';
 
   @override
   String bestWorkoutDay(String day) {
@@ -3264,7 +3264,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'No data available for the selected period';
 
   @override
-  String get previous => 'Previous';
+  String get previous => 'Prev';
 
   @override
   String get tapForDetails => 'Tap for details';
@@ -18879,4 +18879,65 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get autoAdjustRestTooltip =>
       'RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.';
+
+  @override
+  String get streakViewMonthly => 'Monthly';
+
+  @override
+  String get streakViewAnnual => 'Annual';
+
+  @override
+  String get streakViewMultiYear => 'Multi-year';
+
+  @override
+  String get weeksInRow => 'weeks in a row';
+
+  @override
+  String get restDaysCount => 'rest days';
+
+  @override
+  String get analysis => 'Analysis';
+
+  @override
+  String get availableAnalytics => 'Available Analytics';
+
+  @override
+  String get setsByMuscleGroup => 'Sets by Muscle Group';
+
+  @override
+  String get setsByMuscleGroupDesc =>
+      'View total sets performed per muscle group';
+
+  @override
+  String get muscleDistributionDesc =>
+      'See detailed volume distribution across muscle groups';
+
+  @override
+  String get requestNewMetric => 'Request New Metric';
+
+  @override
+  String get requestNewMetricDesc =>
+      'Suggest a new metric you\'d like to see in the app';
+
+  @override
+  String get requestNewMetricDialogContent =>
+      'Would you like to request a new analytics metric? Send us an email with your suggestion:';
+
+  @override
+  String get sendEmail => 'Send Email';
+
+  @override
+  String get selectTimePeriod => 'Select time period';
+
+  @override
+  String get currentPeriod => 'Current';
+
+  @override
+  String get previousPeriod => 'Previous';
+
+  @override
+  String get increased => 'Increased';
+
+  @override
+  String get decreased => 'Decreased';
 }

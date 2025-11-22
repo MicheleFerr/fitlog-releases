@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Stato vuoto quando non ci sono esercizi nel workout
 class EmptyExerciseList extends StatelessWidget {
@@ -18,10 +20,12 @@ class EmptyExerciseList extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.addCircleOutline,
-              size: 64,
-              color: colorScheme.primary.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.addCircleOutline,
+  semanticLabel: 'Add circle outline',
+  size: AppIconSize.medium,
+  color: colorScheme.primary.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 16),
             Text(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/contextual_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Service for managing contextual overlays (tooltips, hints, guides)
 /// Uses action-based triggers (not time-based) for 3x effectiveness
@@ -52,7 +53,7 @@ class ContextualOverlayManager {
       await showDialog(
         context: context,
         barrierDismissible: dismissible,
-        barrierColor: Colors.black.withValues(alpha: 0.7),
+        barrierColor: context.colors.onSurface.withValues(alpha: 0.7),
         builder: (dialogContext) => ContextualOverlay(
           targetKey: targetKey,
           message: message,

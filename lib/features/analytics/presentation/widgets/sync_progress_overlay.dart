@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SyncProgressOverlay extends ConsumerWidget {
   const SyncProgressOverlay({super.key});
@@ -29,11 +31,12 @@ class SyncProgressOverlay extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  AppIcons.syncIcon,
-                  size: 64,
-                  color: theme.colorScheme.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.syncIcon,
+  semanticLabel: 'Sync icon',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary,
+),
                 const SizedBox(height: 24),
 
                 Text(

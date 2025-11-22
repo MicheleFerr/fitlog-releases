@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class LanguageSelectionScreen extends ConsumerStatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -151,11 +153,12 @@ class _LanguageSelectionScreenState extends ConsumerState<LanguageSelectionScree
                         ),
                       ],
                     ),
-                    child: Icon(
-                      AppIcons.language,
-                      size: 60,
-                      color: colorScheme.onPrimary,
-                    ),
+                    child: SemanticIcon(
+  icon: AppIcons.language,
+  semanticLabel: 'Language',
+  size: AppIconSize.medium,
+  color: colorScheme.onPrimary,
+),
                   ),
 
                   const SizedBox(height: 48),

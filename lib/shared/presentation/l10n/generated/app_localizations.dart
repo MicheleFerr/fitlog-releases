@@ -1796,10 +1796,10 @@ abstract class AppLocalizations {
   /// **'Exercise Category'**
   String get exerciseCategory;
 
-  /// Plural form of exercise sets
+  /// Sets stat label
   ///
   /// In en, this message translates to:
-  /// **'sets'**
+  /// **'Sets'**
   String get sets;
 
   /// Button to add a new set
@@ -1946,7 +1946,7 @@ abstract class AppLocalizations {
   /// **'exercises'**
   String get exercises;
 
-  /// Progress label
+  /// Progress tab label
   ///
   /// In en, this message translates to:
   /// **'Progress'**
@@ -3151,10 +3151,10 @@ abstract class AppLocalizations {
   /// **'Volume decreased by {amount}kg from last week'**
   String volumeDecreased(String amount);
 
-  /// Workouts unit label
+  /// Workouts stat label
   ///
   /// In en, this message translates to:
-  /// **'workouts'**
+  /// **'Workouts'**
   String get workouts;
 
   /// Best workout day insight
@@ -3959,7 +3959,7 @@ abstract class AppLocalizations {
   /// **'Edit Set {percentage}%'**
   String editSet(String percentage);
 
-  /// Coming soon label
+  /// Coming soon placeholder message
   ///
   /// In en, this message translates to:
   /// **'Coming Soon'**
@@ -4115,7 +4115,7 @@ abstract class AppLocalizations {
   /// **'PAUSED'**
   String get workoutPaused;
 
-  /// Duration label
+  /// Duration stat label
   ///
   /// In en, this message translates to:
   /// **'Duration'**
@@ -4217,7 +4217,7 @@ abstract class AppLocalizations {
   /// **'Error loading insights'**
   String get errorLoadingInsights;
 
-  /// Label for volume calculation
+  /// Volume stat label
   ///
   /// In en, this message translates to:
   /// **'Volume'**
@@ -5795,7 +5795,7 @@ abstract class AppLocalizations {
   /// **'usages'**
   String get usages;
 
-  /// Title for muscle group breakdown section
+  /// Muscle distribution analytics screen title
   ///
   /// In en, this message translates to:
   /// **'Muscle Distribution'**
@@ -6089,10 +6089,10 @@ abstract class AppLocalizations {
   /// **'No data available for the selected period'**
   String get noDataForSelectedPeriod;
 
-  /// Previous period label
+  /// Short label for previous period value
   ///
   /// In en, this message translates to:
-  /// **'Previous'**
+  /// **'Prev'**
   String get previous;
 
   /// Instruction to tap for more details
@@ -7787,7 +7787,7 @@ abstract class AppLocalizations {
   /// **'Operation Error'**
   String get operationError;
 
-  /// Button text to view feedback details
+  /// Details tab label
   ///
   /// In en, this message translates to:
   /// **'Details'**
@@ -33827,6 +33827,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.'**
   String get autoAdjustRestTooltip;
+
+  /// Streak view mode: monthly calendar
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get streakViewMonthly;
+
+  /// Streak view mode: annual 12-month grid
+  ///
+  /// In en, this message translates to:
+  /// **'Annual'**
+  String get streakViewAnnual;
+
+  /// Streak view mode: multi-year horizontal strip
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-year'**
+  String get streakViewMultiYear;
+
+  /// Consecutive weeks with workouts
+  ///
+  /// In en, this message translates to:
+  /// **'weeks in a row'**
+  String get weeksInRow;
+
+  /// Number of rest days without workouts
+  ///
+  /// In en, this message translates to:
+  /// **'rest days'**
+  String get restDaysCount;
+
+  /// Analysis tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis'**
+  String get analysis;
+
+  /// Section title for available analytics features
+  ///
+  /// In en, this message translates to:
+  /// **'Available Analytics'**
+  String get availableAnalytics;
+
+  /// Button title for sets by muscle group analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Sets by Muscle Group'**
+  String get setsByMuscleGroup;
+
+  /// Description for sets by muscle group analytics
+  ///
+  /// In en, this message translates to:
+  /// **'View total sets performed per muscle group'**
+  String get setsByMuscleGroupDesc;
+
+  /// Description for muscle distribution analytics
+  ///
+  /// In en, this message translates to:
+  /// **'See detailed volume distribution across muscle groups'**
+  String get muscleDistributionDesc;
+
+  /// Button to request new analytics metric
+  ///
+  /// In en, this message translates to:
+  /// **'Request New Metric'**
+  String get requestNewMetric;
+
+  /// Description for request new metric feature
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest a new metric you\'d like to see in the app'**
+  String get requestNewMetricDesc;
+
+  /// Dialog content for requesting new metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to request a new analytics metric? Send us an email with your suggestion:'**
+  String get requestNewMetricDialogContent;
+
+  /// Button to send email
+  ///
+  /// In en, this message translates to:
+  /// **'Send Email'**
+  String get sendEmail;
+
+  /// Semantic label for time period dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select time period'**
+  String get selectTimePeriod;
+
+  /// Legend label for current period in charts
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get currentPeriod;
+
+  /// Legend label for previous period in charts
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previousPeriod;
+
+  /// Semantic label for upward trend arrow
+  ///
+  /// In en, this message translates to:
+  /// **'Increased'**
+  String get increased;
+
+  /// Semantic label for downward trend arrow
+  ///
+  /// In en, this message translates to:
+  /// **'Decreased'**
+  String get decreased;
 }
 
 class _AppLocalizationsDelegate

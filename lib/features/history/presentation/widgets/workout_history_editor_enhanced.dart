@@ -21,6 +21,8 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_replacement_modal.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutHistoryEditorEnhanced extends ConsumerStatefulWidget {
 
@@ -154,7 +156,10 @@ class _WorkoutHistoryEditorEnhancedState
                   children: [
                     IconButton(
                       onPressed: _onClosePressed,
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       style: IconButton.styleFrom(
                         backgroundColor: theme.colorScheme.surfaceContainerHighest,
                       ),
@@ -194,7 +199,11 @@ class _WorkoutHistoryEditorEnhancedState
                                 ),
                               ),
                             )
-                          : const Icon(AppIcons.save, size: 18),
+                          : const SemanticIcon(
+  icon: AppIcons.save,
+  semanticLabel: 'Save',
+  size: AppIconSize.small,
+),
                       label: Text(l10n.save),
                     ),
                   ],
@@ -245,7 +254,10 @@ class _WorkoutHistoryEditorEnhancedState
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            prefixIcon: const Icon(AppIcons.workout),
+            prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
           ),
           textCapitalization: TextCapitalization.sentences,
         ),
@@ -286,11 +298,12 @@ class _WorkoutHistoryEditorEnhancedState
                   style: theme.textTheme.bodyLarge,
                 ),
                 const Spacer(),
-                Icon(
-                  AppIcons.forwardIos,
-                  size: 16,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
               ],
             ),
           ),
@@ -473,7 +486,7 @@ class _WorkoutHistoryEditorEnhancedState
           InkWell(
             onTap: () => _updateSet(exerciseIndex, setIndex,
                 isCompleted: !set.isCompleted),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: Container(
               padding: const EdgeInsets.all(4),
               child: Icon(

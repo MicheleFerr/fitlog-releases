@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Premium Lock Card
 ///
@@ -61,11 +63,12 @@ class PremiumLockCard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(
-                AppIcons.autoAwesome,
-                size: 48,
-                color: theme.colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.primary,
+),
               const SizedBox(height: 16),
               Text(
                 l10n.unlockPremiumAnalytics,
@@ -121,7 +124,10 @@ class PremiumLockCard extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(AppIcons.unlock),
+                icon: const SemanticIcon(
+  icon: AppIcons.unlock,
+  semanticLabel: 'Unlock',
+),
                 label: Text(l10n.unlockPremium),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -202,10 +208,12 @@ class PremiumLockCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: Icon(
-                AppIcons.lock,
-                size: 48,
-                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+              child: SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.primary.withValues(alpha: 0.5,
+),
               ),
             ),
           ),
@@ -223,11 +231,12 @@ class PremiumLockCard extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(
-          AppIcons.complete,
-          size: 20,
-          color: theme.colorScheme.primary,
-        ),
+        SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
         const SizedBox(width: 12),
         Expanded(
           child: Text(

@@ -22,6 +22,9 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
+// Export ColorScheme extensions so they're available to all files using context.colors
+export 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+
 extension BuildContextExtensions on BuildContext {
   /// Accesso rapido al ColorScheme del tema corrente
   ///

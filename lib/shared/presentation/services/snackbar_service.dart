@@ -218,7 +218,7 @@ class SnackBarService {
       case SnackBarType.success:
         return (
           background: const Color(0xFF4CAF50), // Verde
-          foreground: Colors.white,
+          foreground: context.colors.surface,
         );
 
       case SnackBarType.error:
@@ -230,7 +230,7 @@ class SnackBarService {
       case SnackBarType.warning:
         return (
           background: const Color(0xFFFF9800), // Arancione
-          foreground: Colors.white,
+          foreground: context.colors.surface,
         );
 
       case SnackBarType.info:

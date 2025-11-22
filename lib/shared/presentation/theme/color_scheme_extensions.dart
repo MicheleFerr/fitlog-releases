@@ -33,4 +33,10 @@ extension ColorSchemeExtensions on ColorScheme {
   Color get onSuccessContainer => brightness == Brightness.light
       ? const Color(0xFF1B5E20) // Dark text on success container
       : const Color(0xFFC8E6C9); // Light text on success container
+
+  /// onSurface with 87% opacity
+  Color get onSurface87 => onSurface.withValues(alpha: 0.87);
+
+  /// onSurface with 26% opacity
+  Color get onSurface26 => onSurface.withValues(alpha: 0.26);
 }

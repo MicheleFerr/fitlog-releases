@@ -38,6 +38,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 
 class ModalService {
   /// Mostra bottom sheet standard (altezza ~50-90% schermo)
@@ -283,7 +284,7 @@ class ModalService {
       barrierDismissible: barrierDismissible,
       builder: (_) => AlertDialog(
         icon: icon != null
-            ? Icon(icon, size: 48, color: context.colors.error)
+            ? Icon(icon, size: AppIconSize.xxlarge, color: context.colors.error)
             : null,
         title: Text(title),
         content: Text(message),

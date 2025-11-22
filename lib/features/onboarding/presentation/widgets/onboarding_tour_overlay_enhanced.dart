@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/services/onboarding_tour_manager.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/dynamic_spotlight_overlay.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/tour_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Enhanced onboarding tour overlay using advanced positioning system
 ///
@@ -87,7 +88,7 @@ class _OnboardingTourOverlayEnhancedState
       animationDuration: const Duration(milliseconds: 800),
       spotlightBorderRadius: 12.0,
       spotlightPadding: 12.0,
-      overlayColor: Colors.black.withValues(alpha: 0.8),
+      overlayColor: context.colors.onSurface.withValues(alpha: 0.8),
       child: TourBottomSheet(step: currentStep, manager: widget.manager),
     );
   }

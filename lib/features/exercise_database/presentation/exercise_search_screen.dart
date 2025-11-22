@@ -21,6 +21,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -115,7 +118,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(AppIcons.feedbackOutlined, size: 24),
+            SemanticIcon(
+  icon: AppIcons.feedbackOutlined,
+  semanticLabel: 'Feedback outlined',
+  size: AppIconSize.medium,
+),
             SizedBox(width: 12),
             Expanded(child: Text('Feedback Esercizio')),
           ],
@@ -144,12 +151,20 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
-            icon: Icon(AppIcons.arrowDownward, size: 18),
+            icon: SemanticIcon(
+  icon: AppIcons.arrowDownward,
+  semanticLabel: 'Arrow downward',
+  size: AppIconSize.small,
+),
             label: Text('Riduci priorità'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
-            icon: Icon(AppIcons.deleteOutline, size: 18),
+            icon: SemanticIcon(
+  icon: AppIcons.deleteOutline,
+  semanticLabel: 'Delete outline',
+  size: AppIconSize.small,
+),
             label: Text('Rimuovi'),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
@@ -190,7 +205,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               backgroundColor: context.colors.error,
               action: SnackBarAction(
                 label: 'ANNULLA',
-                textColor: Colors.white,
+                textColor: context.colors.surface,
                 onPressed: () async {
                   // Re-add with usage count 1
                   final user = FirebaseAuth.instance.currentUser;
@@ -365,7 +380,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(AppIcons.back),
+          icon: SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -400,26 +418,34 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: l10n.searchExercisesHint,
-                  prefixIcon: _isSearching
+                  // ✅ FIX: Icona search sempre visibile (mai nascosta dal loader)
+                  prefixIcon: const SemanticIcon(
+                    icon: AppIcons.search,
+                    semanticLabel: 'Search',
+                  ),
+                  // ✅ FIX: Loader a destra quando carica, altrimenti X per cancellare
+                  suffixIcon: _isSearching
                       ? const Padding(
                           padding: EdgeInsets.all(12.0),
                           child: LoadingIndicator(size: 20),
                         )
-                      : const Icon(AppIcons.search),
-                  suffixIcon: _searchQuery.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(AppIcons.clear),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() {
-                              _searchQuery = '';
-                              _useFuzzyResults = false;
-                              _fuzzyResults = [];
-                            });
-                            _searchDebounce?.cancel();
-                          },
-                        )
-                      : null,
+                      : (_searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: const SemanticIcon(
+                                icon: AppIcons.clear,
+                                semanticLabel: 'Clear',
+                              ),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _searchQuery = '';
+                                  _useFuzzyResults = false;
+                                  _fuzzyResults = [];
+                                });
+                                _searchDebounce?.cancel();
+                              },
+                            )
+                          : null),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -599,11 +625,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
           color: context.colors.primaryContainer.withValues(alpha: 0.3),
           child: Row(
             children: [
-              Icon(
-                AppIcons.autoAwesome,
-                size: 16,
-                color: context.colors.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
               SizedBox(width: 8),
               Text(
                 '${_fuzzyResults.length} ${l10n.exercisesFound}',
@@ -700,7 +727,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _showAddTemporaryExerciseDialog,
-              icon: Icon(AppIcons.addCircleOutline),
+              icon: SemanticIcon(
+  icon: AppIcons.addCircleOutline,
+  semanticLabel: 'Add circle outline',
+),
               label: Text(l10n.addTemporaryExercise),
               style: FilledButton.styleFrom(
                 backgroundColor: context.colors.primaryContainer,
@@ -751,7 +781,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 labelText: l10n.enterExerciseName,
                 hintText: 'es. Bulgarian Split Squat',
                 border: const OutlineInputBorder(),
-                prefixIcon: const Icon(AppIcons.edit),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+),
               ),
               textCapitalization: TextCapitalization.words,
             ),
@@ -830,7 +863,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 ),
               );
             },
-            icon: const Icon(AppIcons.check),
+            icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
             label: Text(l10n.add),
           ),
         ],
@@ -865,7 +901,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.error, size: 64, color: Colors.red),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
           const SizedBox(height: 16),
           Text('${l10n.errorLoadingData}: $error'),
           const SizedBox(height: 16),
@@ -1106,7 +1147,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     if (isSelected) {
       return CircleAvatar(
         backgroundColor: context.colors.primary,
-        child: Icon(AppIcons.check, color: Colors.white),
+        child: Icon(AppIcons.check, color: context.colors.surface),
       );
     }
     
@@ -1200,7 +1241,14 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         ),
         trailing: isSelected
             ? Icon(AppIcons.checkCircle, color: context.colors.primary)
-            : (widget.selectionMode ? const Icon(AppIcons.arrowForwardIos, size: 16) : const Icon(AppIcons.radioButtonUnchecked)),
+            : (widget.selectionMode ? const SemanticIcon(
+  icon: AppIcons.arrowForwardIos,
+  semanticLabel: 'Arrow forward ios',
+  size: AppIconSize.tiny,
+) : const SemanticIcon(
+  icon: AppIcons.radioButtonUnchecked,
+  semanticLabel: 'Radio button unchecked',
+)),
         onTap: () {
           // Selection mode: return exercise and close
           if (widget.selectionMode) {
@@ -1233,11 +1281,11 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     // Color based on match quality
     Color matchColor;
     if (matchScore >= 0.85) {
-      matchColor = Colors.green;
+      matchColor = context.colors.success;
     } else if (matchScore >= 0.70) {
       matchColor = Colors.orange;
     } else {
-      matchColor = Colors.grey;
+      matchColor = context.colors.surfaceVariant;
     }
 
     // Check if exercise is frequent or trending (ML-enhanced)
@@ -1257,7 +1305,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: hasCategoryMatch
-            ? const BorderSide(color: Colors.green, width: 2)
+            ? BorderSide(color: context.colors.success, width: 2)
             : BorderSide.none,
       ),
       child: ListTile(
@@ -1294,11 +1342,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             // Auto-correct icon
             if (wasAutoCorrected) ...[
               SizedBox(width: 4),
-              Icon(
-                AppIcons.autoFixHigh,
-                size: 16,
-                color: context.colors.secondary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.autoFixHigh,
+  semanticLabel: 'Auto fix high',
+  size: AppIconSize.tiny,
+  color: context.colors.secondary,
+),
             ],
           ],
         ),
@@ -1405,10 +1454,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   borderRadius: BorderRadius.circular(16),
                   child: Padding(
                     padding: const EdgeInsets.all(4),
-                    child: Icon(
-                      AppIcons.close,
-                      size: 16,
-                      color: context.colors.error.withValues(alpha: 0.7),
+                    child: SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.tiny,
+  color: context.colors.error.withValues(alpha: 0.7,
+),
                     ),
                   ),
                 ),
@@ -1418,8 +1469,15 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               isSelected
                   ? Icon(AppIcons.complete, color: context.colors.primary)
                   : (widget.selectionMode
-                      ? const Icon(AppIcons.arrowForwardIos, size: 16)
-                      : const Icon(AppIcons.radioButtonUnchecked)),
+                      ? const SemanticIcon(
+  icon: AppIcons.arrowForwardIos,
+  semanticLabel: 'Arrow forward ios',
+  size: AppIconSize.tiny,
+)
+                      : const SemanticIcon(
+  icon: AppIcons.radioButtonUnchecked,
+  semanticLabel: 'Radio button unchecked',
+)),
             ],
           ),
         ),
@@ -1454,10 +1512,12 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     return ListView(
       children: [
         SizedBox(height: 64),
-        Icon(
-          AppIcons.searchOff,
-          size: 64,
-          color: context.colors.onSurface.withValues(alpha: 0.5),
+        SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: context.colors.onSurface.withValues(alpha: 0.5,
+),
         ),
         SizedBox(height: 16),
         Text(
@@ -1540,13 +1600,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
         return Colors.orange;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
-        return Colors.grey;
+        return context.colors.surfaceVariant;
     }
   }
 

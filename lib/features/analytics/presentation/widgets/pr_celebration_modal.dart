@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// PR Celebration Modal Widget
 ///
@@ -99,7 +101,7 @@ class _PRCelebrationModalState extends State<PRCelebrationModal>
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: context.colors.onSurface.withValues(alpha: 0.2),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -116,11 +118,12 @@ class _PRCelebrationModalState extends State<PRCelebrationModal>
                         color: context.colors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        AppIcons.achievement,
-                        size: 48,
-                        color: context.colors.primary,
-                      ),
+                      child: SemanticIcon(
+  icon: AppIcons.achievement,
+  semanticLabel: 'Achievement',
+  size: AppIconSize.xxlarge,
+  color: context.colors.primary,
+),
                     ),
 
                     const SizedBox(height: 16),
@@ -228,13 +231,14 @@ class _PRCelebrationModalState extends State<PRCelebrationModal>
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  AppIcons.trendingUp,
-                                  size: 20,
-                                  color: isSignificant
+                                SemanticIcon(
+  icon: AppIcons.trendingUp,
+  semanticLabel: 'Trending up',
+  size: AppIconSize.small,
+  color: isSignificant
                                       ? context.colors.primary
                                       : context.colors.secondary,
-                                ),
+),
                                 const SizedBox(width: 8),
                                 Text(
                                   '+${improvementPercentage.toStringAsFixed(1)}%',
@@ -264,7 +268,10 @@ class _PRCelebrationModalState extends State<PRCelebrationModal>
                               HapticFeedback.lightImpact();
                               widget.onShare();
                             },
-                            icon: const Icon(AppIcons.shareOutlined),
+                            icon: const SemanticIcon(
+  icon: AppIcons.shareOutlined,
+  semanticLabel: 'Share outlined',
+),
                             label: Text(context.l10n.share),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),

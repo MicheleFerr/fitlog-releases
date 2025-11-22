@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SmartSuggestionChip extends StatefulWidget {
   
@@ -203,11 +205,13 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Icon(
-                        AppIcons.info,
-                        size: 16,
-                        color: widget.isMinimal
-                          ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                      SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: widget.isMinimal
+                          ? theme.colorScheme.primary.withValues(alpha: 0.7,
+)
                           : theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                       ),
                     ],

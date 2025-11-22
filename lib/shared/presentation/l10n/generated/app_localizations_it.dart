@@ -949,7 +949,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exerciseCategory => 'Categoria Esercizio';
 
   @override
-  String get sets => 'serie';
+  String get sets => 'Serie';
 
   @override
   String get addSet => 'Aggiungi Serie';
@@ -1024,7 +1024,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get exercises => 'esercizi';
 
   @override
-  String get progress => 'Progresso';
+  String get progress => 'Progressi';
 
   @override
   String get workoutProgress => 'Progresso Allenamento';
@@ -1668,7 +1668,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get workouts => 'allenamenti';
+  String get workouts => 'Allenamenti';
 
   @override
   String bestWorkoutDay(String day) {
@@ -3132,7 +3132,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get usages => 'utilizzi';
 
   @override
-  String get muscleDistribution => 'Distribuzione Muscolare';
+  String get muscleDistribution => 'Distribuzione dei muscoli';
 
   @override
   String get core => 'CORE (Addominali/Lombare)';
@@ -3284,7 +3284,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessun dato disponibile per il periodo selezionato';
 
   @override
-  String get previous => 'Precedente';
+  String get previous => 'Prec';
 
   @override
   String get tapForDetails => 'Tocca per dettagli';
@@ -19065,4 +19065,65 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get autoAdjustRestTooltip =>
       'RPE 8-10: +30s riposo. RPE ≤6: -15s riposo. Adatta automaticamente il tempo di recupero al tuo livello di fatica.';
+
+  @override
+  String get streakViewMonthly => 'Mensile';
+
+  @override
+  String get streakViewAnnual => 'Annuale';
+
+  @override
+  String get streakViewMultiYear => 'Pluriennale';
+
+  @override
+  String get weeksInRow => 'settimane di fila';
+
+  @override
+  String get restDaysCount => 'giorni di riposo';
+
+  @override
+  String get analysis => 'Analisi';
+
+  @override
+  String get availableAnalytics => 'Analisi disponibili';
+
+  @override
+  String get setsByMuscleGroup => 'Serie per gruppo muscolare';
+
+  @override
+  String get setsByMuscleGroupDesc =>
+      'Visualizza il numero totale di serie per gruppo muscolare';
+
+  @override
+  String get muscleDistributionDesc =>
+      'Vedi la distribuzione dettagliata del volume tra i gruppi muscolari';
+
+  @override
+  String get requestNewMetric => 'Richiedi nuova metrica';
+
+  @override
+  String get requestNewMetricDesc =>
+      'Suggerisci una nuova metrica che vorresti vedere nell\'app';
+
+  @override
+  String get requestNewMetricDialogContent =>
+      'Vuoi richiedere una nuova metrica di analisi? Inviaci un\'email con il tuo suggerimento:';
+
+  @override
+  String get sendEmail => 'Invia Email';
+
+  @override
+  String get selectTimePeriod => 'Seleziona periodo temporale';
+
+  @override
+  String get currentPeriod => 'Attuale';
+
+  @override
+  String get previousPeriod => 'Precedente';
+
+  @override
+  String get increased => 'Aumentato';
+
+  @override
+  String get decreased => 'Diminuito';
 }

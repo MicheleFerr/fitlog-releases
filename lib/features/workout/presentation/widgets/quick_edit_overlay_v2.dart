@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class QuickEditOverlayV2 extends ConsumerStatefulWidget {
 
@@ -400,7 +402,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               if (widget.previousSet != null && !widget.isSuperset)
                 TextButton.icon(
                   onPressed: _copyFromPreviousSet,
-                  icon: const Icon(AppIcons.contentCopyRounded, size: 16),
+                  icon: const SemanticIcon(
+  icon: AppIcons.contentCopyRounded,
+  semanticLabel: 'Content copy rounded',
+  size: AppIconSize.tiny,
+),
                   label: Text(AppLocalizations.of(context).copy, style: const TextStyle(fontSize: 12)),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -484,7 +490,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(AppIcons.workout, size: 14, color: theme.colorScheme.primary),
+            SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).weightKg.replaceAll('kg', measurementUnit),
@@ -639,7 +650,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(AppIcons.repeat, size: 14, color: theme.colorScheme.secondary),
+            SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.secondary,
+),
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context).reps,
@@ -789,7 +805,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
       children: [
         Row(
           children: [
-            Icon(AppIcons.timer, size: 14, color: theme.colorScheme.tertiary),
+            SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.tertiary,
+),
             const SizedBox(width: 4),
             Text(
               'Duration',  // TODO: Add localization
@@ -954,11 +975,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               children: [
                 Row(
                   children: [
-                    Icon(
-                      AppIcons.history,
-                      size: 14,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                     const SizedBox(width: 4),
                     Text(
                       AppLocalizations.of(context).recentWeights,
@@ -1111,7 +1133,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           label,
@@ -1189,12 +1211,14 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.calculateRounded,
-                size: 16,
-                color: hasWeight 
+              SemanticIcon(
+  icon: AppIcons.calculateRounded,
+  semanticLabel: 'Calculate rounded',
+  size: AppIconSize.tiny,
+  color: hasWeight 
                   ? theme.colorScheme.onSecondary 
-                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
               ),
               const SizedBox(width: 6),
               Text(
@@ -1307,7 +1331,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         Expanded(
           child: OutlinedButton.icon(
             onPressed: _cancel,
-            icon: const Icon(AppIcons.closeRounded, size: 18),
+            icon: const SemanticIcon(
+  icon: AppIcons.closeRounded,
+  semanticLabel: 'Close rounded',
+  size: AppIconSize.small,
+),
             label: Text(AppLocalizations.of(context).cancel),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1323,7 +1351,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           flex: 2,
           child: FilledButton.icon(
             onPressed: _save,
-            icon: const Icon(AppIcons.checkRounded, size: 18),
+            icon: const SemanticIcon(
+  icon: AppIcons.checkRounded,
+  semanticLabel: 'Check rounded',
+  size: AppIconSize.small,
+),
             label: Text(AppLocalizations.of(context).save),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1551,7 +1583,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: _isWeightAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: const Icon(AppIcons.workout, size: 16),
+                icon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+),
                 label: const Text('Weight to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1561,7 +1597,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyWeightToAll,
-                icon: const Icon(AppIcons.workout, size: 16),
+                icon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+),
                 label: const Text('Weight to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1578,7 +1618,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           child: _isRepsAppliedToAll
             ? FilledButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: const Icon(AppIcons.repeat, size: 16),
+                icon: const SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+),
                 label: const Text('Reps to All'),  // TODO: Add localization
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1588,7 +1632,11 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
               )
             : OutlinedButton.icon(
                 onPressed: _applyRepsToAll,
-                icon: const Icon(AppIcons.repeat, size: 16),
+                icon: const SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+),
                 label: const Text('Reps to All'),  // TODO: Add localization
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1781,7 +1829,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     ),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],

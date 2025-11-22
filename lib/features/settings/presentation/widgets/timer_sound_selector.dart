@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/timer_sound.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TimerSoundSelector extends ConsumerWidget {
   
@@ -54,7 +56,11 @@ class TimerSoundSelector extends ConsumerWidget {
       value: sound,
       secondary: IconButton(
         onPressed: () => _playPreview(context, sound),
-        icon: const Icon(AppIcons.play, size: 20),
+        icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+  size: AppIconSize.small,
+),
         tooltip: AppLocalizations.of(context).playPreview,
       ),
     );

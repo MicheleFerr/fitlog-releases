@@ -123,7 +123,7 @@ class _ContextualOverlayState extends State<ContextualOverlay>
               child: CustomPaint(
                 painter: _SpotlightPainter(
                   spotlightRect: _targetRect!,
-                  backgroundColor: Colors.black.withValues(alpha: 0.7),
+                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -285,7 +285,7 @@ class _TooltipCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: context.colors.onSurface.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),

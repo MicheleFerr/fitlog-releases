@@ -12,24 +12,32 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+
+// Mock
+class MockHiveBoxManagerEnhanced extends Mock implements HiveBoxManagerEnhanced {}
 
 void main() {
   group('ExerciseHistoryService', () {
     late ExerciseHistoryService service;
     late Box<Map> box;
-    
+    late MockHiveBoxManagerEnhanced mockBoxManager;
+
     const testUserId = 'test_user_123';
     const testExerciseName = 'Bench Press';
-    
+
     setUpAll(() async {
       // Initialize Hive for testing
       await Hive.initFlutter();
     });
-    
+
     setUp(() async {
-      service = const ExerciseHistoryService();
+      mockBoxManager = MockHiveBoxManagerEnhanced();
+
+      service = ExerciseHistoryService(boxManager: mockBoxManager);
       
       // Create a temporary box for testing - use the same name as the service
       box = await Hive.openBox<Map>('workouts');
