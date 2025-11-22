@@ -5,6 +5,11 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/missing_exercise_request.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class MissingExercisesRequestsScreen extends ConsumerStatefulWidget {
   const MissingExercisesRequestsScreen({super.key});
@@ -42,7 +47,10 @@ class _MissingExercisesRequestsScreenState
               ref.invalidate(requestsByStatusProvider);
               ref.invalidate(requestCountsProvider);
             },
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             tooltip: l10n.refresh,
           ),
         ],
@@ -60,7 +68,7 @@ class _MissingExercisesRequestsScreenState
           Expanded(
             child: requestsAsync.when(
               data: (requests) => _buildRequestsList(requests),
-              loading: () => Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: LoadingIndicator()),
               error: (error, _) => _buildErrorState(error),
             ),
           ),
@@ -86,21 +94,21 @@ class _MissingExercisesRequestsScreenState
             'Approvate',
             RequestStatus.approved,
             counts[RequestStatus.approved] ?? 0,
-            Colors.green,
+            context.colors.success,
           ),
           const SizedBox(width: 8),
           _buildFilterChip(
             'Completate',
             RequestStatus.completed,
             counts[RequestStatus.completed] ?? 0,
-            Colors.blue,
+            context.colors.primary,
           ),
           const SizedBox(width: 8),
           _buildFilterChip(
             'Rifiutate',
             RequestStatus.rejected,
             counts[RequestStatus.rejected] ?? 0,
-            Colors.red,
+            context.colors.error,
           ),
         ],
       ),
@@ -122,7 +130,7 @@ class _MissingExercisesRequestsScreenState
           children: [
             Text(
               '$count',
-              style: TextStyle(
+              style: context.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
                 color: isSelected
@@ -132,7 +140,7 @@ class _MissingExercisesRequestsScreenState
             ),
             Text(
               label,
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 fontSize: 11,
                 color: isSelected
                     ? Theme.of(context).colorScheme.onPrimaryContainer
@@ -157,10 +165,12 @@ class _MissingExercisesRequestsScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.completeOutline,
-              size: 64,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.primary.withValues(alpha: 0.5),
             ),
             SizedBox(height: 16),
             Text(
@@ -275,7 +285,10 @@ class _MissingExercisesRequestsScreenState
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _rejectRequest(request),
-                      icon: Icon(AppIcons.close),
+                      icon: SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       label: Text('Rifiuta'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error,
@@ -286,7 +299,10 @@ class _MissingExercisesRequestsScreenState
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: () => _approveRequest(request),
-                      icon: const Icon(AppIcons.check),
+                      icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                       label: const Text('Approva'),
                     ),
                   ),
@@ -303,7 +319,10 @@ class _MissingExercisesRequestsScreenState
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: () => _markAsCompleted(request),
-                  icon: const Icon(AppIcons.doneAll),
+                  icon: const SemanticIcon(
+  icon: AppIcons.doneAll,
+  semanticLabel: 'Done all',
+),
                   label: const Text('Segna come Completato'),
                 ),
               ),
@@ -320,9 +339,14 @@ class _MissingExercisesRequestsScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.error, size: 64, color: Colors.red),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
           const SizedBox(height: 16),
-          Text('Errore: $error'),
+          Text(context.l10n.error),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
@@ -517,11 +541,11 @@ class _MissingExercisesRequestsScreenState
       case RequestStatus.pending:
         return Colors.orange;
       case RequestStatus.approved:
-        return Colors.green;
+        return context.colors.success;
       case RequestStatus.rejected:
-        return Colors.red;
+        return context.colors.error;
       case RequestStatus.completed:
-        return Colors.blue;
+        return context.colors.primary;
     }
   }
 
