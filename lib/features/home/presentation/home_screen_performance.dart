@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/providers/home_pro
 import 'package:gymbro_flutter_new/features/home/presentation/providers/home_state.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/memory_monitor.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/cache_warm_tracker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Performance-optimized homepage that maintains IDENTICAL UI to HomeScreenOptimized
 /// Uses MVVM pattern with lazy loading for <3s cold start while preserving all existing widgets
@@ -406,11 +407,12 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
                                   ],
                                 ),
                               ),
-                              Icon(
-                                AppIcons.forwardIos,
-                                size: 16,
-                                color: context.colors.primary,
-                              ),
+                              SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                             ],
                           ),
                         ),
@@ -547,17 +549,17 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          Colors.deepPurple.shade700,
-                                          Colors.deepPurple.shade900,
+                                          Colors.deepPurple[700]!,
+                                          Colors.deepPurple[900]!,
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           AppIcons.flagCircle,
-                                          color: Colors.white,
+                                          color: context.colors.surface,
                                           size: 24,
                                         ),
                                         const SizedBox(width: 12),
@@ -571,7 +573,7 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
                                                 style: context
                                                     .textTheme.titleMedium
                                                     ?.copyWith(
-                                                  color: Colors.white,
+                                                  color: context.colors.surface,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -582,16 +584,16 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
                                                 style: context
                                                     .textTheme.bodySmall
                                                     ?.copyWith(
-                                                  color: Colors.white
+                                                  color: context.colors.surface
                                                       .withValues(alpha: 0.8),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        const Icon(
+                                        Icon(
                                           AppIcons.forwardIos,
-                                          color: Colors.white,
+                                          color: context.colors.surface,
                                           size: 16,
                                         ),
                                       ],
