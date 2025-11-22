@@ -237,9 +237,9 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '🏆 Progressi & Achievement',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                context.l10n.progressAndAchievement,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 _getMotivationalText(dashboardStatsAsync.value?.currentStreak ?? 0),
@@ -346,7 +346,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
               ),
             ),
             Text(
-              'Livello $level',
+              context.l10n.levelLabel(level),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
@@ -427,7 +427,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '$currentLevelXP / $requiredXP XP per il livello ${level + 1}',
+                    context.l10n.xpToNextLevel(currentLevelXP, requiredXP, level + 1),
                     style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
                   ),
                 ],
@@ -546,12 +546,12 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Livello $level', style: theme.textTheme.bodySmall),
+                  Text(context.l10n.levelLabel(level), style: theme.textTheme.bodySmall),
                   Text(
                     '$currentLevelXP / $requiredXP XP',
                     style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  Text('Livello ${level + 1}', style: theme.textTheme.bodySmall),
+                  Text(context.l10n.levelLabel(level + 1), style: theme.textTheme.bodySmall),
                 ],
               ),
               const SizedBox(height: 8),
@@ -739,7 +739,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             ),
             const SizedBox(height: 8),
             Text(
-              'Errore caricamento dati',
+              context.l10n.errorLoadingData,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.error,
               ),
@@ -751,12 +751,12 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   String _getMotivationalText(int streak) {
-    if (streak >= 30) return '🔥 Inarrestabile! 30+ giorni di streak!';
-    if (streak >= 14) return '💪 Campione! 2 settimane consecutive!';
-    if (streak >= 7) return '⭐ Ottimo! Una settimana completa!';
-    if (streak >= 3) return '🚀 Bene! Mantieni il ritmo!';
-    if (streak >= 1) return '✨ Iniziato! Continua così!';
-    return '🎯 Inizia oggi il tuo percorso!';
+    if (streak >= 30) return context.l10n.motivationalUnstoppable;
+    if (streak >= 14) return context.l10n.motivationalChampion;
+    if (streak >= 7) return context.l10n.motivationalGreat;
+    if (streak >= 3) return context.l10n.motivationalGood;
+    if (streak >= 1) return context.l10n.motivationalStarted;
+    return context.l10n.motivationalStartToday;
   }
   
   Color _getLevelColor(int level) {

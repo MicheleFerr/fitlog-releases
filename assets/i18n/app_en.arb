@@ -22977,5 +22977,61 @@
   "kgPerWeek": "kg/week",
   "@kgPerWeek": {
     "description": "Kilograms per week unit"
+  },
+  "progressAndAchievement": "🏆 Progress & Achievement",
+  "@progressAndAchievement": {
+    "description": "Progress and achievement header title"
+  },
+  "levelLabel": "Level {level}",
+  "@levelLabel": {
+    "description": "Level label with number",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "xpToNextLevel": "{currentXP} / {requiredXP} XP to level {nextLevel}",
+  "@xpToNextLevel": {
+    "description": "XP progress to next level",
+    "placeholders": {
+      "currentXP": {
+        "type": "int"
+      },
+      "requiredXP": {
+        "type": "int"
+      },
+      "nextLevel": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingData": "Error loading data",
+  "@errorLoadingData": {
+    "description": "Error loading data message"
+  },
+  "motivationalUnstoppable": "🔥 Unstoppable! 30+ day streak!",
+  "@motivationalUnstoppable": {
+    "description": "Motivational text for 30+ day streak"
+  },
+  "motivationalChampion": "💪 Champion! 2 weeks in a row!",
+  "@motivationalChampion": {
+    "description": "Motivational text for 14+ day streak"
+  },
+  "motivationalGreat": "⭐ Great! A full week!",
+  "@motivationalGreat": {
+    "description": "Motivational text for 7+ day streak"
+  },
+  "motivationalGood": "🚀 Good! Keep the pace!",
+  "@motivationalGood": {
+    "description": "Motivational text for 3+ day streak"
+  },
+  "motivationalStarted": "✨ Started! Keep going!",
+  "@motivationalStarted": {
+    "description": "Motivational text for 1+ day streak"
+  },
+  "motivationalStartToday": "🎯 Start your journey today!",
+  "@motivationalStartToday": {
+    "description": "Motivational text for 0 day streak"
   }
 }

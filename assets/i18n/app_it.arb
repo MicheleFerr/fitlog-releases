@@ -12515,5 +12515,61 @@
   "kgPerWeek": "kg/settimana",
   "@kgPerWeek": {
     "description": "Kilograms per week unit"
+  },
+  "progressAndAchievement": "🏆 Progressi & Achievement",
+  "@progressAndAchievement": {
+    "description": "Progress and achievement header title"
+  },
+  "levelLabel": "Livello {level}",
+  "@levelLabel": {
+    "description": "Level label with number",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "xpToNextLevel": "{currentXP} / {requiredXP} XP per il livello {nextLevel}",
+  "@xpToNextLevel": {
+    "description": "XP progress to next level",
+    "placeholders": {
+      "currentXP": {
+        "type": "int"
+      },
+      "requiredXP": {
+        "type": "int"
+      },
+      "nextLevel": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoadingData": "Errore caricamento dati",
+  "@errorLoadingData": {
+    "description": "Error loading data message"
+  },
+  "motivationalUnstoppable": "🔥 Inarrestabile! 30+ giorni di streak!",
+  "@motivationalUnstoppable": {
+    "description": "Motivational text for 30+ day streak"
+  },
+  "motivationalChampion": "💪 Campione! 2 settimane consecutive!",
+  "@motivationalChampion": {
+    "description": "Motivational text for 14+ day streak"
+  },
+  "motivationalGreat": "⭐ Ottimo! Una settimana completa!",
+  "@motivationalGreat": {
+    "description": "Motivational text for 7+ day streak"
+  },
+  "motivationalGood": "🚀 Bene! Mantieni il ritmo!",
+  "@motivationalGood": {
+    "description": "Motivational text for 3+ day streak"
+  },
+  "motivationalStarted": "✨ Iniziato! Continua così!",
+  "@motivationalStarted": {
+    "description": "Motivational text for 1+ day streak"
+  },
+  "motivationalStartToday": "🎯 Inizia oggi il tuo percorso!",
+  "@motivationalStartToday": {
+    "description": "Motivational text for 0 day streak"
   }
 }

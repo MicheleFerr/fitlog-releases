@@ -18683,4 +18683,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kgPerWeek => 'kg/week';
+
+  @override
+  String get progressAndAchievement => '🏆 Progress & Achievement';
+
+  @override
+  String levelLabel(int level) {
+    return 'Level $level';
+  }
+
+  @override
+  String xpToNextLevel(int currentXP, int requiredXP, int nextLevel) {
+    return '$currentXP / $requiredXP XP to level $nextLevel';
+  }
+
+  @override
+  String get motivationalUnstoppable => '🔥 Unstoppable! 30+ day streak!';
+
+  @override
+  String get motivationalChampion => '💪 Champion! 2 weeks in a row!';
+
+  @override
+  String get motivationalGreat => '⭐ Great! A full week!';
+
+  @override
+  String get motivationalGood => '🚀 Good! Keep the pace!';
+
+  @override
+  String get motivationalStarted => '✨ Started! Keep going!';
+
+  @override
+  String get motivationalStartToday => '🎯 Start your journey today!';
 }

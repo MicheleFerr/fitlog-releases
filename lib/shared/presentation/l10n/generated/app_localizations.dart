@@ -3079,7 +3079,7 @@ abstract class AppLocalizations {
   /// **'days'**
   String get days;
 
-  /// Error message when data fails to load
+  /// Error loading data message
   ///
   /// In en, this message translates to:
   /// **'Error loading data'**
@@ -33527,6 +33527,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'kg/week'**
   String get kgPerWeek;
+
+  /// Progress and achievement header title
+  ///
+  /// In en, this message translates to:
+  /// **'🏆 Progress & Achievement'**
+  String get progressAndAchievement;
+
+  /// Level label with number
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level}'**
+  String levelLabel(int level);
+
+  /// XP progress to next level
+  ///
+  /// In en, this message translates to:
+  /// **'{currentXP} / {requiredXP} XP to level {nextLevel}'**
+  String xpToNextLevel(int currentXP, int requiredXP, int nextLevel);
+
+  /// Motivational text for 30+ day streak
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Unstoppable! 30+ day streak!'**
+  String get motivationalUnstoppable;
+
+  /// Motivational text for 14+ day streak
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Champion! 2 weeks in a row!'**
+  String get motivationalChampion;
+
+  /// Motivational text for 7+ day streak
+  ///
+  /// In en, this message translates to:
+  /// **'⭐ Great! A full week!'**
+  String get motivationalGreat;
+
+  /// Motivational text for 3+ day streak
+  ///
+  /// In en, this message translates to:
+  /// **'🚀 Good! Keep the pace!'**
+  String get motivationalGood;
+
+  /// Motivational text for 1+ day streak
+  ///
+  /// In en, this message translates to:
+  /// **'✨ Started! Keep going!'**
+  String get motivationalStarted;
+
+  /// Motivational text for 0 day streak
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Start your journey today!'**
+  String get motivationalStartToday;
 }
 
 class _AppLocalizationsDelegate

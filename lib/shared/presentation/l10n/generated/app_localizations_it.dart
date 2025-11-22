@@ -1627,7 +1627,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get days => 'giorni';
 
   @override
-  String get errorLoadingData => 'Errore nel caricamento dei dati';
+  String get errorLoadingData => 'Errore caricamento dati';
 
   @override
   String get exportData => 'Esporta Dati';
@@ -18868,4 +18868,36 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get kgPerWeek => 'kg/settimana';
+
+  @override
+  String get progressAndAchievement => '🏆 Progressi & Achievement';
+
+  @override
+  String levelLabel(int level) {
+    return 'Livello $level';
+  }
+
+  @override
+  String xpToNextLevel(int currentXP, int requiredXP, int nextLevel) {
+    return '$currentXP / $requiredXP XP per il livello $nextLevel';
+  }
+
+  @override
+  String get motivationalUnstoppable =>
+      '🔥 Inarrestabile! 30+ giorni di streak!';
+
+  @override
+  String get motivationalChampion => '💪 Campione! 2 settimane consecutive!';
+
+  @override
+  String get motivationalGreat => '⭐ Ottimo! Una settimana completa!';
+
+  @override
+  String get motivationalGood => '🚀 Bene! Mantieni il ritmo!';
+
+  @override
+  String get motivationalStarted => '✨ Iniziato! Continua così!';
+
+  @override
+  String get motivationalStartToday => '🎯 Inizia oggi il tuo percorso!';
 }
