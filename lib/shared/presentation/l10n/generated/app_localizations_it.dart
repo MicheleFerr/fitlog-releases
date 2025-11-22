@@ -688,7 +688,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importSuccessful => 'Importazione completata con successo!';
 
   @override
-  String get importing => 'Importazione in corso...';
+  String get importing => 'Importazione...';
 
   @override
   String get importCompleted => 'Importazione Completata';
@@ -10833,7 +10833,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get finalizing => 'Finalizzazione...';
 
   @override
-  String get importFailed => 'Importazione fallita';
+  String get importFailed => '❌ Importazione fallita';
 
   @override
   String get noDescription => 'Nessuna descrizione';
@@ -18443,4 +18443,57 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get skipOnboardingMessage =>
       'Puoi sempre modificare le tue preferenze successivamente';
+
+  @override
+  String get importExercisesReady => 'Pronto per importare gli esercizi';
+
+  @override
+  String get firebaseExerciseImporter => 'Importatore Esercizi Firebase';
+
+  @override
+  String get testSingleExercise => '🧪 Testa Singolo Esercizio';
+
+  @override
+  String get importAllExercises => '🔥 Importa Tutti gli Esercizi';
+
+  @override
+  String get importExercisesDescription =>
+      'Questo importerà tutti gli esercizi da assets/data/exercises.json a Firebase Firestore.';
+
+  @override
+  String get testingExercise => '🧪 Test conversione singolo esercizio...';
+
+  @override
+  String get testSuccess =>
+      '✅ Test completato con successo! Controlla la console per i dettagli.';
+
+  @override
+  String get testFailed => '❌ Test fallito';
+
+  @override
+  String get confirmImportTitle => 'Conferma Importazione';
+
+  @override
+  String get confirmImportMessage =>
+      'Questo eliminerà tutti gli esercizi esistenti e ne importerà di nuovi dal JSON. Continuare?';
+
+  @override
+  String get importAction => 'Importa';
+
+  @override
+  String get importStarting => '🔥 Avvio processo di importazione...';
+
+  @override
+  String get importSuccess =>
+      '✅ Importazione completata con successo! Tutti gli esercizi importati su Firebase.';
+
+  @override
+  String get importSuccessTitle => 'Importazione Riuscita';
+
+  @override
+  String get importSuccessMessage =>
+      'Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell\'app!';
+
+  @override
+  String get importFailedTitle => 'Importazione Fallita';
 }

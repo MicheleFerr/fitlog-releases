@@ -22196,5 +22196,81 @@
   "skipOnboardingMessage": "You can always modify your preferences later",
   "@skipOnboardingMessage": {
     "description": "Dialog message when skipping buddy onboarding"
+  },
+  "importExercisesReady": "Ready to import exercises",
+  "@importExercisesReady": {
+    "description": "Initial status message on import exercises screen"
+  },
+  "importExercises": "Import Exercises",
+  "@importExercises": {
+    "description": "Title for import exercises screen"
+  },
+  "firebaseExerciseImporter": "Firebase Exercise Importer",
+  "@firebaseExerciseImporter": {
+    "description": "Screen title for Firebase exercise import tool"
+  },
+  "testSingleExercise": "🧪 Test Single Exercise",
+  "@testSingleExercise": {
+    "description": "Button label to test single exercise conversion"
+  },
+  "importing": "Importing...",
+  "@importing": {
+    "description": "Status text during import process"
+  },
+  "importAllExercises": "🔥 Import All Exercises",
+  "@importAllExercises": {
+    "description": "Button label to import all exercises from JSON"
+  },
+  "importExercisesDescription": "This will import all exercises from assets/data/exercises.json to Firebase Firestore.",
+  "@importExercisesDescription": {
+    "description": "Description text explaining import functionality"
+  },
+  "testingExercise": "🧪 Testing single exercise conversion...",
+  "@testingExercise": {
+    "description": "Status message while testing exercise conversion"
+  },
+  "testSuccess": "✅ Test completed successfully! Check console for details.",
+  "@testSuccess": {
+    "description": "Success message after test completion"
+  },
+  "testFailed": "❌ Test failed",
+  "@testFailed": {
+    "description": "Error message when test fails"
+  },
+  "confirmImportTitle": "Confirm Import",
+  "@confirmImportTitle": {
+    "description": "Dialog title asking to confirm import operation"
+  },
+  "confirmImportMessage": "This will delete all existing exercises and import new ones from JSON. Continue?",
+  "@confirmImportMessage": {
+    "description": "Warning message in import confirmation dialog"
+  },
+  "importAction": "Import",
+  "@importAction": {
+    "description": "Button label to proceed with import"
+  },
+  "importStarting": "🔥 Starting import process...",
+  "@importStarting": {
+    "description": "Status message when import process begins"
+  },
+  "importSuccess": "✅ Import completed successfully! All exercises imported to Firebase.",
+  "@importSuccess": {
+    "description": "Success message after import completion"
+  },
+  "importSuccessTitle": "Import Successful",
+  "@importSuccessTitle": {
+    "description": "Dialog title for successful import"
+  },
+  "importSuccessMessage": "All exercises have been imported to Firebase. You can now use them in the app!",
+  "@importSuccessMessage": {
+    "description": "Success dialog message after import"
+  },
+  "importFailed": "❌ Import failed",
+  "@importFailed": {
+    "description": "Error status message when import fails"
+  },
+  "importFailedTitle": "Import Failed",
+  "@importFailedTitle": {
+    "description": "Dialog title when import fails"
   }
 }

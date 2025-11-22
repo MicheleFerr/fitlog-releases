@@ -12,14 +12,20 @@ class ImportExercisesScreen extends StatefulWidget {
 
 class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
   bool _isImporting = false;
-  String _status = 'Ready to import exercises';
+  late String _status;
   final FirebaseExerciseImporter _importer = FirebaseExerciseImporter();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _status = context.l10n.importExercisesReady;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Import Exercises'),
+        title: Text(context.l10n.importExercises),
         backgroundColor: Colors.blue,
       ),
       body: Padding(
@@ -34,7 +40,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Firebase Exercise Importer',
+              context.l10n.firebaseExerciseImporter,
               style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -61,7 +67,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                 backgroundColor: Colors.orange,
               ),
               child: Text(
-                '🧪 Test Single Exercise',
+                context.l10n.testSingleExercise,
                 style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
             ),
@@ -86,19 +92,19 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          'Importing...',
+                          context.l10n.importing,
                           style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
                         ),
                       ],
                     )
                   : Text(
-                      '🔥 Import All Exercises',
+                      context.l10n.importAllExercises,
                       style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
                     ),
             ),
             const SizedBox(height: 30),
             Text(
-              'This will import all exercises from assets/data/exercises.json to Firebase Firestore.',
+              context.l10n.importExercisesDescription,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
@@ -112,17 +118,17 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
 
   Future<void> _testSingleExercise() async {
     setState(() {
-      _status = '🧪 Testing single exercise conversion...';
+      _status = context.l10n.testingExercise;
     });
 
     try {
       await _importer.testSingleExercise();
       setState(() {
-        _status = '✅ Test completed successfully! Check console for details.';
+        _status = context.l10n.testSuccess;
       });
     } catch (e) {
       setState(() {
-        _status = '❌ Test failed';
+        _status = context.l10n.testFailed;
       });
     }
   }
@@ -132,18 +138,18 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Import'),
-        content: const Text(
-          'This will delete all existing exercises and import new ones from JSON. Continue?',
+        title: Text(context.l10n.confirmImportTitle),
+        content: Text(
+          context.l10n.confirmImportMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Import'),
+            child: Text(context.l10n.importAction),
           ),
         ],
       ),
@@ -153,14 +159,14 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
 
     setState(() {
       _isImporting = true;
-      _status = '🔥 Starting import process...';
+      _status = context.l10n.importStarting;
     });
 
     try {
       await _importer.importExercisesFromJson();
       setState(() {
         _isImporting = false;
-        _status = '✅ Import completed successfully! All exercises imported to Firebase.';
+        _status = context.l10n.importSuccess;
       });
       
       // Show success dialog
@@ -168,15 +174,15 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Import Successful'),
-            content: const Text('All exercises have been imported to Firebase. You can now use them in the app!'),
+            title: Text(context.l10n.importSuccessTitle),
+            content: Text(context.l10n.importSuccessMessage),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop(); // Go back to previous screen
                 },
-                child: const Text('OK'),
+                child: Text(context.l10n.ok),
               ),
             ],
           ),
@@ -185,20 +191,20 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
     } catch (e) {
       setState(() {
         _isImporting = false;
-        _status = '❌ Import failed';
+        _status = context.l10n.importFailed;
       });
-      
+
       // Show error dialog
       if (mounted) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Import Failed'),
+            title: Text(context.l10n.importFailedTitle),
             content: Text(context.l10n.error),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
+                child: Text(context.l10n.ok),
               ),
             ],
           ),

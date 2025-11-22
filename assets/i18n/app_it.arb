@@ -11734,5 +11734,81 @@
   "skipOnboardingMessage": "Puoi sempre modificare le tue preferenze successivamente",
   "@skipOnboardingMessage": {
     "description": "Dialog message when skipping buddy onboarding"
+  },
+  "importExercisesReady": "Pronto per importare gli esercizi",
+  "@importExercisesReady": {
+    "description": "Initial status message on import exercises screen"
+  },
+  "importExercises": "Importa Esercizi",
+  "@importExercises": {
+    "description": "Title for import exercises screen"
+  },
+  "firebaseExerciseImporter": "Importatore Esercizi Firebase",
+  "@firebaseExerciseImporter": {
+    "description": "Screen title for Firebase exercise import tool"
+  },
+  "testSingleExercise": "🧪 Testa Singolo Esercizio",
+  "@testSingleExercise": {
+    "description": "Button label to test single exercise conversion"
+  },
+  "importing": "Importazione...",
+  "@importing": {
+    "description": "Status text during import process"
+  },
+  "importAllExercises": "🔥 Importa Tutti gli Esercizi",
+  "@importAllExercises": {
+    "description": "Button label to import all exercises from JSON"
+  },
+  "importExercisesDescription": "Questo importerà tutti gli esercizi da assets/data/exercises.json a Firebase Firestore.",
+  "@importExercisesDescription": {
+    "description": "Description text explaining import functionality"
+  },
+  "testingExercise": "🧪 Test conversione singolo esercizio...",
+  "@testingExercise": {
+    "description": "Status message while testing exercise conversion"
+  },
+  "testSuccess": "✅ Test completato con successo! Controlla la console per i dettagli.",
+  "@testSuccess": {
+    "description": "Success message after test completion"
+  },
+  "testFailed": "❌ Test fallito",
+  "@testFailed": {
+    "description": "Error message when test fails"
+  },
+  "confirmImportTitle": "Conferma Importazione",
+  "@confirmImportTitle": {
+    "description": "Dialog title asking to confirm import operation"
+  },
+  "confirmImportMessage": "Questo eliminerà tutti gli esercizi esistenti e ne importerà di nuovi dal JSON. Continuare?",
+  "@confirmImportMessage": {
+    "description": "Warning message in import confirmation dialog"
+  },
+  "importAction": "Importa",
+  "@importAction": {
+    "description": "Button label to proceed with import"
+  },
+  "importStarting": "🔥 Avvio processo di importazione...",
+  "@importStarting": {
+    "description": "Status message when import process begins"
+  },
+  "importSuccess": "✅ Importazione completata con successo! Tutti gli esercizi importati su Firebase.",
+  "@importSuccess": {
+    "description": "Success message after import completion"
+  },
+  "importSuccessTitle": "Importazione Riuscita",
+  "@importSuccessTitle": {
+    "description": "Dialog title for successful import"
+  },
+  "importSuccessMessage": "Tutti gli esercizi sono stati importati su Firebase. Ora puoi usarli nell'app!",
+  "@importSuccessMessage": {
+    "description": "Success dialog message after import"
+  },
+  "importFailed": "❌ Importazione fallita",
+  "@importFailed": {
+    "description": "Error status message when import fails"
+  },
+  "importFailedTitle": "Importazione Fallita",
+  "@importFailedTitle": {
+    "description": "Dialog title when import fails"
   }
 }

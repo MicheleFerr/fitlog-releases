@@ -1328,7 +1328,7 @@ abstract class AppLocalizations {
   /// **'Import completed successfully!'**
   String get importSuccessful;
 
-  /// Import in progress message
+  /// Status text during import process
   ///
   /// In en, this message translates to:
   /// **'Importing...'**
@@ -2815,7 +2815,7 @@ abstract class AppLocalizations {
   /// **'Customize app'**
   String get customizeApp;
 
-  /// Import exercises quick action
+  /// Title for import exercises screen
   ///
   /// In en, this message translates to:
   /// **'Import Exercises'**
@@ -19032,10 +19032,10 @@ abstract class AppLocalizations {
   /// **'Finalizing...'**
   String get finalizing;
 
-  /// Import failed error message
+  /// Error status message when import fails
   ///
   /// In en, this message translates to:
-  /// **'Import failed'**
+  /// **'❌ Import failed'**
   String get importFailed;
 
   /// Placeholder for missing description
@@ -32765,6 +32765,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can always modify your preferences later'**
   String get skipOnboardingMessage;
+
+  /// Initial status message on import exercises screen
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to import exercises'**
+  String get importExercisesReady;
+
+  /// Screen title for Firebase exercise import tool
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase Exercise Importer'**
+  String get firebaseExerciseImporter;
+
+  /// Button label to test single exercise conversion
+  ///
+  /// In en, this message translates to:
+  /// **'🧪 Test Single Exercise'**
+  String get testSingleExercise;
+
+  /// Button label to import all exercises from JSON
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Import All Exercises'**
+  String get importAllExercises;
+
+  /// Description text explaining import functionality
+  ///
+  /// In en, this message translates to:
+  /// **'This will import all exercises from assets/data/exercises.json to Firebase Firestore.'**
+  String get importExercisesDescription;
+
+  /// Status message while testing exercise conversion
+  ///
+  /// In en, this message translates to:
+  /// **'🧪 Testing single exercise conversion...'**
+  String get testingExercise;
+
+  /// Success message after test completion
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Test completed successfully! Check console for details.'**
+  String get testSuccess;
+
+  /// Error message when test fails
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Test failed'**
+  String get testFailed;
+
+  /// Dialog title asking to confirm import operation
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Import'**
+  String get confirmImportTitle;
+
+  /// Warning message in import confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will delete all existing exercises and import new ones from JSON. Continue?'**
+  String get confirmImportMessage;
+
+  /// Button label to proceed with import
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importAction;
+
+  /// Status message when import process begins
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Starting import process...'**
+  String get importStarting;
+
+  /// Success message after import completion
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Import completed successfully! All exercises imported to Firebase.'**
+  String get importSuccess;
+
+  /// Dialog title for successful import
+  ///
+  /// In en, this message translates to:
+  /// **'Import Successful'**
+  String get importSuccessTitle;
+
+  /// Success dialog message after import
+  ///
+  /// In en, this message translates to:
+  /// **'All exercises have been imported to Firebase. You can now use them in the app!'**
+  String get importSuccessMessage;
+
+  /// Dialog title when import fails
+  ///
+  /// In en, this message translates to:
+  /// **'Import Failed'**
+  String get importFailedTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -10714,7 +10714,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finalizing => 'Finalizing...';
 
   @override
-  String get importFailed => 'Import failed';
+  String get importFailed => '❌ Import failed';
 
   @override
   String get noDescription => 'No description';
@@ -18264,4 +18264,57 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get skipOnboardingMessage =>
       'You can always modify your preferences later';
+
+  @override
+  String get importExercisesReady => 'Ready to import exercises';
+
+  @override
+  String get firebaseExerciseImporter => 'Firebase Exercise Importer';
+
+  @override
+  String get testSingleExercise => '🧪 Test Single Exercise';
+
+  @override
+  String get importAllExercises => '🔥 Import All Exercises';
+
+  @override
+  String get importExercisesDescription =>
+      'This will import all exercises from assets/data/exercises.json to Firebase Firestore.';
+
+  @override
+  String get testingExercise => '🧪 Testing single exercise conversion...';
+
+  @override
+  String get testSuccess =>
+      '✅ Test completed successfully! Check console for details.';
+
+  @override
+  String get testFailed => '❌ Test failed';
+
+  @override
+  String get confirmImportTitle => 'Confirm Import';
+
+  @override
+  String get confirmImportMessage =>
+      'This will delete all existing exercises and import new ones from JSON. Continue?';
+
+  @override
+  String get importAction => 'Import';
+
+  @override
+  String get importStarting => '🔥 Starting import process...';
+
+  @override
+  String get importSuccess =>
+      '✅ Import completed successfully! All exercises imported to Firebase.';
+
+  @override
+  String get importSuccessTitle => 'Import Successful';
+
+  @override
+  String get importSuccessMessage =>
+      'All exercises have been imported to Firebase. You can now use them in the app!';
+
+  @override
+  String get importFailedTitle => 'Import Failed';
 }
