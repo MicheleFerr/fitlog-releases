@@ -23197,8 +23197,94 @@
         "type": "int"
       }
     }
-  }
-,
+  },
+  "recentWorkouts": "Recent Workouts",
+  "@recentWorkouts": {
+    "description": "Recent workouts card title"
+  },
+  "fullHistoryComingSoon": "Full history coming soon!",
+  "@fullHistoryComingSoon": {
+    "description": "Full history feature coming soon message"
+  },
+  "viewAll": "View All",
+  "@viewAll": {
+    "description": "View all button text"
+  },
+  "noRecentWorkouts": "No recent workouts",
+  "@noRecentWorkouts": {
+    "description": "Empty state message for recent workouts"
+  },
+  "exercisesWithCount": "{count} {count, plural, =1{exercise} other{exercises}}",
+  "@exercisesWithCount": {
+    "description": "Exercise count with plural handling",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeLabel": "volume",
+  "@volumeLabel": {
+    "description": "Volume label (lowercase for inline use)"
+  },
+  "exercisesLabel": "Exercises",
+  "@exercisesLabel": {
+    "description": "Exercises summary label"
+  },
+  "totalSets": "Total sets",
+  "@totalSets": {
+    "description": "Total sets summary label"
+  },
+  "totalVolume": "Total volume",
+  "@totalVolume": {
+    "description": "Total volume summary label"
+  },
+  "setsCount": "{count} {count, plural, =1{set} other{sets}}",
+  "@setsCount": {
+    "description": "Sets count with plural handling",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kgVolume": "{volume} kg volume",
+  "@kgVolume": {
+    "description": "Volume in kg with label",
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "setHeader": "Set",
+  "@setHeader": {
+    "description": "Set table header"
+  },
+  "weightKg": "Weight (kg)",
+  "@weightKg": {
+    "description": "Weight in kg table header"
+  },
+  "reps": "Reps",
+  "@reps": {
+    "description": "Reps table header"
+  },
+  "effort": "Effort",
+  "@effort": {
+    "description": "Effort table header"
+  },
+  "time": "Time",
+  "@time": {
+    "description": "Time table header"
+  },
+  "averageRpe": "Average RPE",
+  "@averageRpe": {
+    "description": "Average RPE label"
+  },
+  "averageRir": "Average RIR",
+  "@averageRir": {
+    "description": "Average RIR label"
+  },
   "autoAdjustWeightTitle": "Auto-Adjust Weight",
   "@autoAdjustWeightTitle": {
     "description": "Auto-adjust weight feature title"

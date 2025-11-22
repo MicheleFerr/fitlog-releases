@@ -12735,8 +12735,94 @@
         "type": "int"
       }
     }
-  }
-,
+  },
+  "recentWorkouts": "Workout Recenti",
+  "@recentWorkouts": {
+    "description": "Titolo card workout recenti"
+  },
+  "fullHistoryComingSoon": "Cronologia completa in arrivo!",
+  "@fullHistoryComingSoon": {
+    "description": "Messaggio funzionalità cronologia completa in arrivo"
+  },
+  "viewAll": "Vedi Tutti",
+  "@viewAll": {
+    "description": "Testo pulsante vedi tutti"
+  },
+  "noRecentWorkouts": "Nessun workout recente",
+  "@noRecentWorkouts": {
+    "description": "Messaggio stato vuoto per workout recenti"
+  },
+  "exercisesWithCount": "{count} {count, plural, =1{esercizio} other{esercizi}}",
+  "@exercisesWithCount": {
+    "description": "Conteggio esercizi con plurale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeLabel": "volume",
+  "@volumeLabel": {
+    "description": "Etichetta volume (minuscolo per uso inline)"
+  },
+  "exercisesLabel": "Esercizi",
+  "@exercisesLabel": {
+    "description": "Etichetta riepilogo esercizi"
+  },
+  "totalSets": "Serie totali",
+  "@totalSets": {
+    "description": "Etichetta riepilogo serie totali"
+  },
+  "totalVolume": "Volume totale",
+  "@totalVolume": {
+    "description": "Etichetta riepilogo volume totale"
+  },
+  "setsCount": "{count} {count, plural, =1{serie} other{serie}}",
+  "@setsCount": {
+    "description": "Conteggio serie con plurale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kgVolume": "{volume} kg volume",
+  "@kgVolume": {
+    "description": "Volume in kg con etichetta",
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "setHeader": "Serie",
+  "@setHeader": {
+    "description": "Intestazione tabella serie"
+  },
+  "weightKg": "Peso (kg)",
+  "@weightKg": {
+    "description": "Intestazione tabella peso in kg"
+  },
+  "reps": "Reps",
+  "@reps": {
+    "description": "Intestazione tabella ripetizioni"
+  },
+  "effort": "Sforzo",
+  "@effort": {
+    "description": "Intestazione tabella sforzo"
+  },
+  "time": "Tempo",
+  "@time": {
+    "description": "Intestazione tabella tempo"
+  },
+  "averageRpe": "RPE medio",
+  "@averageRpe": {
+    "description": "Etichetta RPE medio"
+  },
+  "averageRir": "RIR medio",
+  "@averageRir": {
+    "description": "Etichetta RIR medio"
+  },
   "autoAdjustWeightTitle": "Auto-Regola Peso",
   "@autoAdjustWeightTitle": {
     "description": "Titolo funzione auto-regolazione peso"

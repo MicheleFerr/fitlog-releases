@@ -961,7 +961,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weightTimesReps => 'Weight × Reps';
 
   @override
-  String get reps => 'reps';
+  String get reps => 'Reps';
 
   @override
   String get notes => 'Notes';
@@ -1553,7 +1553,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisWeek => 'This Week';
 
   @override
-  String get totalVolume => 'Total Volume';
+  String get totalVolume => 'Total volume';
 
   @override
   String get consistency => 'Consistency';
@@ -3067,7 +3067,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalExercises => 'Total';
 
   @override
-  String get totalSets => 'Total Sets';
+  String get totalSets => 'Total sets';
 
   @override
   String get avgVolumePerWorkout => 'Avg Volume Per Workout';
@@ -3666,7 +3666,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String setsCount(int count) {
-    return '$count sets';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'sets',
+      one: 'set',
+    );
+    return '$count $_temp0';
   }
 
   @override
@@ -18801,6 +18807,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String suggestionKeepGoing(int count) {
     return 'Keep going! You need $count more workouts to complete your weekly goal.';
   }
+
+  @override
+  String exercisesWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'exercises',
+      one: 'exercise',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get volumeLabel => 'volume';
+
+  @override
+  String kgVolume(String volume) {
+    return '$volume kg volume';
+  }
+
+  @override
+  String get setHeader => 'Set';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get averageRir => 'Average RIR';
 
   @override
   String get autoAdjustWeightTitle => 'Auto-Adjust Weight';

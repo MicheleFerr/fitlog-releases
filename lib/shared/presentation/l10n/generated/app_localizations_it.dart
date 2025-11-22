@@ -964,7 +964,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get weightTimesReps => 'Peso × Rip';
 
   @override
-  String get reps => 'rip';
+  String get reps => 'Reps';
 
   @override
   String get notes => 'Note';
@@ -1570,7 +1570,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get thisWeek => 'Questa Settimana';
 
   @override
-  String get totalVolume => 'Volume Totale';
+  String get totalVolume => 'Volume totale';
 
   @override
   String get consistency => 'Costanza';
@@ -3087,7 +3087,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get totalExercises => 'Totale';
 
   @override
-  String get totalSets => 'Serie Totali';
+  String get totalSets => 'Serie totali';
 
   @override
   String get avgVolumePerWorkout => 'Volume Medio Per Allenamento';
@@ -3223,7 +3223,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Inizia un allenamento per vedere le tue analisi';
 
   @override
-  String get recentWorkouts => 'Allenamenti Recenti';
+  String get recentWorkouts => 'Workout Recenti';
 
   @override
   String get highPriority => 'Alta Priorità';
@@ -3693,7 +3693,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String setsCount(int count) {
-    return '$count serie';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'serie',
+      one: 'serie',
+    );
+    return '$count $_temp0';
   }
 
   @override
@@ -4330,7 +4336,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get justNow => 'ora';
 
   @override
-  String get viewAll => 'Visualizza Tutto';
+  String get viewAll => 'Vedi Tutti';
 
   @override
   String get adminInfo => 'Informazioni Admin';
@@ -5957,7 +5963,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Inizia un allenamento per vedere i tuoi progressi';
 
   @override
-  String get noRecentWorkouts => 'Nessun allenamento recente';
+  String get noRecentWorkouts => 'Nessun workout recente';
 
   @override
   String workoutsCount(int count, int goal) {
@@ -10507,7 +10513,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get quickSetCount => 'Scelta Serie Rapida';
 
   @override
-  String get averageRpe => 'RPE Medio';
+  String get averageRpe => 'RPE medio';
 
   @override
   String get routineDayCompleted => 'Giorno routine completato:';
@@ -14796,7 +14802,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Complete workouts to see your progress';
 
   @override
-  String get fullHistoryComingSoon => 'Full history coming soon!';
+  String get fullHistoryComingSoon => 'Cronologia completa in arrivo!';
 
   @override
   String get trainingInsight => '💡 Training Insight';
@@ -18987,6 +18993,34 @@ class AppLocalizationsIt extends AppLocalizations {
   String suggestionKeepGoing(int count) {
     return 'Continua con costanza! Ti mancano $count workout per completare l\'obiettivo settimanale.';
   }
+
+  @override
+  String exercisesWithCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'esercizi',
+      one: 'esercizio',
+    );
+    return '$count $_temp0';
+  }
+
+  @override
+  String get volumeLabel => 'volume';
+
+  @override
+  String kgVolume(String volume) {
+    return '$volume kg volume';
+  }
+
+  @override
+  String get setHeader => 'Serie';
+
+  @override
+  String get time => 'Tempo';
+
+  @override
+  String get averageRir => 'RIR medio';
 
   @override
   String get autoAdjustWeightTitle => 'Auto-Regola Peso';

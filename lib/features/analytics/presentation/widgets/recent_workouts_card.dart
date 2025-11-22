@@ -3,6 +3,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RecentWorkoutsCard extends StatelessWidget {
 
@@ -34,7 +35,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Recent Workouts',
+                      context.l10n.recentWorkouts,
                       style: context.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -45,22 +46,22 @@ class RecentWorkoutsCard extends StatelessWidget {
                   onPressed: () {
                     // TODO: Navigate to full history
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Full history coming soon!')),
+                      SnackBar(content: Text(context.l10n.fullHistoryComingSoon)),
                     );
                   },
-                  child: const Text('View All'),
+                  child: Text(context.l10n.viewAll),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             
             if (recentWorkouts.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: Text(
-                    'No recent workouts',
-                    style: TextStyle(color: Colors.grey),
+                    context.l10n.noRecentWorkouts,
+                    style: TextStyle(color: context.colors.surfaceVariant),
                   ),
                 ),
               )
@@ -153,7 +154,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                   ),
                   SizedBox(height: 2),
                   Text(
-                    '${_formatDate(date)} • $exerciseCount exercises',
+                    '${_formatDate(date)} • ${context.l10n.exercisesWithCount(exerciseCount)}',
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
@@ -174,7 +175,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'volume',
+                  context.l10n.volumeLabel,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
@@ -273,16 +274,16 @@ class RecentWorkoutsCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildSummaryItem(context, '${syntheticActivities.length}', 'Esercizi'),
+                        _buildSummaryItem(context, '${syntheticActivities.length}', context.l10n.exercisesLabel),
                         _buildSummaryItem(
-                          context, 
-                          '${syntheticActivities.fold<int>(0, (sum, a) => sum + a.sets.length)}', 
-                          'Serie totali'
+                          context,
+                          '${syntheticActivities.fold<int>(0, (sum, a) => sum + a.sets.length)}',
+                          context.l10n.totalSets
                         ),
                         _buildSummaryItem(
                           context,
                           '${_calculateWorkoutVolumeFromActivities(syntheticActivities).toStringAsFixed(0)} kg',
-                          'Volume totale'
+                          context.l10n.totalVolume
                         ),
                       ],
                     ),
@@ -384,12 +385,12 @@ class RecentWorkoutsCard extends StatelessWidget {
           subtitle: Row(
             children: [
               Text(
-                '${activity.sets.length} serie',
+                context.l10n.setsCount(activity.sets.length),
                 style: context.textTheme.bodySmall,
               ),
               SizedBox(width: 12),
               Text(
-                '${_calculateExerciseVolume(activity).toStringAsFixed(0)} kg volume',
+                context.l10n.kgVolume(_calculateExerciseVolume(activity).toStringAsFixed(0)),
                 style: context.textTheme.bodySmall?.copyWith(
                   color: context.colors.primary,
                   fontWeight: FontWeight.w600,
@@ -418,7 +419,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                         SizedBox(
                           width: 40,
                           child: Text(
-                            'Set',
+                            context.l10n.setHeader,
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.colors.onSurface.withValues(alpha: 0.7),
@@ -428,18 +429,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            'Peso (kg)',
-                            style: context.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.onSurface.withValues(alpha: 0.7),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            'Reps',
+                            context.l10n.weightKg,
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.colors.onSurface.withValues(alpha: 0.7),
@@ -450,7 +440,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            'Effort',
+                            context.l10n.reps,
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.colors.onSurface.withValues(alpha: 0.7),
@@ -461,7 +451,18 @@ class RecentWorkoutsCard extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            'Tempo',
+                            context.l10n.effort,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colors.onSurface.withValues(alpha: 0.7),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            context.l10n.time,
                             style: context.textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.colors.onSurface.withValues(alpha: 0.7),
@@ -563,13 +564,13 @@ class RecentWorkoutsCard extends StatelessWidget {
                     if (activity.sets.any((s) => s.rpe != null))
                       _buildAdditionalStat(
                         context,
-                        'RPE medio',
+                        context.l10n.averageRpe,
                         (activity.sets.where((s) => s.rpe != null).fold<int>(0, (sum, s) => sum + s.rpe!) / activity.sets.where((s) => s.rpe != null).length).toStringAsFixed(1),
                       ),
                     if (activity.sets.any((s) => s.rir != null))
                       _buildAdditionalStat(
                         context,
-                        'RIR medio',
+                        context.l10n.averageRir,
                         (activity.sets.where((s) => s.rir != null).fold<int>(0, (sum, s) => sum + s.rir!) / activity.sets.where((s) => s.rir != null).length).toStringAsFixed(1),
                       ),
                   ],
@@ -584,11 +585,11 @@ class RecentWorkoutsCard extends StatelessWidget {
 
   Widget _buildEffortIndicator(BuildContext context, int effort) {
     final colors = [
-      Colors.green.shade300,
-      Colors.green.shade400, 
+      HSLColor.fromColor(context.colors.success).withLightness(0.7).toColor(),
+      HSLColor.fromColor(context.colors.success).withLightness(0.6).toColor(),
       Colors.orange.shade400,
       Colors.deepOrange.shade400,
-      Colors.red.shade400,
+      HSLColor.fromColor(context.colors.error).withLightness(0.6).toColor(),
     ];
     
     return Row(

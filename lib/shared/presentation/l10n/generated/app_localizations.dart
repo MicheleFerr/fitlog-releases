@@ -1826,10 +1826,10 @@ abstract class AppLocalizations {
   /// **'Weight × Reps'**
   String get weightTimesReps;
 
-  /// Label for repetitions (lowercase)
+  /// Reps table header
   ///
   /// In en, this message translates to:
-  /// **'reps'**
+  /// **'Reps'**
   String get reps;
 
   /// Notes label
@@ -2965,10 +2965,10 @@ abstract class AppLocalizations {
   /// **'This Week'**
   String get thisWeek;
 
-  /// Label for total volume (weight lifted)
+  /// Total volume summary label
   ///
   /// In en, this message translates to:
-  /// **'Total Volume'**
+  /// **'Total volume'**
   String get totalVolume;
 
   /// Label for consistency metric
@@ -5705,10 +5705,10 @@ abstract class AppLocalizations {
   /// **'Total'**
   String get totalExercises;
 
-  /// Migration stat label
+  /// Total sets summary label
   ///
   /// In en, this message translates to:
-  /// **'Total Sets'**
+  /// **'Total sets'**
   String get totalSets;
 
   /// Average volume per workout statistic
@@ -5975,7 +5975,7 @@ abstract class AppLocalizations {
   /// **'Start a workout to see your analytics'**
   String get startWorkoutToSeeAnalytics;
 
-  /// Recent workouts title
+  /// Recent workouts card title
   ///
   /// In en, this message translates to:
   /// **'Recent Workouts'**
@@ -6791,10 +6791,10 @@ abstract class AppLocalizations {
   /// **'{minutes} minutes'**
   String durationMinutes(Object minutes);
 
-  /// Sets count
+  /// Sets count with plural handling
   ///
   /// In en, this message translates to:
-  /// **'{count} sets'**
+  /// **'{count} {count, plural, =1{set} other{sets}}'**
   String setsCount(int count);
 
   /// Label for a numbered set
@@ -6851,7 +6851,7 @@ abstract class AppLocalizations {
   /// **'Edit round data'**
   String get editRoundData;
 
-  /// Weight input label
+  /// Weight in kg table header
   ///
   /// In en, this message translates to:
   /// **'Weight (kg)'**
@@ -7973,7 +7973,7 @@ abstract class AppLocalizations {
   /// **'now'**
   String get justNow;
 
-  /// Button text to view all items
+  /// View all button text
   ///
   /// In en, this message translates to:
   /// **'View All'**
@@ -10745,7 +10745,7 @@ abstract class AppLocalizations {
   /// **'Start a workout to see your progress'**
   String get noRecentWorkoutsDesc;
 
-  /// No recent workouts empty state
+  /// Empty state message for recent workouts
   ///
   /// In en, this message translates to:
   /// **'No recent workouts'**
@@ -17634,7 +17634,7 @@ abstract class AppLocalizations {
   /// **'Tap to show/hide'**
   String get tapToToggle;
 
-  /// Effort (RPE) metric label
+  /// Effort table header
   ///
   /// In en, this message translates to:
   /// **'Effort'**
@@ -18480,7 +18480,7 @@ abstract class AppLocalizations {
   /// **'Quick Set Count'**
   String get quickSetCount;
 
-  /// Average Rate of Perceived Exertion label in workout summary
+  /// Average RPE label
   ///
   /// In en, this message translates to:
   /// **'Average RPE'**
@@ -24738,7 +24738,7 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get routineDuration;
 
-  /// Label for exercises (without count)
+  /// Exercises summary label
   ///
   /// In en, this message translates to:
   /// **'Exercises'**
@@ -26082,7 +26082,7 @@ abstract class AppLocalizations {
   /// **'Complete workouts to see your progress'**
   String get completeWorkoutsToSeeYourProgress;
 
-  /// From quick wins migration - 1 occurrences
+  /// Full history feature coming soon message
   ///
   /// In en, this message translates to:
   /// **'Full history coming soon!'**
@@ -33719,6 +33719,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep going! You need {count} more workouts to complete your weekly goal.'**
   String suggestionKeepGoing(int count);
+
+  /// Exercise count with plural handling
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{exercise} other{exercises}}'**
+  String exercisesWithCount(int count);
+
+  /// Volume label (lowercase for inline use)
+  ///
+  /// In en, this message translates to:
+  /// **'volume'**
+  String get volumeLabel;
+
+  /// Volume in kg with label
+  ///
+  /// In en, this message translates to:
+  /// **'{volume} kg volume'**
+  String kgVolume(String volume);
+
+  /// Set table header
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get setHeader;
+
+  /// Time table header
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// Average RIR label
+  ///
+  /// In en, this message translates to:
+  /// **'Average RIR'**
+  String get averageRir;
 
   /// Auto-adjust weight feature title
   ///
