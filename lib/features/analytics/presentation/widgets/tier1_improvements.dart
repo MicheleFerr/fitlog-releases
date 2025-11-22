@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter/services.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🎯 TIER-1 IMPROVEMENT COMPONENTS
 /// Componenti riutilizzabili per rendere Analytics tier-1
@@ -568,18 +568,18 @@ class InsightCard extends StatelessWidget {
   InsightColors _getColors(ThemeData theme, BuildContext context) {
     return switch (type) {
       InsightType.success => InsightColors(
-          background: Colors.green.shade50,
-          border: Colors.green.shade700,
-          icon: Colors.green.shade900,
-          iconBackground: Colors.green.shade100,
-          text: Colors.green.shade900,
+          background: HSLColor.fromColor(theme.colorScheme.success).withLightness(0.95).toColor(),
+          border: HSLColor.fromColor(theme.colorScheme.success).withLightness(0.3).toColor(),
+          icon: HSLColor.fromColor(theme.colorScheme.success).withLightness(0.2).toColor(),
+          iconBackground: HSLColor.fromColor(theme.colorScheme.success).withLightness(0.9).toColor(),
+          text: HSLColor.fromColor(theme.colorScheme.success).withLightness(0.2).toColor(),
         ),
       InsightType.warning => InsightColors(
-          background: Colors.orange.shade50,
-          border: Colors.orange.shade700,
-          icon: Colors.orange.shade900,
-          iconBackground: Colors.orange.shade100,
-          text: Colors.orange.shade900,
+          background: HSLColor.fromColor(theme.colorScheme.warning).withLightness(0.95).toColor(),
+          border: HSLColor.fromColor(theme.colorScheme.warning).withLightness(0.3).toColor(),
+          icon: HSLColor.fromColor(theme.colorScheme.warning).withLightness(0.2).toColor(),
+          iconBackground: HSLColor.fromColor(theme.colorScheme.warning).withLightness(0.9).toColor(),
+          text: HSLColor.fromColor(theme.colorScheme.warning).withLightness(0.2).toColor(),
         ),
       InsightType.error => InsightColors(
           background: theme.colorScheme.errorContainer,
@@ -743,7 +743,10 @@ class MotivationalEmptyState extends StatelessWidget {
                   HapticFeedback.mediumImpact();
                   onAction!();
                 },
-                icon: const Icon(AppIcons.rocket),
+                icon: const SemanticIcon(
+  icon: AppIcons.rocket,
+  semanticLabel: 'Rocket',
+),
                 label: Text(actionLabel ?? l10n.startNow),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -842,12 +845,12 @@ class StreakWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: context.colors.surface.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   AppIcons.streak,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: 24,
                 ),
               ),
@@ -858,7 +861,7 @@ class StreakWidget extends StatelessWidget {
                   Text(
                     l10n.currentStreak,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                     ),
                   ),
                   Row(
@@ -868,7 +871,7 @@ class StreakWidget extends StatelessWidget {
                       Text(
                         currentStreak.toString(),
                         style: theme.textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -876,7 +879,7 @@ class StreakWidget extends StatelessWidget {
                       Text(
                         l10n.days,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: context.colors.surface.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -890,13 +893,13 @@ class StreakWidget extends StatelessWidget {
                   Text(
                     l10n.longestStreak,
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: context.colors.surface.withValues(alpha: 0.7),
                     ),
                   ),
                   Text(
                     '$longestStreak ${l10n.days}',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -916,13 +919,13 @@ class StreakWidget extends StatelessWidget {
                   Text(
                     l10n.nextMilestone,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                     ),
                   ),
                   Text(
                     '$daysToMilestone ${l10n.daysToGo}',
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -934,9 +937,9 @@ class StreakWidget extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: progressToMilestone,
                   minHeight: 8,
-                  backgroundColor: Colors.white.withValues(alpha: 0.2),
+                  backgroundColor: context.colors.surface.withValues(alpha: 0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withValues(alpha: 0.9),
+                    context.colors.surface.withValues(alpha: 0.9),
                   ),
                 ),
               ),
@@ -949,7 +952,7 @@ class StreakWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: context.colors.surface.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -964,7 +967,7 @@ class StreakWidget extends StatelessWidget {
                     child: Text(
                       motivationalMessage!,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
