@@ -23090,5 +23090,137 @@
   "maxBonusReached": "Max bonus reached! 100 XP every day",
   "@maxBonusReached": {
     "description": "Max bonus reached message"
+  },
+  "goal": "Goal",
+  "@goal": {
+    "description": "Goal label"
+  },
+  "goalAchieved": "Goal achieved! 🎉",
+  "@goalAchieved": {
+    "description": "Goal achieved celebration message"
+  },
+  "startFirstWorkout": "Start your first workout",
+  "@startFirstWorkout": {
+    "description": "Prompt to start first workout"
+  },
+  "moreWorkoutsRemaining": "{count} more workouts",
+  "@moreWorkoutsRemaining": {
+    "description": "Remaining workouts count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyGoal": "Weekly Goal",
+  "@weeklyGoal": {
+    "description": "Weekly goal label"
+  },
+  "workoutsCount": "{count} / {goal} workouts",
+  "@workoutsCount": {
+    "description": "Workouts count vs goal",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "completedCheckmark": "✓ Completed",
+  "@completedCheckmark": {
+    "description": "Completed with checkmark"
+  },
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress label"
+  },
+  "goalsAndTips": "Goals & Tips",
+  "@goalsAndTips": {
+    "description": "Goals and tips section title"
+  },
+  "personalizedWeeklyPlan": "Personalized weekly plan",
+  "@personalizedWeeklyPlan": {
+    "description": "Personalized weekly plan subtitle"
+  },
+  "completedLabel": "Completed",
+  "@completedLabel": {
+    "description": "Completed label for stats"
+  },
+  "goalLabel": "Goal",
+  "@goalLabel": {
+    "description": "Goal label for stats"
+  },
+  "daysRemaining": "Days remaining",
+  "@daysRemaining": {
+    "description": "Days remaining label"
+  },
+  "suggestionLabel": "Suggestion",
+  "@suggestionLabel": {
+    "description": "Suggestion label"
+  },
+  "goalReached": "Goal Reached!",
+  "@goalReached": {
+    "description": "Goal reached celebration"
+  },
+  "greatWorkThisWeek": "Great work this week!",
+  "@greatWorkThisWeek": {
+    "description": "Congratulations message"
+  },
+  "loginToSeeGoals": "Login to see your goals",
+  "@loginToSeeGoals": {
+    "description": "Login prompt for goals"
+  },
+  "suggestionStartToday": "Start today your first workout of the week! A good start is half the work.",
+  "@suggestionStartToday": {
+    "description": "Suggestion for 0 workouts completed"
+  },
+  "suggestionOneMore": "One more workout to reach your goal! You can do it!",
+  "@suggestionOneMore": {
+    "description": "Suggestion for 1 workout remaining"
+  },
+  "suggestionTwoMore": "Great progress! Schedule the next {count} workouts in the remaining days.",
+  "@suggestionTwoMore": {
+    "description": "Suggestion for 2 workouts remaining",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestionKeepGoing": "Keep going! You need {count} more workouts to complete your weekly goal.",
+  "@suggestionKeepGoing": {
+    "description": "Suggestion for 3+ workouts remaining",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+,
+  "autoAdjustWeightTitle": "Auto-Adjust Weight",
+  "@autoAdjustWeightTitle": {
+    "description": "Auto-adjust weight feature title"
+  },
+  "autoAdjustWeightDescription": "Adjust weight based on RPE feedback",
+  "@autoAdjustWeightDescription": {
+    "description": "Auto-adjust weight feature description"
+  },
+  "autoAdjustWeightTooltip": "RPE 9-10: suggest -2.5kg/-5%. RPE ≤6: suggest +2.5kg/+5%. Helps you find the optimal load for your current state.",
+  "@autoAdjustWeightTooltip": {
+    "description": "Auto-adjust weight feature tooltip"
+  },
+  "autoAdjustRestTitle": "Auto-Adjust Rest Time",
+  "@autoAdjustRestTitle": {
+    "description": "Auto-adjust rest time feature title"
+  },
+  "autoAdjustRestDescription": "Adjust rest based on effort level",
+  "@autoAdjustRestDescription": {
+    "description": "Auto-adjust rest time feature description"
+  },
+  "autoAdjustRestTooltip": "RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.",
+  "@autoAdjustRestTooltip": {
+    "description": "Auto-adjust rest time feature tooltip"
   }
 }

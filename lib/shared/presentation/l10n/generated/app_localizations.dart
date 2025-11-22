@@ -1946,7 +1946,7 @@ abstract class AppLocalizations {
   /// **'exercises'**
   String get exercises;
 
-  /// Label for progression indicator
+  /// Progress label
   ///
   /// In en, this message translates to:
   /// **'Progress'**
@@ -3133,10 +3133,10 @@ abstract class AppLocalizations {
   /// **'Complete some workouts to see your\nanalytics and progress!'**
   String get completeWorkoutsToSeeAnalytics;
 
-  /// Start first workout button text
+  /// Prompt to start first workout
   ///
   /// In en, this message translates to:
-  /// **'Start Your First Workout'**
+  /// **'Start your first workout'**
   String get startFirstWorkout;
 
   /// Volume increased message
@@ -10751,7 +10751,7 @@ abstract class AppLocalizations {
   /// **'No recent workouts'**
   String get noRecentWorkouts;
 
-  /// Format for displaying workout count vs goal
+  /// Workouts count vs goal
   ///
   /// In en, this message translates to:
   /// **'{count} / {goal} workouts'**
@@ -21366,10 +21366,10 @@ abstract class AppLocalizations {
   /// **'Paused until {date}'**
   String pausedUntil(String date);
 
-  /// Label for days until next milestone
+  /// Days remaining label
   ///
   /// In en, this message translates to:
-  /// **'days remaining'**
+  /// **'Days remaining'**
   String get daysRemaining;
 
   /// Button to manually resume a paused routine
@@ -32424,10 +32424,10 @@ abstract class AppLocalizations {
   /// **'This Week'**
   String get thisWeekShort;
 
-  /// Badge text when goal is achieved
+  /// Goal achieved celebration message
   ///
   /// In en, this message translates to:
-  /// **'Goal!'**
+  /// **'Goal achieved! 🎉'**
   String get goalAchieved;
 
   /// Title for last 7 days chart
@@ -32466,7 +32466,7 @@ abstract class AppLocalizations {
   /// **'Rest days are part of progress!'**
   String get tipRestDays;
 
-  /// Label for weekly goal setting
+  /// Weekly goal label
   ///
   /// In en, this message translates to:
   /// **'Weekly Goal'**
@@ -33629,6 +33629,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Max bonus reached! 100 XP every day'**
   String get maxBonusReached;
+
+  /// Goal label
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goal;
+
+  /// Remaining workouts count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} more workouts'**
+  String moreWorkoutsRemaining(int count);
+
+  /// Completed with checkmark
+  ///
+  /// In en, this message translates to:
+  /// **'✓ Completed'**
+  String get completedCheckmark;
+
+  /// Goals and tips section title
+  ///
+  /// In en, this message translates to:
+  /// **'Goals & Tips'**
+  String get goalsAndTips;
+
+  /// Personalized weekly plan subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized weekly plan'**
+  String get personalizedWeeklyPlan;
+
+  /// Completed label for stats
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedLabel;
+
+  /// Goal label for stats
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goalLabel;
+
+  /// Suggestion label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get suggestionLabel;
+
+  /// Goal reached celebration
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Reached!'**
+  String get goalReached;
+
+  /// Congratulations message
+  ///
+  /// In en, this message translates to:
+  /// **'Great work this week!'**
+  String get greatWorkThisWeek;
+
+  /// Login prompt for goals
+  ///
+  /// In en, this message translates to:
+  /// **'Login to see your goals'**
+  String get loginToSeeGoals;
+
+  /// Suggestion for 0 workouts completed
+  ///
+  /// In en, this message translates to:
+  /// **'Start today your first workout of the week! A good start is half the work.'**
+  String get suggestionStartToday;
+
+  /// Suggestion for 1 workout remaining
+  ///
+  /// In en, this message translates to:
+  /// **'One more workout to reach your goal! You can do it!'**
+  String get suggestionOneMore;
+
+  /// Suggestion for 2 workouts remaining
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress! Schedule the next {count} workouts in the remaining days.'**
+  String suggestionTwoMore(int count);
+
+  /// Suggestion for 3+ workouts remaining
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going! You need {count} more workouts to complete your weekly goal.'**
+  String suggestionKeepGoing(int count);
+
+  /// Auto-adjust weight feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Adjust Weight'**
+  String get autoAdjustWeightTitle;
+
+  /// Auto-adjust weight feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust weight based on RPE feedback'**
+  String get autoAdjustWeightDescription;
+
+  /// Auto-adjust weight feature tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 9-10: suggest -2.5kg/-5%. RPE ≤6: suggest +2.5kg/+5%. Helps you find the optimal load for your current state.'**
+  String get autoAdjustWeightTooltip;
+
+  /// Auto-adjust rest time feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Adjust Rest Time'**
+  String get autoAdjustRestTitle;
+
+  /// Auto-adjust rest time feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust rest based on effort level'**
+  String get autoAdjustRestDescription;
+
+  /// Auto-adjust rest time feature tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.'**
+  String get autoAdjustRestTooltip;
 }
 
 class _AppLocalizationsDelegate

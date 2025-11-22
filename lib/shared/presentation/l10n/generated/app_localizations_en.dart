@@ -1638,7 +1638,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Complete some workouts to see your\nanalytics and progress!';
 
   @override
-  String get startFirstWorkout => 'Start Your First Workout';
+  String get startFirstWorkout => 'Start your first workout';
 
   @override
   String volumeIncreased(int percent) {
@@ -12123,7 +12123,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get daysRemaining => 'days remaining';
+  String get daysRemaining => 'Days remaining';
 
   @override
   String get resumeRoutine => 'Resume Routine';
@@ -18070,7 +18070,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thisWeekShort => 'This Week';
 
   @override
-  String get goalAchieved => 'Goal!';
+  String get goalAchieved => 'Goal achieved! 🎉';
 
   @override
   String get lastSevenDays => 'Last 7 Days';
@@ -18748,4 +18748,78 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maxBonusReached => 'Max bonus reached! 100 XP every day';
+
+  @override
+  String get goal => 'Goal';
+
+  @override
+  String moreWorkoutsRemaining(int count) {
+    return '$count more workouts';
+  }
+
+  @override
+  String get completedCheckmark => '✓ Completed';
+
+  @override
+  String get goalsAndTips => 'Goals & Tips';
+
+  @override
+  String get personalizedWeeklyPlan => 'Personalized weekly plan';
+
+  @override
+  String get completedLabel => 'Completed';
+
+  @override
+  String get goalLabel => 'Goal';
+
+  @override
+  String get suggestionLabel => 'Suggestion';
+
+  @override
+  String get goalReached => 'Goal Reached!';
+
+  @override
+  String get greatWorkThisWeek => 'Great work this week!';
+
+  @override
+  String get loginToSeeGoals => 'Login to see your goals';
+
+  @override
+  String get suggestionStartToday =>
+      'Start today your first workout of the week! A good start is half the work.';
+
+  @override
+  String get suggestionOneMore =>
+      'One more workout to reach your goal! You can do it!';
+
+  @override
+  String suggestionTwoMore(int count) {
+    return 'Great progress! Schedule the next $count workouts in the remaining days.';
+  }
+
+  @override
+  String suggestionKeepGoing(int count) {
+    return 'Keep going! You need $count more workouts to complete your weekly goal.';
+  }
+
+  @override
+  String get autoAdjustWeightTitle => 'Auto-Adjust Weight';
+
+  @override
+  String get autoAdjustWeightDescription =>
+      'Adjust weight based on RPE feedback';
+
+  @override
+  String get autoAdjustWeightTooltip =>
+      'RPE 9-10: suggest -2.5kg/-5%. RPE ≤6: suggest +2.5kg/+5%. Helps you find the optimal load for your current state.';
+
+  @override
+  String get autoAdjustRestTitle => 'Auto-Adjust Rest Time';
+
+  @override
+  String get autoAdjustRestDescription => 'Adjust rest based on effort level';
+
+  @override
+  String get autoAdjustRestTooltip =>
+      'RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.';
 }

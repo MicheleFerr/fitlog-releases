@@ -87,7 +87,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Obiettivo',
+                        context.l10n.goal,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -126,9 +126,9 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    count >= goal ? 'Obiettivo raggiunto! 🎉' :
-                    count == 0 ? 'Inizia il tuo primo workout' :
-                    'Ancora ${goal - count} workout',
+                    count >= goal ? context.l10n.goalAchieved :
+                    count == 0 ? context.l10n.startFirstWorkout :
+                    context.l10n.moreWorkoutsRemaining(goal - count),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: count >= goal ? theme.colorScheme.primary :
                              theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -208,13 +208,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Obiettivo Settimanale',
+                              context.l10n.weeklyGoal,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '$count / $goal workout',
+                              context.l10n.workoutsCount(count, goal),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
@@ -230,7 +230,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            '✓ Completato',
+                            context.l10n.completedCheckmark,
                             style: TextStyle(
                               color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Progresso',
+                              context.l10n.progress,
                               style: theme.textTheme.bodyMedium,
                             ),
                             Text(
@@ -408,13 +408,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Obiettivi & Suggerimenti',
+                          context.l10n.goalsAndTips,
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          'Piano settimanale personalizzato',
+                          context.l10n.personalizedWeeklyPlan,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -442,7 +442,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: _buildGoalCard(
                               context,
                               icon: AppIcons.workout,
-                              label: 'Completati',
+                              label: context.l10n.completedLabel,
                               value: '$count',
                               color: context.colors.primary,
                             ),
@@ -452,7 +452,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: _buildGoalCard(
                               context,
                               icon: AppIcons.flag,
-                              label: 'Obiettivo',
+                              label: context.l10n.goalLabel,
                               value: '$goal',
                               color: context.colors.success,
                             ),
@@ -462,7 +462,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: _buildGoalCard(
                               context,
                               icon: AppIcons.calendar,
-                              label: 'Giorni rimasti',
+                              label: context.l10n.daysRemaining,
                               value: '${7 - DateTime.now().weekday}',
                               color: context.colors.secondary,
                             ),
@@ -493,7 +493,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Suggerimento',
+                                    context.l10n.suggestionLabel,
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       color: theme.colorScheme.primary,
                                       fontWeight: FontWeight.bold,
@@ -503,7 +503,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                _getSuggestion(count, goal - count),
+                                _getSuggestion(context, count, goal - count),
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -537,14 +537,14 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Obiettivo Raggiunto!',
+                                      context.l10n.goalReached,
                                       style: theme.textTheme.titleMedium?.copyWith(
                                         color: context.colors.success,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
-                                      'Ottimo lavoro questa settimana!',
+                                      context.l10n.greatWorkThisWeek,
                                       style: theme.textTheme.bodySmall?.copyWith(
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                       ),
@@ -624,7 +624,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
         ),
         child: Center(
           child: Text(
-            'Accedi per vedere i tuoi obiettivi',
+            context.l10n.loginToSeeGoals,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -710,15 +710,15 @@ class WeeklyGoalsWidget extends ConsumerWidget {
     return workoutDays;
   }
 
-  String _getSuggestion(int completed, int remaining) {
+  String _getSuggestion(BuildContext context, int completed, int remaining) {
     if (completed == 0) {
-      return 'Inizia oggi il tuo primo workout della settimana! Un buon inizio è metà dell\'opera.';
+      return context.l10n.suggestionStartToday;
     } else if (remaining == 1) {
-      return 'Ancora un workout per raggiungere il tuo obiettivo! Puoi farcela!';
+      return context.l10n.suggestionOneMore;
     } else if (remaining == 2) {
-      return 'Ottimo progresso! Programma i prossimi $remaining workout nei giorni rimanenti.';
+      return context.l10n.suggestionTwoMore(remaining);
     } else {
-      return 'Continua con costanza! Ti mancano $remaining workout per completare l\'obiettivo settimanale.';
+      return context.l10n.suggestionKeepGoing(remaining);
     }
   }
 }

@@ -12628,5 +12628,137 @@
   "maxBonusReached": "Bonus massimo raggiunto! 100 XP ogni giorno",
   "@maxBonusReached": {
     "description": "Max bonus reached message"
+  },
+  "goal": "Obiettivo",
+  "@goal": {
+    "description": "Goal label"
+  },
+  "goalAchieved": "Obiettivo raggiunto! 🎉",
+  "@goalAchieved": {
+    "description": "Goal achieved celebration message"
+  },
+  "startFirstWorkout": "Inizia il tuo primo workout",
+  "@startFirstWorkout": {
+    "description": "Prompt to start first workout"
+  },
+  "moreWorkoutsRemaining": "Ancora {count} workout",
+  "@moreWorkoutsRemaining": {
+    "description": "Remaining workouts count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyGoal": "Obiettivo Settimanale",
+  "@weeklyGoal": {
+    "description": "Weekly goal label"
+  },
+  "workoutsCount": "{count} / {goal} workout",
+  "@workoutsCount": {
+    "description": "Workouts count vs goal",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "completedCheckmark": "✓ Completato",
+  "@completedCheckmark": {
+    "description": "Completed with checkmark"
+  },
+  "progress": "Progresso",
+  "@progress": {
+    "description": "Progress label"
+  },
+  "goalsAndTips": "Obiettivi & Suggerimenti",
+  "@goalsAndTips": {
+    "description": "Goals and tips section title"
+  },
+  "personalizedWeeklyPlan": "Piano settimanale personalizzato",
+  "@personalizedWeeklyPlan": {
+    "description": "Personalized weekly plan subtitle"
+  },
+  "completedLabel": "Completati",
+  "@completedLabel": {
+    "description": "Completed label for stats"
+  },
+  "goalLabel": "Obiettivo",
+  "@goalLabel": {
+    "description": "Goal label for stats"
+  },
+  "daysRemaining": "Giorni rimasti",
+  "@daysRemaining": {
+    "description": "Days remaining label"
+  },
+  "suggestionLabel": "Suggerimento",
+  "@suggestionLabel": {
+    "description": "Suggestion label"
+  },
+  "goalReached": "Obiettivo Raggiunto!",
+  "@goalReached": {
+    "description": "Goal reached celebration"
+  },
+  "greatWorkThisWeek": "Ottimo lavoro questa settimana!",
+  "@greatWorkThisWeek": {
+    "description": "Congratulations message"
+  },
+  "loginToSeeGoals": "Accedi per vedere i tuoi obiettivi",
+  "@loginToSeeGoals": {
+    "description": "Login prompt for goals"
+  },
+  "suggestionStartToday": "Inizia oggi il tuo primo workout della settimana! Un buon inizio è metà dell'opera.",
+  "@suggestionStartToday": {
+    "description": "Suggestion for 0 workouts completed"
+  },
+  "suggestionOneMore": "Ancora un workout per raggiungere il tuo obiettivo! Puoi farcela!",
+  "@suggestionOneMore": {
+    "description": "Suggestion for 1 workout remaining"
+  },
+  "suggestionTwoMore": "Ottimo progresso! Programma i prossimi {count} workout nei giorni rimanenti.",
+  "@suggestionTwoMore": {
+    "description": "Suggestion for 2 workouts remaining",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "suggestionKeepGoing": "Continua con costanza! Ti mancano {count} workout per completare l'obiettivo settimanale.",
+  "@suggestionKeepGoing": {
+    "description": "Suggestion for 3+ workouts remaining",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+,
+  "autoAdjustWeightTitle": "Auto-Regola Peso",
+  "@autoAdjustWeightTitle": {
+    "description": "Titolo funzione auto-regolazione peso"
+  },
+  "autoAdjustWeightDescription": "Regola il peso in base al RPE",
+  "@autoAdjustWeightDescription": {
+    "description": "Descrizione funzione auto-regolazione peso"
+  },
+  "autoAdjustWeightTooltip": "RPE 9-10: suggerisci -2.5kg/-5%. RPE ≤6: suggerisci +2.5kg/+5%. Ti aiuta a trovare il carico ottimale per il tuo stato attuale.",
+  "@autoAdjustWeightTooltip": {
+    "description": "Tooltip funzione auto-regolazione peso"
+  },
+  "autoAdjustRestTitle": "Auto-Regola Riposo",
+  "@autoAdjustRestTitle": {
+    "description": "Titolo funzione auto-regolazione riposo"
+  },
+  "autoAdjustRestDescription": "Regola il riposo in base allo sforzo",
+  "@autoAdjustRestDescription": {
+    "description": "Descrizione funzione auto-regolazione riposo"
+  },
+  "autoAdjustRestTooltip": "RPE 8-10: +30s riposo. RPE ≤6: -15s riposo. Adatta automaticamente il tempo di recupero al tuo livello di fatica.",
+  "@autoAdjustRestTooltip": {
+    "description": "Tooltip funzione auto-regolazione riposo"
   }
 }
