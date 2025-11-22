@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});
@@ -32,10 +33,9 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
               color: Colors.blue,
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Firebase Exercise Importer',
-              style: TextStyle(
-                fontSize: 24,
+              style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -49,7 +49,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
               ),
               child: Text(
                 _status,
-                style: const TextStyle(fontSize: 16),
+                style: context.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -60,9 +60,9 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 backgroundColor: Colors.orange,
               ),
-              child: const Text(
+              child: Text(
                 '🧪 Test Single Exercise',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
             ),
             const SizedBox(height: 15),
@@ -73,7 +73,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                 backgroundColor: Colors.green,
               ),
               child: _isImporting
-                  ? const Row(
+                  ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
@@ -87,21 +87,20 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                         SizedBox(width: 10),
                         Text(
                           'Importing...',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
                         ),
                       ],
                     )
-                  : const Text(
+                  : Text(
                       '🔥 Import All Exercises',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
                     ),
             ),
             const SizedBox(height: 30),
-            const Text(
+            Text(
               'This will import all exercises from assets/data/exercises.json to Firebase Firestore.',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -123,7 +122,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
       });
     } catch (e) {
       setState(() {
-        _status = '❌ Test failed: $e';
+        _status = '❌ Test failed';
       });
     }
   }
@@ -186,7 +185,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
     } catch (e) {
       setState(() {
         _isImporting = false;
-        _status = '❌ Import failed: $e';
+        _status = '❌ Import failed';
       });
       
       // Show error dialog
@@ -195,7 +194,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Import Failed'),
-            content: Text('Error: $e'),
+            content: Text(context.l10n.error),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
