@@ -20,6 +20,10 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/workout_goals_chips.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/instagram_link_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class BuddyProfileDetails extends StatelessWidget {
 
@@ -74,7 +78,10 @@ class BuddyProfileDetails extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -146,10 +153,10 @@ class BuddyProfileDetails extends StatelessWidget {
                     profile.photoURL!,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
-                        _buildProfilePlaceholder(theme),
+                        _buildProfilePlaceholder(context),
                   ),
                 )
-              : _buildProfilePlaceholder(theme),
+              : _buildProfilePlaceholder(context),
         ),
 
         const SizedBox(height: 16),
@@ -166,9 +173,9 @@ class BuddyProfileDetails extends StatelessWidget {
             ),
             if (profile.isVerified) ...[
               const SizedBox(width: 8),
-              const Icon(
+              Icon(
                 AppIcons.verified,
-                color: Colors.blue,
+                color: context.colors.primary,
                 size: 24,
               ),
             ],
@@ -182,15 +189,15 @@ class BuddyProfileDetails extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: profile.isOnline 
-                ? Colors.green.withValues(alpha: 0.2)
+                ? context.colors.success.withValues(alpha: 0.2)
                 : theme.colorScheme.outline.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
             profile.onlineStatus,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: profile.isOnline 
-                  ? Colors.green.shade700
+              color: profile.isOnline
+                  ? context.colors.success
                   : theme.colorScheme.onSurface.withValues(alpha: 0.7),
               fontWeight: FontWeight.w600,
             ),
@@ -200,11 +207,12 @@ class BuddyProfileDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildProfilePlaceholder(ThemeData theme) {
-    return const Icon(
-      AppIcons.person,
-      size: 60,
-      color: Colors.white,
+  Widget _buildProfilePlaceholder(BuildContext context) {
+    return SemanticIcon(
+      icon: AppIcons.person,
+      semanticLabel: 'Profile',
+      size: AppIconSize.medium,
+      color: context.colors.surface,
     );
   }
 
@@ -237,10 +245,12 @@ class BuddyProfileDetails extends StatelessWidget {
             // Fitness level
             Row(
               children: [
-                Icon(
-                  AppIcons.workout,
-                  size: 20,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.7,
+),
                 ),
                 const SizedBox(width: 8),
                 FitnessLevelBadge(level: profile.preferences.fitnessLevel),
@@ -253,10 +263,12 @@ class BuddyProfileDetails extends StatelessWidget {
             if (profile.preferences.locationName != null) ...[
               Row(
                 children: [
-                  Icon(
-                    AppIcons.location,
-                    size: 20,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  SemanticIcon(
+  icon: AppIcons.location,
+  semanticLabel: 'Location',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.7,
+),
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -441,7 +453,7 @@ class BuddyProfileDetails extends StatelessWidget {
                   Text(
                     'Tasso di successo: ${profile.successRate.toStringAsFixed(0)}%',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.green,
+                      color: context.colors.success,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -525,14 +537,14 @@ class BuddyProfileDetails extends StatelessWidget {
                     children: [
                       Icon(
                         _getBadgeIcon(badge),
-                        color: Colors.amber.shade700,
+                        color: Colors.amber[700]!,
                         size: 20,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         badge.displayName,
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: Colors.amber.shade700,
+                          color: Colors.amber[700]!,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
