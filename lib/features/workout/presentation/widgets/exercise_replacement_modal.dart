@@ -133,17 +133,54 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       orElse: () => <Exercise>[],
     );
     
-    // Get suggestions or all exercises based on toggle
+    // Get suggestions or all exercises based on search/toggle
     List<ExerciseSuggestion> displayList;
-    
-    if (_showOnlyCompatible) {
-      // Show smart suggestions only
+
+    if (_searchQuery.isNotEmpty && _fuzzyResults.isNotEmpty) {
+      // Use fuzzy search results with hybrid scoring (fuzzy + compatibility)
+      displayList = _fuzzyResults.map((fuzzyResult) {
+        // Try to find existing workout exercise with same name
+        Exercise? matchingWorkoutExercise;
+        try {
+          matchingWorkoutExercise = allExercises.firstWhere(
+            (ex) => ex.name.toLowerCase() == fuzzyResult.exercise.nome.toLowerCase(),
+          );
+        } catch (e) {
+          // Exercise not found in workout provider, create minimal Exercise from DB exercise
+          matchingWorkoutExercise = Exercise(
+            name: fuzzyResult.exercise.nome,
+            type: ExerciseType.single, // Default to single exercise
+            category: _mapCategoryFromMuscles(fuzzyResult.exercise.focus),
+          );
+        }
+
+        // Calculate compatibility between current exercise and candidate
+        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
+          widget.currentExercise,
+          matchingWorkoutExercise,
+        );
+
+        // Hybrid score: 50% fuzzy name similarity + 50% muscle/pattern compatibility
+        // Fuzzy score is 0-1, compatibility is 0-100
+        // Convert fuzzy to 0-100 scale and average
+        final fuzzyScore100 = fuzzyResult.score * 100; // 0-1 → 0-100
+        final hybridScore = (fuzzyScore100 * 0.5) + (compatibility * 0.5);
+
+        return ExerciseSuggestion(
+          exercise: matchingWorkoutExercise,
+          compatibilityScore: hybridScore,
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise),
+        );
+      }).toList()
+        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
+    } else if (_showOnlyCompatible) {
+      // Show smart suggestions only (no search query)
       displayList = ExerciseCompatibilityService.getSuggestedReplacements(
         widget.currentExercise,
         allExercises,
       );
     } else {
-      // Show all exercises with compatibility scores
+      // Show all exercises with compatibility scores (no search query)
       displayList = allExercises.map((exercise) {
         // Special handling for same exercise
         if (exercise.name == widget.currentExercise.name) {
@@ -153,7 +190,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
             reason: _getCompatibilityReason(100, exercise),
           );
         }
-        
+
         final compatibility = ExerciseCompatibilityService.calculateCompatibility(
           widget.currentExercise,
           exercise,
@@ -166,13 +203,9 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       }).toList()
         ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
     }
-    
-    // Filter based on search and category
+
+    // Filter based on category only (search filtering is done by fuzzy search)
     final filteredSuggestions = displayList.where((s) {
-      if (_searchQuery.isNotEmpty && 
-          !s.exercise.name.toLowerCase().contains(_searchQuery.toLowerCase())) {
-        return false;
-      }
       if (_filterCategory != null && s.exercise.category != _filterCategory) {
         return false;
       }
@@ -686,11 +719,11 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   
   String _getCompatibilityReason(double score, Exercise exercise) {
     final l10n = AppLocalizations.of(context);
-    
+
     if (exercise.name == widget.currentExercise.name) {
       return l10n.currentExercise;
     }
-    
+
     if (score >= 80) {
       if (exercise.category == widget.currentExercise.category) {
         return l10n.excellentReplacement;
@@ -703,5 +736,30 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     } else {
       return l10n.differentMuscleGroup;
     }
+  }
+
+  /// Map database exercise muscles to workout category
+  ExerciseCategory _mapCategoryFromMuscles(List<String> muscles) {
+    // Convert to uppercase for case-insensitive matching
+    final musclesUpper = muscles.map((m) => m.toUpperCase()).toList();
+
+    // Check each muscle group
+    if (musclesUpper.any((m) => m.contains('PETT') || m.contains('CHEST') || m.contains('PECS'))) {
+      return ExerciseCategory.chest;
+    } else if (musclesUpper.any((m) => m.contains('DORS') || m.contains('LAT') || m.contains('BACK'))) {
+      return ExerciseCategory.back;
+    } else if (musclesUpper.any((m) => m.contains('SPALL') || m.contains('DELT') || m.contains('SHOULDER'))) {
+      return ExerciseCategory.shoulders;
+    } else if (musclesUpper.any((m) => m.contains('BRAC') || m.contains('BICIP') || m.contains('TRIC') || m.contains('ARM'))) {
+      return ExerciseCategory.arms;
+    } else if (musclesUpper.any((m) => m.contains('QUAD') || m.contains('GLUT') || m.contains('FEMO') || m.contains('POLP') || m.contains('LEG'))) {
+      return ExerciseCategory.legs;
+    } else if (musclesUpper.any((m) => m.contains('CORE') || m.contains('ABS') || m.contains('ADDOME'))) {
+      return ExerciseCategory.abs;
+    } else if (musclesUpper.any((m) => m.contains('CARDIO'))) {
+      return ExerciseCategory.cardio;
+    }
+
+    return ExerciseCategory.other;
   }
 }
