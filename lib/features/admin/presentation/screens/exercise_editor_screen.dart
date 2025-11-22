@@ -11,10 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_selector.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseEditorScreen extends ConsumerStatefulWidget { // null = new exercise
 
@@ -104,7 +107,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
         appBar: AppBar(
           title: Text(isEditing ? l10n.editExercise : l10n.addExercise),
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const Center(child: LoadingIndicator()),
       );
     }
 
@@ -115,16 +118,19 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.all(16),
-              child: SizedBox(
+              child: const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: LoadingIndicator(),
               ),
             )
           else
             TextButton.icon(
               onPressed: _saveExercise,
-              icon: const Icon(AppIcons.save),
+              icon: const SemanticIcon(
+  icon: AppIcons.save,
+  semanticLabel: 'Save',
+),
               label: Text(l10n.save),
             ),
         ],
@@ -282,7 +288,10 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: _isLoading ? null : _saveExercise,
-                  icon: const Icon(AppIcons.save),
+                  icon: const SemanticIcon(
+  icon: AppIcons.save,
+  semanticLabel: 'Save',
+),
                   label: Text(isEditing ? l10n.updateExercise : l10n.createExercise),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -355,7 +364,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
             border: Border.all(
               color: Theme.of(context).colorScheme.outline,
             ),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Wrap(
             spacing: 8,
@@ -442,7 +451,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(context.l10n.error),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
