@@ -47,6 +47,8 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_services_initializer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -199,11 +201,12 @@ class FitLogApp extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      AppIcons.errorOutlineRounded,
-                      size: 64,
-                      color: context.colors.error,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.errorOutlineRounded,
+  semanticLabel: 'Error outline rounded',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
                     const SizedBox(height: 24),
                     Text(
                       'Failed to initialize app',
@@ -405,10 +408,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AppIcons.error, size: 64),
-            SizedBox(height: 16),
+            const SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+),
+            const SizedBox(height: 16),
             Text('Page not found: ${state.fullPath ?? state.path ?? 'Unknown'}'),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.goNamed('home'),
               child: const Text('Go Home'),

@@ -13,20 +13,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_patch_review_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/patch_review_card.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_patch.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/patch_event_tracker.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExercisePatchReviewScreen extends ConsumerWidget {
   const ExercisePatchReviewScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
     final patchesAsync = ref.watch(exercisePatchReviewProvider);
 
     // Track screen view and pending patches count
@@ -55,7 +56,10 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(exercisePatchReviewProvider),
-            icon: Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             tooltip: l10n.refresh,
           ),
         ],
@@ -278,10 +282,12 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.checkCircle,
-            size: 64,
-            color: context.colors.success.withValues(alpha: 0.5),
+          SemanticIcon(
+  icon: AppIcons.checkCircle,
+  semanticLabel: 'Complete',
+  size: AppIconSize.medium,
+  color: context.colors.success.withValues(alpha: 0.5,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -310,11 +316,12 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: context.colors.error,
-          ),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
           const SizedBox(height: 16),
           Text(
             l10n.errorLoadingPatches,
@@ -351,7 +358,7 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
           children: [
             Icon(AppIcons.checkCircle, color: context.colors.success),
             const SizedBox(width: 8),
-            Text('Approve Patch'),
+            const Text('Approve Patch'),
           ],
         ),
         content: Text(
@@ -380,6 +387,8 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
       await approveAction(patch.id, null);
 
       // Haptic feedback for success
+      // ignore: unawaited_futures
+      // ignore: unawaited_futures
       HapticFeedback.mediumImpact();
 
       // Track analytics
@@ -403,6 +412,7 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
 
       // Haptic feedback for error
       HapticFeedback.vibrate();
+      // ignore: unawaited_futures
 
       SnackBarService.showError(
         context,
@@ -427,7 +437,7 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
           children: [
             Icon(AppIcons.cancel, color: context.colors.error),
             const SizedBox(width: 8),
-            Text('Reject Patch'),
+            const Text('Reject Patch'),
           ],
         ),
         content: Column(
@@ -441,10 +451,10 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Rejection Reason',
                 hintText: 'Explain why this patch is rejected...',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
               maxLines: 3,
             ),
@@ -488,6 +498,7 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
 
       // Haptic feedback for rejection
       HapticFeedback.lightImpact();
+      // ignore: unawaited_futures
 
       // Track analytics
       final analytics = ref.read(analyticsServiceProvider);
@@ -511,6 +522,7 @@ class ExercisePatchReviewScreen extends ConsumerWidget {
 
       // Haptic feedback for error
       HapticFeedback.vibrate();
+      // ignore: unawaited_futures
 
       SnackBarService.showError(
         context,

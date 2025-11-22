@@ -9,7 +9,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class MissingExercisesRequestsScreen extends ConsumerStatefulWidget {
   const MissingExercisesRequestsScreen({super.key});
@@ -25,7 +24,6 @@ class _MissingExercisesRequestsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final requestsAsync = ref.watch(requestsByStatusProvider(_selectedFilter));
     final countsAsync = ref.watch(requestCountsProvider);
 
@@ -172,7 +170,7 @@ class _MissingExercisesRequestsScreenState
   color: Theme.of(context,
 ).colorScheme.primary.withValues(alpha: 0.5),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Nessuna richiesta ${_getStatusLabel(_selectedFilter).toLowerCase()}',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -200,7 +198,6 @@ class _MissingExercisesRequestsScreenState
   }
 
   Widget _buildRequestCard(MissingExerciseRequest request) {
-    final l10n = AppLocalizations.of(context);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -217,7 +214,7 @@ class _MissingExercisesRequestsScreenState
                   color: _getStatusColor(request.status),
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     request.exerciseName,
@@ -229,7 +226,7 @@ class _MissingExercisesRequestsScreenState
               ],
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Details
             Text(
@@ -239,7 +236,7 @@ class _MissingExercisesRequestsScreenState
                     fontFamily: 'monospace',
                   ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               'Richiesto: ${_formatDate(request.requestedAt)}',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -248,7 +245,7 @@ class _MissingExercisesRequestsScreenState
             ),
 
             if (request.reviewedAt != null) ...[
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 'Revisionato: ${_formatDate(request.reviewedAt!)}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -258,7 +255,7 @@ class _MissingExercisesRequestsScreenState
             ],
 
             if (request.adminNotes != null) ...[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -277,19 +274,19 @@ class _MissingExercisesRequestsScreenState
 
             // Actions (only for pending requests)
             if (request.status == RequestStatus.pending) ...[
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               const Divider(),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _rejectRequest(request),
-                      icon: SemanticIcon(
+                      icon: const SemanticIcon(
   icon: AppIcons.close,
   semanticLabel: 'Close',
 ),
-                      label: Text('Rifiuta'),
+                      label: const Text('Rifiuta'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.error,
                       ),
@@ -334,7 +331,6 @@ class _MissingExercisesRequestsScreenState
   }
 
   Widget _buildErrorState(dynamic error) {
-    final l10n = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -436,7 +432,7 @@ class _MissingExercisesRequestsScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Annulla'),
+            child: const Text('Annulla'),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),

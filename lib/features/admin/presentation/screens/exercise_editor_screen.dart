@@ -99,7 +99,6 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final isEditing = widget.exercise != null;
 
     if (_dropdownValues == null) {
@@ -118,7 +117,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
           if (_isLoading)
             const Padding(
               padding: EdgeInsets.all(16),
-              child: const SizedBox(
+              child: SizedBox(
                 width: 20,
                 height: 20,
                 child: LoadingIndicator(),
@@ -298,7 +297,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -356,7 +355,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(12),
@@ -398,7 +397,6 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
 
     try {
       final service = ref.read(databaseManagerServiceProvider);
-      final l10n = AppLocalizations.of(context);
 
       // Create or update exercise
       final exercise = Exercise(

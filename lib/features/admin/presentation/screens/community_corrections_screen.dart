@@ -14,8 +14,9 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/communi
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correction_review_card.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -40,7 +41,10 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(communityCorrectionsProvider),
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             tooltip: l10n.refresh,
           ),
         ],
@@ -94,7 +98,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             // Statistiche rapide
             _buildStatsCards(context, l10n, corrections),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Correzioni in pending
             if (pendingCorrections.isNotEmpty) ...[
@@ -112,7 +116,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
                   onAction: (action) => _handleCorrectionAction(context, ref, correction, action),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
 
             // Correzioni già revisionate
@@ -153,7 +157,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: context.colors.secondary,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.approved,
@@ -162,7 +166,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: context.colors.success,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.rejected,
@@ -185,7 +189,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
     return Row(
       children: [
         Icon(icon, color: color, size: 20),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(
           title,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -193,7 +197,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
             color: color,
           ),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
@@ -230,17 +234,19 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.error,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             l10n.errorLoadingCorrections,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             error,
             style: Theme.of(context).textTheme.bodySmall,
@@ -256,19 +262,21 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.inbox,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          SemanticIcon(
+  icon: AppIcons.inbox,
+  semanticLabel: 'Inbox',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             l10n.noCorrections,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             l10n.noCorrectionsDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -434,7 +442,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(

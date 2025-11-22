@@ -75,12 +75,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   size: AppIconSize.medium,
   color: context.colors.error,
 ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Admin access required',
               style: context.textTheme.titleLarge,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'You do not have permission to view this page',
               style: context.textTheme.bodyMedium?.copyWith(
@@ -112,7 +112,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: SemanticIcon(
+          icon: const SemanticIcon(
   icon: AppIcons.back,
   semanticLabel: 'Back',
 ),
@@ -124,7 +124,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.admin,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(context.l10n.analyticsAdmin),
           ],
         ),
@@ -220,7 +220,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   size: AppIconSize.large,
   color: context.colors.primary,
 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   'Analytics Dashboard',
                   style: context.textTheme.headlineSmall?.copyWith(
@@ -230,14 +230,14 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Real-time analytics monitoring for admin users',
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onPrimaryContainer,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: [
                 SemanticIcon(
@@ -246,7 +246,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   size: AppIconSize.tiny,
   color: context.colors.primary,
 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   kDebugMode ? 'Debug Mode' : 'Production Mode',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -288,7 +288,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -300,7 +300,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                 color: context.colors.primary,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildOverviewCard(
                 context,
@@ -310,7 +310,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                 color: context.colors.secondary,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildOverviewCard(
                 context,
@@ -339,7 +339,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 32),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.headlineMedium?.copyWith(
@@ -347,7 +347,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                 color: color,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               title,
               style: context.textTheme.bodySmall?.copyWith(
@@ -396,7 +396,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.barChart,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'Event Counters',
               style: context.textTheme.titleLarge?.copyWith(
@@ -500,7 +500,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.workout,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'Workout Metrics',
               style: context.textTheme.titleLarge?.copyWith(
@@ -575,14 +575,14 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(icon, color: context.colors.primary, size: 24),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               title,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -618,7 +618,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.person,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'User Properties',
               style: context.textTheme.titleLarge?.copyWith(
@@ -627,7 +627,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -677,7 +677,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.history,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'Recent Events',
               style: context.textTheme.titleLarge?.copyWith(
@@ -686,14 +686,14 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           'Last 20 events (newest first)',
           style: context.textTheme.bodySmall?.copyWith(
             color: context.colors.onSurfaceVariant,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         if (recentEvents.isEmpty)
           Card(
             child: Padding(
@@ -766,7 +766,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ...parameters.entries.map((entry) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 2),
@@ -806,7 +806,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               AppIcons.info,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(context.l10n.analyticsInfo),
           ],
         ),
@@ -820,7 +820,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'This dashboard shows analytics events stored locally. All events are also sent to Firebase Analytics for advanced analytics features.',
               style: context.textTheme.bodyMedium,
@@ -838,7 +838,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               label: 'User ID',
               value: hybridService.userId ?? 'Not set',
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -853,7 +853,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   size: AppIconSize.tiny,
   color: context.colors.primary,
 ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Events synced to Firebase',

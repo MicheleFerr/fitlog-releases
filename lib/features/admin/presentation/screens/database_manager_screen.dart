@@ -1,331 +1,828 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
 ///
 /// 📁 Layer: features/admin/presentation/screens
-/// 🎯 Feature: admin - DATABASE MANAGER REDESIGN (ALL 6 PHASES)
+/// 🎯 Feature: admin
 /// 🔧 Type: screen
 ///
-/// Complete Database Manager redesign with tab structure, statistics dashboard,
-/// quick edit, bulk operations, filters, pagination, and offline mode
+/// Schermata principale Database Manager per gestione completa esercizi
 library;
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/widgets/exercise_quick_edit_card.dart';
+import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_tab_provider.dart';
-import 'package:gymbro_flutter_new/features/admin/domain/services/exercise_statistics_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_publish_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
-/// Complete Database Manager with Tab Structure (PHASE 1-6 COMPLETE)
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
 
   @override
-  ConsumerState<DatabaseManagerScreen> createState() =>
-      _DatabaseManagerScreenState();
+  ConsumerState<DatabaseManagerScreen> createState() => _DatabaseManagerScreenState();
 }
 
-class _DatabaseManagerScreenState
-    extends ConsumerState<DatabaseManagerScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
   final _searchController = TextEditingController();
-  Timer? _searchDebounce;
-  String _searchQuery = '';
-
-  // Pagination
-  int _currentPage = 0;
-  static const int _pageSize = 50;
-
-  // Expanded exercise ID for quick edit
-  String? _expandedExerciseId;
-
-  // Connectivity
-  final _connectivity = Connectivity();
-  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  bool _isOffline = false;
+  final _scrollController = ScrollController();
+  bool _isMultiSelectMode = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-
-    // Load column preference from SharedPreferences
-    _loadColumnPreference();
-
-    // Listen to connectivity changes
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-
-    // Check initial connectivity
-    _connectivity.checkConnectivity().then(_updateConnectionStatus);
+    // Carica esercizi all'avvio
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(databaseManagerProvider.notifier).loadExercises();
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     _searchController.dispose();
-    _searchDebounce?.cancel();
-    _connectivitySubscription?.cancel();
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _updateConnectionStatus(List<ConnectivityResult> results) {
-    setState(() {
-      _isOffline = results.contains(ConnectivityResult.none);
-    });
-  }
-
-  Future<void> _loadColumnPreference() async {
-    final preference = await loadColumnPreference();
-    if (mounted) {
-      ref.read(showDetailedColumnsProvider.notifier).state = preference;
-    }
-  }
-
-  void _onSearchChanged(String query) {
-    _searchDebounce?.cancel();
-    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
-      setState(() {
-        _searchQuery = query.toLowerCase();
-        _currentPage = 0; // Reset to first page on search
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final state = ref.watch(databaseManagerProvider);
+    final stats = ref.watch(databaseStatsProvider);
+
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context, l10n, state),
       body: Column(
         children: [
-          // Offline banner
-          if (_isOffline) _buildOfflineBanner(),
+          // Version Management Card
+          _buildVersionManagementCard(context, l10n, ref),
 
-          // Tab content
+          // Stats bar
+          _buildStatsBar(context, l10n, stats),
+
+          // Filter bar
+          _buildFilterBar(context, l10n, state),
+
+          // Selection bar (se in modalità selezione)
+          if (_isMultiSelectMode && state.hasSelection)
+            _buildSelectionBar(context, l10n, state),
+
+          // Exercise list
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildOverviewTab(),
-                _buildExercisesTab(language: 'it'),
-                _buildExercisesTab(language: 'en'),
-              ],
-            ),
+            child: _buildExerciseList(context, l10n, state),
           ),
         ],
       ),
+      floatingActionButton: _buildFAB(context, l10n),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    DatabaseManagerState state,
+  ) {
     return AppBar(
       title: Row(
         children: [
-          Icon(AppIcons.storage, size: AppIconSize.medium),
-          SizedBox(width: 8),
-          Text(context.l10n.databaseManager),
-        ],
-      ),
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: [
-          Tab(text: context.l10n.overview),
-          const Tab(text: 'Exercises IT'),
-          const Tab(text: 'Exercises EN'),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(AppIcons.refresh, size: AppIconSize.medium),
-          onPressed: () {
-            ref.invalidate(exercisesITStreamProvider);
-            ref.invalidate(exercisesENStreamProvider);
-            ref.invalidate(metadataStreamProvider);
-            ExerciseStatisticsService.clearCache();
-            SnackBarService.showSuccess(context, context.l10n.refreshed);
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOfflineBanner() {
-    return MaterialBanner(
-      backgroundColor: context.colors.errorContainer,
-      content: Row(
-        children: [
-          Icon(AppIcons.wifiOff, color: context.colors.error, size: AppIconSize.small),
-          SizedBox(width: 8),
-          Text(
-            'Offline mode - showing cached data',
-            style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onErrorContainer),
+          Icon(
+            AppIcons.storage,
+            color: Theme.of(context).colorScheme.primary,
           ),
+          const SizedBox(width: 8),
+          Text(l10n.databaseManager),
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => setState(() => _isOffline = false),
-          child: Text(context.l10n.dismiss),
+        // Toggle multi-select mode
+        IconButton(
+          onPressed: () {
+            setState(() => _isMultiSelectMode = !_isMultiSelectMode);
+            if (!_isMultiSelectMode) {
+              ref.read(databaseManagerProvider.notifier).clearSelection();
+            }
+          },
+          icon: Icon(
+            _isMultiSelectMode ? AppIcons.checkBox : AppIcons.checkBoxOutlineBlank,
+          ),
+          tooltip: l10n.multiSelectMode,
+        ),
+
+        // Export menu
+        PopupMenuButton<String>(
+          icon: const Icon(AppIcons.moreVert),
+          onSelected: (value) => _handleMenuAction(value, context, l10n),
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'export_all',
+              child: Row(
+                children: [
+                  const Icon(AppIcons.download),
+                  const SizedBox(width: 8),
+                  Text(l10n.exportAllJson),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'export_selected',
+              enabled: state.hasSelection,
+              child: Row(
+                children: [
+                  const Icon(AppIcons.downloadDone),
+                  const SizedBox(width: 8),
+                  Text(l10n.exportSelectedJson),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem(
+              value: 'import',
+              child: Row(
+                children: [
+                  const Icon(AppIcons.upload),
+                  const SizedBox(width: 8),
+                  Text(l10n.importJson),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem(
+              value: 'refresh',
+              child: Row(
+                children: [
+                  const Icon(AppIcons.refresh),
+                  const SizedBox(width: 8),
+                  Text(l10n.refresh),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  // ============================================================================
-  // PHASE 1+2: OVERVIEW TAB WITH STATISTICS
-  // ============================================================================
-
-  Widget _buildOverviewTab() {
-    final metadataAsync = ref.watch(metadataStreamProvider);
-    final selectedLang = ref.watch(overviewStatsLanguageProvider);
-    final exercisesAsync = selectedLang == 'it'
-        ? ref.watch(exercisesITStreamProvider)
-        : ref.watch(exercisesENStreamProvider);
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(metadataStreamProvider);
-        ref.invalidate(
-            selectedLang == 'it' ? exercisesITStreamProvider : exercisesENStreamProvider);
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatsBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    AsyncValue<Map<String, dynamic>> stats,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+      child: stats.when(
+        data: (data) => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Version Info Card
-            metadataAsync.when(
-              data: (metadata) => _buildVersionInfoCard(metadata),
-              loading: () => const LoadingIndicator(),
-              error: (error, stack) => _buildErrorCard(error.toString()),
+            _StatChip(
+              label: l10n.totalExercises,
+              value: data['totalExercises']?.toString() ?? '0',
+              icon: AppIcons.workout,
             ),
-
-            const SizedBox(height: 24),
-
-            // Language Selector
-            _buildLanguageSelector(),
-
-            const SizedBox(height: 16),
-
-            // Statistics Grid
-            exercisesAsync.when(
-              data: (exercises) => _buildStatisticsGrid(exercises, selectedLang),
-              loading: () => const LoadingIndicator(),
-              error: (error, stack) => _buildErrorCard(error.toString()),
+            _StatChip(
+              label: l10n.bodyweight,
+              value: data['bodyweightCount']?.toString() ?? '0',
+              icon: AppIcons.accessibility,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            _StatChip(
+              label: l10n.uniqueMuscles,
+              value: data['uniqueMuscles']?.toString() ?? '0',
+              icon: AppIcons.category,
             ),
           ],
         ),
+        loading: () => const LinearProgressIndicator(),
+        error: (_, __) => const SizedBox.shrink(),
       ),
     );
   }
 
-  Widget _buildVersionInfoCard(Map<String, dynamic>? metadata) {
-    final currentVersion = metadata?['current_version'] as String? ?? '1.0.0';
-    final lastUpdated = metadata?['last_updated'] as Timestamp?;
-    final totalExercisesEn = metadata?['total_exercises_en'] as int? ?? 0;
-    final totalExercisesIt = metadata?['total_exercises_it'] as int? ?? 0;
+  Widget _buildFilterBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    DatabaseManagerState state,
+  ) {
+    final dropdownValues = ref.watch(exerciseDropdownValuesProvider);
 
-    final dateStr = lastUpdated != null
-        ? DateFormat('dd/MM/yyyy HH:mm').format(lastUpdated.toDate())
-        : 'N/A';
-
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Icon(AppIcons.package, size: AppIconSize.large, color: context.colors.primary),
-                SizedBox(width: 12),
-                Text(
-                  context.l10n.versionInformation,
-                  style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-
-            // 2x2 Grid
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildInfoTile(context.l10n.currentVersion, currentVersion, AppIcons.tag),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: _buildInfoTile(context.l10n.lastPublished, dateStr, AppIcons.calendar),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildInfoTile('Exercises (EN)', totalExercisesEn.toString(), AppIcons.workout),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildInfoTile('Exercises (IT)', totalExercisesIt.toString(), AppIcons.workout),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            SizedBox(height: 20),
-
-            // Quick Actions Row
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    icon: Icon(AppIcons.upload, size: AppIconSize.small),
-                    label: Text(context.l10n.publishNewVersion),
-                    onPressed: () {
-                      SnackBarService.showInfo(context, 'Publish functionality preserved from original');
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(AppIcons.export, size: AppIconSize.small),
-                    label: const Text('Export JSON'),
-                    onPressed: () {
-                      SnackBarService.showInfo(context, 'Export functionality preserved from original');
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoTile(String label, String value, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Search field
+          TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: l10n.searchExercises,
+              prefixIcon: const Icon(AppIcons.search),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(AppIcons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        _applySearch();
+                      },
+                    )
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(vertical: 8),
+            ),
+            onChanged: (_) => _applySearch(),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Filter dropdowns
+          dropdownValues.when(
+            data: (values) => SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  // Difficulty filter
+                  _FilterChip(
+                    label: l10n.difficulty,
+                    value: state.selectedDifficulty,
+                    items: values.difficulties,
+                    onChanged: (value) => _applyFilter('difficulty', value),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // Equipment filter
+                  _FilterChip(
+                    label: l10n.equipment,
+                    value: state.selectedEquipment,
+                    items: values.equipments,
+                    onChanged: (value) => _applyFilter('equipment', value),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // Exercise type filter
+                  _FilterChip(
+                    label: l10n.exerciseType,
+                    value: state.selectedExerciseType,
+                    items: values.exerciseTypes,
+                    onChanged: (value) => _applyFilter('exerciseType', value),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // Clear filters button
+                  if (state.searchQuery != null ||
+                      state.selectedDifficulty != null ||
+                      state.selectedEquipment != null ||
+                      state.selectedExerciseType != null)
+                    ActionChip(
+                      label: Text(l10n.clearFilters),
+                      avatar: const Icon(AppIcons.clearAll, size: 18),
+                      onPressed: () {
+                        _searchController.clear();
+                        ref.read(databaseManagerProvider.notifier).resetFilters();
+                      },
+                    ),
+                ],
+              ),
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelectionBar(
+    BuildContext context,
+    AppLocalizations l10n,
+    DatabaseManagerState state,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: Row(
+        children: [
+          Text(
+            '${state.selectionCount} ${l10n.selected}',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const Spacer(),
+
+          // Bulk actions
+          TextButton.icon(
+            onPressed: () => _showBulkEditDialog(context, l10n),
+            icon: const Icon(AppIcons.edit, size: 18),
+            label: Text(l10n.bulkEdit),
+          ),
+          const SizedBox(width: 8),
+
+          TextButton.icon(
+            onPressed: () => _confirmBulkDelete(context, l10n),
+            icon: const Icon(AppIcons.delete, size: 18, color: Colors.red),
+            label: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseList(
+    BuildContext context,
+    AppLocalizations l10n,
+    DatabaseManagerState state,
+  ) {
+    if (state.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state.error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              AppIcons.error,
+              size: 64,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(state.error!),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => ref.read(databaseManagerProvider.notifier).loadExercises(),
+              icon: const Icon(AppIcons.refresh),
+              label: Text(l10n.retry),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state.filteredExercises.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(AppIcons.search_off, size: 64),
+            const SizedBox(height: 16),
+            Text(l10n.noExercisesFound),
+            const SizedBox(height: 8),
+            if (state.searchQuery != null || state.selectedDifficulty != null)
+              TextButton.icon(
+                onPressed: () {
+                  _searchController.clear();
+                  ref.read(databaseManagerProvider.notifier).resetFilters();
+                },
+                icon: const Icon(AppIcons.clear),
+                label: Text(l10n.clearFilters),
+              ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await ref.read(databaseManagerProvider.notifier).loadExercises(forceRefresh: true);
+      },
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(12),
+        itemCount: state.filteredExercises.length,
+        itemBuilder: (context, index) {
+          final exercise = state.filteredExercises[index];
+          final isSelected = state.selectedExerciseIds.contains(exercise.id);
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: ExerciseQuickEditCard(
+              exercise: exercise,
+              isSelected: isSelected,
+              onSelectionChanged: _isMultiSelectMode
+                  ? (_) => ref
+                      .read(databaseManagerProvider.notifier)
+                      .toggleExerciseSelection(exercise.id)
+                  : null,
+              onTap: () {
+                if (_isMultiSelectMode) {
+                  ref
+                      .read(databaseManagerProvider.notifier)
+                      .toggleExerciseSelection(exercise.id);
+                } else {
+                  _openExerciseEditor(context, exercise);
+                }
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFAB(BuildContext context, AppLocalizations l10n) {
+    return FloatingActionButton.extended(
+      onPressed: () => _openExerciseEditor(context, null),
+      icon: const Icon(AppIcons.add),
+      label: Text(l10n.addExercise),
+    );
+  }
+
+  void _applySearch() {
+    ref.read(databaseManagerProvider.notifier).applyFilters(
+      searchQuery: _searchController.text.isEmpty ? null : _searchController.text,
+    );
+  }
+
+  void _applyFilter(String filterType, String? value) {
+    final notifier = ref.read(databaseManagerProvider.notifier);
+
+    switch (filterType) {
+      case 'difficulty':
+        notifier.applyFilters(difficulty: value);
+        break;
+      case 'equipment':
+        notifier.applyFilters(equipment: value);
+        break;
+      case 'exerciseType':
+        notifier.applyFilters(exerciseType: value);
+        break;
+    }
+  }
+
+  void _handleMenuAction(String action, BuildContext context, AppLocalizations l10n) {
+    switch (action) {
+      case 'export_all':
+        _exportExercises(context, l10n, false);
+        break;
+      case 'export_selected':
+        _exportExercises(context, l10n, true);
+        break;
+      case 'import':
+        _showImportDialog(context, l10n);
+        break;
+      case 'refresh':
+        ref.read(databaseManagerProvider.notifier).loadExercises(forceRefresh: true);
+        break;
+    }
+  }
+
+  Future<void> _exportExercises(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool selectedOnly,
+  ) async {
+    final json = await ref
+        .read(databaseManagerProvider.notifier)
+        .exportExercises(selectedOnly: selectedOnly);
+
+    if (json != null) {
+      // Copy to clipboard for now (simplified export)
+      await Clipboard.setData(ClipboardData(text: json));
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('JSON copiato negli appunti'),
+            action: SnackBarAction(
+              label: l10n.ok,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _showImportDialog(BuildContext context, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.importJson),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.importJsonDescription),
+            const SizedBox(height: 16),
+            Text(
+              l10n.importWarning,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // TODO: Implement file picker and import
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.comingSoon)),
+              );
+            },
+            child: Text(l10n.selectFile),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBulkEditDialog(BuildContext context, AppLocalizations l10n) {
+    final dropdownValues = ref.read(exerciseDropdownValuesProvider).value;
+    if (dropdownValues == null) return;
+
+    String? selectedField;
+    String? selectedValue;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(l10n.bulkEdit),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Field selector
+              DropdownButtonFormField<String>(
+                initialValue: selectedField,
+                decoration: InputDecoration(
+                  labelText: l10n.selectField,
+                  border: const OutlineInputBorder(),
+                ),
+                items: [
+                  DropdownMenuItem(value: 'difficolta', child: Text(l10n.difficulty)),
+                  DropdownMenuItem(value: 'attrezzatura', child: Text(l10n.equipment)),
+                  DropdownMenuItem(value: 'tipoEsercizio', child: Text(l10n.exerciseType)),
+                  DropdownMenuItem(value: 'rangeRipetizioni', child: Text(l10n.repRange)),
+                ],
+                onChanged: (value) => setState(() {
+                  selectedField = value;
+                  selectedValue = null;
+                }),
+              ),
+
+              if (selectedField != null) ...[
+                const SizedBox(height: 16),
+
+                // Value selector
+                DropdownButtonFormField<String>(
+                  initialValue: selectedValue,
+                  decoration: InputDecoration(
+                    labelText: l10n.newValue,
+                    border: const OutlineInputBorder(),
+                  ),
+                  items: _getBulkEditValues(selectedField!, dropdownValues)
+                      .map((value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (value) => setState(() => selectedValue = value),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: selectedField != null && selectedValue != null
+                  ? () {
+                      Navigator.of(context).pop();
+                      ref.read(databaseManagerProvider.notifier).bulkUpdateField(
+                            selectedField!,
+                            selectedValue!,
+                          );
+                    }
+                  : null,
+              child: Text(l10n.apply),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<String> _getBulkEditValues(String field, ExerciseDropdownValues values) {
+    switch (field) {
+      case 'difficolta':
+        return values.difficulties;
+      case 'attrezzatura':
+        return values.equipments;
+      case 'tipoEsercizio':
+        return values.exerciseTypes;
+      case 'rangeRipetizioni':
+        return values.repRanges;
+      default:
+        return [];
+    }
+  }
+
+  void _confirmBulkDelete(BuildContext context, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.confirmDeleteMultiple(
+          ref.read(databaseManagerProvider).selectionCount,
+        )),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(databaseManagerProvider.notifier).deleteSelectedExercises();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openExerciseEditor(BuildContext context, Exercise? exercise) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ExerciseEditorScreen(exercise: exercise),
+      ),
+    ).then((_) {
+      // Refresh list after editing
+      ref.read(databaseManagerProvider.notifier).loadExercises();
+    });
+  }
+
+  /// Build Version Management Card
+  Widget _buildVersionManagementCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    WidgetRef ref,
+  ) {
+    final versionMetadataAsync = ref.watch(versionMetadataProvider);
+
+    return versionMetadataAsync.when(
+      data: (metadata) {
+        final currentVersion = metadata?['current_version'] as String? ?? '1.0.0';
+        final lastUpdated = metadata?['last_updated'] as Timestamp?;
+        final totalExercises = metadata?['total_exercises'] as int? ?? 0;
+        final changelog = metadata?['changelog'] as List<dynamic>? ?? [];
+
+        final dateStr = lastUpdated != null
+            ? DateFormat('dd/MM/yyyy HH:mm').format(lastUpdated.toDate())
+            : 'N/A';
+
+        return Container(
+          margin: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                context.colors.primaryContainer,
+                context.colors.secondaryContainer,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          AppIcons.storage,
+                          color: context.colors.primary,
+                          size: 28,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          l10n.versionHistory,
+                          style: context.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: context.colors.onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                    FilledButton.icon(
+                      onPressed: () => _showPublishDialog(context, l10n, currentVersion, ref),
+                      icon: const Icon(AppIcons.publish),
+                      label: Text(l10n.publishNewVersion),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Version Info Grid
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildInfoTile(
+                        context,
+                        l10n.currentVersion,
+                        currentVersion,
+                        AppIcons.tag,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildInfoTile(
+                        context,
+                        l10n.lastPublished,
+                        dateStr,
+                        AppIcons.calendar,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildInfoTile(
+                        context,
+                        l10n.totalExercisesInDb,
+                        totalExercises.toString(),
+                        AppIcons.workout,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Latest Changelog
+                if (changelog.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 12),
+                  Text(
+                    '${l10n.changelog} (Latest):',
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colors.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildChangelogEntry(context, changelog.first as Map<String, dynamic>),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
+    );
+  }
+
+  Widget _buildInfoTile(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -333,8 +830,8 @@ class _DatabaseManagerScreenState
         children: [
           Row(
             children: [
-              Icon(icon, size: AppIconSize.small, color: context.colors.secondary),
-              SizedBox(width: 6),
+              Icon(icon, size: 16, color: context.colors.primary),
+              const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   label,
@@ -347,10 +844,13 @@ class _DatabaseManagerScreenState
               ),
             ],
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             value,
-            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: context.colors.onSurface,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -359,987 +859,305 @@ class _DatabaseManagerScreenState
     );
   }
 
-  Widget _buildLanguageSelector() {
-    final selectedLang = ref.watch(overviewStatsLanguageProvider);
-    final itAsync = ref.watch(exercisesITStreamProvider);
-    final enAsync = ref.watch(exercisesENStreamProvider);
-
-    final itCount = itAsync.value?.length ?? 0;
-    final enCount = enAsync.value?.length ?? 0;
-
-    return Row(
-      children: [
-        Text(
-          'Statistics Language:',
-          style: context.textTheme.labelLarge,
-        ),
-        const SizedBox(width: 12),
-        DropdownButton<String>(
-          value: selectedLang,
-          items: [
-            DropdownMenuItem(
-              value: 'it',
-              child: Row(
-                children: [
-                  const Text('🇮🇹'),
-                  const SizedBox(width: 8),
-                  Text('Italian ($itCount)'),
-                ],
-              ),
-            ),
-            DropdownMenuItem(
-              value: 'en',
-              child: Row(
-                children: [
-                  const Text('🇬🇧'),
-                  const SizedBox(width: 8),
-                  Text('English ($enCount)'),
-                ],
-              ),
-            ),
-          ],
-          onChanged: (lang) {
-            if (lang != null) {
-              ref.read(overviewStatsLanguageProvider.notifier).state = lang;
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatisticsGrid(List<Exercise> exercises, String language) {
-    final stats = ExerciseStatisticsService.computeStats(exercises, language);
-
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      childAspectRatio: 1.2,
-      children: [
-        _buildStatsCard(
-          title: '🏋️ Equipment Distribution',
-          stats: stats.equipmentBreakdown,
-          total: stats.totalExercises,
-          maxVisible: 5,
-        ),
-        _buildStatsCard(
-          title: '💪 Muscle Groups',
-          stats: stats.muscleGroupBreakdown,
-          total: stats.totalExercises,
-          maxVisible: 5,
-        ),
-        _buildStatsCard(
-          title: '📊 Difficulty Levels',
-          stats: stats.difficultyBreakdown,
-          total: stats.totalExercises,
-          maxVisible: 3,
-        ),
-        _buildStatsCard(
-          title: '🎯 Exercise Types',
-          stats: stats.exerciseTypeBreakdown,
-          total: stats.totalExercises,
-          maxVisible: 4,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatsCard({
-    required String title,
-    required Map<String, int> stats,
-    required int total,
-    required int maxVisible,
-  }) {
-    final sortedEntries = stats.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final topEntries = sortedEntries.take(maxVisible);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: context.textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Expanded(
-              child: ListView(
-                children: topEntries.map((entry) {
-                  final percentage = total > 0 ? (entry.value / total * 100).toStringAsFixed(1) : '0.0';
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                entry.key,
-                                style: context.textTheme.bodySmall,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Text(
-                              '${entry.value} ($percentage%)',
-                              style: context.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: LinearProgressIndicator(
-                            value: total > 0 ? entry.value / total : 0,
-                            minHeight: 4,
-                            backgroundColor: context.colors.surfaceContainerHighest,
-                            color: context.colors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            if (sortedEntries.length > maxVisible) ...[
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton.icon(
-                  icon: const Icon(AppIcons.expand, size: AppIconSize.small),
-                  label: Text('Show All ${sortedEntries.length}'),
-                  onPressed: () => _showFullStatsDialog(title, stats, total),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showFullStatsDialog(String title, Map<String, int> stats, int total) {
-    final sortedEntries = stats.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: sortedEntries.length,
-            itemBuilder: (context, index) {
-              final entry = sortedEntries[index];
-              final percentage = total > 0 ? (entry.value / total * 100).toStringAsFixed(1) : '0.0';
-              return ListTile(
-                title: Text(entry.key),
-                trailing: Text('${entry.value} ($percentage%)'),
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.close),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ============================================================================
-  // PHASE 3+4+5: EXERCISES TAB (IT/EN) WITH FILTERS, PAGINATION, BULK EDIT
-  // ============================================================================
-
-  Widget _buildExercisesTab({required String language}) {
-    final exercisesAsync = language == 'it'
-        ? ref.watch(exercisesITStreamProvider)
-        : ref.watch(exercisesENStreamProvider);
-
-    final selectedExercises = language == 'it'
-        ? ref.watch(selectedExercisesITProvider)
-        : ref.watch(selectedExercisesENProvider);
-
-    final showDetailedColumns = ref.watch(showDetailedColumnsProvider);
-
-    return Column(
-      children: [
-        // Search bar + column toggle
-        _buildSearchBar(language, showDetailedColumns),
-
-        // Bulk edit toolbar (conditional)
-        if (selectedExercises.length >= 2)
-          _buildBulkEditToolbar(language, selectedExercises),
-
-        // Exercise list
-        Expanded(
-          child: exercisesAsync.when(
-            data: (exercises) {
-              final filteredExercises = _filterExercises(exercises);
-              final pagedExercises = _getPagedExercises(filteredExercises);
-
-              if (filteredExercises.isEmpty) {
-                return _buildEmptyState();
-              }
-
-              return RefreshIndicator(
-                onRefresh: () async {
-                  ref.invalidate(
-                      language == 'it' ? exercisesITStreamProvider : exercisesENStreamProvider);
-                },
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: pagedExercises.length + 1, // +1 for pagination controls
-                  itemBuilder: (context, index) {
-                    if (index == pagedExercises.length) {
-                      return _buildPaginationControls(filteredExercises.length);
-                    }
-
-                    final exercise = pagedExercises[index];
-                    final isSelected = selectedExercises.contains(exercise.id);
-                    final isExpanded = _expandedExerciseId == exercise.id;
-
-                    return _buildExerciseCard(
-                      exercise: exercise,
-                      language: language,
-                      isSelected: isSelected,
-                      isExpanded: isExpanded,
-                      showDetailedColumns: showDetailedColumns,
-                    );
-                  },
-                ),
-              );
-            },
-            loading: () => _buildLoadingSkeleton(),
-            error: (error, stack) => _buildErrorCard(error.toString()),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSearchBar(String language, bool showDetailedColumns) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: context.l10n.searchExercises,
-                prefixIcon: const SemanticIcon(
-  icon: AppIcons.search,
-  semanticLabel: 'Search',
-),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
-                        onPressed: () {
-                          _searchController.clear();
-                          _onSearchChanged('');
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: _onSearchChanged,
-            ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: Icon(
-              showDetailedColumns ? AppIcons.viewCompact : AppIcons.viewDetailed,
-              size: AppIconSize.medium,
-            ),
-            onPressed: () async {
-              final newValue = !showDetailedColumns;
-              ref.read(showDetailedColumnsProvider.notifier).state = newValue;
-              await saveColumnPreference(newValue);
-            },
-            tooltip: showDetailedColumns ? 'Show Fewer Columns' : 'Show More Columns',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBulkEditToolbar(String language, Set<String> selectedExercises) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: 60,
-      child: Material(
-        elevation: 4,
-        color: context.colors.primaryContainer,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Icon(AppIcons.checkCircle, color: context.colors.primary),
-              SizedBox(width: 8),
-              Text(
-                '${selectedExercises.length} selected',
-                style: context.textTheme.titleSmall?.copyWith(
-                  color: context.colors.onPrimaryContainer,
-                ),
-              ),
-              const Spacer(),
-              TextButton.icon(
-                icon: Icon(AppIcons.edit, size: AppIconSize.small),
-                label: Text('Change Equipment'),
-                onPressed: () => _showBulkChangeEquipmentDialog(language, selectedExercises),
-              ),
-              TextButton.icon(
-                icon: Icon(AppIcons.delete, size: AppIconSize.small, color: context.colors.error),
-                label: Text('Delete', style: context.textTheme.labelLarge?.copyWith(color: context.colors.error)),
-                onPressed: () => _confirmBulkDelete(language, selectedExercises),
-              ),
-              IconButton(
-                icon: const Icon(AppIcons.close, size: AppIconSize.small),
-                onPressed: () {
-                  if (language == 'it') {
-                    ref.read(selectedExercisesITProvider.notifier).state = {};
-                  } else {
-                    ref.read(selectedExercisesENProvider.notifier).state = {};
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExerciseCard({
-    required Exercise exercise,
-    required String language,
-    required bool isSelected,
-    required bool isExpanded,
-    required bool showDetailedColumns,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        children: [
-          ListTile(
-            leading: Checkbox(
-              value: isSelected,
-              onChanged: (value) {
-                _toggleExerciseSelection(exercise.id, language);
-              },
-            ),
-            title: Text(
-              exercise.nome,
-              style: context.textTheme.bodyLarge?.copyWith(fontWeight: isExpanded ? FontWeight.bold : FontWeight.normal),
-            ),
-            subtitle: Row(
-              children: [
-                Text('${exercise.attrezzatura} • ${exercise.focus.join(", ")}'),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(AppIcons.edit, size: AppIconSize.small),
-                  onPressed: () {
-                    SnackBarService.showInfo(context, 'Edit: ${exercise.nome}');
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
-                    size: AppIconSize.small,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _expandedExerciseId = isExpanded ? null : exercise.id;
-                    });
-                  },
-                ),
-              ],
-            ),
-            onTap: () {
-              setState(() {
-                _expandedExerciseId = isExpanded ? null : exercise.id;
-              });
-            },
-          ),
-
-          // PHASE 3: Quick Edit Chips (expandable)
-          if (isExpanded) _buildQuickEditChips(exercise, language),
-
-          // Detailed columns (if enabled)
-          if (isExpanded && showDetailedColumns)
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDetailRow('Difficulty', exercise.difficolta),
-                  _buildDetailRow('Type', exercise.tipoEsercizio),
-                  _buildDetailRow('Pattern', exercise.patternMovimento),
-                  _buildDetailRow('Secondary', exercise.muscoliSecondari.join(', ')),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              '$label:',
-              style: context.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(child: Text(value, style: context.textTheme.bodySmall)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickEditChips(Exercise exercise, String language) {
+  Widget _buildChangelogEntry(BuildContext context, Map<String, dynamic> entry) {
+    final changes = entry['changes'] as List<dynamic>? ?? [];
     return Container(
-      padding: const EdgeInsets.all(16),
-      color: context.colors.surfaceContainerHighest,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.surface.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Equipment chips
-          Text('Equipment:', style: context.textTheme.labelSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: _getEquipmentOptions().map((eq) {
-              final isSelected = exercise.attrezzatura == eq;
-              return FilterChip(
-                label: Text(eq),
-                selected: isSelected,
-                onSelected: (selected) {
-                  if (selected) {
-                    _quickUpdateField(exercise.id, 'attrezzatura', eq, language);
-                  }
-                },
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 12),
-
-          // Difficulty chips
-          Text('Difficulty:', style: context.textTheme.labelSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: ['Principiante', 'Intermedio', 'Avanzato'].map((diff) {
-              final isSelected = exercise.difficolta == diff;
-              return ChoiceChip(
-                label: Text(diff),
-                selected: isSelected,
-                onSelected: (_) => _quickUpdateField(exercise.id, 'difficolta', diff, language),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 12),
-
-          // Type chips (Compound/Isolation)
-          Text('Type:', style: context.textTheme.labelSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: ['Compound', 'Isolamento'].map((type) {
-              final isSelected = exercise.tipoEsercizio == type;
-              return ChoiceChip(
-                label: Text(type),
-                selected: isSelected,
-                onSelected: (_) => _quickUpdateField(exercise.id, 'tipoEsercizio', type, language),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 12),
-
-          // Focus muscles (multi-select)
-          Text('Focus Muscles:', style: context.textTheme.labelSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: _getAvailableMuscles().map((muscle) {
-              final isSelected = exercise.focus.contains(muscle);
-              return FilterChip(
-                label: Text(muscle),
-                selected: isSelected,
-                onSelected: (selected) {
-                  final updatedFocus = List<String>.from(exercise.focus);
-                  if (selected) {
-                    updatedFocus.add(muscle);
-                  } else {
-                    updatedFocus.remove(muscle);
-                  }
-                  _quickUpdateField(exercise.id, 'focus', updatedFocus, language);
-                },
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 12),
-
-          // Secondary muscles (multi-select)
-          Text('Secondary Muscles:', style: context.textTheme.labelSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: _getAvailableMuscles().map((muscle) {
-              final isSelected = exercise.muscoliSecondari.contains(muscle);
-              return FilterChip(
-                label: Text(muscle),
-                selected: isSelected,
-                onSelected: (selected) {
-                  final updatedSecondary = List<String>.from(exercise.muscoliSecondari);
-                  if (selected) {
-                    updatedSecondary.add(muscle);
-                  } else {
-                    updatedSecondary.remove(muscle);
-                  }
-                  _quickUpdateField(exercise.id, 'muscoliSecondari', updatedSecondary, language);
-                },
-              );
-            }).toList(),
-          ),
-        ],
+        children: changes.map((change) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('• ', style: context.textTheme.bodyMedium),
+                Expanded(
+                  child: Text(
+                    change.toString(),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colors.onSurface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ),
     );
   }
 
-  List<String> _getEquipmentOptions() {
-    return [
-      'Corpo Libero',
-      'Bilanciere',
-      'Manubri',
-      'Cavi',
-      'Macchina',
-      'Kettlebell',
-      'Elastici',
-      'TRX',
-      'Vario',
-    ];
-  }
+  /// Show Publish New Version Dialog
+  void _showPublishDialog(
+    BuildContext context,
+    AppLocalizations l10n,
+    String currentVersion,
+    WidgetRef ref,
+  ) {
+    final service = ref.read(exercisePublishServiceProvider);
+    final newVersion = service.incrementVersion(currentVersion);
 
-  List<String> _getAvailableMuscles() {
-    return [
-      'QUAD', 'GLUT', 'HAMS', 'POLP', // Legs
-      'PETT', 'DELT', 'TRAP', 'DORS', 'CORE', // Upper body
-      'BICI', 'TRIC', 'AVAMB', // Arms
-      'ADDUT', 'ABDUT', // Leg stabilizers
-    ];
-  }
-
-  Future<void> _quickUpdateField(
-    String exerciseId,
-    String fieldName,
-    dynamic value,
-    String language,
-  ) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('exercises_$language')
-          .doc(exerciseId)
-          .update({fieldName: value});
-
-      HapticFeedback.lightImpact();
-      SnackBarService.showSuccess(context, 'Updated $fieldName to $value');
-    } catch (e) {
-      SnackBarService.showError(context, context.l10n.error);
-    }
-  }
-
-  void _toggleExerciseSelection(String exerciseId, String language) {
-    if (language == 'it') {
-      final current = ref.read(selectedExercisesITProvider);
-      if (current.contains(exerciseId)) {
-        ref.read(selectedExercisesITProvider.notifier).state = Set.from(current)..remove(exerciseId);
-      } else {
-        ref.read(selectedExercisesITProvider.notifier).state = Set.from(current)..add(exerciseId);
-      }
-    } else {
-      final current = ref.read(selectedExercisesENProvider);
-      if (current.contains(exerciseId)) {
-        ref.read(selectedExercisesENProvider.notifier).state = Set.from(current)..remove(exerciseId);
-      } else {
-        ref.read(selectedExercisesENProvider.notifier).state = Set.from(current)..add(exerciseId);
-      }
-    }
-  }
-
-  void _showBulkChangeEquipmentDialog(String language, Set<String> selectedExercises) {
-    String? selectedEquipment;
+    final changelogController = TextEditingController();
+    bool isRequired = false;
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
+      builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Change Equipment'),
-          content: DropdownButtonFormField<String>(
-            initialValue: selectedEquipment,
-            decoration: const InputDecoration(
-              labelText: 'New Equipment',
-              border: OutlineInputBorder(),
+          title: Text(l10n.publishVersion),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Version Number (read-only, auto-incremented)
+                Text(
+                  l10n.versionNumber,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(AppIcons.tag, size: 20, color: context.colors.primary),
+                      const SizedBox(width: 8),
+                      Text(
+                        newVersion,
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: context.colors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Changelog Input
+                Text(
+                  l10n.changelog,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: changelogController,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    hintText: l10n.changelogHint,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Force Update Checkbox
+                CheckboxListTile(
+                  value: isRequired,
+                  onChanged: (value) {
+                    setState(() => isRequired = value ?? false);
+                  },
+                  title: Text(l10n.forceUpdate),
+                  subtitle: Text(
+                    l10n.forceUpdateDesc,
+                    style: context.textTheme.bodySmall,
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ],
             ),
-            items: _getEquipmentOptions()
-                .map((eq) => DropdownMenuItem(value: eq, child: Text(eq)))
-                .toList(),
-            onChanged: (value) => setState(() => selectedEquipment = value),
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.l10n.cancel),
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(l10n.cancel),
             ),
-            ElevatedButton(
-              onPressed: selectedEquipment != null
-                  ? () {
-                      Navigator.pop(context);
-                      _bulkUpdateField(
-                        selectedExercises.toList(),
-                        'attrezzatura',
-                        selectedEquipment!,
-                        language,
-                      );
-                    }
-                  : null,
-              child: const Text('Apply'),
+            FilledButton(
+              onPressed: () async {
+                if (changelogController.text.trim().isEmpty) {
+                  SnackBarService.showError(
+                    context,
+                    'Changelog cannot be empty',
+                  );
+                  return;
+                }
+
+                Navigator.pop(dialogContext);
+
+                // Show loading
+                if (context.mounted) {
+                  SnackBarService.showInfo(context, l10n.publishing);
+                }
+
+                try {
+                  // Parse changelog (split by newlines)
+                  final changelogEntries = changelogController.text
+                      .split('\n')
+                      .map((e) => e.trim())
+                      .where((e) => e.isNotEmpty)
+                      .toList();
+
+                  // Publish new version
+                  await service.publishNewVersion(
+                    version: newVersion,
+                    changelogEntries: changelogEntries,
+                    isRequired: isRequired,
+                  );
+
+                  if (context.mounted) {
+                    SnackBarService.showSuccess(
+                      context,
+                      l10n.versionPublished(newVersion),
+                    );
+
+                    // Refresh metadata
+                    ref.invalidate(versionMetadataProvider);
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    SnackBarService.showError(
+                      context,
+                      l10n.publishFailed(e.toString()),
+                    );
+                  }
+                }
+              },
+              child: Text(l10n.publishVersion),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  Future<void> _bulkUpdateField(
-    List<String> exerciseIds,
-    String fieldName,
-    dynamic value,
-    String language,
-  ) async {
-    // Show loading
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: LoadingIndicator()),
-    );
+/// Stat chip widget
+class _StatChip extends StatelessWidget {
 
-    try {
-      const batchSize = 500;
-      final batches = <WriteBatch>[];
+  const _StatChip({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.color,
+  });
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color? color;
 
-      for (int i = 0; i < exerciseIds.length; i += batchSize) {
-        final batch = FirebaseFirestore.instance.batch();
-        final end = (i + batchSize < exerciseIds.length) ? i + batchSize : exerciseIds.length;
-
-        for (int j = i; j < end; j++) {
-          final docRef = FirebaseFirestore.instance
-              .collection('exercises_$language')
-              .doc(exerciseIds[j]);
-          batch.update(docRef, {fieldName: value});
-        }
-
-        batches.add(batch);
-      }
-
-      // Commit all batches in parallel
-      await Future.wait(batches.map((batch) => batch.commit()));
-
-      Navigator.pop(context); // Dismiss loading
-
-      // Clear selection
-      if (language == 'it') {
-        ref.read(selectedExercisesITProvider.notifier).state = {};
-      } else {
-        ref.read(selectedExercisesENProvider.notifier).state = {};
-      }
-
-      SnackBarService.showSuccess(context, 'Updated ${exerciseIds.length} exercises');
-    } catch (e) {
-      Navigator.pop(context); // Dismiss loading
-      SnackBarService.showError(context, context.l10n.error);
-    }
-  }
-
-  void _confirmBulkDelete(String language, Set<String> selectedExercises) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Delete'),
-        content: Text('Delete ${selectedExercises.length} exercises? This cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _bulkDeleteExercises(selectedExercises.toList(), language);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: context.colors.error,
-              foregroundColor: context.colors.onError,
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: color),
+        const SizedBox(width: 4),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
             ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _bulkDeleteExercises(List<String> exerciseIds, String language) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: LoadingIndicator()),
-    );
-
-    try {
-      const batchSize = 500;
-      final batches = <WriteBatch>[];
-
-      for (int i = 0; i < exerciseIds.length; i += batchSize) {
-        final batch = FirebaseFirestore.instance.batch();
-        final end = (i + batchSize < exerciseIds.length) ? i + batchSize : exerciseIds.length;
-
-        for (int j = i; j < end; j++) {
-          final docRef = FirebaseFirestore.instance
-              .collection('exercises_$language')
-              .doc(exerciseIds[j]);
-          batch.delete(docRef);
-        }
-
-        batches.add(batch);
-      }
-
-      await Future.wait(batches.map((batch) => batch.commit()));
-
-      Navigator.pop(context); // Dismiss loading
-
-      // Clear selection
-      if (language == 'it') {
-        ref.read(selectedExercisesITProvider.notifier).state = {};
-      } else {
-        ref.read(selectedExercisesENProvider.notifier).state = {};
-      }
-
-      SnackBarService.showSuccess(context, 'Deleted ${exerciseIds.length} exercises');
-    } catch (e) {
-      Navigator.pop(context);
-      SnackBarService.showError(context, context.l10n.error);
-    }
-  }
-
-  // ============================================================================
-  // PHASE 5: FILTERING AND PAGINATION
-  // ============================================================================
-
-  List<Exercise> _filterExercises(List<Exercise> exercises) {
-    if (_searchQuery.isEmpty) return exercises;
-
-    return exercises.where((exercise) {
-      return exercise.nome.toLowerCase().contains(_searchQuery) ||
-          exercise.focus.any((f) => f.toLowerCase().contains(_searchQuery)) ||
-          exercise.attrezzatura.toLowerCase().contains(_searchQuery);
-    }).toList();
-  }
-
-  List<Exercise> _getPagedExercises(List<Exercise> exercises) {
-    final startIndex = _currentPage * _pageSize;
-    final endIndex = (startIndex + _pageSize < exercises.length)
-        ? startIndex + _pageSize
-        : exercises.length;
-
-    if (startIndex >= exercises.length) return [];
-
-    return exercises.sublist(startIndex, endIndex);
-  }
-
-  Widget _buildPaginationControls(int totalCount) {
-    final totalPages = (totalCount / _pageSize).ceil();
-    final currentPageDisplay = _currentPage + 1;
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            icon: SemanticIcon(
-  icon: AppIcons.chevronLeft,
-  semanticLabel: 'Chevron left',
-),
-            onPressed: _currentPage > 0
-                ? () => setState(() => _currentPage--)
-                : null,
-          ),
-          Text(
-            'Page $currentPageDisplay of $totalPages',
-            style: context.textTheme.bodyMedium,
-          ),
-          IconButton(
-            icon: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
-            onPressed: _currentPage < totalPages - 1
-                ? () => setState(() => _currentPage++)
-                : null,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ============================================================================
-  // PHASE 6: EMPTY STATES AND LOADING SKELETONS
-  // ============================================================================
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SemanticIcon(
-  icon: AppIcons.searchOff,
-  semanticLabel: 'Search off',
-  size: AppIconSize.medium,
-  color: context.colors.onSurfaceVariant,
-),
-          SizedBox(height: 16),
-          Text(
-            context.l10n.noExercisesFound,
-            style: context.textTheme.titleMedium,
-          ),
-          SizedBox(height: 8),
-          TextButton.icon(
-            onPressed: () {
-              _searchController.clear();
-              _onSearchChanged('');
-            },
-            icon: SemanticIcon(
-  icon: AppIcons.clear,
-  semanticLabel: 'Clear',
-),
-            label: Text(context.l10n.clearFilters),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoadingSkeleton() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: ListTile(
-            leading: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-            title: Container(
-              height: 16,
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            subtitle: Container(
-              height: 12,
-              margin: const EdgeInsets.only(top: 4),
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildErrorCard(String error) {
-    return Center(
-      child: Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
-              SizedBox(height: 16),
-              Text(
-                'Error loading data',
-                style: context.textTheme.titleMedium,
-              ),
-              SizedBox(height: 8),
-              Text(
-                error,
-                style: context.textTheme.bodySmall,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  ref.invalidate(exercisesITStreamProvider);
-                  ref.invalidate(exercisesENStreamProvider);
-                  ref.invalidate(metadataStreamProvider);
-                },
-                icon: SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
-                label: Text(context.l10n.retry),
-              ),
-            ],
-          ),
+          ],
         ),
+      ],
+    );
+  }
+}
+
+/// Filter chip dropdown
+class _FilterChip extends StatelessWidget {
+
+  const _FilterChip({
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
+  final String label;
+  final String? value;
+  final List<String> items;
+  final Function(String?) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
+        borderRadius: BorderRadius.circular(20),
+        color: value != null
+            ? Theme.of(context).colorScheme.primaryContainer
+            : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Dropdown button
+          DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: value,
+              hint: Text(label, style: const TextStyle(fontSize: 12)),
+              items: [
+                DropdownMenuItem(
+                  value: null,
+                  child: Text(label),
+                ),
+                ...items.map((item) => DropdownMenuItem(
+                      value: item,
+                      child: Text(item, style: const TextStyle(fontSize: 12)),
+                    )),
+              ],
+              onChanged: onChanged,
+              isDense: true,
+              icon: value == null
+                  ? const Icon(AppIcons.arrowDropDown, size: 18)
+                  : const SizedBox.shrink(),
+            ),
+          ),
+
+          // Clear button (only when value is selected)
+          if (value != null) ...[
+            const SizedBox(width: 4),
+            GestureDetector(
+              onTap: () => onChanged(null),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  AppIcons.clear,
+                  size: 14,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
+
 }

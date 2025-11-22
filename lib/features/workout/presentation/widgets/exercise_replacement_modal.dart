@@ -1,13 +1,18 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/fuzzy_search_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
   
@@ -43,13 +48,24 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   String _searchQuery = '';
   ExerciseCategory? _filterCategory;
   bool _showOnlyCompatible = false; // Mostra tutti di default
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+  List<ExerciseDB.Exercise> _dbExercises = [];
+  List<ExerciseSearchResult> _fuzzyResults = [];
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
     final exercisesAsync = ref.watch(exerciseJsonProvider);
-    
+
     // Get exercises from provider
     final allExercises = exercisesAsync.maybeWhen(
       data: (exercises) => exercises,
@@ -156,7 +172,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -201,11 +220,17 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   onChanged: (value) => setState(() => _searchQuery = value),
                   decoration: InputDecoration(
                     hintText: l10n.searchExercises,
-                    prefixIcon: const Icon(AppIcons.search),
+                    prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             onPressed: () => setState(() => _searchQuery = ''),
-                            icon: const Icon(AppIcons.clear),
+                            icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                           )
                         : null,
                     border: OutlineInputBorder(
@@ -228,13 +253,14 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                         label: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              AppIcons.autoAwesome,
-                              size: 16,
-                              color: _showOnlyCompatible 
+                            SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.tiny,
+  color: _showOnlyCompatible 
                                   ? theme.colorScheme.onPrimary
                                   : theme.colorScheme.onSurface,
-                            ),
+),
                             const SizedBox(width: 4),
                             Text(l10n.smartSuggestions),
                           ],
@@ -279,11 +305,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      AppIcons.error,
-                      size: 64,
-                      color: theme.colorScheme.error,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error,
+),
                     const SizedBox(height: 16),
                     Text(
                       l10n.errorLoadingExercises,
@@ -297,10 +324,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          AppIcons.searchOff,
-                          size: 64,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                        SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -467,11 +496,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

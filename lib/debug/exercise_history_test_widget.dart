@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/workout/data/services/exercise_histo
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistoryTestWidget extends ConsumerStatefulWidget {
   
@@ -78,7 +79,6 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
     
     final historyAsync = ref.watch(exerciseHistoryProvider(widget.exerciseName));
     final userId = ref.watch(currentUserIdProvider);
@@ -314,7 +314,10 @@ class _ExerciseHistoryTestWidgetState extends ConsumerState<ExerciseHistoryTestW
                 ref.invalidate(exerciseHistoryProvider(widget.exerciseName));
                 _loadDebugData();
               },
-              icon: const Icon(AppIcons.refresh),
+              icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
               label: const Text('Refresh Data'),
             ),
           ],

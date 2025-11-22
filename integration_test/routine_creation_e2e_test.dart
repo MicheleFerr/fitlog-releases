@@ -19,6 +19,7 @@
 /// - integration_test package (Flutter)
 /// - FakeFirebaseFirestore for isolated Firestore testing
 /// - Riverpod provider overrides for dependency injection
+library;
 
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:gymbro_flutter_new/features/routine/data/repositories/firebase_routine_repository.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_preset.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_providers.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_creation_step1_screen.dart';
@@ -268,7 +268,7 @@ void main() {
       expect(find.byType(RoutineCreationStep1Screen), findsOneWidget);
 
       // Tap back button (close icon)
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byIcon(AppIcons.close));
       await tester.pumpAndSettle();
 
       // Verify navigation back to Routine Center

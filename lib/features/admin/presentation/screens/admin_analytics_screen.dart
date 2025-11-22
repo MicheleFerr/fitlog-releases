@@ -14,6 +14,9 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_analytics_sync_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class AdminAnalyticsScreen extends ConsumerStatefulWidget {
   const AdminAnalyticsScreen({super.key});
@@ -45,7 +48,6 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
   
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final syncState = ref.watch(adminAnalyticsSyncProvider);
     final isAdmin = ref.watch(isAdminProvider);
@@ -59,11 +61,12 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.lockOutline,
-                size: 64,
-                color: theme.colorScheme.outline,
-              ),
+              SemanticIcon(
+  icon: AppIcons.lockOutline,
+  semanticLabel: 'Lock outline',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.outline,
+),
               const SizedBox(height: 16),
               Text(
                 'Admin Access Required',
@@ -89,10 +92,22 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
           controller: _tabController,
           isScrollable: true,
           tabs: const [
-            Tab(text: 'Overview', icon: Icon(AppIcons.dashboard)),
-            Tab(text: 'Users', icon: Icon(AppIcons.people)),
-            Tab(text: 'Exercises', icon: Icon(AppIcons.workout)),
-            Tab(text: 'Trends', icon: Icon(AppIcons.trendUp)),
+            Tab(text: 'Overview', icon: SemanticIcon(
+  icon: AppIcons.dashboard,
+  semanticLabel: 'Dashboard',
+)),
+            Tab(text: 'Users', icon: SemanticIcon(
+  icon: AppIcons.people,
+  semanticLabel: 'People',
+)),
+            Tab(text: 'Exercises', icon: SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+)),
+            Tab(text: 'Trends', icon: SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+)),
           ],
         ),
       ),
@@ -217,7 +232,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                               .triggerReverseSync();
                         }
                       },
-                      icon: const Icon(AppIcons.syncIcon),
+                      icon: const SemanticIcon(
+  icon: AppIcons.syncIcon,
+  semanticLabel: 'Sync icon',
+),
                       label: Text(state.isSyncing ? 'Syncing...' : 'Sync Analytics'),
                     ),
                   ),
@@ -231,7 +249,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                         await ref.read(adminAnalyticsSyncProvider.notifier)
                             .triggerCloudAnalyticsCollection();
                       },
-                      icon: const Icon(AppIcons.cloudDownload),
+                      icon: const SemanticIcon(
+  icon: AppIcons.cloudDownload,
+  semanticLabel: 'Cloud download',
+),
                       label: Text(state.isCollecting ? 'Collecting...' : 'Cloud Collect'),
                     ),
                   ),
@@ -262,8 +283,11 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                           ),
                           FilledButton.icon(
                             onPressed: () => Navigator.pop(context, true),
-                            icon: Icon(AppIcons.download),
-                            label: Text('Download Exercises'),
+                            icon: const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
+                            label: const Text('Download Exercises'),
                           ),
                         ],
                       ),
@@ -276,21 +300,24 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                       // Show success message
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('✅ Exercises downloaded from Firestore'),
-                            backgroundColor: Colors.green,
+                          SnackBar(
+                            content: const Text('✅ Exercises downloaded from Firestore'),
+                            backgroundColor: context.colors.success,
                           ),
                         );
                       }
                     }
                   },
-                  icon: const Icon(AppIcons.downloadForOffline),
+                  icon: const SemanticIcon(
+  icon: AppIcons.downloadForOffline,
+  semanticLabel: 'Download for offline',
+),
                   label: Text(
                     state.isCollecting ? 'Downloading...' : 'Download Exercises from Cloud',
                   ),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    side: const BorderSide(color: Colors.blue),
+                    foregroundColor: context.colors.primary,
+                    side: BorderSide(color: context.colors.primary),
                   ),
                 ),
               ),
@@ -341,11 +368,12 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.analytics,
-              size: 64,
-              color: theme.colorScheme.outline,
-            ),
+            SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.outline,
+),
             const SizedBox(height: 16),
             Text(
               'No analytics data',
@@ -443,7 +471,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                   'Recent Activity',
                   style: theme.textTheme.titleMedium,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildRecentActivity(context, state),
               ],
             ),
@@ -480,7 +508,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
               backgroundColor: _getTierColor(user.accountTier, theme),
               child: Text(
                 user.userName?.substring(0, 1).toUpperCase() ?? '?',
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.colors.surface),
               ),
             ),
             title: Text(user.userName ?? 'Anonymous'),
@@ -603,7 +631,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                   'Muscle Group Distribution',
                   style: theme.textTheme.titleMedium,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 SizedBox(
                   height: 200,
                   child: _buildMuscleGroupChart(context, state),
@@ -819,8 +847,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                 backgroundColor: _getTierColor(user.accountTier, theme),
                 child: Text(
                   user.userName?.substring(0, 1).toUpperCase() ?? '?',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.colors.surface,
                     fontSize: 12,
                   ),
                 ),
@@ -843,11 +871,12 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                   ],
                 ),
               ),
-              Icon(
-                AppIcons.workout,
-                size: 16,
-                color: theme.colorScheme.outline,
-              ),
+              SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.outline,
+),
             ],
           ),
         );
@@ -899,10 +928,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             title: entry.key,
             color: colors[index % colors.length],
             radius: 80,
-            titleStyle: const TextStyle(
+            titleStyle: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: context.colors.surface,
             ),
           );
         }).toList(),
@@ -999,8 +1028,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
                         backgroundColor: _getTierColor(user.accountTier, theme),
                         child: Text(
                           user.userName?.substring(0, 1).toUpperCase() ?? '?',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontSize: 18,
                           ),
                         ),

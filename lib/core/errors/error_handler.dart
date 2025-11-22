@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Error types for categorization
 enum ErrorType {
@@ -167,15 +169,17 @@ class ErrorHandler {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  AppIcons.error,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.error,
+                SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.xxlarge,
+  color: Theme.of(context,
+).colorScheme.error,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(message),
                 if (kDebugMode) ...[
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Debug: ${error.toString()}',
                     style: Theme.of(context).textTheme.bodySmall,
@@ -292,24 +296,26 @@ class ErrorScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.error,
-                size: 80,
-                color: Theme.of(context).colorScheme.error,
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.error,
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               Text(
                 l10n.criticalError,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 message,
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               if (kDebugMode) ...[
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(

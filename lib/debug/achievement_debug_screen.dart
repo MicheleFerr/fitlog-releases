@@ -13,7 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/mock_achievement_notification_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Debug screen to test all mock achievements visually
 class AchievementDebugScreen extends ConsumerWidget {
@@ -29,7 +30,10 @@ class AchievementDebugScreen extends ConsumerWidget {
         title: const Text('Achievement Mock Data (13 items)'),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.shuffle),
+            icon: const SemanticIcon(
+  icon: AppIcons.shuffle,
+  semanticLabel: 'Shuffle',
+),
             onPressed: () {
               final random = mockService.getRandomMockAchievement();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -59,13 +63,13 @@ class AchievementDebugScreen extends ConsumerWidget {
 }
 
 class _AchievementCard extends StatelessWidget {
-  final MockAchievement achievement;
-  final int index;
 
   const _AchievementCard({
     required this.achievement,
     required this.index,
   });
+  final MockAchievement achievement;
+  final int index;
 
   Color _getTypeColor(BuildContext context, MockAchievementType type) {
     switch (type) {
@@ -239,11 +243,12 @@ class _AchievementCard extends StatelessWidget {
               // Tap to test hint
               Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    size: 16,
-                    color: context.colors.onSurfaceVariant,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
                   const SizedBox(width: 6),
                   Text(
                     'Tap to simulate notification',

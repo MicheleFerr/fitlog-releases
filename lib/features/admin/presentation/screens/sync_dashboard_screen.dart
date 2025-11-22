@@ -18,6 +18,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -38,7 +40,6 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -57,11 +58,12 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.lockOutline,
-                size: 64,
-                color: colorScheme.onSurfaceVariant,
-              ),
+              SemanticIcon(
+  icon: AppIcons.lockOutline,
+  semanticLabel: 'Lock outline',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurfaceVariant,
+),
               const SizedBox(height: 16),
               Text(
                 'Admin access required',
@@ -78,7 +80,10 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         title: const Text('Sync Dashboard'),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             onPressed: () {
               ref.read(syncMonitorProvider.notifier).refreshStats();
             },
@@ -91,11 +96,12 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.error,
-                size: 48,
-                color: colorScheme.error,
-              ),
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.xxlarge,
+  color: colorScheme.error,
+),
               const SizedBox(height: 16),
               Text(
                 'Error loading sync data',
@@ -135,7 +141,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
               
               // User Statistics
               _buildUserStats(context, data),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               
               // System Health
               _buildSystemHealth(context, data),
@@ -340,7 +346,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           'Feature Status',
           style: theme.textTheme.headlineSmall,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         ...data.featureStats.entries.map((entry) {
           return _buildFeatureRow(context, entry.key, entry.value);
         }),

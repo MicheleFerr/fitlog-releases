@@ -17,8 +17,9 @@ import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
   const AdminAIInsightsFeedbackWidget({super.key});
@@ -41,7 +42,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.psychology,
+                  AppIcons.ai,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -176,9 +177,9 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
                   value: helpfulPercentage / 100,
                   minHeight: 8,
@@ -235,10 +236,12 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
       child: Center(
         child: Column(
           children: [
-            Icon(
-              AppIcons.feedbackOutlined,
-              size: 64,
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.feedbackOutlined,
+  semanticLabel: 'Feedback outlined',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurface.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -338,7 +341,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: colorScheme.surface,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       feedback.comment!,

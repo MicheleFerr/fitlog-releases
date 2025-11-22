@@ -15,6 +15,8 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FeedbackDetailScreen extends ConsumerStatefulWidget {
 
@@ -53,12 +55,12 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       'OTHER': '❓',
     };
 
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
 
     Color severityColor;
     String severityLabel;
     if (widget.feedback.severity >= 4) {
-      severityColor = Colors.red;
+      severityColor = context.colors.error;
       severityLabel = l10n.feedbackSeverityCritical;
     } else if (widget.feedback.severity == 3) {
       severityColor = Colors.orange;
@@ -67,7 +69,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       severityColor = Colors.amber;
       severityLabel = l10n.feedbackSeverityMedium;
     } else {
-      severityColor = Colors.green;
+      severityColor = context.colors.success;
       severityLabel = l10n.feedbackSeverityLow;
     }
 
@@ -77,13 +79,13 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
         statusColor = Colors.orange;
         break;
       case 'REVIEWING':
-        statusColor = Colors.blue;
+        statusColor = context.colors.primary;
         break;
       case 'RESOLVED':
-        statusColor = Colors.green;
+        statusColor = context.colors.success;
         break;
       case 'DISMISSED':
-        statusColor = Colors.grey;
+        statusColor = context.colors.surfaceContainerHighest;
         break;
       default:
         statusColor = context.colors.primary;
@@ -191,7 +193,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Message Card
             Card(
@@ -202,12 +204,13 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          AppIcons.message,
-                          size: 20,
-                          color: context.colors.primary,
-                        ),
-                        SizedBox(width: 8),
+                        SemanticIcon(
+  icon: AppIcons.message,
+  semanticLabel: 'Message',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
+                        const SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailUserMessage,
                           style: context.textTheme.titleMedium?.copyWith(
@@ -216,7 +219,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     Text(
                       widget.feedback.message,
                       style: context.textTheme.bodyLarge,
@@ -225,7 +228,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Admin Notes Card
             Card(
@@ -236,12 +239,13 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          AppIcons.admin,
-                          size: 20,
-                          color: context.colors.secondary,
-                        ),
-                        SizedBox(width: 8),
+                        SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.small,
+  color: context.colors.secondary,
+),
+                        const SizedBox(width: 8),
                         Text(
                           l10n.feedbackDetailAdminNotes,
                           style: context.textTheme.titleMedium?.copyWith(
@@ -273,7 +277,10 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                                 height: 16,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : Icon(AppIcons.save),
+                            : const SemanticIcon(
+  icon: AppIcons.save,
+  semanticLabel: 'Save',
+),
                         label: Text(l10n.feedbackDetailSaveNotes),
                       ),
                     ),
@@ -281,7 +288,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Actions Section
             Text(
@@ -302,7 +309,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     context,
                     label: l10n.feedbackActionStartReview,
                     icon: AppIcons.rateReview,
-                    color: Colors.blue,
+                    color: context.colors.primary,
                     onTap: () => _updateStatus('REVIEWING'),
                   ),
                 if (widget.feedback.status != 'RESOLVED')
@@ -310,7 +317,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     context,
                     label: l10n.feedbackActionMarkResolved,
                     icon: AppIcons.complete,
-                    color: Colors.green,
+                    color: context.colors.success,
                     onTap: () => _updateStatus('RESOLVED'),
                   ),
                 if (widget.feedback.status != 'DISMISSED')
@@ -318,7 +325,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     context,
                     label: l10n.feedbackActionDismiss,
                     icon: AppIcons.cancel,
-                    color: Colors.grey,
+                    color: context.colors.surfaceContainerHighest,
                     onTap: () => _updateStatus('DISMISSED'),
                   ),
                 if (widget.feedback.status != 'OPEN')
@@ -331,7 +338,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                   ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Severity Actions
             Text(
@@ -345,11 +352,11 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _buildSeverityButton(context, 1, l10n.feedbackSeverityLow, Colors.green),
+                _buildSeverityButton(context, 1, l10n.feedbackSeverityLow, context.colors.success),
                 _buildSeverityButton(context, 2, l10n.feedbackSeverityMedium, Colors.amber),
                 _buildSeverityButton(context, 3, l10n.feedbackSeverityHigh, Colors.orange),
-                _buildSeverityButton(context, 4, l10n.feedbackSeverityCritical, Colors.red),
-                _buildSeverityButton(context, 5, l10n.feedbackSeverityUrgent, Colors.red.shade900),
+                _buildSeverityButton(context, 4, l10n.feedbackSeverityCritical, context.colors.error),
+                _buildSeverityButton(context, 5, l10n.feedbackSeverityUrgent, HSLColor.fromColor(context.colors.error).withLightness(0.2).toColor()),
               ],
             ),
           ],
@@ -400,7 +407,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
     return Row(
       children: [
         Icon(icon, size: 16, color: context.colors.onSurfaceVariant),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(
           '$label: ',
           style: context.textTheme.bodySmall?.copyWith(
@@ -431,7 +438,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        foregroundColor: Colors.white,
+        foregroundColor: context.colors.surface,
       ),
     );
   }

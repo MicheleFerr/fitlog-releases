@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
@@ -37,19 +38,20 @@ class ExerciseReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: context.colors.error,
-          ),
-          SizedBox(height: 16),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+          const SizedBox(height: 16),
           Text(
             'Errore nel caricamento del report',
             style: context.textTheme.titleMedium?.copyWith(
               color: context.colors.error,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
@@ -69,17 +71,18 @@ class ExerciseReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.assignmentOutlined,
-            size: 64,
-            color: context.colors.onSurfaceVariant,
-          ),
-          SizedBox(height: 16),
+          SemanticIcon(
+  icon: AppIcons.assignmentOutlined,
+  semanticLabel: 'Assignment outlined',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant,
+),
+          const SizedBox(height: 16),
           Text(
             'Nessun report disponibile',
             style: context.textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Il report mensile sarà disponibile dopo la prima esecuzione',
             style: context.textTheme.bodySmall?.copyWith(
@@ -134,7 +137,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
 
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -151,7 +154,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           'Revisione automatica mensile degli esercizi',
           style: context.textTheme.bodySmall?.copyWith(
@@ -181,7 +184,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         GridView.count(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
@@ -243,7 +246,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: color, size: 24),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.headlineSmall?.copyWith(
@@ -251,7 +254,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 color: color,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(
@@ -259,7 +262,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               subtitle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -287,7 +290,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           color: context.colors.surfaceContainerHighest,
           child: Padding(
@@ -357,7 +360,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           child: ListView.separated(
             shrinkWrap: true,
@@ -412,7 +415,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           child: ListView.separated(
             shrinkWrap: true,

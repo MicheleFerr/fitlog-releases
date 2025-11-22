@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebas
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
@@ -31,7 +33,10 @@ class AdminDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(AppIcons.back),
+          icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
@@ -47,7 +52,10 @@ class AdminDashboardScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => _showAdminInfo(context, l10n),
-            icon: const Icon(AppIcons.info),
+            icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
             tooltip: l10n.adminInfo,
           ),
         ],
@@ -121,12 +129,14 @@ class AdminDashboardScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.wavingHand,
-                  size: 28,
-                  color: Theme.of(context).colorScheme.primary,
+                SemanticIcon(
+  icon: AppIcons.wavingHand,
+  semanticLabel: 'Waving hand',
+  size: AppIconSize.large,
+  color: Theme.of(context,
+).colorScheme.primary,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   l10n.welcomeAdmin,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -136,22 +146,24 @@ class AdminDashboardScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               l10n.adminDashboardDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: [
-                Icon(
-                  AppIcons.security,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.primary,
+                SemanticIcon(
+  icon: AppIcons.security,
+  semanticLabel: 'Security',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.primary,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   l10n.secureAdminAccess,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -177,7 +189,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         const AdminStatsCard(),
       ],
     );
@@ -193,7 +205,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.cloud,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               l10n.firebaseManagement,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -202,7 +214,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         const FirebaseInitWidget(),
       ],
     );
@@ -218,7 +230,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.flashOn,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               l10n.quickActions,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -227,7 +239,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         const AdminQuickActions(),
       ],
     );
@@ -243,7 +255,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.history,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               l10n.recentActivity,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -252,7 +264,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         const AdminRecentActivity(),
       ],
     );
@@ -268,7 +280,7 @@ class AdminDashboardScreen extends ConsumerWidget {
               AppIcons.admin,
               color: Theme.of(context).colorScheme.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(l10n.adminInfo),
           ],
         ),
@@ -332,7 +344,7 @@ class _InfoItem extends StatelessWidget {
           size: 20,
           color: Theme.of(context).colorScheme.primary,
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

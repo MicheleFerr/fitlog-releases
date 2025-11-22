@@ -12,10 +12,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
   const ExerciseFeedbackScreen({super.key});
@@ -24,7 +25,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(feedbackStatsProvider);
     final allFeedbackAsync = ref.watch(allFeedbackProvider);
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
 
     debugPrint('🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback');
 
@@ -43,7 +44,10 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(allFeedbackProvider),
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             tooltip: l10n.feedbackRefresh,
           ),
         ],
@@ -71,7 +75,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           children: [
             // Stats Cards
             _buildStatsCards(context, stats),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Feedback by Type
             if (stats.byType.isNotEmpty) ...[
@@ -81,9 +85,9 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               ..._buildFeedbackTypeCards(context, stats.byType),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
 
             // Feedback by Severity
@@ -111,7 +115,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildStatsCards(BuildContext context, FeedbackStats stats) {
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
     return Row(
       children: [
         Expanded(
@@ -122,7 +126,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             color: context.colors.primary,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.feedbackStatsOpen,
@@ -131,7 +135,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             color: context.colors.secondary,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatCard(
             title: l10n.feedbackStatsResolved,
@@ -168,7 +172,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             child: Row(
               children: [
                 Text(emoji, style: context.textTheme.titleMedium),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     type,
@@ -243,7 +247,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     severityLabel,
@@ -282,7 +286,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final critical = ref.watch(criticalFeedbackProvider);
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +298,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             color: context.colors.error,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         critical.isEmpty
             ? Card(
                 child: Padding(
@@ -315,7 +319,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                     .map((feedback) => _buildFeedbackCard(context, feedback))
                     .toList(),
               ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
       ],
     );
   }
@@ -325,7 +329,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final open = ref.watch(feedbackByStatusProvider('OPEN'));
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,7 +340,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         open.isEmpty
             ? Card(
                 child: Padding(
@@ -362,7 +366,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildFeedbackCard(BuildContext context, ExerciseFeedback feedback) {
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
     final typeEmojis = {
       'BUG': '🐛',
       'SUGGESTION': '💡',
@@ -403,7 +407,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                   typeEmojis[feedback.feedbackType] ?? '•',
                   style: context.textTheme.titleSmall,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,14 +437,14 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               feedback.message,
               style: context.textTheme.bodySmall,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -461,12 +465,13 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                         color: context.colors.onSurfaceVariant,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(
-                      AppIcons.forwardIos,
-                      size: 12,
-                      color: context.colors.onSurfaceVariant,
-                    ),
+                    const SizedBox(width: 8),
+                    SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant,
+),
                   ],
                 ),
               ],
@@ -496,17 +501,18 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.error,
-            size: 64,
-            color: context.colors.error,
-          ),
-          SizedBox(height: 16),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+          const SizedBox(height: 16),
           Text(
             l10n.feedbackErrorLoading,
             style: context.textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             error,
             style: context.textTheme.bodySmall,
@@ -554,7 +560,7 @@ class _StatCard extends StatelessWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 24),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.titleLarge?.copyWith(
