@@ -17,6 +17,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_ti
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/weight_picker_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class EditTemplateScreen extends ConsumerStatefulWidget {
 
@@ -178,17 +180,17 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    AppIcons.info,
-                                    size: 16,
-                                    color: context.colors.primary,
-                                  ),
+                                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       'Assicurati che il template sia completo e ben descritto',
-                                      style: TextStyle(
-                                        fontSize: 12,
+                                      style: context.textTheme.labelSmall?.copyWith(
                                         color:
                                             context.colors.onPrimaryContainer,
                                       ),
@@ -225,7 +227,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: _showAddExercise,
-          child: const Icon(AppIcons.add),
+          child: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
         ),
 
       ),
@@ -237,10 +242,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.fitnessCenterOutlined,
-            size: 64,
-            color: context.colors.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.fitnessCenterOutlined,
+  semanticLabel: 'Fitness center outlined',
+  size: AppIconSize.medium,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
           ),
           SizedBox(height: 16),
           Text(
@@ -259,7 +266,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
-            icon: Icon(AppIcons.add),
+            icon: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
             label: Text(context.l10n.addExercise),
           ),
         ],
@@ -281,19 +291,18 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: context.colors.error,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(AppIcons.delete, color: Colors.white, size: 28),
+              Icon(AppIcons.delete, color: context.colors.surface, size: 28),
               SizedBox(height: 4),
               Text(
                 context.l10n.delete,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                style: context.textTheme.labelSmall?.copyWith(
+                  color: context.colors.surface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -368,16 +377,17 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          AppIcons.timer,
-                                          size: 12,
-                                          color: context.colors.primary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.medium,
+  color: context.colors.primary,
+),
                                         SizedBox(width: 2),
                                         Text(
                                           _formatRestTime(
                                               exerciseTemplate.restTime!),
-                                          style: TextStyle(
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontSize: 10,
                                             fontWeight: FontWeight.w600,
                                             color: context.colors.primary,
@@ -395,7 +405,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       // Rest timer button
                       IconButton.filledTonal(
                         onPressed: () => _showRestTimePicker(index),
-                        icon: Icon(AppIcons.timer),
+                        icon: SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+),
                         iconSize: 20,
                         tooltip: 'Timer Recupero',
                       ),
@@ -506,8 +519,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       child: Center(
                         child: Text(
                           '${set.setNumber}',
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: context.colors.primary,
                           ),
@@ -536,7 +548,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       ),
                     ),
                     SizedBox(width: 8),
-                    Text('×', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('×', style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
                     SizedBox(width: 8),
                     // Reps Picker Button
                     Expanded(
@@ -561,8 +573,11 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     if (exerciseTemplate.sets.length > 1)
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: Icon(AppIcons.removeCircleOutline),
-                        color: Colors.red,
+                        icon: SemanticIcon(
+  icon: AppIcons.removeCircleOutline,
+  semanticLabel: 'Remove circle outline',
+),
+                        color: context.colors.error,
                         iconSize: 20,
                         tooltip: context.l10n.removeSet,
                       ),
@@ -576,7 +591,10 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: OutlinedButton.icon(
               onPressed: () => _addSet(exerciseIndex),
-              icon: Icon(AppIcons.add),
+              icon: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               label: Text(context.l10n.addSet),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 40),
@@ -808,7 +826,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
       setState(() => _isLoading = false);
 
       if (mounted) {
-        SnackBarService.showError(context, 'Errore nel salvataggio: $e');
+        SnackBarService.showError(context, context.l10n.error);
       }
     }
   }
