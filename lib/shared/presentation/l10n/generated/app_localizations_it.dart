@@ -1469,13 +1469,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get startFresh => 'Inizia da capo';
 
   @override
-  String get history => 'Storico';
+  String get history => 'Cronologia';
 
   @override
   String get viewPastWorkouts => 'Visualizza allenamenti passati';
 
   @override
-  String get analytics => 'Analisi';
+  String get analytics => 'Analytics';
 
   @override
   String get trackProgress => 'Traccia progressi';
@@ -1658,8 +1658,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get startFirstWorkout => 'Inizia il Tuo Primo Allenamento';
 
   @override
-  String volumeIncreased(String amount) {
-    return 'Volume aumentato di ${amount}kg dalla settimana scorsa';
+  String volumeIncreased(int percent) {
+    return 'Il tuo volume è aumentato del $percent% questo mese';
   }
 
   @override
@@ -2320,9 +2320,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String workoutInProgress(String name) {
-    return 'Allenamento in Corso';
-  }
+  String get workoutInProgress => 'Allenamento in corso';
 
   @override
   String get workoutDiscarded => 'Allenamento scartato';
@@ -3167,7 +3165,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get insights => 'Insight';
 
   @override
-  String get muscleBalance => 'Equilibrio Muscolare';
+  String get muscleBalance => 'Bilanciamento Muscolare';
 
   @override
   String get allExercises => 'Tutti gli Esercizi';
@@ -5923,7 +5921,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get all => 'Tutti';
 
   @override
-  String get thisWeekProgress => 'Progresso di Questa Settimana';
+  String thisWeekProgress(int completed, int total) {
+    return '$completed/$total questa settimana';
+  }
 
   @override
   String get thisMonthProgress => 'Progresso di Questo Mese';
@@ -11924,18 +11924,18 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timeRangeLabelAll => 'Tutto';
 
   @override
-  String daysAgo(int days) {
-    return '${days}g fa';
+  String daysAgo(int count) {
+    return '$count giorni fa';
   }
 
   @override
-  String weeksAgo(int weeks) {
-    return '$weeks sett. fa';
+  String weeksAgo(int count) {
+    return '$count settimane fa';
   }
 
   @override
-  String monthsAgo(String months) {
-    return '$months mesi fa';
+  String monthsAgo(int count) {
+    return '$count mesi fa';
   }
 
   @override
@@ -14268,7 +14268,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get userNotAuthenticated => 'User not authenticated';
 
   @override
-  String get noDataAvailable => 'No data available';
+  String get noDataAvailable => 'Nessun dato sufficiente';
 
   @override
   String get selectAtLeastOneMetric => 'Seleziona almeno una metrica';
@@ -18693,4 +18693,179 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get typeLabelTranslation => 'Traduzione';
+
+  @override
+  String get startNewWorkout => 'Inizia nuovo allenamento';
+
+  @override
+  String get paused => 'In pausa';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get finish => 'Termina';
+
+  @override
+  String get continueWorkout => 'Continua';
+
+  @override
+  String get finishAndSave => 'Termina e Salva';
+
+  @override
+  String get analysisReady => 'Analisi pronta';
+
+  @override
+  String get mainAdvice => 'Consiglio principale';
+
+  @override
+  String get template => 'Template';
+
+  @override
+  String get chooseWorkout => 'Scegli allenamento';
+
+  @override
+  String get chooseTemplate => 'Scegli Template';
+
+  @override
+  String get selectSavedWorkout => 'Seleziona un allenamento salvato';
+
+  @override
+  String get goals => 'Obiettivi';
+
+  @override
+  String get quoteSuccessStarts => 'Il successo inizia dalla forza di volontà';
+
+  @override
+  String get quoteEveryWorkout => 'Ogni allenamento conta';
+
+  @override
+  String get quoteExceedLimits => 'Supera i tuoi limiti';
+
+  @override
+  String get quoteConsistencyBeats => 'La costanza batte il talento';
+
+  @override
+  String get exerciseOfDay => 'Esercizio del Giorno';
+
+  @override
+  String get exerciseOfDayExample => 'Squat - 4x12';
+
+  @override
+  String get squatProgression => 'Progressione Squat';
+
+  @override
+  String get considerLoadIncrease =>
+      'Considera un aumento del carico del 2-5% basato sui tuoi ultimi 3 allenamenti';
+
+  @override
+  String moreAdvicesAvailable(int count) {
+    return 'Altri $count consigli disponibili';
+  }
+
+  @override
+  String get personalizedProgressAnalysis =>
+      'Analisi personalizzata dei tuoi progressi';
+
+  @override
+  String newInsightsCount(int count) {
+    return '$count nuovi';
+  }
+
+  @override
+  String get loadProgression => 'Progressione Carico';
+
+  @override
+  String get squatIncreaseRecommended =>
+      'Squat: incremento del 2-5% consigliato';
+
+  @override
+  String basedOnWeeksProgress(int weeks) {
+    return 'Basato su $weeks settimane di progressi costanti';
+  }
+
+  @override
+  String get optimalRecovery => 'Recupero Ottimale';
+
+  @override
+  String get considerRecoveryTime => 'Considera 48-72h tra sessioni intense';
+
+  @override
+  String get pushPullBalanced => 'Rapporto push/pull equilibrato';
+
+  @override
+  String maintainVolumeForCycles(int cycles) {
+    return 'Mantieni il volume attuale per i prossimi $cycles microcicli';
+  }
+
+  @override
+  String get dataBasedBadge => 'BASATO SU DATI';
+
+  @override
+  String get analysisBasedOnProgress => 'Analisi basata sui tuoi progressi';
+
+  @override
+  String get personalizedAdvices => 'Consigli Personalizzati';
+
+  @override
+  String basedOnLastWeeks(int weeks) {
+    return 'Basati sulle ultime $weeks settimane di allenamento';
+  }
+
+  @override
+  String get advicesUpdateAfterWorkout =>
+      'I consigli si aggiornano dopo ogni allenamento';
+
+  @override
+  String get viewAnalytics => 'Vedi Analytics';
+
+  @override
+  String get analysisBasedOnData => 'Analisi basata sui tuoi dati';
+
+  @override
+  String completeWorkoutsForAdvices(int count) {
+    return 'Completa almeno $count allenamenti per ricevere consigli personalizzati';
+  }
+
+  @override
+  String basedOnLastWorkouts(int count) {
+    return 'Basati sui tuoi ultimi $count allenamenti';
+  }
+
+  @override
+  String exerciseProgression(String exercise) {
+    return 'Progressione $exercise';
+  }
+
+  @override
+  String lastWorkoutsCount(int count) {
+    return 'Ultimi $count allenamenti';
+  }
+
+  @override
+  String setsCountParenthesis(int count) {
+    return '($count set)';
+  }
+
+  @override
+  String get keepGoingAdvice => 'Continua così';
+
+  @override
+  String improvementPercentage(String percent) {
+    return 'Ottimo! +$percent% ultimo allenamento';
+  }
+
+  @override
+  String get tryIncreaseWeight => 'Prova con +2.5kg nel prossimo allenamento';
+
+  @override
+  String get consolidateWeight => 'Consolida il peso attuale';
+
+  @override
+  String get avgMin => 'Min medi';
+
+  @override
+  String get kgPerWeek => 'kg/settimana';
 }

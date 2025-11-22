@@ -22590,5 +22590,392 @@
   "typeLabelTranslation": "Translation",
   "@typeLabelTranslation": {
     "description": "Label for translation contribution type"
+  },
+  "startNewWorkout": "Start new workout",
+  "@startNewWorkout": {
+    "description": "Start new workout button text"
+  },
+  "tapToStart": "Tap to start",
+  "@tapToStart": {
+    "description": "Tap to start instruction"
+  },
+  "workoutInProgress": "Workout in progress",
+  "@workoutInProgress": {
+    "description": "Workout in progress status"
+  },
+  "paused": "Paused",
+  "@paused": {
+    "description": "Paused status"
+  },
+  "minutesFormat": "{minutes} min",
+  "@minutesFormat": {
+    "description": "Minutes format",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "exercisesCount": "{count} exercises",
+  "@exercisesCount": {
+    "description": "Exercises count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setsCount": "{count} sets",
+  "@setsCount": {
+    "description": "Sets count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resume": "Resume",
+  "@resume": {
+    "description": "Resume button"
+  },
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish button"
+  },
+  "workoutDiscarded": "Workout discarded",
+  "@workoutDiscarded": {
+    "description": "Workout discarded message"
+  },
+  "continueWorkout": "Continue",
+  "@continueWorkout": {
+    "description": "Continue workout button"
+  },
+  "finishAndSave": "Finish & Save",
+  "@finishAndSave": {
+    "description": "Finish and save button"
+  },
+  "analysisReady": "Analysis ready",
+  "@analysisReady": {
+    "description": "Analysis ready status"
+  },
+  "mainAdvice": "Main advice",
+  "@mainAdvice": {
+    "description": "Main advice label"
+  },
+  "template": "Template",
+  "@template": {
+    "description": "Template label"
+  },
+  "chooseWorkout": "Choose workout",
+  "@chooseWorkout": {
+    "description": "Choose workout instruction"
+  },
+  "chooseTemplate": "Choose Template",
+  "@chooseTemplate": {
+    "description": "Choose template title"
+  },
+  "selectSavedWorkout": "Select a saved workout",
+  "@selectSavedWorkout": {
+    "description": "Select saved workout instruction"
+  },
+  "history": "History",
+  "@history": {
+    "description": "History label"
+  },
+  "analytics": "Analytics",
+  "@analytics": {
+    "description": "Analytics label"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings label"
+  },
+  "recentWorkouts": "Recent Workouts",
+  "@recentWorkouts": {
+    "description": "Recent workouts title"
+  },
+  "noRecentWorkouts": "No recent workouts",
+  "@noRecentWorkouts": {
+    "description": "No recent workouts empty state"
+  },
+  "goals": "Goals",
+  "@goals": {
+    "description": "Goals label"
+  },
+  "thisWeekProgress": "{completed}/{total} this week",
+  "@thisWeekProgress": {
+    "description": "This week progress",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quoteSuccessStarts": "Success starts with willpower",
+  "@quoteSuccessStarts": {
+    "description": "Motivational quote"
+  },
+  "quoteEveryWorkout": "Every workout counts",
+  "@quoteEveryWorkout": {
+    "description": "Motivational quote"
+  },
+  "quoteExceedLimits": "Exceed your limits",
+  "@quoteExceedLimits": {
+    "description": "Motivational quote"
+  },
+  "quoteConsistencyBeats": "Consistency beats talent",
+  "@quoteConsistencyBeats": {
+    "description": "Motivational quote"
+  },
+  "exerciseOfDay": "Exercise of the Day",
+  "@exerciseOfDay": {
+    "description": "Exercise of the day title"
+  },
+  "exerciseOfDayExample": "Squat - 4x12",
+  "@exerciseOfDayExample": {
+    "description": "Exercise of day example"
+  },
+  "squatProgression": "Squat Progression",
+  "@squatProgression": {
+    "description": "Squat progression title"
+  },
+  "considerLoadIncrease": "Consider a 2-5% load increase based on your last 3 workouts",
+  "@considerLoadIncrease": {
+    "description": "Load increase advice"
+  },
+  "moreAdvicesAvailable": "{count} more advices available",
+  "@moreAdvicesAvailable": {
+    "description": "More advices available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalizedProgressAnalysis": "Personalized analysis of your progress",
+  "@personalizedProgressAnalysis": {
+    "description": "Personalized progress analysis subtitle"
+  },
+  "newInsightsCount": "{count} new",
+  "@newInsightsCount": {
+    "description": "New insights count badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loadProgression": "Load Progression",
+  "@loadProgression": {
+    "description": "Load progression insight title"
+  },
+  "squatIncreaseRecommended": "Squat: 2-5% increase recommended",
+  "@squatIncreaseRecommended": {
+    "description": "Squat increase recommendation"
+  },
+  "basedOnWeeksProgress": "Based on {weeks} weeks of consistent progress",
+  "@basedOnWeeksProgress": {
+    "description": "Based on weeks progress",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "optimalRecovery": "Optimal Recovery",
+  "@optimalRecovery": {
+    "description": "Optimal recovery insight title"
+  },
+  "considerRecoveryTime": "Consider 48-72h between intense sessions",
+  "@considerRecoveryTime": {
+    "description": "Recovery time advice"
+  },
+  "volumeIncreased": "Your volume increased {percent}% this month",
+  "@volumeIncreased": {
+    "description": "Volume increased message",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "muscleBalance": "Muscle Balance",
+  "@muscleBalance": {
+    "description": "Muscle balance insight title"
+  },
+  "pushPullBalanced": "Push/pull ratio balanced",
+  "@pushPullBalanced": {
+    "description": "Push pull balanced message"
+  },
+  "maintainVolumeForCycles": "Maintain current volume for the next {cycles} microcycles",
+  "@maintainVolumeForCycles": {
+    "description": "Maintain volume advice",
+    "placeholders": {
+      "cycles": {
+        "type": "int"
+      }
+    }
+  },
+  "dataBasedBadge": "DATA BASED",
+  "@dataBasedBadge": {
+    "description": "Data based badge"
+  },
+  "analysisBasedOnProgress": "Analysis based on your progress",
+  "@analysisBasedOnProgress": {
+    "description": "Analysis based on progress subtitle"
+  },
+  "personalizedAdvices": "Personalized Advices",
+  "@personalizedAdvices": {
+    "description": "Personalized advices title"
+  },
+  "basedOnLastWeeks": "Based on the last {weeks} weeks of training",
+  "@basedOnLastWeeks": {
+    "description": "Based on last weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "advicesUpdateAfterWorkout": "Advices update after each workout",
+  "@advicesUpdateAfterWorkout": {
+    "description": "Advices update info"
+  },
+  "viewAnalytics": "View Analytics",
+  "@viewAnalytics": {
+    "description": "View analytics button"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+  "analysisBasedOnData": "Analysis based on your data",
+  "@analysisBasedOnData": {
+    "description": "Analysis based on data subtitle"
+  },
+  "noDataAvailable": "No sufficient data",
+  "@noDataAvailable": {
+    "description": "No data available message"
+  },
+  "completeWorkoutsForAdvices": "Complete at least {count} workouts to receive personalized advices",
+  "@completeWorkoutsForAdvices": {
+    "description": "Complete workouts for advices message",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "basedOnLastWorkouts": "Based on your last {count} workouts",
+  "@basedOnLastWorkouts": {
+    "description": "Based on last workouts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exerciseProgression": "Progression {exercise}",
+  "@exerciseProgression": {
+    "description": "Exercise progression title",
+    "placeholders": {
+      "exercise": {
+        "type": "String"
+      }
+    }
+  },
+  "lastWorkoutsCount": "Last {count} workouts",
+  "@lastWorkoutsCount": {
+    "description": "Last workouts count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repsCount": "{count} reps",
+  "@repsCount": {
+    "description": "Reps count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setsCountParenthesis": "({count} set)",
+  "@setsCountParenthesis": {
+    "description": "Sets count in parenthesis",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday"
+  },
+  "daysAgo": "{count} days ago",
+  "@daysAgo": {
+    "description": "Days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksAgo": "{count} weeks ago",
+  "@weeksAgo": {
+    "description": "Weeks ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthsAgo": "{count} months ago",
+  "@monthsAgo": {
+    "description": "Months ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "keepGoingAdvice": "Keep going",
+  "@keepGoingAdvice": {
+    "description": "Keep going advice"
+  },
+  "improvementPercentage": "Great! +{percent}% last workout",
+  "@improvementPercentage": {
+    "description": "Improvement percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tryIncreaseWeight": "Try +2.5kg next workout",
+  "@tryIncreaseWeight": {
+    "description": "Try increase weight advice"
+  },
+  "consolidateWeight": "Consolidate current weight",
+  "@consolidateWeight": {
+    "description": "Consolidate weight advice"
+  },
+  "avgMin": "Avg min",
+  "@avgMin": {
+    "description": "Average minutes label"
+  },
+  "kgPerWeek": "kg/week",
+  "@kgPerWeek": {
+    "description": "Kilograms per week unit"
   }
 }

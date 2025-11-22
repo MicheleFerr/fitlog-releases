@@ -12128,5 +12128,392 @@
   "typeLabelTranslation": "Traduzione",
   "@typeLabelTranslation": {
     "description": "Label for translation contribution type"
+  },
+  "startNewWorkout": "Inizia nuovo allenamento",
+  "@startNewWorkout": {
+    "description": "Start new workout button text"
+  },
+  "tapToStart": "Tocca per iniziare",
+  "@tapToStart": {
+    "description": "Tap to start instruction"
+  },
+  "workoutInProgress": "Allenamento in corso",
+  "@workoutInProgress": {
+    "description": "Workout in progress status"
+  },
+  "paused": "In pausa",
+  "@paused": {
+    "description": "Paused status"
+  },
+  "minutesFormat": "{minutes} min",
+  "@minutesFormat": {
+    "description": "Minutes format",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "exercisesCount": "{count} esercizi",
+  "@exercisesCount": {
+    "description": "Exercises count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setsCount": "{count} serie",
+  "@setsCount": {
+    "description": "Sets count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resume": "Riprendi",
+  "@resume": {
+    "description": "Resume button"
+  },
+  "finish": "Termina",
+  "@finish": {
+    "description": "Finish button"
+  },
+  "workoutDiscarded": "Allenamento scartato",
+  "@workoutDiscarded": {
+    "description": "Workout discarded message"
+  },
+  "continueWorkout": "Continua",
+  "@continueWorkout": {
+    "description": "Continue workout button"
+  },
+  "finishAndSave": "Termina e Salva",
+  "@finishAndSave": {
+    "description": "Finish and save button"
+  },
+  "analysisReady": "Analisi pronta",
+  "@analysisReady": {
+    "description": "Analysis ready status"
+  },
+  "mainAdvice": "Consiglio principale",
+  "@mainAdvice": {
+    "description": "Main advice label"
+  },
+  "template": "Template",
+  "@template": {
+    "description": "Template label"
+  },
+  "chooseWorkout": "Scegli allenamento",
+  "@chooseWorkout": {
+    "description": "Choose workout instruction"
+  },
+  "chooseTemplate": "Scegli Template",
+  "@chooseTemplate": {
+    "description": "Choose template title"
+  },
+  "selectSavedWorkout": "Seleziona un allenamento salvato",
+  "@selectSavedWorkout": {
+    "description": "Select saved workout instruction"
+  },
+  "history": "Cronologia",
+  "@history": {
+    "description": "History label"
+  },
+  "analytics": "Analytics",
+  "@analytics": {
+    "description": "Analytics label"
+  },
+  "settings": "Impostazioni",
+  "@settings": {
+    "description": "Settings label"
+  },
+  "recentWorkouts": "Allenamenti Recenti",
+  "@recentWorkouts": {
+    "description": "Recent workouts title"
+  },
+  "noRecentWorkouts": "Nessun allenamento recente",
+  "@noRecentWorkouts": {
+    "description": "No recent workouts empty state"
+  },
+  "goals": "Obiettivi",
+  "@goals": {
+    "description": "Goals label"
+  },
+  "thisWeekProgress": "{completed}/{total} questa settimana",
+  "@thisWeekProgress": {
+    "description": "This week progress",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quoteSuccessStarts": "Il successo inizia dalla forza di volontà",
+  "@quoteSuccessStarts": {
+    "description": "Motivational quote"
+  },
+  "quoteEveryWorkout": "Ogni allenamento conta",
+  "@quoteEveryWorkout": {
+    "description": "Motivational quote"
+  },
+  "quoteExceedLimits": "Supera i tuoi limiti",
+  "@quoteExceedLimits": {
+    "description": "Motivational quote"
+  },
+  "quoteConsistencyBeats": "La costanza batte il talento",
+  "@quoteConsistencyBeats": {
+    "description": "Motivational quote"
+  },
+  "exerciseOfDay": "Esercizio del Giorno",
+  "@exerciseOfDay": {
+    "description": "Exercise of the day title"
+  },
+  "exerciseOfDayExample": "Squat - 4x12",
+  "@exerciseOfDayExample": {
+    "description": "Exercise of day example"
+  },
+  "squatProgression": "Progressione Squat",
+  "@squatProgression": {
+    "description": "Squat progression title"
+  },
+  "considerLoadIncrease": "Considera un aumento del carico del 2-5% basato sui tuoi ultimi 3 allenamenti",
+  "@considerLoadIncrease": {
+    "description": "Load increase advice"
+  },
+  "moreAdvicesAvailable": "Altri {count} consigli disponibili",
+  "@moreAdvicesAvailable": {
+    "description": "More advices available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalizedProgressAnalysis": "Analisi personalizzata dei tuoi progressi",
+  "@personalizedProgressAnalysis": {
+    "description": "Personalized progress analysis subtitle"
+  },
+  "newInsightsCount": "{count} nuovi",
+  "@newInsightsCount": {
+    "description": "New insights count badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loadProgression": "Progressione Carico",
+  "@loadProgression": {
+    "description": "Load progression insight title"
+  },
+  "squatIncreaseRecommended": "Squat: incremento del 2-5% consigliato",
+  "@squatIncreaseRecommended": {
+    "description": "Squat increase recommendation"
+  },
+  "basedOnWeeksProgress": "Basato su {weeks} settimane di progressi costanti",
+  "@basedOnWeeksProgress": {
+    "description": "Based on weeks progress",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "optimalRecovery": "Recupero Ottimale",
+  "@optimalRecovery": {
+    "description": "Optimal recovery insight title"
+  },
+  "considerRecoveryTime": "Considera 48-72h tra sessioni intense",
+  "@considerRecoveryTime": {
+    "description": "Recovery time advice"
+  },
+  "volumeIncreased": "Il tuo volume è aumentato del {percent}% questo mese",
+  "@volumeIncreased": {
+    "description": "Volume increased message",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "muscleBalance": "Bilanciamento Muscolare",
+  "@muscleBalance": {
+    "description": "Muscle balance insight title"
+  },
+  "pushPullBalanced": "Rapporto push/pull equilibrato",
+  "@pushPullBalanced": {
+    "description": "Push pull balanced message"
+  },
+  "maintainVolumeForCycles": "Mantieni il volume attuale per i prossimi {cycles} microcicli",
+  "@maintainVolumeForCycles": {
+    "description": "Maintain volume advice",
+    "placeholders": {
+      "cycles": {
+        "type": "int"
+      }
+    }
+  },
+  "dataBasedBadge": "BASATO SU DATI",
+  "@dataBasedBadge": {
+    "description": "Data based badge"
+  },
+  "analysisBasedOnProgress": "Analisi basata sui tuoi progressi",
+  "@analysisBasedOnProgress": {
+    "description": "Analysis based on progress subtitle"
+  },
+  "personalizedAdvices": "Consigli Personalizzati",
+  "@personalizedAdvices": {
+    "description": "Personalized advices title"
+  },
+  "basedOnLastWeeks": "Basati sulle ultime {weeks} settimane di allenamento",
+  "@basedOnLastWeeks": {
+    "description": "Based on last weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "advicesUpdateAfterWorkout": "I consigli si aggiornano dopo ogni allenamento",
+  "@advicesUpdateAfterWorkout": {
+    "description": "Advices update info"
+  },
+  "viewAnalytics": "Vedi Analytics",
+  "@viewAnalytics": {
+    "description": "View analytics button"
+  },
+  "close": "Chiudi",
+  "@close": {
+    "description": "Close button"
+  },
+  "analysisBasedOnData": "Analisi basata sui tuoi dati",
+  "@analysisBasedOnData": {
+    "description": "Analysis based on data subtitle"
+  },
+  "noDataAvailable": "Nessun dato sufficiente",
+  "@noDataAvailable": {
+    "description": "No data available message"
+  },
+  "completeWorkoutsForAdvices": "Completa almeno {count} allenamenti per ricevere consigli personalizzati",
+  "@completeWorkoutsForAdvices": {
+    "description": "Complete workouts for advices message",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "basedOnLastWorkouts": "Basati sui tuoi ultimi {count} allenamenti",
+  "@basedOnLastWorkouts": {
+    "description": "Based on last workouts",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exerciseProgression": "Progressione {exercise}",
+  "@exerciseProgression": {
+    "description": "Exercise progression title",
+    "placeholders": {
+      "exercise": {
+        "type": "String"
+      }
+    }
+  },
+  "lastWorkoutsCount": "Ultimi {count} allenamenti",
+  "@lastWorkoutsCount": {
+    "description": "Last workouts count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repsCount": "{count} reps",
+  "@repsCount": {
+    "description": "Reps count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "setsCountParenthesis": "({count} set)",
+  "@setsCountParenthesis": {
+    "description": "Sets count in parenthesis",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "today": "Oggi",
+  "@today": {
+    "description": "Today"
+  },
+  "yesterday": "Ieri",
+  "@yesterday": {
+    "description": "Yesterday"
+  },
+  "daysAgo": "{count} giorni fa",
+  "@daysAgo": {
+    "description": "Days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeksAgo": "{count} settimane fa",
+  "@weeksAgo": {
+    "description": "Weeks ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monthsAgo": "{count} mesi fa",
+  "@monthsAgo": {
+    "description": "Months ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "keepGoingAdvice": "Continua così",
+  "@keepGoingAdvice": {
+    "description": "Keep going advice"
+  },
+  "improvementPercentage": "Ottimo! +{percent}% ultimo allenamento",
+  "@improvementPercentage": {
+    "description": "Improvement percentage",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "tryIncreaseWeight": "Prova con +2.5kg nel prossimo allenamento",
+  "@tryIncreaseWeight": {
+    "description": "Try increase weight advice"
+  },
+  "consolidateWeight": "Consolida il peso attuale",
+  "@consolidateWeight": {
+    "description": "Consolidate weight advice"
+  },
+  "avgMin": "Min medi",
+  "@avgMin": {
+    "description": "Average minutes label"
+  },
+  "kgPerWeek": "kg/settimana",
+  "@kgPerWeek": {
+    "description": "Kilograms per week unit"
   }
 }

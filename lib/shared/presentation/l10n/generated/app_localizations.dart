@@ -1436,7 +1436,7 @@ abstract class AppLocalizations {
   /// **'Your current export limits:'**
   String get yourCurrentLimits;
 
-  /// Button text to close dialog
+  /// Close button
   ///
   /// In en, this message translates to:
   /// **'Close'**
@@ -2287,7 +2287,7 @@ abstract class AppLocalizations {
   /// **'Rest-Pause: Perform to failure, rest 10-15 seconds, repeat until target reps.'**
   String get restPauseInfo;
 
-  /// Settings menu item
+  /// Settings label
   ///
   /// In en, this message translates to:
   /// **'Settings'**
@@ -2773,7 +2773,7 @@ abstract class AppLocalizations {
   /// **'Start fresh'**
   String get startFresh;
 
-  /// History button label
+  /// History label
   ///
   /// In en, this message translates to:
   /// **'History'**
@@ -2785,7 +2785,7 @@ abstract class AppLocalizations {
   /// **'View past workouts'**
   String get viewPastWorkouts;
 
-  /// Analytics quick action
+  /// Analytics label
   ///
   /// In en, this message translates to:
   /// **'Analytics'**
@@ -3139,11 +3139,11 @@ abstract class AppLocalizations {
   /// **'Start Your First Workout'**
   String get startFirstWorkout;
 
-  /// Volume increase insight message
+  /// Volume increased message
   ///
   /// In en, this message translates to:
-  /// **'Volume increased by {amount}kg from last week'**
-  String volumeIncreased(String amount);
+  /// **'Your volume increased {percent}% this month'**
+  String volumeIncreased(int percent);
 
   /// Volume decrease insight message
   ///
@@ -3577,7 +3577,7 @@ abstract class AppLocalizations {
   /// **'Start with an empty workout'**
   String get startWithEmptyWorkout;
 
-  /// Exercise start button hint text
+  /// Tap to start instruction
   ///
   /// In en, this message translates to:
   /// **'Tap to start'**
@@ -4367,11 +4367,11 @@ abstract class AppLocalizations {
   /// **'Unexpected error: {error}'**
   String unexpectedError(String error);
 
-  /// Workout already in progress warning
+  /// Workout in progress status
   ///
   /// In en, this message translates to:
-  /// **'You already have a workout in progress: {name}'**
-  String workoutInProgress(String name);
+  /// **'Workout in progress'**
+  String get workoutInProgress;
 
   /// Workout discarded message
   ///
@@ -5633,7 +5633,7 @@ abstract class AppLocalizations {
   /// **'Select'**
   String get select;
 
-  /// Exercise count label
+  /// Exercises count
   ///
   /// In en, this message translates to:
   /// **'{count} exercises'**
@@ -5861,7 +5861,7 @@ abstract class AppLocalizations {
   /// **'Insights'**
   String get insights;
 
-  /// Muscle balance section title
+  /// Muscle balance insight title
   ///
   /// In en, this message translates to:
   /// **'Muscle Balance'**
@@ -5975,7 +5975,7 @@ abstract class AppLocalizations {
   /// **'Start a workout to see your analytics'**
   String get startWorkoutToSeeAnalytics;
 
-  /// Recent workouts section title
+  /// Recent workouts title
   ///
   /// In en, this message translates to:
   /// **'Recent Workouts'**
@@ -6791,7 +6791,7 @@ abstract class AppLocalizations {
   /// **'{minutes} minutes'**
   String durationMinutes(Object minutes);
 
-  /// Number of sets
+  /// Sets count
   ///
   /// In en, this message translates to:
   /// **'{count} sets'**
@@ -7397,13 +7397,13 @@ abstract class AppLocalizations {
   /// **'Complete workouts to see history'**
   String get completeWorkoutsToSeeHistory;
 
-  /// Today time reference
+  /// Today
   ///
   /// In en, this message translates to:
   /// **'Today'**
   String get today;
 
-  /// Yesterday time reference
+  /// Yesterday
   ///
   /// In en, this message translates to:
   /// **'Yesterday'**
@@ -10679,11 +10679,11 @@ abstract class AppLocalizations {
   /// **'All'**
   String get all;
 
-  /// Title for this week's progress
+  /// This week progress
   ///
   /// In en, this message translates to:
-  /// **'This Week Progress'**
-  String get thisWeekProgress;
+  /// **'{completed}/{total} this week'**
+  String thisWeekProgress(int completed, int total);
 
   /// Title for this month's progress
   ///
@@ -10745,7 +10745,7 @@ abstract class AppLocalizations {
   /// **'Start a workout to see your progress'**
   String get noRecentWorkoutsDesc;
 
-  /// Title for no recent workouts state
+  /// No recent workouts empty state
   ///
   /// In en, this message translates to:
   /// **'No recent workouts'**
@@ -10757,7 +10757,7 @@ abstract class AppLocalizations {
   /// **'{count} / {goal} workouts'**
   String workoutsCount(int count, int goal);
 
-  /// Label showing reps count
+  /// Reps count
   ///
   /// In en, this message translates to:
   /// **'{count} reps'**
@@ -20778,23 +20778,23 @@ abstract class AppLocalizations {
   /// **'All'**
   String get timeRangeLabelAll;
 
-  /// Relative time format for days
+  /// Days ago
   ///
   /// In en, this message translates to:
-  /// **'{days}d ago'**
-  String daysAgo(int days);
+  /// **'{count} days ago'**
+  String daysAgo(int count);
 
-  /// Relative time format for weeks
+  /// Weeks ago
   ///
   /// In en, this message translates to:
-  /// **'{weeks} wk ago'**
-  String weeksAgo(int weeks);
+  /// **'{count} weeks ago'**
+  String weeksAgo(int count);
 
-  /// Format for months ago
+  /// Months ago
   ///
   /// In en, this message translates to:
-  /// **'{months} months ago'**
-  String monthsAgo(String months);
+  /// **'{count} months ago'**
+  String monthsAgo(int count);
 
   /// Short format for days ago
   ///
@@ -25086,10 +25086,10 @@ abstract class AppLocalizations {
   /// **'User not authenticated'**
   String get userNotAuthenticated;
 
-  /// From quick wins migration - 5 occurrences
+  /// No data available message
   ///
   /// In en, this message translates to:
-  /// **'No data available'**
+  /// **'No sufficient data'**
   String get noDataAvailable;
 
   /// Message shown in landscape chart when no metrics are selected
@@ -33233,6 +33233,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Translation'**
   String get typeLabelTranslation;
+
+  /// Start new workout button text
+  ///
+  /// In en, this message translates to:
+  /// **'Start new workout'**
+  String get startNewWorkout;
+
+  /// Paused status
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// Minutes format
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutesFormat(int minutes);
+
+  /// Finish button
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get finish;
+
+  /// Continue workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueWorkout;
+
+  /// Finish and save button
+  ///
+  /// In en, this message translates to:
+  /// **'Finish & Save'**
+  String get finishAndSave;
+
+  /// Analysis ready status
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis ready'**
+  String get analysisReady;
+
+  /// Main advice label
+  ///
+  /// In en, this message translates to:
+  /// **'Main advice'**
+  String get mainAdvice;
+
+  /// Template label
+  ///
+  /// In en, this message translates to:
+  /// **'Template'**
+  String get template;
+
+  /// Choose workout instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Choose workout'**
+  String get chooseWorkout;
+
+  /// Choose template title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Template'**
+  String get chooseTemplate;
+
+  /// Select saved workout instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Select a saved workout'**
+  String get selectSavedWorkout;
+
+  /// Goals label
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get goals;
+
+  /// Motivational quote
+  ///
+  /// In en, this message translates to:
+  /// **'Success starts with willpower'**
+  String get quoteSuccessStarts;
+
+  /// Motivational quote
+  ///
+  /// In en, this message translates to:
+  /// **'Every workout counts'**
+  String get quoteEveryWorkout;
+
+  /// Motivational quote
+  ///
+  /// In en, this message translates to:
+  /// **'Exceed your limits'**
+  String get quoteExceedLimits;
+
+  /// Motivational quote
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency beats talent'**
+  String get quoteConsistencyBeats;
+
+  /// Exercise of the day title
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise of the Day'**
+  String get exerciseOfDay;
+
+  /// Exercise of day example
+  ///
+  /// In en, this message translates to:
+  /// **'Squat - 4x12'**
+  String get exerciseOfDayExample;
+
+  /// Squat progression title
+  ///
+  /// In en, this message translates to:
+  /// **'Squat Progression'**
+  String get squatProgression;
+
+  /// Load increase advice
+  ///
+  /// In en, this message translates to:
+  /// **'Consider a 2-5% load increase based on your last 3 workouts'**
+  String get considerLoadIncrease;
+
+  /// More advices available
+  ///
+  /// In en, this message translates to:
+  /// **'{count} more advices available'**
+  String moreAdvicesAvailable(int count);
+
+  /// Personalized progress analysis subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized analysis of your progress'**
+  String get personalizedProgressAnalysis;
+
+  /// New insights count badge
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new'**
+  String newInsightsCount(int count);
+
+  /// Load progression insight title
+  ///
+  /// In en, this message translates to:
+  /// **'Load Progression'**
+  String get loadProgression;
+
+  /// Squat increase recommendation
+  ///
+  /// In en, this message translates to:
+  /// **'Squat: 2-5% increase recommended'**
+  String get squatIncreaseRecommended;
+
+  /// Based on weeks progress
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {weeks} weeks of consistent progress'**
+  String basedOnWeeksProgress(int weeks);
+
+  /// Optimal recovery insight title
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Recovery'**
+  String get optimalRecovery;
+
+  /// Recovery time advice
+  ///
+  /// In en, this message translates to:
+  /// **'Consider 48-72h between intense sessions'**
+  String get considerRecoveryTime;
+
+  /// Push pull balanced message
+  ///
+  /// In en, this message translates to:
+  /// **'Push/pull ratio balanced'**
+  String get pushPullBalanced;
+
+  /// Maintain volume advice
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain current volume for the next {cycles} microcycles'**
+  String maintainVolumeForCycles(int cycles);
+
+  /// Data based badge
+  ///
+  /// In en, this message translates to:
+  /// **'DATA BASED'**
+  String get dataBasedBadge;
+
+  /// Analysis based on progress subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis based on your progress'**
+  String get analysisBasedOnProgress;
+
+  /// Personalized advices title
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Advices'**
+  String get personalizedAdvices;
+
+  /// Based on last weeks
+  ///
+  /// In en, this message translates to:
+  /// **'Based on the last {weeks} weeks of training'**
+  String basedOnLastWeeks(int weeks);
+
+  /// Advices update info
+  ///
+  /// In en, this message translates to:
+  /// **'Advices update after each workout'**
+  String get advicesUpdateAfterWorkout;
+
+  /// View analytics button
+  ///
+  /// In en, this message translates to:
+  /// **'View Analytics'**
+  String get viewAnalytics;
+
+  /// Analysis based on data subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis based on your data'**
+  String get analysisBasedOnData;
+
+  /// Complete workouts for advices message
+  ///
+  /// In en, this message translates to:
+  /// **'Complete at least {count} workouts to receive personalized advices'**
+  String completeWorkoutsForAdvices(int count);
+
+  /// Based on last workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your last {count} workouts'**
+  String basedOnLastWorkouts(int count);
+
+  /// Exercise progression title
+  ///
+  /// In en, this message translates to:
+  /// **'Progression {exercise}'**
+  String exerciseProgression(String exercise);
+
+  /// Last workouts count
+  ///
+  /// In en, this message translates to:
+  /// **'Last {count} workouts'**
+  String lastWorkoutsCount(int count);
+
+  /// Sets count in parenthesis
+  ///
+  /// In en, this message translates to:
+  /// **'({count} set)'**
+  String setsCountParenthesis(int count);
+
+  /// Keep going advice
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going'**
+  String get keepGoingAdvice;
+
+  /// Improvement percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Great! +{percent}% last workout'**
+  String improvementPercentage(String percent);
+
+  /// Try increase weight advice
+  ///
+  /// In en, this message translates to:
+  /// **'Try +2.5kg next workout'**
+  String get tryIncreaseWeight;
+
+  /// Consolidate weight advice
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate current weight'**
+  String get consolidateWeight;
+
+  /// Average minutes label
+  ///
+  /// In en, this message translates to:
+  /// **'Avg min'**
+  String get avgMin;
+
+  /// Kilograms per week unit
+  ///
+  /// In en, this message translates to:
+  /// **'kg/week'**
+  String get kgPerWeek;
 }
 
 class _AppLocalizationsDelegate

@@ -19,6 +19,9 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/recent_wor
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_goals_widget.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Factory class to build home widgets based on configuration
 class HomeWidgetFactory {
@@ -155,10 +158,11 @@ class HomeWidgetFactory {
                     color: theme.colorScheme.primary.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    AppIcons.addCircleOutline,
+                  child: SemanticIcon(
+                    icon: AppIcons.addCircleOutline,
+                    semanticLabel: 'Add new workout',
                     color: theme.colorScheme.primary,
-                    size: 24,
+                    size: AppIconSize.medium,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -168,14 +172,14 @@ class HomeWidgetFactory {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Inizia un nuovo workout',
+                        context.l10n.startNewWorkout,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Tocca per cominciare',
+                        context.l10n.tapToStart,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
@@ -183,10 +187,11 @@ class HomeWidgetFactory {
                     ],
                   ),
                 ),
-                Icon(
-                  AppIcons.forwardIos,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Navigate forward',
                   color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                  size: 16,
+                  size: AppIconSize.tiny,
                 ),
               ],
             ),
@@ -231,10 +236,11 @@ class HomeWidgetFactory {
                             color: theme.colorScheme.primary,
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            workout.isActive ? AppIcons.play : AppIcons.pause,
-                            color: Colors.white,
-                            size: 20,
+                          child: SemanticIcon(
+                            icon: workout.isActive ? AppIcons.play : AppIcons.pause,
+                            semanticLabel: workout.isActive ? 'Workout active' : 'Workout paused',
+                            color: context.colors.surface,
+                            size: AppIconSize.small,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -243,7 +249,7 @@ class HomeWidgetFactory {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                workout.isActive ? 'Allenamento in corso' : 'In pausa',
+                                workout.isActive ? context.l10n.workoutInProgress : context.l10n.paused,
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
                                 ),
@@ -259,10 +265,11 @@ class HomeWidgetFactory {
                             ],
                           ),
                         ),
-                        Icon(
-                          AppIcons.forwardIos,
+                        SemanticIcon(
+                          icon: AppIcons.forwardIos,
+                          semanticLabel: 'Navigate to workout',
                           color: theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.5),
-                          size: 16,
+                          size: AppIconSize.tiny,
                         ),
                       ],
                     ),
@@ -271,9 +278,9 @@ class HomeWidgetFactory {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildCompactStat(AppIcons.timer, '$minutes min', theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(AppIcons.workout, '$exerciseCount esercizi', theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(AppIcons.repeat, '$totalSets serie', theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.timer, context.l10n.minutesFormat(minutes), theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.workout, context.l10n.exercisesCount(exerciseCount), theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.repeat, context.l10n.setsCount(totalSets), theme.colorScheme.onPrimaryContainer),
                       ],
                     ),
                   ],
@@ -291,7 +298,7 @@ class HomeWidgetFactory {
                   child: _buildActionButton(
                     context,
                     icon: AppIcons.play,
-                    label: 'Riprendi',
+                    label: context.l10n.resume,
                     color: theme.colorScheme.primary,
                     onTap: () => context.push('/workout'),
                   ),
@@ -301,7 +308,7 @@ class HomeWidgetFactory {
                   child: _buildActionButton(
                     context,
                     icon: AppIcons.complete,
-                    label: 'Termina',
+                    label: context.l10n.finish,
                     color: context.successColor,
                     onTap: () => _showCompleteDialog(context, ref, workout),
                   ),
@@ -348,7 +355,12 @@ class HomeWidgetFactory {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: color.withValues(alpha: 0.7)),
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: value,
+          size: AppIconSize.tiny,
+          color: color.withValues(alpha: 0.7),
+        ),
         const SizedBox(width: 4),
         Text(
           value,
@@ -381,10 +393,11 @@ class HomeWidgetFactory {
           borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: const EdgeInsets.all(8),
-            child: Icon(
-              icon,
+            child: SemanticIcon(
+              icon: icon,
+              semanticLabel: label.isEmpty ? 'Action button' : label,
               color: color,
-              size: 20,
+              size: AppIconSize.small,
             ),
           ),
         ),
@@ -402,10 +415,11 @@ class HomeWidgetFactory {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
+              SemanticIcon(
+                icon: icon,
+                semanticLabel: label,
                 color: color,
-                size: 18,
+                size: AppIconSize.small,
               ),
               if (label.isNotEmpty) ...[
                 const SizedBox(width: 6),
@@ -444,7 +458,7 @@ class HomeWidgetFactory {
               // Mostra conferma
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Allenamento scartato'),
+                  content: Text(context.l10n.workoutDiscarded),
                   backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               );
@@ -479,7 +493,7 @@ class HomeWidgetFactory {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Continua'),
+            child: Text(context.l10n.continueWorkout),
           ),
           FilledButton(
             onPressed: () {
@@ -489,7 +503,7 @@ class HomeWidgetFactory {
               // Vai alla schermata di riepilogo
               context.push('/workout/summary');
             },
-            child: Text('Termina e Salva'),
+            child: Text(context.l10n.finishAndSave),
           ),
         ],
       ),
@@ -522,10 +536,11 @@ class HomeWidgetFactory {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.ai,
-                    color: Colors.white,
-                    size: 20,
+                  child: SemanticIcon(
+                    icon: AppIcons.ai,
+                    semanticLabel: 'AI Coach',
+                    color: context.colors.surface,
+                    size: AppIconSize.small,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -537,7 +552,7 @@ class HomeWidgetFactory {
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  'Analisi pronta',
+                  context.l10n.analysisReady,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w600,
@@ -572,10 +587,11 @@ class HomeWidgetFactory {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        AppIcons.ai,
-                        color: Colors.white,
-                        size: 20,
+                      child: SemanticIcon(
+                        icon: AppIcons.ai,
+                        semanticLabel: 'AI Coach insights',
+                        color: context.colors.surface,
+                        size: AppIconSize.small,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -590,7 +606,7 @@ class HomeWidgetFactory {
                             ),
                           ),
                           Text(
-                            'Consiglio principale',
+                            context.l10n.mainAdvice,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.primary,
                             ),
@@ -613,15 +629,16 @@ class HomeWidgetFactory {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            AppIcons.trendingUp,
+                          SemanticIcon(
+                            icon: AppIcons.trendingUp,
+                            semanticLabel: 'Trending up',
                             color: context.successColor,
-                            size: 16,
+                            size: AppIconSize.tiny,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Progressione Squat',
+                              context.l10n.squatProgression,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -631,7 +648,7 @@ class HomeWidgetFactory {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Considera un aumento del carico del 2-5% basato sui tuoi ultimi 3 allenamenti',
+                        context.l10n.considerLoadIncrease,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
@@ -645,16 +662,18 @@ class HomeWidgetFactory {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Altri 2 consigli disponibili',
+                      context.l10n.moreAdvicesAvailable(2),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.primary.withValues(alpha: 0.7),
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(
-                      AppIcons.forward,
-                      size: 14,
-                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                    SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
                     ),
                   ],
                 ),
@@ -687,10 +706,11 @@ class HomeWidgetFactory {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        AppIcons.ai,
-                        color: Colors.white,
-                        size: 24,
+                      child: SemanticIcon(
+                        icon: AppIcons.ai,
+                        semanticLabel: 'AI Coach analysis',
+                        color: context.colors.surface,
+                        size: AppIconSize.medium,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -705,7 +725,7 @@ class HomeWidgetFactory {
                             ),
                           ),
                           Text(
-                            'Analisi personalizzata dei tuoi progressi',
+                            context.l10n.personalizedProgressAnalysis,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
@@ -719,10 +739,10 @@ class HomeWidgetFactory {
                         color: theme.colorScheme.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        '3 nuovi',
+                      child: Text(
+                        context.l10n.newInsightsCount(3),
                         style: TextStyle(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -745,23 +765,23 @@ class HomeWidgetFactory {
     final insights = [
       {
         'icon': AppIcons.trendUp,
-        'title': 'Progressione Carico',
-        'message': 'Squat: incremento del 2-5% consigliato',
-        'detail': 'Basato su 4 settimane di progressi costanti',
+        'title': context.l10n.loadProgression,
+        'message': context.l10n.squatIncreaseRecommended,
+        'detail': context.l10n.basedOnWeeksProgress(4),
         'color': context.successColor,
       },
       {
         'icon': AppIcons.schedule,
-        'title': 'Recupero Ottimale',
-        'message': 'Considera 48-72h tra sessioni intense',
-        'detail': 'Il tuo volume è aumentato del 15% questo mese',
+        'title': context.l10n.optimalRecovery,
+        'message': context.l10n.considerRecoveryTime,
+        'detail': context.l10n.volumeIncreased(15),
         'color': context.warningColor,
       },
       {
         'icon': AppIcons.workout,
-        'title': 'Bilanciamento Muscolare',
-        'message': 'Rapporto push/pull equilibrato',
-        'detail': 'Mantieni il volume attuale per i prossimi 2 microcicli',
+        'title': context.l10n.muscleBalance,
+        'message': context.l10n.pushPullBalanced,
+        'detail': context.l10n.maintainVolumeForCycles(2),
         'color': context.infoColor,
       },
     ];
@@ -787,10 +807,11 @@ class HomeWidgetFactory {
                   color: (insight['color'] as Color).withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  insight['icon'] as IconData,
+                child: SemanticIcon(
+                  icon: insight['icon'] as IconData,
+                  semanticLabel: insight['title'] as String,
                   color: insight['color'] as Color,
-                  size: 16,
+                  size: AppIconSize.tiny,
                 ),
               ),
               const SizedBox(width: 12),
@@ -815,7 +836,7 @@ class HomeWidgetFactory {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'BASATO SU DATI',
+                            context.l10n.dataBasedBadge,
                             style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
@@ -894,13 +915,14 @@ class HomeWidgetFactory {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: context.colors.surface.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        AppIcons.ai,
-                        color: Colors.white,
-                        size: 24,
+                      child: SemanticIcon(
+                        icon: AppIcons.ai,
+                        semanticLabel: 'AI Coach',
+                        color: context.colors.surface,
+                        size: AppIconSize.medium,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -908,18 +930,18 @@ class HomeWidgetFactory {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'AI Coach Insights',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                           ),
                           Text(
-                            'Analisi basata sui tuoi progressi',
+                            context.l10n.analysisBasedOnProgress,
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
+                              color: context.colors.surface.withValues(alpha: 0.9),
                               fontSize: 12,
                             ),
                           ),
@@ -927,7 +949,12 @@ class HomeWidgetFactory {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(AppIcons.close, color: Colors.white),
+                      icon: SemanticIcon(
+                        icon: AppIcons.close,
+                        semanticLabel: 'Close',
+                        color: context.colors.surface,
+                        size: AppIconSize.medium,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -944,14 +971,14 @@ class HomeWidgetFactory {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Consigli Personalizzati',
+                        context.l10n.personalizedAdvices,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Basati sulle ultime 4 settimane di allenamento',
+                        context.l10n.basedOnLastWeeks(4),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -969,15 +996,17 @@ class HomeWidgetFactory {
                         ),
                         child: Row(
                           children: [
-                            Icon(
-                              AppIcons.info,
-                              size: 16,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.6,
+),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'I consigli si aggiornano dopo ogni allenamento',
+                                context.l10n.advicesUpdateAfterWorkout,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 ),
@@ -1009,12 +1038,12 @@ class HomeWidgetFactory {
 
                         context.push('/analytics');
                       },
-                      child: const Text('Vedi Analytics'),
+                      child: Text(context.l10n.viewAnalytics),
                     ),
                     const SizedBox(width: 8),
                     FilledButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Chiudi'),
+                      child: Text(context.l10n.close),
                     ),
                   ],
                 ),
@@ -1196,9 +1225,10 @@ class HomeWidgetFactory {
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          group['type'] == 'Push' ? AppIcons.north : AppIcons.south,
-                          size: 16,
+                        SemanticIcon(
+                          icon: group['type'] == 'Push' ? AppIcons.north : AppIcons.south,
+                          semanticLabel: group['type'] as String,
+                          size: AppIconSize.tiny,
                           color: theme.colorScheme.primary,
                         ),
                         const SizedBox(width: 4),
@@ -1349,10 +1379,11 @@ class HomeWidgetFactory {
                       color: (insight['color'] as Color).withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      insight['icon'] as IconData,
+                    child: SemanticIcon(
+                      icon: insight['icon'] as IconData,
+                      semanticLabel: insight['title'] as String,
                       color: insight['color'] as Color,
-                      size: 20,
+                      size: AppIconSize.small,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1402,11 +1433,12 @@ class HomeWidgetFactory {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          AppIcons.tip,
-                          size: 14,
-                          color: insight['color'] as Color,
-                        ),
+                        SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.tiny,
+  color: insight['color'] as Color,
+),
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
@@ -1462,10 +1494,11 @@ class HomeWidgetFactory {
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.workout,
-                    color: Colors.white,
-                    size: 20,
+                  child: SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Workout',
+                    color: context.colors.surface,
+                    size: AppIconSize.small,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -1475,13 +1508,13 @@ class HomeWidgetFactory {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Template',
+                        context.l10n.template,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Scegli workout',
+                        context.l10n.chooseWorkout,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
@@ -1489,10 +1522,11 @@ class HomeWidgetFactory {
                     ],
                   ),
                 ),
-                Icon(
-                  AppIcons.forwardIos,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Go to templates',
                   color: theme.colorScheme.primary,
-                  size: 16,
+                  size: AppIconSize.tiny,
                 ),
               ],
             ),
@@ -1527,10 +1561,11 @@ class HomeWidgetFactory {
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.workout,
-                    color: Colors.white,
-                    size: 28,
+                  child: SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Choose template',
+                    color: context.colors.surface,
+                    size: AppIconSize.large,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -1540,14 +1575,14 @@ class HomeWidgetFactory {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Scegli Template',
+                        context.l10n.chooseTemplate,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Seleziona un workout salvato',
+                        context.l10n.selectSavedWorkout,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
@@ -1561,10 +1596,11 @@ class HomeWidgetFactory {
                     color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    AppIcons.forward,
+                  child: SemanticIcon(
+                    icon: AppIcons.forward,
+                    semanticLabel: 'Navigate',
                     color: theme.colorScheme.primary,
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                 ),
               ],
@@ -1601,10 +1637,11 @@ class HomeWidgetFactory {
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    AppIcons.workout,
-                    color: Colors.white,
-                    size: 36,
+                  child: SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Select workout template',
+                    color: context.colors.surface,
+                    size: AppIconSize.xlarge,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -1625,11 +1662,11 @@ class HomeWidgetFactory {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildQuickStatSmall('12', 'Template', AppIcons.assignment, theme),
+                    _buildQuickStatSmall('12', context.l10n.template, AppIcons.assignment, theme),
                     const SizedBox(width: 32),
-                    _buildQuickStatSmall('45', 'Min medi', AppIcons.timer, theme),
+                    _buildQuickStatSmall('45', context.l10n.avgMin, AppIcons.timer, theme),
                     const SizedBox(width: 32),
-                    _buildQuickStatSmall('3.2k', 'kg/settimana', AppIcons.workout, theme),
+                    _buildQuickStatSmall('3.2k', context.l10n.kgPerWeek, AppIcons.workout, theme),
                   ],
                 ),
               ],
@@ -1643,10 +1680,11 @@ class HomeWidgetFactory {
   static Widget _buildQuickStatSmall(String value, String label, IconData icon, ThemeData theme) {
     return Column(
       children: [
-        Icon(
-          icon,
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: label,
           color: theme.colorScheme.primary.withValues(alpha: 0.7),
-          size: 16,
+          size: AppIconSize.tiny,
         ),
         const SizedBox(height: 4),
         Text(
@@ -1672,10 +1710,10 @@ class HomeWidgetFactory {
     final theme = Theme.of(context);
 
     final actions = [
-      {'icon': AppIcons.assignment, 'label': 'Template', 'route': '/workout-templates'},
-      {'icon': AppIcons.history, 'label': 'Cronologia', 'route': '/history'},
-      {'icon': AppIcons.analytics, 'label': 'Analytics', 'route': '/analytics'},
-      {'icon': AppIcons.settings, 'label': 'Impostazioni', 'route': '/settings'},
+      {'icon': AppIcons.assignment, 'label': context.l10n.template, 'route': '/workout-templates'},
+      {'icon': AppIcons.history, 'label': context.l10n.history, 'route': '/history'},
+      {'icon': AppIcons.analytics, 'label': context.l10n.analytics, 'route': '/analytics'},
+      {'icon': AppIcons.settings, 'label': context.l10n.settings, 'route': '/settings'},
     ];
 
     return Card(
@@ -1712,10 +1750,11 @@ class HomeWidgetFactory {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    action['icon'] as IconData,
+                  SemanticIcon(
+                    icon: action['icon'] as IconData,
+                    semanticLabel: action['label'] as String,
                     color: theme.colorScheme.primary,
-                    size: 28,
+                    size: AppIconSize.large,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -1743,10 +1782,15 @@ class HomeWidgetFactory {
           children: [
             Row(
               children: [
-                Icon(AppIcons.history, color: theme.colorScheme.primary),
+                SemanticIcon(
+                  icon: AppIcons.history,
+                  semanticLabel: 'Recent workouts',
+                  color: theme.colorScheme.primary,
+                  size: AppIconSize.medium,
+                ),
                 const SizedBox(width: 8),
                 Text(
-                  'Allenamenti Recenti',
+                  context.l10n.recentWorkouts,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -1756,7 +1800,7 @@ class HomeWidgetFactory {
             const SizedBox(height: 16),
             // TODO: Implement recent workouts list
             Text(
-              'Nessun allenamento recente',
+              context.l10n.noRecentWorkouts,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -1778,10 +1822,15 @@ class HomeWidgetFactory {
           children: [
             Row(
               children: [
-                Icon(AppIcons.flag, color: theme.colorScheme.primary, size: 20),
+                SemanticIcon(
+                  icon: AppIcons.flag,
+                  semanticLabel: 'Weekly goals',
+                  color: theme.colorScheme.primary,
+                  size: AppIconSize.small,
+                ),
                 const SizedBox(width: 8),
                 Text(
-                  'Obiettivi',
+                  context.l10n.goals,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -1790,7 +1839,7 @@ class HomeWidgetFactory {
             ),
             SizedBox(height: 12),
             Text(
-              '3/4 questa settimana',
+              context.l10n.thisWeekProgress(3, 4),
               style: theme.textTheme.bodyMedium,
             ),
           ],
@@ -1802,12 +1851,12 @@ class HomeWidgetFactory {
   static Widget _buildMotivationalQuoteWidget(BuildContext context) {
     final theme = Theme.of(context);
     final quotes = [
-      'Il successo inizia con la volontà',
-      'Ogni allenamento conta',
-      'Supera i tuoi limiti',
-      'La costanza batte il talento',
+      context.l10n.quoteSuccessStarts,
+      context.l10n.quoteEveryWorkout,
+      context.l10n.quoteExceedLimits,
+      context.l10n.quoteConsistencyBeats,
     ];
-    
+
     final quote = quotes[DateTime.now().day % quotes.length];
     
     return Card(
@@ -1825,10 +1874,11 @@ class HomeWidgetFactory {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.formatQuote,
+            SemanticIcon(
+              icon: AppIcons.formatQuote,
+              semanticLabel: 'Motivational quote',
               color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              size: 24,
+              size: AppIconSize.medium,
             ),
             const SizedBox(height: 8),
             Text(
@@ -1861,10 +1911,11 @@ class HomeWidgetFactory {
                   color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  AppIcons.fitnessCenter,
+                child: SemanticIcon(
+                  icon: AppIcons.fitnessCenter,
+                  semanticLabel: 'Exercise of the day',
                   color: context.warningColor,
-                  size: 24,
+                  size: AppIconSize.medium,
                 ),
               ),
               SizedBox(width: 16),
@@ -1873,13 +1924,13 @@ class HomeWidgetFactory {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Esercizio del Giorno',
+                      context.l10n.exerciseOfDay,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Squat - 4x12',
+                      context.l10n.exerciseOfDayExample,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: context.warningColor,
                         fontWeight: FontWeight.w600,
@@ -1905,10 +1956,11 @@ class HomeWidgetFactory {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                config.icon,
+              SemanticIcon(
+                icon: config.icon,
+                semanticLabel: config.title,
                 color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                size: 32,
+                size: AppIconSize.xlarge,
               ),
               const SizedBox(height: 8),
               Text(
@@ -1968,13 +2020,14 @@ class _AICoachDialog extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: context.colors.surface.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      AppIcons.ai,
-                      color: Colors.white,
-                      size: 24,
+                    child: SemanticIcon(
+                      icon: AppIcons.ai,
+                      semanticLabel: 'AI Coach dialog',
+                      color: context.colors.surface,
+                      size: AppIconSize.medium,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1982,18 +2035,18 @@ class _AICoachDialog extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'AI Coach Insights',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Analisi basata sui tuoi dati',
+                          context.l10n.analysisBasedOnData,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
+                            color: context.colors.surface.withValues(alpha: 0.9),
                             fontSize: 12,
                           ),
                         ),
@@ -2001,7 +2054,12 @@ class _AICoachDialog extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(AppIcons.close, color: Colors.white),
+                    icon: SemanticIcon(
+                      icon: AppIcons.close,
+                      semanticLabel: 'Close dialog',
+                      color: context.colors.surface,
+                      size: AppIconSize.medium,
+                    ),
                     onPressed: () => Navigator.of(context).pop(),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -2018,27 +2076,27 @@ class _AICoachDialog extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (analyticsState.isLoading) ...[
-                      const Center(child: CircularProgressIndicator()),
+                      const Center(child: LoadingIndicator()),
                     ] else if (insights.isEmpty) ...[
                       Text(
-                        'Nessun dato sufficiente',
+                        context.l10n.noDataAvailable,
                         style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Completa almeno 4 allenamenti per ricevere consigli personalizzati.',
+                        context.l10n.completeWorkoutsForAdvices(4),
                         style: theme.textTheme.bodySmall,
                       ),
                     ] else ...[
                       Text(
-                        'Consigli Personalizzati',
+                        context.l10n.personalizedAdvices,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Basati sui tuoi ultimi ${analyticsState.activities.length} allenamenti',
+                        context.l10n.basedOnLastWorkouts(analyticsState.activities.length),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -2069,12 +2127,12 @@ class _AICoachDialog extends ConsumerWidget {
 
                       context.push('/analytics');
                     },
-                    child: const Text('Vedi Analytics'),
+                    child: Text(context.l10n.viewAnalytics),
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Chiudi'),
+                    child: Text(context.l10n.close),
                   ),
                 ],
               ),
@@ -2170,10 +2228,11 @@ class _AICoachDialog extends ConsumerWidget {
                     color: context.successColor.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    AppIcons.trendingUp,
+                  child: SemanticIcon(
+                    icon: AppIcons.trendingUp,
+                    semanticLabel: 'Progression trend',
                     color: context.successColor,
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                 ),
                 SizedBox(width: 12),
@@ -2182,13 +2241,13 @@ class _AICoachDialog extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Progressione $exerciseName',
+                        context.l10n.exerciseProgression(exerciseName),
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Ultimi ${history.length} allenamenti',
+                        context.l10n.lastWorkoutsCount(history.length),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: context.successColor,
                           fontWeight: FontWeight.w600,
@@ -2225,7 +2284,7 @@ class _AICoachDialog extends ConsumerWidget {
                         SizedBox(
                           width: 100,
                           child: Text(
-                            _formatDate(activity.createdAt),
+                            _formatDate(activity.createdAt, context),
                             style: theme.textTheme.bodySmall,
                           ),
                         ),
@@ -2246,13 +2305,13 @@ class _AICoachDialog extends ConsumerWidget {
                         SizedBox(
                           width: 30,
                           child: Text(
-                            '$maxReps reps',
+                            context.l10n.repsCount(maxReps),
                             style: theme.textTheme.bodySmall,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '($totalSets set)',
+                          context.l10n.setsCountParenthesis(totalSets),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -2276,15 +2335,16 @@ class _AICoachDialog extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        AppIcons.lightbulbOutline,
-                        size: 14,
-                        color: context.successColor,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.lightbulbOutline,
+  semanticLabel: 'Lightbulb outline',
+  size: AppIconSize.tiny,
+  color: context.successColor,
+),
                       SizedBox(width: 6),
                       Flexible(
                         child: Text(
-                          _generateProgressionAdvice(history),
+                          _generateProgressionAdvice(history, context),
                           style: TextStyle(
                             color: context.successColor,
                             fontWeight: FontWeight.w600,
@@ -2313,36 +2373,36 @@ class _AICoachDialog extends ConsumerWidget {
     return const SizedBox.shrink();
   }
   
-  static String _formatDate(DateTime date) {
+  static String _formatDate(DateTime date, BuildContext context) {
     final now = DateTime.now();
     final diff = now.difference(date).inDays;
-    
-    if (diff == 0) return 'Oggi';
-    if (diff == 1) return 'Ieri';
-    if (diff < 7) return '$diff giorni fa';
-    if (diff < 30) return '${(diff / 7).floor()} settimane fa';
-    return '${(diff / 30).floor()} mesi fa';
+
+    if (diff == 0) return context.l10n.today;
+    if (diff == 1) return context.l10n.yesterday;
+    if (diff < 7) return context.l10n.daysAgo(diff);
+    if (diff < 30) return context.l10n.weeksAgo((diff / 7).floor());
+    return context.l10n.monthsAgo((diff / 30).floor());
   }
   
-  static String _generateProgressionAdvice(List<ExerciseActivity> history) {
-    if (history.length < 2) return 'Continua così';
-    
+  static String _generateProgressionAdvice(List<ExerciseActivity> history, BuildContext context) {
+    if (history.length < 2) return context.l10n.keepGoingAdvice;
+
     final last = history.last;
     final secondLast = history[history.length - 2];
-    
+
     final lastWeights = last.sets.map((s) => double.tryParse(s.weight) ?? 0.0).toList();
     final lastMaxWeight = lastWeights.isEmpty ? 0.0 : lastWeights.reduce((a, b) => a > b ? a : b);
-    
+
     final prevWeights = secondLast.sets.map((s) => double.tryParse(s.weight) ?? 0.0).toList();
     final prevMaxWeight = prevWeights.isEmpty ? 0.0 : prevWeights.reduce((a, b) => a > b ? a : b);
-    
+
     if (lastMaxWeight > prevMaxWeight) {
       final increase = ((lastMaxWeight - prevMaxWeight) / prevMaxWeight * 100).toStringAsFixed(1);
-      return 'Ottimo! +$increase% ultimo allenamento';
+      return context.l10n.improvementPercentage(increase);
     } else if (lastMaxWeight == prevMaxWeight) {
-      return 'Prova con +2.5kg nel prossimo allenamento';
+      return context.l10n.tryIncreaseWeight;
     } else {
-      return 'Consolida il peso attuale';
+      return context.l10n.consolidateWeight;
     }
   }
 }
