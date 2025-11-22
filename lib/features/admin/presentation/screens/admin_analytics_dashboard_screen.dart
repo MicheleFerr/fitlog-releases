@@ -16,6 +16,9 @@ import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_serv
 import 'package:gymbro_flutter_new/core/analytics/analytics_constants.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Admin Analytics Dashboard Screen
 ///
@@ -46,12 +49,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       },
       loading: () => const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: LoadingIndicator(),
         ),
       ),
       error: (error, stack) => Scaffold(
         body: Center(
-          child: Text('Error: $error'),
+          child: Text(context.l10n.error),
         ),
       ),
     );
@@ -60,17 +63,18 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
   Widget _buildAccessDenied(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Access Denied'),
+        title: Text(context.l10n.accessDenied),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.lock,
-              size: 64,
-              color: context.colors.error,
-            ),
+            SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
             SizedBox(height: 16),
             Text(
               'Admin access required',
@@ -86,8 +90,11 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(AppIcons.back),
-              label: const Text('Go Back'),
+              icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
+              label: Text(context.l10n.goBack),
             ),
           ],
         ),
@@ -105,7 +112,10 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(AppIcons.back),
+          icon: SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         ),
         title: Row(
@@ -121,7 +131,10 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => _showRefreshInfo(context, hybridService),
-            icon: const Icon(AppIcons.info),
+            icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
             tooltip: 'Analytics Info',
           ),
         ],
@@ -201,11 +214,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.admin,
-                  size: 28,
-                  color: context.colors.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.large,
+  color: context.colors.primary,
+),
                 SizedBox(width: 12),
                 Text(
                   'Analytics Dashboard',
@@ -226,11 +240,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
             SizedBox(height: 16),
             Row(
               children: [
-                Icon(
-                  AppIcons.security,
-                  size: 16,
-                  color: context.colors.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.security,
+  semanticLabel: 'Security',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                 SizedBox(width: 4),
                 Text(
                   kDebugMode ? 'Debug Mode' : 'Production Mode',
@@ -792,7 +807,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               color: context.colors.primary,
             ),
             SizedBox(width: 8),
-            Text('Analytics Info'),
+            Text(context.l10n.analyticsInfo),
           ],
         ),
         content: Column(
@@ -832,11 +847,12 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.cloudDone,
-                    size: 16,
-                    color: context.colors.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.cloudDone,
+  semanticLabel: 'Cloud done',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -855,7 +871,7 @@ class AdminAnalyticsDashboardScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(context.l10n.ok),
           ),
         ],
       ),
