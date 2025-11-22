@@ -6,7 +6,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/fuzzy_search_service.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as ExerciseDB;
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
+import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -50,20 +51,80 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   bool _showOnlyCompatible = false; // Mostra tutti di default
   bool _isSearching = false;
   Timer? _searchDebounce;
-  List<ExerciseDB.Exercise> _dbExercises = [];
+  List<exercise_db.Exercise> _dbExercises = [];
   List<ExerciseSearchResult> _fuzzyResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDatabaseExercises();
+  }
 
   @override
   void dispose() {
     _searchDebounce?.cancel();
     super.dispose();
   }
-  
+
+  /// Load exercises from JSON database for fuzzy search
+  Future<void> _loadDatabaseExercises() async {
+    try {
+      final locale = Localizations.localeOf(context);
+      final repository = JsonExerciseRepository(locale: locale);
+      final exercises = await repository.getAllExercises();
+      if (mounted) {
+        setState(() {
+          _dbExercises = exercises;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading database exercises: $e');
+    }
+  }
+
+  /// Perform fuzzy search with debouncing
+  void _performFuzzySearch(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _fuzzyResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    // Cancel previous search
+    _searchDebounce?.cancel();
+
+    // Show loading
+    setState(() => _isSearching = true);
+
+    // Debounce search (300ms)
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+      if (_dbExercises.isEmpty) {
+        setState(() => _isSearching = false);
+        return;
+      }
+
+      final locale = Localizations.localeOf(context).languageCode;
+      final results = FuzzySearchService.searchExercises(
+        query: query,
+        allExercises: _dbExercises,
+        locale: locale,
+      );
+
+      if (mounted) {
+        setState(() {
+          _fuzzyResults = results;
+          _isSearching = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final locale = Localizations.localeOf(context);
     final exercisesAsync = ref.watch(exerciseJsonProvider);
 
     // Get exercises from provider
@@ -203,8 +264,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       Expanded(
                         child: Text(
                           l10n.replacementKeepsSetsAndReps,
-                          style: TextStyle(
-                            fontSize: 13,
+                          style: context.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
@@ -217,22 +277,33 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                 
                 // Search bar
                 TextField(
-                  onChanged: (value) => setState(() => _searchQuery = value),
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value);
+                    _performFuzzySearch(value);
+                  },
                   decoration: InputDecoration(
                     hintText: l10n.searchExercises,
                     prefixIcon: const SemanticIcon(
   icon: AppIcons.search,
   semanticLabel: 'Search',
 ),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            onPressed: () => setState(() => _searchQuery = ''),
-                            icon: const SemanticIcon(
+                    suffixIcon: _isSearching
+                        ? const Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: LoadingIndicator(size: 20),
+                          )
+                        : (_searchQuery.isNotEmpty
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() => _searchQuery = '');
+                                  _performFuzzySearch('');
+                                },
+                                icon: const SemanticIcon(
   icon: AppIcons.clear,
   semanticLabel: 'Clear',
 ),
-                          )
-                        : null,
+                              )
+                            : null),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -299,7 +370,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           Expanded(
             child: exercisesAsync.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
               error: (error, stack) => Center(
                 child: Column(
@@ -449,8 +520,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       const SizedBox(width: 4),
                       Text(
                         '${suggestion.compatibilityScore.toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: context.textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: compatibilityColor,
                         ),
@@ -506,8 +576,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   Expanded(
                     child: Text(
                       l10n.replacementKeepsSetsAndReps,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: context.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
