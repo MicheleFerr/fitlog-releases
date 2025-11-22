@@ -159,7 +159,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 final message = messageController.text.trim();
 
                 if (message.isEmpty) {
-                  SnackBarService.showError(context, 'Il messaggio è obbligatorio');
+                  SnackBarService.showError(context, context.l10n.feedbackRequired);
                   return;
                 }
 
@@ -168,7 +168,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                 try {
                   final user = FirebaseAuth.instance.currentUser;
                   if (user == null) {
-                    SnackBarService.showError(context, 'Autenticazione richiesta');
+                    SnackBarService.showError(context, context.l10n.errorAuthenticationRequired);
                     return;
                   }
 
@@ -207,13 +207,13 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                       },
                       (feedbackId) {
                         Navigator.of(context).pop();
-                        SnackBarService.showSuccess(context, 'Feedback inviato con successo!');
+                        SnackBarService.showSuccess(context, context.l10n.feedbackSentSuccess);
                       },
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    SnackBarService.showError(context, 'Errore invio feedback');
+                    SnackBarService.showError(context, context.l10n.feedbackSentError);
                   }
                   debugPrint('❌ Error submitting feedback: $e');
                 } finally {
@@ -436,7 +436,7 @@ class _ExerciseFeedbackButtonState
         if (mounted) {
           SnackBarService.showError(
             context,
-            'Authentication required',
+            context.l10n.errorAuthenticationRequired,
           );
         }
         return;
