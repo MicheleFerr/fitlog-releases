@@ -23285,6 +23285,14 @@
   "@averageRir": {
     "description": "Average RIR label"
   },
+  "equipmentProfiles": "Equipment Profiles",
+  "@equipmentProfiles": {
+    "description": "Equipment profiles screen title"
+  },
+  "equipmentProfilesUnderConstruction": "Equipment profiles - Under construction",
+  "@equipmentProfilesUnderConstruction": {
+    "description": "Equipment profiles under construction message"
+  },
   "autoAdjustWeightTitle": "Auto-Adjust Weight",
   "@autoAdjustWeightTitle": {
     "description": "Auto-adjust weight feature title"

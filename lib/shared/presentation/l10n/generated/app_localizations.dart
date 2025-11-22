@@ -33756,6 +33756,18 @@ abstract class AppLocalizations {
   /// **'Average RIR'**
   String get averageRir;
 
+  /// Equipment profiles screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment Profiles'**
+  String get equipmentProfiles;
+
+  /// Equipment profiles under construction message
+  ///
+  /// In en, this message translates to:
+  /// **'Equipment profiles - Under construction'**
+  String get equipmentProfilesUnderConstruction;
+
   /// Auto-adjust weight feature title
   ///
   /// In en, this message translates to:

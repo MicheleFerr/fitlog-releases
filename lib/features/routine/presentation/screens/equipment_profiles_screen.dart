@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class EquipmentProfilesScreen extends StatelessWidget {
   const EquipmentProfilesScreen({super.key});
@@ -15,9 +16,9 @@ class EquipmentProfilesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Equipment Profiles')),
-      body: const Center(
-        child: Text('Equipment profiles - Under construction'),
+      appBar: AppBar(title: Text(context.l10n.equipmentProfiles)),
+      body: Center(
+        child: Text(context.l10n.equipmentProfilesUnderConstruction),
       ),
     );
   }

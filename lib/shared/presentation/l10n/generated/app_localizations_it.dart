@@ -19023,6 +19023,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get averageRir => 'RIR medio';
 
   @override
+  String get equipmentProfiles => 'Profili Attrezzatura';
+
+  @override
+  String get equipmentProfilesUnderConstruction =>
+      'Profili attrezzatura - In costruzione';
+
+  @override
   String get autoAdjustWeightTitle => 'Auto-Regola Peso';
 
   @override

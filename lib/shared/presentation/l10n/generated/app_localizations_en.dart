@@ -18837,6 +18837,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get averageRir => 'Average RIR';
 
   @override
+  String get equipmentProfiles => 'Equipment Profiles';
+
+  @override
+  String get equipmentProfilesUnderConstruction =>
+      'Equipment profiles - Under construction';
+
+  @override
   String get autoAdjustWeightTitle => 'Auto-Adjust Weight';
 
   @override

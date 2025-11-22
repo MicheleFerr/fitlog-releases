@@ -12823,6 +12823,14 @@
   "@averageRir": {
     "description": "Etichetta RIR medio"
   },
+  "equipmentProfiles": "Profili Attrezzatura",
+  "@equipmentProfiles": {
+    "description": "Titolo schermata profili attrezzatura"
+  },
+  "equipmentProfilesUnderConstruction": "Profili attrezzatura - In costruzione",
+  "@equipmentProfilesUnderConstruction": {
+    "description": "Messaggio profili attrezzatura in costruzione"
+  },
   "autoAdjustWeightTitle": "Auto-Regola Peso",
   "@autoAdjustWeightTitle": {
     "description": "Titolo funzione auto-regolazione peso"
