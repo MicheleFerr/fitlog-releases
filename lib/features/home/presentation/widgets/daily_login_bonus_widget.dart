@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class DailyLoginBonusWidget extends ConsumerWidget {
   const DailyLoginBonusWidget({super.key});
@@ -11,7 +12,6 @@ class DailyLoginBonusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
     final loginState = ref.watch(dailyLoginProvider);
     final bonusInfo = ref.read(dailyLoginProvider.notifier).getBonusInfo();
     
@@ -77,7 +77,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                   loginState.bonusClaimedToday 
                     ? AppIcons.complete
                     : AppIcons.gift,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: 24,
                 ),
               ),
@@ -90,7 +90,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                     Row(
                       children: [
                         Text(
-                          'Bonus Giornaliero',
+                          context.l10n.dailyBonus,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -107,7 +107,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              '🔥 ${loginState.consecutiveDays} giorni',
+                              context.l10n.daysStreak(loginState.consecutiveDays),
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
@@ -120,14 +120,14 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                     const SizedBox(height: 4),
                     if (loginState.bonusClaimedToday) ...[
                       Text(
-                        '✅ Bonus di oggi reclamato: +${bonusInfo.currentDayBonus} XP',
+                        context.l10n.todayBonusClaimed(bonusInfo.currentDayBonus),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
                       ),
                       if (!bonusInfo.isMaxBonus)
                         Text(
-                          'Torna domani per +${bonusInfo.nextDayBonus} XP!',
+                          context.l10n.comeTomorrowForBonus(bonusInfo.nextDayBonus),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
@@ -135,7 +135,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                         ),
                     ] else ...[
                       Text(
-                        'Reclama +${bonusInfo.currentDayBonus} XP',
+                        context.l10n.claimBonus(bonusInfo.currentDayBonus),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.amber.shade700,
                           fontWeight: FontWeight.bold,
@@ -189,12 +189,12 @@ class DailyLoginBonusWidget extends ConsumerWidget {
           SnackBar(
             content: Row(
               children: [
-                const Icon(AppIcons.celebration, color: Colors.white),
+                Icon(AppIcons.celebration, color: context.colors.surface),
                 const SizedBox(width: 12),
-                Text('Hai guadagnato +${bonusInfo.currentDayBonus} XP!'),
+                Text(context.l10n.youEarnedBonus(bonusInfo.currentDayBonus)),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: context.colors.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -232,7 +232,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Progressione Bonus Login',
+            context.l10n.loginBonusProgression,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -255,7 +255,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       shape: BoxShape.circle,
                       gradient: isCompleted 
                         ? LinearGradient(
-                            colors: [Colors.green, Colors.green.shade700],
+                            colors: [context.colors.success, context.colors.success.shade700],
                           )
                         : isToday
                           ? const LinearGradient(
@@ -276,16 +276,16 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                     ),
                     child: Center(
                       child: isCompleted
-                        ? const Icon(
+                        ? Icon(
                             AppIcons.check,
-                            color: Colors.white,
+                            color: context.colors.surface,
                             size: 20,
                           )
                         : Text(
                             day.toString(),
                             style: TextStyle(
                               color: isToday 
-                                ? Colors.white
+                                ? context.colors.surface
                                 : theme.colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -300,7 +300,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       color: isCompleted 
-                        ? Colors.green
+                        ? context.colors.success
                         : isToday
                           ? Colors.amber.shade700
                           : theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -322,23 +322,23 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
+                color: context.colors.success.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     AppIcons.star,
-                    color: Colors.green,
+                    color: context.colors.success,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Bonus massimo raggiunto! 100 XP ogni giorno',
+                      context.l10n.maxBonusReached,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.green.shade700,
+                        color: context.colors.success.shade700,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

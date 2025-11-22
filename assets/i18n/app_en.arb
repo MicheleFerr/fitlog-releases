@@ -23033,5 +23033,62 @@
   "motivationalStartToday": "🎯 Start your journey today!",
   "@motivationalStartToday": {
     "description": "Motivational text for 0 day streak"
+  },
+  "dailyBonus": "Daily Bonus",
+  "@dailyBonus": {
+    "description": "Daily bonus title"
+  },
+  "daysStreak": "🔥 {count} days",
+  "@daysStreak": {
+    "description": "Days streak badge",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayBonusClaimed": "✅ Today's bonus claimed: +{xp} XP",
+  "@todayBonusClaimed": {
+    "description": "Today's bonus claimed message",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "comeTomorrowForBonus": "Come back tomorrow for +{xp} XP!",
+  "@comeTomorrowForBonus": {
+    "description": "Come back tomorrow for next bonus",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "claimBonus": "Claim +{xp} XP",
+  "@claimBonus": {
+    "description": "Claim bonus call to action",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "youEarnedBonus": "You earned +{xp} XP!",
+  "@youEarnedBonus": {
+    "description": "You earned bonus success message",
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "loginBonusProgression": "Login Bonus Progression",
+  "@loginBonusProgression": {
+    "description": "Login bonus progression title"
+  },
+  "maxBonusReached": "Max bonus reached! 100 XP every day",
+  "@maxBonusReached": {
+    "description": "Max bonus reached message"
   }
 }

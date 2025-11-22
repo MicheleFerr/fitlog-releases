@@ -33581,6 +33581,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'🎯 Start your journey today!'**
   String get motivationalStartToday;
+
+  /// Daily bonus title
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Bonus'**
+  String get dailyBonus;
+
+  /// Days streak badge
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 {count} days'**
+  String daysStreak(int count);
+
+  /// Today's bonus claimed message
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Today\'s bonus claimed: +{xp} XP'**
+  String todayBonusClaimed(int xp);
+
+  /// Come back tomorrow for next bonus
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow for +{xp} XP!'**
+  String comeTomorrowForBonus(int xp);
+
+  /// Claim bonus call to action
+  ///
+  /// In en, this message translates to:
+  /// **'Claim +{xp} XP'**
+  String claimBonus(int xp);
+
+  /// You earned bonus success message
+  ///
+  /// In en, this message translates to:
+  /// **'You earned +{xp} XP!'**
+  String youEarnedBonus(int xp);
+
+  /// Login bonus progression title
+  ///
+  /// In en, this message translates to:
+  /// **'Login Bonus Progression'**
+  String get loginBonusProgression;
+
+  /// Max bonus reached message
+  ///
+  /// In en, this message translates to:
+  /// **'Max bonus reached! 100 XP every day'**
+  String get maxBonusReached;
 }
 
 class _AppLocalizationsDelegate

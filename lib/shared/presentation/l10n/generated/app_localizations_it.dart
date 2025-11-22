@@ -18900,4 +18900,38 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get motivationalStartToday => '🎯 Inizia oggi il tuo percorso!';
+
+  @override
+  String get dailyBonus => 'Bonus Giornaliero';
+
+  @override
+  String daysStreak(int count) {
+    return '🔥 $count giorni';
+  }
+
+  @override
+  String todayBonusClaimed(int xp) {
+    return '✅ Bonus di oggi reclamato: +$xp XP';
+  }
+
+  @override
+  String comeTomorrowForBonus(int xp) {
+    return 'Torna domani per +$xp XP!';
+  }
+
+  @override
+  String claimBonus(int xp) {
+    return 'Reclama +$xp XP';
+  }
+
+  @override
+  String youEarnedBonus(int xp) {
+    return 'Hai guadagnato +$xp XP!';
+  }
+
+  @override
+  String get loginBonusProgression => 'Progressione Bonus Login';
+
+  @override
+  String get maxBonusReached => 'Bonus massimo raggiunto! 100 XP ogni giorno';
 }
