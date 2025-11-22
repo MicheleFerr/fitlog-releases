@@ -401,7 +401,7 @@ class _MissingExercisesRequestsScreenState
         if (mounted) {
           SnackBarService.showError(
             context,
-            'Errore: $e',
+            context.l10n.error,
           );
         }
       }
@@ -468,7 +468,7 @@ class _MissingExercisesRequestsScreenState
         if (mounted) {
           SnackBarService.showError(
             context,
-            'Errore: $e',
+            context.l10n.error,
           );
         }
       }
@@ -516,7 +516,7 @@ class _MissingExercisesRequestsScreenState
         if (mounted) {
           SnackBarService.showError(
             context,
-            'Errore: $e',
+            context.l10n.error,
           );
         }
       }
