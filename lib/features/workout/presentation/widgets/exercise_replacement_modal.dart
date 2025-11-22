@@ -174,11 +174,42 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       }).toList()
         ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
     } else if (_showOnlyCompatible) {
-      // Show smart suggestions only (no search query)
-      displayList = ExerciseCompatibilityService.getSuggestedReplacements(
-        widget.currentExercise,
-        allExercises,
-      );
+      // Show smart suggestions from ENTIRE database (1550+ exercises)
+      // Use all DB exercises with compatibility scoring
+      displayList = _dbExercises.map((dbExercise) {
+        // Try to find existing workout exercise with same name
+        Exercise? matchingWorkoutExercise;
+        try {
+          matchingWorkoutExercise = allExercises.firstWhere(
+            (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
+          );
+        } catch (e) {
+          // Exercise not found in workout provider, create minimal Exercise from DB exercise
+          matchingWorkoutExercise = Exercise(
+            name: dbExercise.nome,
+            type: ExerciseType.single,
+            category: _mapCategoryFromMuscles(dbExercise.focus),
+          );
+        }
+
+        // Calculate compatibility
+        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
+          widget.currentExercise,
+          matchingWorkoutExercise,
+        );
+
+        return ExerciseSuggestion(
+          exercise: matchingWorkoutExercise,
+          compatibilityScore: compatibility,
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise),
+        );
+      }).toList()
+        // Filter: only show suggestions with compatibility >= 30%
+        ..removeWhere((s) => s.compatibilityScore < 30)
+        // Sort by compatibility descending
+        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore))
+        // Limit to top 20 suggestions (avoid overwhelming UI)
+        ..take(20).toList();
     } else {
       // Show all exercises with compatibility scores (no search query)
       displayList = allExercises.map((exercise) {
