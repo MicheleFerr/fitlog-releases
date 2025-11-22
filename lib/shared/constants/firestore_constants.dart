@@ -47,13 +47,6 @@ class FirestoreCollections {
   static const String contributionReports = 'contribution_reports';
   static const String workoutsTogether = 'workouts_together';
 
-  // ==================== BUDDY MATCHING ====================
-  static const String buddyProfiles = 'buddy_profiles';
-  static const String buddyMatches = 'buddy_matches';
-  static const String buddyActions = 'buddy_actions';
-  static const String buddyReports = 'buddy_reports';
-  static const String userSearchFilters = 'user_search_filters';
-
   // ==================== VERIFICATION & MODERATION ====================
   static const String verificationRequests = 'verification_requests';
   static const String photoVerificationRequests = 'photo_verification_requests';

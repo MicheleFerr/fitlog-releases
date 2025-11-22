@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/features/settings/presentation/settings_scree
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/screens/notification_settings_screen_v2.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/equipment_profiles_screen.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
@@ -556,11 +555,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/import-exercises',
         name: 'import-exercises',
         builder: (context, state) => const ImportExercisesScreen(),
-      ),
-      GoRoute(
-        path: '/routine',
-        name: 'routine',
-        builder: (context, state) => const RoutineCenterScreen(),
       ),
       GoRoute(
         path: '/community',

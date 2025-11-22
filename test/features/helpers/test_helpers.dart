@@ -6,8 +6,6 @@
 /// 🌍 Localization: ✅ AppLocalizations included
 /// 🎨 Theme: ✅ ColorScheme included
 /// 📱 Platform: Universal
-/// 
-/// Test helpers for buddy matching enhanced features
 library;
 
 import 'package:flutter/material.dart';
