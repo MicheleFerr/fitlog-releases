@@ -587,8 +587,8 @@ class RecentWorkoutsCard extends StatelessWidget {
     final colors = [
       HSLColor.fromColor(context.colors.success).withLightness(0.7).toColor(),
       HSLColor.fromColor(context.colors.success).withLightness(0.6).toColor(),
-      Colors.orange.shade400,
-      Colors.deepOrange.shade400,
+      Colors.orange[400]!,
+      Colors.deepOrange[400]!,
       HSLColor.fromColor(context.colors.error).withLightness(0.6).toColor(),
     ];
     
