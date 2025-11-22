@@ -9,8 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class WorkoutShareSummary extends ConsumerStatefulWidget {
   
@@ -88,7 +89,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppLocalizations.of(context).errorPickingImage}: ${e.toString()}')),
+          SnackBar(content: Text(context.l10n.errorPickingImage)),
         );
       }
     }
@@ -129,7 +130,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppLocalizations.of(context).errorSharing}: ${e.toString()}')),
+          SnackBar(content: Text(context.l10n.errorSharing)),
         );
       }
     } finally {
@@ -181,7 +182,10 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -204,7 +208,7 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
+                                color: context.colors.onSurface.withValues(alpha: 0.1),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                               ),
@@ -228,8 +232,8 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                         colors: [
-                                          Colors.blue.shade900,
-                                          Colors.purple.shade900,
+                                          HSLColor.fromColor(context.colors.primary).withLightness(0.2).toColor(),
+                                          HSLColor.fromColor(context.colors.tertiary).withLightness(0.2).toColor(),
                                         ],
                                       ),
                                     ),
@@ -242,8 +246,8 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        Colors.black.withValues(alpha: 0.3),
-                                        Colors.black.withValues(alpha: 0.7),
+                                        context.colors.onSurface.withValues(alpha: 0.3),
+                                        context.colors.onSurface.withValues(alpha: 0.7),
                                       ],
                                     ),
                                   ),
@@ -262,12 +266,12 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                             width: 50,
                                             height: 50,
                                             decoration: BoxDecoration(
-                                              color: Colors.white,
+                                              color: context.colors.surface,
                                               borderRadius: BorderRadius.circular(12),
                                             ),
-                                            child: const Icon(
+                                            child: Icon(
                                               AppIcons.workout,
-                                              color: Colors.blue,
+                                              color: context.colors.primary,
                                               size: 30,
                                             ),
                                           ),
@@ -275,19 +279,17 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              const Text(
+                                              Text(
                                                 'FitLogPro',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 24,
+                                                style: context.textTheme.titleLarge?.copyWith(
+                                                  color: context.colors.surface,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               Text(
                                                 DateFormat('MMMM d, yyyy').format(DateTime.now()),
-                                                style: TextStyle(
-                                                  color: Colors.white.withValues(alpha: 0.8),
-                                                  fontSize: 14,
+                                                style: context.textTheme.bodyMedium?.copyWith(
+                                                  color: context.colors.surface.withValues(alpha: 0.8),
                                                 ),
                                               ),
                                             ],
@@ -304,14 +306,13 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                           vertical: 8,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.2),
+                                          color: context.colors.surface.withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(20),
                                         ),
                                         child: Text(
                                           widget.workout.name,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
+                                          style: context.textTheme.titleMedium?.copyWith(
+                                            color: context.colors.surface,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -349,21 +350,20 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                           children: [
                                             Icon(
                                               AppIcons.formatQuote,
-                                              color: Colors.white.withValues(alpha: 0.5),
+                                              color: context.colors.surface.withValues(alpha: 0.5),
                                               size: 30,
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
                                               'WORKOUT COMPLETE',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 28,
+                                              style: context.textTheme.headlineMedium?.copyWith(
+                                                color: context.colors.surface,
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 2,
                                                 shadows: [
                                                   Shadow(
                                                     blurRadius: 10,
-                                                    color: Colors.black.withValues(alpha: 0.5),
+                                                    color: context.colors.onSurface.withValues(alpha: 0.5),
                                                     offset: const Offset(0, 2),
                                                   ),
                                                 ],
@@ -372,9 +372,8 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                                             const SizedBox(height: 8),
                                             Text(
                                               'One step closer to your goals!',
-                                              style: TextStyle(
-                                                color: Colors.white.withValues(alpha: 0.9),
-                                                fontSize: 16,
+                                              style: context.textTheme.bodyLarge?.copyWith(
+                                                color: context.colors.surface.withValues(alpha: 0.9),
                                                 fontStyle: FontStyle.italic,
                                               ),
                                             ),
@@ -428,7 +427,10 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                               _showSelfieOption = true;
                             });
                           },
-                          icon: const Icon(AppIcons.refresh),
+                          icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
                           label: const Text('Change Background'),
                         ),
                         const SizedBox(height: 16),
@@ -440,15 +442,18 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
                         child: FilledButton.icon(
                           onPressed: _isGenerating ? null : _generateAndShare,
                           icon: _isGenerating
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                   ),
                                 )
-                              : const Icon(AppIcons.share),
+                              : const SemanticIcon(
+  icon: AppIcons.share,
+  semanticLabel: 'Share',
+),
                           label: Text(_isGenerating ? 'Generating...' : 'Share Achievement'),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.all(16),
@@ -480,23 +485,21 @@ class _WorkoutShareSummaryState extends ConsumerState<WorkoutShareSummary> {
       children: [
         Icon(
           icon,
-          color: Colors.white,
+          color: context.colors.surface,
           size: 28,
         ),
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 32,
+          style: context.textTheme.headlineMedium?.copyWith(
+            color: context.colors.surface,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
-            fontSize: 14,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.surface.withValues(alpha: 0.8),
           ),
         ),
       ],
