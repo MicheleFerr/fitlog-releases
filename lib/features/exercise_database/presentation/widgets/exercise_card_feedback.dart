@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unif
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget button per segnalare problemi su esercizi
 class ExerciseFeedbackButton extends ConsumerStatefulWidget {
@@ -202,7 +203,7 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                   if (context.mounted) {
                     result.fold(
                       (failure) {
-                        SnackBarService.showError(context, 'Errore invio feedback: ${failure.message}');
+                        SnackBarService.showError(context, context.l10n.error);
                       },
                       (feedbackId) {
                         Navigator.of(context).pop();
@@ -228,7 +229,10 @@ class ExerciseFeedbackButton extends ConsumerStatefulWidget {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(AppIcons.send),
+                  : const SemanticIcon(
+  icon: AppIcons.send,
+  semanticLabel: 'Send',
+),
               label: const Text('Invia'),
             ),
           ],
@@ -259,7 +263,10 @@ class _ExerciseFeedbackButtonState
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(AppIcons.flagOutlined),
+      icon: SemanticIcon(
+  icon: AppIcons.flagOutlined,
+  semanticLabel: 'Flag outlined',
+),
       tooltip: context.l10n.reportExerciseIssue,
       onPressed: _showFeedbackDialog,
     );
@@ -395,7 +402,10 @@ class _ExerciseFeedbackButtonState
                       ),
                     ),
                   )
-                : Icon(AppIcons.send),
+                : SemanticIcon(
+  icon: AppIcons.send,
+  semanticLabel: 'Send',
+),
             label: Text(context.l10n.sendFeedback),
           ),
         ],
