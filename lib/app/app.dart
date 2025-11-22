@@ -358,7 +358,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 🔒 SECURITY: Record user activity (reset session timeout)
       if (isLoggedIn) {
-        ref.read(sessionActivityRecorderProvider);
+        ref.read(sessionActivityRecorderProvider); // OK: read (event handler, not build)
       }
 
       // ✅ AUTH CHECK: If not logged in and not on login/register page, redirect to login
