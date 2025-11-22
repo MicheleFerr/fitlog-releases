@@ -148,7 +148,7 @@ class _StreakModalState extends State<StreakModal> {
     final oneYearAgo = today.subtract(const Duration(days: 365));
 
     // Count days in last year
-    int totalDays = 365;
+    const int totalDays = 365;
     int workoutDaysInYear = 0;
 
     for (final date in workoutDates) {
@@ -236,7 +236,7 @@ class _StreakModalState extends State<StreakModal> {
                 isExpanded: true,
                 isDense: false,
                 underline: const SizedBox.shrink(),
-                icon: SemanticIcon(
+                icon: const SemanticIcon(
                   icon: AppIcons.expandMore,
                   semanticLabel: 'Select view',
                   size: AppIconSize.small,
@@ -267,7 +267,7 @@ class _StreakModalState extends State<StreakModal> {
               // TODO: Implement share functionality
               HapticFeedback.lightImpact();
             },
-            icon: SemanticIcon(
+            icon: const SemanticIcon(
               icon: AppIcons.share,
               semanticLabel: 'Share',
               size: AppIconSize.medium,
@@ -336,7 +336,7 @@ class _StreakModalState extends State<StreakModal> {
         children: [
           Text(
             icon,
-            style: const TextStyle(fontSize: 24),
+            style: context.textTheme.titleLarge,
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -488,7 +488,7 @@ class _StreakModalState extends State<StreakModal> {
             final hasWorkout = workoutDates.contains(date);
             final isToday = date.isAtSameMomentAs(today);
 
-            return Container(
+            return DecoratedBox(
               decoration: BoxDecoration(
                 color: hasWorkout
                     ? context.colors.primary.withValues(alpha: 0.15)
