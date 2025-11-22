@@ -3,6 +3,8 @@ import 'package:gymbro_flutter_new/shared/domain/privacy/consent_type.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// GDPR Consent Dialog
 ///
@@ -85,9 +87,9 @@ class _ConsentDialogState extends State<ConsentDialog> {
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             ...ConsentType.values.map((type) => _buildConsentTile(type)),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildPrivacyPolicyLink(),
           ],
         ),
@@ -97,7 +99,9 @@ class _ConsentDialogState extends State<ConsentDialog> {
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(false),
           child: Text(
             'Cancel',
-            style: TextStyle(color: context.colors.onSurface.withValues(alpha: 0.6)),
+            style: context.textTheme.labelLarge?.copyWith(
+              color: context.colors.onSurface.withValues(alpha: 0.6),
+            ),
           ),
         ),
         FilledButton(
@@ -140,7 +144,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                           ),
                         ),
                         if (type.isRequired) ...[
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,
@@ -148,7 +152,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                             ),
                             decoration: BoxDecoration(
                               color: context.colors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'Required',
@@ -161,7 +165,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
                         ],
                       ],
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       type.description,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -198,12 +202,13 @@ class _ConsentDialogState extends State<ConsentDialog> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            Icon(
-              AppIcons.policyOutlined,
-              size: 16,
-              color: context.colors.primary,
-            ),
-            SizedBox(width: 8),
+            SemanticIcon(
+  icon: AppIcons.policyOutlined,
+  semanticLabel: 'Policy outlined',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
+            const SizedBox(width: 8),
             Text(
               'Read our Privacy Policy',
               style: context.textTheme.bodySmall?.copyWith(

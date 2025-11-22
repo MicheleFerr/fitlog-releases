@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutHeader extends StatefulWidget {
 
@@ -118,7 +120,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   _buildStatusChip(context),
                 ],
               ),
@@ -141,7 +143,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
           ],
         ),
         
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         
         // Progress and stats
         Row(
@@ -155,7 +157,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Theme.of(context).colorScheme.primary,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 context,
@@ -165,7 +167,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 Theme.of(context).colorScheme.secondary,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
                 context,
@@ -178,7 +180,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
           ],
         ),
         
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         
         // Progress bar
         Column(
@@ -195,15 +197,17 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 const Spacer(),
                 Tooltip(
                   message: '💡 Set Gestures:\n• Tap = Complete\n• Double-tap = Quick Edit\n• Long press = Full Edit',
-                  child: Icon(
-                    AppIcons.help,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  child: SemanticIcon(
+  icon: AppIcons.help,
+  semanticLabel: 'Help',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             LinearProgressIndicator(
               value: widget.workout.progressPercentage,
               backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -214,7 +218,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                         ? Theme.of(context).colorScheme.secondary  
                         : Theme.of(context).colorScheme.tertiary,
               ),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
           ],
         ),
@@ -237,7 +241,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 AppIcons.workout,
                 Theme.of(context).colorScheme.primary,
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               // Sets stat
               _buildCompactStat(
                 'Sets',
@@ -245,7 +249,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                 AppIcons.formatListNumbered,
                 Theme.of(context).colorScheme.secondary,
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               // Volume stat
               _buildCompactStat(
                 'Volume',
@@ -255,14 +259,16 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
               ),
               const Spacer(),
               // Expand indicator
-              Icon(
-                AppIcons.expandMore,
-                size: 20,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+              SemanticIcon(
+  icon: AppIcons.expandMore,
+  semanticLabel: 'Expand',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           // Progress bar (maintained)
           LinearProgressIndicator(
             value: widget.workout.progressPercentage,
@@ -274,7 +280,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
                       ? Theme.of(context).colorScheme.secondary  
                       : Theme.of(context).colorScheme.tertiary,
             ),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
         ],
       ),
@@ -287,7 +293,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 16, color: color),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -355,7 +361,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: textColor),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             text,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -388,7 +394,7 @@ class _WorkoutHeaderState extends State<WorkoutHeader>
       child: Column(
         children: [
           Icon(icon, color: color, size: 20),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             value,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(

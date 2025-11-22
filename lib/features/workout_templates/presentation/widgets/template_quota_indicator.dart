@@ -14,9 +14,10 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
   
@@ -36,8 +37,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final l10n = AppLocalizations.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -59,11 +59,12 @@ class TemplateQuotaIndicator extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.package,
-                size: 20,
-                color: colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.package,
+  semanticLabel: 'Package',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
               const SizedBox(width: 8),
               Text(
                 'Template Quota',
@@ -186,7 +187,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
         Row(
           children: [
             Icon(icon, size: 16, color: color),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Text(
               label,
               style: theme.textTheme.labelMedium,
@@ -205,9 +206,9 @@ class TemplateQuotaIndicator extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: percentage,
             minHeight: 8,

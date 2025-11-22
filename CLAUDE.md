@@ -15,7 +15,15 @@
 
 **⚠️ OBBLIGATORIO**: Prima di qualsiasi modifica, leggi [`docs/NAVIGATION/INDEX.md`](docs/NAVIGATION/INDEX.md) → trova docs feature → leggi → implementa
 
-**Documentazione chiave**: `DESIGN_GUIDELINES.md` (design system), `TIMER_SYSTEM_DOCUMENTATION.md` (timer), `ANALYTICS_SYSTEM_DOCUMENTATION.md` (analytics), `USER_PROFILE_DOCUMENTATION.md` (auth), `WORKOUT_SYSTEM_OVERVIEW.md` (workout), `ROUTINE_CENTER_V2_IMPLEMENTATION.md` (routine v2.0 - START HERE), `FASE_1_PRESET_TEMPLATES_UI_ENHANCEMENT.md` (routine preset UI), `APRE_INDEX.md` (APRE), `AI_COACH_COMPREHENSIVE_DOCUMENTATION.md` (AI coach feature gating)
+**Documentazione chiave**:
+- **Analytics**: `ANALYTICS_SYSTEM_OVERVIEW.md` (v2.0 completo), `MUSCLE_DISTRIBUTION_DOCUMENTATION.md` (radar chart), `STREAK_MODAL_DOCUMENTATION.md` (GitHub calendar), `VOLUME_MODAL_DOCUMENTATION.md` (volume breakdown)
+- **Design**: `DESIGN_GUIDELINES.md` (design system completo)
+- **Timer**: `TIMER_SYSTEM_DOCUMENTATION.md` (timer + live activities)
+- **Auth**: `USER_PROFILE_DOCUMENTATION.md` (autenticazione)
+- **Workout**: `WORKOUT_SYSTEM_OVERVIEW.md` (sistema workout)
+- **Routine**: `ROUTINE_CENTER_V2_IMPLEMENTATION.md` (routine v2.0 - START HERE), `FASE_1_PRESET_TEMPLATES_UI_ENHANCEMENT.md` (preset UI)
+- **APRE**: `APRE_INDEX.md` (autoregolazione)
+- **AI Coach**: `AI_COACH_COMPREHENSIVE_DOCUMENTATION.md` (feature gating)
 
 **Workflow**: INDEX.md → Trova feature → Leggi docs → Implementa → Aggiorna docs → Commit
 
