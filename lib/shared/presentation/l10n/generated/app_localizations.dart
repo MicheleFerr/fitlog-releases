@@ -7955,22 +7955,22 @@ abstract class AppLocalizations {
   /// **'Activity for'**
   String get activityFor;
 
-  /// Timestamp showing hours elapsed
+  /// Relative time format for hours
   ///
   /// In en, this message translates to:
   /// **'{hours}h ago'**
   String hoursAgo(int hours);
 
-  /// Timestamp showing minutes elapsed
+  /// Relative time format for minutes
   ///
   /// In en, this message translates to:
   /// **'{minutes}m ago'**
   String minutesAgo(int minutes);
 
-  /// Timestamp indicating action just happened
+  /// Relative time for just now
   ///
   /// In en, this message translates to:
-  /// **'Just now'**
+  /// **'now'**
   String get justNow;
 
   /// Button text to view all items
@@ -15110,11 +15110,11 @@ abstract class AppLocalizations {
   /// **'Template \"{name}\" deleted'**
   String templateDeletedSuccessfully(String name);
 
-  /// Error with message placeholder
+  /// Generic error message with details
   ///
   /// In en, this message translates to:
-  /// **'Error: {error}'**
-  String errorWithMessage(String error);
+  /// **'Error: {message}'**
+  String errorWithMessage(String message);
 
   /// PDF shared success message
   ///
@@ -20778,17 +20778,17 @@ abstract class AppLocalizations {
   /// **'All'**
   String get timeRangeLabelAll;
 
-  /// Format for days ago
+  /// Relative time format for days
   ///
   /// In en, this message translates to:
-  /// **'{days} days ago'**
+  /// **'{days}d ago'**
   String daysAgo(int days);
 
-  /// Format for weeks ago
+  /// Relative time format for weeks
   ///
   /// In en, this message translates to:
-  /// **'{weeks} weeks ago'**
-  String weeksAgo(String weeks);
+  /// **'{weeks} wk ago'**
+  String weeksAgo(int weeks);
 
   /// Format for months ago
   ///
@@ -23988,16 +23988,16 @@ abstract class AppLocalizations {
   /// **'Report reason inappropriate photos'**
   String get reportReasonInappropriatePhotos;
 
-  /// Auto-generated for reportReasonOther
+  /// Report reason option for other
   ///
   /// In en, this message translates to:
-  /// **'Report reason other'**
+  /// **'Other'**
   String get reportReasonOther;
 
-  /// Auto-generated for reportReasonSpam
+  /// Report reason option for spam
   ///
   /// In en, this message translates to:
-  /// **'Report reason spam'**
+  /// **'Spam or advertising'**
   String get reportReasonSpam;
 
   /// Auto-generated for reportReasonUnderage
@@ -32861,6 +32861,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import Failed'**
   String get importFailedTitle;
+
+  /// Title for contribution detail modal
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution Details'**
+  String get contributionDetails;
+
+  /// Section title for admin action buttons
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Actions'**
+  String get adminActions;
+
+  /// Comments section title with count
+  ///
+  /// In en, this message translates to:
+  /// **'Comments ({count})'**
+  String commentsCount(int count);
+
+  /// Empty state message when no comments
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet'**
+  String get noCommentsYet;
+
+  /// Encouragement message to add first comment
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to comment!'**
+  String get beFirstToComment;
+
+  /// Placeholder text for comment input field
+  ///
+  /// In en, this message translates to:
+  /// **'Add a comment...'**
+  String get addCommentHint;
+
+  /// Button label to report a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Report contribution'**
+  String get reportContribution;
+
+  /// Success message after upvoting
+  ///
+  /// In en, this message translates to:
+  /// **'👍 Upvoted!'**
+  String get upvoteSuccess;
+
+  /// Success message after downvoting
+  ///
+  /// In en, this message translates to:
+  /// **'👎 Downvoted'**
+  String get downvoteSuccess;
+
+  /// Success message after adding comment
+  ///
+  /// In en, this message translates to:
+  /// **'💬 Comment added!'**
+  String get commentAddedSuccess;
+
+  /// Success message after approving contribution
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Contribution approved!'**
+  String get contributionApprovedSuccess;
+
+  /// Success message after rejecting contribution
+  ///
+  /// In en, this message translates to:
+  /// **'🚫 Contribution rejected'**
+  String get contributionRejectedSuccess;
+
+  /// Success message after submitting report
+  ///
+  /// In en, this message translates to:
+  /// **'🚨 Report submitted'**
+  String get reportSubmittedSuccess;
+
+  /// Dialog title for rejecting contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Contribution'**
+  String get rejectContributionTitle;
+
+  /// Label for rejection reason input
+  ///
+  /// In en, this message translates to:
+  /// **'Specify rejection reason:'**
+  String get rejectReasonLabel;
+
+  /// Placeholder hint for rejection reason
+  ///
+  /// In en, this message translates to:
+  /// **'E.g., Inaccurate information'**
+  String get rejectReasonHint;
+
+  /// Report reason option for offensive content
+  ///
+  /// In en, this message translates to:
+  /// **'Offensive content'**
+  String get reportReasonOffensive;
+
+  /// Report reason option for wrong info
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong information'**
+  String get reportReasonWrongInfo;
+
+  /// Report reason option for duplicate
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate'**
+  String get reportReasonDuplicate;
+
+  /// Dialog title for reporting contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Report Contribution'**
+  String get reportContributionTitle;
+
+  /// Label for report reason selection
+  ///
+  /// In en, this message translates to:
+  /// **'Reason for report:'**
+  String get reportReasonLabel;
+
+  /// Placeholder for custom report reason
+  ///
+  /// In en, this message translates to:
+  /// **'Specify the reason'**
+  String get reportReasonOtherHint;
+
+  /// Button label to submit report
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get reportAction;
 }
 
 class _AppLocalizationsDelegate

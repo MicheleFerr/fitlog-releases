@@ -22272,5 +22272,159 @@
   "importFailedTitle": "Import Failed",
   "@importFailedTitle": {
     "description": "Dialog title when import fails"
+  },
+  "contributionDetails": "Contribution Details",
+  "@contributionDetails": {
+    "description": "Title for contribution detail modal"
+  },
+  "adminActions": "Admin Actions",
+  "@adminActions": {
+    "description": "Section title for admin action buttons"
+  },
+  "commentsCount": "Comments ({count})",
+  "@commentsCount": {
+    "description": "Comments section title with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noCommentsYet": "No comments yet",
+  "@noCommentsYet": {
+    "description": "Empty state message when no comments"
+  },
+  "beFirstToComment": "Be the first to comment!",
+  "@beFirstToComment": {
+    "description": "Encouragement message to add first comment"
+  },
+  "addCommentHint": "Add a comment...",
+  "@addCommentHint": {
+    "description": "Placeholder text for comment input field"
+  },
+  "reportContribution": "Report contribution",
+  "@reportContribution": {
+    "description": "Button label to report a contribution"
+  },
+  "upvoteSuccess": "👍 Upvoted!",
+  "@upvoteSuccess": {
+    "description": "Success message after upvoting"
+  },
+  "downvoteSuccess": "👎 Downvoted",
+  "@downvoteSuccess": {
+    "description": "Success message after downvoting"
+  },
+  "errorWithMessage": "Error: {message}",
+  "@errorWithMessage": {
+    "description": "Generic error message with details",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "commentAddedSuccess": "💬 Comment added!",
+  "@commentAddedSuccess": {
+    "description": "Success message after adding comment"
+  },
+  "contributionApprovedSuccess": "✅ Contribution approved!",
+  "@contributionApprovedSuccess": {
+    "description": "Success message after approving contribution"
+  },
+  "contributionRejectedSuccess": "🚫 Contribution rejected",
+  "@contributionRejectedSuccess": {
+    "description": "Success message after rejecting contribution"
+  },
+  "reportSubmittedSuccess": "🚨 Report submitted",
+  "@reportSubmittedSuccess": {
+    "description": "Success message after submitting report"
+  },
+  "weeksAgo": "{weeks} wk ago",
+  "@weeksAgo": {
+    "description": "Relative time format for weeks",
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "{days}d ago",
+  "@daysAgo": {
+    "description": "Relative time format for days",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{hours}h ago",
+  "@hoursAgo": {
+    "description": "Relative time format for hours",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesAgo": "{minutes}m ago",
+  "@minutesAgo": {
+    "description": "Relative time format for minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "justNow": "now",
+  "@justNow": {
+    "description": "Relative time for just now"
+  },
+  "rejectContributionTitle": "Reject Contribution",
+  "@rejectContributionTitle": {
+    "description": "Dialog title for rejecting contribution"
+  },
+  "rejectReasonLabel": "Specify rejection reason:",
+  "@rejectReasonLabel": {
+    "description": "Label for rejection reason input"
+  },
+  "rejectReasonHint": "E.g., Inaccurate information",
+  "@rejectReasonHint": {
+    "description": "Placeholder hint for rejection reason"
+  },
+  "reportReasonSpam": "Spam or advertising",
+  "@reportReasonSpam": {
+    "description": "Report reason option for spam"
+  },
+  "reportReasonOffensive": "Offensive content",
+  "@reportReasonOffensive": {
+    "description": "Report reason option for offensive content"
+  },
+  "reportReasonWrongInfo": "Wrong information",
+  "@reportReasonWrongInfo": {
+    "description": "Report reason option for wrong info"
+  },
+  "reportReasonDuplicate": "Duplicate",
+  "@reportReasonDuplicate": {
+    "description": "Report reason option for duplicate"
+  },
+  "reportReasonOther": "Other",
+  "@reportReasonOther": {
+    "description": "Report reason option for other"
+  },
+  "reportContributionTitle": "Report Contribution",
+  "@reportContributionTitle": {
+    "description": "Dialog title for reporting contribution"
+  },
+  "reportReasonLabel": "Reason for report:",
+  "@reportReasonLabel": {
+    "description": "Label for report reason selection"
+  },
+  "reportReasonOtherHint": "Specify the reason",
+  "@reportReasonOtherHint": {
+    "description": "Placeholder for custom report reason"
+  },
+  "reportAction": "Report",
+  "@reportAction": {
+    "description": "Button label to submit report"
   }
 }

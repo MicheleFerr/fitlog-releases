@@ -4329,7 +4329,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get justNow => 'Proprio ora';
+  String get justNow => 'ora';
 
   @override
   String get viewAll => 'Visualizza Tutto';
@@ -8534,8 +8534,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String errorWithMessage(String error) {
-    return 'Errore: $error';
+  String errorWithMessage(String message) {
+    return 'Errore: $message';
   }
 
   @override
@@ -11925,12 +11925,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String daysAgo(int days) {
-    return '$days giorni fa';
+    return '${days}g fa';
   }
 
   @override
-  String weeksAgo(String weeks) {
-    return '$weeks settimane fa';
+  String weeksAgo(int weeks) {
+    return '$weeks sett. fa';
   }
 
   @override
@@ -13669,10 +13669,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Report reason inappropriate photos';
 
   @override
-  String get reportReasonOther => 'Report reason other';
+  String get reportReasonOther => 'Altro';
 
   @override
-  String get reportReasonSpam => 'Report reason spam';
+  String get reportReasonSpam => 'Spam o pubblicità';
 
   @override
   String get reportReasonUnderage => 'Report reason underage';
@@ -18496,4 +18496,75 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get importFailedTitle => 'Importazione Fallita';
+
+  @override
+  String get contributionDetails => 'Dettagli Contributo';
+
+  @override
+  String get adminActions => 'Azioni Admin';
+
+  @override
+  String commentsCount(int count) {
+    return 'Commenti ($count)';
+  }
+
+  @override
+  String get noCommentsYet => 'Nessun commento ancora';
+
+  @override
+  String get beFirstToComment => 'Sii il primo a commentare!';
+
+  @override
+  String get addCommentHint => 'Aggiungi un commento...';
+
+  @override
+  String get reportContribution => 'Segnala contributo';
+
+  @override
+  String get upvoteSuccess => '👍 Voto positivo!';
+
+  @override
+  String get downvoteSuccess => '👎 Voto negativo';
+
+  @override
+  String get commentAddedSuccess => '💬 Commento aggiunto!';
+
+  @override
+  String get contributionApprovedSuccess => '✅ Contributo approvato!';
+
+  @override
+  String get contributionRejectedSuccess => '🚫 Contributo rifiutato';
+
+  @override
+  String get reportSubmittedSuccess => '🚨 Segnalazione inviata';
+
+  @override
+  String get rejectContributionTitle => 'Rifiuta Contributo';
+
+  @override
+  String get rejectReasonLabel => 'Specifica il motivo del rifiuto:';
+
+  @override
+  String get rejectReasonHint => 'Es: Informazioni non accurate';
+
+  @override
+  String get reportReasonOffensive => 'Contenuto offensivo';
+
+  @override
+  String get reportReasonWrongInfo => 'Informazioni errate';
+
+  @override
+  String get reportReasonDuplicate => 'Duplicato';
+
+  @override
+  String get reportContributionTitle => 'Segnala Contributo';
+
+  @override
+  String get reportReasonLabel => 'Motivo della segnalazione:';
+
+  @override
+  String get reportReasonOtherHint => 'Specifica il motivo';
+
+  @override
+  String get reportAction => 'Segnala';
 }
