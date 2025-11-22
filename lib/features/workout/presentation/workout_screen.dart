@@ -54,6 +54,7 @@ import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_modal.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
   /// Optional template ID to pre-load when opening the screen
@@ -284,12 +285,18 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               title: Text(workoutName ?? context.l10n.myWorkouts),
               leading: isActive
                 ? IconButton(
-                    icon: const Icon(AppIcons.home),
+                    icon: const SemanticIcon(
+  icon: AppIcons.home,
+  semanticLabel: 'Home',
+),
                     onPressed: () => _handleBackNavigation(context, ref),
                     tooltip: context.l10n.backToHomeKeepWorkoutActive,
                   )
                 : IconButton(
-                    icon: const Icon(AppIcons.back),
+                    icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
                     onPressed: () => context.goNamed('home'),
                     tooltip: context.l10n.backToHome,
                   ),
@@ -308,19 +315,28 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         );
                       }
                     },
-                    icon: Icon(_isReorderMode ? AppIcons.done : AppIcons.swapVert),
+                    icon: SemanticIcon(
+                      icon: _isReorderMode ? AppIcons.done : AppIcons.swapVert,
+                      semanticLabel: _isReorderMode ? 'Confirm reorder' : 'Reorder exercises',
+                    ),
                     tooltip: _isReorderMode ? context.l10n.confirmReorder : context.l10n.reorderExercises,
                   ),
                 if (isActive)
                   IconButton(
                     key: _completeWorkoutButtonKey, // PHASE 2: GlobalKey for contextual overlay
                     onPressed: () => _completeWorkout(context, ref),
-                    icon: const Icon(AppIcons.checkCircle),
+                    icon: const SemanticIcon(
+  icon: AppIcons.checkCircle,
+  semanticLabel: 'Complete',
+),
                     tooltip: context.l10n.completeWorkout,
                   ),
                 IconButton(
                   onPressed: () => _showSettingsMenu(context, ref),
-                  icon: const Icon(AppIcons.moreVert),
+                  icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+),
                 ),
               ],
             ),
@@ -411,7 +427,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     label: context.l10n.startNow,
                     onTap: () => _startQuickWorkout(context, ref),
                     backgroundColor: context.successColor,
-                    foregroundColor: Colors.white,
+                    foregroundColor: context.colors.surface,
                   ),
                   ExpandableFabOption(
                     icon: AppIcons.edit,
@@ -485,7 +501,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(AppIcons.error, size: 64, color: context.errorColor),
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.errorColor,
+),
               const SizedBox(height: 16),
               Text(context.l10n.errorOccurred),
               const SizedBox(height: 8),
@@ -519,11 +540,19 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               labelStyle: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               tabs: [
                 Tab(
-                  icon: const Icon(AppIcons.person),
+                  icon: SemanticIcon(
+                    icon: AppIcons.person,
+                    semanticLabel: context.l10n.yourTemplates,
+                    size: AppIconSize.medium,
+                  ),
                   text: context.l10n.yourTemplates,
                 ),
                 Tab(
-                  icon: const Icon(AppIcons.stars),
+                  icon: SemanticIcon(
+                    icon: AppIcons.stars,
+                    semanticLabel: context.l10n.predefinedWorkouts,
+                    size: AppIconSize.medium,
+                  ),
                   text: context.l10n.predefinedWorkouts,
                 ),
               ],
@@ -592,9 +621,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              isCustomTab ? AppIcons.noteAdd : AppIcons.inventory2Outlined,
-              size: 64,
+            SemanticIcon(
+              icon: isCustomTab ? AppIcons.noteAdd : AppIcons.inventory2Outlined,
+              semanticLabel: isCustomTab ? 'No custom templates' : 'No predefined workouts',
+              size: AppIconSize.xxlarge,
               color: context.colors.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
@@ -615,7 +645,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: () => _showCreateTemplateModal(context),
-                icon: const Icon(AppIcons.add),
+                icon: SemanticIcon(
+                  icon: AppIcons.add,
+                  semanticLabel: context.l10n.createNewTemplate,
+                  size: AppIconSize.medium,
+                ),
                 label: Text(context.l10n.createNewTemplate),
               ),
             ],
@@ -677,11 +711,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: const Center(
-                child: Icon(
-                  AppIcons.workout,
-                  color: Colors.white,
-                  size: 36,
+              child: Center(
+                child: SemanticIcon(
+                  icon: AppIcons.workout,
+                  semanticLabel: 'Workout template',
+                  size: AppIconSize.xlarge,
+                  color: context.colors.surface,
                 ),
               ),
             ),
@@ -710,10 +745,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         // Exercises count
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.formatListBulleted,
-                              size: 14,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            SemanticIcon(
+  icon: AppIcons.formatListBulleted,
+  semanticLabel: 'Format list bulleted',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.6,
+),
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -726,10 +763,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         // Duration
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.timer,
-                              size: 14,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.6,
+),
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -797,12 +836,13 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.workout,
+                  SemanticIcon(
+                    icon: AppIcons.workout,
+                    semanticLabel: 'Workout template',
+                    size: AppIconSize.large,
                     color: template.isCustom
                         ? Theme.of(modalContext).colorScheme.primary
                         : Theme.of(modalContext).colorScheme.secondary,
-                    size: 28,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -820,14 +860,24 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(AppIcons.formatListBulleted, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
+                            SemanticIcon(
+  icon: AppIcons.formatListBulleted,
+  semanticLabel: 'Format list bulleted',
+  size: AppIconSize.tiny,
+  color: Theme.of(modalContext,
+).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '${template.exercises.length} ${AppLocalizations.of(modalContext).exercises}',
                               style: Theme.of(modalContext).textTheme.bodySmall,
                             ),
                             const SizedBox(width: 12),
-                            Icon(AppIcons.timer, size: 14, color: Theme.of(modalContext).colorScheme.onSurface.withValues(alpha: 0.6)),
+                            SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: Theme.of(modalContext,
+).colorScheme.onSurface.withValues(alpha: 0.6)),
                             const SizedBox(width: 4),
                             Text(
                               '~${template.estimatedDuration} min',
@@ -853,7 +903,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.successContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(AppIcons.play, color: context.successColor),
+                child: SemanticIcon(
+                  icon: AppIcons.play,
+                  semanticLabel: 'Start workout',
+                  size: AppIconSize.medium,
+                  color: context.successColor,
+                ),
               ),
               title: Text(AppLocalizations.of(modalContext).startWorkout, style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).startWorkoutWithTemplate),
@@ -872,7 +927,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     color: context.infoContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(AppIcons.edit, color: context.infoColor),
+                  child: SemanticIcon(
+                    icon: AppIcons.edit,
+                    semanticLabel: 'Edit template',
+                    size: AppIconSize.medium,
+                    color: context.infoColor,
+                  ),
                 ),
                 title: Text(AppLocalizations.of(modalContext).editTemplate, style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).editTemplateSubtitle),
@@ -891,7 +951,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.warningContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(AppIcons.share, color: context.warningColor),
+                child: SemanticIcon(
+                  icon: AppIcons.share,
+                  semanticLabel: 'Share PDF',
+                  size: AppIconSize.medium,
+                  color: context.warningColor,
+                ),
               ),
               title: Text(AppLocalizations.of(modalContext).sharePdf, style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).sharePdfSubtitle),
@@ -909,7 +974,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(AppIcons.print, color: context.colors.primary),
+                child: SemanticIcon(
+                  icon: AppIcons.print,
+                  semanticLabel: 'Print template',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
               ),
               title: Text(AppLocalizations.of(modalContext).print, style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
               subtitle: Text(AppLocalizations.of(modalContext).printTemplate),
@@ -928,7 +998,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     color: context.errorContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(AppIcons.delete, color: context.errorColor),
+                  child: SemanticIcon(
+                    icon: AppIcons.delete,
+                    semanticLabel: 'Delete template',
+                    size: AppIconSize.medium,
+                    color: context.errorColor,
+                  ),
                 ),
                 title: Text(AppLocalizations.of(modalContext).deleteTemplate, style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
                 subtitle: Text(AppLocalizations.of(modalContext).deleteTemplateSubtitle),
@@ -1231,11 +1306,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    AppIcons.autoAwesome,
-                    size: 14,
-                    color: context.colors.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                   const SizedBox(width: 4),
                   Text(
                     'Suggerito',
@@ -1276,11 +1352,14 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
               onPressed: () => _onStartWorkout(context, ref, workout, sessionId),
-              icon: Icon(AppIcons.playArrowRounded),
+              icon: SemanticIcon(
+  icon: AppIcons.playArrowRounded,
+  semanticLabel: 'Play arrow rounded',
+),
               label: Text(context.l10n.startWorkout),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.successColor,
-                foregroundColor: Colors.white,
+                foregroundColor: context.colors.surface,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 minimumSize: const Size(double.infinity, 48),
               ),
@@ -1382,14 +1461,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundColor: context.colors.primary.withValues(alpha: 0.1),
-                          child: Icon(
-                            AppIcons.workout,
+                          child: SemanticIcon(
+                            icon: AppIcons.workout,
+                            semanticLabel: 'Workout template',
+                            size: AppIconSize.medium,
                             color: context.colors.primary,
                           ),
                         ),
                         title: Text(template.name),
                         subtitle: Text('${template.exercises.length} esercizi • ~${template.estimatedDuration} min'),
-                        trailing: const Icon(AppIcons.arrowForwardRounded, size: 16),
+                        trailing: SemanticIcon(
+                          icon: AppIcons.arrowForwardRounded,
+                          semanticLabel: 'Select template',
+                          size: AppIconSize.small,
+                        ),
                         onTap: () async {
                           // Replace exercises with selected template
                           await ref
@@ -1475,7 +1560,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                   color: context.colors.primary, // Solid primary color (NO gradient)
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: context.isDarkMode ? 0.2 : 0.15),
+                      color: context.colors.onSurface.withValues(alpha: context.isDarkMode ? 0.2 : 0.15),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -1491,10 +1576,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         color: context.colors.onPrimary.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
-                        AppIcons.flashOn,
-                        color: context.colors.onPrimary,
+                      child: SemanticIcon(
+                        icon: AppIcons.flashOn,
+                        semanticLabel: 'Start workout now',
                         size: AppIconSize.xlarge,
+                        color: context.colors.onPrimary,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -1519,8 +1605,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         ],
                       ),
                     ),
-                    Icon(
-                      AppIcons.forwardIos,
+                    SemanticIcon(
+                      icon: AppIcons.forwardIos,
+                      semanticLabel: 'Start',
+                      size: AppIconSize.medium,
                       color: context.colors.onPrimary,
                     ),
                   ],
@@ -1608,8 +1696,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                                     child: AnimatedOpacity(
                                       duration: const Duration(milliseconds: 200),
                                       opacity: 1.0,
-                                      child: Icon(
-                                        AppIcons.dragIndicator,
+                                      child: SemanticIcon(
+                                        icon: AppIcons.dragIndicator,
+                                        semanticLabel: 'Drag to reorder',
+                                        size: AppIconSize.medium,
                                         color: context.colors.onSurfaceVariant,
                                       ),
                                     ),
@@ -1719,10 +1809,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.workout,
-            size: 64,
-            color: context.colors.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -2113,7 +2205,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
           const SizedBox(height: 16),
           if (ref.watch(currentWorkoutProvider) != null) ...[
             ListTile(
-              leading: Icon(AppIcons.saveAlt),
+              leading: SemanticIcon(
+  icon: AppIcons.saveAlt,
+  semanticLabel: 'Save alt',
+),
               title: Text(context.l10n.saveAsTemplate),
               subtitle: Text(context.l10n.saveToFirebase),
               onTap: () {
@@ -2123,7 +2218,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             ),
             const Divider(),
             ListTile(
-              leading: Icon(AppIcons.pause),
+              leading: SemanticIcon(
+  icon: AppIcons.pause,
+  semanticLabel: 'Pause',
+),
               title: Text(context.l10n.pauseWorkout),
               onTap: () {
                 ref.read(currentWorkoutProvider.notifier).pauseWorkout();
@@ -2131,7 +2229,12 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
               },
             ),
             ListTile(
-              leading: Icon(AppIcons.stop, color: context.errorColor),
+              leading: SemanticIcon(
+                icon: AppIcons.stop,
+                semanticLabel: 'End workout',
+                size: AppIconSize.medium,
+                color: context.errorColor,
+              ),
               title: Text(context.l10n.endWorkout),
               onTap: () {
                 Navigator.pop(context);
@@ -2141,7 +2244,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             const Divider(),
           ],
           ListTile(
-            leading: Icon(AppIcons.tune),
+            leading: SemanticIcon(
+  icon: AppIcons.tune,
+  semanticLabel: 'Tune',
+),
             title: Text(context.l10n.customizeWorkout),
             subtitle: Text(context.l10n.rpeTimerMore),
             onTap: () {
@@ -2150,7 +2256,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             },
           ),
           ListTile(
-            leading: Icon(AppIcons.logout),
+            leading: SemanticIcon(
+  icon: AppIcons.logout,
+  semanticLabel: 'Logout',
+),
             title: Text(context.l10n.signOut),
             onTap: () {
               Navigator.pop(context);

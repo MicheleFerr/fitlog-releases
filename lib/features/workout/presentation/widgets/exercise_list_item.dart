@@ -2036,7 +2036,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
    icon: AppIcons.deleteOutline,
    semanticLabel: 'Delete',
    size: AppIconSize.medium,
-   color: Colors.white,
+   color: context.colors.surface,
  ),
       ),
       confirmDismiss: (direction) async {
@@ -2047,7 +2047,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           context: context,
           barrierDismissible: true,
           barrierLabel: 'Dismiss',
-          barrierColor: Colors.black.withValues(alpha: 0.54),
+          barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
           transitionDuration: const Duration(milliseconds: 250),
           pageBuilder: (context, animation, secondaryAnimation) {
             return Container(); // Not used with transitionBuilder
@@ -4907,7 +4907,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: context.colors.onSurface.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -5217,7 +5217,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: context.colors.onSurface.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),

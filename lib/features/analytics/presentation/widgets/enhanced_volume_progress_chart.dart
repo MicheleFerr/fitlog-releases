@@ -14,6 +14,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/fatigue_rating_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -131,17 +133,29 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ButtonSegment(
           value: VolumeChartType.daily,
           label: Text(localizations.day),
-          icon: const Icon(AppIcons.calendarViewDay, size: 18),
+          icon: const SemanticIcon(
+  icon: AppIcons.calendarViewDay,
+  semanticLabel: 'Calendar view day',
+  size: AppIconSize.small,
+),
         ),
         ButtonSegment(
           value: VolumeChartType.weekly,
           label: Text(localizations.week),
-          icon: const Icon(AppIcons.calendarViewWeek, size: 18),
+          icon: const SemanticIcon(
+  icon: AppIcons.calendarViewWeek,
+  semanticLabel: 'Calendar view week',
+  size: AppIconSize.small,
+),
         ),
         ButtonSegment(
           value: VolumeChartType.monthly,
           label: Text(localizations.month),
-          icon: const Icon(AppIcons.calendarViewMonth, size: 18),
+          icon: const SemanticIcon(
+  icon: AppIcons.calendarViewMonth,
+  semanticLabel: 'Calendar view month',
+  size: AppIconSize.small,
+),
         ),
       ],
       selected: {_currentChartType},
@@ -176,7 +190,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const Icon(AppIcons.chevronLeft),
+              icon: const SemanticIcon(
+  icon: AppIcons.chevronLeft,
+  semanticLabel: 'Chevron left',
+),
               onPressed: () {
                 setState(() {
                   _selectedDate = _selectedDate.subtract(const Duration(days: 1));
@@ -216,7 +233,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const Icon(AppIcons.chevronRight),
+              icon: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onPressed: _selectedDate.isBefore(DateTime.now().subtract(const Duration(days: 1)))
                   ? () {
                       setState(() {
@@ -245,7 +265,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: const Icon(AppIcons.chevronLeft),
+                  icon: const SemanticIcon(
+  icon: AppIcons.chevronLeft,
+  semanticLabel: 'Chevron left',
+),
                   onPressed: () {
                     setState(() {
                       _selectedWeek--;
@@ -283,7 +306,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 ),
                 const SizedBox(width: 16),
                 IconButton(
-                  icon: const Icon(AppIcons.chevronRight),
+                  icon: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                   onPressed: _isCurrentWeek() ? null : () {
                     setState(() {
                       _selectedWeek++;
@@ -342,7 +368,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const Icon(AppIcons.chevronLeft),
+              icon: const SemanticIcon(
+  icon: AppIcons.chevronLeft,
+  semanticLabel: 'Chevron left',
+),
               onPressed: () {
                 setState(() {
                   _selectedMonth--;
@@ -371,7 +400,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const Icon(AppIcons.chevronRight),
+              icon: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onPressed: _isCurrentMonth() ? null : () {
                 setState(() {
                   _selectedMonth++;
@@ -528,10 +560,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 final volumeData = processedData[groupIndex];
                 return BarTooltipItem(
                   _getTooltipText(volumeData, localizations),
-                  TextStyle(
+                  theme.textTheme.bodySmall!.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
                   ),
                 );
               },
@@ -573,7 +604,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                   onPressed: () {
                     setState(() {
                       _showDetails = false;
@@ -666,16 +700,21 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              volumeChange > 5 
+                            SemanticIcon(
+                              icon: volumeChange > 5
                                   ? AppIcons.trendUp
-                                  : volumeChange < -5 
+                                  : volumeChange < -5
                                       ? AppIcons.trendDown
                                       : AppIcons.remove,
-                              size: 14,
-                              color: volumeChange > 5 
+                              semanticLabel: volumeChange > 5
+                                  ? 'Trend up'
+                                  : volumeChange < -5
+                                      ? 'Trend down'
+                                      : 'No change',
+                              size: AppIconSize.tiny,
+                              color: volumeChange > 5
                                   ? context.colors.success
-                                  : volumeChange < -5 
+                                  : volumeChange < -5
                                       ? context.colors.error
                                       : context.colors.secondary,
                             ),
@@ -768,10 +807,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(
-              AppIcons.workout,
+            SemanticIcon(
+              icon: AppIcons.workout,
+              semanticLabel: 'Workout',
               color: theme.colorScheme.primary,
-              size: 20,
+              size: AppIconSize.small,
             ),
           ],
         ),
@@ -971,9 +1011,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }) {
     return Column(
       children: [
-        Icon(
-          icon,
-          size: 20,
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: label,
+          size: AppIconSize.small,
           color: color ?? theme.colorScheme.primary,
         ),
         const SizedBox(height: 4),
@@ -1004,9 +1045,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.star,
+                SemanticIcon(
+                  icon: AppIcons.star,
+                  semanticLabel: 'Star',
                   color: theme.colorScheme.primary,
+                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1037,9 +1080,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.autoAwesome,
+                SemanticIcon(
+                  icon: AppIcons.autoAwesome,
+                  semanticLabel: 'Insights',
                   color: theme.colorScheme.primary,
+                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1096,9 +1141,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             // Muscle Efficiency Score Section
             Row(
               children: [
-                Icon(
-                  AppIcons.workout,
+                SemanticIcon(
+                  icon: AppIcons.workout,
+                  semanticLabel: 'Workout',
                   color: theme.colorScheme.secondary,
+                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1143,7 +1190,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   const SizedBox(height: 12),
                   FilledButton.icon(
                     onPressed: () => _showFatigueRatingDialog(context),
-                    icon: const Icon(AppIcons.ai),
+                    icon: const SemanticIcon(
+  icon: AppIcons.ai,
+  semanticLabel: 'Ai',
+),
                     label: const Text('Rate Today\'s Fatigue'),
                     style: FilledButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,
@@ -1170,7 +1220,12 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: theme.colorScheme.primary),
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: title,
+          size: AppIconSize.small,
+          color: theme.colorScheme.primary,
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -1199,10 +1254,12 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.barChart,
-            size: 64,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -1275,10 +1332,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Icon(
-                            isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+                          SemanticIcon(
+                            icon: isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
+                            semanticLabel: isExpanded ? 'Collapse' : 'Expand',
                             color: theme.colorScheme.onSurfaceVariant,
-                            size: 20,
+                            size: AppIconSize.small,
                           ),
                         ],
                       ),
@@ -1317,10 +1375,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.workout,
+              SemanticIcon(
+                icon: AppIcons.workout,
+                semanticLabel: 'Workout',
                 color: theme.colorScheme.primary,
-                size: 16,
+                size: AppIconSize.tiny,
               ),
               const SizedBox(width: 8),
               Text(
@@ -1395,16 +1454,21 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                volumeChange > 5 
+                              SemanticIcon(
+                                icon: volumeChange > 5
                                     ? AppIcons.trendUp
-                                    : volumeChange < -5 
+                                    : volumeChange < -5
                                         ? AppIcons.trendDown
                                         : AppIcons.remove,
-                                size: 14,
-                                color: volumeChange > 5 
+                                semanticLabel: volumeChange > 5
+                                    ? 'Trend up'
+                                    : volumeChange < -5
+                                        ? 'Trend down'
+                                        : 'No change',
+                                size: AppIconSize.tiny,
+                                color: volumeChange > 5
                                     ? context.colors.success
-                                    : volumeChange < -5 
+                                    : volumeChange < -5
                                         ? context.colors.error
                                         : context.colors.secondary,
                               ),
@@ -2044,13 +2108,18 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         color: score.color,
                       ),
                     ),
-                    Icon(
-                      score.trend == EfficiencyTrend.improving
+                    SemanticIcon(
+                      icon: score.trend == EfficiencyTrend.improving
                           ? AppIcons.trendUp
                           : score.trend == EfficiencyTrend.declining
                               ? AppIcons.trendDown
                               : AppIcons.remove,
-                      size: 20,
+                      semanticLabel: score.trend == EfficiencyTrend.improving
+                          ? 'Trend improving'
+                          : score.trend == EfficiencyTrend.declining
+                              ? 'Trend declining'
+                              : 'Trend stable',
+                      size: AppIconSize.small,
                       color: score.trend == EfficiencyTrend.improving
                           ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
@@ -2124,11 +2193,12 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    AppIcons.tip,
-                    size: 14,
-                    color: theme.colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -2300,7 +2370,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
               color: context.colors.onSurface.withValues(alpha: 0.3),
@@ -2331,10 +2401,11 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.fitnessCenter,
+                  SemanticIcon(
+                    icon: AppIcons.fitnessCenter,
+                    semanticLabel: 'Fitness',
                     color: context.colors.surface,
-                    size: 20,
+                    size: AppIconSize.small,
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -2360,10 +2431,11 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(
-                      AppIcons.close,
+                    icon: SemanticIcon(
+                      icon: AppIcons.close,
+                      semanticLabel: 'Close',
                       color: context.colors.surface,
-                      size: 20,
+                      size: AppIconSize.small,
                     ),
                   ),
                 ],
@@ -2412,9 +2484,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     _showComparison = !_showComparison;
                   });
                 },
-                icon: Icon(
-                  _showComparison ? AppIcons.keyboardArrowUp : Icons.history,
-                  size: 20,
+                icon: SemanticIcon(
+                  icon: _showComparison ? AppIcons.keyboardArrowUp : AppIcons.history,
+                  semanticLabel: _showComparison ? 'Collapse history' : 'Show history',
+                  size: AppIconSize.small,
                 ),
                 label: Text(widget.localizations.compareWithHistory),
                 style: OutlinedButton.styleFrom(
@@ -2484,10 +2557,11 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     child: Row(
                       children: [
-                        Icon(
-                          AppIcons.listAlt,
+                        SemanticIcon(
+                          icon: AppIcons.listAlt,
+                          semanticLabel: 'List',
                           color: theme.colorScheme.primary,
-                          size: 18,
+                          size: AppIconSize.small,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -2535,10 +2609,11 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          Icon(
-            icon,
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: label,
             color: theme.colorScheme.primary,
-            size: 20,
+            size: AppIconSize.small,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -2592,7 +2667,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
             height: 28,
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Center(
               child: Text(
@@ -2622,7 +2697,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: effortColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '$effort',

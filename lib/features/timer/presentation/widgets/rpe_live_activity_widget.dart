@@ -67,28 +67,25 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
+        Text(
           '💪 Set Completato!',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: context.colors.surface,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           widget.rpeData['exerciseName'] as String? ?? 'Unknown',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: context.colors.surface,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           '${widget.rpeData['weight']}kg • Set ${widget.rpeData['currentSet']}/${widget.rpeData['totalSets']}',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.9),
-            fontSize: 14,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: context.colors.surface.withValues(alpha: 0.9),
           ),
         ),
       ],
@@ -99,16 +96,15 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: context.colors.surface.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
           Text(
             '🔢 Reps Effettive',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 16,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: context.colors.surface.withValues(alpha: 0.9),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -127,15 +123,14 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                 width: 80,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: context.colors.surface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     '${_actualReps ?? widget.rpeData['targetReps']}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -164,8 +159,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
       height: 44,
       decoration: BoxDecoration(
         color: onPressed != null 
-            ? Colors.white.withValues(alpha: 0.2)
-            : Colors.white.withValues(alpha: 0.1),
+            ? context.colors.surface.withValues(alpha: 0.2)
+            : context.colors.surface.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Material(
@@ -176,8 +171,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           child: Icon(
             icon,
             color: onPressed != null 
-                ? Colors.white
-                : Colors.white.withValues(alpha: 0.5),
+                ? context.colors.surface
+                : context.colors.surface.withValues(alpha: 0.5),
             size: 20,
           ),
         ),
@@ -189,25 +184,23 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: context.colors.surface.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
           Text(
             '⚡ RPE (Rate of Perceived Exertion)',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 16,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: context.colors.surface.withValues(alpha: 0.9),
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             'Quanto è stato difficile questo set?',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.7),
-              fontSize: 12,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: context.colors.surface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 16),
@@ -225,19 +218,18 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                   height: 45,
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? Colors.white.withValues(alpha: 0.3)
-                        : Colors.white.withValues(alpha: 0.1),
+                        ? context.colors.surface.withValues(alpha: 0.3)
+                        : context.colors.surface.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: isSelected
-                        ? Border.all(color: Colors.white, width: 2)
+                        ? Border.all(color: context.colors.surface, width: 2)
                         : null,
                   ),
                   child: Center(
                     child: Text(
                       '$rpe',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: context.colors.surface,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                       ),
                     ),
@@ -249,9 +241,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           const SizedBox(height: 12),
           Text(
             _getRPEDescription(_selectedRPE),
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
-              fontSize: 12,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: context.colors.surface.withValues(alpha: 0.8),
               fontStyle: FontStyle.italic,
             ),
             textAlign: TextAlign.center,
@@ -270,23 +261,23 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
           child: _buildActionButton(
             label: 'Annulla',
             icon: AppIcons.close,
-            color: Colors.white.withValues(alpha: 0.2),
-            textColor: Colors.white,
+            color: context.colors.surface.withValues(alpha: 0.2),
+            textColor: context.colors.surface,
             onPressed: _isLoading ? null : _handleCancel,
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           flex: 2,
           child: _buildActionButton(
             label: _isLoading ? 'Salvando...' : 'Conferma Set',
             icon: _isLoading ? null : AppIcons.check,
             color: canConfirm 
-                ? Colors.white.withValues(alpha: 0.9)
-                : Colors.white.withValues(alpha: 0.3),
+                ? context.colors.surface.withValues(alpha: 0.9)
+                : context.colors.surface.withValues(alpha: 0.3),
             textColor: canConfirm 
                 ? Theme.of(context).colorScheme.primary
-                : Colors.white.withValues(alpha: 0.7),
+                : context.colors.surface.withValues(alpha: 0.7),
             onPressed: canConfirm && !_isLoading ? _handleConfirm : null,
           ),
         ),
@@ -333,9 +324,8 @@ class _RPELiveActivityWidgetState extends ConsumerState<RPELiveActivityWidget> {
                 ],
                 Text(
                   label,
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: textColor,
-                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -449,11 +439,11 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: context.colors.surface.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Center(
-              child: Text('💪', style: TextStyle(fontSize: 20)),
+            child: Center(
+              child: Text('💪', style: Theme.of(context).textTheme.titleLarge),
             ),
           ),
           const SizedBox(width: 12),
@@ -463,18 +453,16 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
               children: [
                 Text(
                   rpeData['exerciseName'] as String? ?? 'Unknown',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   'Set ${rpeData['currentSet']}/${rpeData['totalSets']} • ${rpeData['weight']}kg',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontSize: 12,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: context.colors.surface.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -483,14 +471,13 @@ class CompactRPELiveActivityWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: context.colors.surface.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Text(
+            child: Text(
               'RPE?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: context.colors.surface,
                 fontWeight: FontWeight.w600,
               ),
             ),

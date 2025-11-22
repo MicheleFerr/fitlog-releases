@@ -31,6 +31,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_settings_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/frequency_cap.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Notification Settings Screen v2.0
 ///
@@ -55,7 +56,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
         actions: [
           // Sync status indicator
           IconButton(
-            icon: const Icon(AppIcons.sync),
+            icon: const SemanticIcon(
+  icon: AppIcons.sync,
+  semanticLabel: 'Sync',
+),
             onPressed: () {
               ref.read(notificationSettingsV2Provider.notifier).syncNow();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +77,12 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(AppIcons.error, size: AppIconSize.xxlarge, color: context.colors.error),
+              SemanticIcon(
+                icon: AppIcons.error,
+                semanticLabel: context.l10n.errorLoadingSettings,
+                size: AppIconSize.xxlarge,
+                color: context.colors.error,
+              ),
               const SizedBox(height: 16),
               Text(
                 context.l10n.errorLoadingSettings,
@@ -152,7 +161,12 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             // 🔔 Workout Reminders Category
             Row(
               children: [
-                Icon(AppIcons.notifications, size: AppIconSize.small, color: context.colors.primary),
+                SemanticIcon(
+                  icon: AppIcons.notifications,
+                  semanticLabel: context.l10n.workoutReminders,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.workoutReminders,
@@ -179,9 +193,15 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 child: ListTile(
                   dense: true,
-                  leading: const Icon(AppIcons.schedule),
+                  leading: const SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+),
                   title: Text(_getCustomTimeText(context, settings, 'workoutReminder')),
-                  trailing: const Icon(AppIcons.chevronRight),
+                  trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                   onTap: () => _showCustomTimePicker(context, ref, settings, 'workoutReminder'),
                 ),
               ),
@@ -200,9 +220,15 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 child: ListTile(
                   dense: true,
-                  leading: const Icon(AppIcons.schedule),
+                  leading: const SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+),
                   title: Text(_getCustomTimeText(context, settings, 'recoveryAlert')),
-                  trailing: const Icon(AppIcons.chevronRight),
+                  trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                   onTap: () => _showCustomTimePicker(context, ref, settings, 'recoveryAlert'),
                 ),
               ),
@@ -211,7 +237,12 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Icon(AppIcons.analytics, size: AppIconSize.small, color: context.colors.secondary),
+                SemanticIcon(
+                  icon: AppIcons.analytics,
+                  semanticLabel: context.l10n.progressAndMotivation,
+                  size: AppIconSize.small,
+                  color: context.colors.secondary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.progressAndMotivation,
@@ -281,9 +312,15 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 child: ListTile(
                   dense: true,
-                  leading: const Icon(AppIcons.schedule),
+                  leading: const SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+),
                   title: Text(_getCustomTimeText(context, settings, 'streakMotivation')),
-                  trailing: const Icon(AppIcons.chevronRight),
+                  trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                   onTap: () => _showCustomTimePicker(context, ref, settings, 'streakMotivation'),
                 ),
               ),
@@ -302,9 +339,15 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 child: ListTile(
                   dense: true,
-                  leading: const Icon(AppIcons.schedule),
+                  leading: const SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+),
                   title: Text(_getCustomTimeText(context, settings, 'supplementReminder')),
-                  trailing: const Icon(AppIcons.chevronRight),
+                  trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                   onTap: () => _showCustomTimePicker(context, ref, settings, 'supplementReminder'),
                 ),
               ),
@@ -335,7 +378,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             ListTile(
               title: Text(context.l10n.preferredTime),
               subtitle: Text(_formatTimePreference(context, settings.preferredTime)),
-              trailing: const Icon(AppIcons.chevronRight),
+              trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onTap: () => _showTimePreferencePicker(context, ref, settings),
             ),
             SwitchListTile(
@@ -402,7 +448,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(AppIcons.chevronRight),
+                  const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                 ],
               ),
               onTap: () => _showMaxPerDayPicker(context, ref, settings),
@@ -420,7 +469,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(AppIcons.chevronRight),
+                  const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                 ],
               ),
               onTap: () => _showMaxPerWeekPicker(context, ref, settings),
@@ -438,7 +490,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(AppIcons.chevronRight),
+                  const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                 ],
               ),
               onTap: () => _showMinIntervalHoursPicker(context, ref, settings),
@@ -491,7 +546,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
               ListTile(
                 title: Text(context.l10n.quietHoursWindow),
                 subtitle: Text(_formatQuietHours(settings)),
-                trailing: const Icon(AppIcons.chevronRight),
+                trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
                 onTap: () => _showQuietHoursPicker(context, ref, settings),
               ),
             ],
@@ -529,10 +587,13 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: Icon(
-                settings.hasValidConsent
+              leading: SemanticIcon(
+                icon: settings.hasValidConsent
                     ? AppIcons.checkCircle
                     : AppIcons.warning,
+                semanticLabel: settings.hasValidConsent
+                    ? context.l10n.consentGiven
+                    : context.l10n.consentNotGiven,
                 color: settings.hasValidConsent
                     ? context.colors.success
                     : context.colors.warning,
@@ -562,7 +623,10 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             ListTile(
               title: Text(context.l10n.dataRetentionPeriod),
               subtitle: Text('${settings.dataRetentionDays} ${context.l10n.days}'),
-              trailing: const Icon(AppIcons.chevronRight),
+              trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onTap: () => _showDataRetentionPicker(context, ref, settings),
             ),
           ],
@@ -590,8 +654,9 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             const SizedBox(height: 16),
             lastSyncAsync.when(
               data: (lastSync) => ListTile(
-                leading: Icon(
-                  AppIcons.cloudDone,
+                leading: SemanticIcon(
+                  icon: AppIcons.cloudDone,
+                  semanticLabel: context.l10n.lastSynced,
                   color: context.colors.success,
                 ),
                 title: Text(context.l10n.lastSynced),
@@ -608,8 +673,9 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             isOutOfSyncAsync.when(
               data: (isOutOfSync) => isOutOfSync
                   ? ListTile(
-                      leading: Icon(
-                        AppIcons.warning,
+                      leading: SemanticIcon(
+                        icon: AppIcons.warning,
+                        semanticLabel: context.l10n.outOfSync,
                         color: context.colors.warning,
                       ),
                       title: Text(context.l10n.outOfSync),
@@ -648,14 +714,26 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: Icon(AppIcons.notifications, color: context.colors.success),
+              leading: SemanticIcon(
+                icon: AppIcons.notifications,
+                semanticLabel: context.l10n.testNotification,
+                color: context.colors.success,
+              ),
               title: Text(context.l10n.testNotification),
               subtitle: Text(context.l10n.testNotificationDescription),
-              trailing: const Icon(AppIcons.send, size: AppIconSize.small),
+              trailing: const SemanticIcon(
+                icon: AppIcons.send,
+                semanticLabel: 'Send',
+                size: AppIconSize.small,
+              ),
               onTap: () => _sendTestNotification(context),
             ),
             ListTile(
-              leading: Icon(AppIcons.restore, color: context.colors.primary),
+              leading: SemanticIcon(
+                icon: AppIcons.restore,
+                semanticLabel: context.l10n.resetToDefaults,
+                color: context.colors.primary,
+              ),
               title: Text(context.l10n.resetToDefaults),
               subtitle: Text(context.l10n.resetToDefaultsDescription),
               onTap: () {
@@ -663,7 +741,11 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: Icon(AppIcons.delete, color: context.colors.error),
+              leading: SemanticIcon(
+                icon: AppIcons.delete,
+                semanticLabel: context.l10n.deleteAllData,
+                color: context.colors.error,
+              ),
               title: Text(context.l10n.deleteAllData),
               subtitle: Text(context.l10n.deleteAllDataDescription),
               onTap: () {
@@ -1046,7 +1128,11 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(AppIcons.warningAmber, color: context.colors.warning),
+                      SemanticIcon(
+                        icon: AppIcons.warningAmber,
+                        semanticLabel: context.l10n.exceedsResearchLimit,
+                        color: context.colors.warning,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -1167,7 +1253,11 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(AppIcons.checkCircle, color: context.colors.success),
+            SemanticIcon(
+              icon: AppIcons.checkCircle,
+              semanticLabel: context.l10n.testNotificationSent,
+              color: context.colors.success,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -1321,7 +1411,10 @@ class _QuietHoursPickerDialogState extends State<_QuietHoursPickerDialog> {
             subtitle: Text(
               '${_startTime.hour}:${_startTime.minute.toString().padLeft(2, '0')}',
             ),
-            trailing: const Icon(AppIcons.accessTime),
+            trailing: const SemanticIcon(
+  icon: AppIcons.accessTime,
+  semanticLabel: 'Access time',
+),
             onTap: _pickStartTime,
           ),
           ListTile(
@@ -1329,7 +1422,10 @@ class _QuietHoursPickerDialogState extends State<_QuietHoursPickerDialog> {
             subtitle: Text(
               '${_endTime.hour}:${_endTime.minute.toString().padLeft(2, '0')}',
             ),
-            trailing: const Icon(AppIcons.accessTime),
+            trailing: const SemanticIcon(
+  icon: AppIcons.accessTime,
+  semanticLabel: 'Access time',
+),
             onTap: _pickEndTime,
           ),
         ],

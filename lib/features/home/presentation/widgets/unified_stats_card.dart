@@ -5,6 +5,10 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class UnifiedStatsCard extends ConsumerStatefulWidget {
 
@@ -127,10 +131,11 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              AppIcons.autoAwesome,
-                              color: Colors.white,
-                              size: 20,
+                            child: SemanticIcon(
+                              icon: AppIcons.autoAwesome,
+                              semanticLabel: 'Achievements',
+                              color: context.colors.surface,
+                              size: AppIconSize.small,
                             ),
                           ),
                         );
@@ -217,10 +222,11 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                               alignment: Alignment.center,
                               children: [
                                 // Level icon background
-                                Icon(
-                                  _getLevelIcon(level),
-                                  size: 40,
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                SemanticIcon(
+                                  icon: _getLevelIcon(level),
+                                  semanticLabel: 'Level badge',
+                                  size: AppIconSize.xlarge,
+                                  color: context.colors.surface.withValues(alpha: 0.3),
                                 ),
                                 // Level number
                                 Column(
@@ -228,19 +234,17 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                                   children: [
                                     Text(
                                       'LV',
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(
+                                      style: theme.textTheme.bodySmall?.copyWith(
+                                        color: context.colors.surface.withValues(
                                           alpha: 0.8,
                                         ),
-                                        fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     Text(
                                       '$level',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 28,
+                                      style: theme.textTheme.headlineMedium?.copyWith(
+                                        color: context.colors.surface,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -257,10 +261,11 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              AppIcons.bolt,
+                            SemanticIcon(
+                              icon: AppIcons.bolt,
+                              semanticLabel: 'Experience points',
                               color: theme.colorScheme.primary,
-                              size: 24,
+                              size: AppIconSize.medium,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -302,7 +307,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                               animation: _xpProgress,
                               builder: (context, child) {
                                 return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(12),
                                   child: LinearProgressIndicator(
                                     value: progress * _xpProgress.value,
                                     minHeight: 10,
@@ -330,7 +335,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                                 icon: AppIcons.people,
                                 label: 'Community',
                                 value: '$communityXP XP',
-                                color: Colors.blue,
+                                color: context.colors.primary,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -340,7 +345,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                                 icon: AppIcons.achievement,
                                 label: 'Achievement',
                                 value: '$achievementXP XP',
-                                color: Colors.orange,
+                                color: context.colors.warning,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -350,7 +355,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                                 icon: AppIcons.streak,
                                 label: 'Streak',
                                 value: '${streakAsync.asData?.value ?? 0}',
-                                color: Colors.red,
+                                color: context.colors.error,
                               ),
                             ),
                           ],
@@ -364,11 +369,12 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                           const SizedBox(height: 12),
                           Row(
                             children: [
-                              Icon(
-                                AppIcons.star,
-                                size: 16,
-                                color: theme.colorScheme.primary,
-                              ),
+                              SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                               const SizedBox(width: 8),
                               Text(
                                 'Achievement Recenti',
@@ -427,7 +433,12 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 20),
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: label,
+            color: color,
+            size: AppIconSize.small,
+          ),
           const SizedBox(height: 4),
           Text(
             value,
@@ -469,9 +480,11 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Text(
-                achievement.emoji,
-                style: const TextStyle(fontSize: 16),
+              child: Builder(
+                builder: (context) => Text(
+                  achievement.emoji,
+                  style: context.textTheme.bodyMedium,
+                ),
               ),
             ),
           ),
@@ -500,14 +513,13 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.green,
+                color: context.colors.success,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
+              child: Text(
                 'NEW',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: context.colors.surface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -528,33 +540,33 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              colors: [Colors.green, Colors.green.withValues(alpha: 0.3)],
+              colors: [context.colors.success, context.colors.success.withValues(alpha: 0.3)],
             ),
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Icon(
-                AppIcons.workout,
-                size: 40,
-                color: Colors.white.withValues(alpha: 0.3),
+              SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: context.colors.surface.withValues(alpha: 0.3,
+),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'LV',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 12,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: context.colors.surface.withValues(alpha: 0.8),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const Text(
+                  Text(
                     '1',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -570,7 +582,12 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AppIcons.bolt, color: theme.colorScheme.primary, size: 24),
+            SemanticIcon(
+              icon: AppIcons.bolt,
+              semanticLabel: 'Experience points',
+              color: theme.colorScheme.primary,
+              size: AppIconSize.medium,
+            ),
             const SizedBox(width: 8),
             Text(
               '0 XP',
@@ -602,12 +619,12 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
             ),
             const SizedBox(height: 8),
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               child: LinearProgressIndicator(
                 value: 0,
                 minHeight: 10,
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                valueColor: AlwaysStoppedAnimation<Color>(context.colors.success),
               ),
             ),
           ],
@@ -624,7 +641,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                 icon: AppIcons.people,
                 label: 'Community',
                 value: '0 XP',
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
             ),
             const SizedBox(width: 12),
@@ -634,7 +651,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                 icon: AppIcons.achievement,
                 label: 'Achievement',
                 value: '0 XP',
-                color: Colors.orange,
+                color: context.colors.warning,
               ),
             ),
             const SizedBox(width: 12),
@@ -644,7 +661,7 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
                 icon: AppIcons.streak,
                 label: 'Streak',
                 value: '0',
-                color: Colors.red,
+                color: context.colors.error,
               ),
             ),
           ],
@@ -664,11 +681,11 @@ class _UnifiedStatsCardState extends ConsumerState<UnifiedStatsCard>
   }
 
   Color _getLevelColor(int level) {
-    if (level >= 20) return Colors.purple;
-    if (level >= 15) return Colors.deepOrange;
-    if (level >= 10) return Colors.orange;
-    if (level >= 5) return Colors.blue;
-    return Colors.green;
+    if (level >= 20) return context.colors.tertiary;
+    if (level >= 15) return context.colors.error;
+    if (level >= 10) return context.colors.warning;
+    if (level >= 5) return context.colors.primary;
+    return context.colors.success;
   }
 
   IconData _getLevelIcon(int level) {

@@ -14,6 +14,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CustomizableHomeScreen extends ConsumerStatefulWidget {
   const CustomizableHomeScreen({super.key});
@@ -87,7 +89,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
               content: Text(
                 AppLocalizations.of(context).premiumUnlockedFor24Hours,
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
               duration: const Duration(seconds: 3),
             ),
           );
@@ -137,7 +139,8 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
   @override
   Widget build(BuildContext context) {
     final isEditing = ref.watch(isHomeEditingProvider);
-    final widgets = ref.watch(homeCustomizationProvider);
+    // Keep provider watched to rebuild on changes
+    ref.watch(homeCustomizationProvider);
     final visibleWidgets = ref.read(homeCustomizationProvider.notifier).visibleWidgets;
     
     return Scaffold(
@@ -149,7 +152,7 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             expandedHeight: isEditing ? 140 : 120,
             floating: true,
             pinned: true,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.transparent, // Universal color - allowed exception
             flexibleSpace: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -168,16 +171,14 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   children: [
                     Text(
                       isEditing ? context.l10n.customizeHome : _getGreeting(),
-                      style: TextStyle(
-                        fontSize: isEditing ? 20 : 24,
+                      style: (isEditing ? context.textTheme.titleLarge : context.textTheme.headlineSmall)?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (isEditing)
                       Text(
                         context.l10n.dragToReorderTapToConfigure,
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: context.textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
@@ -189,12 +190,18 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             actions: [
               if (!isEditing) ...[
                 IconButton(
-                  icon: const Icon(AppIcons.edit),
+                  icon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+),
                   onPressed: _startEditMode,
                   tooltip: context.l10n.customize,
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.notificationsOutlined),
+                  icon: const SemanticIcon(
+  icon: AppIcons.notificationsOutlined,
+  semanticLabel: 'Notifications outlined',
+),
                   onPressed: () {
                     // Open notifications
                   },
@@ -209,9 +216,13 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 ),
                 TextButton(
                   onPressed: _endEditMode,
-                  child: Text(
-                    AppLocalizations.of(context).fatto,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  child: Builder(
+                    builder: (context) => Text(
+                      AppLocalizations.of(context).fatto,
+                      style: context.textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -295,8 +306,8 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.deepPurple.shade700,
-                            Colors.deepPurple.shade900,
+                            context.colors.tertiary,
+                            context.colors.tertiary.withValues(alpha: 0.7),
                           ],
                         ),
                       ),
@@ -306,13 +317,14 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: context.colors.surface.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
-                              AppIcons.flagCircle,
-                              color: Colors.white,
-                              size: 32,
+                            child: SemanticIcon(
+                              icon: AppIcons.flagCircle,
+                              semanticLabel: 'Exercise Feedback',
+                              color: context.colors.surface,
+                              size: AppIconSize.xlarge,
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -320,29 +332,28 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   '🔧 Exercise Feedback',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
+                                  style: context.textTheme.titleMedium?.copyWith(
+                                    color: context.colors.surface,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   context.l10n.manageExerciseReports,
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    fontSize: 14,
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: context.colors.surface.withValues(alpha: 0.9),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const Icon(
-                            AppIcons.forwardIos,
-                            color: Colors.white,
-                            size: 20,
+                          SemanticIcon(
+                            icon: AppIcons.forwardIos,
+                            semanticLabel: context.l10n.next,
+                            color: context.colors.surface,
+                            size: AppIconSize.small,
                           ),
                         ],
                       ),
@@ -374,15 +385,6 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
           const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
         ],
       ),
-      
-      // Floating action button (only in normal mode) - COMMENTED OUT
-      // floatingActionButton: !isEditing
-      //     ? FloatingActionButton.extended(
-      //         onPressed: () => context.push('/workout'),
-      //         icon: const Icon(AppIcons.workout),
-      //         label: Text(AppLocalizations.of(context)!.iniziaAllenamento),
-      //       )
-      //     : null,
     );
   }
   
@@ -406,12 +408,13 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  _getSizeIcon(widget.size),
-                  size: 16,
+                SemanticIcon(
+                  icon: _getSizeIcon(widget.size),
+                  semanticLabel: _getSizeLabel(widget.size),
+                  size: AppIconSize.tiny,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   sizeLabel,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -473,8 +476,9 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   Container(
                     width: 40,
                     alignment: Alignment.center,
-                    child: Icon(
-                      AppIcons.dragIndicator,
+                    child: SemanticIcon(
+                      icon: AppIcons.dragIndicator,
+                      semanticLabel: 'Drag',
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -485,8 +489,12 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          Icon(widget.icon, size: AppIconSize.medium),
-                          SizedBox(width: 12),
+                          SemanticIcon(
+                            icon: widget.icon,
+                            semanticLabel: widget.title,
+                            size: AppIconSize.medium,
+                          ),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               widget.title,
@@ -503,8 +511,9 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     // Size selector - only show if resize is allowed
                     if (widget.allowResize)
                       PopupMenuButton<WidgetSize>(
-                        icon: Icon(
-                          _getSizeIcon(widget.size),
+                        icon: SemanticIcon(
+                          icon: _getSizeIcon(widget.size),
+                          semanticLabel: 'Change size',
                           color: Theme.of(context).colorScheme.primary,
                         ),
                         onSelected: (size) {
@@ -517,7 +526,10 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           value: WidgetSize.small,
                           child: Row(
                             children: [
-                              Icon(_getSizeIcon(WidgetSize.small)),
+                              SemanticIcon(
+                                icon: _getSizeIcon(WidgetSize.small),
+                                semanticLabel: context.l10n.small,
+                              ),
                               const SizedBox(width: 8),
                               Text(context.l10n.small),
                             ],
@@ -527,7 +539,10 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           value: WidgetSize.medium,
                           child: Row(
                             children: [
-                              Icon(_getSizeIcon(WidgetSize.medium)),
+                              SemanticIcon(
+                                icon: _getSizeIcon(WidgetSize.medium),
+                                semanticLabel: context.l10n.medium,
+                              ),
                               const SizedBox(width: 8),
                               Text(context.l10n.medium),
                             ],
@@ -537,7 +552,10 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                           value: WidgetSize.large,
                           child: Row(
                             children: [
-                              Icon(_getSizeIcon(WidgetSize.large)),
+                              SemanticIcon(
+                                icon: _getSizeIcon(WidgetSize.large),
+                                semanticLabel: context.l10n.large,
+                              ),
                               const SizedBox(width: 8),
                               Text(context.l10n.large),
                             ],
@@ -548,7 +566,10 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                     
                     // Hide button
                     IconButton(
-                      icon: const Icon(AppIcons.visibilityOff),
+                      icon: const SemanticIcon(
+  icon: AppIcons.visibilityOff,
+  semanticLabel: 'Hide',
+),
                       onPressed: () {
                         ref.read(homeCustomizationProvider.notifier)
                             .toggleWidgetVisibility(widget.id);
@@ -595,11 +616,12 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.addCircleOutline,
+              SemanticIcon(
+                icon: AppIcons.addCircleOutline,
+                semanticLabel: context.l10n.addWidget,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 context.l10n.addWidget,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -618,20 +640,15 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent, // Universal color - allowed exception
       builder: (context) => const WidgetCustomizationMenu(),
     );
   }
   
   String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) {
-      return context.l10n.goodMorning;
-    } else if (hour < 18) {
-      return context.l10n.goodAfternoon;
-    } else {
-      return context.l10n.goodEvening;
-    }
+    // Using simple "welcome" title as goodMorning/goodAfternoon/goodEvening require name parameter
+    // TODO: Get user name from profile and use goodMorning(name), goodAfternoon(name), goodEvening(name)
+    return AppLocalizations.of(context).welcome;
   }
   
   IconData _getSizeIcon(WidgetSize size) {
@@ -766,8 +783,8 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.amber.shade700,
-                    Colors.amber.shade900,
+                    context.colors.warning,
+                    context.colors.warning.withValues(alpha: 0.7),
                   ],
                 )
               : LinearGradient(
@@ -792,10 +809,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
       children: [
         Row(
           children: [
-            const Icon(
-              AppIcons.premium,
-              color: Colors.white,
-              size: 32,
+            SemanticIcon(
+              icon: AppIcons.premium,
+              semanticLabel: context.l10n.premium,
+              color: context.colors.surface,
+              size: AppIconSize.xlarge,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -804,9 +822,8 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                 children: [
                   Text(
                     '👑 ${AppLocalizations.of(context).premium}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -816,9 +833,8 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                       AppLocalizations.of(context).premiumActiveRemaining(
                         _formatRemainingTime(_premiumRemainingTime!),
                       ),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 14,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.surface.withValues(alpha: 0.9),
                       ),
                     ),
                 ],
@@ -838,10 +854,11 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
         children: [
           Row(
             children: [
-              const Icon(
-                AppIcons.gift,
-                color: Colors.white,
-                size: 32,
+              SemanticIcon(
+                icon: AppIcons.gift,
+                semanticLabel: context.l10n.premium,
+                color: context.colors.surface,
+                size: AppIconSize.xlarge,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -850,27 +867,26 @@ class _CustomizableHomeScreenState extends ConsumerState<CustomizableHomeScreen>
                   children: [
                     Text(
                       AppLocalizations.of(context).unlockPremium,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                      style: context.textTheme.titleLarge?.copyWith(
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       AppLocalizations.of(context).watchAdForPremium,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 14,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.surface.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(
-                AppIcons.playCircleFilled,
-                color: Colors.white,
-                size: 40,
+              SemanticIcon(
+                icon: AppIcons.playCircleFilled,
+                semanticLabel: 'Watch ad',
+                color: context.colors.surface,
+                size: AppIconSize.xxlarge,
               ),
             ],
           ),

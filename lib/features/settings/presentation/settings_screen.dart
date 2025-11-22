@@ -11,9 +11,12 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/debug/achievement_debug_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -32,7 +35,10 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
-          icon: Icon(AppIcons.back),
+          icon: SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -96,7 +102,10 @@ class SettingsScreen extends ConsumerWidget {
                     Center(
                       child: FilledButton.tonalIcon(
                         onPressed: () => showMigrationDialog(context, ref),
-                        icon: const Icon(AppIcons.analytics),
+                        icon: const SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+),
                         label: Text(context.l10n.migrateWorkoutHistory),
                         style: FilledButton.styleFrom(
                           backgroundColor: context.colors.primary.withValues(alpha: 0.1),
@@ -115,7 +124,10 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           );
                         },
-                        icon: const Icon(AppIcons.star),
+                        icon: const SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+),
                         label: const Text('🧪 Test 13 Achievements'),
                         style: FilledButton.styleFrom(
                           backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
@@ -141,8 +153,10 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.person,
+                SemanticIcon(
+                  icon: AppIcons.person,
+                  semanticLabel: 'Account',
+                  size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
                 SizedBox(width: 8),
@@ -167,7 +181,10 @@ class SettingsScreen extends ConsumerWidget {
                                   ? NetworkImage(user.photoURL!)
                                   : null,
                               child: user.photoURL == null
-                                  ? Icon(AppIcons.person)
+                                  ? SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+)
                                   : null,
                             ),
                             SizedBox(width: 12),
@@ -198,7 +215,10 @@ class SettingsScreen extends ConsumerWidget {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: () => context.pushNamed('admin'),
-                            icon: Icon(AppIcons.admin),
+                            icon: SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+),
                             label: Text(context.l10n.adminDashboard),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: context.colors.primary,
@@ -217,7 +237,10 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                               );
                             },
-                            icon: Icon(AppIcons.storage),
+                            icon: SemanticIcon(
+  icon: AppIcons.storage,
+  semanticLabel: 'Storage',
+),
                             label: Text(context.l10n.databaseManager),
                             style: FilledButton.styleFrom(
                               backgroundColor: context.colors.primary,
@@ -245,8 +268,10 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.theme,
+                SemanticIcon(
+                  icon: AppIcons.theme,
+                  semanticLabel: 'Theme settings',
+                  size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
                 SizedBox(width: 8),
@@ -266,13 +291,24 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(_getThemeModeIcon(config.themeMode), size: 20),
+                  SemanticIcon(
+                    icon: _getThemeModeIcon(config.themeMode),
+                    semanticLabel: _getThemeModeText(context.l10n, config.themeMode),
+                    size: AppIconSize.small,
+                  ),
                   const SizedBox(width: 8),
                   Text(_getThemeModeText(context.l10n, config.themeMode)),
                 ],
               ),
-              leading: Icon(_getThemeModeIcon(config.themeMode)),
-              trailing: const Icon(AppIcons.chevronRight),
+              leading: SemanticIcon(
+                icon: _getThemeModeIcon(config.themeMode),
+                semanticLabel: _getThemeModeText(context.l10n, config.themeMode),
+                size: AppIconSize.medium,
+              ),
+              trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onTap: () => _showThemeDialog(context, ref, config.themeMode),
               contentPadding: EdgeInsets.zero,
             ),
@@ -286,10 +322,10 @@ class SettingsScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 20,
-                    height: 20,
+                    width: AppIconSize.small,
+                    height: AppIconSize.small,
                     decoration: BoxDecoration(
-                      color: _getPrimaryColor(config.primaryColor),
+                      color: _getPrimaryColor(context, config.primaryColor),
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: context.colors.outline.withValues(alpha: 0.2),
@@ -301,11 +337,16 @@ class SettingsScreen extends ConsumerWidget {
                   Text(context.l10n.settingsThemeColorDesc),
                 ],
               ),
-              leading: Icon(
-                AppIcons.colorLens,
-                color: _getPrimaryColor(config.primaryColor),
+              leading: SemanticIcon(
+                icon: AppIcons.colorLens,
+                semanticLabel: 'Theme color',
+                size: AppIconSize.medium,
+                color: _getPrimaryColor(context, config.primaryColor),
               ),
-              trailing: const Icon(AppIcons.chevronRight),
+              trailing: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
               onTap: () => _showColorDialog(context, ref, config.primaryColor),
               contentPadding: EdgeInsets.zero,
             ),
@@ -318,7 +359,10 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    Icon(AppIcons.formatSize),
+                    SemanticIcon(
+  icon: AppIcons.formatSize,
+  semanticLabel: 'Format size',
+),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -370,7 +414,12 @@ class SettingsScreen extends ConsumerWidget {
             // Header
             Row(
               children: [
-                Icon(AppIcons.workout, color: context.colors.primary),
+                SemanticIcon(
+                  icon: AppIcons.workout,
+                  semanticLabel: 'Workout essentials',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.settingsWorkoutEssentials,
@@ -387,7 +436,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.settingsDefaultRestTime,
               subtitle: '${config.defaultRestTime}s',
-              leading: const Icon(AppIcons.timer),
+              leading: const SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+),
               onTap: () => _showRestTimeDialog(context, ref, config.defaultRestTime),
             ),
 
@@ -414,7 +466,10 @@ class SettingsScreen extends ConsumerWidget {
                 context,
                 title: context.l10n.settingsApreProtocol,
                 subtitle: context.l10n.settingsApreProtocolDesc(config.defaultApreProtocol ?? 3),
-                leading: const Icon(AppIcons.settings),
+                leading: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                 onTap: () => _showApreProtocolDialog(context, ref, config.defaultApreProtocol ?? 3),
               ),
             ],
@@ -428,7 +483,10 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: context.l10n.settingsDayCutoffHourDesc(
                 ref.watch(userProfileProvider).valueOrNull?.dayCutoffHour ?? 4,
               ),
-              leading: const Icon(AppIcons.schedule),
+              leading: const SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+),
               onTap: () => _showDayCutoffDialog(context, ref),
             ),
           ],
@@ -447,7 +505,12 @@ class SettingsScreen extends ConsumerWidget {
             // Header
             Row(
               children: [
-                Icon(AppIcons.insights, color: context.colors.primary),
+                SemanticIcon(
+                  icon: AppIcons.insights,
+                  semanticLabel: 'AI Coach',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.aiCoach,
@@ -464,7 +527,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Recovery Insights',
               subtitle: 'Track readiness, muscle recovery, and overtraining risk',
-              leading: Icon(AppIcons.analytics),
+              leading: SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+),
               onTap: () => context.pushNamed('ai-coach'),
             ),
           ],
@@ -483,7 +549,12 @@ class SettingsScreen extends ConsumerWidget {
             // Header
             Row(
               children: [
-                Icon(AppIcons.notifications, color: context.colors.primary),
+                SemanticIcon(
+                  icon: AppIcons.notifications,
+                  semanticLabel: 'Notifications',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.notifications,
@@ -500,7 +571,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.notificationSettings,
               subtitle: context.l10n.notificationSettingsDesc,
-              leading: Icon(AppIcons.notifications),
+              leading: SemanticIcon(
+  icon: AppIcons.notifications,
+  semanticLabel: 'Notifications',
+),
               onTap: () => context.pushNamed('notifications-v2'),
             ),
           ],
@@ -518,8 +592,10 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.language,
+                SemanticIcon(
+                  icon: AppIcons.language,
+                  semanticLabel: 'Units and language',
+                  size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
                 SizedBox(width: 8),
@@ -538,7 +614,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.settingsLanguage,
               subtitle: _getLanguageText(config.languageCode),
-              leading: const Icon(AppIcons.translate),
+              leading: const SemanticIcon(
+  icon: AppIcons.translate,
+  semanticLabel: 'Translate',
+),
               onTap: () => _showLanguageDialog(context, ref, config.languageCode),
             ),
 
@@ -549,7 +628,10 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.weightUnits,
               subtitle: config.measurementUnit.toUpperCase(),
-              leading: const Icon(AppIcons.weight),
+              leading: const SemanticIcon(
+  icon: AppIcons.weight,
+  semanticLabel: 'Weight',
+),
               onTap: () => _showUnitsDialog(context, ref, config.measurementUnit),
             ),
           ],
@@ -568,9 +650,11 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.logout,
-                  color: Colors.red,
+                SemanticIcon(
+                  icon: AppIcons.logout,
+                  semanticLabel: 'Account actions',
+                  size: AppIconSize.medium,
+                  color: context.colors.error,
                 ),
                 SizedBox(width: 8),
                 Text(
@@ -588,7 +672,12 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.settingsSignOut,
               subtitle: context.l10n.settingsSignOutDesc,
-              leading: const Icon(AppIcons.logout, color: Colors.red),
+              leading: SemanticIcon(
+                icon: AppIcons.logout,
+                semanticLabel: 'Sign out',
+                size: AppIconSize.medium,
+                color: context.colors.error,
+              ),
               onTap: () => _showSignOutDialog(context, ref),
             ),
           ],
@@ -609,7 +698,10 @@ class SettingsScreen extends ConsumerWidget {
       title: Text(title),
       subtitle: Text(subtitle),
       leading: leading,
-      trailing: trailing ?? const Icon(AppIcons.chevronRight),
+      trailing: trailing ?? const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );
@@ -756,14 +848,19 @@ class SettingsScreen extends ConsumerWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: _getPrimaryColor(color),
+                color: _getPrimaryColor(context, color),
                 shape: BoxShape.circle,
                 border: currentColor == color
-                    ? Border.all(color: Colors.black, width: 3)
+                    ? Border.all(color: context.colors.onSurface, width: 3)
                     : null,
               ),
               child: currentColor == color
-                  ? const Icon(AppIcons.check, color: Colors.white)
+                  ? SemanticIcon(
+                      icon: AppIcons.check,
+                      semanticLabel: 'Selected',
+                      size: AppIconSize.medium,
+                      color: context.colors.surface,
+                    )
                   : null,
             ),
           )).toList(),
@@ -950,7 +1047,7 @@ class SettingsScreen extends ConsumerWidget {
               await ref.read(authControllerProvider.notifier).signOut();
               context.go('/login');
             },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: context.colors.error),
             child: Text(context.l10n.signOutButton),
           ),
         ],
@@ -998,12 +1095,12 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  Color _getPrimaryColor(String colorName) {
+  Color _getPrimaryColor(BuildContext context, String colorName) {
     switch (colorName) {
       case 'red':
-        return Colors.red;
+        return context.colors.error;
       case 'green':
-        return Colors.green;
+        return context.colors.success;
       case 'purple':
         return Colors.purple;
       case 'orange':
@@ -1012,7 +1109,7 @@ class SettingsScreen extends ConsumerWidget {
         return Colors.teal;
       case 'blue':
       default:
-        return Colors.blue;
+        return context.colors.primary;
     }
   }
 }
