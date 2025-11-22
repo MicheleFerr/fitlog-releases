@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Premium animated progress ring per Tier 1 apps
 class AnimatedProgressRing extends StatefulWidget {
@@ -104,7 +106,7 @@ class _AnimatedProgressRingState extends State<AnimatedProgressRing>
                 widget.subtitle,
                 style: TextStyle(
                   fontSize: widget.size * 0.1,
-                  color: Colors.grey.shade600,
+                  color: Color.lerp(context.colors.surfaceVariant, Colors.black, 0.6)!,
                 ),
               ),
             ],
@@ -124,7 +126,7 @@ class GlassmorphismCard extends StatelessWidget {
     this.borderRadius = 20,
     this.blur = 10,
     this.opacity = 0.1,
-    this.color = Colors.white,
+    this.color = context.colors.surface,
   });
   final Widget child;
   final double borderRadius;
@@ -138,11 +140,11 @@ class GlassmorphismCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
+          color: context.colors.surface.withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -434,14 +436,14 @@ class _AnimatedStatCardState extends State<AnimatedStatCard>
                             ? AppIcons.trendUp
                             : AppIcons.trendDown,
                         size: 16,
-                        color: widget.isPositive ? Colors.green : Colors.red,
+                        color: widget.isPositive ? context.colors.success : context.colors.error,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.subtitle,
                         style: TextStyle(
                           fontSize: 12,
-                          color: widget.isPositive ? Colors.green : Colors.red,
+                          color: widget.isPositive ? context.colors.success : context.colors.error,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -547,20 +549,20 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(28),
+                            color: context.colors.surface.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             AppIcons.play,
-                            color: Colors.white,
+                            color: context.colors.surface,
                             size: 28,
                           ),
                         ),
                         const Spacer(),
                         Text(
                           widget.duration,
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color: context.colors.surface70,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -570,8 +572,8 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                     const SizedBox(height: 20),
                     Text(
                       widget.title,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: context.colors.surface,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -579,18 +581,18 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                     const SizedBox(height: 8),
                     Text(
                       widget.subtitle,
-                      style: const TextStyle(
-                        color: Colors.white70,
+                      style: TextStyle(
+                        color: context.colors.surface70,
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        const Text(
+                        Text(
                           'INIZIA ORA',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
@@ -600,9 +602,9 @@ class _HeroWorkoutCardState extends State<HeroWorkoutCard>
                         AnimatedRotation(
                           turns: _isHovered ? 0.25 : 0,
                           duration: const Duration(milliseconds: 200),
-                          child: const Icon(
+                          child: Icon(
                             AppIcons.forward,
-                            color: Colors.white,
+                            color: context.colors.surface,
                             size: 20,
                           ),
                         ),
