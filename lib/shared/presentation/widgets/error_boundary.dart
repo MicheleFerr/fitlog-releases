@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget che cattura e gestisce errori nei suoi figli
 class ErrorBoundary extends StatefulWidget {
@@ -68,16 +69,16 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
+        color: Color.lerp(context.colors.error, Colors.white, 0.95)!,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.shade300, width: 2),
+        border: Border.all(color: Color.lerp(context.colors.error, Colors.white, 0.7)!, width: 2),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             AppIcons.error,
-            color: Colors.red.shade700,
+            color: Color.lerp(context.colors.error, Colors.black, 0.3)!,
             size: 48,
           ),
           const SizedBox(height: 16),
@@ -86,7 +87,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.red.shade900,
+              color: Color.lerp(context.colors.error, Colors.black, 0.6)!,
             ),
           ),
           const SizedBox(height: 8),
@@ -94,7 +95,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
             error?.toString() ?? 'Unknown error',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.red.shade700,
+              color: Color.lerp(context.colors.error, Colors.black, 0.3)!,
             ),
             textAlign: TextAlign.center,
           ),
@@ -132,7 +133,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade700,
+                backgroundColor: Color.lerp(context.colors.error, Colors.black, 0.3)!,
               ),
               child: const Text('Show Details'),
             ),
