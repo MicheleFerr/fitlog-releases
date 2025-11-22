@@ -15,6 +15,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/q
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal per creare un nuovo contributo community
 class CreateContributionModal extends ConsumerStatefulWidget {
@@ -97,7 +99,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   children: [
                     Expanded(
                       child: Text(
-                        'Nuovo Contributo',
+                        context.l10n.newContribution,
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -105,7 +107,10 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -133,20 +138,23 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                       TextFormField(
                         controller: _titleController,
                         decoration: InputDecoration(
-                          labelText: 'Titolo',
-                          hintText: 'Es: Migliore presa per principianti',
+                          labelText: context.l10n.titleLabel,
+                          hintText: context.l10n.titleHintContribution,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: const Icon(AppIcons.titleIcon),
+                          prefixIcon: const SemanticIcon(
+  icon: AppIcons.titleIcon,
+  semanticLabel: 'Title icon',
+),
                         ),
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Il titolo è obbligatorio';
+                            return context.l10n.titleRequired;
                           }
                           if (value.trim().length < 10) {
-                            return 'Il titolo deve essere almeno 10 caratteri';
+                            return context.l10n.titleMinLength;
                           }
                           return null;
                         },
@@ -157,22 +165,25 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                       TextFormField(
                         controller: _descriptionController,
                         decoration: InputDecoration(
-                          labelText: 'Descrizione',
+                          labelText: context.l10n.descriptionLabel,
                           hintText: _getDescriptionHint(),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          prefixIcon: const Icon(AppIcons.template),
+                          prefixIcon: const SemanticIcon(
+  icon: AppIcons.template,
+  semanticLabel: 'Template',
+),
                           alignLabelWithHint: true,
                         ),
                         maxLines: 5,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'La descrizione è obbligatoria';
+                            return context.l10n.descriptionRequired;
                           }
                           if (value.trim().length < 20) {
-                            return 'La descrizione deve essere almeno 20 caratteri';
+                            return context.l10n.descriptionMinLength;
                           }
                           return null;
                         },
@@ -184,17 +195,20 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                         TextFormField(
                           controller: _originalValueController,
                           decoration: InputDecoration(
-                            labelText: 'Valore Attuale (Errato)',
-                            hintText: 'Es: Presa stretta',
+                            labelText: context.l10n.currentValueIncorrect,
+                            hintText: context.l10n.currentValueHint,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: const Icon(AppIcons.error),
+                            prefixIcon: const SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Valore attuale obbligatorio per correzioni';
+                                    return context.l10n.currentValueRequired;
                                   }
                                   return null;
                                 }
@@ -204,17 +218,20 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                         TextFormField(
                           controller: _suggestedValueController,
                           decoration: InputDecoration(
-                            labelText: 'Valore Corretto',
-                            hintText: 'Es: Presa larga',
+                            labelText: context.l10n.correctedValue,
+                            hintText: context.l10n.correctedValueHint,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            prefixIcon: const Icon(AppIcons.completeOutline),
+                            prefixIcon: const SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+),
                           ),
                           validator: _selectedType == ContributionType.correction
                               ? (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Valore corretto obbligatorio';
+                                    return context.l10n.correctedValueRequired;
                                   }
                                   return null;
                                 }
@@ -243,7 +260,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Il tuo contributo sarà revisionato da un admin prima di essere pubblicato. Riceverai +50 XP se approvato!',
+                                context.l10n.contributionReviewInfo,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -264,8 +281,11 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                                 height: 20,
                                 child: CircularProgressIndicator(strokeWidth: 2),
                               )
-                            : const Icon(AppIcons.send),
-                        label: Text(_isSubmitting ? 'Invio...' : 'Invia Contributo'),
+                            : const SemanticIcon(
+  icon: AppIcons.send,
+  semanticLabel: 'Send',
+),
+                        label: Text(_isSubmitting ? context.l10n.sending : context.l10n.submitContribution),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -309,7 +329,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Esercizio',
+                    context.l10n.exerciseLabel,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                     ),
@@ -330,7 +350,10 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                   _selectedExerciseName = null;
                 });
               },
-              icon: const Icon(AppIcons.edit),
+              icon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+),
             ),
           ],
         ),
@@ -341,7 +364,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Seleziona Esercizio',
+          context.l10n.selectExercise,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -365,17 +388,18 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Tocca per selezionare un esercizio',
+                    context.l10n.tapToSelectExercise,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.outline,
                     ),
                   ),
                 ),
-                Icon(
-                  AppIcons.forwardIos,
-                  size: 16,
-                  color: theme.colorScheme.outline,
-                ),
+                SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.outline,
+),
               ],
             ),
           ),
@@ -389,7 +413,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Tipo di Contributo',
+          context.l10n.contributionType,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -412,7 +436,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
                     size: 16,
                     color: isSelected ? context.colors.surface : color,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(_getTypeLabel(type)),
                 ],
               ),
@@ -423,14 +447,14 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
               },
               selectedColor: color,
               checkmarkColor: context.colors.surface,
-              labelStyle: TextStyle(
+              labelStyle: context.textTheme.bodyMedium?.copyWith(
                 color: isSelected ? context.colors.surface : color,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             );
           }).toList(),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           _getTypeDescription(_selectedType),
           style: theme.textTheme.bodySmall?.copyWith(
@@ -461,8 +485,8 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
     if (_selectedExerciseId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('⚠️ Seleziona un esercizio'),
+        SnackBar(
+          content: Text(context.l10n.selectExerciseWarning),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -492,7 +516,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('✅ Contributo inviato! In attesa di approvazione'),
+          content: Text(context.l10n.contributionSubmittedSuccess),
           backgroundColor: context.colors.success,
           duration: const Duration(seconds: 3),
         ),
@@ -502,7 +526,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('❌ Errore: $e'),
+          content: Text(context.l10n.errorWithMessage(e.toString())),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -516,34 +540,34 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   String _getDescriptionHint() {
     switch (_selectedType) {
       case ContributionType.tip:
-        return 'Condividi un consiglio utile per questo esercizio...';
+        return context.l10n.descriptionHintTip;
       case ContributionType.warning:
-        return 'Descrivi cosa evitare e perché è pericoloso...';
+        return context.l10n.descriptionHintWarning;
       case ContributionType.correction:
-        return 'Spiega qual è l\'errore comune e come correggerlo...';
+        return context.l10n.descriptionHintCorrection;
       case ContributionType.technique:
-        return 'Descrivi la tecnica corretta passo per passo...';
+        return context.l10n.descriptionHintTechnique;
       case ContributionType.variant:
-        return 'Descrivi la variante dell\'esercizio...';
+        return context.l10n.descriptionHintVariant;
       case ContributionType.translation:
-        return 'Fornisci la traduzione corretta...';
+        return context.l10n.descriptionHintTranslation;
     }
   }
 
   String _getTypeDescription(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return 'Consiglio pratico per migliorare l\'esecuzione';
+        return context.l10n.typeDescriptionTip;
       case ContributionType.warning:
-        return 'Avviso su errori comuni o rischi';
+        return context.l10n.typeDescriptionWarning;
       case ContributionType.correction:
-        return 'Correzione di informazioni errate';
+        return context.l10n.typeDescriptionCorrection;
       case ContributionType.technique:
-        return 'Spiegazione tecnica dettagliata';
+        return context.l10n.typeDescriptionTechnique;
       case ContributionType.variant:
-        return 'Variante dell\'esercizio';
+        return context.l10n.typeDescriptionVariant;
       case ContributionType.translation:
-        return 'Traduzione dell\'esercizio';
+        return context.l10n.typeDescriptionTranslation;
     }
   }
 
@@ -584,17 +608,17 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
   String _getTypeLabel(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return 'Consiglio';
+        return context.l10n.typeLabelTip;
       case ContributionType.warning:
-        return 'Avviso';
+        return context.l10n.typeLabelWarning;
       case ContributionType.correction:
-        return 'Correzione';
+        return context.l10n.typeLabelCorrection;
       case ContributionType.technique:
-        return 'Tecnica';
+        return context.l10n.typeLabelTechnique;
       case ContributionType.variant:
-        return 'Variante';
+        return context.l10n.typeLabelVariant;
       case ContributionType.translation:
-        return 'Traduzione';
+        return context.l10n.typeLabelTranslation;
     }
   }
 }

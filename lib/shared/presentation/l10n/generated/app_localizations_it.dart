@@ -2808,7 +2808,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get yourMostFrequentWorkout => 'Il tuo allenamento più frequente';
 
   @override
-  String get selectExercise => 'Seleziona un esercizio per vedere i progressi';
+  String get selectExercise => 'Seleziona Esercizio';
 
   @override
   String get originalExercise => 'Esercizio originale';
@@ -4730,7 +4730,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get contributionSubmittedSuccess =>
-      'Il tuo contributo è stato inviato per la revisione!';
+      '✅ Contributo inviato! In attesa di approvazione';
 
   @override
   String get thankYouForContributing => 'Grazie per aver aiutato la community!';
@@ -18567,4 +18567,130 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get reportAction => 'Segnala';
+
+  @override
+  String get newContribution => 'Nuovo Contributo';
+
+  @override
+  String get titleLabel => 'Titolo';
+
+  @override
+  String get titleHintContribution => 'Es: Migliore presa per principianti';
+
+  @override
+  String get titleRequired => 'Il titolo è obbligatorio';
+
+  @override
+  String get titleMinLength => 'Il titolo deve essere almeno 10 caratteri';
+
+  @override
+  String get descriptionLabel => 'Descrizione';
+
+  @override
+  String get descriptionRequired => 'La descrizione è obbligatoria';
+
+  @override
+  String get descriptionMinLength =>
+      'La descrizione deve essere almeno 20 caratteri';
+
+  @override
+  String get currentValueIncorrect => 'Valore Attuale (Errato)';
+
+  @override
+  String get currentValueHint => 'Es: Presa stretta';
+
+  @override
+  String get currentValueRequired =>
+      'Valore attuale obbligatorio per correzioni';
+
+  @override
+  String get correctedValue => 'Valore Corretto';
+
+  @override
+  String get correctedValueHint => 'Es: Presa larga';
+
+  @override
+  String get correctedValueRequired => 'Valore corretto obbligatorio';
+
+  @override
+  String get contributionReviewInfo =>
+      'Il tuo contributo sarà revisionato da un admin prima di essere pubblicato. Riceverai +50 XP se approvato!';
+
+  @override
+  String get sending => 'Invio...';
+
+  @override
+  String get submitContribution => 'Invia Contributo';
+
+  @override
+  String get exerciseLabel => 'Esercizio';
+
+  @override
+  String get tapToSelectExercise => 'Tocca per selezionare un esercizio';
+
+  @override
+  String get contributionType => 'Tipo di Contributo';
+
+  @override
+  String get selectExerciseWarning => '⚠️ Seleziona un esercizio';
+
+  @override
+  String get descriptionHintTip =>
+      'Condividi un consiglio utile per questo esercizio...';
+
+  @override
+  String get descriptionHintWarning =>
+      'Descrivi cosa evitare e perché è pericoloso...';
+
+  @override
+  String get descriptionHintCorrection =>
+      'Spiega qual è l\'errore comune e come correggerlo...';
+
+  @override
+  String get descriptionHintTechnique =>
+      'Descrivi la tecnica corretta passo per passo...';
+
+  @override
+  String get descriptionHintVariant =>
+      'Descrivi la variante dell\'esercizio...';
+
+  @override
+  String get descriptionHintTranslation => 'Fornisci la traduzione corretta...';
+
+  @override
+  String get typeDescriptionTip =>
+      'Consiglio pratico per migliorare l\'esecuzione';
+
+  @override
+  String get typeDescriptionWarning => 'Avviso su errori comuni o rischi';
+
+  @override
+  String get typeDescriptionCorrection => 'Correzione di informazioni errate';
+
+  @override
+  String get typeDescriptionTechnique => 'Spiegazione tecnica dettagliata';
+
+  @override
+  String get typeDescriptionVariant => 'Variante dell\'esercizio';
+
+  @override
+  String get typeDescriptionTranslation => 'Traduzione dell\'esercizio';
+
+  @override
+  String get typeLabelTip => 'Consiglio';
+
+  @override
+  String get typeLabelWarning => 'Avviso';
+
+  @override
+  String get typeLabelCorrection => 'Correzione';
+
+  @override
+  String get typeLabelTechnique => 'Tecnica';
+
+  @override
+  String get typeLabelVariant => 'Variante';
+
+  @override
+  String get typeLabelTranslation => 'Traduzione';
 }

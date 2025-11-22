@@ -22426,5 +22426,169 @@
   "reportAction": "Report",
   "@reportAction": {
     "description": "Button label to submit report"
+  },
+  "newContribution": "New Contribution",
+  "@newContribution": {
+    "description": "Title for create contribution modal"
+  },
+  "titleLabel": "Title",
+  "@titleLabel": {
+    "description": "Label for title input field"
+  },
+  "titleHintContribution": "E.g., Best grip for beginners",
+  "@titleHintContribution": {
+    "description": "Hint text for contribution title field"
+  },
+  "titleRequired": "Title is required",
+  "@titleRequired": {
+    "description": "Validation error for empty title"
+  },
+  "titleMinLength": "Title must be at least 10 characters",
+  "@titleMinLength": {
+    "description": "Validation error for title too short"
+  },
+  "descriptionLabel": "Description",
+  "@descriptionLabel": {
+    "description": "Label for description input field"
+  },
+  "descriptionRequired": "Description is required",
+  "@descriptionRequired": {
+    "description": "Validation error for empty description"
+  },
+  "descriptionMinLength": "Description must be at least 20 characters",
+  "@descriptionMinLength": {
+    "description": "Validation error for description too short"
+  },
+  "currentValueIncorrect": "Current Value (Incorrect)",
+  "@currentValueIncorrect": {
+    "description": "Label for current incorrect value field"
+  },
+  "currentValueHint": "E.g., Narrow grip",
+  "@currentValueHint": {
+    "description": "Hint for current value field"
+  },
+  "currentValueRequired": "Current value required for corrections",
+  "@currentValueRequired": {
+    "description": "Validation error for missing current value"
+  },
+  "correctedValue": "Corrected Value",
+  "@correctedValue": {
+    "description": "Label for corrected value field"
+  },
+  "correctedValueHint": "E.g., Wide grip",
+  "@correctedValueHint": {
+    "description": "Hint for corrected value field"
+  },
+  "correctedValueRequired": "Corrected value required",
+  "@correctedValueRequired": {
+    "description": "Validation error for missing corrected value"
+  },
+  "contributionReviewInfo": "Your contribution will be reviewed by an admin before being published. You'll receive +50 XP if approved!",
+  "@contributionReviewInfo": {
+    "description": "Info message about review process and XP reward"
+  },
+  "sending": "Sending...",
+  "@sending": {
+    "description": "Button loading state text"
+  },
+  "submitContribution": "Submit Contribution",
+  "@submitContribution": {
+    "description": "Button label to submit contribution"
+  },
+  "exerciseLabel": "Exercise",
+  "@exerciseLabel": {
+    "description": "Label for exercise field"
+  },
+  "selectExercise": "Select Exercise",
+  "@selectExercise": {
+    "description": "Title for exercise selection section"
+  },
+  "tapToSelectExercise": "Tap to select an exercise",
+  "@tapToSelectExercise": {
+    "description": "Placeholder text for exercise selection"
+  },
+  "contributionType": "Contribution Type",
+  "@contributionType": {
+    "description": "Title for contribution type selector"
+  },
+  "selectExerciseWarning": "⚠️ Select an exercise",
+  "@selectExerciseWarning": {
+    "description": "Warning when submitting without selecting exercise"
+  },
+  "contributionSubmittedSuccess": "✅ Contribution submitted! Awaiting approval",
+  "@contributionSubmittedSuccess": {
+    "description": "Success message after submission"
+  },
+  "descriptionHintTip": "Share a useful tip for this exercise...",
+  "@descriptionHintTip": {
+    "description": "Hint for tip type description"
+  },
+  "descriptionHintWarning": "Describe what to avoid and why it's dangerous...",
+  "@descriptionHintWarning": {
+    "description": "Hint for warning type description"
+  },
+  "descriptionHintCorrection": "Explain the common mistake and how to fix it...",
+  "@descriptionHintCorrection": {
+    "description": "Hint for correction type description"
+  },
+  "descriptionHintTechnique": "Describe the correct technique step by step...",
+  "@descriptionHintTechnique": {
+    "description": "Hint for technique type description"
+  },
+  "descriptionHintVariant": "Describe the exercise variant...",
+  "@descriptionHintVariant": {
+    "description": "Hint for variant type description"
+  },
+  "descriptionHintTranslation": "Provide the correct translation...",
+  "@descriptionHintTranslation": {
+    "description": "Hint for translation type description"
+  },
+  "typeDescriptionTip": "Practical advice to improve execution",
+  "@typeDescriptionTip": {
+    "description": "Description of tip contribution type"
+  },
+  "typeDescriptionWarning": "Warning about common mistakes or risks",
+  "@typeDescriptionWarning": {
+    "description": "Description of warning contribution type"
+  },
+  "typeDescriptionCorrection": "Correction of incorrect information",
+  "@typeDescriptionCorrection": {
+    "description": "Description of correction contribution type"
+  },
+  "typeDescriptionTechnique": "Detailed technical explanation",
+  "@typeDescriptionTechnique": {
+    "description": "Description of technique contribution type"
+  },
+  "typeDescriptionVariant": "Exercise variant",
+  "@typeDescriptionVariant": {
+    "description": "Description of variant contribution type"
+  },
+  "typeDescriptionTranslation": "Exercise translation",
+  "@typeDescriptionTranslation": {
+    "description": "Description of translation contribution type"
+  },
+  "typeLabelTip": "Tip",
+  "@typeLabelTip": {
+    "description": "Label for tip contribution type"
+  },
+  "typeLabelWarning": "Warning",
+  "@typeLabelWarning": {
+    "description": "Label for warning contribution type"
+  },
+  "typeLabelCorrection": "Correction",
+  "@typeLabelCorrection": {
+    "description": "Label for correction contribution type"
+  },
+  "typeLabelTechnique": "Technique",
+  "@typeLabelTechnique": {
+    "description": "Label for technique contribution type"
+  },
+  "typeLabelVariant": "Variant",
+  "@typeLabelVariant": {
+    "description": "Label for variant contribution type"
+  },
+  "typeLabelTranslation": "Translation",
+  "@typeLabelTranslation": {
+    "description": "Label for translation contribution type"
   }
 }

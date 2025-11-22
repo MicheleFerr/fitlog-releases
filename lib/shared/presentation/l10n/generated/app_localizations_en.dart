@@ -2790,7 +2790,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourMostFrequentWorkout => 'Your most frequent workout';
 
   @override
-  String get selectExercise => 'Select an exercise to view progress';
+  String get selectExercise => 'Select Exercise';
 
   @override
   String get originalExercise => 'Original exercise';
@@ -4694,7 +4694,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contributionSubmittedSuccess =>
-      'Your contribution has been submitted for review!';
+      '✅ Contribution submitted! Awaiting approval';
 
   @override
   String get thankYouForContributing => 'Thank you for helping the community!';
@@ -18388,4 +18388,126 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportAction => 'Report';
+
+  @override
+  String get newContribution => 'New Contribution';
+
+  @override
+  String get titleLabel => 'Title';
+
+  @override
+  String get titleHintContribution => 'E.g., Best grip for beginners';
+
+  @override
+  String get titleRequired => 'Title is required';
+
+  @override
+  String get titleMinLength => 'Title must be at least 10 characters';
+
+  @override
+  String get descriptionLabel => 'Description';
+
+  @override
+  String get descriptionRequired => 'Description is required';
+
+  @override
+  String get descriptionMinLength =>
+      'Description must be at least 20 characters';
+
+  @override
+  String get currentValueIncorrect => 'Current Value (Incorrect)';
+
+  @override
+  String get currentValueHint => 'E.g., Narrow grip';
+
+  @override
+  String get currentValueRequired => 'Current value required for corrections';
+
+  @override
+  String get correctedValue => 'Corrected Value';
+
+  @override
+  String get correctedValueHint => 'E.g., Wide grip';
+
+  @override
+  String get correctedValueRequired => 'Corrected value required';
+
+  @override
+  String get contributionReviewInfo =>
+      'Your contribution will be reviewed by an admin before being published. You\'ll receive +50 XP if approved!';
+
+  @override
+  String get sending => 'Sending...';
+
+  @override
+  String get submitContribution => 'Submit Contribution';
+
+  @override
+  String get exerciseLabel => 'Exercise';
+
+  @override
+  String get tapToSelectExercise => 'Tap to select an exercise';
+
+  @override
+  String get contributionType => 'Contribution Type';
+
+  @override
+  String get selectExerciseWarning => '⚠️ Select an exercise';
+
+  @override
+  String get descriptionHintTip => 'Share a useful tip for this exercise...';
+
+  @override
+  String get descriptionHintWarning =>
+      'Describe what to avoid and why it\'s dangerous...';
+
+  @override
+  String get descriptionHintCorrection =>
+      'Explain the common mistake and how to fix it...';
+
+  @override
+  String get descriptionHintTechnique =>
+      'Describe the correct technique step by step...';
+
+  @override
+  String get descriptionHintVariant => 'Describe the exercise variant...';
+
+  @override
+  String get descriptionHintTranslation => 'Provide the correct translation...';
+
+  @override
+  String get typeDescriptionTip => 'Practical advice to improve execution';
+
+  @override
+  String get typeDescriptionWarning => 'Warning about common mistakes or risks';
+
+  @override
+  String get typeDescriptionCorrection => 'Correction of incorrect information';
+
+  @override
+  String get typeDescriptionTechnique => 'Detailed technical explanation';
+
+  @override
+  String get typeDescriptionVariant => 'Exercise variant';
+
+  @override
+  String get typeDescriptionTranslation => 'Exercise translation';
+
+  @override
+  String get typeLabelTip => 'Tip';
+
+  @override
+  String get typeLabelWarning => 'Warning';
+
+  @override
+  String get typeLabelCorrection => 'Correction';
+
+  @override
+  String get typeLabelTechnique => 'Technique';
+
+  @override
+  String get typeLabelVariant => 'Variant';
+
+  @override
+  String get typeLabelTranslation => 'Translation';
 }

@@ -11964,5 +11964,169 @@
   "reportAction": "Segnala",
   "@reportAction": {
     "description": "Button label to submit report"
+  },
+  "newContribution": "Nuovo Contributo",
+  "@newContribution": {
+    "description": "Title for create contribution modal"
+  },
+  "titleLabel": "Titolo",
+  "@titleLabel": {
+    "description": "Label for title input field"
+  },
+  "titleHintContribution": "Es: Migliore presa per principianti",
+  "@titleHintContribution": {
+    "description": "Hint text for contribution title field"
+  },
+  "titleRequired": "Il titolo è obbligatorio",
+  "@titleRequired": {
+    "description": "Validation error for empty title"
+  },
+  "titleMinLength": "Il titolo deve essere almeno 10 caratteri",
+  "@titleMinLength": {
+    "description": "Validation error for title too short"
+  },
+  "descriptionLabel": "Descrizione",
+  "@descriptionLabel": {
+    "description": "Label for description input field"
+  },
+  "descriptionRequired": "La descrizione è obbligatoria",
+  "@descriptionRequired": {
+    "description": "Validation error for empty description"
+  },
+  "descriptionMinLength": "La descrizione deve essere almeno 20 caratteri",
+  "@descriptionMinLength": {
+    "description": "Validation error for description too short"
+  },
+  "currentValueIncorrect": "Valore Attuale (Errato)",
+  "@currentValueIncorrect": {
+    "description": "Label for current incorrect value field"
+  },
+  "currentValueHint": "Es: Presa stretta",
+  "@currentValueHint": {
+    "description": "Hint for current value field"
+  },
+  "currentValueRequired": "Valore attuale obbligatorio per correzioni",
+  "@currentValueRequired": {
+    "description": "Validation error for missing current value"
+  },
+  "correctedValue": "Valore Corretto",
+  "@correctedValue": {
+    "description": "Label for corrected value field"
+  },
+  "correctedValueHint": "Es: Presa larga",
+  "@correctedValueHint": {
+    "description": "Hint for corrected value field"
+  },
+  "correctedValueRequired": "Valore corretto obbligatorio",
+  "@correctedValueRequired": {
+    "description": "Validation error for missing corrected value"
+  },
+  "contributionReviewInfo": "Il tuo contributo sarà revisionato da un admin prima di essere pubblicato. Riceverai +50 XP se approvato!",
+  "@contributionReviewInfo": {
+    "description": "Info message about review process and XP reward"
+  },
+  "sending": "Invio...",
+  "@sending": {
+    "description": "Button loading state text"
+  },
+  "submitContribution": "Invia Contributo",
+  "@submitContribution": {
+    "description": "Button label to submit contribution"
+  },
+  "exerciseLabel": "Esercizio",
+  "@exerciseLabel": {
+    "description": "Label for exercise field"
+  },
+  "selectExercise": "Seleziona Esercizio",
+  "@selectExercise": {
+    "description": "Title for exercise selection section"
+  },
+  "tapToSelectExercise": "Tocca per selezionare un esercizio",
+  "@tapToSelectExercise": {
+    "description": "Placeholder text for exercise selection"
+  },
+  "contributionType": "Tipo di Contributo",
+  "@contributionType": {
+    "description": "Title for contribution type selector"
+  },
+  "selectExerciseWarning": "⚠️ Seleziona un esercizio",
+  "@selectExerciseWarning": {
+    "description": "Warning when submitting without selecting exercise"
+  },
+  "contributionSubmittedSuccess": "✅ Contributo inviato! In attesa di approvazione",
+  "@contributionSubmittedSuccess": {
+    "description": "Success message after submission"
+  },
+  "descriptionHintTip": "Condividi un consiglio utile per questo esercizio...",
+  "@descriptionHintTip": {
+    "description": "Hint for tip type description"
+  },
+  "descriptionHintWarning": "Descrivi cosa evitare e perché è pericoloso...",
+  "@descriptionHintWarning": {
+    "description": "Hint for warning type description"
+  },
+  "descriptionHintCorrection": "Spiega qual è l'errore comune e come correggerlo...",
+  "@descriptionHintCorrection": {
+    "description": "Hint for correction type description"
+  },
+  "descriptionHintTechnique": "Descrivi la tecnica corretta passo per passo...",
+  "@descriptionHintTechnique": {
+    "description": "Hint for technique type description"
+  },
+  "descriptionHintVariant": "Descrivi la variante dell'esercizio...",
+  "@descriptionHintVariant": {
+    "description": "Hint for variant type description"
+  },
+  "descriptionHintTranslation": "Fornisci la traduzione corretta...",
+  "@descriptionHintTranslation": {
+    "description": "Hint for translation type description"
+  },
+  "typeDescriptionTip": "Consiglio pratico per migliorare l'esecuzione",
+  "@typeDescriptionTip": {
+    "description": "Description of tip contribution type"
+  },
+  "typeDescriptionWarning": "Avviso su errori comuni o rischi",
+  "@typeDescriptionWarning": {
+    "description": "Description of warning contribution type"
+  },
+  "typeDescriptionCorrection": "Correzione di informazioni errate",
+  "@typeDescriptionCorrection": {
+    "description": "Description of correction contribution type"
+  },
+  "typeDescriptionTechnique": "Spiegazione tecnica dettagliata",
+  "@typeDescriptionTechnique": {
+    "description": "Description of technique contribution type"
+  },
+  "typeDescriptionVariant": "Variante dell'esercizio",
+  "@typeDescriptionVariant": {
+    "description": "Description of variant contribution type"
+  },
+  "typeDescriptionTranslation": "Traduzione dell'esercizio",
+  "@typeDescriptionTranslation": {
+    "description": "Description of translation contribution type"
+  },
+  "typeLabelTip": "Consiglio",
+  "@typeLabelTip": {
+    "description": "Label for tip contribution type"
+  },
+  "typeLabelWarning": "Avviso",
+  "@typeLabelWarning": {
+    "description": "Label for warning contribution type"
+  },
+  "typeLabelCorrection": "Correzione",
+  "@typeLabelCorrection": {
+    "description": "Label for correction contribution type"
+  },
+  "typeLabelTechnique": "Tecnica",
+  "@typeLabelTechnique": {
+    "description": "Label for technique contribution type"
+  },
+  "typeLabelVariant": "Variante",
+  "@typeLabelVariant": {
+    "description": "Label for variant contribution type"
+  },
+  "typeLabelTranslation": "Traduzione",
+  "@typeLabelTranslation": {
+    "description": "Label for translation contribution type"
   }
 }

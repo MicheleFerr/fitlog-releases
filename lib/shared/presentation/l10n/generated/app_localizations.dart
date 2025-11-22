@@ -5201,10 +5201,10 @@ abstract class AppLocalizations {
   /// **'Your most frequent workout'**
   String get yourMostFrequentWorkout;
 
-  /// Hint to select an exercise
+  /// Title for exercise selection section
   ///
   /// In en, this message translates to:
-  /// **'Select an exercise to view progress'**
+  /// **'Select Exercise'**
   String get selectExercise;
 
   /// Label for original exercise name in selection dialog
@@ -8693,10 +8693,10 @@ abstract class AppLocalizations {
   /// **'Be the first to share your advice!'**
   String get beFirstToShare;
 
-  /// Success message after submitting a contribution
+  /// Success message after submission
   ///
   /// In en, this message translates to:
-  /// **'Your contribution has been submitted for review!'**
+  /// **'✅ Contribution submitted! Awaiting approval'**
   String get contributionSubmittedSuccess;
 
   /// Thank you message for community contributions
@@ -32999,6 +32999,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report'**
   String get reportAction;
+
+  /// Title for create contribution modal
+  ///
+  /// In en, this message translates to:
+  /// **'New Contribution'**
+  String get newContribution;
+
+  /// Label for title input field
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get titleLabel;
+
+  /// Hint text for contribution title field
+  ///
+  /// In en, this message translates to:
+  /// **'E.g., Best grip for beginners'**
+  String get titleHintContribution;
+
+  /// Validation error for empty title
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get titleRequired;
+
+  /// Validation error for title too short
+  ///
+  /// In en, this message translates to:
+  /// **'Title must be at least 10 characters'**
+  String get titleMinLength;
+
+  /// Label for description input field
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// Validation error for empty description
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get descriptionRequired;
+
+  /// Validation error for description too short
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at least 20 characters'**
+  String get descriptionMinLength;
+
+  /// Label for current incorrect value field
+  ///
+  /// In en, this message translates to:
+  /// **'Current Value (Incorrect)'**
+  String get currentValueIncorrect;
+
+  /// Hint for current value field
+  ///
+  /// In en, this message translates to:
+  /// **'E.g., Narrow grip'**
+  String get currentValueHint;
+
+  /// Validation error for missing current value
+  ///
+  /// In en, this message translates to:
+  /// **'Current value required for corrections'**
+  String get currentValueRequired;
+
+  /// Label for corrected value field
+  ///
+  /// In en, this message translates to:
+  /// **'Corrected Value'**
+  String get correctedValue;
+
+  /// Hint for corrected value field
+  ///
+  /// In en, this message translates to:
+  /// **'E.g., Wide grip'**
+  String get correctedValueHint;
+
+  /// Validation error for missing corrected value
+  ///
+  /// In en, this message translates to:
+  /// **'Corrected value required'**
+  String get correctedValueRequired;
+
+  /// Info message about review process and XP reward
+  ///
+  /// In en, this message translates to:
+  /// **'Your contribution will be reviewed by an admin before being published. You\'ll receive +50 XP if approved!'**
+  String get contributionReviewInfo;
+
+  /// Button loading state text
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get sending;
+
+  /// Button label to submit contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Contribution'**
+  String get submitContribution;
+
+  /// Label for exercise field
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get exerciseLabel;
+
+  /// Placeholder text for exercise selection
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select an exercise'**
+  String get tapToSelectExercise;
+
+  /// Title for contribution type selector
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution Type'**
+  String get contributionType;
+
+  /// Warning when submitting without selecting exercise
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Select an exercise'**
+  String get selectExerciseWarning;
+
+  /// Hint for tip type description
+  ///
+  /// In en, this message translates to:
+  /// **'Share a useful tip for this exercise...'**
+  String get descriptionHintTip;
+
+  /// Hint for warning type description
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what to avoid and why it\'s dangerous...'**
+  String get descriptionHintWarning;
+
+  /// Hint for correction type description
+  ///
+  /// In en, this message translates to:
+  /// **'Explain the common mistake and how to fix it...'**
+  String get descriptionHintCorrection;
+
+  /// Hint for technique type description
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the correct technique step by step...'**
+  String get descriptionHintTechnique;
+
+  /// Hint for variant type description
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the exercise variant...'**
+  String get descriptionHintVariant;
+
+  /// Hint for translation type description
+  ///
+  /// In en, this message translates to:
+  /// **'Provide the correct translation...'**
+  String get descriptionHintTranslation;
+
+  /// Description of tip contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Practical advice to improve execution'**
+  String get typeDescriptionTip;
+
+  /// Description of warning contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Warning about common mistakes or risks'**
+  String get typeDescriptionWarning;
+
+  /// Description of correction contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Correction of incorrect information'**
+  String get typeDescriptionCorrection;
+
+  /// Description of technique contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed technical explanation'**
+  String get typeDescriptionTechnique;
+
+  /// Description of variant contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise variant'**
+  String get typeDescriptionVariant;
+
+  /// Description of translation contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise translation'**
+  String get typeDescriptionTranslation;
+
+  /// Label for tip contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get typeLabelTip;
+
+  /// Label for warning contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get typeLabelWarning;
+
+  /// Label for correction contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Correction'**
+  String get typeLabelCorrection;
+
+  /// Label for technique contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Technique'**
+  String get typeLabelTechnique;
+
+  /// Label for variant contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get typeLabelVariant;
+
+  /// Label for translation contribution type
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get typeLabelTranslation;
 }
 
 class _AppLocalizationsDelegate
