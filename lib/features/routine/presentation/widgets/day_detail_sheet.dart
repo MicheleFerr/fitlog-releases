@@ -30,6 +30,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/workout_selector_sheet.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class DayDetailSheet extends ConsumerStatefulWidget {
 
@@ -75,7 +78,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           height: 400,
           child: Center(
             child: Text(
-              'Error loading day stats: $error',
+              context.l10n.errorLoadingStats,
               style: TextStyle(color: context.colors.error),
             ),
           ),
@@ -121,16 +124,21 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.blue.withValues(alpha: 0.2),
-                      Colors.purple.withValues(alpha: 0.2),
+                      context.colors.primary.withValues(alpha: 0.2),
+                      context.colors.tertiary.withValues(alpha: 0.2),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.withValues(alpha: 0.5)),
+                  border: Border.all(color: context.colors.primary.withValues(alpha: 0.5)),
                 ),
                 child: Row(
                   children: [
-                    Icon(AppIcons.star, color: Colors.blue, size: 20),
+                    SemanticIcon(
+                      icon: AppIcons.star,
+                      semanticLabel: context.l10n.routineExtraWorkout,
+                      size: AppIconSize.small,
+                      color: context.colors.primary,
+                    ),
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -139,7 +147,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                           Text(
                             context.l10n.routineExtraWorkout,
                             style: context.textTheme.titleSmall?.copyWith(
-                              color: Colors.blue.shade700,
+                              color: Color.lerp(context.colors.primary, Colors.black, 0.3)!,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -206,7 +214,12 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
           // Template name
           Row(
             children: [
-              Icon(statusIcon, size: 32, color: statusColor),
+              SemanticIcon(
+                icon: statusIcon,
+                semanticLabel: _getStatusText(),
+                size: AppIconSize.xlarge,
+                color: statusColor,
+              ),
               SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -250,7 +263,12 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
         ),
         child: Row(
           children: [
-            Icon(statusIcon, color: statusColor, size: 20),
+            SemanticIcon(
+              icon: statusIcon,
+              semanticLabel: statusText,
+              size: AppIconSize.small,
+              color: statusColor,
+            ),
             SizedBox(width: 12),
             Text(
               statusText,
@@ -329,22 +347,27 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.amber.withValues(alpha: 0.2),
-                    Colors.orange.withValues(alpha: 0.2),
+                    context.colors.warning.withValues(alpha: 0.2),
+                    context.colors.warning.withValues(alpha: 0.3),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber),
+                border: Border.all(color: context.colors.warning),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(AppIcons.achievement, color: Colors.amber, size: 20),
+                  SemanticIcon(
+                    icon: AppIcons.achievement,
+                    semanticLabel: context.l10n.personalRecord,
+                    size: AppIconSize.small,
+                    color: context.colors.warning,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     '🎯 ${context.l10n.personalRecord}',
                     style: context.textTheme.titleSmall?.copyWith(
-                      color: Colors.amber.shade700,
+                      color: context.colors.warning,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -366,7 +389,12 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   }) {
     return Row(
       children: [
-        Icon(icon, color: context.colors.primary, size: 20),
+        SemanticIcon(
+          icon: icon,
+          semanticLabel: label,
+          size: AppIconSize.small,
+          color: context.colors.primary,
+        ),
         SizedBox(width: 12),
         Expanded(
           child: Text(
@@ -393,19 +421,24 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
 
   Widget _buildTrendIndicator(BuildContext context, double trend) {
     final isPositive = trend > 0;
-    final color = isPositive ? Colors.green : Colors.red;
+    final color = isPositive ? context.colors.success : context.colors.error;
     final icon = isPositive ? AppIcons.trendUp : AppIcons.trendDown;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: color),
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: isPositive ? 'Trending up' : 'Trending down',
+            size: AppIconSize.tiny,
+            color: color,
+          ),
           SizedBox(width: 4),
           Text(
             '${trend.abs().toStringAsFixed(1)}%',
@@ -441,7 +474,11 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               // Change Template button
               TextButton.icon(
                 onPressed: () => _changeTemplate(context),
-                icon: Icon(AppIcons.swapHoriz, size: 18),
+                icon: SemanticIcon(
+  icon: AppIcons.swapHoriz,
+  semanticLabel: 'Swap horiz',
+  size: AppIconSize.small,
+),
                 label: Text(context.l10n.routineChange),
                 style: TextButton.styleFrom(
                   foregroundColor: context.colors.secondary,
@@ -520,9 +557,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  _showAllExercises ? AppIcons.expandLess : AppIcons.expandMore,
-                                  size: 18,
+                                SemanticIcon(
+                                  icon: _showAllExercises ? AppIcons.expandLess : AppIcons.expandMore,
+                                  semanticLabel: _showAllExercises ? context.l10n.routineShowLess : context.l10n.routineShowAll(remainingCount),
+                                  size: AppIconSize.tiny,
                                   color: context.colors.primary,
                                 ),
                                 SizedBox(width: 4),
@@ -546,7 +584,7 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             },
             loading: () => const LoadingIndicator(),
             error: (_, __) => Text(
-              'Error loading template',
+              context.l10n.errorLoadingTemplates,
               style: TextStyle(color: context.colors.error),
             ),
           ),
@@ -586,7 +624,12 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Row(
                       children: [
-                        Icon(AppIcons.history, size: 16, color: context.colors.primary),
+                        SemanticIcon(
+                          icon: AppIcons.history,
+                          semanticLabel: context.l10n.routineWorkoutHistory,
+                          size: AppIconSize.tiny,
+                          color: context.colors.primary,
+                        ),
                         SizedBox(width: 8),
                         Text(
                           dateFormat.format(workout.completedAt),
@@ -611,16 +654,17 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                   const Divider(height: 24),
                   Row(
                     children: [
-                      Icon(
-                        stats.volumeChangePercent! > 0 ? AppIcons.trendUp : AppIcons.trendDown,
-                        color: stats.volumeChangePercent! > 0 ? Colors.green : Colors.red,
-                        size: 20,
+                      SemanticIcon(
+                        icon: stats.volumeChangePercent! > 0 ? AppIcons.trendUp : AppIcons.trendDown,
+                        semanticLabel: stats.volumeChangePercent! > 0 ? 'Volume increased' : 'Volume decreased',
+                        size: AppIconSize.small,
+                        color: stats.volumeChangePercent! > 0 ? context.colors.success : context.colors.error,
                       ),
                       SizedBox(width: 8),
                       Text(
                         '${stats.volumeChangePercent!.abs().toStringAsFixed(1)}% volume vs last time',
                         style: context.textTheme.bodyMedium?.copyWith(
-                          color: stats.volumeChangePercent! > 0 ? Colors.green : Colors.red,
+                          color: stats.volumeChangePercent! > 0 ? context.colors.success : context.colors.error,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -661,9 +705,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                     '• Current training streak\n'
                     '• Rest day patterns\n'
                     '• Personal records',
-                child: Icon(
-                  AppIcons.info,
-                  size: 18,
+                child: SemanticIcon(
+                  icon: AppIcons.info,
+                  semanticLabel: 'Information',
+                  size: AppIconSize.small,
                   color: context.colors.primary.withValues(alpha: 0.6),
                 ),
               ),
@@ -695,9 +740,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            AppIcons.lightbulb,
-                            size: 16,
+                          SemanticIcon(
+                            icon: AppIcons.lightbulb,
+                            semanticLabel: context.l10n.routineInsightsSuggestions,
+                            size: AppIconSize.tiny,
                             color: context.colors.primary,
                           ),
                           SizedBox(width: 8),
@@ -726,22 +772,27 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.orange.withValues(alpha: 0.2),
-                    Colors.red.withValues(alpha: 0.2),
+                    context.colors.warning.withValues(alpha: 0.2),
+                    context.colors.error.withValues(alpha: 0.2),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange),
+                border: Border.all(color: context.colors.warning),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(AppIcons.streak, color: Colors.orange, size: 20),
+                  SemanticIcon(
+                    icon: AppIcons.streak,
+                    semanticLabel: 'Streak',
+                    size: AppIconSize.small,
+                    color: context.colors.warning,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     '🔥 ${stats.currentStreak} day streak',
                     style: context.textTheme.titleSmall?.copyWith(
-                      color: Colors.orange.shade700,
+                      color: context.colors.warning,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -764,7 +815,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             // Start Workout button
             ElevatedButton.icon(
               onPressed: () => _startWorkout(context),
-              icon: Icon(AppIcons.play),
+              icon: SemanticIcon(
+                icon: AppIcons.play,
+                semanticLabel: context.l10n.routineStartWorkout,
+              ),
               label: Text(context.l10n.routineStartWorkout),
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.colors.primary,
@@ -782,7 +836,10 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
             // View Full Details button
             OutlinedButton.icon(
               onPressed: () => _viewWorkoutDetails(context, stats),
-              icon: Icon(AppIcons.visibility),
+              icon: SemanticIcon(
+                icon: AppIcons.visibility,
+                semanticLabel: context.l10n.routineViewFullDetails,
+              ),
               label: Text(context.l10n.routineViewFullDetails),
               style: OutlinedButton.styleFrom(
                 foregroundColor: context.colors.primary,
@@ -803,11 +860,15 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _completeDay(context),
-                    icon: const Icon(AppIcons.check, size: 18),
+                    icon: SemanticIcon(
+                      icon: AppIcons.check,
+                      semanticLabel: context.l10n.routineComplete,
+                      size: AppIconSize.small,
+                    ),
                     label: Text(context.l10n.routineComplete),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.green,
-                      side: const BorderSide(color: Colors.green),
+                      foregroundColor: context.colors.success,
+                      side: BorderSide(color: context.colors.success),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -819,7 +880,11 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _skipDay(context),
-                  icon: Icon(AppIcons.skipNext, size: 18),
+                  icon: SemanticIcon(
+                    icon: AppIcons.skipNext,
+                    semanticLabel: context.l10n.routineSkip,
+                    size: AppIconSize.small,
+                  ),
                   label: Text(context.l10n.routineSkip),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: context.colors.error,
@@ -856,13 +921,13 @@ class _DayDetailSheetState extends ConsumerState<DayDetailSheet> {
   Color _getStatusColor(BuildContext context) {
     switch (widget.dayInfo.status) {
       case DayStatus.completed:
-        return Colors.green;
+        return context.colors.success;
       case DayStatus.scheduled:
         return context.colors.primary;
       case DayStatus.skipped:
-        return Colors.orange;
+        return context.colors.warning;
       case DayStatus.recovered:
-        return Colors.blue;
+        return context.colors.primary;
       case DayStatus.rest:
         return context.colors.secondary;
     }
