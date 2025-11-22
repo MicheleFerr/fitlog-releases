@@ -277,6 +277,7 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
     super.didChangeAppLifecycleState(state);
 
     try {
+      // NOTE: No Timer instances in this file - SessionTimeoutService manages its own Timer
       // SessionTimeoutService is monitored automatically via Timer.periodic
       // No need to explicitly handle lifecycle changes
 
