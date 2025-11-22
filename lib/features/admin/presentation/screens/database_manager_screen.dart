@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_tab_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/domain/services/exercise_statistics_service.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Complete Database Manager with Tab Structure (PHASE 1-6 COMPLETE)
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
@@ -167,7 +168,7 @@ class _DatabaseManagerScreenState
           SizedBox(width: 8),
           Text(
             'Offline mode - showing cached data',
-            style: TextStyle(color: context.colors.onErrorContainer),
+            style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onErrorContainer),
           ),
         ],
       ),
@@ -491,7 +492,7 @@ class _DatabaseManagerScreenState
                         ),
                         SizedBox(height: 4),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
                             value: total > 0 ? entry.value / total : 0,
                             minHeight: 4,
@@ -636,10 +637,16 @@ class _DatabaseManagerScreenState
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: context.l10n.searchExercises,
-                prefixIcon: const Icon(AppIcons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(AppIcons.close),
+                        icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                         onPressed: () {
                           _searchController.clear();
                           _onSearchChanged('');
@@ -699,7 +706,7 @@ class _DatabaseManagerScreenState
               ),
               TextButton.icon(
                 icon: Icon(AppIcons.delete, size: AppIconSize.small, color: context.colors.error),
-                label: Text('Delete', style: TextStyle(color: context.colors.error)),
+                label: Text('Delete', style: context.textTheme.labelLarge?.copyWith(color: context.colors.error)),
                 onPressed: () => _confirmBulkDelete(language, selectedExercises),
               ),
               IconButton(
@@ -739,7 +746,7 @@ class _DatabaseManagerScreenState
             ),
             title: Text(
               exercise.nome,
-              style: TextStyle(fontWeight: isExpanded ? FontWeight.bold : FontWeight.normal),
+              style: context.textTheme.bodyLarge?.copyWith(fontWeight: isExpanded ? FontWeight.bold : FontWeight.normal),
             ),
             subtitle: Row(
               children: [
@@ -969,7 +976,7 @@ class _DatabaseManagerScreenState
       HapticFeedback.lightImpact();
       SnackBarService.showSuccess(context, 'Updated $fieldName to $value');
     } catch (e) {
-      SnackBarService.showError(context, 'Failed to update: $e');
+      SnackBarService.showError(context, context.l10n.error);
     }
   }
 
@@ -1081,7 +1088,7 @@ class _DatabaseManagerScreenState
       SnackBarService.showSuccess(context, 'Updated ${exerciseIds.length} exercises');
     } catch (e) {
       Navigator.pop(context); // Dismiss loading
-      SnackBarService.showError(context, 'Bulk update failed: $e');
+      SnackBarService.showError(context, context.l10n.error);
     }
   }
 
@@ -1151,7 +1158,7 @@ class _DatabaseManagerScreenState
       SnackBarService.showSuccess(context, 'Deleted ${exerciseIds.length} exercises');
     } catch (e) {
       Navigator.pop(context);
-      SnackBarService.showError(context, 'Bulk delete failed: $e');
+      SnackBarService.showError(context, context.l10n.error);
     }
   }
 
@@ -1190,7 +1197,10 @@ class _DatabaseManagerScreenState
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(AppIcons.chevronLeft),
+            icon: SemanticIcon(
+  icon: AppIcons.chevronLeft,
+  semanticLabel: 'Chevron left',
+),
             onPressed: _currentPage > 0
                 ? () => setState(() => _currentPage--)
                 : null,
@@ -1200,7 +1210,10 @@ class _DatabaseManagerScreenState
             style: context.textTheme.bodyMedium,
           ),
           IconButton(
-            icon: const Icon(AppIcons.chevronRight),
+            icon: const SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+),
             onPressed: _currentPage < totalPages - 1
                 ? () => setState(() => _currentPage++)
                 : null,
@@ -1219,7 +1232,12 @@ class _DatabaseManagerScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.searchOff, size: 64, color: context.colors.onSurfaceVariant),
+          SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant,
+),
           SizedBox(height: 16),
           Text(
             context.l10n.noExercisesFound,
@@ -1231,7 +1249,10 @@ class _DatabaseManagerScreenState
               _searchController.clear();
               _onSearchChanged('');
             },
-            icon: Icon(AppIcons.clear),
+            icon: SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
             label: Text(context.l10n.clearFilters),
           ),
         ],
@@ -1252,14 +1273,14 @@ class _DatabaseManagerScreenState
               height: 40,
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             title: Container(
               height: 16,
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             subtitle: Container(
@@ -1267,7 +1288,7 @@ class _DatabaseManagerScreenState
               margin: const EdgeInsets.only(top: 4),
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
@@ -1285,7 +1306,12 @@ class _DatabaseManagerScreenState
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(AppIcons.error, size: 64, color: context.colors.error),
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
               SizedBox(height: 16),
               Text(
                 'Error loading data',
@@ -1304,7 +1330,10 @@ class _DatabaseManagerScreenState
                   ref.invalidate(exercisesENStreamProvider);
                   ref.invalidate(metadataStreamProvider);
                 },
-                icon: Icon(AppIcons.refresh),
+                icon: SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
                 label: Text(context.l10n.retry),
               ),
             ],
