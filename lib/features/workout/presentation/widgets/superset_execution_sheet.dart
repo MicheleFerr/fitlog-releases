@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
 ///
@@ -196,7 +199,10 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(AppIcons.close),
+                    icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                   ),
                 ],
               ),
@@ -244,10 +250,12 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                 ),
                                 child: Center(
                                   child: isCompleted
-                                    ? Icon(
-                                        AppIcons.check,
-                                        size: 18,
-                                        color: Theme.of(context).colorScheme.onSecondary,
+                                    ? SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSecondary,
                                       )
                                     : Text(
                                         '${index + 1}',
@@ -439,7 +447,10 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                       widget.onComplete(_actualReps, _rpes, _weights);
                       Navigator.pop(context);
                     } : null,
-                    icon: const Icon(AppIcons.complete),
+                    icon: const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+),
                     label: const Text('Completa Superset'),
                   ),
                 ],
@@ -452,11 +463,11 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   }
   
   Color _getRpeColor(int rpe) {
-    if (rpe <= 4) return Colors.green;
+    if (rpe <= 4) return context.colors.success;
     if (rpe <= 6) return Colors.lightGreen;
-    if (rpe <= 7) return Colors.yellow.shade700;
+    if (rpe <= 7) return Colors.yellow[700]!;
     if (rpe <= 8) return Colors.orange;
     if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
+    return context.colors.error;
   }
 }
