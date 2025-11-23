@@ -53,6 +53,19 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   Timer? _searchDebounce;
   List<exercise_db.Exercise> _dbExercises = [];
   List<ExerciseSearchResult> _fuzzyResults = [];
+  Exercise? _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
+
+  // ✅ Cache statica per esercizi arricchiti (condivisa tra tutte le istanze del modal)
+  // Chiave: nome esercizio lowercase
+  // Valore: Exercise arricchito con category corretta dal DB
+  static final Map<String, Exercise> _enrichedExercisesCache = {};
+
+  /// Svuota la cache degli esercizi arricchiti
+  /// Utile quando il database JSON viene aggiornato o per testing
+  static void clearEnrichedCache() {
+    _enrichedExercisesCache.clear();
+    debugPrint('🗑️ [ExerciseReplacement] Cache cleared');
+  }
 
   @override
   void initState() {
@@ -76,9 +89,70 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         setState(() {
           _dbExercises = exercises;
         });
+        // Arricchisci currentExercise con dati dal DB dopo aver caricato il database
+        _enrichCurrentExerciseFromDB();
       }
     } catch (e) {
       debugPrint('Error loading database exercises: $e');
+    }
+  }
+
+  /// Arricchisce currentExercise con dati dal database JSON (categoria, muscoli, ecc.)
+  /// Questo permette alle smart suggestions di funzionare correttamente
+  /// ✅ Usa cache statica per evitare lookup ripetuti
+  void _enrichCurrentExerciseFromDB() {
+    final exerciseNameLower = widget.currentExercise.name.toLowerCase();
+
+    // ✅ STEP 1: Controlla cache prima di fare lookup nel DB
+    if (_enrichedExercisesCache.containsKey(exerciseNameLower)) {
+      setState(() {
+        _enrichedCurrentExercise = _enrichedExercisesCache[exerciseNameLower];
+      });
+      debugPrint('⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})');
+      return;
+    }
+
+    // ✅ STEP 2: Cache miss → fai lookup nel database
+    if (_dbExercises.isEmpty) {
+      _enrichedCurrentExercise = widget.currentExercise;
+      return;
+    }
+
+    try {
+      // Cerca esercizio nel database per nome (case-insensitive)
+      final dbExercise = _dbExercises.firstWhere(
+        (ex) => ex.nome.toLowerCase() == exerciseNameLower,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      // Mappa categoria dai muscoli del database
+      final enrichedCategory = _mapCategoryFromMuscles(dbExercise.focus);
+
+      // Crea esercizio arricchito solo se categoria è diversa da quella attuale
+      // O se categoria attuale è "other" (default fallback)
+      if (widget.currentExercise.category == ExerciseCategory.other ||
+          widget.currentExercise.category != enrichedCategory) {
+        final enrichedExercise = widget.currentExercise.copyWith(
+          category: enrichedCategory,
+        );
+
+        setState(() {
+          _enrichedCurrentExercise = enrichedExercise;
+        });
+
+        // ✅ STEP 3: Salva in cache per riutilizzo futuro
+        _enrichedExercisesCache[exerciseNameLower] = enrichedExercise;
+
+        debugPrint('✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)');
+        debugPrint('📊 [ExerciseReplacement] Cache size: ${_enrichedExercisesCache.length} exercises');
+      } else {
+        // Categoria già corretta → usa esercizio originale
+        _enrichedCurrentExercise = widget.currentExercise;
+      }
+    } catch (e) {
+      debugPrint('⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e');
+      // Fallback: usa currentExercise originale
+      _enrichedCurrentExercise = widget.currentExercise;
     }
   }
 
@@ -132,7 +206,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       data: (exercises) => exercises,
       orElse: () => <Exercise>[],
     );
-    
+
+    // Usa esercizio arricchito con dati dal DB (se disponibile) per matching più accurato
+    final currentExerciseForMatching = _enrichedCurrentExercise ?? widget.currentExercise;
+
     // Get suggestions or all exercises based on search/toggle
     List<ExerciseSuggestion> displayList;
 
@@ -156,7 +233,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
 
         // Calculate compatibility between current exercise and candidate
         final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          widget.currentExercise,
+          currentExerciseForMatching,
           matchingWorkoutExercise,
         );
 
@@ -169,7 +246,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         return ExerciseSuggestion(
           exercise: matchingWorkoutExercise,
           compatibilityScore: hybridScore,
-          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise),
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
         );
       }).toList()
         ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
@@ -194,14 +271,14 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
 
         // Calculate compatibility
         final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          widget.currentExercise,
+          currentExerciseForMatching,
           matchingWorkoutExercise,
         );
 
         return ExerciseSuggestion(
           exercise: matchingWorkoutExercise,
           compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise),
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
         );
       }).toList()
         // Filter: only show suggestions with compatibility >= 30%
@@ -214,22 +291,22 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       // Show all exercises with compatibility scores (no search query)
       displayList = allExercises.map((exercise) {
         // Special handling for same exercise
-        if (exercise.name == widget.currentExercise.name) {
+        if (exercise.name == currentExerciseForMatching.name) {
           return ExerciseSuggestion(
             exercise: exercise,
             compatibilityScore: 100, // Show current exercise at top
-            reason: _getCompatibilityReason(100, exercise),
+            reason: _getCompatibilityReason(100, exercise, currentExerciseForMatching),
           );
         }
 
         final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          widget.currentExercise,
+          currentExerciseForMatching,
           exercise,
         );
         return ExerciseSuggestion(
           exercise: exercise,
           compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, exercise),
+          reason: _getCompatibilityReason(compatibility, exercise, currentExerciseForMatching),
         );
       }).toList()
         ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
@@ -748,15 +825,15 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     }
   }
   
-  String _getCompatibilityReason(double score, Exercise exercise) {
+  String _getCompatibilityReason(double score, Exercise exercise, Exercise currentExercise) {
     final l10n = AppLocalizations.of(context);
 
-    if (exercise.name == widget.currentExercise.name) {
+    if (exercise.name == currentExercise.name) {
       return l10n.currentExercise;
     }
 
     if (score >= 80) {
-      if (exercise.category == widget.currentExercise.category) {
+      if (exercise.category == currentExercise.category) {
         return l10n.excellentReplacement;
       }
       return l10n.highlyCompatible;
