@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 
 part 'body_measurement.freezed.dart';
 part 'body_measurement.g.dart';

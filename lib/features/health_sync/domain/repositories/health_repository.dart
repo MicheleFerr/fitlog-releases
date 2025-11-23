@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart' hide State;
-import '../../../../core/errors/failures.dart';
-import '../entities/health_data_type.dart';
-import '../entities/health_permission_status.dart';
-import '../entities/health_sync_status.dart';
-import '../entities/body_measurement.dart';
+import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_sync_status.dart';
+import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
 
 /// Repository interface for health data synchronization operations.
 ///
@@ -90,7 +90,7 @@ abstract class IHealthRepository {
   ///
   /// Returns:
   /// - Right: void (success)
-  /// - Left: [PermissionFailure] if not authorized
+  /// - Left: [PermissionDeniedFailure] if not authorized
   /// - Left: [ServerFailure] if fetch/save fails
   ///
   /// Example:
@@ -115,7 +115,7 @@ abstract class IHealthRepository {
   ///
   /// Returns:
   /// - Right: void (success)
-  /// - Left: [PermissionFailure] if not authorized
+  /// - Left: [PermissionDeniedFailure] if not authorized
   /// - Left: [ServerFailure] if sync fails
   Future<Either<Failure, void>> syncBodyWeight({
     required DateTime startDate,
@@ -133,7 +133,7 @@ abstract class IHealthRepository {
   ///
   /// Returns:
   /// - Right: void (success)
-  /// - Left: [PermissionFailure] if not authorized
+  /// - Left: [PermissionDeniedFailure] if not authorized
   /// - Left: [ServerFailure] if write fails
   ///
   /// Example:
