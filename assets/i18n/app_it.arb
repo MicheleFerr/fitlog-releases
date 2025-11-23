@@ -577,6 +577,12 @@
   "yourTemplates": "I Tuoi Template",
   "popularTemplates": "Schede Popolari",
   "seeAll": "Vedi tutti",
+  "templateQuotaUsed": "{used} di {max} template utilizzati",
+  "templateQuotaExceeded": "Limite template raggiunto",
+  "templateQuotaExceededMessage": "Hai raggiunto il limite di {max} template. Passa a Premium per template illimitati.",
+  "upgradeToUnlimited": "Passa a illimitati",
+  "templateQuotaWarning": "Stai usando {used} di {max} template. Considera l'upgrade per template illimitati.",
+  "unlimitedTemplates": "Template illimitati",
   "welcomeToGymBro": "Benvenuto nel tuo nuovo compagno fitness!",
   "homeWelcomeDescription": "Traccia i tuoi allenamenti con precisione. Inizia una nuova sessione o continua da dove avevi lasciato.",
   "quickActions": "Azioni Rapide",
@@ -12905,6 +12911,38 @@
   "colorsAvailable": "colori disponibili",
   "@colorsAvailable": {
     "description": "Numero di colori disponibili per la personalizzazione"
+  },
+  "weeksInRowExplanation": "Conta le settimane consecutive in cui hai completato almeno 1 allenamento. Anche se salti qualche giorno, lo streak continua finché ti alleni almeno una volta a settimana!",
+  "@weeksInRowExplanation": {
+    "description": "Spiegazione del calcolo dello streak settimanale"
+  },
+  "yourCurrentStreak": "Il tuo streak attuale",
+  "@yourCurrentStreak": {
+    "description": "Etichetta per il valore dello streak corrente"
+  },
+  "consecutiveWeeks": "settimane consecutive",
+  "@consecutiveWeeks": {
+    "description": "Unità per lo streak settimanale (es. '11 settimane consecutive')"
+  },
+  "daysSinceWorkoutExplanation": "Mostra quanti giorni sono passati dal tuo allenamento più recente. Il colore cambia in base al tempo: verde (oggi), blu (1-2 giorni), giallo (3+ giorni).",
+  "@daysSinceWorkoutExplanation": {
+    "description": "Spiegazione della metrica giorni dall'ultimo allenamento"
+  },
+  "timeSinceLastWorkout": "Tempo dall'ultimo allenamento",
+  "@timeSinceLastWorkout": {
+    "description": "Etichetta per il tempo dall'ultimo allenamento"
+  },
+  "workedOutToday": "Allenato oggi!",
+  "@workedOutToday": {
+    "description": "Messaggio quando l'utente si è allenato oggi (0 giorni)"
+  },
+  "daysAgo": "giorni fa",
+  "@daysAgo": {
+    "description": "Suffisso per il conteggio giorni (es. '3 giorni fa')"
+  },
+  "gotIt": "Ho capito",
+  "@gotIt": {
+    "description": "Pulsante di conferma nei dialog informativi"
   },
   "muscleDistribution": "Distribuzione dei muscoli",
   "@muscleDistribution": {

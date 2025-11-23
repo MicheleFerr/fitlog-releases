@@ -1760,10 +1760,10 @@ abstract class AppLocalizations {
   /// **'Return to FitLog Pro and use \'Import Template\''**
   String get step4ReturnToApp;
 
-  /// Button to dismiss explanation dialog
+  /// Acknowledgment button in info dialogs
   ///
   /// In en, this message translates to:
-  /// **'Got it!'**
+  /// **'Got it'**
   String get gotIt;
 
   /// Open ChatGPT button
@@ -2748,6 +2748,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See all'**
   String get seeAll;
+
+  /// Template quota counter showing used/max templates
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {max} templates used'**
+  String templateQuotaUsed(int used, int max);
+
+  /// Template quota exceeded title
+  ///
+  /// In en, this message translates to:
+  /// **'Template limit reached'**
+  String get templateQuotaExceeded;
+
+  /// Template quota exceeded detailed message
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the limit of {max} templates. Upgrade to Premium for unlimited templates.'**
+  String templateQuotaExceededMessage(int max);
+
+  /// Upgrade to Premium button for unlimited templates
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade for unlimited'**
+  String get upgradeToUnlimited;
+
+  /// Warning when approaching template quota limit
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re using {used} of {max} templates. Consider upgrading for unlimited templates.'**
+  String templateQuotaWarning(int used, int max);
+
+  /// Premium feature: unlimited templates
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited templates'**
+  String get unlimitedTemplates;
 
   /// Welcome message on login screen
   ///
@@ -20802,11 +20838,11 @@ abstract class AppLocalizations {
   /// **'All'**
   String get timeRangeLabelAll;
 
-  /// Days ago
+  /// Suffix for days count (e.g., '3 days ago')
   ///
   /// In en, this message translates to:
-  /// **'{count} days ago'**
-  String daysAgo(int count);
+  /// **'days ago'**
+  String get daysAgo;
 
   /// Weeks ago
   ///
@@ -33863,6 +33899,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'colors available'**
   String get colorsAvailable;
+
+  /// Explanation of week streak calculation
+  ///
+  /// In en, this message translates to:
+  /// **'This counts consecutive weeks where you completed at least 1 workout. Even if you miss a few days, your streak continues as long as you train at least once per week!'**
+  String get weeksInRowExplanation;
+
+  /// Label for current streak value
+  ///
+  /// In en, this message translates to:
+  /// **'Your current streak'**
+  String get yourCurrentStreak;
+
+  /// Unit for week streak (e.g., '11 consecutive weeks')
+  ///
+  /// In en, this message translates to:
+  /// **'consecutive weeks'**
+  String get consecutiveWeeks;
+
+  /// Explanation of days since last workout metric
+  ///
+  /// In en, this message translates to:
+  /// **'This shows how many days have passed since your most recent workout. The color changes based on time: green (today), blue (1-2 days), yellow (3+ days).'**
+  String get daysSinceWorkoutExplanation;
+
+  /// Label for time since last workout
+  ///
+  /// In en, this message translates to:
+  /// **'Time since last workout'**
+  String get timeSinceLastWorkout;
+
+  /// Message when user worked out today (0 days)
+  ///
+  /// In en, this message translates to:
+  /// **'Worked out today!'**
+  String get workedOutToday;
 
   /// Analysis tab label
   ///

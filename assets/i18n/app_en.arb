@@ -1819,6 +1819,56 @@
   "@seeAll": {
     "description": "See all button"
   },
+  "templateQuotaUsed": "{used} of {max} templates used",
+  "@templateQuotaUsed": {
+    "description": "Template quota counter showing used/max templates",
+    "placeholders": {
+      "used": {
+        "type": "int",
+        "example": "3"
+      },
+      "max": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "templateQuotaExceeded": "Template limit reached",
+  "@templateQuotaExceeded": {
+    "description": "Template quota exceeded title"
+  },
+  "templateQuotaExceededMessage": "You've reached the limit of {max} templates. Upgrade to Premium for unlimited templates.",
+  "@templateQuotaExceededMessage": {
+    "description": "Template quota exceeded detailed message",
+    "placeholders": {
+      "max": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "upgradeToUnlimited": "Upgrade for unlimited",
+  "@upgradeToUnlimited": {
+    "description": "Upgrade to Premium button for unlimited templates"
+  },
+  "templateQuotaWarning": "You're using {used} of {max} templates. Consider upgrading for unlimited templates.",
+  "@templateQuotaWarning": {
+    "description": "Warning when approaching template quota limit",
+    "placeholders": {
+      "used": {
+        "type": "int",
+        "example": "4"
+      },
+      "max": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "unlimitedTemplates": "Unlimited templates",
+  "@unlimitedTemplates": {
+    "description": "Premium feature: unlimited templates"
+  },
   "welcomeToGymBro": "Welcome to your new fitness companion!",
   "@welcomeToGymBro": {
     "description": "Welcome message on login screen"
@@ -23370,6 +23420,38 @@
   "colorsAvailable": "colors available",
   "@colorsAvailable": {
     "description": "Number of colors available for customization"
+  },
+  "weeksInRowExplanation": "This counts consecutive weeks where you completed at least 1 workout. Even if you miss a few days, your streak continues as long as you train at least once per week!",
+  "@weeksInRowExplanation": {
+    "description": "Explanation of week streak calculation"
+  },
+  "yourCurrentStreak": "Your current streak",
+  "@yourCurrentStreak": {
+    "description": "Label for current streak value"
+  },
+  "consecutiveWeeks": "consecutive weeks",
+  "@consecutiveWeeks": {
+    "description": "Unit for week streak (e.g., '11 consecutive weeks')"
+  },
+  "daysSinceWorkoutExplanation": "This shows how many days have passed since your most recent workout. The color changes based on time: green (today), blue (1-2 days), yellow (3+ days).",
+  "@daysSinceWorkoutExplanation": {
+    "description": "Explanation of days since last workout metric"
+  },
+  "timeSinceLastWorkout": "Time since last workout",
+  "@timeSinceLastWorkout": {
+    "description": "Label for time since last workout"
+  },
+  "workedOutToday": "Worked out today!",
+  "@workedOutToday": {
+    "description": "Message when user worked out today (0 days)"
+  },
+  "daysAgo": "days ago",
+  "@daysAgo": {
+    "description": "Suffix for days count (e.g., '3 days ago')"
+  },
+  "gotIt": "Got it",
+  "@gotIt": {
+    "description": "Acknowledgment button in info dialogs"
   },
   "muscleDistribution": "Muscle Distribution",
   "@muscleDistribution": {

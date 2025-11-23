@@ -928,7 +928,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Return to FitLog Pro and use \'Import Template\'';
 
   @override
-  String get gotIt => 'Got it!';
+  String get gotIt => 'Got it';
 
   @override
   String get openChatGPT => 'Open ChatGPT';
@@ -1438,6 +1438,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get seeAll => 'See all';
+
+  @override
+  String templateQuotaUsed(int used, int max) {
+    return '$used of $max templates used';
+  }
+
+  @override
+  String get templateQuotaExceeded => 'Template limit reached';
+
+  @override
+  String templateQuotaExceededMessage(int max) {
+    return 'You\'ve reached the limit of $max templates. Upgrade to Premium for unlimited templates.';
+  }
+
+  @override
+  String get upgradeToUnlimited => 'Upgrade for unlimited';
+
+  @override
+  String templateQuotaWarning(int used, int max) {
+    return 'You\'re using $used of $max templates. Consider upgrading for unlimited templates.';
+  }
+
+  @override
+  String get unlimitedTemplates => 'Unlimited templates';
 
   @override
   String get welcomeToGymBro => 'Welcome to your new fitness companion!';
@@ -11809,9 +11833,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeRangeLabelAll => 'All';
 
   @override
-  String daysAgo(int count) {
-    return '$count days ago';
-  }
+  String get daysAgo => 'days ago';
 
   @override
   String weeksAgo(int count) {
@@ -18897,6 +18919,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get colorsAvailable => 'colors available';
+
+  @override
+  String get weeksInRowExplanation =>
+      'This counts consecutive weeks where you completed at least 1 workout. Even if you miss a few days, your streak continues as long as you train at least once per week!';
+
+  @override
+  String get yourCurrentStreak => 'Your current streak';
+
+  @override
+  String get consecutiveWeeks => 'consecutive weeks';
+
+  @override
+  String get daysSinceWorkoutExplanation =>
+      'This shows how many days have passed since your most recent workout. The color changes based on time: green (today), blue (1-2 days), yellow (3+ days).';
+
+  @override
+  String get timeSinceLastWorkout => 'Time since last workout';
+
+  @override
+  String get workedOutToday => 'Worked out today!';
 
   @override
   String get analysis => 'Analysis';

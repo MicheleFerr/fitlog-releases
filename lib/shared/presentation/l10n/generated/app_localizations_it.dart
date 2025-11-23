@@ -930,7 +930,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get step4ReturnToApp => 'Torna in FitLog Pro e usa \'Importa Scheda\'';
 
   @override
-  String get gotIt => 'Capito!';
+  String get gotIt => 'Ho capito';
 
   @override
   String get openChatGPT => 'Apri ChatGPT';
@@ -1454,6 +1454,30 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get seeAll => 'Vedi tutti';
+
+  @override
+  String templateQuotaUsed(int used, int max) {
+    return '$used di $max template utilizzati';
+  }
+
+  @override
+  String get templateQuotaExceeded => 'Limite template raggiunto';
+
+  @override
+  String templateQuotaExceededMessage(int max) {
+    return 'Hai raggiunto il limite di $max template. Passa a Premium per template illimitati.';
+  }
+
+  @override
+  String get upgradeToUnlimited => 'Passa a illimitati';
+
+  @override
+  String templateQuotaWarning(int used, int max) {
+    return 'Stai usando $used di $max template. Considera l\'upgrade per template illimitati.';
+  }
+
+  @override
+  String get unlimitedTemplates => 'Template illimitati';
 
   @override
   String get welcomeToGymBro => 'Benvenuto nel tuo nuovo compagno fitness!';
@@ -11943,9 +11967,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get timeRangeLabelAll => 'Tutto';
 
   @override
-  String daysAgo(int count) {
-    return '$count giorni fa';
-  }
+  String get daysAgo => 'giorni fa';
 
   @override
   String weeksAgo(int count) {
@@ -19082,6 +19104,26 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get colorsAvailable => 'colori disponibili';
+
+  @override
+  String get weeksInRowExplanation =>
+      'Conta le settimane consecutive in cui hai completato almeno 1 allenamento. Anche se salti qualche giorno, lo streak continua finché ti alleni almeno una volta a settimana!';
+
+  @override
+  String get yourCurrentStreak => 'Il tuo streak attuale';
+
+  @override
+  String get consecutiveWeeks => 'settimane consecutive';
+
+  @override
+  String get daysSinceWorkoutExplanation =>
+      'Mostra quanti giorni sono passati dal tuo allenamento più recente. Il colore cambia in base al tempo: verde (oggi), blu (1-2 giorni), giallo (3+ giorni).';
+
+  @override
+  String get timeSinceLastWorkout => 'Tempo dall\'ultimo allenamento';
+
+  @override
+  String get workedOutToday => 'Allenato oggi!';
 
   @override
   String get analysis => 'Analisi';
