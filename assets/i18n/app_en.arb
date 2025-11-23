@@ -23466,5 +23466,157 @@
   "notificationCenter": "Notification Center",
   "@notificationCenter": {
     "description": "Title for notification center screen"
+  },
+  "healthDataWorkouts": "Workouts",
+  "@healthDataWorkouts": {
+    "description": "Health data type: workouts"
+  },
+  "healthDataBodyWeight": "Body Weight",
+  "@healthDataBodyWeight": {
+    "description": "Health data type: body weight"
+  },
+  "healthDataBodyFat": "Body Fat",
+  "@healthDataBodyFat": {
+    "description": "Health data type: body fat percentage"
+  },
+  "healthDataLeanMass": "Lean Mass",
+  "@healthDataLeanMass": {
+    "description": "Health data type: lean body mass"
+  },
+  "healthDataHeartRate": "Heart Rate",
+  "@healthDataHeartRate": {
+    "description": "Health data type: heart rate"
+  },
+  "healthDataSleep": "Sleep",
+  "@healthDataSleep": {
+    "description": "Health data type: sleep tracking"
+  },
+  "healthDataNutrition": "Nutrition",
+  "@healthDataNutrition": {
+    "description": "Health data type: nutrition data"
+  },
+  "healthSyncNotSyncedYet": "Not synced yet",
+  "@healthSyncNotSyncedYet": {
+    "description": "Status message when data has never been synced"
+  },
+  "healthSyncSyncing": "Syncing...",
+  "@healthSyncSyncing": {
+    "description": "Status message while sync is in progress"
+  },
+  "healthSyncSuccessful": "Sync successful",
+  "@healthSyncSuccessful": {
+    "description": "Status message when sync completed successfully"
+  },
+  "healthSyncFailed": "Sync failed",
+  "@healthSyncFailed": {
+    "description": "Status message when sync failed"
+  },
+  "healthSyncFailedWithRetry": "Sync failed (Retry {retryCount}/3)",
+  "@healthSyncFailedWithRetry": {
+    "description": "Status message when sync failed with retry count",
+    "placeholders": {
+      "retryCount": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "healthSyncLastSynced": "Last synced {time}",
+  "@healthSyncLastSynced": {
+    "description": "Last sync time with relative time",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2 hours ago"
+      }
+    }
+  },
+  "healthSyncRetry": "Retry",
+  "@healthSyncRetry": {
+    "description": "Button label to retry failed sync"
+  },
+  "healthSyncSync": "Sync",
+  "@healthSyncSync": {
+    "description": "Semantic label for sync action"
+  },
+  "healthSyncNow": "Sync Now",
+  "@healthSyncNow": {
+    "description": "Button label to manually trigger sync"
+  },
+  "healthSyncSettings": "Health Sync Settings",
+  "@healthSyncSettings": {
+    "description": "Title for health sync settings screen"
+  },
+  "healthSyncPermissions": "Permissions",
+  "@healthSyncPermissions": {
+    "description": "Section header for permissions management"
+  },
+  "healthSyncStatus": "Sync Status",
+  "@healthSyncStatus": {
+    "description": "Section header for sync status display"
+  },
+  "healthSyncBackgroundSync": "Background Sync",
+  "@healthSyncBackgroundSync": {
+    "description": "Section header for background sync configuration"
+  },
+  "healthSyncDescription": "Sync your workout and body data",
+  "@healthSyncDescription": {
+    "description": "Platform banner description for health sync feature"
+  },
+  "healthSyncWorkoutsDescription": "Sync workouts from HealthKit/Health Connect",
+  "@healthSyncWorkoutsDescription": {
+    "description": "Description for workout sync permission"
+  },
+  "healthSyncBodyWeightDescription": "Sync body weight measurements",
+  "@healthSyncBodyWeightDescription": {
+    "description": "Description for body weight sync permission"
+  },
+  "healthSyncEnableBackground": "Enable automatic background sync",
+  "@healthSyncEnableBackground": {
+    "description": "Description for background sync toggle"
+  },
+  "healthSyncSyncAll": "Sync All",
+  "@healthSyncSyncAll": {
+    "description": "Button label to sync all data types at once"
+  },
+  "healthSyncPermissionGranted": "Permission granted",
+  "@healthSyncPermissionGranted": {
+    "description": "Success message when permission is granted"
+  },
+  "healthSyncPermissionDenied": "Permission denied",
+  "@healthSyncPermissionDenied": {
+    "description": "Error message when permission is denied"
+  },
+  "healthSyncPermissionRevoke": "Please revoke permission in system settings",
+  "@healthSyncPermissionRevoke": {
+    "description": "Warning message when user tries to disable granted permission"
+  },
+  "healthSyncCompleted": "Sync completed successfully",
+  "@healthSyncCompleted": {
+    "description": "Success message when sync completes"
+  },
+  "healthSyncError": "Sync failed: {error}",
+  "@healthSyncError": {
+    "description": "Error message with error details",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "healthSyncHelp": "Help",
+  "@healthSyncHelp": {
+    "description": "Help button label"
+  },
+  "healthSyncPlatformConnected": "Connected to {platform}",
+  "@healthSyncPlatformConnected": {
+    "description": "Platform connection status",
+    "placeholders": {
+      "platform": {
+        "type": "String",
+        "example": "Apple Health"
+      }
+    }
   }
 }

@@ -13001,5 +13001,157 @@
   "notificationCenter": "Centro Notifiche",
   "@notificationCenter": {
     "description": "Titolo per la schermata del centro notifiche"
+  },
+  "healthDataWorkouts": "Allenamenti",
+  "@healthDataWorkouts": {
+    "description": "Tipo di dato salute: allenamenti"
+  },
+  "healthDataBodyWeight": "Peso Corporeo",
+  "@healthDataBodyWeight": {
+    "description": "Tipo di dato salute: peso corporeo"
+  },
+  "healthDataBodyFat": "Grasso Corporeo",
+  "@healthDataBodyFat": {
+    "description": "Tipo di dato salute: percentuale di grasso corporeo"
+  },
+  "healthDataLeanMass": "Massa Magra",
+  "@healthDataLeanMass": {
+    "description": "Tipo di dato salute: massa corporea magra"
+  },
+  "healthDataHeartRate": "Frequenza Cardiaca",
+  "@healthDataHeartRate": {
+    "description": "Tipo di dato salute: frequenza cardiaca"
+  },
+  "healthDataSleep": "Sonno",
+  "@healthDataSleep": {
+    "description": "Tipo di dato salute: monitoraggio del sonno"
+  },
+  "healthDataNutrition": "Nutrizione",
+  "@healthDataNutrition": {
+    "description": "Tipo di dato salute: dati nutrizionali"
+  },
+  "healthSyncNotSyncedYet": "Non ancora sincronizzato",
+  "@healthSyncNotSyncedYet": {
+    "description": "Messaggio di stato quando i dati non sono mai stati sincronizzati"
+  },
+  "healthSyncSyncing": "Sincronizzazione...",
+  "@healthSyncSyncing": {
+    "description": "Messaggio di stato durante la sincronizzazione"
+  },
+  "healthSyncSuccessful": "Sincronizzazione riuscita",
+  "@healthSyncSuccessful": {
+    "description": "Messaggio di stato quando la sincronizzazione è completata con successo"
+  },
+  "healthSyncFailed": "Sincronizzazione fallita",
+  "@healthSyncFailed": {
+    "description": "Messaggio di stato quando la sincronizzazione fallisce"
+  },
+  "healthSyncFailedWithRetry": "Sincronizzazione fallita (Tentativo {retryCount}/3)",
+  "@healthSyncFailedWithRetry": {
+    "description": "Messaggio di stato quando la sincronizzazione fallisce con conteggio tentativi",
+    "placeholders": {
+      "retryCount": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "healthSyncLastSynced": "Ultima sincronizzazione {time}",
+  "@healthSyncLastSynced": {
+    "description": "Orario ultima sincronizzazione con tempo relativo",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2 ore fa"
+      }
+    }
+  },
+  "healthSyncRetry": "Riprova",
+  "@healthSyncRetry": {
+    "description": "Etichetta pulsante per riprovare sincronizzazione fallita"
+  },
+  "healthSyncSync": "Sincronizza",
+  "@healthSyncSync": {
+    "description": "Etichetta semantica per azione di sincronizzazione"
+  },
+  "healthSyncNow": "Sincronizza Ora",
+  "@healthSyncNow": {
+    "description": "Etichetta pulsante per avviare manualmente la sincronizzazione"
+  },
+  "healthSyncSettings": "Impostazioni Sincronizzazione Salute",
+  "@healthSyncSettings": {
+    "description": "Titolo per schermata impostazioni sincronizzazione salute"
+  },
+  "healthSyncPermissions": "Permessi",
+  "@healthSyncPermissions": {
+    "description": "Intestazione sezione per gestione permessi"
+  },
+  "healthSyncStatus": "Stato Sincronizzazione",
+  "@healthSyncStatus": {
+    "description": "Intestazione sezione per visualizzazione stato sincronizzazione"
+  },
+  "healthSyncBackgroundSync": "Sincronizzazione in Background",
+  "@healthSyncBackgroundSync": {
+    "description": "Intestazione sezione per configurazione sincronizzazione in background"
+  },
+  "healthSyncDescription": "Sincronizza i tuoi dati di allenamento e corpo",
+  "@healthSyncDescription": {
+    "description": "Descrizione banner piattaforma per funzione sincronizzazione salute"
+  },
+  "healthSyncWorkoutsDescription": "Sincronizza allenamenti da HealthKit/Health Connect",
+  "@healthSyncWorkoutsDescription": {
+    "description": "Descrizione per permesso sincronizzazione allenamenti"
+  },
+  "healthSyncBodyWeightDescription": "Sincronizza misurazioni peso corporeo",
+  "@healthSyncBodyWeightDescription": {
+    "description": "Descrizione per permesso sincronizzazione peso corporeo"
+  },
+  "healthSyncEnableBackground": "Abilita sincronizzazione automatica in background",
+  "@healthSyncEnableBackground": {
+    "description": "Descrizione per toggle sincronizzazione in background"
+  },
+  "healthSyncSyncAll": "Sincronizza Tutto",
+  "@healthSyncSyncAll": {
+    "description": "Etichetta pulsante per sincronizzare tutti i tipi di dati contemporaneamente"
+  },
+  "healthSyncPermissionGranted": "Permesso concesso",
+  "@healthSyncPermissionGranted": {
+    "description": "Messaggio di successo quando il permesso viene concesso"
+  },
+  "healthSyncPermissionDenied": "Permesso negato",
+  "@healthSyncPermissionDenied": {
+    "description": "Messaggio di errore quando il permesso viene negato"
+  },
+  "healthSyncPermissionRevoke": "Revoca il permesso nelle impostazioni di sistema",
+  "@healthSyncPermissionRevoke": {
+    "description": "Messaggio di avviso quando l'utente prova a disabilitare un permesso concesso"
+  },
+  "healthSyncCompleted": "Sincronizzazione completata con successo",
+  "@healthSyncCompleted": {
+    "description": "Messaggio di successo quando la sincronizzazione è completata"
+  },
+  "healthSyncError": "Sincronizzazione fallita: {error}",
+  "@healthSyncError": {
+    "description": "Messaggio di errore con dettagli errore",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Errore di rete"
+      }
+    }
+  },
+  "healthSyncHelp": "Aiuto",
+  "@healthSyncHelp": {
+    "description": "Etichetta pulsante aiuto"
+  },
+  "healthSyncPlatformConnected": "Connesso a {platform}",
+  "@healthSyncPlatformConnected": {
+    "description": "Stato connessione piattaforma",
+    "placeholders": {
+      "platform": {
+        "type": "String",
+        "example": "Apple Health"
+      }
+    }
   }
 }

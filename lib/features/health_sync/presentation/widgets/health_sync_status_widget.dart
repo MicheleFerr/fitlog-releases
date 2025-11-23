@@ -150,11 +150,11 @@ class HealthSyncStatusWidget extends ConsumerWidget {
                     onPressed: () => _handleRetry(ref),
                     icon: SemanticIcon(
                       icon: AppIcons.refresh,
-                      semanticLabel: 'Retry',
+                      semanticLabel: context.l10n.healthSyncRetry,
                       size: AppIconSize.small,
                       color: context.iconPrimary,
                     ),
-                    label: const Text('Retry'),
+                    label: Text(context.l10n.healthSyncRetry),
                   ),
                   const SizedBox(width: 8),
                 ],
@@ -164,11 +164,11 @@ class HealthSyncStatusWidget extends ConsumerWidget {
                   onPressed: onManualSync,
                   icon: SemanticIcon(
                     icon: AppIcons.sync,
-                    semanticLabel: 'Sync',
+                    semanticLabel: context.l10n.healthSyncSync,
                     size: AppIconSize.small,
                     color: context.colors.onPrimary,
                   ),
-                  label: const Text('Sync Now'),
+                  label: Text(context.l10n.healthSyncNow),
                 ),
               ],
             ),
@@ -260,19 +260,19 @@ class HealthSyncStatusWidget extends ConsumerWidget {
   String _getDataTypeName(BuildContext context, HealthDataType dataType) {
     switch (dataType) {
       case HealthDataType.workout:
-        return 'Workouts'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataWorkouts;
       case HealthDataType.bodyWeight:
-        return 'Body Weight'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataBodyWeight;
       case HealthDataType.bodyFat:
-        return 'Body Fat'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataBodyFat;
       case HealthDataType.leanMass:
-        return 'Lean Mass'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataLeanMass;
       case HealthDataType.heartRate:
-        return 'Heart Rate'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataHeartRate;
       case HealthDataType.sleep:
-        return 'Sleep'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataSleep;
       case HealthDataType.nutrition:
-        return 'Nutrition'; // TODO: Localize in Task 5.1
+        return context.l10n.healthDataNutrition;
     }
   }
 
@@ -300,23 +300,23 @@ class HealthSyncStatusWidget extends ConsumerWidget {
   String _getSyncStatusMessage(BuildContext context, HealthSyncStatus status) {
     switch (status.lastResult) {
       case SyncResult.idle:
-        return 'Not synced yet'; // TODO: Localize in Task 5.1
+        return context.l10n.healthSyncNotSyncedYet;
       case SyncResult.syncing:
-        return 'Syncing...'; // TODO: Localize in Task 5.1
+        return context.l10n.healthSyncSyncing;
       case SyncResult.success:
-        return 'Sync successful'; // TODO: Localize in Task 5.1
+        return context.l10n.healthSyncSuccessful;
       case SyncResult.error:
         final retryCount = status.retryCount;
         if (retryCount > 0) {
-          return 'Sync failed (Retry $retryCount/3)'; // TODO: Localize
+          return context.l10n.healthSyncFailedWithRetry(retryCount);
         }
-        return 'Sync failed'; // TODO: Localize in Task 5.1
+        return context.l10n.healthSyncFailed;
     }
   }
 
   /// Gets last sync time text with relative time
   String _getLastSyncText(BuildContext context, DateTime lastSyncTime) {
     final relative = timeago.format(lastSyncTime);
-    return 'Last synced $relative'; // TODO: Localize in Task 5.1
+    return context.l10n.healthSyncLastSynced(relative);
   }
 }

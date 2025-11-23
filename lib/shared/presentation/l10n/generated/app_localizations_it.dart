@@ -19131,4 +19131,113 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get notificationCenter => 'Centro Notifiche';
+
+  @override
+  String get healthDataWorkouts => 'Allenamenti';
+
+  @override
+  String get healthDataBodyWeight => 'Peso Corporeo';
+
+  @override
+  String get healthDataBodyFat => 'Grasso Corporeo';
+
+  @override
+  String get healthDataLeanMass => 'Massa Magra';
+
+  @override
+  String get healthDataHeartRate => 'Frequenza Cardiaca';
+
+  @override
+  String get healthDataSleep => 'Sonno';
+
+  @override
+  String get healthDataNutrition => 'Nutrizione';
+
+  @override
+  String get healthSyncNotSyncedYet => 'Non ancora sincronizzato';
+
+  @override
+  String get healthSyncSyncing => 'Sincronizzazione...';
+
+  @override
+  String get healthSyncSuccessful => 'Sincronizzazione riuscita';
+
+  @override
+  String get healthSyncFailed => 'Sincronizzazione fallita';
+
+  @override
+  String healthSyncFailedWithRetry(int retryCount) {
+    return 'Sincronizzazione fallita (Tentativo $retryCount/3)';
+  }
+
+  @override
+  String healthSyncLastSynced(String time) {
+    return 'Ultima sincronizzazione $time';
+  }
+
+  @override
+  String get healthSyncRetry => 'Riprova';
+
+  @override
+  String get healthSyncSync => 'Sincronizza';
+
+  @override
+  String get healthSyncNow => 'Sincronizza Ora';
+
+  @override
+  String get healthSyncSettings => 'Impostazioni Sincronizzazione Salute';
+
+  @override
+  String get healthSyncPermissions => 'Permessi';
+
+  @override
+  String get healthSyncStatus => 'Stato Sincronizzazione';
+
+  @override
+  String get healthSyncBackgroundSync => 'Sincronizzazione in Background';
+
+  @override
+  String get healthSyncDescription =>
+      'Sincronizza i tuoi dati di allenamento e corpo';
+
+  @override
+  String get healthSyncWorkoutsDescription =>
+      'Sincronizza allenamenti da HealthKit/Health Connect';
+
+  @override
+  String get healthSyncBodyWeightDescription =>
+      'Sincronizza misurazioni peso corporeo';
+
+  @override
+  String get healthSyncEnableBackground =>
+      'Abilita sincronizzazione automatica in background';
+
+  @override
+  String get healthSyncSyncAll => 'Sincronizza Tutto';
+
+  @override
+  String get healthSyncPermissionGranted => 'Permesso concesso';
+
+  @override
+  String get healthSyncPermissionDenied => 'Permesso negato';
+
+  @override
+  String get healthSyncPermissionRevoke =>
+      'Revoca il permesso nelle impostazioni di sistema';
+
+  @override
+  String get healthSyncCompleted => 'Sincronizzazione completata con successo';
+
+  @override
+  String healthSyncError(String error) {
+    return 'Sincronizzazione fallita: $error';
+  }
+
+  @override
+  String get healthSyncHelp => 'Aiuto';
+
+  @override
+  String healthSyncPlatformConnected(String platform) {
+    return 'Connesso a $platform';
+  }
 }

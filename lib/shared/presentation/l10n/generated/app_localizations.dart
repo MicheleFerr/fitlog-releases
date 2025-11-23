@@ -33953,6 +33953,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notification Center'**
   String get notificationCenter;
+
+  /// Health data type: workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts'**
+  String get healthDataWorkouts;
+
+  /// Health data type: body weight
+  ///
+  /// In en, this message translates to:
+  /// **'Body Weight'**
+  String get healthDataBodyWeight;
+
+  /// Health data type: body fat percentage
+  ///
+  /// In en, this message translates to:
+  /// **'Body Fat'**
+  String get healthDataBodyFat;
+
+  /// Health data type: lean body mass
+  ///
+  /// In en, this message translates to:
+  /// **'Lean Mass'**
+  String get healthDataLeanMass;
+
+  /// Health data type: heart rate
+  ///
+  /// In en, this message translates to:
+  /// **'Heart Rate'**
+  String get healthDataHeartRate;
+
+  /// Health data type: sleep tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep'**
+  String get healthDataSleep;
+
+  /// Health data type: nutrition data
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get healthDataNutrition;
+
+  /// Status message when data has never been synced
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get healthSyncNotSyncedYet;
+
+  /// Status message while sync is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get healthSyncSyncing;
+
+  /// Status message when sync completed successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Sync successful'**
+  String get healthSyncSuccessful;
+
+  /// Status message when sync failed
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed'**
+  String get healthSyncFailed;
+
+  /// Status message when sync failed with retry count
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed (Retry {retryCount}/3)'**
+  String healthSyncFailedWithRetry(int retryCount);
+
+  /// Last sync time with relative time
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced {time}'**
+  String healthSyncLastSynced(String time);
+
+  /// Button label to retry failed sync
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get healthSyncRetry;
+
+  /// Semantic label for sync action
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get healthSyncSync;
+
+  /// Button label to manually trigger sync
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get healthSyncNow;
+
+  /// Title for health sync settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Health Sync Settings'**
+  String get healthSyncSettings;
+
+  /// Section header for permissions management
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get healthSyncPermissions;
+
+  /// Section header for sync status display
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Status'**
+  String get healthSyncStatus;
+
+  /// Section header for background sync configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Background Sync'**
+  String get healthSyncBackgroundSync;
+
+  /// Platform banner description for health sync feature
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your workout and body data'**
+  String get healthSyncDescription;
+
+  /// Description for workout sync permission
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts from HealthKit/Health Connect'**
+  String get healthSyncWorkoutsDescription;
+
+  /// Description for body weight sync permission
+  ///
+  /// In en, this message translates to:
+  /// **'Sync body weight measurements'**
+  String get healthSyncBodyWeightDescription;
+
+  /// Description for background sync toggle
+  ///
+  /// In en, this message translates to:
+  /// **'Enable automatic background sync'**
+  String get healthSyncEnableBackground;
+
+  /// Button label to sync all data types at once
+  ///
+  /// In en, this message translates to:
+  /// **'Sync All'**
+  String get healthSyncSyncAll;
+
+  /// Success message when permission is granted
+  ///
+  /// In en, this message translates to:
+  /// **'Permission granted'**
+  String get healthSyncPermissionGranted;
+
+  /// Error message when permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied'**
+  String get healthSyncPermissionDenied;
+
+  /// Warning message when user tries to disable granted permission
+  ///
+  /// In en, this message translates to:
+  /// **'Please revoke permission in system settings'**
+  String get healthSyncPermissionRevoke;
+
+  /// Success message when sync completes
+  ///
+  /// In en, this message translates to:
+  /// **'Sync completed successfully'**
+  String get healthSyncCompleted;
+
+  /// Error message with error details
+  ///
+  /// In en, this message translates to:
+  /// **'Sync failed: {error}'**
+  String healthSyncError(String error);
+
+  /// Help button label
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get healthSyncHelp;
+
+  /// Platform connection status
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {platform}'**
+  String healthSyncPlatformConnected(String platform);
 }
 
 class _AppLocalizationsDelegate

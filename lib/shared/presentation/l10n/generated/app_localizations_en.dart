@@ -18946,4 +18946,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationCenter => 'Notification Center';
+
+  @override
+  String get healthDataWorkouts => 'Workouts';
+
+  @override
+  String get healthDataBodyWeight => 'Body Weight';
+
+  @override
+  String get healthDataBodyFat => 'Body Fat';
+
+  @override
+  String get healthDataLeanMass => 'Lean Mass';
+
+  @override
+  String get healthDataHeartRate => 'Heart Rate';
+
+  @override
+  String get healthDataSleep => 'Sleep';
+
+  @override
+  String get healthDataNutrition => 'Nutrition';
+
+  @override
+  String get healthSyncNotSyncedYet => 'Not synced yet';
+
+  @override
+  String get healthSyncSyncing => 'Syncing...';
+
+  @override
+  String get healthSyncSuccessful => 'Sync successful';
+
+  @override
+  String get healthSyncFailed => 'Sync failed';
+
+  @override
+  String healthSyncFailedWithRetry(int retryCount) {
+    return 'Sync failed (Retry $retryCount/3)';
+  }
+
+  @override
+  String healthSyncLastSynced(String time) {
+    return 'Last synced $time';
+  }
+
+  @override
+  String get healthSyncRetry => 'Retry';
+
+  @override
+  String get healthSyncSync => 'Sync';
+
+  @override
+  String get healthSyncNow => 'Sync Now';
+
+  @override
+  String get healthSyncSettings => 'Health Sync Settings';
+
+  @override
+  String get healthSyncPermissions => 'Permissions';
+
+  @override
+  String get healthSyncStatus => 'Sync Status';
+
+  @override
+  String get healthSyncBackgroundSync => 'Background Sync';
+
+  @override
+  String get healthSyncDescription => 'Sync your workout and body data';
+
+  @override
+  String get healthSyncWorkoutsDescription =>
+      'Sync workouts from HealthKit/Health Connect';
+
+  @override
+  String get healthSyncBodyWeightDescription => 'Sync body weight measurements';
+
+  @override
+  String get healthSyncEnableBackground => 'Enable automatic background sync';
+
+  @override
+  String get healthSyncSyncAll => 'Sync All';
+
+  @override
+  String get healthSyncPermissionGranted => 'Permission granted';
+
+  @override
+  String get healthSyncPermissionDenied => 'Permission denied';
+
+  @override
+  String get healthSyncPermissionRevoke =>
+      'Please revoke permission in system settings';
+
+  @override
+  String get healthSyncCompleted => 'Sync completed successfully';
+
+  @override
+  String healthSyncError(String error) {
+    return 'Sync failed: $error';
+  }
+
+  @override
+  String get healthSyncHelp => 'Help';
+
+  @override
+  String healthSyncPlatformConnected(String platform) {
+    return 'Connected to $platform';
+  }
 }

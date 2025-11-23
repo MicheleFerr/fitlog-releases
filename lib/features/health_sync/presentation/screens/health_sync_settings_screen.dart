@@ -51,14 +51,14 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Health Sync Settings'), // TODO: Localize in Task 5.1
+        title: Text(context.l10n.healthSyncSettings),
         actions: [
           // Help icon
           IconButton(
             onPressed: () => _showHelpDialog(context),
             icon: SemanticIcon(
               icon: AppIcons.help,
-              semanticLabel: 'Help',
+              semanticLabel: context.l10n.healthSyncHelp,
               size: AppIconSize.large,
               color: context.iconPrimary,
             ),
@@ -94,21 +94,21 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
         const SizedBox(height: 24),
 
         // Permission section
-        _buildSectionHeader(context, 'Permissions'), // TODO: Localize
+        _buildSectionHeader(context, context.l10n.healthSyncPermissions),
         const SizedBox(height: 12),
         _buildPermissionsList(context, ref, permissionStatus),
 
         const SizedBox(height: 24),
 
         // Sync status section
-        _buildSectionHeader(context, 'Sync Status'), // TODO: Localize
+        _buildSectionHeader(context, context.l10n.healthSyncStatus),
         const SizedBox(height: 12),
         _buildSyncStatusList(context, ref, permissionStatus),
 
         const SizedBox(height: 24),
 
         // Background sync section
-        _buildSectionHeader(context, 'Background Sync'), // TODO: Localize
+        _buildSectionHeader(context, context.l10n.healthSyncBackgroundSync),
         const SizedBox(height: 12),
         _buildBackgroundSyncCard(context, ref, backgroundSyncState),
 
@@ -152,7 +152,7 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  'Sync your workout and body data', // TODO: Localize
+                  context.l10n.healthSyncDescription,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -189,8 +189,8 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
         _buildPermissionTile(
           context,
           ref,
-          title: 'Workouts', // TODO: Localize
-          subtitle: 'Import workouts from Apple Health / Health Connect', // TODO
+          title: context.l10n.healthDataWorkouts,
+          subtitle: context.l10n.healthSyncWorkoutsDescription,
           dataType: HealthDataType.workout,
           isGranted: permissions[HealthDataType.workout]?.name == 'authorized',
         ),
@@ -201,8 +201,8 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
         _buildPermissionTile(
           context,
           ref,
-          title: 'Body Weight', // TODO: Localize
-          subtitle: 'Sync body weight data (bidirectional)', // TODO
+          title: context.l10n.healthDataBodyWeight,
+          subtitle: context.l10n.healthSyncBodyWeightDescription,
           dataType: HealthDataType.bodyWeight,
           isGranted: permissions[HealthDataType.bodyWeight]?.name == 'authorized',
         ),
@@ -455,7 +455,7 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
       // Cannot revoke from app - must do in iOS Settings / Health Connect
       SnackBarService.showWarning(
         context,
-        'Please revoke permission in system settings', // TODO: Localize
+        context.l10n.healthSyncPermissionRevoke,
       );
       return;
     }
@@ -471,12 +471,12 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
       if (isGranted) {
         SnackBarService.showSuccess(
           context,
-          'Permission granted', // TODO: Localize
+          context.l10n.healthSyncPermissionGranted,
         );
       } else {
         SnackBarService.showError(
           context,
-          'Permission denied', // TODO: Localize
+          context.l10n.healthSyncPermissionDenied,
         );
       }
     }
@@ -499,12 +499,12 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
 
       SnackBarService.showSuccess(
         context,
-        'Sync completed successfully', // TODO: Localize
+        context.l10n.healthSyncCompleted,
       );
     } catch (e) {
       SnackBarService.showError(
         context,
-        'Sync failed: $e', // TODO: Localize
+        context.l10n.healthSyncError(e.toString()),
       );
     }
   }
