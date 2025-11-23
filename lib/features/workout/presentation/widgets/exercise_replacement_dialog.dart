@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_database.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_similarity_service.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_database_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_database_provider.dart' as db_provider;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Tier-1 Exercise Replacement Dialog with intelligent suggestions
 class ExerciseReplacementDialog extends ConsumerStatefulWidget {
@@ -37,6 +37,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   String? _selectedEquipment;
   bool _showOnlyFavorites = false;
 
+  // Smart suggestions filters
+  bool _sameMuscleGroupFilter = true;  // Default: filtra per stesso gruppo muscolare
+  bool _sameEquipmentFilter = false;   // Default: non filtra per attrezzatura
+
   @override
   void initState() {
     super.initState();
@@ -61,35 +65,76 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   }
 
   List<ExerciseRecommendation> _getSmartRecommendations(List<ExerciseDatabase> allExercises) {
-    // Find current exercise in database
-    // First try by ID, then by name (case-insensitive)
-    ExerciseDatabase? currentDbExercise;
+    // 🔧 FIX: Match by NAME instead of ID (workout Exercise vs ExerciseDatabase have different IDs)
+    final currentName = widget.currentExercise.name.toLowerCase().trim();
 
-    // Try matching by ID first
-    try {
-      currentDbExercise = allExercises.firstWhere(
-        (e) => e.id == widget.currentExercise.id,
-      );
-    } catch (_) {
-      // If ID match fails, try matching by name (case-insensitive)
-      try {
-        currentDbExercise = allExercises.firstWhere(
-          (e) => e.name.toLowerCase() == widget.currentExercise.name.toLowerCase(),
-        );
-      } catch (_) {
-        // If both fail, return empty recommendations
-        debugPrint('⚠️ Could not find exercise: ${widget.currentExercise.name} (ID: ${widget.currentExercise.id})');
-        return [];
-      }
-    }
+    final currentDbExercise = allExercises.firstWhere(
+      (e) => e.name.toLowerCase().trim() == currentName,
+      orElse: () {
+        // Fallback: try to find by partial match
+        try {
+          return allExercises.firstWhere(
+            (e) => e.name.toLowerCase().contains(currentName) ||
+                   currentName.contains(e.name.toLowerCase()),
+          );
+        } catch (_) {
+          // Last resort: create a synthetic ExerciseDatabase from workout Exercise
+          return ExerciseDatabase(
+            id: widget.currentExercise.id,
+            name: widget.currentExercise.name,
+            category: _mapCategoryToString(widget.currentExercise.category),
+            equipment: null,
+            primaryMuscleGroups: [_mapCategoryToString(widget.currentExercise.category)],
+          );
+        }
+      },
+    );
 
     // Get smart recommendations
-    return ExerciseSimilarityService.getRecommendations(
+    var recommendations = ExerciseSimilarityService.getRecommendations(
       targetExercise: currentDbExercise,
       availableExercises: allExercises,
-      maxRecommendations: 20,
-      minSimilarityThreshold: 0.4, // Increased to filter out irrelevant matches
+      maxRecommendations: 50,  // Get more for filtering
+      minSimilarityThreshold: 0.2,
     );
+
+    // 🎯 Apply smart filters
+    if (_sameMuscleGroupFilter) {
+      final targetMuscles = currentDbExercise.primaryMuscleGroups?.map((m) => m.toUpperCase()).toSet() ?? {};
+      recommendations = recommendations.where((rec) {
+        final recMuscles = rec.exercise.primaryMuscleGroups?.map((m) => m.toUpperCase()).toSet() ?? {};
+        return targetMuscles.intersection(recMuscles).isNotEmpty;
+      }).toList();
+    }
+
+    if (_sameEquipmentFilter && currentDbExercise.equipment != null) {
+      recommendations = recommendations.where((rec) {
+        return rec.exercise.equipment?.toLowerCase() == currentDbExercise.equipment?.toLowerCase();
+      }).toList();
+    }
+
+    return recommendations.take(20).toList();
+  }
+
+  String _mapCategoryToString(ExerciseCategory category) {
+    switch (category) {
+      case ExerciseCategory.chest:
+        return 'Chest';
+      case ExerciseCategory.back:
+        return 'Back';
+      case ExerciseCategory.shoulders:
+        return 'Shoulders';
+      case ExerciseCategory.arms:
+        return 'Arms';
+      case ExerciseCategory.legs:
+        return 'Legs';
+      case ExerciseCategory.abs:
+        return 'Core';
+      case ExerciseCategory.cardio:
+        return 'Cardio';
+      case ExerciseCategory.other:
+        return 'Other';
+    }
   }
 
   List<ExerciseDatabase> _filterExercises(List<ExerciseDatabase> exercises) {
@@ -131,7 +176,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final exercisesAsync = ref.watch(exerciseDatabaseProvider);
+    final exercisesAsync = ref.watch(db_provider.exerciseDatabaseProvider);
 
     return Dialog.fullscreen(
       child: Scaffold(
@@ -157,7 +202,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
           ),
           leading: IconButton(
-            icon: const Icon(AppIcons.close),
+            icon: Icon(AppIcons.close),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
@@ -168,11 +213,11 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
             tabs: [
               Tab(
-                icon: const Icon(AppIcons.autoAwesome),
+                icon: Icon(AppIcons.autoAwesome),
                 text: l10n.smartSuggestions,
               ),
               Tab(
-                icon: const Icon(AppIcons.list),
+                icon: Icon(AppIcons.list),
                 text: l10n.allExercises,
               ),
             ],
@@ -191,7 +236,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ],
             ),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: LoadingIndicator()),
           error: (error, stack) => Center(
             child: Text(l10n.errorLoadingExercises),
           ),
@@ -236,19 +281,30 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Wrap(
-              spacing: 12, // Default spacing per DESIGN_GUIDELINES.md
-              runSpacing: 8, // Vertical spacing for wrapped chips
+              spacing: 8,
               children: [
                 _buildFilterChip(
                   label: l10n.sameMuscleGroup,
                   icon: AppIcons.workout,
-                  isSelected: true,
+                  isSelected: _sameMuscleGroupFilter,
+                  onTap: () {
+                    setState(() {
+                      _sameMuscleGroupFilter = !_sameMuscleGroupFilter;
+                    });
+                    HapticFeedback.lightImpact();
+                  },
                   theme: theme,
                 ),
                 _buildFilterChip(
                   label: l10n.sameEquipment,
-                  icon: AppIcons.sportsGymnastics,
-                  isSelected: false,
+                  icon: AppIcons.gymnastics,
+                  isSelected: _sameEquipmentFilter,
+                  onTap: () {
+                    setState(() {
+                      _sameEquipmentFilter = !_sameEquipmentFilter;
+                    });
+                    HapticFeedback.lightImpact();
+                  },
                   theme: theme,
                 ),
               ],
@@ -293,10 +349,10 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             onChanged: (value) => setState(() => _searchQuery = value),
             decoration: InputDecoration(
               hintText: l10n.searchExercises,
-              prefixIcon: const Icon(AppIcons.search),
+              prefixIcon: Icon(AppIcons.search),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(AppIcons.clear),
+                      icon: Icon(AppIcons.clear),
                       onPressed: () {
                         _searchController.clear();
                         setState(() => _searchQuery = '');
@@ -416,13 +472,23 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
                   ),
                 ),
                 child: Center(
-                  child: Text(
-                    '$similarity%',
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '$similarity%',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        l10n.match,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: color,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -495,7 +561,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               ),
               // Arrow
               Icon(
-                AppIcons.forwardIos,
+                AppIcons.arrowForwardIos,
                 size: 20,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
@@ -552,7 +618,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
             ],
             if (exercise.primaryMuscleGroups?.isNotEmpty ?? false) ...[
               Icon(
-                AppIcons.sportsGymnastics,
+                AppIcons.gymnastics,
                 size: 14,
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -608,7 +674,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               const SizedBox(width: 6),
               Text(
                 label,
-                style: TextStyle(
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: isSelected
                       ? theme.colorScheme.onPrimaryContainer
                       : theme.colorScheme.onSurfaceVariant,
@@ -647,11 +713,11 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
               const SizedBox(width: 6),
               Text(
                 label,
-                style: TextStyle(
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Icon(
                 AppIcons.arrowDropDown,
                 size: 18,
@@ -676,7 +742,7 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
       case 'chest':
         return AppIcons.workout;
       case 'back':
-        return AppIcons.sportsGymnastics;
+        return AppIcons.gymnastics;
       case 'legs':
         return AppIcons.cardio;
       case 'shoulders':
