@@ -2037,6 +2037,30 @@
   "@longestStreak": {
     "description": "Label for longest workout streak achieved"
   },
+  "shareYourProgress": "Share Your Progress",
+  "@shareYourProgress": {
+    "description": "Title for share dialog"
+  },
+  "shareStreakDescription": "Share your workout streak calendar with friends and on social media",
+  "@shareStreakDescription": {
+    "description": "Description for share functionality"
+  },
+  "streakSettings": "Streak Settings",
+  "@streakSettings": {
+    "description": "Title for streak settings dialog"
+  },
+  "streakSettingsDescription": "Customize your streak calendar appearance and preferences",
+  "@streakSettingsDescription": {
+    "description": "Description for streak settings"
+  },
+  "customizeColors": "Customize Colors",
+  "@customizeColors": {
+    "description": "Setting option to customize streak colors"
+  },
+  "defaultView": "Default View",
+  "@defaultView": {
+    "description": "Setting option for default streak view mode"
+  },
   "totalDays": "Total Days",
   "@totalDays": {
     "description": "Label for total workout days stat"
@@ -23345,5 +23369,122 @@
   "autoAdjustRestTooltip": "RPE 8-10: +30s rest. RPE ≤6: -15s rest. Automatically adapts recovery time to your fatigue level.",
   "@autoAdjustRestTooltip": {
     "description": "Auto-adjust rest time feature tooltip"
+  }
+,
+  "streakViewMonthly": "Monthly",
+  "@streakViewMonthly": {
+    "description": "Streak view mode: monthly calendar"
+  },
+  "streakViewAnnual": "Annual",
+  "@streakViewAnnual": {
+    "description": "Streak view mode: annual 12-month grid"
+  },
+  "streakViewMultiYear": "Multi-year",
+  "@streakViewMultiYear": {
+    "description": "Streak view mode: multi-year horizontal strip"
+  },
+  "weeksInRow": "weeks in a row",
+  "@weeksInRow": {
+    "description": "Consecutive weeks with workouts"
+  },
+  "restDaysCount": "rest days",
+  "@restDaysCount": {
+    "description": "Number of rest days without workouts"
+  },
+  "muscleDistribution": "Muscle Distribution",
+  "@muscleDistribution": {
+    "description": "Muscle distribution analytics screen title"
+  },
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress tab label"
+  },
+  "analysis": "Analysis",
+  "@analysis": {
+    "description": "Analysis tab label"
+  },
+  "details": "Details",
+  "@details": {
+    "description": "Details tab label"
+  },
+  "availableAnalytics": "Available Analytics",
+  "@availableAnalytics": {
+    "description": "Section title for available analytics features"
+  },
+  "setsByMuscleGroup": "Sets by Muscle Group",
+  "@setsByMuscleGroup": {
+    "description": "Button title for sets by muscle group analytics"
+  },
+  "setsByMuscleGroupDesc": "View total sets performed per muscle group",
+  "@setsByMuscleGroupDesc": {
+    "description": "Description for sets by muscle group analytics"
+  },
+  "muscleDistributionDesc": "See detailed volume distribution across muscle groups",
+  "@muscleDistributionDesc": {
+    "description": "Description for muscle distribution analytics"
+  },
+  "requestNewMetric": "Request New Metric",
+  "@requestNewMetric": {
+    "description": "Button to request new analytics metric"
+  },
+  "requestNewMetricDesc": "Suggest a new metric you'd like to see in the app",
+  "@requestNewMetricDesc": {
+    "description": "Description for request new metric feature"
+  },
+  "requestNewMetricDialogContent": "Would you like to request a new analytics metric? Send us an email with your suggestion:",
+  "@requestNewMetricDialogContent": {
+    "description": "Dialog content for requesting new metrics"
+  },
+  "sendEmail": "Send Email",
+  "@sendEmail": {
+    "description": "Button to send email"
+  },
+  "selectTimePeriod": "Select time period",
+  "@selectTimePeriod": {
+    "description": "Semantic label for time period dropdown"
+  },
+  "currentPeriod": "Current",
+  "@currentPeriod": {
+    "description": "Legend label for current period in charts"
+  },
+  "previousPeriod": "Previous",
+  "@previousPeriod": {
+    "description": "Legend label for previous period in charts"
+  },
+  "workouts": "Workouts",
+  "@workouts": {
+    "description": "Workouts stat label"
+  },
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration stat label"
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "Volume stat label"
+  },
+  "sets": "Sets",
+  "@sets": {
+    "description": "Sets stat label"
+  },
+  "increased": "Increased",
+  "@increased": {
+    "description": "Semantic label for upward trend arrow"
+  },
+  "decreased": "Decreased",
+  "@decreased": {
+    "description": "Semantic label for downward trend arrow"
+  },
+  "previous": "Prev",
+  "@previous": {
+    "description": "Short label for previous period value"
+  },
+  "comingSoon": "Coming Soon",
+  "@comingSoon": {
+    "description": "Coming soon placeholder message"
+  },
+  "notificationCenter": "Notification Center",
+  "@notificationCenter": {
+    "description": "Title for notification center screen"
   }
 }

@@ -1604,6 +1604,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get longestStreak => 'Longest streak';
 
   @override
+  String get shareYourProgress => 'Share Your Progress';
+
+  @override
+  String get shareStreakDescription =>
+      'Share your workout streak calendar with friends and on social media';
+
+  @override
+  String get streakSettings => 'Streak Settings';
+
+  @override
+  String get streakSettingsDescription =>
+      'Customize your streak calendar appearance and preferences';
+
+  @override
+  String get customizeColors => 'Customize Colors';
+
+  @override
+  String get defaultView => 'Default View';
+
+  @override
   String get totalDays => 'Total Days';
 
   @override
@@ -18940,4 +18960,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get decreased => 'Decreased';
+
+  @override
+  String get notificationCenter => 'Notification Center';
 }

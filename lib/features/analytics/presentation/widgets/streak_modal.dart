@@ -166,40 +166,43 @@ class _StreakModalState extends State<StreakModal> {
     final restDays = _calculateRestDays();
     final workoutDates = _getAllWorkoutDates();
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header with dropdown and close button
-            _buildHeader(context),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.85, // Limit to 85% screen height
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header with dropdown and close button
+              _buildHeader(context),
 
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stats header (weeks in a row, rest days)
-                    _buildStatsHeader(context, weekStreak, restDays),
-                    const SizedBox(height: 24),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Stats header (weeks in a row, rest days)
+                      _buildStatsHeader(context, weekStreak, restDays),
+                      const SizedBox(height: 24),
 
-                    // Calendar view based on mode
-                    _buildCalendarView(context, workoutDates),
-                    const SizedBox(height: 24),
+                      // Calendar view based on mode
+                      _buildCalendarView(context, workoutDates),
+                      const SizedBox(height: 24),
 
-                    // Close button
-                    _buildCloseButton(context),
-                  ],
+                      // Close button
+                      _buildCloseButton(context),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -264,8 +267,8 @@ class _StreakModalState extends State<StreakModal> {
           // Share/export button
           IconButton(
             onPressed: () {
-              // TODO: Implement share functionality
               HapticFeedback.lightImpact();
+              _showShareDialog(context);
             },
             icon: const SemanticIcon(
               icon: AppIcons.share,
@@ -277,8 +280,8 @@ class _StreakModalState extends State<StreakModal> {
           // Settings button
           IconButton(
             onPressed: () {
-              // TODO: Implement settings (customize colors, etc.)
               HapticFeedback.lightImpact();
+              _showSettingsDialog(context);
             },
             icon: SemanticIcon(
               icon: AppIcons.settings,
@@ -750,6 +753,144 @@ class _StreakModalState extends State<StreakModal> {
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 12),
         ),
+      ),
+    );
+  }
+
+  /// Show share dialog with export options
+  void _showShareDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: SemanticIcon(
+          icon: AppIcons.share,
+          semanticLabel: context.l10n.share,
+          size: AppIconSize.large,
+          color: context.colors.primary,
+        ),
+        title: Text(context.l10n.shareYourProgress),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.shareStreakDescription,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.comingSoon,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+            },
+            child: Text(context.l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show settings dialog for customization
+  void _showSettingsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: SemanticIcon(
+          icon: AppIcons.settings,
+          semanticLabel: context.l10n.settings,
+          size: AppIconSize.large,
+          color: context.colors.primary,
+        ),
+        title: Text(context.l10n.streakSettings),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.streakSettingsDescription,
+              style: context.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            _buildSettingOption(
+              context,
+              icon: AppIcons.colorLens,
+              title: context.l10n.customizeColors,
+              subtitle: context.l10n.comingSoon,
+              enabled: false,
+            ),
+            const SizedBox(height: 12),
+            _buildSettingOption(
+              context,
+              icon: AppIcons.calendarMonth,
+              title: context.l10n.defaultView,
+              subtitle: context.l10n.comingSoon,
+              enabled: false,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+            },
+            child: Text(context.l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Build setting option row
+  Widget _buildSettingOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool enabled,
+  }) {
+    return Opacity(
+      opacity: enabled ? 1.0 : 0.5,
+      child: Row(
+        children: [
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: title,
+            size: AppIconSize.medium,
+            color: context.colors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

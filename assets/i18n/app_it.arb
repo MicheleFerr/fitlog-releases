@@ -630,6 +630,12 @@
   "dayStreak": "Serie Giorni",
   "nextMilestone": "Prossimo Traguardo",
   "longestStreak": "Streak massimo",
+  "shareYourProgress": "Condividi i Tuoi Progressi",
+  "shareStreakDescription": "Condividi il tuo calendario streak con amici e sui social media",
+  "streakSettings": "Impostazioni Streak",
+  "streakSettingsDescription": "Personalizza l'aspetto e le preferenze del tuo calendario streak",
+  "customizeColors": "Personalizza Colori",
+  "defaultView": "Vista Predefinita",
   "totalDays": "Giorni Totali",
   "days": "giorni",
   "errorLoadingData": "Errore nel caricamento dei dati",
@@ -12883,5 +12889,122 @@
   "autoAdjustRestTooltip": "RPE 8-10: +30s riposo. RPE ≤6: -15s riposo. Adatta automaticamente il tempo di recupero al tuo livello di fatica.",
   "@autoAdjustRestTooltip": {
     "description": "Tooltip funzione auto-regolazione riposo"
+  }
+,
+  "streakViewMonthly": "Mensile",
+  "@streakViewMonthly": {
+    "description": "Modalità vista streak: calendario mensile"
+  },
+  "streakViewAnnual": "Annuale",
+  "@streakViewAnnual": {
+    "description": "Modalità vista streak: griglia 12 mesi"
+  },
+  "streakViewMultiYear": "Pluriennale",
+  "@streakViewMultiYear": {
+    "description": "Modalità vista streak: striscia orizzontale pluriennale"
+  },
+  "weeksInRow": "settimane di fila",
+  "@weeksInRow": {
+    "description": "Settimane consecutive con allenamenti"
+  },
+  "restDaysCount": "giorni di riposo",
+  "@restDaysCount": {
+    "description": "Numero di giorni di riposo senza allenamenti"
+  },
+  "muscleDistribution": "Distribuzione dei muscoli",
+  "@muscleDistribution": {
+    "description": "Titolo schermata analisi distribuzione muscolare"
+  },
+  "progress": "Progressi",
+  "@progress": {
+    "description": "Etichetta tab progressi"
+  },
+  "analysis": "Analisi",
+  "@analysis": {
+    "description": "Etichetta tab analisi"
+  },
+  "details": "Dettagli",
+  "@details": {
+    "description": "Etichetta tab dettagli"
+  },
+  "availableAnalytics": "Analisi disponibili",
+  "@availableAnalytics": {
+    "description": "Titolo sezione analisi disponibili"
+  },
+  "setsByMuscleGroup": "Serie per gruppo muscolare",
+  "@setsByMuscleGroup": {
+    "description": "Titolo pulsante analisi serie per gruppo muscolare"
+  },
+  "setsByMuscleGroupDesc": "Visualizza il numero totale di serie per gruppo muscolare",
+  "@setsByMuscleGroupDesc": {
+    "description": "Descrizione analisi serie per gruppo muscolare"
+  },
+  "muscleDistributionDesc": "Vedi la distribuzione dettagliata del volume tra i gruppi muscolari",
+  "@muscleDistributionDesc": {
+    "description": "Descrizione analisi distribuzione muscolare"
+  },
+  "requestNewMetric": "Richiedi nuova metrica",
+  "@requestNewMetric": {
+    "description": "Pulsante per richiedere nuova metrica"
+  },
+  "requestNewMetricDesc": "Suggerisci una nuova metrica che vorresti vedere nell'app",
+  "@requestNewMetricDesc": {
+    "description": "Descrizione funzionalità richiesta nuova metrica"
+  },
+  "requestNewMetricDialogContent": "Vuoi richiedere una nuova metrica di analisi? Inviaci un'email con il tuo suggerimento:",
+  "@requestNewMetricDialogContent": {
+    "description": "Contenuto dialog richiesta nuove metriche"
+  },
+  "sendEmail": "Invia Email",
+  "@sendEmail": {
+    "description": "Pulsante per inviare email"
+  },
+  "selectTimePeriod": "Seleziona periodo temporale",
+  "@selectTimePeriod": {
+    "description": "Etichetta semantica per dropdown periodo temporale"
+  },
+  "currentPeriod": "Attuale",
+  "@currentPeriod": {
+    "description": "Etichetta legenda periodo attuale nei grafici"
+  },
+  "previousPeriod": "Precedente",
+  "@previousPeriod": {
+    "description": "Etichetta legenda periodo precedente nei grafici"
+  },
+  "workouts": "Allenamenti",
+  "@workouts": {
+    "description": "Etichetta statistica allenamenti"
+  },
+  "duration": "Durata",
+  "@duration": {
+    "description": "Etichetta statistica durata"
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "Etichetta statistica volume"
+  },
+  "sets": "Serie",
+  "@sets": {
+    "description": "Etichetta statistica serie"
+  },
+  "increased": "Aumentato",
+  "@increased": {
+    "description": "Etichetta semantica per freccia trend crescente"
+  },
+  "decreased": "Diminuito",
+  "@decreased": {
+    "description": "Etichetta semantica per freccia trend decrescente"
+  },
+  "previous": "Prec",
+  "@previous": {
+    "description": "Etichetta breve per valore periodo precedente"
+  },
+  "comingSoon": "Prossimamente",
+  "@comingSoon": {
+    "description": "Messaggio placeholder prossimamente"
+  },
+  "notificationCenter": "Centro Notifiche",
+  "@notificationCenter": {
+    "description": "Titolo per la schermata del centro notifiche"
   }
 }

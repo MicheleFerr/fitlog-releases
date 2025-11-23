@@ -1621,6 +1621,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get longestStreak => 'Streak massimo';
 
   @override
+  String get shareYourProgress => 'Condividi i Tuoi Progressi';
+
+  @override
+  String get shareStreakDescription =>
+      'Condividi il tuo calendario streak con amici e sui social media';
+
+  @override
+  String get streakSettings => 'Impostazioni Streak';
+
+  @override
+  String get streakSettingsDescription =>
+      'Personalizza l\'aspetto e le preferenze del tuo calendario streak';
+
+  @override
+  String get customizeColors => 'Personalizza Colori';
+
+  @override
+  String get defaultView => 'Vista Predefinita';
+
+  @override
   String get totalDays => 'Giorni Totali';
 
   @override
@@ -19126,4 +19146,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get decreased => 'Diminuito';
+
+  @override
+  String get notificationCenter => 'Centro Notifiche';
 }

@@ -3067,6 +3067,42 @@ abstract class AppLocalizations {
   /// **'Longest streak'**
   String get longestStreak;
 
+  /// Title for share dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Share Your Progress'**
+  String get shareYourProgress;
+
+  /// Description for share functionality
+  ///
+  /// In en, this message translates to:
+  /// **'Share your workout streak calendar with friends and on social media'**
+  String get shareStreakDescription;
+
+  /// Title for streak settings dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Settings'**
+  String get streakSettings;
+
+  /// Description for streak settings
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your streak calendar appearance and preferences'**
+  String get streakSettingsDescription;
+
+  /// Setting option to customize streak colors
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Colors'**
+  String get customizeColors;
+
+  /// Setting option for default streak view mode
+  ///
+  /// In en, this message translates to:
+  /// **'Default View'**
+  String get defaultView;
+
   /// Label for total workout days stat
   ///
   /// In en, this message translates to:
@@ -33941,6 +33977,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Decreased'**
   String get decreased;
+
+  /// Title for notification center screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Center'**
+  String get notificationCenter;
 }
 
 class _AppLocalizationsDelegate
