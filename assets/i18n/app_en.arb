@@ -11169,14 +11169,6 @@
   "@routineOnboardingReadyCTA": {
     "description": "Routine onboarding: Ready CTA on benefits page"
   },
-  "routineCenter": "Routine Center",
-  "@routineCenter": {
-    "description": "Title for routine center screen"
-  },
-  "routineCenterDescription": "Multi-period routines with smart tracking",
-  "@routineCenterDescription": {
-    "description": "Routine Center description on home screen"
-  },
   "routineBasicInfoTitle": "Basic Information",
   "@routineBasicInfoTitle": {
     "description": "Basic info step title"
@@ -14287,26 +14279,6 @@
   "tourHistoryDescription": "Here you'll find your complete workout history.\nReview past sessions and track your consistency!",
   "@tourHistoryDescription": {
     "description": "Tour step 5 description - History"
-  },
-  "tourRoutineCenterTitle": "Routine Center - Advanced Training 🏋️",
-  "@tourRoutineCenterTitle": {
-    "description": "Tour step 6 title - Routine Center"
-  },
-  "tourRoutineCenterDescription": "Create multi-week programs with:",
-  "@tourRoutineCenterDescription": {
-    "description": "Tour step 6 description - Routine Center"
-  },
-  "tourRoutineCenterBullet1": "Periodization (strength → hypertrophy → deload)",
-  "@tourRoutineCenterBullet1": {
-    "description": "Tour step 6 bullet 1"
-  },
-  "tourRoutineCenterBullet2": "Automatic template swapping",
-  "@tourRoutineCenterBullet2": {
-    "description": "Tour step 6 bullet 2"
-  },
-  "tourRoutineCenterBullet3": "Progress tracking for each phase",
-  "@tourRoutineCenterBullet3": {
-    "description": "Tour step 6 bullet 3"
   },
   "tourCommunityTitle": "Community 🤝",
   "@tourCommunityTitle": {
@@ -23390,6 +23362,14 @@
   "restDaysCount": "rest days",
   "@restDaysCount": {
     "description": "Number of rest days without workouts"
+  },
+  "daysSinceLastWorkout": "days since last workout",
+  "@daysSinceLastWorkout": {
+    "description": "Days elapsed since most recent workout session"
+  },
+  "colorsAvailable": "colors available",
+  "@colorsAvailable": {
+    "description": "Number of colors available for customization"
   },
   "muscleDistribution": "Muscle Distribution",
   "@muscleDistribution": {

@@ -3523,14 +3523,6 @@
   "routineOnboardingBenefit3Title": "Recupero Intelligente",
   "routineOnboardingBenefit3Desc": "Hai saltato un allenamento? Riprogrammalo facilmente",
   "routineOnboardingReadyCTA": "Pronto a creare la tua prima routine?",
-  "routineCenter": "Centro Routine",
-  "@routineCenter": {
-    "description": "Titolo schermata centro routine"
-  },
-  "routineCenterDescription": "Routine multi-periodo con tracciamento intelligente",
-  "@routineCenterDescription": {
-    "description": "Routine Center description on home screen"
-  },
   "routineBasicInfoTitle": "Informazioni di Base",
   "@routineBasicInfoTitle": {
     "description": "Basic info step title"
@@ -5323,11 +5315,6 @@
   "tourAnalyticsBullet3": "Record personali e miglioramenti",
   "tourHistoryTitle": "Storico Allenamenti 📅",
   "tourHistoryDescription": "Qui trovi lo storico completo dei tuoi allenamenti.\nRileggi le sessioni passate e traccia la tua costanza!",
-  "tourRoutineCenterTitle": "Routine Center - Training Avanzato 🏋️",
-  "tourRoutineCenterDescription": "Crea programmi multi-settimana con:",
-  "tourRoutineCenterBullet1": "Periodizzazione (forza → ipertrofia → deload)",
-  "tourRoutineCenterBullet2": "Swap automatico tra template",
-  "tourRoutineCenterBullet3": "Tracking progressi per ogni fase",
   "tourCommunityTitle": "Community 🤝",
   "tourCommunityDescription": "Connettiti con altri atleti per motivazione e supporto!",
   "tourNotificationsTitle": "Notifiche 🔔",
@@ -12910,6 +12897,14 @@
   "restDaysCount": "giorni di riposo",
   "@restDaysCount": {
     "description": "Numero di giorni di riposo senza allenamenti"
+  },
+  "daysSinceLastWorkout": "giorni dall'ultimo allenamento",
+  "@daysSinceLastWorkout": {
+    "description": "Giorni trascorsi dall'ultima sessione di allenamento"
+  },
+  "colorsAvailable": "colori disponibili",
+  "@colorsAvailable": {
+    "description": "Numero di colori disponibili per la personalizzazione"
   },
   "muscleDistribution": "Distribuzione dei muscoli",
   "@muscleDistribution": {

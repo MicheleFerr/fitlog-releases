@@ -26,7 +26,11 @@
 /// ```
 library;
 
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -34,6 +38,9 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// View modes for streak visualization
 enum StreakViewMode {
@@ -72,6 +79,66 @@ class StreakModal extends StatefulWidget {
 class _StreakModalState extends State<StreakModal> {
   // View mode state
   StreakViewMode _viewMode = StreakViewMode.monthly;
+
+  // Global key for capturing calendar screenshot
+  final GlobalKey _calendarKey = GlobalKey();
+
+  // Preferences keys
+  static const String _defaultViewKey = 'streak_default_view';
+  static const String _calendarColorKey = 'streak_calendar_color';
+
+  // Available calendar colors
+  static const List<Color> _availableColors = [
+    Color(0xFF4CAF50),  // Green (default)
+    Color(0xFF2196F3),  // Blue
+    Color(0xFFFF9800),  // Orange
+    Color(0xFFE91E63),  // Pink
+    Color(0xFF9C27B0),  // Purple
+    Color(0xFFF44336),  // Red
+    Color(0xFF00BCD4),  // Cyan
+    Color(0xFFFFEB3B),  // Yellow
+  ];
+
+  Color _selectedCalendarColor = _availableColors[0];  // Default green
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  /// Load user preferences from SharedPreferences
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Load default view mode
+    final viewIndex = prefs.getInt(_defaultViewKey);
+    if (viewIndex != null && viewIndex < StreakViewMode.values.length) {
+      setState(() {
+        _viewMode = StreakViewMode.values[viewIndex];
+      });
+    }
+
+    // Load calendar color
+    final colorValue = prefs.getInt(_calendarColorKey);
+    if (colorValue != null) {
+      setState(() {
+        _selectedCalendarColor = Color(colorValue);
+      });
+    }
+  }
+
+  /// Save view mode preference
+  Future<void> _saveDefaultView(StreakViewMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_defaultViewKey, mode.index);
+  }
+
+  /// Save calendar color preference
+  Future<void> _saveCalendarColor(Color color) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_calendarColorKey, color.value);
+  }
 
   /// Get all unique workout dates (normalized to day precision)
   Set<DateTime> _getAllWorkoutDates() {
@@ -141,29 +208,28 @@ class _StreakModalState extends State<StreakModal> {
     return '${date.year}-W$weekNumber';
   }
 
-  /// Calculate rest days (days without workout in last year)
-  int _calculateRestDays() {
+  /// Calculate days since last workout (more meaningful than total rest days)
+  int _calculateDaysSinceLastWorkout() {
     final workoutDates = _getAllWorkoutDates();
+    if (workoutDates.isEmpty) return 0;
+
+    // Find most recent workout date
+    final mostRecentWorkout = workoutDates.reduce((a, b) => a.isAfter(b) ? a : b);
+
     final today = DateTime.now();
-    final oneYearAgo = today.subtract(const Duration(days: 365));
+    final todayOnly = DateTime(today.year, today.month, today.day);
 
-    // Count days in last year
-    const int totalDays = 365;
-    int workoutDaysInYear = 0;
+    // Calculate days since last workout
+    final daysSince = todayOnly.difference(mostRecentWorkout).inDays;
 
-    for (final date in workoutDates) {
-      if (date.isAfter(oneYearAgo.subtract(const Duration(days: 1))) && !date.isAfter(today)) {
-        workoutDaysInYear++;
-      }
-    }
-
-    return totalDays - workoutDaysInYear;
+    // Return 0 if workout was today
+    return daysSince < 0 ? 0 : daysSince;
   }
 
   @override
   Widget build(BuildContext context) {
     final weekStreak = _calculateWeekStreak();
-    final restDays = _calculateRestDays();
+    final daysSinceLastWorkout = _calculateDaysSinceLastWorkout();
     final workoutDates = _getAllWorkoutDates();
 
     return SizedBox(
@@ -187,12 +253,19 @@ class _StreakModalState extends State<StreakModal> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Stats header (weeks in a row, rest days)
-                      _buildStatsHeader(context, weekStreak, restDays),
+                      // Stats header (weeks in a row, days since last workout)
+                      _buildStatsHeader(context, weekStreak, daysSinceLastWorkout),
                       const SizedBox(height: 24),
 
-                      // Calendar view based on mode
-                      _buildCalendarView(context, workoutDates),
+                      // Calendar view based on mode (wrapped in RepaintBoundary for screenshots)
+                      RepaintBoundary(
+                        key: _calendarKey,
+                        child: Container(
+                          color: context.colors.surface,  // Background for screenshot
+                          padding: const EdgeInsets.all(16),
+                          child: _buildCalendarView(context, workoutDates),
+                        ),
+                      ),
                       const SizedBox(height: 24),
 
                       // Close button
@@ -294,8 +367,8 @@ class _StreakModalState extends State<StreakModal> {
     );
   }
 
-  /// Stats header (weeks in a row, rest days)
-  Widget _buildStatsHeader(BuildContext context, int weekStreak, int restDays) {
+  /// Stats header (weeks in a row, days since last workout)
+  Widget _buildStatsHeader(BuildContext context, int weekStreak, int daysSinceLastWorkout) {
     return Row(
       children: [
         Expanded(
@@ -311,10 +384,14 @@ class _StreakModalState extends State<StreakModal> {
         Expanded(
           child: _buildStatCard(
             context,
-            icon: '🌙',
-            value: '$restDays',
-            label: context.l10n.restDaysCount,
-            color: context.colors.primary,
+            icon: '⏱️',
+            value: '$daysSinceLastWorkout',
+            label: context.l10n.daysSinceLastWorkout,
+            color: daysSinceLastWorkout == 0
+                ? context.colors.success  // Green if worked out today
+                : daysSinceLastWorkout <= 2
+                    ? context.colors.primary  // Blue if 1-2 days
+                    : context.colors.warning,  // Warning if 3+ days
           ),
         ),
       ],
@@ -494,12 +571,12 @@ class _StreakModalState extends State<StreakModal> {
             return DecoratedBox(
               decoration: BoxDecoration(
                 color: hasWorkout
-                    ? context.colors.primary.withValues(alpha: 0.15)
+                    ? _selectedCalendarColor.withValues(alpha: 0.15)
                     : context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
                 border: isToday
                     ? Border.all(
-                        color: context.colors.primary,
+                        color: _selectedCalendarColor,
                         width: 2,
                       )
                     : null,
@@ -623,12 +700,12 @@ class _StreakModalState extends State<StreakModal> {
               return Container(
                 decoration: BoxDecoration(
                   color: hasWorkout
-                      ? context.colors.primary
+                      ? _selectedCalendarColor
                       : context.colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(2),
                   border: isToday
                       ? Border.all(
-                          color: context.colors.primary,
+                          color: _selectedCalendarColor,
                           width: 1,
                         )
                       : null,
@@ -720,12 +797,12 @@ class _StreakModalState extends State<StreakModal> {
           margin: const EdgeInsets.only(right: 2),
           decoration: BoxDecoration(
             color: hasWorkout
-                ? context.colors.primary
+                ? _selectedCalendarColor
                 : context.colors.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(2),
             border: isToday
                 ? Border.all(
-                    color: context.colors.primary,
+                    color: _selectedCalendarColor,
                     width: 1,
                   )
                 : null,
@@ -757,11 +834,50 @@ class _StreakModalState extends State<StreakModal> {
     );
   }
 
+  /// Capture calendar screenshot and share it
+  Future<void> _shareStreak(BuildContext context) async {
+    try {
+      // Find the RepaintBoundary and capture screenshot
+      final boundary = _calendarKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        throw Exception('Could not capture calendar screenshot');
+      }
+
+      // Capture image with high quality
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        throw Exception('Could not convert image to bytes');
+      }
+
+      // Save to temporary file
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/streak_calendar.png');
+      await file.writeAsBytes(byteData.buffer.asUint8List());
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: context.l10n.shareStreakDescription,
+      );
+    } catch (e) {
+      // Show error snackbar if sharing fails
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${context.l10n.error}: $e'),
+            backgroundColor: context.colors.error,
+          ),
+        );
+      }
+    }
+  }
+
   /// Show share dialog with export options
   void _showShareDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         icon: SemanticIcon(
           icon: AppIcons.share,
           semanticLabel: context.l10n.share,
@@ -769,31 +885,140 @@ class _StreakModalState extends State<StreakModal> {
           color: context.colors.primary,
         ),
         title: Text(context.l10n.shareYourProgress),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.shareStreakDescription,
-              style: context.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              context.l10n.comingSoon,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
+        content: Text(
+          context.l10n.shareStreakDescription,
+          style: context.textTheme.bodyMedium,
         ),
         actions: [
           TextButton(
             onPressed: () {
               HapticFeedback.lightImpact();
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
+            },
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              HapticFeedback.lightImpact();
+              Navigator.pop(dialogContext);
+              // Give time for dialog to close before capturing screenshot
+              await Future.delayed(const Duration(milliseconds: 300));
+              await _shareStreak(context);
+            },
+            icon: const SemanticIcon(
+              icon: AppIcons.share,
+              semanticLabel: '',
+              size: AppIconSize.small,
+            ),
+            label: Text(context.l10n.share),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show color picker dialog
+  void _showColorPicker(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.customizeColors),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: _availableColors.length,
+            itemBuilder: (context, index) {
+              final color = _availableColors[index];
+              final isSelected = color.value == _selectedCalendarColor.value;
+
+              return GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  setState(() {
+                    _selectedCalendarColor = color;
+                  });
+                  _saveCalendarColor(color);
+                  Navigator.pop(dialogContext);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: isSelected
+                        ? Border.all(
+                            color: context.colors.onSurface,
+                            width: 3,
+                          )
+                        : null,
+                  ),
+                  child: isSelected
+                      ? const SemanticIcon(
+                          icon: AppIcons.check,
+                          semanticLabel: '',  // Decorative icon
+                          color: Colors.white,
+                          size: AppIconSize.large,
+                        )
+                      : null,
+                ),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(dialogContext);
             },
             child: Text(context.l10n.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Show default view selector dialog
+  void _showDefaultViewSelector(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.defaultView),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: StreakViewMode.values.map((mode) {
+            final isSelected = mode == _viewMode;
+
+            return RadioListTile<StreakViewMode>(
+              value: mode,
+              groupValue: _viewMode,
+              title: Text(mode.getLabel(context)),
+              selected: isSelected,
+              onChanged: (value) {
+                if (value != null) {
+                  HapticFeedback.lightImpact();
+                  setState(() {
+                    _viewMode = value;
+                  });
+                  _saveDefaultView(value);
+                  Navigator.pop(dialogContext);
+                }
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(dialogContext);
+            },
+            child: Text(context.l10n.cancel),
           ),
         ],
       ),
@@ -804,7 +1029,7 @@ class _StreakModalState extends State<StreakModal> {
   void _showSettingsDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         icon: SemanticIcon(
           icon: AppIcons.settings,
           semanticLabel: context.l10n.settings,
@@ -821,20 +1046,38 @@ class _StreakModalState extends State<StreakModal> {
               style: context.textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
-            _buildSettingOption(
-              context,
-              icon: AppIcons.colorLens,
-              title: context.l10n.customizeColors,
-              subtitle: context.l10n.comingSoon,
-              enabled: false,
+            InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                Navigator.pop(dialogContext);
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  _showColorPicker(context);
+                });
+              },
+              child: _buildSettingOption(
+                context,
+                icon: AppIcons.colorLens,
+                title: context.l10n.customizeColors,
+                subtitle: '${_availableColors.length} ${context.l10n.colorsAvailable}',
+                enabled: true,
+              ),
             ),
             const SizedBox(height: 12),
-            _buildSettingOption(
-              context,
-              icon: AppIcons.calendarMonth,
-              title: context.l10n.defaultView,
-              subtitle: context.l10n.comingSoon,
-              enabled: false,
+            InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                Navigator.pop(dialogContext);
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  _showDefaultViewSelector(context);
+                });
+              },
+              child: _buildSettingOption(
+                context,
+                icon: AppIcons.calendarMonth,
+                title: context.l10n.defaultView,
+                subtitle: _viewMode.getLabel(context),
+                enabled: true,
+              ),
             ),
           ],
         ),
@@ -842,7 +1085,7 @@ class _StreakModalState extends State<StreakModal> {
           TextButton(
             onPressed: () {
               HapticFeedback.lightImpact();
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
             },
             child: Text(context.l10n.close),
           ),

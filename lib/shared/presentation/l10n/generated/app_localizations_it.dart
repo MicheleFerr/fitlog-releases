@@ -9513,13 +9513,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Pronto a creare la tua prima routine?';
 
   @override
-  String get routineCenter => 'Centro Routine';
-
-  @override
-  String get routineCenterDescription =>
-      'Routine multi-periodo con tracciamento intelligente';
-
-  @override
   String get routineBasicInfoTitle => 'Informazioni di Base';
 
   @override
@@ -12149,23 +12142,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get tourHistoryDescription =>
       'Qui trovi lo storico completo dei tuoi allenamenti.\nRileggi le sessioni passate e traccia la tua costanza!';
-
-  @override
-  String get tourRoutineCenterTitle => 'Routine Center - Training Avanzato 🏋️';
-
-  @override
-  String get tourRoutineCenterDescription =>
-      'Crea programmi multi-settimana con:';
-
-  @override
-  String get tourRoutineCenterBullet1 =>
-      'Periodizzazione (forza → ipertrofia → deload)';
-
-  @override
-  String get tourRoutineCenterBullet2 => 'Swap automatico tra template';
-
-  @override
-  String get tourRoutineCenterBullet3 => 'Tracking progressi per ogni fase';
 
   @override
   String get tourCommunityTitle => 'Community 🤝';
@@ -19100,6 +19076,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get restDaysCount => 'giorni di riposo';
+
+  @override
+  String get daysSinceLastWorkout => 'giorni dall\'ultimo allenamento';
+
+  @override
+  String get colorsAvailable => 'colori disponibili';
 
   @override
   String get analysis => 'Analisi';

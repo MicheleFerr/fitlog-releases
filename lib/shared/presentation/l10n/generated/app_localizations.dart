@@ -16764,18 +16764,6 @@ abstract class AppLocalizations {
   /// **'Ready to create your first routine?'**
   String get routineOnboardingReadyCTA;
 
-  /// Title for routine center screen
-  ///
-  /// In en, this message translates to:
-  /// **'Routine Center'**
-  String get routineCenter;
-
-  /// Routine Center description on home screen
-  ///
-  /// In en, this message translates to:
-  /// **'Multi-period routines with smart tracking'**
-  String get routineCenterDescription;
-
   /// Basic info step title
   ///
   /// In en, this message translates to:
@@ -21155,36 +21143,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Here you\'ll find your complete workout history.\nReview past sessions and track your consistency!'**
   String get tourHistoryDescription;
-
-  /// Tour step 6 title - Routine Center
-  ///
-  /// In en, this message translates to:
-  /// **'Routine Center - Advanced Training 🏋️'**
-  String get tourRoutineCenterTitle;
-
-  /// Tour step 6 description - Routine Center
-  ///
-  /// In en, this message translates to:
-  /// **'Create multi-week programs with:'**
-  String get tourRoutineCenterDescription;
-
-  /// Tour step 6 bullet 1
-  ///
-  /// In en, this message translates to:
-  /// **'Periodization (strength → hypertrophy → deload)'**
-  String get tourRoutineCenterBullet1;
-
-  /// Tour step 6 bullet 2
-  ///
-  /// In en, this message translates to:
-  /// **'Automatic template swapping'**
-  String get tourRoutineCenterBullet2;
-
-  /// Tour step 6 bullet 3
-  ///
-  /// In en, this message translates to:
-  /// **'Progress tracking for each phase'**
-  String get tourRoutineCenterBullet3;
 
   /// Tour step 7 title - Community
   ///
@@ -33893,6 +33851,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'rest days'**
   String get restDaysCount;
+
+  /// Days elapsed since most recent workout session
+  ///
+  /// In en, this message translates to:
+  /// **'days since last workout'**
+  String get daysSinceLastWorkout;
+
+  /// Number of colors available for customization
+  ///
+  /// In en, this message translates to:
+  /// **'colors available'**
+  String get colorsAvailable;
 
   /// Analysis tab label
   ///
