@@ -157,8 +157,8 @@ abstract class IHealthLocalDatasource {
   /// Typically called in app initialization (main.dart).
   ///
   /// Boxes created:
-  /// - `health_sync_status` - LazyBox<Map> (JSON storage)
-  /// - `body_measurements` - LazyBox<List<Map>> (JSON storage)
+  /// - `health_sync_status` - `LazyBox<Map>` (JSON storage)
+  /// - `body_measurements` - `LazyBox<List<Map>>` (JSON storage)
   ///
   /// Example:
   /// ```dart

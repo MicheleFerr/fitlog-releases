@@ -182,7 +182,7 @@ abstract class IHealthRepository {
   /// sync timeline in UI.
   ///
   /// Returns:
-  /// - Right: List<HealthSyncStatus> (may be empty)
+  /// - Right: `List<HealthSyncStatus>` (may be empty)
   /// - Left: [CacheFailure] if Hive read fails
   Future<Either<Failure, List<HealthSyncStatus>>> getSyncHistory({
     required HealthDataType dataType,
@@ -243,7 +243,7 @@ abstract class IHealthRepository {
   /// - By source (FitLog, HealthKit, Health Connect)
   ///
   /// Returns:
-  /// - Right: List<BodyMeasurement> (sorted by recordedAt desc)
+  /// - Right: `List<BodyMeasurement>` (sorted by recordedAt desc)
   /// - Left: [CacheFailure] if Hive read fails
   Future<Either<Failure, List<BodyMeasurement>>> getMeasurements({
     required HealthDataType dataType,

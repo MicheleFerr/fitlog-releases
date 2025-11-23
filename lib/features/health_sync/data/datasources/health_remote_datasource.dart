@@ -237,7 +237,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   @override
   Future<HealthPermissionStatus> checkPermissionStatus() async {
     // Check all possible data types (7 total)
-    final allTypes = HealthDataType.values;
+    const allTypes = HealthDataType.values;
 
     final permissionStates = <HealthDataType, PermissionState>{};
 
@@ -292,7 +292,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     required DateTime endDate,
   }) async {
     // Fetch workout data from health platform
-    final healthType = health_pkg.HealthDataType.WORKOUT;
+    const healthType = health_pkg.HealthDataType.WORKOUT;
 
     final workoutData = await _health.getHealthDataFromTypes(
       types: [healthType],
@@ -331,7 +331,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    final healthType = health_pkg.HealthDataType.WEIGHT;
+    const healthType = health_pkg.HealthDataType.WEIGHT;
 
     final weightData = await _health.getHealthDataFromTypes(
       types: [healthType],
@@ -362,7 +362,7 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         ? measurement.value
         : measurement.toKilograms();
 
-    final healthType = health_pkg.HealthDataType.WEIGHT;
+    const healthType = health_pkg.HealthDataType.WEIGHT;
 
     final success = await _health.writeHealthData(
       value: valueInKg,

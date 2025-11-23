@@ -78,7 +78,7 @@ class HealthRepositoryImpl implements IHealthRepository {
 
       if (!permissionStatus.canSync(HealthDataType.workout)) {
         return left(
-          PermissionDeniedFailure('Workout sync permission not granted'),
+          const PermissionDeniedFailure('Workout sync permission not granted'),
         );
       }
 
@@ -92,6 +92,7 @@ class HealthRepositoryImpl implements IHealthRepository {
       );
 
       // 3. Fetch workouts from remote datasource
+      // ignore: unused_local_variable
       final workouts = await _remoteDatasource.fetchWorkouts(
         startDate: startDate,
         endDate: endDate,
@@ -147,7 +148,7 @@ class HealthRepositoryImpl implements IHealthRepository {
 
       if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
         return left(
-          PermissionDeniedFailure('Body weight sync permission not granted'),
+          const PermissionDeniedFailure('Body weight sync permission not granted'),
         );
       }
 
@@ -215,7 +216,7 @@ class HealthRepositoryImpl implements IHealthRepository {
 
       if (!permissionStatus.canSync(HealthDataType.bodyWeight)) {
         return left(
-          PermissionDeniedFailure('Body weight write permission not granted'),
+          const PermissionDeniedFailure('Body weight write permission not granted'),
         );
       }
 
@@ -297,12 +298,12 @@ class HealthRepositoryImpl implements IHealthRepository {
       // 2. Check if retry is allowed
       if (!status.shouldRetry()) {
         return left(
-          ServerFailure('Max retries reached or sync not in error state'),
+          const ServerFailure('Max retries reached or sync not in error state'),
         );
       }
 
       // 3. Calculate exponential backoff delay
-      final retryDelays = [
+      const retryDelays = [
         Duration(hours: 1),  // Retry 1
         Duration(hours: 4),  // Retry 2
         Duration(hours: 24), // Retry 3
@@ -324,12 +325,12 @@ class HealthRepositoryImpl implements IHealthRepository {
       switch (dataType) {
         case HealthDataType.workout:
           return syncWorkouts(
-            startDate: DateTime.now().subtract(Duration(days: 30)),
+            startDate: DateTime.now().subtract(const Duration(days: 30)),
             endDate: DateTime.now(),
           );
         case HealthDataType.bodyWeight:
           return syncBodyWeight(
-            startDate: DateTime.now().subtract(Duration(days: 90)),
+            startDate: DateTime.now().subtract(const Duration(days: 90)),
             endDate: DateTime.now(),
           );
         default:
