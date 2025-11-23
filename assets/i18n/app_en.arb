@@ -23445,10 +23445,6 @@
   "@workedOutToday": {
     "description": "Message when user worked out today (0 days)"
   },
-  "daysAgo": "days ago",
-  "@daysAgo": {
-    "description": "Suffix for days count (e.g., '3 days ago')"
-  },
   "gotIt": "Got it",
   "@gotIt": {
     "description": "Acknowledgment button in info dialogs"

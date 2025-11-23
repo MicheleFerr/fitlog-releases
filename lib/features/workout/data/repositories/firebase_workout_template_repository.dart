@@ -723,7 +723,7 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
         await _firestore.collection('users').doc(userId).update({
           'accountTier': 'free',
           'templateQuota': {
-            'maxPrivateTemplates': 10,
+            'maxPrivateTemplates': 5,  // QUOTA: 5 templates for free users
             'maxPublicTemplates': 2,
             'usedPrivateTemplates': 0,
             'usedPublicTemplates': 0,
@@ -734,7 +734,7 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
     }
 
     // Check quota limits
-    final maxPrivate = quotaData['maxPrivateTemplates'] ?? 10;
+    final maxPrivate = quotaData['maxPrivateTemplates'] ?? 5;  // QUOTA: 5 templates for free users
     final maxPublic = quotaData['maxPublicTemplates'] ?? 2;
     final usedPrivate = quotaData['usedPrivateTemplates'] ?? 0;
     final usedPublic = quotaData['usedPublicTemplates'] ?? 0;

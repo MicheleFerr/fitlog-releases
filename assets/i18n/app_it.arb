@@ -12936,10 +12936,6 @@
   "@workedOutToday": {
     "description": "Messaggio quando l'utente si è allenato oggi (0 giorni)"
   },
-  "daysAgo": "giorni fa",
-  "@daysAgo": {
-    "description": "Suffisso per il conteggio giorni (es. '3 giorni fa')"
-  },
   "gotIt": "Ho capito",
   "@gotIt": {
     "description": "Pulsante di conferma nei dialog informativi"

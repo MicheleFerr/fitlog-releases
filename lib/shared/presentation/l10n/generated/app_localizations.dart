@@ -20838,11 +20838,11 @@ abstract class AppLocalizations {
   /// **'All'**
   String get timeRangeLabelAll;
 
-  /// Suffix for days count (e.g., '3 days ago')
+  /// Days ago
   ///
   /// In en, this message translates to:
-  /// **'days ago'**
-  String get daysAgo;
+  /// **'{count} days ago'**
+  String daysAgo(int count);
 
   /// Weeks ago
   ///

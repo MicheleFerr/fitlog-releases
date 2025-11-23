@@ -21,7 +21,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
@@ -143,12 +142,39 @@ class HybridTemplateRepository {
       error: (_, __) => false,
     );
   }
-  
+
+  /// Check template quota (5 for free users, unlimited for premium)
+  Future<void> _checkQuota() async {
+    // Premium users have unlimited templates
+    if (_isPremiumUser) {
+      _HybridTemplateLogger.log('Quota check: PREMIUM user - unlimited templates');
+      return;
+    }
+
+    // Count custom templates for free users
+    final customTemplates = await getUserTemplates();
+    final customCount = customTemplates.where((t) => t.isCustom).length;
+
+    const maxFreeTemplates = 5;
+    _HybridTemplateLogger.log('Quota check: FREE user - $customCount/$maxFreeTemplates templates used');
+
+    if (customCount >= maxFreeTemplates) {
+      _HybridTemplateLogger.error('Quota exceeded: $customCount >= $maxFreeTemplates');
+      throw Exception(
+        'Template quota exceeded. Free users can save up to $maxFreeTemplates custom templates. '
+        'Upgrade to Premium for unlimited templates.'
+      );
+    }
+  }
+
   /// Create a new template (LOCAL FIRST!)
   Future<String> createTemplate(WorkoutTemplate template) async {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('User not authenticated');
-    
+
+    // Check quota before creating (5 for free, unlimited for premium)
+    await _checkQuota();
+
     // Generate ID if not present
     final templateId = template.id ?? DateTime.now().millisecondsSinceEpoch.toString();
     
@@ -294,7 +320,7 @@ class HybridTemplateRepository {
   
   /// Get public/community templates (PREMIUM ONLY)
   Future<List<WorkoutTemplate>> getPublicTemplates({
-    UnifiedTemplateCategory? category,
+    String? category,  // Changed from UnifiedTemplateCategory to String (cleanup fix)
     String? searchQuery,
     List<String>? tags,
     String? difficultyLevel,
@@ -352,7 +378,7 @@ class HybridTemplateRepository {
         .where('isPublic', isEqualTo: true);
 
     if (category != null) {
-      query = query.where('category', isEqualTo: category.name);
+      query = query.where('category', isEqualTo: category);  // category is now String
     }
 
     if (difficultyLevel != null) {

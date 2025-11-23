@@ -11833,7 +11833,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timeRangeLabelAll => 'All';
 
   @override
-  String get daysAgo => 'days ago';
+  String daysAgo(int count) {
+    return '$count days ago';
+  }
 
   @override
   String weeksAgo(int count) {

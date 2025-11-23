@@ -9,6 +9,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Helper class for template saving functionality
 class SaveTemplateHelper {
@@ -24,14 +26,14 @@ class SaveTemplateHelper {
         .get();
 
     int usedTemplates = 0;
-    int maxTemplates = 10;
+    int maxTemplates = 5;  // QUOTA: 5 templates for free users
 
     if (userDoc.exists) {
       final data = userDoc.data()!;
       final quotaData = data['templateQuota'] as Map<String, dynamic>?;
       if (quotaData != null) {
         usedTemplates = quotaData['usedPrivateTemplates'] ?? 0;
-        maxTemplates = quotaData['maxPrivateTemplates'] ?? 10;
+        maxTemplates = quotaData['maxPrivateTemplates'] ?? 5;  // QUOTA: 5 templates for free users
       }
     }
 
@@ -40,21 +42,25 @@ class SaveTemplateHelper {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(context.l10n.limitReached),
+          title: Text(context.l10n.templateQuotaExceeded),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.package,
-                size: 48,
-                color: context.colors.error,
-              ),
+              SemanticIcon(
+  icon: AppIcons.package,
+  semanticLabel: 'Package',
+  size: AppIconSize.xxlarge,
+  color: context.colors.error,
+),
               const SizedBox(height: 16),
-              Text(context.l10n.templateQuotaLimit(maxTemplates)),
+              Text(context.l10n.templateQuotaExceededMessage(maxTemplates)),
               const SizedBox(height: 8),
               Text(
-                'Elimina un template esistente o passa a Premium per avere più spazio.',
-                style: context.textTheme.bodyMedium,
+                context.l10n.upgradeToUnlimited,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.primary,
+                ),
               ),
             ],
           ),
@@ -95,9 +101,9 @@ class SaveTemplateHelper {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                '$usedTemplates/$maxTemplates',
+                context.l10n.templateQuotaUsed(usedTemplates, maxTemplates),
                 style: context.textTheme.labelSmall?.copyWith(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: usedTemplates >= maxTemplates - 2
                       ? context.warningColor
@@ -133,7 +139,7 @@ class SaveTemplateHelper {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Solo ${maxTemplates - usedTemplates} template rimanenti nel piano Free',
+                          context.l10n.templateQuotaWarning(usedTemplates, maxTemplates),
                           style: context.textTheme.labelSmall?.copyWith(
                             fontSize: 12,
                             color: context.warningColor,
@@ -149,7 +155,10 @@ class SaveTemplateHelper {
                   labelText: context.l10n.templateName,
                   hintText: context.l10n.templateNameHint,
                   border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(AppIcons.workout),
+                  prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -160,7 +169,10 @@ class SaveTemplateHelper {
                   labelText: context.l10n.description,
                   hintText: context.l10n.descriptionHint,
                   border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(AppIcons.template),
+                  prefixIcon: const SemanticIcon(
+  icon: AppIcons.template,
+  semanticLabel: 'Template',
+),
                 ),
                 maxLines: 3,
                 textCapitalization: TextCapitalization.sentences,
@@ -269,11 +281,12 @@ class SaveTemplateHelper {
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            AppIcons.inventory2,
-                            size: 48,
-                            color: context.warningColor,
-                          ),
+                          SemanticIcon(
+  icon: AppIcons.inventory2,
+  semanticLabel: 'Inventory2',
+  size: AppIconSize.xxlarge,
+  color: context.warningColor,
+),
                           const SizedBox(height: 16),
                           Text(errorMessage.replaceAll('Exception: ', '')),
                           const SizedBox(height: 8),
@@ -306,7 +319,10 @@ class SaveTemplateHelper {
                 }
               }
             },
-            icon: const Icon(AppIcons.cloudUpload),
+            icon: const SemanticIcon(
+  icon: AppIcons.cloudUpload,
+  semanticLabel: 'Cloud upload',
+),
             label: Text(context.l10n.saveToFirebase),
           ),
         ],
