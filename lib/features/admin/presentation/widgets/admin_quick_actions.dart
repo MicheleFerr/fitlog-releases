@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/community_corrections_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/missing_exercises_requests_screen.dart';
@@ -17,9 +18,6 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/firebase_init_widget.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminQuickActions extends ConsumerWidget {
   const AdminQuickActions({super.key});
@@ -37,10 +35,10 @@ class AdminQuickActions extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.flashOn,
+                  Icons.flash_on,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.quickActions,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -62,7 +60,7 @@ class AdminQuickActions extends ConsumerWidget {
               children: [
                 // Gestione database esercizi
                 _QuickActionCard(
-                  icon: AppIcons.storage,
+                  icon: Icons.storage,
                   title: l10n.databaseManager,
                   subtitle: l10n.manageExercisesDescription,
                   color: Theme.of(context).colorScheme.primary,
@@ -71,7 +69,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Exercise Feedback (NUOVO)
                 _QuickActionCardWithBadge(
-                  icon: AppIcons.flagCircle,
+                  icon: Icons.flag_circle,
                   title: 'Exercise Feedback',
                   subtitle: 'Segnalazioni e bug utenti',
                   color: context.colors.tertiary,
@@ -81,7 +79,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Review contributi community
                 _QuickActionCard(
-                  icon: AppIcons.rateReview,
+                  icon: Icons.rate_review,
                   title: l10n.communityContributions,
                   subtitle: l10n.reviewContributionsDescription,
                   color: context.colors.secondary,
@@ -90,7 +88,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Richieste esercizi mancanti
                 _QuickActionCard(
-                  icon: AppIcons.workout,
+                  icon: Icons.fitness_center,
                   title: 'Esercizi Mancanti',
                   subtitle: 'Gestisci richieste esercizi',
                   color: context.colors.warning,
@@ -99,7 +97,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Fix dati mancanti
                 _QuickActionCard(
-                  icon: AppIcons.buildCircle,
+                  icon: Icons.build_circle,
                   title: l10n.fixMissingData,
                   subtitle: l10n.fixMissingDataDescription,
                   color: context.colors.primary,
@@ -108,7 +106,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Statistiche utenti
                 _QuickActionCard(
-                  icon: AppIcons.analytics,
+                  icon: Icons.analytics,
                   title: l10n.userAnalytics,
                   subtitle: l10n.userAnalyticsDescription,
                   color: context.colors.success,
@@ -117,7 +115,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Backup database
                 _QuickActionCard(
-                  icon: AppIcons.backup,
+                  icon: Icons.backup,
                   title: l10n.databaseBackup,
                   subtitle: l10n.databaseBackupDescription,
                   color: context.colors.tertiary,
@@ -126,7 +124,7 @@ class AdminQuickActions extends ConsumerWidget {
 
                 // Notifiche push
                 _QuickActionCard(
-                  icon: AppIcons.notifications,
+                  icon: Icons.notifications,
                   title: l10n.pushNotifications,
                   subtitle: l10n.pushNotificationsDescription,
                   color: context.colors.error,
@@ -221,7 +219,7 @@ class AdminQuickActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              AppIcons.buildCircle,
+              Icons.build_circle,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -254,7 +252,7 @@ class AdminQuickActions extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              AppIcons.construction,
+              Icons.construction,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -312,7 +310,7 @@ class _QuickActionCard extends StatelessWidget {
                   size: 32,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -322,7 +320,7 @@ class _QuickActionCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -419,7 +417,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                     ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -429,7 +427,7 @@ class _QuickActionCardWithBadge extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

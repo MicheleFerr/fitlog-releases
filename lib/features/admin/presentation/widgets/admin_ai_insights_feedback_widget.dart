@@ -13,13 +13,10 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
   const AdminAIInsightsFeedbackWidget({super.key});
@@ -42,7 +39,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.ai,
+                  Icons.psychology,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -125,28 +122,28 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
             children: [
               _buildStatColumn(
                 context,
-                icon: AppIcons.feedback,
+                icon: Icons.feedback,
                 label: 'Totale',
                 value: totalFeedback.toString(),
                 color: colorScheme.primary,
               ),
               _buildStatColumn(
                 context,
-                icon: AppIcons.thumbUp,
+                icon: Icons.thumb_up,
                 label: 'Utile',
                 value: totalHelpful.toString(),
                 color: context.colors.success,
               ),
               _buildStatColumn(
                 context,
-                icon: AppIcons.thumbDown,
+                icon: Icons.thumb_down,
                 label: 'Non Utile',
                 value: totalNotHelpful.toString(),
                 color: context.colors.error,
               ),
               _buildStatColumn(
                 context,
-                icon: AppIcons.people,
+                icon: Icons.people,
                 label: 'Utenti',
                 value: uniqueUsers.toString(),
                 color: colorScheme.secondary,
@@ -179,14 +176,14 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: helpfulPercentage / 100,
                   minHeight: 8,
                   backgroundColor: colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     helpfulPercentage >= 70 ? context.colors.success :
-                    helpfulPercentage >= 50 ? context.colors.secondary : context.colors.error,
+                    helpfulPercentage >= 50 ? context.colors.warning : context.colors.error,
                   ),
                 ),
               ),
@@ -236,12 +233,10 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
       child: Center(
         child: Column(
           children: [
-            SemanticIcon(
-  icon: AppIcons.feedbackOutlined,
-  semanticLabel: 'Feedback outlined',
-  size: AppIconSize.medium,
-  color: colorScheme.onSurface.withValues(alpha: 0.3,
-),
+            Icon(
+              Icons.feedback_outlined,
+              size: 64,
+              color: colorScheme.onSurface.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
@@ -296,7 +291,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              feedback.isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
+              feedback.isHelpful ? Icons.thumb_up : Icons.thumb_down,
               color: feedback.isHelpful ? context.colors.success : context.colors.error,
               size: 20,
             ),
@@ -341,7 +336,7 @@ class AdminAIInsightsFeedbackWidget extends ConsumerWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: colorScheme.surface,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       feedback.comment!,

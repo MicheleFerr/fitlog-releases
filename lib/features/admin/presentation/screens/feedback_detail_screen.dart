@@ -63,10 +63,10 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
       severityColor = context.colors.error;
       severityLabel = l10n.feedbackSeverityCritical;
     } else if (widget.feedback.severity == 3) {
-      severityColor = Colors.orange;
+      severityColor = context.colors.warning;
       severityLabel = l10n.feedbackSeverityHigh;
     } else if (widget.feedback.severity == 2) {
-      severityColor = Colors.amber;
+      severityColor = context.colors.warning;
       severityLabel = l10n.feedbackSeverityMedium;
     } else {
       severityColor = context.colors.success;
@@ -76,7 +76,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
     Color statusColor;
     switch (widget.feedback.status) {
       case 'OPEN':
-        statusColor = Colors.orange;
+        statusColor = context.colors.warning;
         break;
       case 'REVIEWING':
         statusColor = context.colors.primary;
@@ -333,7 +333,7 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
                     context,
                     label: l10n.feedbackActionReopen,
                     icon: AppIcons.undo,
-                    color: Colors.orange,
+                    color: context.colors.warning,
                     onTap: () => _updateStatus('OPEN'),
                   ),
               ],
@@ -353,8 +353,8 @@ class _FeedbackDetailScreenState extends ConsumerState<FeedbackDetailScreen> {
               runSpacing: 8,
               children: [
                 _buildSeverityButton(context, 1, l10n.feedbackSeverityLow, context.colors.success),
-                _buildSeverityButton(context, 2, l10n.feedbackSeverityMedium, Colors.amber),
-                _buildSeverityButton(context, 3, l10n.feedbackSeverityHigh, Colors.orange),
+                _buildSeverityButton(context, 2, l10n.feedbackSeverityMedium, context.colors.warning),
+                _buildSeverityButton(context, 3, l10n.feedbackSeverityHigh, context.colors.warning),
                 _buildSeverityButton(context, 4, l10n.feedbackSeverityCritical, context.colors.error),
                 _buildSeverityButton(context, 5, l10n.feedbackSeverityUrgent, HSLColor.fromColor(context.colors.error).withLightness(0.2).toColor()),
               ],

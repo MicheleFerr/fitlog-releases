@@ -10,7 +10,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/data/services/database_manager_service.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/database_manager_provider.dart';
@@ -104,7 +103,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
     if (_dropdownValues == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(isEditing ? l10n.editExercise : l10n.addExercise),
+          title: Text(isEditing ? context.l10n.editExercise : context.l10n.addExercise),
         ),
         body: const Center(child: LoadingIndicator()),
       );
@@ -112,7 +111,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? l10n.editExercise : l10n.addExercise),
+        title: Text(isEditing ? context.l10n.editExercise : context.l10n.addExercise),
         actions: [
           if (_isLoading)
             const Padding(
@@ -130,7 +129,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
   icon: AppIcons.save,
   semanticLabel: 'Save',
 ),
-              label: Text(l10n.save),
+              label: Text(context.l10n.save),
             ),
         ],
       ),
@@ -142,18 +141,18 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Basic Information Section
-              _buildSectionTitle(l10n.generalInformation),
+              _buildSectionTitle(context.l10n.generalInformation),
 
               // Exercise Name
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: l10n.exerciseName,
+                  labelText: context.l10n.exerciseName,
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return l10n.exerciseNameRequired;
+                    return context.l10n.exerciseNameRequired;
                   }
                   return null;
                 },
@@ -231,7 +230,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
               const SizedBox(height: 16),
 
               // TUT (Time Under Tension)
-              _buildTutSelector(l10n),
+              _buildTutSelector(),
               const SizedBox(height: 24),
 
               // Muscles Section
@@ -291,7 +290,7 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
   icon: AppIcons.save,
   semanticLabel: 'Save',
 ),
-                  label: Text(isEditing ? l10n.updateExercise : l10n.createExercise),
+                  label: Text(isEditing ? context.l10n.updateExercise : context.l10n.createExercise),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -461,11 +460,11 @@ class _ExerciseEditorScreenState extends ConsumerState<ExerciseEditorScreen> {
     }
   }
 
-  Widget _buildTutSelector(AppLocalizations l10n) {
+  Widget _buildTutSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(l10n.tempoEsecuzione),
+        _buildSectionTitle(context.l10n.tempoEsecuzione),
         const SizedBox(height: 8),
         TutSelector(
           initialValue: _selectedTUT ?? '3-1-2-0',

@@ -17,9 +17,6 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_s
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SyncDashboardScreen extends ConsumerStatefulWidget {
   const SyncDashboardScreen({super.key});
@@ -40,6 +37,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -58,12 +56,11 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SemanticIcon(
-  icon: AppIcons.lockOutline,
-  semanticLabel: 'Lock outline',
-  size: AppIconSize.medium,
-  color: colorScheme.onSurfaceVariant,
-),
+              Icon(
+                Icons.lock_outline,
+                size: 64,
+                color: colorScheme.onSurfaceVariant,
+              ),
               const SizedBox(height: 16),
               Text(
                 'Admin access required',
@@ -80,10 +77,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
         title: const Text('Sync Dashboard'),
         actions: [
           IconButton(
-            icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+            icon: const Icon(Icons.refresh),
             onPressed: () {
               ref.read(syncMonitorProvider.notifier).refreshStats();
             },
@@ -96,12 +90,11 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.xxlarge,
-  color: colorScheme.error,
-),
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: colorScheme.error,
+              ),
               const SizedBox(height: 16),
               Text(
                 'Error loading sync data',
@@ -174,7 +167,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
           children: [
             _buildStatCard(
               context,
-              icon: AppIcons.people,
+              icon: Icons.people,
               title: 'Total Users',
               value: data.totalUsers.toString(),
               subtitle: '${data.premiumUsers} premium',
@@ -182,7 +175,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.syncIcon,
+              icon: Icons.sync,
               title: 'Active Syncs',
               value: data.activeSyncs.toString(),
               subtitle: 'Last ${data.lastSyncTime}',
@@ -190,7 +183,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.storage,
+              icon: Icons.storage,
               title: 'Local Data',
               value: _formatBytes(data.localDataSize),
               subtitle: '${data.localEntities} entities',
@@ -198,7 +191,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.cloudUpload,
+              icon: Icons.cloud_upload,
               title: 'Cloud Synced',
               value: '${data.syncPercentage}%',
               subtitle: '${data.pendingSyncs} pending',
@@ -434,7 +427,7 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
               final activity = data.recentActivities[index];
               return ListTile(
                 leading: Icon(
-                  activity.isSuccess ? AppIcons.complete : AppIcons.error,
+                  activity.isSuccess ? Icons.check_circle : Icons.error,
                   color: activity.isSuccess 
                       ? theme.colorScheme.primary 
                       : theme.colorScheme.error,
@@ -597,8 +590,8 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
                   children: [
                     Icon(
                       data.systemHealth.isHealthy 
-                          ? AppIcons.complete 
-                          : AppIcons.warning,
+                          ? Icons.check_circle 
+                          : Icons.warning,
                       color: data.systemHealth.isHealthy 
                           ? colorScheme.primary 
                           : colorScheme.error,
@@ -653,17 +646,17 @@ class _SyncDashboardScreenState extends ConsumerState<SyncDashboardScreen> {
   IconData _getFeatureIcon(String feature) {
     switch (feature.toLowerCase()) {
       case 'workouts':
-        return AppIcons.workout;
+        return Icons.fitness_center;
       case 'templates':
-        return AppIcons.template;
+        return Icons.description;
       case 'achievements':
-        return AppIcons.achievement;
+        return Icons.emoji_events;
       case 'community':
-        return AppIcons.people;
+        return Icons.people;
       case 'preferences':
-        return AppIcons.settings;
+        return Icons.settings;
       default:
-        return AppIcons.folder;
+        return Icons.folder;
     }
   }
 

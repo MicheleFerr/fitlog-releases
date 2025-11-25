@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/patch_conflict_detector.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Warning banner displaying patch conflicts
 class ConflictWarningBanner extends StatelessWidget {
@@ -68,7 +69,12 @@ class ConflictWarningBanner extends StatelessWidget {
               if (onTapDetails != null)
                 IconButton(
                   onPressed: onTapDetails,
-                  icon: Icon(AppIcons.info, size: 18, color: color),
+                  icon: SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: color,
+),
                   tooltip: 'View details',
                 ),
             ],
@@ -93,11 +99,12 @@ class ConflictWarningBanner extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.error,
-                    size: 16,
-                    color: context.colors.error,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.tiny,
+  color: context.colors.error,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

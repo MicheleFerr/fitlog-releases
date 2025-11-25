@@ -13,8 +13,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_stats_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AdminStatsCard extends ConsumerWidget {
   const AdminStatsCard({super.key});
@@ -34,10 +32,10 @@ class AdminStatsCard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.analytics,
+                  Icons.analytics,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.systemStatistics,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -50,7 +48,7 @@ class AdminStatsCard extends ConsumerWidget {
                     ref.invalidate(collectionStatsProvider);
                     ref.invalidate(adminStatsProvider);
                   },
-                  icon: const Icon(AppIcons.refresh),
+                  icon: const Icon(Icons.refresh),
                   tooltip: l10n.refresh,
                 ),
               ],
@@ -94,20 +92,20 @@ class AdminStatsCard extends ConsumerWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: _StatItem(
-                icon: AppIcons.workout,
+                icon: Icons.fitness_center,
                 title: l10n.exerciseCountLabel,
                 value: exerciseCount.toString(),
-                color: exerciseCount > 0 ? context.colors.success : context.colors.secondary,
+                color: exerciseCount > 0 ? context.colors.success : context.colors.warning,
               ),
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.infoIcon,
+                icon: Icons.info,
                 title: l10n.versionMetadata,
                 value: hasVersionMetadata ? l10n.present : l10n.missing,
                 color: hasVersionMetadata ? context.colors.success : context.colors.error,
@@ -115,7 +113,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.search,
+                icon: Icons.search,
                 title: l10n.searchIndex,
                 value: hasSearchIndex ? l10n.present : l10n.missing,
                 color: hasSearchIndex ? context.colors.success : context.colors.error,
@@ -124,7 +122,7 @@ class AdminStatsCard extends ConsumerWidget {
           ],
         ),
         if (versionInfo != null) ...[
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _VersionInfoCard(versionInfo: versionInfo, l10n: l10n),
         ],
       ],
@@ -142,20 +140,20 @@ class AdminStatsCard extends ConsumerWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: _StatItem(
-                icon: AppIcons.feedback,
+                icon: Icons.feedback,
                 title: l10n.pendingCorrections,
                 value: stats.pendingCorrections.toString(),
-                color: stats.pendingCorrections > 0 ? context.colors.secondary : context.colors.success,
+                color: stats.pendingCorrections > 0 ? context.colors.warning : context.colors.success,
               ),
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.complete,
+                icon: Icons.check_circle,
                 title: l10n.approvedCorrections,
                 value: stats.approvedCorrections.toString(),
                 color: context.colors.success,
@@ -163,7 +161,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.cancel,
+                icon: Icons.cancel,
                 title: l10n.rejectedCorrections,
                 value: stats.rejectedCorrections.toString(),
                 color: context.colors.error,
@@ -171,12 +169,12 @@ class AdminStatsCard extends ConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: _StatItem(
-                icon: AppIcons.people,
+                icon: Icons.people,
                 title: l10n.totalUsers,
                 value: stats.totalUsers.toString(),
                 color: context.colors.primary,
@@ -184,7 +182,7 @@ class AdminStatsCard extends ConsumerWidget {
             ),
             Expanded(
               child: _StatItem(
-                icon: AppIcons.update,
+                icon: Icons.update,
                 title: l10n.lastUpdate,
                 value: _formatDate(stats.lastUpdate),
                 color: context.colors.tertiary,
@@ -201,7 +199,7 @@ class AdminStatsCard extends ConsumerWidget {
     return Column(
       children: [
         const CircularProgressIndicator(),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(l10n.loadingStats),
       ],
     );
@@ -217,10 +215,10 @@ class AdminStatsCard extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            AppIcons.error,
+            Icons.error,
             color: Theme.of(context).colorScheme.error,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +292,7 @@ class _StatItem extends StatelessWidget {
             color: color,
             size: 24,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -302,7 +300,7 @@ class _StatItem extends StatelessWidget {
               color: color,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             title,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -348,11 +346,11 @@ class _VersionInfoCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                AppIcons.infoIcon,
+                Icons.info,
                 size: 16,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 l10n.currentVersion,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

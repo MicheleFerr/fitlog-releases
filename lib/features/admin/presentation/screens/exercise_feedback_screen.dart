@@ -12,11 +12,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/feedback_detail_screen.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseFeedbackScreen extends ConsumerWidget {
   const ExerciseFeedbackScreen({super.key});
@@ -25,7 +20,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final stats = ref.watch(feedbackStatsProvider);
     final allFeedbackAsync = ref.watch(allFeedbackProvider);
-    final AppLocalizations l10n = context.l10n;
+    final l10n = context.l10n;
 
     debugPrint('🔧 ExerciseFeedbackScreen: Building with stats: ${stats.totalFeedback} total feedback');
 
@@ -34,7 +29,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              AppIcons.flagCircle,
+              Icons.flag_circle,
               color: context.colors.primary,
             ),
             const SizedBox(width: 8),
@@ -44,10 +39,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(allFeedbackProvider),
-            icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+            icon: const Icon(Icons.refresh),
             tooltip: l10n.feedbackRefresh,
           ),
         ],
@@ -115,14 +107,14 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildStatsCards(BuildContext context, FeedbackStats stats) {
-    final AppLocalizations l10n = context.l10n;
+    final l10n = context.l10n;
     return Row(
       children: [
         Expanded(
           child: _StatCard(
             title: l10n.feedbackStatsTotal,
             value: stats.totalFeedback.toString(),
-            icon: AppIcons.list,
+            icon: Icons.list,
             color: context.colors.primary,
           ),
         ),
@@ -131,8 +123,8 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.feedbackStatsOpen,
             value: stats.openCount.toString(),
-            icon: AppIcons.pending,
-            color: context.colors.secondary,
+            icon: Icons.pending,
+            color: context.colors.warning,
           ),
         ),
         const SizedBox(width: 12),
@@ -140,7 +132,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.feedbackStatsResolved,
             value: stats.resolvedCount.toString(),
-            icon: AppIcons.checkCircle,
+            icon: Icons.check_circle,
             color: context.colors.success,
           ),
         ),
@@ -171,7 +163,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Text(emoji, style: context.textTheme.titleMedium),
+                Text(emoji, style: const TextStyle(fontSize: 20)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -222,7 +214,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
         severityColor = context.colors.error;
         severityLabel = l10n.feedbackSeverityCritical;
       } else if (severity == 3) {
-        severityColor = context.colors.secondary;
+        severityColor = context.colors.warning;
         severityLabel = l10n.feedbackSeverityHigh;
       } else if (severity == 2) {
         severityColor = context.colors.warning;
@@ -244,7 +236,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: severityColor,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -286,7 +278,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final critical = ref.watch(criticalFeedbackProvider);
-    final AppLocalizations l10n = context.l10n;
+    final l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,7 +321,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     final open = ref.watch(feedbackByStatusProvider('OPEN'));
-    final AppLocalizations l10n = context.l10n;
+    final l10n = context.l10n;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,7 +358,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
   }
 
   Widget _buildFeedbackCard(BuildContext context, ExerciseFeedback feedback) {
-    final AppLocalizations l10n = context.l10n;
+    final l10n = context.l10n;
     final typeEmojis = {
       'BUG': '🐛',
       'SUGGESTION': '💡',
@@ -378,7 +370,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
     if (feedback.severity >= 4) {
       severityColor = context.colors.error;
     } else if (feedback.severity == 3) {
-      severityColor = context.colors.secondary;
+      severityColor = context.colors.warning;
     } else if (feedback.severity == 2) {
       severityColor = context.colors.warning;
     } else {
@@ -405,7 +397,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
               children: [
                 Text(
                   typeEmojis[feedback.feedbackType] ?? '•',
-                  style: context.textTheme.titleSmall,
+                  style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -466,12 +458,11 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    SemanticIcon(
-  icon: AppIcons.forwardIos,
-  semanticLabel: 'Forward ios',
-  size: AppIconSize.medium,
-  color: context.colors.onSurfaceVariant,
-),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                      color: context.colors.onSurfaceVariant,
+                    ),
                   ],
                 ),
               ],
@@ -488,7 +479,7 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const LoadingIndicator(),
+          const CircularProgressIndicator(),
           const SizedBox(height: 16),
           Text(l10n.feedbackLoadingMessage),
         ],
@@ -501,12 +492,11 @@ class ExerciseFeedbackScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+          Icon(
+            Icons.error,
+            size: 64,
+            color: context.colors.error,
+          ),
           const SizedBox(height: 16),
           Text(
             l10n.feedbackErrorLoading,

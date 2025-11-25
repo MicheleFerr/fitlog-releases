@@ -16,7 +16,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -63,12 +62,12 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Stats Overview
             statsAsync.when(
               data: (stats) => _buildStatsOverview(context, stats),
-              loading: () => Center(
+              loading: () => const Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: LoadingIndicator(),
@@ -118,7 +117,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => Center(
+              loading: () => const Center(
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: LoadingIndicator(),
@@ -217,7 +216,7 @@ class AdminAnalyticsFeedbackWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(

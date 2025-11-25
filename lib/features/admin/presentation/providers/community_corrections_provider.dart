@@ -10,6 +10,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
@@ -122,8 +123,13 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
       final user = await _ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
-      // Verifica che l'utente sia admin
-      if (user.email != 'ferrara-michele@hotmail.it') {
+      // ========================================
+      // 🔐 SECURITY: Check admin via custom claims (secure)
+      // ========================================
+      // REPLACED: user.email != 'ferrara-michele@hotmail.it' (insecure)
+      // NEW: Uses Firebase Custom Claims (server-validated)
+      final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+      if (!isAdmin) {
         throw Exception('Unauthorized: Admin only');
       }
 
@@ -146,8 +152,13 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
       final user = await _ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
-      // Verifica che l'utente sia admin
-      if (user.email != 'ferrara-michele@hotmail.it') {
+      // ========================================
+      // 🔐 SECURITY: Check admin via custom claims (secure)
+      // ========================================
+      // REPLACED: user.email != 'ferrara-michele@hotmail.it' (insecure)
+      // NEW: Uses Firebase Custom Claims (server-validated)
+      final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+      if (!isAdmin) {
         throw Exception('Unauthorized: Admin only');
       }
 

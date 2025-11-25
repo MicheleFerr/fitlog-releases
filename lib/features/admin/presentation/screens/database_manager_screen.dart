@@ -22,6 +22,9 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercis
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:intl/intl.dart';
+// 📊 Analytics migration imports
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 class DatabaseManagerScreen extends ConsumerStatefulWidget {
   const DatabaseManagerScreen({super.key});
@@ -163,6 +166,17 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
                 ],
               ),
             ),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
+              value: 'migrate_analytics',
+              child: Row(
+                children: [
+                  Icon(AppIcons.analytics),
+                  SizedBox(width: 8),
+                  Text('Migrate Analytics'), // Hardcoded for now (admin only)
+                ],
+              ),
+            ),
           ],
         ),
       ],
@@ -218,7 +232,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -335,8 +349,8 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
 
           TextButton.icon(
             onPressed: () => _confirmBulkDelete(context, l10n),
-            icon: const Icon(AppIcons.delete, size: 18, color: Colors.red),
-            label: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+            icon: Icon(AppIcons.delete, size: 18, color: context.colors.error),
+            label: Text(l10n.delete, style: TextStyle(color: context.colors.error)),
           ),
         ],
       ),
@@ -380,7 +394,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.search_off, size: 64),
+            const Icon(AppIcons.searchOff, size: 64),
             const SizedBox(height: 16),
             Text(l10n.noExercisesFound),
             const SizedBox(height: 8),
@@ -480,6 +494,9 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
       case 'refresh':
         ref.read(databaseManagerProvider.notifier).loadExercises(forceRefresh: true);
         break;
+      case 'migrate_analytics':
+        _showMigrationDialog(context, l10n);
+        break;
     }
   }
 
@@ -547,6 +564,236 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
         ],
       ),
     );
+  }
+
+  /// 📊 Show analytics migration dialog
+  ///
+  /// **Flow**:
+  /// 1. Show confirmation dialog with warning
+  /// 2. Execute migration via AnalyticsMigrationService
+  /// 3. Show loading dialog during migration
+  /// 4. Display results (success/error)
+  Future<void> _showMigrationDialog(BuildContext context, AppLocalizations l10n) async {
+    // Get current user ID
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) {
+      if (context.mounted) {
+        SnackBarService.showError(
+          context,
+          'User not authenticated', // Admin screen - hardcoded OK
+        );
+      }
+      return;
+    }
+
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(AppIcons.analytics),
+            SizedBox(width: 8),
+            Text('Migrate Analytics'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'This will migrate all existing workouts to the analytics collection.',
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '📊 What this does:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8),
+                  Text('• Reads all completed workouts'),
+                  Text('• Extracts exercise sessions'),
+                  Text('• Updates analytics collection'),
+                  SizedBox(height: 12),
+                  Text(
+                    '✅ Safe: Can be run multiple times',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Start Migration'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    // Show loading dialog
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Migrating analytics...'),
+              SizedBox(height: 8),
+              Text(
+                'This may take a few seconds',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Execute migration
+    try {
+      final migrationService = ref.read(analyticsMigrationServiceProvider);
+      final result = await migrationService.migrateUserWorkouts(userId: userId);
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Handle result
+      result.fold(
+        // Error case
+        (failure) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Row(
+                  children: [
+                    Icon(AppIcons.error, color: context.colors.error),
+                    const SizedBox(width: 8),
+                    const Text('Migration Failed'),
+                  ],
+                ),
+                content: Text(
+                  'Error: ${failure.message}',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(l10n.ok),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+        // Success case
+        (stats) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Row(
+                  children: [
+                    Icon(AppIcons.checkCircle, color: context.colors.success),
+                    const SizedBox(width: 8),
+                    const Text('Migration Complete'),
+                  ],
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Successfully migrated workouts to analytics collection!',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('📊 Workouts processed: ${stats.totalWorkouts}'),
+                          Text('🏋️ Unique exercises: ${stats.totalExercises}'),
+                          Text('📈 Total sessions: ${stats.totalSessions}'),
+                          Text('💪 Total sets: ${stats.totalSets}'),
+                          if (stats.skippedExercises.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Text('⚠️ Skipped: ${stats.skippedExercises.length} exercises'),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(l10n.ok),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show error
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Row(
+              children: [
+                Icon(AppIcons.error, color: context.colors.error),
+                const SizedBox(width: 8),
+                const Text('Migration Error'),
+              ],
+            ),
+            content: Text(
+              'Unexpected error: $e',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.ok),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   void _showBulkEditDialog(BuildContext context, AppLocalizations l10n) {
@@ -715,7 +962,7 @@ class _DatabaseManagerScreenState extends ConsumerState<DatabaseManagerScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: context.colors.onSurface.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

@@ -11,9 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_patch.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PatchReviewCard extends StatefulWidget {
   const PatchReviewCard({
@@ -149,10 +150,12 @@ class _PatchReviewCardState extends State<PatchReviewCard>
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Icon(
-                          AppIcons.forward,
-                          size: 20,
-                          color: context.colors.onSurface.withValues(alpha: 0.5),
+                        child: SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.small,
+  color: context.colors.onSurface.withValues(alpha: 0.5,
+),
                         ),
                       ),
                       Expanded(
@@ -192,7 +195,11 @@ class _PatchReviewCardState extends State<PatchReviewCard>
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _handleRejectWithHaptic,
-                      icon: Icon(AppIcons.cancel, size: 18),
+                      icon: const SemanticIcon(
+  icon: AppIcons.cancel,
+  semanticLabel: 'Cancel',
+  size: AppIconSize.small,
+),
                       label: const Text('Reject'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.colors.error,
@@ -204,11 +211,15 @@ class _PatchReviewCardState extends State<PatchReviewCard>
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _handleApproveWithHaptic,
-                      icon: Icon(AppIcons.check, size: 18),
+                      icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.small,
+),
                       label: const Text('Approve'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.success,
-                        foregroundColor: Colors.white,
+                        foregroundColor: context.colors.surface,
                       ),
                     ),
                   ),
@@ -231,11 +242,12 @@ class _PatchReviewCardState extends State<PatchReviewCard>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      AppIcons.info,
-                      size: 16,
-                      color: context.colors.tertiary,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: context.colors.tertiary,
+),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(

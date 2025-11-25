@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/missing_exercise_request.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -49,7 +48,7 @@ class _MissingExercisesRequestsScreenState
   icon: AppIcons.refresh,
   semanticLabel: 'Refresh',
 ),
-            tooltip: l10n.refresh,
+            tooltip: context.l10n.refresh,
           ),
         ],
       ),
@@ -85,7 +84,7 @@ class _MissingExercisesRequestsScreenState
             'In Attesa',
             RequestStatus.pending,
             counts[RequestStatus.pending] ?? 0,
-            Colors.orange,
+            context.colors.warning,
           ),
           const SizedBox(width: 8),
           _buildFilterChip(
@@ -348,7 +347,7 @@ class _MissingExercisesRequestsScreenState
             onPressed: () {
               ref.invalidate(requestsByStatusProvider);
             },
-            child: Text(l10n.retry),
+            child: Text(context.l10n.retry),
           ),
         ],
       ),
@@ -535,7 +534,7 @@ class _MissingExercisesRequestsScreenState
   Color _getStatusColor(RequestStatus status) {
     switch (status) {
       case RequestStatus.pending:
-        return Colors.orange;
+        return context.colors.warning;
       case RequestStatus.approved:
         return context.colors.success;
       case RequestStatus.rejected:

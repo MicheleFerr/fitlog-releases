@@ -14,9 +14,6 @@ import 'package:gymbro_flutter_new/features/admin/presentation/providers/communi
 import 'package:gymbro_flutter_new/features/admin/presentation/widgets/correction_review_card.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CommunityCorrectionsScreen extends ConsumerWidget {
   const CommunityCorrectionsScreen({super.key});
@@ -31,7 +28,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         title: Row(
           children: [
             Icon(
-              AppIcons.rateReview,
+              Icons.rate_review,
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
@@ -41,10 +38,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () => ref.refresh(communityCorrectionsProvider),
-            icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+            icon: const Icon(Icons.refresh),
             tooltip: l10n.refresh,
           ),
         ],
@@ -105,8 +99,8 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.pendingCorrections,
-                AppIcons.pending,
-                context.colors.secondary,
+                Icons.pending,
+                context.colors.warning,
                 pendingCorrections.length,
               ),
               const SizedBox(height: 12),
@@ -124,7 +118,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
               _buildSectionHeader(
                 context,
                 l10n.reviewedCorrections,
-                AppIcons.checkCircle,
+                Icons.check_circle,
                 context.colors.success,
                 reviewedCorrections.length,
               ),
@@ -153,8 +147,8 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.pending,
             value: pending.toString(),
-            icon: AppIcons.pending,
-            color: context.colors.secondary,
+            icon: Icons.pending,
+            color: context.colors.warning,
           ),
         ),
         const SizedBox(width: 12),
@@ -162,7 +156,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.approved,
             value: approved.toString(),
-            icon: AppIcons.checkCircle,
+            icon: Icons.check_circle,
             color: context.colors.success,
           ),
         ),
@@ -171,7 +165,7 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
           child: _StatCard(
             title: l10n.rejected,
             value: rejected.toString(),
-            icon: AppIcons.cancel,
+            icon: Icons.cancel,
             color: context.colors.error,
           ),
         ),
@@ -234,12 +228,10 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: Theme.of(context,
-).colorScheme.error,
+          Icon(
+            Icons.error,
+            size: 64,
+            color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(height: 16),
           Text(
@@ -262,12 +254,10 @@ class CommunityCorrectionsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.inbox,
-  semanticLabel: 'Inbox',
-  size: AppIconSize.medium,
-  color: Theme.of(context,
-).colorScheme.onSurfaceVariant,
+          Icon(
+            Icons.inbox,
+            size: 64,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 16),
           Text(

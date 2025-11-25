@@ -12,13 +12,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Provider per le attività recenti
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final recentActivityProvider = FutureProvider.autoDispose<List<AdminActivity>>((ref) async {
+final recentActivityProvider = FutureProvider<List<AdminActivity>>((ref) async {
   try {
     final firestore = FirebaseFirestore.instance;
 
@@ -103,10 +99,10 @@ class AdminRecentActivity extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.history,
+                  Icons.history,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.recentActivity,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -116,7 +112,7 @@ class AdminRecentActivity extends ConsumerWidget {
                 const Spacer(),
                 TextButton.icon(
                   onPressed: () => ref.refresh(recentActivityProvider),
-                  icon: const Icon(AppIcons.refresh, size: 16),
+                  icon: const Icon(Icons.refresh, size: 16),
                   label: Text(l10n.refresh),
                 ),
               ],
@@ -166,7 +162,7 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Column(
         children: [
           const CircularProgressIndicator(),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(l10n.loadingActivity),
         ],
       ),
@@ -183,10 +179,10 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            AppIcons.error,
+            Icons.error,
             color: Theme.of(context).colorScheme.error,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,18 +214,18 @@ class AdminRecentActivity extends ConsumerWidget {
       child: Column(
         children: [
           Icon(
-            AppIcons.inbox,
+            Icons.inbox,
             size: 48,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             l10n.noRecentActivity,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             l10n.noRecentActivityDescription,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -309,7 +305,7 @@ class _ActivityItem extends StatelessWidget {
               size: isCompact ? 16 : 20,
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,7 +318,7 @@ class _ActivityItem extends StatelessWidget {
                   maxLines: isCompact ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   '${activity.userName} • $timeAgo',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -330,7 +326,7 @@ class _ActivityItem extends StatelessWidget {
                   ),
                 ),
                 if (!isCompact && activity.description != null) ...[
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     activity.description!,
                     style: Theme.of(context).textTheme.bodySmall,
@@ -348,19 +344,19 @@ class _ActivityItem extends StatelessWidget {
 
   Color _getStatusColor(BuildContext context, String status) {
     return switch (status) {
-      'pending' => context.colors.secondary,
+      'pending' => context.colors.warning,
       'approved' => context.colors.success,
       'rejected' => context.colors.error,
-      _ => Theme.of(context).colorScheme.primary,
+      _ => context.colors.primary,
     };
   }
 
   IconData _getStatusIcon(String status) {
     return switch (status) {
-      'pending' => AppIcons.pending,
-      'approved' => AppIcons.checkCircle,
-      'rejected' => AppIcons.cancel,
-      _ => AppIcons.info,
+      'pending' => Icons.pending,
+      'approved' => Icons.check_circle,
+      'rejected' => Icons.cancel,
+      _ => Icons.info,
     };
   }
 

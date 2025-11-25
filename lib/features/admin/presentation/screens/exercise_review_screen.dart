@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/exercise_review_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Admin screen for viewing monthly exercise review reports
 class ExerciseReviewScreen extends ConsumerWidget {
@@ -38,12 +35,11 @@ class ExerciseReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: context.colors.error,
+          ),
           const SizedBox(height: 16),
           Text(
             'Errore nel caricamento del report',
@@ -71,12 +67,11 @@ class ExerciseReviewScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.assignmentOutlined,
-  semanticLabel: 'Assignment outlined',
-  size: AppIconSize.medium,
-  color: context.colors.onSurfaceVariant,
-),
+          Icon(
+            Icons.assignment_outlined,
+            size: 64,
+            color: context.colors.onSurfaceVariant,
+          ),
           const SizedBox(height: 16),
           Text(
             'Nessun report disponibile',
@@ -194,15 +189,15 @@ class ExerciseReviewScreen extends ConsumerWidget {
           children: [
             _buildStatCard(
               context,
-              icon: AppIcons.scheduleOutlined,
+              icon: Icons.schedule_outlined,
               label: 'Esercizi Obsoleti',
               value: staleCount.toString(),
-              color: context.colors.secondary,
+              color: context.colors.warning,
               subtitle: '>90 giorni',
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.flagOutlined,
+              icon: Icons.flag_outlined,
               label: 'Esercizi Flaggati',
               value: flaggedCount.toString(),
               color: context.colors.warning,
@@ -210,7 +205,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.commentOutlined,
+              icon: Icons.comment_outlined,
               label: 'Feedback Totali',
               value: totalFeedback.toString(),
               color: context.colors.primary,
@@ -218,7 +213,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
             ),
             _buildStatCard(
               context,
-              icon: AppIcons.error,
+              icon: Icons.error_outline,
               label: 'Problemi Critici',
               value: criticalCount.toString(),
               color: context.colors.error,
@@ -354,8 +349,8 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              AppIcons.scheduleOutlined,
-              color: context.colors.secondary,
+              Icons.schedule_outlined,
+              color: context.colors.warning,
               size: 20,
             ),
           ],
@@ -377,8 +372,8 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     'Modificato ${exercise['lastModifiedDaysAgo'] ?? 0} giorni fa',
-                icon: AppIcons.schedule,
-                color: context.colors.secondary,
+                icon: Icons.schedule,
+                color: context.colors.warning,
               );
             },
           ),
@@ -409,7 +404,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
               ),
             ),
             Icon(
-              AppIcons.flagOutlined,
+              Icons.flag_outlined,
               color: context.colors.warning,
               size: 20,
             ),
@@ -435,7 +430,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
                 exerciseName: exercise['nome'] as String? ?? 'Unknown',
                 subtitle:
                     '$feedbackCount feedback${criticalCount > 0 ? ' ($criticalCount critici)' : ''}',
-                icon: AppIcons.flag,
+                icon: Icons.flag,
                 color: criticalCount > 0 ? context.colors.error : context.colors.warning,
               );
             },
@@ -458,7 +453,7 @@ class ExerciseReviewScreen extends ConsumerWidget {
       title: Text(exerciseName),
       subtitle: Text(subtitle),
       trailing: Icon(
-        AppIcons.chevronRight,
+        Icons.chevron_right,
         color: context.colors.onSurfaceVariant,
       ),
     );

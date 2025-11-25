@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/firebase_init_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FirebaseInitWidget extends ConsumerWidget {
   const FirebaseInitWidget({super.key});
@@ -37,7 +38,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                   AppIcons.cloudUpload,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.firebaseInitialization,
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -216,21 +217,30 @@ class FirebaseInitWidget extends ConsumerWidget {
             // Inizializzazione completa
             ElevatedButton.icon(
               onPressed: isLoading ? null : () => _showInitializeDialog(context, l10n, ref),
-              icon: const Icon(AppIcons.cloudUpload),
+              icon: const SemanticIcon(
+  icon: AppIcons.cloudUpload,
+  semanticLabel: 'Cloud upload',
+),
               label: Text(l10n.initializeExercises),
             ),
 
             // Verifica integrità
             OutlinedButton.icon(
               onPressed: isLoading ? null : () => ref.read(firebaseInitStateProvider.notifier).verifyDataIntegrity(),
-              icon: Icon(AppIcons.verified),
+              icon: const SemanticIcon(
+  icon: AppIcons.verified,
+  semanticLabel: 'Verified',
+),
               label: Text(l10n.verifyIntegrity),
             ),
 
             // Fix dati mancanti
             ElevatedButton.icon(
               onPressed: isLoading ? null : () => ref.read(firebaseInitStateProvider.notifier).fixMissingData(),
-              icon: Icon(AppIcons.buildCircle),
+              icon: const SemanticIcon(
+  icon: AppIcons.buildCircle,
+  semanticLabel: 'Build circle',
+),
               label: Text(l10n.fixMissingData),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -242,7 +252,10 @@ class FirebaseInitWidget extends ConsumerWidget {
             if (initState is! FirebaseInitIdle)
               TextButton.icon(
                 onPressed: () => ref.read(firebaseInitStateProvider.notifier).resetState(),
-                icon: const Icon(AppIcons.refresh),
+                icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
                 label: Text(l10n.resetStatus),
               ),
           ],
@@ -264,12 +277,12 @@ class FirebaseInitWidget extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(l10n.operationInProgress),
               ],
             ),
@@ -288,7 +301,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                       AppIcons.complete,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       l10n.operationSuccess,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -297,13 +310,13 @@ class FirebaseInitWidget extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   result.summary,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 if (result.details != null && result.details!.isNotEmpty) ...[
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   ExpansionTile(
                     title: Text(l10n.details),
                     children: [
@@ -341,7 +354,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                       AppIcons.error,
                       color: Theme.of(context).colorScheme.error,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       l10n.operationError,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -350,7 +363,7 @@ class FirebaseInitWidget extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -399,7 +412,7 @@ class _StatusTile extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, size: 20, color: iconColor),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

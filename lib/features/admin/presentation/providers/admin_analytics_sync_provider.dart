@@ -14,10 +14,10 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
 
 /// Admin analytics sync state
 class AdminAnalyticsSyncState {
@@ -290,10 +290,12 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
     }
   }
   
-  /// Check if user is admin
+  /// Check if user is admin (via custom claims)
+  ///
+  /// 🔐 SECURITY: Uses Firebase Custom Claims (server-validated)
+  /// REPLACED: user?.email?.contains('admin') (insecure)
   bool get isAdmin {
-    final user = _ref.read(currentUserProvider).value;
-    return user?.email?.contains('admin') ?? false;
+    return _ref.read(isAdminProvider);
   }
   
   /// Trigger reverse sync for all users (admin only)
@@ -990,11 +992,9 @@ final adminAnalyticsSyncProvider =
   return AdminAnalyticsSyncNotifier(ref);
 });
 
-/// Check if current user is admin
-final isAdminProvider = Provider<bool>((ref) {
-  final user = ref.watch(currentUserProvider).value;
-  return user?.email?.contains('admin') ?? false;
-});
+/// 🔐 SECURITY: Check if current user is admin
+/// Import from core/auth/admin_status_provider.dart (global provider using Custom Claims)
+/// REMOVED: Local duplicate provider with insecure email check
 
 /// Get sync progress
 final syncProgressProvider = Provider<SyncProgress?>((ref) {

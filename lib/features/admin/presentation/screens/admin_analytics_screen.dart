@@ -12,11 +12,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/providers/admin_analytics_sync_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
 
 class AdminAnalyticsScreen extends ConsumerStatefulWidget {
   const AdminAnalyticsScreen({super.key});
@@ -433,7 +433,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
               title: 'Avg Duration',
               value: _calculateAvgDuration(state),
               subtitle: 'Per workout',
-              color: Colors.orange,
+              color: context.colors.warning,
             ),
           ],
         ),
@@ -919,8 +919,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
             theme.colorScheme.primary,
             theme.colorScheme.secondary,
             theme.colorScheme.tertiary,
-            Colors.orange,
-            Colors.purple,
+            context.colors.warning,
+            context.colors.tertiary,
           ];
           
           return PieChartSectionData(
@@ -1126,7 +1126,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen>
       case 'premium':
         return theme.colorScheme.primary;
       case 'pro':
-        return Colors.purple;
+        return context.colors.tertiary;
       default:
         return theme.colorScheme.outline;
     }
