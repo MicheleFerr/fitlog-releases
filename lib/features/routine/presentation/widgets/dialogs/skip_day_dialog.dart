@@ -138,17 +138,17 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.1),
+                      color: context.colors.warning.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.orange.withValues(alpha: 0.3),
+                        color: context.colors.warning.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.warning_amber_rounded,
-                          color: Colors.orange,
+                          color: context.colors.warning,
                           size: 24,
                         ),
                         const SizedBox(width: 12),
@@ -156,7 +156,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                           child: Text(
                             'You have ${widget.routine.skipTracker.currentSkipStreak} consecutive skip(s). Consider recovering them to maintain consistency.',
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: Colors.orange[800],
+                              color: context.colors.warning,
                             ),
                           ),
                         ),
@@ -395,14 +395,14 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           Icon(
             isNegative ? Icons.arrow_downward : Icons.arrow_upward,
             size: 14,
-            color: isNegative ? context.colors.error : Colors.green,
+            color: isNegative ? context.colors.error : context.colors.success,
           ),
           const SizedBox(width: 4),
           Text(
             change,
             style: context.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isNegative ? context.colors.error : Colors.green,
+              color: isNegative ? context.colors.error : context.colors.success,
             ),
           ),
         ],

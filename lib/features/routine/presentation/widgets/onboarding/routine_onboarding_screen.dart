@@ -331,7 +331,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.track_changes,
             title: context.l10n.routineOnboardingBenefit1Title,
             description: context.l10n.routineOnboardingBenefit1Desc,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
           const SizedBox(height: 16),
           _buildBenefitCard(
@@ -339,7 +339,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.insights,
             title: context.l10n.routineOnboardingBenefit2Title,
             description: context.l10n.routineOnboardingBenefit2Desc,
-            color: Colors.green,
+            color: context.colors.success,
           ),
           const SizedBox(height: 16),
           _buildBenefitCard(
@@ -347,7 +347,7 @@ class _RoutineOnboardingScreenState
             icon: Icons.auto_awesome,
             title: context.l10n.routineOnboardingBenefit3Title,
             description: context.l10n.routineOnboardingBenefit3Desc,
-            color: Colors.orange,
+            color: context.colors.warning,
           ),
           const SizedBox(height: 32),
 

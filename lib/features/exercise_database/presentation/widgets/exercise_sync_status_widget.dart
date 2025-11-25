@@ -238,8 +238,8 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.of(context).updateAvailable,
-                    style: const TextStyle(
-                      color: Colors.orange,
+                    style: TextStyle(
+                      color: context.colors.warning,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),

@@ -342,7 +342,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       '(Rest day)',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? Colors.white.withValues(alpha: 0.8)
+                            ? context.colors.surface.withValues(alpha: 0.8)
                             : context.colors.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
@@ -363,7 +363,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
     Color? backgroundColor;
     if (isRestDay) {
-      backgroundColor = Colors.green.withValues(alpha: 0.2);
+      backgroundColor = context.colors.success.withValues(alpha: 0.2);
     } else if (isOccupied) {
       backgroundColor = context.colors.error.withValues(alpha: 0.1);
     }
@@ -391,10 +391,10 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
+        color: context.colors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.blue.withValues(alpha: 0.3),
+          color: context.colors.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -402,9 +402,9 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.check_circle_outline,
-                color: Colors.blue,
+                color: context.colors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -459,17 +459,17 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           ),
         ),
         if (isPositive)
-          const Icon(
+          Icon(
             Icons.arrow_upward,
             size: 14,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
         const SizedBox(width: 4),
         Text(
           value,
           style: context.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.blue,
+            color: context.colors.primary,
           ),
         ),
       ],
