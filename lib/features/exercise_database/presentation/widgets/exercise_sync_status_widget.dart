@@ -95,7 +95,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         break;
       case SyncStatus.success:
         text = AppLocalizations.of(context).syncSuccess;
-        color = Colors.green;
+        color = context.colors.success;
         icon = Icons.check_circle;
         break;
       case SyncStatus.error:
@@ -224,16 +224,16 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: context.colors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.new_releases,
                     size: 16,
-                    color: Colors.orange,
+                    color: context.colors.warning,
                   ),
                   const SizedBox(width: 4),
                   Text(

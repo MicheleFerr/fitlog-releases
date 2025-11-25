@@ -83,12 +83,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withValues(alpha: 0.2),
+                      color: context.colors.primary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.refresh,
-                      color: Colors.blue,
+                      color: context.colors.primary,
                       size: 24,
                     ),
                   ),
@@ -123,17 +123,17 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
+                  color: context.colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.blue.withValues(alpha: 0.3),
+                    color: context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.info_outline,
-                      color: Colors.blue,
+                      color: context.colors.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -185,8 +185,8 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       color: context.colors.primary.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
                     ),
-                    selectedDecoration: const BoxDecoration(
-                      color: Colors.blue,
+                    selectedDecoration: BoxDecoration(
+                      color: context.colors.primary,
                       shape: BoxShape.circle,
                     ),
                     outsideDaysVisible: false,
@@ -262,8 +262,8 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                         ? null
                         : _confirmRecovery,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: context.colors.primary,
+                      foregroundColor: context.colors.surface,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,
@@ -312,12 +312,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.blue
+                      ? context.colors.primary
                       : context.colors.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? Colors.blue
+                        ? context.colors.primary
                         : context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
@@ -327,13 +327,13 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                     Icon(
                       Icons.calendar_today,
                       size: 16,
-                      color: isSelected ? Colors.white : context.colors.primary,
+                      color: isSelected ? context.colors.surface : context.colors.primary,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       _formatDateShort(date),
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: isSelected ? Colors.white : context.colors.onSurface,
+                        color: isSelected ? context.colors.surface : context.colors.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

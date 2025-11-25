@@ -1289,7 +1289,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     if (matchScore >= 0.85) {
       matchColor = context.colors.success;
     } else if (matchScore >= 0.70) {
-      matchColor = Colors.orange;
+      matchColor = context.colors.warning;
     } else {
       matchColor = context.colors.surfaceContainerHighest;
     }
@@ -1369,10 +1369,10 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withValues(alpha: 0.2),
+                        color: context.colors.warning.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.amber.withValues(alpha: 0.4),
+                          color: context.colors.warning.withValues(alpha: 0.4),
                           width: 1,
                         ),
                       ),
@@ -1608,7 +1608,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       case 'principiante':
         return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.warning;
       case 'avanzato':
         return context.colors.error;
       default:

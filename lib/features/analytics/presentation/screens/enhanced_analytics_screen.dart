@@ -275,7 +275,9 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   }
 
   Widget _buildVolumeTab(BuildContext context, AppLocalizations localizations) {
-    final analyticsState = ref.watch(analyticsProvider);
+    // ⚡ OPTIMIZATION: Select only needed fields to reduce rebuilds
+    final activities = ref.watch(analyticsProvider.select((state) => state.activities));
+    final volumeProgression = ref.watch(analyticsProvider.select((state) => state.volumeProgression));
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -286,7 +288,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           // Volume Heatmap
           /*
           VolumeHeatmap(
-            activities: analyticsState.activities,
+            activities: activities,
             onDayTapped: (date) {
               // Handle day tap to show detailed view
               _showDayDetails(context, date);
@@ -296,18 +298,20 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           const SizedBox(height: 16),
 
           // Volume Progression
-          _buildVolumeProgression(context, localizations, analyticsState),
+          _buildVolumeProgression(context, localizations, activities, volumeProgression),
           const SizedBox(height: 16),
 
           // Volume Stats
-          _buildVolumeStats(context, localizations, analyticsState),
+          _buildVolumeStats(context, localizations, activities, volumeProgression),
         ],
       ),
     );
   }
 
   Widget _buildInsightsTab(BuildContext context, AppLocalizations localizations) {
-    final analyticsState = ref.watch(analyticsProvider);
+    // ⚡ OPTIMIZATION: Select only needed fields to reduce rebuilds
+    final insights = ref.watch(analyticsProvider.select((state) => state.insights));
+    final exerciseTrends = ref.watch(analyticsProvider.select((state) => state.exerciseTrends));
     final recommendations = ref.watch(workoutRecommendationsProvider);
 
     return SingleChildScrollView(
@@ -316,10 +320,10 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Insights Carousel
-          if (analyticsState.insights.isNotEmpty) ...[
+          if (insights.isNotEmpty) ...[
             _buildSectionTitle(context, localizations.trainingInsights),
             const SizedBox(height: 8),
-            InsightsCarousel(insights: analyticsState.insights),
+            InsightsCarousel(insights: insights),
             const SizedBox(height: 16),
           ],
 
@@ -334,7 +338,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           // Exercise Trends
           _buildSectionTitle(context, localizations.exerciseTrends),
           const SizedBox(height: 8),
-          _buildExerciseTrends(context, analyticsState),
+          _buildExerciseTrends(context, exerciseTrends),
         ],
       ),
     );
@@ -538,7 +542,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildVolumeProgression(
     BuildContext context,
     AppLocalizations localizations,
-    AnalyticsState state,
+    List activities,
+    VolumeProgression volumeProgression,
   ) {
     return Card(
       child: Padding(
@@ -559,14 +564,14 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 _buildProgressionItem(
                   context,
                   localizations.weekly,
-                  state.volumeProgression.weeklyChange,
-                  state.volumeProgression.currentWeekVolume,
+                  volumeProgression.weeklyChange,
+                  volumeProgression.currentWeekVolume,
                 ),
                 _buildProgressionItem(
                   context,
                   localizations.monthly,
-                  state.volumeProgression.monthlyChange,
-                  state.volumeProgression.currentMonthVolume,
+                  volumeProgression.monthlyChange,
+                  volumeProgression.currentMonthVolume,
                 ),
               ],
             ),
@@ -619,7 +624,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildVolumeStats(
     BuildContext context,
     AppLocalizations localizations,
-    AnalyticsState state,
+    List activities,
+    VolumeProgression volumeProgression,
   ) {
     final volumeStats = ref.read(analyticsProvider.notifier)
         .getVolumeByPeriod(AnalysisPeriod.month);
@@ -653,13 +659,16 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
     );
   }
 
-  Widget _buildExerciseTrends(BuildContext context, AnalyticsState state) {
+  Widget _buildExerciseTrends(BuildContext context, Map exerciseTrends) {
+    // Need to get activities for exercise names
+    final activities = ref.watch(analyticsProvider.select((state) => state.activities));
+
     return Column(
-      children: state.exerciseTrends.entries.map((entry) {
+      children: exerciseTrends.entries.map((entry) {
         final trend = entry.value;
-        final exercise = state.activities
+        final exercise = activities
             .firstWhere((a) => a.exerciseId == entry.key,
-                orElse: () => state.activities.first)
+                orElse: () => activities.first)
             .exerciseName;
         
         return Card(
