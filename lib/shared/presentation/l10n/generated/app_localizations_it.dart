@@ -19,9 +19,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.';
 
   @override
-  String onboardingWelcomeTitle(String name) {
-    return 'Benvenuto, $name!';
-  }
+  String get onboardingWelcomeTitle => 'Benvenuto nel Tuo Hub di Allenamento';
 
   @override
   String get onboardingWelcomeDescription =>
@@ -16940,6 +16938,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'Gestisci promemoria allenamenti, streak e altro';
 
   @override
+  String get healthSyncSettingsDesc =>
+      'Sincronizza allenamenti e misurazioni corporee con Apple Health / Health Connect';
+
+  @override
   String get frequencyCaps => 'Limiti di Frequenza';
 
   @override
@@ -19284,4 +19286,436 @@ class AppLocalizationsIt extends AppLocalizations {
   String healthSyncPlatformConnected(String platform) {
     return 'Connesso a $platform';
   }
+
+  @override
+  String get bodyMeasurementsTitle => 'Misurazioni Corporee';
+
+  @override
+  String get bodyMeasurementsConsentTitle => 'Privacy e Consenso Dati';
+
+  @override
+  String get bodyMeasurementsConsentDescription =>
+      'Abbiamo bisogno del tuo consenso per raccogliere e archiviare le tue misurazioni corporee. I tuoi dati sono criptati e archiviati in modo sicuro.';
+
+  @override
+  String get bodyMeasurementsConsentAgree => 'Accetto la raccolta dati';
+
+  @override
+  String get bodyMeasurementsConsentPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get bodyMeasurementsConsentLearnMore => 'Scopri di più';
+
+  @override
+  String get bodyMeasurementsConsentSelectMetrics =>
+      'Seleziona i tipi di dati da tracciare:';
+
+  @override
+  String get bodyMeasurementsGroupEssential => 'Metriche Essenziali';
+
+  @override
+  String get bodyMeasurementsGroupEssentialDesc =>
+      'Peso, Massa Grassa %, Altezza, Massa Magra, IMC, MB';
+
+  @override
+  String get bodyMeasurementsGroupMeasurements => 'Misurazioni Corporee';
+
+  @override
+  String get bodyMeasurementsGroupMeasurementsDesc =>
+      '13 circonferenze (Collo, Petto, Vita, Bicipiti, Cosce, ecc.)';
+
+  @override
+  String get bodyMeasurementsGroupVitals => 'Metriche Vitali';
+
+  @override
+  String get bodyMeasurementsGroupVitalsDesc =>
+      'Temperatura Corporea, Massa Acqua, Massa Ossea';
+
+  @override
+  String get bodyMeasurementsMetricWeight => 'Peso';
+
+  @override
+  String get bodyMeasurementsMetricHeight => 'Altezza';
+
+  @override
+  String get bodyMeasurementsMetricBodyFat => 'Massa Grassa %';
+
+  @override
+  String get bodyMeasurementsMetricMuscleMass => 'Massa Muscolare';
+
+  @override
+  String get bodyMeasurementsMetricBMI => 'IMC';
+
+  @override
+  String get bodyMeasurementsMetricWaistCircumference => 'Circonferenza Vita';
+
+  @override
+  String get bodyMeasurementsMetricHipCircumference => 'Circonferenza Fianchi';
+
+  @override
+  String get bodyMeasurementsMetricChestCircumference => 'Circonferenza Torace';
+
+  @override
+  String get bodyMeasurementsMetricArmCircumference => 'Circonferenza Braccio';
+
+  @override
+  String get bodyMeasurementsMetricThighCircumference => 'Circonferenza Coscia';
+
+  @override
+  String get bodyMeasurementsMetricCalfCircumference =>
+      'Circonferenza Polpaccio';
+
+  @override
+  String get bodyMeasurementsMetricNeckCircumference => 'Circonferenza Collo';
+
+  @override
+  String get bodyMeasurementsMetricShoulderWidth => 'Larghezza Spalle';
+
+  @override
+  String get bodyMeasurementsUnitKg => 'kg';
+
+  @override
+  String get bodyMeasurementsUnitLb => 'lb';
+
+  @override
+  String get bodyMeasurementsUnitCm => 'cm';
+
+  @override
+  String get bodyMeasurementsUnitInch => 'in';
+
+  @override
+  String get bodyMeasurementsUnitPercent => '%';
+
+  @override
+  String get bodyMeasurementsInputTitle => 'Aggiungi Misurazione';
+
+  @override
+  String get bodyMeasurementsInputSelectMetric => 'Seleziona tipo di metrica';
+
+  @override
+  String get bodyMeasurementsInputValue => 'Valore';
+
+  @override
+  String get bodyMeasurementsInputDate => 'Data';
+
+  @override
+  String get bodyMeasurementsInputTime => 'Ora';
+
+  @override
+  String get bodyMeasurementsInputNotes => 'Note (opzionale)';
+
+  @override
+  String get bodyMeasurementsInputSave => 'Salva';
+
+  @override
+  String get bodyMeasurementsInputCancel => 'Annulla';
+
+  @override
+  String get bodyMeasurementsValidationRequired =>
+      'Questo campo è obbligatorio';
+
+  @override
+  String get bodyMeasurementsValidationInvalidNumber =>
+      'Inserisci un numero valido';
+
+  @override
+  String bodyMeasurementsValidationOutOfRange(double min, double max) {
+    return 'Il valore deve essere tra $min e $max';
+  }
+
+  @override
+  String get bodyMeasurementsValidationInvalid => 'Valore non valido';
+
+  @override
+  String bodyMeasurementsValidationOutlierWarning(String typicalRange) {
+    return 'Valore insolito (intervallo tipico: $typicalRange). Verifica per favore.';
+  }
+
+  @override
+  String get bodyMeasurementsInputEditTitle => 'Modifica Misurazione';
+
+  @override
+  String get bodyMeasurementsInputDescription =>
+      'Compila le tue misurazioni corporee. Tutti i campi sono opzionali.';
+
+  @override
+  String get bodyMeasurementsInputSubmit => 'Invia';
+
+  @override
+  String get bodyMeasurementsDraftSaved => 'Bozza salvata localmente';
+
+  @override
+  String get bodyMeasurementsSaveSuccess => 'Misurazioni salvate con successo';
+
+  @override
+  String get bodyMeasurementsMetricLeanMass => 'Massa Magra';
+
+  @override
+  String get bodyMeasurementsMetricBMR => 'MB (Metabolismo Basale)';
+
+  @override
+  String get bodyMeasurementsMetricShoulderCircumference =>
+      'Circonferenza Spalle';
+
+  @override
+  String get bodyMeasurementsMetricAbdomenCircumference =>
+      'Circonferenza Addome';
+
+  @override
+  String get bodyMeasurementsMetricBicepLeftCircumference =>
+      'Circonferenza Bicipite Sinistro';
+
+  @override
+  String get bodyMeasurementsMetricBicepRightCircumference =>
+      'Circonferenza Bicipite Destro';
+
+  @override
+  String get bodyMeasurementsMetricForearmLeftCircumference =>
+      'Circonferenza Avambraccio Sinistro';
+
+  @override
+  String get bodyMeasurementsMetricForearmRightCircumference =>
+      'Circonferenza Avambraccio Destro';
+
+  @override
+  String get bodyMeasurementsMetricThighLeftCircumference =>
+      'Circonferenza Coscia Sinistra';
+
+  @override
+  String get bodyMeasurementsMetricThighRightCircumference =>
+      'Circonferenza Coscia Destra';
+
+  @override
+  String get bodyMeasurementsMetricCalfLeftCircumference =>
+      'Circonferenza Polpaccio Sinistro';
+
+  @override
+  String get bodyMeasurementsMetricCalfRightCircumference =>
+      'Circonferenza Polpaccio Destro';
+
+  @override
+  String get bodyMeasurementsMetricBodyTemperature => 'Temperatura Corporea';
+
+  @override
+  String get bodyMeasurementsMetricWaterMass => 'Massa Acqua';
+
+  @override
+  String get bodyMeasurementsMetricBoneMass => 'Massa Ossea';
+
+  @override
+  String get bodyMeasurementsListTitle => 'Le Mie Misurazioni';
+
+  @override
+  String get bodyMeasurementsListFilterAll => 'Tutte';
+
+  @override
+  String get bodyMeasurementsListFilterByMetric => 'Filtra per metrica';
+
+  @override
+  String get bodyMeasurementsListEmpty =>
+      'Nessuna misurazione ancora. Aggiungi la tua prima misurazione per iniziare a tracciare i progressi.';
+
+  @override
+  String get bodyMeasurementsListEdit => 'Modifica';
+
+  @override
+  String get bodyMeasurementsListDelete => 'Elimina';
+
+  @override
+  String get bodyMeasurementsListDeleteConfirmTitle => 'Eliminare Misurazione?';
+
+  @override
+  String get bodyMeasurementsListDeleteConfirmMessage =>
+      'Questa misurazione sarà eliminata. Puoi ripristinarla entro 30 giorni dalle impostazioni privacy.';
+
+  @override
+  String get bodyMeasurementsListDeleteSuccess =>
+      'Misurazione eliminata con successo';
+
+  @override
+  String get bodyMeasurementsListDeleteError =>
+      'Impossibile eliminare la misurazione';
+
+  @override
+  String get bodyMeasurementsChartsTitle => 'Grafici Progressi';
+
+  @override
+  String get bodyMeasurementsChartsPeriodWeek => 'Settimana';
+
+  @override
+  String get bodyMeasurementsChartsPeriodMonth => 'Mese';
+
+  @override
+  String get bodyMeasurementsChartsPeriodYear => 'Anno';
+
+  @override
+  String get bodyMeasurementsChartsAxisDate => 'Data';
+
+  @override
+  String get bodyMeasurementsChartsAxisValue => 'Valore';
+
+  @override
+  String get bodyMeasurementsChartsEmpty =>
+      'Nessun dato da visualizzare. Aggiungi misurazioni per vedere i tuoi grafici di progresso.';
+
+  @override
+  String get bodyMeasurementsChartsSelectMetric =>
+      'Seleziona una metrica per visualizzare il suo progresso';
+
+  @override
+  String get bodyMeasurementsPrivacyTitle => 'Privacy e Dati';
+
+  @override
+  String get bodyMeasurementsPrivacyExportData => 'Esporta i Miei Dati';
+
+  @override
+  String get bodyMeasurementsPrivacyDeleteData => 'Elimina i Miei Dati';
+
+  @override
+  String get bodyMeasurementsPrivacyViewConsent => 'Visualizza Consenso';
+
+  @override
+  String get bodyMeasurementsPrivacyManageMetrics =>
+      'Gestisci Metriche Tracciate';
+
+  @override
+  String get bodyMeasurementsPrivacyDataEncrypted =>
+      'I tuoi dati sono criptati con AES-256-GCM';
+
+  @override
+  String get bodyMeasurementsPrivacyGDPRCompliant =>
+      'Archiviazione dati conforme al GDPR';
+
+  @override
+  String get bodyMeasurementsDeleteDialogTitle => 'Eliminare i Tuoi Dati?';
+
+  @override
+  String get bodyMeasurementsDeleteDialogWarning =>
+      'Questo eliminerà permanentemente tutte le tue misurazioni corporee. Questa azione non può essere annullata.';
+
+  @override
+  String get bodyMeasurementsDeleteDialogRetentionNotice =>
+      'I dati saranno conservati per 30 giorni per scopi di conformità, poi eliminati permanentemente.';
+
+  @override
+  String get bodyMeasurementsDeleteDialogConfirm => 'Sì, elimina i miei dati';
+
+  @override
+  String get bodyMeasurementsDeleteDialogCancel => 'Annulla';
+
+  @override
+  String bodyMeasurementsSyncStatusConnected(String platform) {
+    return 'Connesso a $platform';
+  }
+
+  @override
+  String get bodyMeasurementsSyncStatusSyncing => 'Sincronizzazione...';
+
+  @override
+  String bodyMeasurementsSyncStatusError(String error) {
+    return 'Errore sincronizzazione: $error';
+  }
+
+  @override
+  String get bodyMeasurementsSyncStatusDisconnected => 'Non connesso';
+
+  @override
+  String bodyMeasurementsSyncLastSync(String time) {
+    return 'Ultima sincronizzazione: $time';
+  }
+
+  @override
+  String get bodyMeasurementsSyncNow => 'Sincronizza Ora';
+
+  @override
+  String get bodyMeasurementsSyncNeverSynced => 'Mai sincronizzato';
+
+  @override
+  String bodyMeasurementsSyncMeasurementsRead(int count) {
+    return '$count misurazioni lette';
+  }
+
+  @override
+  String bodyMeasurementsSyncMeasurementsWritten(int count) {
+    return '$count misurazioni scritte';
+  }
+
+  @override
+  String get bodyMeasurementsSuccessSaved => 'Misurazione salvata con successo';
+
+  @override
+  String get bodyMeasurementsSuccessDeleted =>
+      'Misurazione eliminata con successo';
+
+  @override
+  String get bodyMeasurementsSuccessExported => 'Dati esportati con successo';
+
+  @override
+  String bodyMeasurementsErrorSave(String error) {
+    return 'Impossibile salvare la misurazione: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorLoad(String error) {
+    return 'Impossibile caricare le misurazioni: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorExport(String error) {
+    return 'Impossibile esportare i dati: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorDelete(String error) {
+    return 'Impossibile eliminare la misurazione: $error';
+  }
+
+  @override
+  String get bodyMeasurementsGDPRRightToAccess =>
+      'Hai il diritto di accedere ai tuoi dati personali';
+
+  @override
+  String get bodyMeasurementsGDPRRightToErasure =>
+      'Hai il diritto di eliminare i tuoi dati personali';
+
+  @override
+  String get bodyMeasurementsGDPRRightToPortability =>
+      'Hai il diritto di esportare i tuoi dati in formato leggibile da computer';
+
+  @override
+  String get bodyMeasurementsConflictResolutionTitle =>
+      'Conflitto Sincronizzazione';
+
+  @override
+  String get bodyMeasurementsConflictResolutionDescription =>
+      'Abbiamo trovato versioni diverse di questa misurazione sul tuo dispositivo e nel cloud.';
+
+  @override
+  String get bodyMeasurementsConflictResolutionKeepDevice =>
+      'Mantieni versione dispositivo';
+
+  @override
+  String get bodyMeasurementsConflictResolutionKeepCloud =>
+      'Mantieni versione cloud';
+
+  @override
+  String get bodyMeasurementsConflictResolutionMerge => 'Unisci entrambe';
+
+  @override
+  String get templateType => 'Tipo';
+
+  @override
+  String get templateTypeUpper => 'Upper Body';
+
+  @override
+  String get templateTypeLower => 'Lower Body';
+
+  @override
+  String get templateTypeFullBody => 'Full Body';
+
+  @override
+  String get advancedOptions => 'Opzioni avanzate';
+
+  @override
+  String get createTemplateButton => 'Crea Template';
 }

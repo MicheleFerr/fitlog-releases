@@ -3,7 +3,7 @@
   "appTitle": "FitLog Pro",
   "welcome": "Pronto per allenarti?",
   "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
-  "onboardingWelcomeTitle": "Benvenuto, {name}!",
+  "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
   "onboardingWelcomeDescription": "Traccia i tuoi progressi, raggiungi i tuoi obiettivi con il tracker di allenamenti più completo",
   "onboardingSkip": "Salta",
   "onboardingBack": "Indietro",
@@ -9540,6 +9540,10 @@
   "@notificationSettingsDesc": {
     "description": "Descrizione voce menu impostazioni notifiche"
   },
+  "healthSyncSettingsDesc": "Sincronizza allenamenti e misurazioni corporee con Apple Health / Health Connect",
+  "@healthSyncSettingsDesc": {
+    "description": "Descrizione voce menu sincronizzazione salute"
+  },
   "frequencyCaps": "Limiti di Frequenza",
   "@frequencyCaps": {
     "description": "Titolo sezione limiti di frequenza"
@@ -10466,12 +10470,7 @@
     }
   },
   "@onboardingWelcomeTitle": {
-    "description": "Titolo benvenuto onboarding AI Coach",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
+    "description": "Titolo benvenuto onboarding"
   },
   "onboardingWelcomeSubtitle": "Il tuo coach fitness AI personale",
   "@onboardingWelcomeSubtitle": {
@@ -13187,5 +13186,571 @@
         "example": "Apple Health"
       }
     }
+  },
+  "bodyMeasurementsTitle": "Misurazioni Corporee",
+  "@bodyMeasurementsTitle": {
+    "description": "Titolo funzionalità misurazioni corporee"
+  },
+  "bodyMeasurementsConsentTitle": "Privacy e Consenso Dati",
+  "@bodyMeasurementsConsentTitle": {
+    "description": "Titolo dialogo consenso"
+  },
+  "bodyMeasurementsConsentDescription": "Abbiamo bisogno del tuo consenso per raccogliere e archiviare le tue misurazioni corporee. I tuoi dati sono criptati e archiviati in modo sicuro.",
+  "@bodyMeasurementsConsentDescription": {
+    "description": "Descrizione dialogo consenso"
+  },
+  "bodyMeasurementsConsentAgree": "Accetto la raccolta dati",
+  "@bodyMeasurementsConsentAgree": {
+    "description": "Pulsante accettazione consenso"
+  },
+  "bodyMeasurementsConsentPrivacyPolicy": "Privacy Policy",
+  "@bodyMeasurementsConsentPrivacyPolicy": {
+    "description": "Link privacy policy"
+  },
+  "bodyMeasurementsConsentLearnMore": "Scopri di più",
+  "@bodyMeasurementsConsentLearnMore": {
+    "description": "Pulsante scopri di più"
+  },
+  "bodyMeasurementsConsentSelectMetrics": "Seleziona i tipi di dati da tracciare:",
+  "@bodyMeasurementsConsentSelectMetrics": {
+    "description": "Istruzione selezione metriche"
+  },
+  "bodyMeasurementsGroupEssential": "Metriche Essenziali",
+  "@bodyMeasurementsGroupEssential": {
+    "description": "Etichetta gruppo metriche essenziali"
+  },
+  "bodyMeasurementsGroupEssentialDesc": "Peso, Massa Grassa %, Altezza, Massa Magra, IMC, MB",
+  "@bodyMeasurementsGroupEssentialDesc": {
+    "description": "Descrizione gruppo metriche essenziali"
+  },
+  "bodyMeasurementsGroupMeasurements": "Misurazioni Corporee",
+  "@bodyMeasurementsGroupMeasurements": {
+    "description": "Etichetta gruppo misurazioni corporee"
+  },
+  "bodyMeasurementsGroupMeasurementsDesc": "13 circonferenze (Collo, Petto, Vita, Bicipiti, Cosce, ecc.)",
+  "@bodyMeasurementsGroupMeasurementsDesc": {
+    "description": "Descrizione gruppo misurazioni corporee"
+  },
+  "bodyMeasurementsGroupVitals": "Metriche Vitali",
+  "@bodyMeasurementsGroupVitals": {
+    "description": "Etichetta gruppo metriche vitali"
+  },
+  "bodyMeasurementsGroupVitalsDesc": "Temperatura Corporea, Massa Acqua, Massa Ossea",
+  "@bodyMeasurementsGroupVitalsDesc": {
+    "description": "Descrizione gruppo metriche vitali"
+  },
+  "bodyMeasurementsMetricWeight": "Peso",
+  "@bodyMeasurementsMetricWeight": {
+    "description": "Etichetta metrica peso"
+  },
+  "bodyMeasurementsMetricHeight": "Altezza",
+  "@bodyMeasurementsMetricHeight": {
+    "description": "Etichetta metrica altezza"
+  },
+  "bodyMeasurementsMetricBodyFat": "Massa Grassa %",
+  "@bodyMeasurementsMetricBodyFat": {
+    "description": "Etichetta metrica percentuale massa grassa"
+  },
+  "bodyMeasurementsMetricMuscleMass": "Massa Muscolare",
+  "@bodyMeasurementsMetricMuscleMass": {
+    "description": "Etichetta metrica massa muscolare"
+  },
+  "bodyMeasurementsMetricBMI": "IMC",
+  "@bodyMeasurementsMetricBMI": {
+    "description": "Etichetta metrica IMC (Indice Massa Corporea)"
+  },
+  "bodyMeasurementsMetricWaistCircumference": "Circonferenza Vita",
+  "@bodyMeasurementsMetricWaistCircumference": {
+    "description": "Etichetta metrica circonferenza vita"
+  },
+  "bodyMeasurementsMetricHipCircumference": "Circonferenza Fianchi",
+  "@bodyMeasurementsMetricHipCircumference": {
+    "description": "Etichetta metrica circonferenza fianchi"
+  },
+  "bodyMeasurementsMetricChestCircumference": "Circonferenza Torace",
+  "@bodyMeasurementsMetricChestCircumference": {
+    "description": "Etichetta metrica circonferenza torace"
+  },
+  "bodyMeasurementsMetricArmCircumference": "Circonferenza Braccio",
+  "@bodyMeasurementsMetricArmCircumference": {
+    "description": "Etichetta metrica circonferenza braccio"
+  },
+  "bodyMeasurementsMetricThighCircumference": "Circonferenza Coscia",
+  "@bodyMeasurementsMetricThighCircumference": {
+    "description": "Etichetta metrica circonferenza coscia"
+  },
+  "bodyMeasurementsMetricCalfCircumference": "Circonferenza Polpaccio",
+  "@bodyMeasurementsMetricCalfCircumference": {
+    "description": "Etichetta metrica circonferenza polpaccio"
+  },
+  "bodyMeasurementsMetricNeckCircumference": "Circonferenza Collo",
+  "@bodyMeasurementsMetricNeckCircumference": {
+    "description": "Etichetta metrica circonferenza collo"
+  },
+  "bodyMeasurementsMetricShoulderWidth": "Larghezza Spalle",
+  "@bodyMeasurementsMetricShoulderWidth": {
+    "description": "Etichetta metrica larghezza spalle"
+  },
+  "bodyMeasurementsUnitKg": "kg",
+  "@bodyMeasurementsUnitKg": {
+    "description": "Unità chilogrammo"
+  },
+  "bodyMeasurementsUnitLb": "lb",
+  "@bodyMeasurementsUnitLb": {
+    "description": "Unità libbra"
+  },
+  "bodyMeasurementsUnitCm": "cm",
+  "@bodyMeasurementsUnitCm": {
+    "description": "Unità centimetro"
+  },
+  "bodyMeasurementsUnitInch": "in",
+  "@bodyMeasurementsUnitInch": {
+    "description": "Unità pollice"
+  },
+  "bodyMeasurementsUnitPercent": "%",
+  "@bodyMeasurementsUnitPercent": {
+    "description": "Unità percentuale"
+  },
+  "bodyMeasurementsInputTitle": "Aggiungi Misurazione",
+  "@bodyMeasurementsInputTitle": {
+    "description": "Titolo form inserimento misurazione"
+  },
+  "bodyMeasurementsInputSelectMetric": "Seleziona tipo di metrica",
+  "@bodyMeasurementsInputSelectMetric": {
+    "description": "Etichetta selettore tipo metrica"
+  },
+  "bodyMeasurementsInputValue": "Valore",
+  "@bodyMeasurementsInputValue": {
+    "description": "Etichetta campo valore"
+  },
+  "bodyMeasurementsInputDate": "Data",
+  "@bodyMeasurementsInputDate": {
+    "description": "Etichetta selettore data"
+  },
+  "bodyMeasurementsInputTime": "Ora",
+  "@bodyMeasurementsInputTime": {
+    "description": "Etichetta selettore ora"
+  },
+  "bodyMeasurementsInputNotes": "Note (opzionale)",
+  "@bodyMeasurementsInputNotes": {
+    "description": "Etichetta campo note"
+  },
+  "bodyMeasurementsInputSave": "Salva",
+  "@bodyMeasurementsInputSave": {
+    "description": "Pulsante salva"
+  },
+  "bodyMeasurementsInputCancel": "Annulla",
+  "@bodyMeasurementsInputCancel": {
+    "description": "Pulsante annulla"
+  },
+  "bodyMeasurementsValidationRequired": "Questo campo è obbligatorio",
+  "@bodyMeasurementsValidationRequired": {
+    "description": "Errore validazione campo obbligatorio"
+  },
+  "bodyMeasurementsValidationInvalidNumber": "Inserisci un numero valido",
+  "@bodyMeasurementsValidationInvalidNumber": {
+    "description": "Errore validazione numero non valido"
+  },
+  "bodyMeasurementsValidationOutOfRange": "Il valore deve essere tra {min} e {max}",
+  "@bodyMeasurementsValidationOutOfRange": {
+    "description": "Errore validazione fuori intervallo",
+    "placeholders": {
+      "min": {
+        "type": "double",
+        "example": "0"
+      },
+      "max": {
+        "type": "double",
+        "example": "300"
+      }
+    }
+  },
+  "bodyMeasurementsValidationInvalid": "Valore non valido",
+  "@bodyMeasurementsValidationInvalid": {
+    "description": "Errore validazione generico"
+  },
+  "bodyMeasurementsValidationOutlierWarning": "Valore insolito (intervallo tipico: {typicalRange}). Verifica per favore.",
+  "@bodyMeasurementsValidationOutlierWarning": {
+    "description": "Messaggio avviso valore anomalo",
+    "placeholders": {
+      "typicalRange": {
+        "type": "String",
+        "example": "50-100kg"
+      }
+    }
+  },
+  "bodyMeasurementsInputEditTitle": "Modifica Misurazione",
+  "@bodyMeasurementsInputEditTitle": {
+    "description": "Titolo modulo modifica misurazione"
+  },
+  "bodyMeasurementsInputDescription": "Compila le tue misurazioni corporee. Tutti i campi sono opzionali.",
+  "@bodyMeasurementsInputDescription": {
+    "description": "Testo descrizione modulo"
+  },
+  "bodyMeasurementsInputSubmit": "Invia",
+  "@bodyMeasurementsInputSubmit": {
+    "description": "Pulsante invia"
+  },
+  "bodyMeasurementsDraftSaved": "Bozza salvata localmente",
+  "@bodyMeasurementsDraftSaved": {
+    "description": "Notifica salvataggio automatico bozza"
+  },
+  "bodyMeasurementsSaveSuccess": "Misurazioni salvate con successo",
+  "@bodyMeasurementsSaveSuccess": {
+    "description": "Notifica salvataggio riuscito"
+  },
+  "bodyMeasurementsMetricLeanMass": "Massa Magra",
+  "@bodyMeasurementsMetricLeanMass": {
+    "description": "Etichetta metrica massa magra"
+  },
+  "bodyMeasurementsMetricBMR": "MB (Metabolismo Basale)",
+  "@bodyMeasurementsMetricBMR": {
+    "description": "Etichetta metrica MB"
+  },
+  "bodyMeasurementsMetricShoulderCircumference": "Circonferenza Spalle",
+  "@bodyMeasurementsMetricShoulderCircumference": {
+    "description": "Etichetta metrica circonferenza spalle"
+  },
+  "bodyMeasurementsMetricAbdomenCircumference": "Circonferenza Addome",
+  "@bodyMeasurementsMetricAbdomenCircumference": {
+    "description": "Etichetta metrica circonferenza addome"
+  },
+  "bodyMeasurementsMetricBicepLeftCircumference": "Circonferenza Bicipite Sinistro",
+  "@bodyMeasurementsMetricBicepLeftCircumference": {
+    "description": "Etichetta metrica circonferenza bicipite sinistro"
+  },
+  "bodyMeasurementsMetricBicepRightCircumference": "Circonferenza Bicipite Destro",
+  "@bodyMeasurementsMetricBicepRightCircumference": {
+    "description": "Etichetta metrica circonferenza bicipite destro"
+  },
+  "bodyMeasurementsMetricForearmLeftCircumference": "Circonferenza Avambraccio Sinistro",
+  "@bodyMeasurementsMetricForearmLeftCircumference": {
+    "description": "Etichetta metrica circonferenza avambraccio sinistro"
+  },
+  "bodyMeasurementsMetricForearmRightCircumference": "Circonferenza Avambraccio Destro",
+  "@bodyMeasurementsMetricForearmRightCircumference": {
+    "description": "Etichetta metrica circonferenza avambraccio destro"
+  },
+  "bodyMeasurementsMetricThighLeftCircumference": "Circonferenza Coscia Sinistra",
+  "@bodyMeasurementsMetricThighLeftCircumference": {
+    "description": "Etichetta metrica circonferenza coscia sinistra"
+  },
+  "bodyMeasurementsMetricThighRightCircumference": "Circonferenza Coscia Destra",
+  "@bodyMeasurementsMetricThighRightCircumference": {
+    "description": "Etichetta metrica circonferenza coscia destra"
+  },
+  "bodyMeasurementsMetricCalfLeftCircumference": "Circonferenza Polpaccio Sinistro",
+  "@bodyMeasurementsMetricCalfLeftCircumference": {
+    "description": "Etichetta metrica circonferenza polpaccio sinistro"
+  },
+  "bodyMeasurementsMetricCalfRightCircumference": "Circonferenza Polpaccio Destro",
+  "@bodyMeasurementsMetricCalfRightCircumference": {
+    "description": "Etichetta metrica circonferenza polpaccio destro"
+  },
+  "bodyMeasurementsMetricBodyTemperature": "Temperatura Corporea",
+  "@bodyMeasurementsMetricBodyTemperature": {
+    "description": "Etichetta metrica temperatura corporea"
+  },
+  "bodyMeasurementsMetricWaterMass": "Massa Acqua",
+  "@bodyMeasurementsMetricWaterMass": {
+    "description": "Etichetta metrica massa acqua"
+  },
+  "bodyMeasurementsMetricBoneMass": "Massa Ossea",
+  "@bodyMeasurementsMetricBoneMass": {
+    "description": "Etichetta metrica massa ossea"
+  },
+  "bodyMeasurementsListTitle": "Le Mie Misurazioni",
+  "@bodyMeasurementsListTitle": {
+    "description": "Titolo schermata elenco misurazioni"
+  },
+  "bodyMeasurementsListFilterAll": "Tutte",
+  "@bodyMeasurementsListFilterAll": {
+    "description": "Filtro mostra tutte le misurazioni"
+  },
+  "bodyMeasurementsListFilterByMetric": "Filtra per metrica",
+  "@bodyMeasurementsListFilterByMetric": {
+    "description": "Opzione filtro per tipo metrica"
+  },
+  "bodyMeasurementsListEmpty": "Nessuna misurazione ancora. Aggiungi la tua prima misurazione per iniziare a tracciare i progressi.",
+  "@bodyMeasurementsListEmpty": {
+    "description": "Messaggio stato vuoto"
+  },
+  "bodyMeasurementsListEdit": "Modifica",
+  "@bodyMeasurementsListEdit": {
+    "description": "Azione modifica misurazione"
+  },
+  "bodyMeasurementsListDelete": "Elimina",
+  "@bodyMeasurementsListDelete": {
+    "description": "Azione elimina misurazione"
+  },
+  "bodyMeasurementsListDeleteConfirmTitle": "Eliminare Misurazione?",
+  "@bodyMeasurementsListDeleteConfirmTitle": {
+    "description": "Titolo dialogo conferma eliminazione"
+  },
+  "bodyMeasurementsListDeleteConfirmMessage": "Questa misurazione sarà eliminata. Puoi ripristinarla entro 30 giorni dalle impostazioni privacy.",
+  "@bodyMeasurementsListDeleteConfirmMessage": {
+    "description": "Messaggio dialogo conferma eliminazione"
+  },
+  "bodyMeasurementsListDeleteSuccess": "Misurazione eliminata con successo",
+  "@bodyMeasurementsListDeleteSuccess": {
+    "description": "Messaggio successo dopo eliminazione misurazione"
+  },
+  "bodyMeasurementsListDeleteError": "Impossibile eliminare la misurazione",
+  "@bodyMeasurementsListDeleteError": {
+    "description": "Messaggio errore quando eliminazione fallisce"
+  },
+  "bodyMeasurementsChartsTitle": "Grafici Progressi",
+  "@bodyMeasurementsChartsTitle": {
+    "description": "Titolo schermata grafici progressi"
+  },
+  "bodyMeasurementsChartsPeriodWeek": "Settimana",
+  "@bodyMeasurementsChartsPeriodWeek": {
+    "description": "Selettore periodo settimana"
+  },
+  "bodyMeasurementsChartsPeriodMonth": "Mese",
+  "@bodyMeasurementsChartsPeriodMonth": {
+    "description": "Selettore periodo mese"
+  },
+  "bodyMeasurementsChartsPeriodYear": "Anno",
+  "@bodyMeasurementsChartsPeriodYear": {
+    "description": "Selettore periodo anno"
+  },
+  "bodyMeasurementsChartsAxisDate": "Data",
+  "@bodyMeasurementsChartsAxisDate": {
+    "description": "Etichetta asse data grafico"
+  },
+  "bodyMeasurementsChartsAxisValue": "Valore",
+  "@bodyMeasurementsChartsAxisValue": {
+    "description": "Etichetta asse valore grafico"
+  },
+  "bodyMeasurementsChartsEmpty": "Nessun dato da visualizzare. Aggiungi misurazioni per vedere i tuoi grafici di progresso.",
+  "@bodyMeasurementsChartsEmpty": {
+    "description": "Messaggio stato vuoto quando non ci sono dati grafico"
+  },
+  "bodyMeasurementsChartsSelectMetric": "Seleziona una metrica per visualizzare il suo progresso",
+  "@bodyMeasurementsChartsSelectMetric": {
+    "description": "Istruzione per selezionare metrica per grafico"
+  },
+  "bodyMeasurementsPrivacyTitle": "Privacy e Dati",
+  "@bodyMeasurementsPrivacyTitle": {
+    "description": "Titolo schermata impostazioni privacy"
+  },
+  "bodyMeasurementsPrivacyExportData": "Esporta i Miei Dati",
+  "@bodyMeasurementsPrivacyExportData": {
+    "description": "Pulsante esporta dati"
+  },
+  "bodyMeasurementsPrivacyDeleteData": "Elimina i Miei Dati",
+  "@bodyMeasurementsPrivacyDeleteData": {
+    "description": "Pulsante elimina dati"
+  },
+  "bodyMeasurementsPrivacyViewConsent": "Visualizza Consenso",
+  "@bodyMeasurementsPrivacyViewConsent": {
+    "description": "Pulsante visualizza consenso"
+  },
+  "bodyMeasurementsPrivacyManageMetrics": "Gestisci Metriche Tracciate",
+  "@bodyMeasurementsPrivacyManageMetrics": {
+    "description": "Pulsante gestisci metriche con consenso"
+  },
+  "bodyMeasurementsPrivacyDataEncrypted": "I tuoi dati sono criptati con AES-256-GCM",
+  "@bodyMeasurementsPrivacyDataEncrypted": {
+    "description": "Messaggio informativo crittografia"
+  },
+  "bodyMeasurementsPrivacyGDPRCompliant": "Archiviazione dati conforme al GDPR",
+  "@bodyMeasurementsPrivacyGDPRCompliant": {
+    "description": "Badge conformità GDPR"
+  },
+  "bodyMeasurementsDeleteDialogTitle": "Eliminare i Tuoi Dati?",
+  "@bodyMeasurementsDeleteDialogTitle": {
+    "description": "Titolo dialogo conferma eliminazione"
+  },
+  "bodyMeasurementsDeleteDialogWarning": "Questo eliminerà permanentemente tutte le tue misurazioni corporee. Questa azione non può essere annullata.",
+  "@bodyMeasurementsDeleteDialogWarning": {
+    "description": "Messaggio avviso eliminazione"
+  },
+  "bodyMeasurementsDeleteDialogRetentionNotice": "I dati saranno conservati per 30 giorni per scopi di conformità, poi eliminati permanentemente.",
+  "@bodyMeasurementsDeleteDialogRetentionNotice": {
+    "description": "Avviso periodo conservazione GDPR"
+  },
+  "bodyMeasurementsDeleteDialogConfirm": "Sì, elimina i miei dati",
+  "@bodyMeasurementsDeleteDialogConfirm": {
+    "description": "Pulsante conferma eliminazione"
+  },
+  "bodyMeasurementsDeleteDialogCancel": "Annulla",
+  "@bodyMeasurementsDeleteDialogCancel": {
+    "description": "Pulsante annulla eliminazione"
+  },
+  "bodyMeasurementsSyncStatusConnected": "Connesso a {platform}",
+  "@bodyMeasurementsSyncStatusConnected": {
+    "description": "Stato sincronizzazione connesso",
+    "placeholders": {
+      "platform": {
+        "type": "String",
+        "example": "Apple Health"
+      }
+    }
+  },
+  "bodyMeasurementsSyncStatusSyncing": "Sincronizzazione...",
+  "@bodyMeasurementsSyncStatusSyncing": {
+    "description": "Stato sincronizzazione in corso"
+  },
+  "bodyMeasurementsSyncStatusError": "Errore sincronizzazione: {error}",
+  "@bodyMeasurementsSyncStatusError": {
+    "description": "Stato errore sincronizzazione",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Errore di rete"
+      }
+    }
+  },
+  "bodyMeasurementsSyncStatusDisconnected": "Non connesso",
+  "@bodyMeasurementsSyncStatusDisconnected": {
+    "description": "Stato sincronizzazione disconnesso"
+  },
+  "bodyMeasurementsSyncLastSync": "Ultima sincronizzazione: {time}",
+  "@bodyMeasurementsSyncLastSync": {
+    "description": "Ora ultima sincronizzazione",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2 minuti fa"
+      }
+    }
+  },
+  "bodyMeasurementsSyncNow": "Sincronizza Ora",
+  "@bodyMeasurementsSyncNow": {
+    "description": "Pulsante sincronizzazione manuale"
+  },
+  "bodyMeasurementsSyncNeverSynced": "Mai sincronizzato",
+  "@bodyMeasurementsSyncNeverSynced": {
+    "description": "Stato quando l'utente non ha mai sincronizzato"
+  },
+  "bodyMeasurementsSyncMeasurementsRead": "{count} misurazioni lette",
+  "@bodyMeasurementsSyncMeasurementsRead": {
+    "description": "Numero di misurazioni lette dalla piattaforma salute",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "bodyMeasurementsSyncMeasurementsWritten": "{count} misurazioni scritte",
+  "@bodyMeasurementsSyncMeasurementsWritten": {
+    "description": "Numero di misurazioni scritte sulla piattaforma salute",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "bodyMeasurementsSuccessSaved": "Misurazione salvata con successo",
+  "@bodyMeasurementsSuccessSaved": {
+    "description": "Messaggio successo salvataggio"
+  },
+  "bodyMeasurementsSuccessDeleted": "Misurazione eliminata con successo",
+  "@bodyMeasurementsSuccessDeleted": {
+    "description": "Messaggio successo eliminazione"
+  },
+  "bodyMeasurementsSuccessExported": "Dati esportati con successo",
+  "@bodyMeasurementsSuccessExported": {
+    "description": "Messaggio successo esportazione"
+  },
+  "bodyMeasurementsErrorSave": "Impossibile salvare la misurazione: {error}",
+  "@bodyMeasurementsErrorSave": {
+    "description": "Messaggio errore salvataggio",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Errore di rete"
+      }
+    }
+  },
+  "bodyMeasurementsErrorLoad": "Impossibile caricare le misurazioni: {error}",
+  "@bodyMeasurementsErrorLoad": {
+    "description": "Messaggio errore caricamento",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Errore database"
+      }
+    }
+  },
+  "bodyMeasurementsErrorExport": "Impossibile esportare i dati: {error}",
+  "@bodyMeasurementsErrorExport": {
+    "description": "Messaggio errore esportazione",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Permesso negato"
+      }
+    }
+  },
+  "bodyMeasurementsErrorDelete": "Impossibile eliminare la misurazione: {error}",
+  "@bodyMeasurementsErrorDelete": {
+    "description": "Messaggio errore eliminazione",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Errore di rete"
+      }
+    }
+  },
+  "bodyMeasurementsGDPRRightToAccess": "Hai il diritto di accedere ai tuoi dati personali",
+  "@bodyMeasurementsGDPRRightToAccess": {
+    "description": "GDPR Articolo 15 - Diritto di accesso"
+  },
+  "bodyMeasurementsGDPRRightToErasure": "Hai il diritto di eliminare i tuoi dati personali",
+  "@bodyMeasurementsGDPRRightToErasure": {
+    "description": "GDPR Articolo 17 - Diritto alla cancellazione"
+  },
+  "bodyMeasurementsGDPRRightToPortability": "Hai il diritto di esportare i tuoi dati in formato leggibile da computer",
+  "@bodyMeasurementsGDPRRightToPortability": {
+    "description": "GDPR Articolo 20 - Diritto alla portabilità dei dati"
+  },
+  "bodyMeasurementsConflictResolutionTitle": "Conflitto Sincronizzazione",
+  "@bodyMeasurementsConflictResolutionTitle": {
+    "description": "Titolo dialogo risoluzione conflitti"
+  },
+  "bodyMeasurementsConflictResolutionDescription": "Abbiamo trovato versioni diverse di questa misurazione sul tuo dispositivo e nel cloud.",
+  "@bodyMeasurementsConflictResolutionDescription": {
+    "description": "Descrizione conflitto"
+  },
+  "bodyMeasurementsConflictResolutionKeepDevice": "Mantieni versione dispositivo",
+  "@bodyMeasurementsConflictResolutionKeepDevice": {
+    "description": "Opzione mantieni versione dispositivo"
+  },
+  "bodyMeasurementsConflictResolutionKeepCloud": "Mantieni versione cloud",
+  "@bodyMeasurementsConflictResolutionKeepCloud": {
+    "description": "Opzione mantieni versione cloud"
+  },
+  "bodyMeasurementsConflictResolutionMerge": "Unisci entrambe",
+  "@bodyMeasurementsConflictResolutionMerge": {
+    "description": "Opzione unisci conflitto"
+  },
+  "templateType": "Tipo",
+  "@templateType": {
+    "description": "Etichetta tipo template"
+  },
+  "templateTypeUpper": "Upper Body",
+  "@templateTypeUpper": {
+    "description": "Tipo template upper body"
+  },
+  "templateTypeLower": "Lower Body",
+  "@templateTypeLower": {
+    "description": "Tipo template lower body"
+  },
+  "templateTypeFullBody": "Full Body",
+  "@templateTypeFullBody": {
+    "description": "Tipo template full body"
+  },
+  "advancedOptions": "Opzioni avanzate",
+  "@advancedOptions": {
+    "description": "Titolo sezione opzioni avanzate"
+  },
+  "createTemplateButton": "Crea Template",
+  "@createTemplateButton": {
+    "description": "Testo pulsante crea template"
   }
 }

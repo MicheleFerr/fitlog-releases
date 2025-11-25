@@ -116,11 +116,11 @@ abstract class AppLocalizations {
   /// **'Track workouts, time your rest periods, and sync with Apple Health.'**
   String get welcomeDescription;
 
-  /// AI Coach onboarding welcome title
+  /// Onboarding welcome title
   ///
   /// In en, this message translates to:
-  /// **'Welcome, {name}!'**
-  String onboardingWelcomeTitle(String name);
+  /// **'Welcome to Your Workout Hub'**
+  String get onboardingWelcomeTitle;
 
   /// Description for the onboarding welcome step
   ///
@@ -29964,6 +29964,12 @@ abstract class AppLocalizations {
   /// **'Manage workout reminders, streak alerts, and more'**
   String get notificationSettingsDesc;
 
+  /// Description for health sync settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Sync workouts and body measurements with Apple Health / Health Connect'**
+  String get healthSyncSettingsDesc;
+
   /// Section title for frequency cap settings
   ///
   /// In en, this message translates to:
@@ -34217,6 +34223,750 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connected to {platform}'**
   String healthSyncPlatformConnected(String platform);
+
+  /// Body measurements feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Body Measurements'**
+  String get bodyMeasurementsTitle;
+
+  /// Consent dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data Consent'**
+  String get bodyMeasurementsConsentTitle;
+
+  /// Consent dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'We need your consent to collect and store your body measurements. Your data is encrypted and stored securely.'**
+  String get bodyMeasurementsConsentDescription;
+
+  /// Consent agreement button
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to data collection'**
+  String get bodyMeasurementsConsentAgree;
+
+  /// Privacy policy link
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get bodyMeasurementsConsentPrivacyPolicy;
+
+  /// Learn more button
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get bodyMeasurementsConsentLearnMore;
+
+  /// Metric selection instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Select data types to track:'**
+  String get bodyMeasurementsConsentSelectMetrics;
+
+  /// Essential metrics group label
+  ///
+  /// In en, this message translates to:
+  /// **'Essential Metrics'**
+  String get bodyMeasurementsGroupEssential;
+
+  /// Essential metrics group description
+  ///
+  /// In en, this message translates to:
+  /// **'Weight, Body Fat %, Height, Lean Mass, BMI, BMR'**
+  String get bodyMeasurementsGroupEssentialDesc;
+
+  /// Body measurements group label
+  ///
+  /// In en, this message translates to:
+  /// **'Body Measurements'**
+  String get bodyMeasurementsGroupMeasurements;
+
+  /// Body measurements group description
+  ///
+  /// In en, this message translates to:
+  /// **'13 circumferences (Neck, Chest, Waist, Biceps, Thighs, etc.)'**
+  String get bodyMeasurementsGroupMeasurementsDesc;
+
+  /// Vital metrics group label
+  ///
+  /// In en, this message translates to:
+  /// **'Vital Metrics'**
+  String get bodyMeasurementsGroupVitals;
+
+  /// Vital metrics group description
+  ///
+  /// In en, this message translates to:
+  /// **'Body Temperature, Water Mass, Bone Mass'**
+  String get bodyMeasurementsGroupVitalsDesc;
+
+  /// Weight metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get bodyMeasurementsMetricWeight;
+
+  /// Height metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get bodyMeasurementsMetricHeight;
+
+  /// Body fat percentage metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Body Fat %'**
+  String get bodyMeasurementsMetricBodyFat;
+
+  /// Muscle mass metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Muscle Mass'**
+  String get bodyMeasurementsMetricMuscleMass;
+
+  /// BMI metric label
+  ///
+  /// In en, this message translates to:
+  /// **'BMI'**
+  String get bodyMeasurementsMetricBMI;
+
+  /// Waist circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Waist Circumference'**
+  String get bodyMeasurementsMetricWaistCircumference;
+
+  /// Hip circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Hip Circumference'**
+  String get bodyMeasurementsMetricHipCircumference;
+
+  /// Chest circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Chest Circumference'**
+  String get bodyMeasurementsMetricChestCircumference;
+
+  /// Arm circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Arm Circumference'**
+  String get bodyMeasurementsMetricArmCircumference;
+
+  /// Thigh circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh Circumference'**
+  String get bodyMeasurementsMetricThighCircumference;
+
+  /// Calf circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Calf Circumference'**
+  String get bodyMeasurementsMetricCalfCircumference;
+
+  /// Neck circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Neck Circumference'**
+  String get bodyMeasurementsMetricNeckCircumference;
+
+  /// Shoulder width metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulder Width'**
+  String get bodyMeasurementsMetricShoulderWidth;
+
+  /// Kilogram unit
+  ///
+  /// In en, this message translates to:
+  /// **'kg'**
+  String get bodyMeasurementsUnitKg;
+
+  /// Pound unit
+  ///
+  /// In en, this message translates to:
+  /// **'lb'**
+  String get bodyMeasurementsUnitLb;
+
+  /// Centimeter unit
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get bodyMeasurementsUnitCm;
+
+  /// Inch unit
+  ///
+  /// In en, this message translates to:
+  /// **'in'**
+  String get bodyMeasurementsUnitInch;
+
+  /// Percentage unit
+  ///
+  /// In en, this message translates to:
+  /// **'%'**
+  String get bodyMeasurementsUnitPercent;
+
+  /// Measurement input form title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Measurement'**
+  String get bodyMeasurementsInputTitle;
+
+  /// Metric type selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Select metric type'**
+  String get bodyMeasurementsInputSelectMetric;
+
+  /// Value input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get bodyMeasurementsInputValue;
+
+  /// Date picker label
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get bodyMeasurementsInputDate;
+
+  /// Time picker label
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get bodyMeasurementsInputTime;
+
+  /// Notes field label
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get bodyMeasurementsInputNotes;
+
+  /// Save button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get bodyMeasurementsInputSave;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get bodyMeasurementsInputCancel;
+
+  /// Required field validation error
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get bodyMeasurementsValidationRequired;
+
+  /// Invalid number validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get bodyMeasurementsValidationInvalidNumber;
+
+  /// Out of range validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Value must be between {min} and {max}'**
+  String bodyMeasurementsValidationOutOfRange(double min, double max);
+
+  /// Generic validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid value'**
+  String get bodyMeasurementsValidationInvalid;
+
+  /// Outlier warning message
+  ///
+  /// In en, this message translates to:
+  /// **'Unusual value (typical range: {typicalRange}). Please verify.'**
+  String bodyMeasurementsValidationOutlierWarning(String typicalRange);
+
+  /// Edit measurement form title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Measurement'**
+  String get bodyMeasurementsInputEditTitle;
+
+  /// Form description text
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your body measurements. All fields are optional.'**
+  String get bodyMeasurementsInputDescription;
+
+  /// Submit button
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get bodyMeasurementsInputSubmit;
+
+  /// Draft auto-save notification
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved locally'**
+  String get bodyMeasurementsDraftSaved;
+
+  /// Save success notification
+  ///
+  /// In en, this message translates to:
+  /// **'Measurements saved successfully'**
+  String get bodyMeasurementsSaveSuccess;
+
+  /// Lean mass metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Lean Mass'**
+  String get bodyMeasurementsMetricLeanMass;
+
+  /// BMR metric label
+  ///
+  /// In en, this message translates to:
+  /// **'BMR (Basal Metabolic Rate)'**
+  String get bodyMeasurementsMetricBMR;
+
+  /// Shoulder circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Shoulder Circumference'**
+  String get bodyMeasurementsMetricShoulderCircumference;
+
+  /// Abdomen circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Abdomen Circumference'**
+  String get bodyMeasurementsMetricAbdomenCircumference;
+
+  /// Left bicep circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Left Bicep Circumference'**
+  String get bodyMeasurementsMetricBicepLeftCircumference;
+
+  /// Right bicep circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Right Bicep Circumference'**
+  String get bodyMeasurementsMetricBicepRightCircumference;
+
+  /// Left forearm circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Left Forearm Circumference'**
+  String get bodyMeasurementsMetricForearmLeftCircumference;
+
+  /// Right forearm circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Right Forearm Circumference'**
+  String get bodyMeasurementsMetricForearmRightCircumference;
+
+  /// Left thigh circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Left Thigh Circumference'**
+  String get bodyMeasurementsMetricThighLeftCircumference;
+
+  /// Right thigh circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Right Thigh Circumference'**
+  String get bodyMeasurementsMetricThighRightCircumference;
+
+  /// Left calf circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Left Calf Circumference'**
+  String get bodyMeasurementsMetricCalfLeftCircumference;
+
+  /// Right calf circumference metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Right Calf Circumference'**
+  String get bodyMeasurementsMetricCalfRightCircumference;
+
+  /// Body temperature metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Body Temperature'**
+  String get bodyMeasurementsMetricBodyTemperature;
+
+  /// Water mass metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Water Mass'**
+  String get bodyMeasurementsMetricWaterMass;
+
+  /// Bone mass metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Bone Mass'**
+  String get bodyMeasurementsMetricBoneMass;
+
+  /// Measurement list screen title
+  ///
+  /// In en, this message translates to:
+  /// **'My Measurements'**
+  String get bodyMeasurementsListTitle;
+
+  /// Show all measurements filter
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get bodyMeasurementsListFilterAll;
+
+  /// Filter by metric type option
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by metric'**
+  String get bodyMeasurementsListFilterByMetric;
+
+  /// Empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'No measurements yet. Add your first measurement to start tracking progress.'**
+  String get bodyMeasurementsListEmpty;
+
+  /// Edit measurement action
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get bodyMeasurementsListEdit;
+
+  /// Delete measurement action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get bodyMeasurementsListDelete;
+
+  /// Delete confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Measurement?'**
+  String get bodyMeasurementsListDeleteConfirmTitle;
+
+  /// Delete confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'This measurement will be deleted. You can restore it within 30 days from privacy settings.'**
+  String get bodyMeasurementsListDeleteConfirmMessage;
+
+  /// Success message after deleting measurement
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement deleted successfully'**
+  String get bodyMeasurementsListDeleteSuccess;
+
+  /// Error message when deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete measurement'**
+  String get bodyMeasurementsListDeleteError;
+
+  /// Progress charts screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Charts'**
+  String get bodyMeasurementsChartsTitle;
+
+  /// Week period selector
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get bodyMeasurementsChartsPeriodWeek;
+
+  /// Month period selector
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get bodyMeasurementsChartsPeriodMonth;
+
+  /// Year period selector
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get bodyMeasurementsChartsPeriodYear;
+
+  /// Chart date axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get bodyMeasurementsChartsAxisDate;
+
+  /// Chart value axis label
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get bodyMeasurementsChartsAxisValue;
+
+  /// Empty state message when no chart data available
+  ///
+  /// In en, this message translates to:
+  /// **'No data to display. Add measurements to see your progress charts.'**
+  String get bodyMeasurementsChartsEmpty;
+
+  /// Instruction to select metric for chart
+  ///
+  /// In en, this message translates to:
+  /// **'Select a metric to view its progress'**
+  String get bodyMeasurementsChartsSelectMetric;
+
+  /// Privacy settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Data'**
+  String get bodyMeasurementsPrivacyTitle;
+
+  /// Export data button
+  ///
+  /// In en, this message translates to:
+  /// **'Export My Data'**
+  String get bodyMeasurementsPrivacyExportData;
+
+  /// Delete data button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete My Data'**
+  String get bodyMeasurementsPrivacyDeleteData;
+
+  /// View consent button
+  ///
+  /// In en, this message translates to:
+  /// **'View Consent'**
+  String get bodyMeasurementsPrivacyViewConsent;
+
+  /// Manage consented metrics button
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Tracked Metrics'**
+  String get bodyMeasurementsPrivacyManageMetrics;
+
+  /// Encryption info message
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is encrypted with AES-256-GCM'**
+  String get bodyMeasurementsPrivacyDataEncrypted;
+
+  /// GDPR compliance badge
+  ///
+  /// In en, this message translates to:
+  /// **'GDPR compliant data storage'**
+  String get bodyMeasurementsPrivacyGDPRCompliant;
+
+  /// Delete confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Your Data?'**
+  String get bodyMeasurementsDeleteDialogTitle;
+
+  /// Delete warning message
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all your body measurements. This action cannot be undone.'**
+  String get bodyMeasurementsDeleteDialogWarning;
+
+  /// GDPR retention period notice
+  ///
+  /// In en, this message translates to:
+  /// **'Data will be retained for 30 days for compliance purposes, then permanently deleted.'**
+  String get bodyMeasurementsDeleteDialogRetentionNotice;
+
+  /// Confirm deletion button
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, delete my data'**
+  String get bodyMeasurementsDeleteDialogConfirm;
+
+  /// Cancel deletion button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get bodyMeasurementsDeleteDialogCancel;
+
+  /// Sync connected status
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {platform}'**
+  String bodyMeasurementsSyncStatusConnected(String platform);
+
+  /// Sync in progress status
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing...'**
+  String get bodyMeasurementsSyncStatusSyncing;
+
+  /// Sync error status
+  ///
+  /// In en, this message translates to:
+  /// **'Sync error: {error}'**
+  String bodyMeasurementsSyncStatusError(String error);
+
+  /// Sync disconnected status
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get bodyMeasurementsSyncStatusDisconnected;
+
+  /// Last sync time
+  ///
+  /// In en, this message translates to:
+  /// **'Last sync: {time}'**
+  String bodyMeasurementsSyncLastSync(String time);
+
+  /// Manual sync button
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Now'**
+  String get bodyMeasurementsSyncNow;
+
+  /// Status when user has never synced
+  ///
+  /// In en, this message translates to:
+  /// **'Never synced'**
+  String get bodyMeasurementsSyncNeverSynced;
+
+  /// Number of measurements read from health platform
+  ///
+  /// In en, this message translates to:
+  /// **'{count} measurements read'**
+  String bodyMeasurementsSyncMeasurementsRead(int count);
+
+  /// Number of measurements written to health platform
+  ///
+  /// In en, this message translates to:
+  /// **'{count} measurements written'**
+  String bodyMeasurementsSyncMeasurementsWritten(int count);
+
+  /// Save success message
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement saved successfully'**
+  String get bodyMeasurementsSuccessSaved;
+
+  /// Delete success message
+  ///
+  /// In en, this message translates to:
+  /// **'Measurement deleted successfully'**
+  String get bodyMeasurementsSuccessDeleted;
+
+  /// Export success message
+  ///
+  /// In en, this message translates to:
+  /// **'Data exported successfully'**
+  String get bodyMeasurementsSuccessExported;
+
+  /// Save error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save measurement: {error}'**
+  String bodyMeasurementsErrorSave(String error);
+
+  /// Load error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load measurements: {error}'**
+  String bodyMeasurementsErrorLoad(String error);
+
+  /// Export error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export data: {error}'**
+  String bodyMeasurementsErrorExport(String error);
+
+  /// Delete error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete measurement: {error}'**
+  String bodyMeasurementsErrorDelete(String error);
+
+  /// GDPR Article 15 - Right to access
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to access your personal data'**
+  String get bodyMeasurementsGDPRRightToAccess;
+
+  /// GDPR Article 17 - Right to erasure
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to delete your personal data'**
+  String get bodyMeasurementsGDPRRightToErasure;
+
+  /// GDPR Article 20 - Right to data portability
+  ///
+  /// In en, this message translates to:
+  /// **'You have the right to export your data in machine-readable format'**
+  String get bodyMeasurementsGDPRRightToPortability;
+
+  /// Conflict resolution dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Conflict'**
+  String get bodyMeasurementsConflictResolutionTitle;
+
+  /// Conflict description
+  ///
+  /// In en, this message translates to:
+  /// **'We found different versions of this measurement on your device and in the cloud.'**
+  String get bodyMeasurementsConflictResolutionDescription;
+
+  /// Keep device version option
+  ///
+  /// In en, this message translates to:
+  /// **'Keep device version'**
+  String get bodyMeasurementsConflictResolutionKeepDevice;
+
+  /// Keep cloud version option
+  ///
+  /// In en, this message translates to:
+  /// **'Keep cloud version'**
+  String get bodyMeasurementsConflictResolutionKeepCloud;
+
+  /// Merge conflict option
+  ///
+  /// In en, this message translates to:
+  /// **'Merge both'**
+  String get bodyMeasurementsConflictResolutionMerge;
+
+  /// Template type label
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get templateType;
+
+  /// Upper body template type
+  ///
+  /// In en, this message translates to:
+  /// **'Upper Body'**
+  String get templateTypeUpper;
+
+  /// Lower body template type
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Body'**
+  String get templateTypeLower;
+
+  /// Full body template type
+  ///
+  /// In en, this message translates to:
+  /// **'Full Body'**
+  String get templateTypeFullBody;
+
+  /// Advanced options section title
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced options'**
+  String get advancedOptions;
+
+  /// Create template button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Template'**
+  String get createTemplateButton;
 }
 
 class _AppLocalizationsDelegate

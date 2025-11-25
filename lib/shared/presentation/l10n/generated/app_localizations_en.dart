@@ -19,9 +19,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Track workouts, time your rest periods, and sync with Apple Health.';
 
   @override
-  String onboardingWelcomeTitle(String name) {
-    return 'Welcome, $name!';
-  }
+  String get onboardingWelcomeTitle => 'Welcome to Your Workout Hub';
 
   @override
   String get onboardingWelcomeDescription =>
@@ -16772,6 +16770,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Manage workout reminders, streak alerts, and more';
 
   @override
+  String get healthSyncSettingsDesc =>
+      'Sync workouts and body measurements with Apple Health / Health Connect';
+
+  @override
   String get frequencyCaps => 'Frequency Caps';
 
   @override
@@ -19096,4 +19098,431 @@ class AppLocalizationsEn extends AppLocalizations {
   String healthSyncPlatformConnected(String platform) {
     return 'Connected to $platform';
   }
+
+  @override
+  String get bodyMeasurementsTitle => 'Body Measurements';
+
+  @override
+  String get bodyMeasurementsConsentTitle => 'Privacy & Data Consent';
+
+  @override
+  String get bodyMeasurementsConsentDescription =>
+      'We need your consent to collect and store your body measurements. Your data is encrypted and stored securely.';
+
+  @override
+  String get bodyMeasurementsConsentAgree => 'I agree to data collection';
+
+  @override
+  String get bodyMeasurementsConsentPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get bodyMeasurementsConsentLearnMore => 'Learn more';
+
+  @override
+  String get bodyMeasurementsConsentSelectMetrics =>
+      'Select data types to track:';
+
+  @override
+  String get bodyMeasurementsGroupEssential => 'Essential Metrics';
+
+  @override
+  String get bodyMeasurementsGroupEssentialDesc =>
+      'Weight, Body Fat %, Height, Lean Mass, BMI, BMR';
+
+  @override
+  String get bodyMeasurementsGroupMeasurements => 'Body Measurements';
+
+  @override
+  String get bodyMeasurementsGroupMeasurementsDesc =>
+      '13 circumferences (Neck, Chest, Waist, Biceps, Thighs, etc.)';
+
+  @override
+  String get bodyMeasurementsGroupVitals => 'Vital Metrics';
+
+  @override
+  String get bodyMeasurementsGroupVitalsDesc =>
+      'Body Temperature, Water Mass, Bone Mass';
+
+  @override
+  String get bodyMeasurementsMetricWeight => 'Weight';
+
+  @override
+  String get bodyMeasurementsMetricHeight => 'Height';
+
+  @override
+  String get bodyMeasurementsMetricBodyFat => 'Body Fat %';
+
+  @override
+  String get bodyMeasurementsMetricMuscleMass => 'Muscle Mass';
+
+  @override
+  String get bodyMeasurementsMetricBMI => 'BMI';
+
+  @override
+  String get bodyMeasurementsMetricWaistCircumference => 'Waist Circumference';
+
+  @override
+  String get bodyMeasurementsMetricHipCircumference => 'Hip Circumference';
+
+  @override
+  String get bodyMeasurementsMetricChestCircumference => 'Chest Circumference';
+
+  @override
+  String get bodyMeasurementsMetricArmCircumference => 'Arm Circumference';
+
+  @override
+  String get bodyMeasurementsMetricThighCircumference => 'Thigh Circumference';
+
+  @override
+  String get bodyMeasurementsMetricCalfCircumference => 'Calf Circumference';
+
+  @override
+  String get bodyMeasurementsMetricNeckCircumference => 'Neck Circumference';
+
+  @override
+  String get bodyMeasurementsMetricShoulderWidth => 'Shoulder Width';
+
+  @override
+  String get bodyMeasurementsUnitKg => 'kg';
+
+  @override
+  String get bodyMeasurementsUnitLb => 'lb';
+
+  @override
+  String get bodyMeasurementsUnitCm => 'cm';
+
+  @override
+  String get bodyMeasurementsUnitInch => 'in';
+
+  @override
+  String get bodyMeasurementsUnitPercent => '%';
+
+  @override
+  String get bodyMeasurementsInputTitle => 'Add Measurement';
+
+  @override
+  String get bodyMeasurementsInputSelectMetric => 'Select metric type';
+
+  @override
+  String get bodyMeasurementsInputValue => 'Value';
+
+  @override
+  String get bodyMeasurementsInputDate => 'Date';
+
+  @override
+  String get bodyMeasurementsInputTime => 'Time';
+
+  @override
+  String get bodyMeasurementsInputNotes => 'Notes (optional)';
+
+  @override
+  String get bodyMeasurementsInputSave => 'Save';
+
+  @override
+  String get bodyMeasurementsInputCancel => 'Cancel';
+
+  @override
+  String get bodyMeasurementsValidationRequired => 'This field is required';
+
+  @override
+  String get bodyMeasurementsValidationInvalidNumber =>
+      'Please enter a valid number';
+
+  @override
+  String bodyMeasurementsValidationOutOfRange(double min, double max) {
+    return 'Value must be between $min and $max';
+  }
+
+  @override
+  String get bodyMeasurementsValidationInvalid => 'Invalid value';
+
+  @override
+  String bodyMeasurementsValidationOutlierWarning(String typicalRange) {
+    return 'Unusual value (typical range: $typicalRange). Please verify.';
+  }
+
+  @override
+  String get bodyMeasurementsInputEditTitle => 'Edit Measurement';
+
+  @override
+  String get bodyMeasurementsInputDescription =>
+      'Fill in your body measurements. All fields are optional.';
+
+  @override
+  String get bodyMeasurementsInputSubmit => 'Submit';
+
+  @override
+  String get bodyMeasurementsDraftSaved => 'Draft saved locally';
+
+  @override
+  String get bodyMeasurementsSaveSuccess => 'Measurements saved successfully';
+
+  @override
+  String get bodyMeasurementsMetricLeanMass => 'Lean Mass';
+
+  @override
+  String get bodyMeasurementsMetricBMR => 'BMR (Basal Metabolic Rate)';
+
+  @override
+  String get bodyMeasurementsMetricShoulderCircumference =>
+      'Shoulder Circumference';
+
+  @override
+  String get bodyMeasurementsMetricAbdomenCircumference =>
+      'Abdomen Circumference';
+
+  @override
+  String get bodyMeasurementsMetricBicepLeftCircumference =>
+      'Left Bicep Circumference';
+
+  @override
+  String get bodyMeasurementsMetricBicepRightCircumference =>
+      'Right Bicep Circumference';
+
+  @override
+  String get bodyMeasurementsMetricForearmLeftCircumference =>
+      'Left Forearm Circumference';
+
+  @override
+  String get bodyMeasurementsMetricForearmRightCircumference =>
+      'Right Forearm Circumference';
+
+  @override
+  String get bodyMeasurementsMetricThighLeftCircumference =>
+      'Left Thigh Circumference';
+
+  @override
+  String get bodyMeasurementsMetricThighRightCircumference =>
+      'Right Thigh Circumference';
+
+  @override
+  String get bodyMeasurementsMetricCalfLeftCircumference =>
+      'Left Calf Circumference';
+
+  @override
+  String get bodyMeasurementsMetricCalfRightCircumference =>
+      'Right Calf Circumference';
+
+  @override
+  String get bodyMeasurementsMetricBodyTemperature => 'Body Temperature';
+
+  @override
+  String get bodyMeasurementsMetricWaterMass => 'Water Mass';
+
+  @override
+  String get bodyMeasurementsMetricBoneMass => 'Bone Mass';
+
+  @override
+  String get bodyMeasurementsListTitle => 'My Measurements';
+
+  @override
+  String get bodyMeasurementsListFilterAll => 'All';
+
+  @override
+  String get bodyMeasurementsListFilterByMetric => 'Filter by metric';
+
+  @override
+  String get bodyMeasurementsListEmpty =>
+      'No measurements yet. Add your first measurement to start tracking progress.';
+
+  @override
+  String get bodyMeasurementsListEdit => 'Edit';
+
+  @override
+  String get bodyMeasurementsListDelete => 'Delete';
+
+  @override
+  String get bodyMeasurementsListDeleteConfirmTitle => 'Delete Measurement?';
+
+  @override
+  String get bodyMeasurementsListDeleteConfirmMessage =>
+      'This measurement will be deleted. You can restore it within 30 days from privacy settings.';
+
+  @override
+  String get bodyMeasurementsListDeleteSuccess =>
+      'Measurement deleted successfully';
+
+  @override
+  String get bodyMeasurementsListDeleteError => 'Failed to delete measurement';
+
+  @override
+  String get bodyMeasurementsChartsTitle => 'Progress Charts';
+
+  @override
+  String get bodyMeasurementsChartsPeriodWeek => 'Week';
+
+  @override
+  String get bodyMeasurementsChartsPeriodMonth => 'Month';
+
+  @override
+  String get bodyMeasurementsChartsPeriodYear => 'Year';
+
+  @override
+  String get bodyMeasurementsChartsAxisDate => 'Date';
+
+  @override
+  String get bodyMeasurementsChartsAxisValue => 'Value';
+
+  @override
+  String get bodyMeasurementsChartsEmpty =>
+      'No data to display. Add measurements to see your progress charts.';
+
+  @override
+  String get bodyMeasurementsChartsSelectMetric =>
+      'Select a metric to view its progress';
+
+  @override
+  String get bodyMeasurementsPrivacyTitle => 'Privacy & Data';
+
+  @override
+  String get bodyMeasurementsPrivacyExportData => 'Export My Data';
+
+  @override
+  String get bodyMeasurementsPrivacyDeleteData => 'Delete My Data';
+
+  @override
+  String get bodyMeasurementsPrivacyViewConsent => 'View Consent';
+
+  @override
+  String get bodyMeasurementsPrivacyManageMetrics => 'Manage Tracked Metrics';
+
+  @override
+  String get bodyMeasurementsPrivacyDataEncrypted =>
+      'Your data is encrypted with AES-256-GCM';
+
+  @override
+  String get bodyMeasurementsPrivacyGDPRCompliant =>
+      'GDPR compliant data storage';
+
+  @override
+  String get bodyMeasurementsDeleteDialogTitle => 'Delete Your Data?';
+
+  @override
+  String get bodyMeasurementsDeleteDialogWarning =>
+      'This will permanently delete all your body measurements. This action cannot be undone.';
+
+  @override
+  String get bodyMeasurementsDeleteDialogRetentionNotice =>
+      'Data will be retained for 30 days for compliance purposes, then permanently deleted.';
+
+  @override
+  String get bodyMeasurementsDeleteDialogConfirm => 'Yes, delete my data';
+
+  @override
+  String get bodyMeasurementsDeleteDialogCancel => 'Cancel';
+
+  @override
+  String bodyMeasurementsSyncStatusConnected(String platform) {
+    return 'Connected to $platform';
+  }
+
+  @override
+  String get bodyMeasurementsSyncStatusSyncing => 'Syncing...';
+
+  @override
+  String bodyMeasurementsSyncStatusError(String error) {
+    return 'Sync error: $error';
+  }
+
+  @override
+  String get bodyMeasurementsSyncStatusDisconnected => 'Not connected';
+
+  @override
+  String bodyMeasurementsSyncLastSync(String time) {
+    return 'Last sync: $time';
+  }
+
+  @override
+  String get bodyMeasurementsSyncNow => 'Sync Now';
+
+  @override
+  String get bodyMeasurementsSyncNeverSynced => 'Never synced';
+
+  @override
+  String bodyMeasurementsSyncMeasurementsRead(int count) {
+    return '$count measurements read';
+  }
+
+  @override
+  String bodyMeasurementsSyncMeasurementsWritten(int count) {
+    return '$count measurements written';
+  }
+
+  @override
+  String get bodyMeasurementsSuccessSaved => 'Measurement saved successfully';
+
+  @override
+  String get bodyMeasurementsSuccessDeleted =>
+      'Measurement deleted successfully';
+
+  @override
+  String get bodyMeasurementsSuccessExported => 'Data exported successfully';
+
+  @override
+  String bodyMeasurementsErrorSave(String error) {
+    return 'Failed to save measurement: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorLoad(String error) {
+    return 'Failed to load measurements: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorExport(String error) {
+    return 'Failed to export data: $error';
+  }
+
+  @override
+  String bodyMeasurementsErrorDelete(String error) {
+    return 'Failed to delete measurement: $error';
+  }
+
+  @override
+  String get bodyMeasurementsGDPRRightToAccess =>
+      'You have the right to access your personal data';
+
+  @override
+  String get bodyMeasurementsGDPRRightToErasure =>
+      'You have the right to delete your personal data';
+
+  @override
+  String get bodyMeasurementsGDPRRightToPortability =>
+      'You have the right to export your data in machine-readable format';
+
+  @override
+  String get bodyMeasurementsConflictResolutionTitle => 'Sync Conflict';
+
+  @override
+  String get bodyMeasurementsConflictResolutionDescription =>
+      'We found different versions of this measurement on your device and in the cloud.';
+
+  @override
+  String get bodyMeasurementsConflictResolutionKeepDevice =>
+      'Keep device version';
+
+  @override
+  String get bodyMeasurementsConflictResolutionKeepCloud =>
+      'Keep cloud version';
+
+  @override
+  String get bodyMeasurementsConflictResolutionMerge => 'Merge both';
+
+  @override
+  String get templateType => 'Type';
+
+  @override
+  String get templateTypeUpper => 'Upper Body';
+
+  @override
+  String get templateTypeLower => 'Lower Body';
+
+  @override
+  String get templateTypeFullBody => 'Full Body';
+
+  @override
+  String get advancedOptions => 'Advanced options';
+
+  @override
+  String get createTemplateButton => 'Create Template';
 }

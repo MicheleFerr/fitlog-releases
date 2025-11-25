@@ -29,6 +29,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Theme Preview Screen - Developer Tool
 class ThemePreviewScreen extends StatefulWidget {
@@ -247,11 +248,11 @@ class _SemanticColorPreview extends StatelessWidget {
     return Column(
       children: [
         _semanticCard(context, 'Success', context.successColor, context.textOnSuccess),
-        SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Error', context.errorColor, context.textOnError),
-        SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Warning', context.warningColor, context.textOnWarning),
-        SizedBox(height: AppSpacing.xs),
+        const SizedBox(height: AppSpacing.xs),
         _semanticCard(context, 'Info', context.infoColor, context.textOnInfo),
       ],
     );
@@ -290,11 +291,11 @@ class _TypographyPreview extends StatelessWidget {
         Text('Headline Large', style: context.textTheme.headlineLarge),
         Text('Headline Medium', style: context.textTheme.headlineMedium),
         Text('Headline Small', style: context.textTheme.headlineSmall),
-        SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
         Text('Title Large', style: context.textTheme.titleLarge),
         Text('Title Medium', style: context.textTheme.titleMedium),
         Text('Title Small', style: context.textTheme.titleSmall),
-        SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
         Text('Body Large', style: context.textTheme.bodyLarge),
         Text('Body Medium', style: context.textTheme.bodyMedium),
         Text('Body Small', style: context.textTheme.bodySmall),
@@ -333,7 +334,7 @@ class _SpacingPreview extends StatelessWidget {
             height: 24,
             color: context.colors.primary,
           ),
-          SizedBox(width: AppSpacing.xs),
+          const SizedBox(width: AppSpacing.xs),
           Text(label, style: context.textTheme.bodySmall),
         ],
       ),
@@ -369,7 +370,10 @@ class _ButtonsPreview extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(AppIcons.favorite),
+          icon: const SemanticIcon(
+  icon: AppIcons.favorite,
+  semanticLabel: 'Favorite',
+),
         ),
       ],
     );
@@ -396,7 +400,7 @@ class _CardsPreview extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: AppSpacing.xs),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   'This is a standard card with default padding.',
                   style: context.textTheme.bodyMedium,
@@ -405,7 +409,7 @@ class _CardsPreview extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
         Card(
           elevation: 4,
           child: Padding(
@@ -413,7 +417,7 @@ class _CardsPreview extends StatelessWidget {
             child: Row(
               children: [
                 Icon(AppIcons.info, color: context.colors.primary),
-                SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     'Elevated Card',

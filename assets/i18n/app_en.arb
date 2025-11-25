@@ -12,14 +12,9 @@
   "@welcomeDescription": {
     "description": "Welcome description on login screen"
   },
-  "onboardingWelcomeTitle": "Welcome, {name}!",
+  "onboardingWelcomeTitle": "Welcome to Your Workout Hub",
   "@onboardingWelcomeTitle": {
-    "description": "AI Coach onboarding welcome title",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
+    "description": "Onboarding welcome title"
   },
   "onboardingWelcomeDescription": "Track your progress, achieve your goals with the most comprehensive workout tracker",
   "@onboardingWelcomeDescription": {
@@ -20278,6 +20273,10 @@
   "@notificationSettingsDesc": {
     "description": "Description for notification settings menu item"
   },
+  "healthSyncSettingsDesc": "Sync workouts and body measurements with Apple Health / Health Connect",
+  "@healthSyncSettingsDesc": {
+    "description": "Description for health sync settings menu item"
+  },
   "frequencyCaps": "Frequency Caps",
   "@frequencyCaps": {
     "description": "Section title for frequency cap settings"
@@ -23696,5 +23695,571 @@
         "example": "Apple Health"
       }
     }
+  },
+  "bodyMeasurementsTitle": "Body Measurements",
+  "@bodyMeasurementsTitle": {
+    "description": "Body measurements feature title"
+  },
+  "bodyMeasurementsConsentTitle": "Privacy & Data Consent",
+  "@bodyMeasurementsConsentTitle": {
+    "description": "Consent dialog title"
+  },
+  "bodyMeasurementsConsentDescription": "We need your consent to collect and store your body measurements. Your data is encrypted and stored securely.",
+  "@bodyMeasurementsConsentDescription": {
+    "description": "Consent dialog description"
+  },
+  "bodyMeasurementsConsentAgree": "I agree to data collection",
+  "@bodyMeasurementsConsentAgree": {
+    "description": "Consent agreement button"
+  },
+  "bodyMeasurementsConsentPrivacyPolicy": "Privacy Policy",
+  "@bodyMeasurementsConsentPrivacyPolicy": {
+    "description": "Privacy policy link"
+  },
+  "bodyMeasurementsConsentLearnMore": "Learn more",
+  "@bodyMeasurementsConsentLearnMore": {
+    "description": "Learn more button"
+  },
+  "bodyMeasurementsConsentSelectMetrics": "Select data types to track:",
+  "@bodyMeasurementsConsentSelectMetrics": {
+    "description": "Metric selection instruction"
+  },
+  "bodyMeasurementsGroupEssential": "Essential Metrics",
+  "@bodyMeasurementsGroupEssential": {
+    "description": "Essential metrics group label"
+  },
+  "bodyMeasurementsGroupEssentialDesc": "Weight, Body Fat %, Height, Lean Mass, BMI, BMR",
+  "@bodyMeasurementsGroupEssentialDesc": {
+    "description": "Essential metrics group description"
+  },
+  "bodyMeasurementsGroupMeasurements": "Body Measurements",
+  "@bodyMeasurementsGroupMeasurements": {
+    "description": "Body measurements group label"
+  },
+  "bodyMeasurementsGroupMeasurementsDesc": "13 circumferences (Neck, Chest, Waist, Biceps, Thighs, etc.)",
+  "@bodyMeasurementsGroupMeasurementsDesc": {
+    "description": "Body measurements group description"
+  },
+  "bodyMeasurementsGroupVitals": "Vital Metrics",
+  "@bodyMeasurementsGroupVitals": {
+    "description": "Vital metrics group label"
+  },
+  "bodyMeasurementsGroupVitalsDesc": "Body Temperature, Water Mass, Bone Mass",
+  "@bodyMeasurementsGroupVitalsDesc": {
+    "description": "Vital metrics group description"
+  },
+  "bodyMeasurementsMetricWeight": "Weight",
+  "@bodyMeasurementsMetricWeight": {
+    "description": "Weight metric label"
+  },
+  "bodyMeasurementsMetricHeight": "Height",
+  "@bodyMeasurementsMetricHeight": {
+    "description": "Height metric label"
+  },
+  "bodyMeasurementsMetricBodyFat": "Body Fat %",
+  "@bodyMeasurementsMetricBodyFat": {
+    "description": "Body fat percentage metric label"
+  },
+  "bodyMeasurementsMetricMuscleMass": "Muscle Mass",
+  "@bodyMeasurementsMetricMuscleMass": {
+    "description": "Muscle mass metric label"
+  },
+  "bodyMeasurementsMetricBMI": "BMI",
+  "@bodyMeasurementsMetricBMI": {
+    "description": "BMI metric label"
+  },
+  "bodyMeasurementsMetricWaistCircumference": "Waist Circumference",
+  "@bodyMeasurementsMetricWaistCircumference": {
+    "description": "Waist circumference metric label"
+  },
+  "bodyMeasurementsMetricHipCircumference": "Hip Circumference",
+  "@bodyMeasurementsMetricHipCircumference": {
+    "description": "Hip circumference metric label"
+  },
+  "bodyMeasurementsMetricChestCircumference": "Chest Circumference",
+  "@bodyMeasurementsMetricChestCircumference": {
+    "description": "Chest circumference metric label"
+  },
+  "bodyMeasurementsMetricArmCircumference": "Arm Circumference",
+  "@bodyMeasurementsMetricArmCircumference": {
+    "description": "Arm circumference metric label"
+  },
+  "bodyMeasurementsMetricThighCircumference": "Thigh Circumference",
+  "@bodyMeasurementsMetricThighCircumference": {
+    "description": "Thigh circumference metric label"
+  },
+  "bodyMeasurementsMetricCalfCircumference": "Calf Circumference",
+  "@bodyMeasurementsMetricCalfCircumference": {
+    "description": "Calf circumference metric label"
+  },
+  "bodyMeasurementsMetricNeckCircumference": "Neck Circumference",
+  "@bodyMeasurementsMetricNeckCircumference": {
+    "description": "Neck circumference metric label"
+  },
+  "bodyMeasurementsMetricShoulderWidth": "Shoulder Width",
+  "@bodyMeasurementsMetricShoulderWidth": {
+    "description": "Shoulder width metric label"
+  },
+  "bodyMeasurementsUnitKg": "kg",
+  "@bodyMeasurementsUnitKg": {
+    "description": "Kilogram unit"
+  },
+  "bodyMeasurementsUnitLb": "lb",
+  "@bodyMeasurementsUnitLb": {
+    "description": "Pound unit"
+  },
+  "bodyMeasurementsUnitCm": "cm",
+  "@bodyMeasurementsUnitCm": {
+    "description": "Centimeter unit"
+  },
+  "bodyMeasurementsUnitInch": "in",
+  "@bodyMeasurementsUnitInch": {
+    "description": "Inch unit"
+  },
+  "bodyMeasurementsUnitPercent": "%",
+  "@bodyMeasurementsUnitPercent": {
+    "description": "Percentage unit"
+  },
+  "bodyMeasurementsInputTitle": "Add Measurement",
+  "@bodyMeasurementsInputTitle": {
+    "description": "Measurement input form title"
+  },
+  "bodyMeasurementsInputSelectMetric": "Select metric type",
+  "@bodyMeasurementsInputSelectMetric": {
+    "description": "Metric type selector label"
+  },
+  "bodyMeasurementsInputValue": "Value",
+  "@bodyMeasurementsInputValue": {
+    "description": "Value input field label"
+  },
+  "bodyMeasurementsInputDate": "Date",
+  "@bodyMeasurementsInputDate": {
+    "description": "Date picker label"
+  },
+  "bodyMeasurementsInputTime": "Time",
+  "@bodyMeasurementsInputTime": {
+    "description": "Time picker label"
+  },
+  "bodyMeasurementsInputNotes": "Notes (optional)",
+  "@bodyMeasurementsInputNotes": {
+    "description": "Notes field label"
+  },
+  "bodyMeasurementsInputSave": "Save",
+  "@bodyMeasurementsInputSave": {
+    "description": "Save button"
+  },
+  "bodyMeasurementsInputCancel": "Cancel",
+  "@bodyMeasurementsInputCancel": {
+    "description": "Cancel button"
+  },
+  "bodyMeasurementsValidationRequired": "This field is required",
+  "@bodyMeasurementsValidationRequired": {
+    "description": "Required field validation error"
+  },
+  "bodyMeasurementsValidationInvalidNumber": "Please enter a valid number",
+  "@bodyMeasurementsValidationInvalidNumber": {
+    "description": "Invalid number validation error"
+  },
+  "bodyMeasurementsValidationOutOfRange": "Value must be between {min} and {max}",
+  "@bodyMeasurementsValidationOutOfRange": {
+    "description": "Out of range validation error",
+    "placeholders": {
+      "min": {
+        "type": "double",
+        "example": "0"
+      },
+      "max": {
+        "type": "double",
+        "example": "300"
+      }
+    }
+  },
+  "bodyMeasurementsValidationInvalid": "Invalid value",
+  "@bodyMeasurementsValidationInvalid": {
+    "description": "Generic validation error"
+  },
+  "bodyMeasurementsValidationOutlierWarning": "Unusual value (typical range: {typicalRange}). Please verify.",
+  "@bodyMeasurementsValidationOutlierWarning": {
+    "description": "Outlier warning message",
+    "placeholders": {
+      "typicalRange": {
+        "type": "String",
+        "example": "50-100kg"
+      }
+    }
+  },
+  "bodyMeasurementsInputEditTitle": "Edit Measurement",
+  "@bodyMeasurementsInputEditTitle": {
+    "description": "Edit measurement form title"
+  },
+  "bodyMeasurementsInputDescription": "Fill in your body measurements. All fields are optional.",
+  "@bodyMeasurementsInputDescription": {
+    "description": "Form description text"
+  },
+  "bodyMeasurementsInputSubmit": "Submit",
+  "@bodyMeasurementsInputSubmit": {
+    "description": "Submit button"
+  },
+  "bodyMeasurementsDraftSaved": "Draft saved locally",
+  "@bodyMeasurementsDraftSaved": {
+    "description": "Draft auto-save notification"
+  },
+  "bodyMeasurementsSaveSuccess": "Measurements saved successfully",
+  "@bodyMeasurementsSaveSuccess": {
+    "description": "Save success notification"
+  },
+  "bodyMeasurementsMetricLeanMass": "Lean Mass",
+  "@bodyMeasurementsMetricLeanMass": {
+    "description": "Lean mass metric label"
+  },
+  "bodyMeasurementsMetricBMR": "BMR (Basal Metabolic Rate)",
+  "@bodyMeasurementsMetricBMR": {
+    "description": "BMR metric label"
+  },
+  "bodyMeasurementsMetricShoulderCircumference": "Shoulder Circumference",
+  "@bodyMeasurementsMetricShoulderCircumference": {
+    "description": "Shoulder circumference metric label"
+  },
+  "bodyMeasurementsMetricAbdomenCircumference": "Abdomen Circumference",
+  "@bodyMeasurementsMetricAbdomenCircumference": {
+    "description": "Abdomen circumference metric label"
+  },
+  "bodyMeasurementsMetricBicepLeftCircumference": "Left Bicep Circumference",
+  "@bodyMeasurementsMetricBicepLeftCircumference": {
+    "description": "Left bicep circumference metric label"
+  },
+  "bodyMeasurementsMetricBicepRightCircumference": "Right Bicep Circumference",
+  "@bodyMeasurementsMetricBicepRightCircumference": {
+    "description": "Right bicep circumference metric label"
+  },
+  "bodyMeasurementsMetricForearmLeftCircumference": "Left Forearm Circumference",
+  "@bodyMeasurementsMetricForearmLeftCircumference": {
+    "description": "Left forearm circumference metric label"
+  },
+  "bodyMeasurementsMetricForearmRightCircumference": "Right Forearm Circumference",
+  "@bodyMeasurementsMetricForearmRightCircumference": {
+    "description": "Right forearm circumference metric label"
+  },
+  "bodyMeasurementsMetricThighLeftCircumference": "Left Thigh Circumference",
+  "@bodyMeasurementsMetricThighLeftCircumference": {
+    "description": "Left thigh circumference metric label"
+  },
+  "bodyMeasurementsMetricThighRightCircumference": "Right Thigh Circumference",
+  "@bodyMeasurementsMetricThighRightCircumference": {
+    "description": "Right thigh circumference metric label"
+  },
+  "bodyMeasurementsMetricCalfLeftCircumference": "Left Calf Circumference",
+  "@bodyMeasurementsMetricCalfLeftCircumference": {
+    "description": "Left calf circumference metric label"
+  },
+  "bodyMeasurementsMetricCalfRightCircumference": "Right Calf Circumference",
+  "@bodyMeasurementsMetricCalfRightCircumference": {
+    "description": "Right calf circumference metric label"
+  },
+  "bodyMeasurementsMetricBodyTemperature": "Body Temperature",
+  "@bodyMeasurementsMetricBodyTemperature": {
+    "description": "Body temperature metric label"
+  },
+  "bodyMeasurementsMetricWaterMass": "Water Mass",
+  "@bodyMeasurementsMetricWaterMass": {
+    "description": "Water mass metric label"
+  },
+  "bodyMeasurementsMetricBoneMass": "Bone Mass",
+  "@bodyMeasurementsMetricBoneMass": {
+    "description": "Bone mass metric label"
+  },
+  "bodyMeasurementsListTitle": "My Measurements",
+  "@bodyMeasurementsListTitle": {
+    "description": "Measurement list screen title"
+  },
+  "bodyMeasurementsListFilterAll": "All",
+  "@bodyMeasurementsListFilterAll": {
+    "description": "Show all measurements filter"
+  },
+  "bodyMeasurementsListFilterByMetric": "Filter by metric",
+  "@bodyMeasurementsListFilterByMetric": {
+    "description": "Filter by metric type option"
+  },
+  "bodyMeasurementsListEmpty": "No measurements yet. Add your first measurement to start tracking progress.",
+  "@bodyMeasurementsListEmpty": {
+    "description": "Empty state message"
+  },
+  "bodyMeasurementsListEdit": "Edit",
+  "@bodyMeasurementsListEdit": {
+    "description": "Edit measurement action"
+  },
+  "bodyMeasurementsListDelete": "Delete",
+  "@bodyMeasurementsListDelete": {
+    "description": "Delete measurement action"
+  },
+  "bodyMeasurementsListDeleteConfirmTitle": "Delete Measurement?",
+  "@bodyMeasurementsListDeleteConfirmTitle": {
+    "description": "Delete confirmation dialog title"
+  },
+  "bodyMeasurementsListDeleteConfirmMessage": "This measurement will be deleted. You can restore it within 30 days from privacy settings.",
+  "@bodyMeasurementsListDeleteConfirmMessage": {
+    "description": "Delete confirmation dialog message"
+  },
+  "bodyMeasurementsListDeleteSuccess": "Measurement deleted successfully",
+  "@bodyMeasurementsListDeleteSuccess": {
+    "description": "Success message after deleting measurement"
+  },
+  "bodyMeasurementsListDeleteError": "Failed to delete measurement",
+  "@bodyMeasurementsListDeleteError": {
+    "description": "Error message when deletion fails"
+  },
+  "bodyMeasurementsChartsTitle": "Progress Charts",
+  "@bodyMeasurementsChartsTitle": {
+    "description": "Progress charts screen title"
+  },
+  "bodyMeasurementsChartsPeriodWeek": "Week",
+  "@bodyMeasurementsChartsPeriodWeek": {
+    "description": "Week period selector"
+  },
+  "bodyMeasurementsChartsPeriodMonth": "Month",
+  "@bodyMeasurementsChartsPeriodMonth": {
+    "description": "Month period selector"
+  },
+  "bodyMeasurementsChartsPeriodYear": "Year",
+  "@bodyMeasurementsChartsPeriodYear": {
+    "description": "Year period selector"
+  },
+  "bodyMeasurementsChartsAxisDate": "Date",
+  "@bodyMeasurementsChartsAxisDate": {
+    "description": "Chart date axis label"
+  },
+  "bodyMeasurementsChartsAxisValue": "Value",
+  "@bodyMeasurementsChartsAxisValue": {
+    "description": "Chart value axis label"
+  },
+  "bodyMeasurementsChartsEmpty": "No data to display. Add measurements to see your progress charts.",
+  "@bodyMeasurementsChartsEmpty": {
+    "description": "Empty state message when no chart data available"
+  },
+  "bodyMeasurementsChartsSelectMetric": "Select a metric to view its progress",
+  "@bodyMeasurementsChartsSelectMetric": {
+    "description": "Instruction to select metric for chart"
+  },
+  "bodyMeasurementsPrivacyTitle": "Privacy & Data",
+  "@bodyMeasurementsPrivacyTitle": {
+    "description": "Privacy settings screen title"
+  },
+  "bodyMeasurementsPrivacyExportData": "Export My Data",
+  "@bodyMeasurementsPrivacyExportData": {
+    "description": "Export data button"
+  },
+  "bodyMeasurementsPrivacyDeleteData": "Delete My Data",
+  "@bodyMeasurementsPrivacyDeleteData": {
+    "description": "Delete data button"
+  },
+  "bodyMeasurementsPrivacyViewConsent": "View Consent",
+  "@bodyMeasurementsPrivacyViewConsent": {
+    "description": "View consent button"
+  },
+  "bodyMeasurementsPrivacyManageMetrics": "Manage Tracked Metrics",
+  "@bodyMeasurementsPrivacyManageMetrics": {
+    "description": "Manage consented metrics button"
+  },
+  "bodyMeasurementsPrivacyDataEncrypted": "Your data is encrypted with AES-256-GCM",
+  "@bodyMeasurementsPrivacyDataEncrypted": {
+    "description": "Encryption info message"
+  },
+  "bodyMeasurementsPrivacyGDPRCompliant": "GDPR compliant data storage",
+  "@bodyMeasurementsPrivacyGDPRCompliant": {
+    "description": "GDPR compliance badge"
+  },
+  "bodyMeasurementsDeleteDialogTitle": "Delete Your Data?",
+  "@bodyMeasurementsDeleteDialogTitle": {
+    "description": "Delete confirmation dialog title"
+  },
+  "bodyMeasurementsDeleteDialogWarning": "This will permanently delete all your body measurements. This action cannot be undone.",
+  "@bodyMeasurementsDeleteDialogWarning": {
+    "description": "Delete warning message"
+  },
+  "bodyMeasurementsDeleteDialogRetentionNotice": "Data will be retained for 30 days for compliance purposes, then permanently deleted.",
+  "@bodyMeasurementsDeleteDialogRetentionNotice": {
+    "description": "GDPR retention period notice"
+  },
+  "bodyMeasurementsDeleteDialogConfirm": "Yes, delete my data",
+  "@bodyMeasurementsDeleteDialogConfirm": {
+    "description": "Confirm deletion button"
+  },
+  "bodyMeasurementsDeleteDialogCancel": "Cancel",
+  "@bodyMeasurementsDeleteDialogCancel": {
+    "description": "Cancel deletion button"
+  },
+  "bodyMeasurementsSyncStatusConnected": "Connected to {platform}",
+  "@bodyMeasurementsSyncStatusConnected": {
+    "description": "Sync connected status",
+    "placeholders": {
+      "platform": {
+        "type": "String",
+        "example": "Apple Health"
+      }
+    }
+  },
+  "bodyMeasurementsSyncStatusSyncing": "Syncing...",
+  "@bodyMeasurementsSyncStatusSyncing": {
+    "description": "Sync in progress status"
+  },
+  "bodyMeasurementsSyncStatusError": "Sync error: {error}",
+  "@bodyMeasurementsSyncStatusError": {
+    "description": "Sync error status",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "bodyMeasurementsSyncStatusDisconnected": "Not connected",
+  "@bodyMeasurementsSyncStatusDisconnected": {
+    "description": "Sync disconnected status"
+  },
+  "bodyMeasurementsSyncLastSync": "Last sync: {time}",
+  "@bodyMeasurementsSyncLastSync": {
+    "description": "Last sync time",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2 minutes ago"
+      }
+    }
+  },
+  "bodyMeasurementsSyncNow": "Sync Now",
+  "@bodyMeasurementsSyncNow": {
+    "description": "Manual sync button"
+  },
+  "bodyMeasurementsSyncNeverSynced": "Never synced",
+  "@bodyMeasurementsSyncNeverSynced": {
+    "description": "Status when user has never synced"
+  },
+  "bodyMeasurementsSyncMeasurementsRead": "{count} measurements read",
+  "@bodyMeasurementsSyncMeasurementsRead": {
+    "description": "Number of measurements read from health platform",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "bodyMeasurementsSyncMeasurementsWritten": "{count} measurements written",
+  "@bodyMeasurementsSyncMeasurementsWritten": {
+    "description": "Number of measurements written to health platform",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "bodyMeasurementsSuccessSaved": "Measurement saved successfully",
+  "@bodyMeasurementsSuccessSaved": {
+    "description": "Save success message"
+  },
+  "bodyMeasurementsSuccessDeleted": "Measurement deleted successfully",
+  "@bodyMeasurementsSuccessDeleted": {
+    "description": "Delete success message"
+  },
+  "bodyMeasurementsSuccessExported": "Data exported successfully",
+  "@bodyMeasurementsSuccessExported": {
+    "description": "Export success message"
+  },
+  "bodyMeasurementsErrorSave": "Failed to save measurement: {error}",
+  "@bodyMeasurementsErrorSave": {
+    "description": "Save error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "bodyMeasurementsErrorLoad": "Failed to load measurements: {error}",
+  "@bodyMeasurementsErrorLoad": {
+    "description": "Load error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Database error"
+      }
+    }
+  },
+  "bodyMeasurementsErrorExport": "Failed to export data: {error}",
+  "@bodyMeasurementsErrorExport": {
+    "description": "Export error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Permission denied"
+      }
+    }
+  },
+  "bodyMeasurementsErrorDelete": "Failed to delete measurement: {error}",
+  "@bodyMeasurementsErrorDelete": {
+    "description": "Delete error message",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  "bodyMeasurementsGDPRRightToAccess": "You have the right to access your personal data",
+  "@bodyMeasurementsGDPRRightToAccess": {
+    "description": "GDPR Article 15 - Right to access"
+  },
+  "bodyMeasurementsGDPRRightToErasure": "You have the right to delete your personal data",
+  "@bodyMeasurementsGDPRRightToErasure": {
+    "description": "GDPR Article 17 - Right to erasure"
+  },
+  "bodyMeasurementsGDPRRightToPortability": "You have the right to export your data in machine-readable format",
+  "@bodyMeasurementsGDPRRightToPortability": {
+    "description": "GDPR Article 20 - Right to data portability"
+  },
+  "bodyMeasurementsConflictResolutionTitle": "Sync Conflict",
+  "@bodyMeasurementsConflictResolutionTitle": {
+    "description": "Conflict resolution dialog title"
+  },
+  "bodyMeasurementsConflictResolutionDescription": "We found different versions of this measurement on your device and in the cloud.",
+  "@bodyMeasurementsConflictResolutionDescription": {
+    "description": "Conflict description"
+  },
+  "bodyMeasurementsConflictResolutionKeepDevice": "Keep device version",
+  "@bodyMeasurementsConflictResolutionKeepDevice": {
+    "description": "Keep device version option"
+  },
+  "bodyMeasurementsConflictResolutionKeepCloud": "Keep cloud version",
+  "@bodyMeasurementsConflictResolutionKeepCloud": {
+    "description": "Keep cloud version option"
+  },
+  "bodyMeasurementsConflictResolutionMerge": "Merge both",
+  "@bodyMeasurementsConflictResolutionMerge": {
+    "description": "Merge conflict option"
+  },
+  "templateType": "Type",
+  "@templateType": {
+    "description": "Template type label"
+  },
+  "templateTypeUpper": "Upper Body",
+  "@templateTypeUpper": {
+    "description": "Upper body template type"
+  },
+  "templateTypeLower": "Lower Body",
+  "@templateTypeLower": {
+    "description": "Lower body template type"
+  },
+  "templateTypeFullBody": "Full Body",
+  "@templateTypeFullBody": {
+    "description": "Full body template type"
+  },
+  "advancedOptions": "Advanced options",
+  "@advancedOptions": {
+    "description": "Advanced options section title"
+  },
+  "createTemplateButton": "Create Template",
+  "@createTemplateButton": {
+    "description": "Create template button text"
   }
 }
