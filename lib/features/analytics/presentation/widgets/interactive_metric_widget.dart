@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
@@ -73,10 +74,12 @@ class InteractiveMetricWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Icon(
-                            AppIcons.info,
-                            size: 14,
-                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                          SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                           ),
                         ],
                       ),

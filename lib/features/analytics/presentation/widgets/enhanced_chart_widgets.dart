@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
@@ -29,11 +29,11 @@ class EnhancedVolumeChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.barChart,
+                  Icons.bar_chart,
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.weeklyVolumeChart,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -42,14 +42,14 @@ class EnhancedVolumeChart extends StatelessWidget {
                 ),
                 const Spacer(),
                 PopupMenuButton<String>(
-                  icon: Icon(AppIcons.moreVert, color: colorScheme.outline),
+                  icon: Icon(Icons.more_vert, color: colorScheme.outline),
                   onSelected: (value) => _handleChartAction(value),
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'export',
                       child: Row(
                         children: [
-                          const Icon(AppIcons.download),
+                          const Icon(Icons.download),
                           const SizedBox(width: 8),
                           Text(localizations.exportData),
                         ],
@@ -59,7 +59,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                       value: 'details',
                       child: Row(
                         children: [
-                          const Icon(AppIcons.infoOutlined),
+                          const Icon(Icons.info_outlined),
                           const SizedBox(width: 8),
                           Text(localizations.viewDetails),
                         ],
@@ -199,7 +199,7 @@ class EnhancedVolumeChart extends StatelessWidget {
                       ),
                     ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildVolumeInsights(context, volumeData),
           ],
         ),
@@ -227,11 +227,11 @@ class EnhancedVolumeChart extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            isImproving ? AppIcons.trendUp : AppIcons.trendDown,
-            color: isImproving ? Colors.green : Colors.red,
+            isImproving ? Icons.trending_up : Icons.trending_down,
+            color: isImproving ? context.colors.success : context.colors.error,
             size: 20,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               isImproving
@@ -287,15 +287,15 @@ class EnhancedVolumeChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.barChart,
+            Icons.bar_chart,
             size: 48,
-            color: Colors.grey.withValues(alpha: 0.5),
+            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
+              color: context.colors.surfaceVariant,
             ),
           ),
         ],
@@ -332,11 +332,11 @@ class EnhancedFrequencyChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.calendar,
+                  Icons.calendar_today,
                   color: colorScheme.secondary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.workoutFrequency,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -440,7 +440,7 @@ class EnhancedFrequencyChart extends StatelessWidget {
                       ),
                     ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildFrequencyInsights(context, frequencyData),
           ],
         ),
@@ -467,26 +467,26 @@ class EnhancedFrequencyChart extends StatelessWidget {
           Row(
             children: [
               Icon(
-                AppIcons.achievement,
+                Icons.emoji_events,
                 color: colorScheme.secondary,
                 size: 16,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 localizations.bestWorkoutDay(_getDayName(bestDay, localizations)),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             children: [
               Icon(
-                AppIcons.analytics,
+                Icons.analytics,
                 color: colorScheme.outline,
                 size: 16,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 localizations.averageWorkoutsPerDay(averagePerDay.toStringAsFixed(1)),
                 style: Theme.of(context).textTheme.bodyMedium,
@@ -520,15 +520,15 @@ class EnhancedFrequencyChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.calendar,
+            Icons.calendar_today,
             size: 48,
-            color: Colors.grey.withValues(alpha: 0.5),
+            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
+              color: context.colors.surfaceVariant,
             ),
           ),
         ],
@@ -587,11 +587,11 @@ class EnhancedBodyPartChart extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.donutLarge,
+                  Icons.donut_large,
                   color: colorScheme.tertiary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.bodyPartDistribution,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -653,7 +653,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
                                         section.category,
@@ -724,11 +724,11 @@ class EnhancedBodyPartChart extends StatelessWidget {
       case 'Shoulders':
         return colorScheme.tertiary;
       case 'Legs':
-        return colorScheme.success;
+        return context.colors.success;
       case 'Arms':
-        return colorScheme.secondary;
+        return context.colors.secondary;
       default:
-        return colorScheme.surfaceContainerHighest;
+        return context.colors.surfaceVariant;
     }
   }
 
@@ -738,15 +738,15 @@ class EnhancedBodyPartChart extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.donutLarge,
+            Icons.donut_large,
             size: 48,
-            color: Colors.grey.withValues(alpha: 0.5),
+            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
+              color: context.colors.surfaceVariant,
             ),
           ),
         ],

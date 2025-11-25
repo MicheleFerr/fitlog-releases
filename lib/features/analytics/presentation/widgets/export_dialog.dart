@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Dialog for exporting analytics data
 class ExportDialog extends ConsumerStatefulWidget {
@@ -31,7 +33,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
       title: Row(
         children: [
           Icon(AppIcons.download, color: colorScheme.primary),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Text(localizations.exportData),
         ],
       ),
@@ -77,7 +79,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
               ),
             ),
             if (_selectedFormat == ExportFormat.csv) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 localizations.selectDataType,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -133,7 +135,10 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                     color: colorScheme.onPrimary,
                   ),
                 )
-              : Icon(AppIcons.download),
+              : const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
           label: Text(_isExporting ? localizations.exporting : localizations.export),
         ),
       ],
@@ -183,7 +188,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                 color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +199,7 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     description,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -353,12 +358,12 @@ class _ExportDialogState extends ConsumerState<ExportDialog> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(AppIcons.complete, color: Colors.white),
+            Icon(AppIcons.complete, color: context.colors.surface),
             const SizedBox(width: 12),
             Text(localizations.exportSuccess),
           ],
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: context.colors.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

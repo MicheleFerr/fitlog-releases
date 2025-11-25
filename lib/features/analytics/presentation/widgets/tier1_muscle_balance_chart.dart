@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
@@ -268,7 +269,10 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         
         // Reset animation
         IconButton(
-          icon: const Icon(AppIcons.refresh),
+          icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -280,7 +284,11 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         
         // Edit targets
         TextButton.icon(
-          icon: const Icon(AppIcons.edit, size: 18),
+          icon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.small,
+),
           label: Text(l10n.editTargets),
           onPressed: _showTargetEditDialog,
         ),
@@ -534,7 +542,11 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 ),
               ),
               IconButton(
-                icon: const Icon(AppIcons.close, size: 20),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -556,7 +568,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             l10n: l10n,
           ),
           
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           
           // Target with edit button
           _buildEditableMetricRow(
@@ -571,7 +583,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           
           // Progress indicator
           if (improvement != 0) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -588,7 +600,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                     color: improvement >= 0 ? context.colors.success : context.colors.error,
                     size: 20,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -624,10 +636,12 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               children: [
                 Row(
                   children: [
-                    Icon(
-                      AppIcons.barChart,
-                      size: 16,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.7,
+),
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -712,7 +726,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / 100,
             minHeight: 8,
@@ -773,7 +787,12 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(AppIcons.edit, size: 14, color: color),
+                    SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+  color: color,
+),
                   ],
                 ),
               ),
@@ -782,7 +801,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / 100,
             minHeight: 8,
@@ -888,13 +907,13 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 formula: 'Volume = Sets × Reps × Weight',
                 example: '3 sets × 10 reps × 50kg = 1500kg',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildFormulaCard(
                 title: l10n.strengthPercentage,
                 formula: 'Strength % = (Current Volume / Max Volume) × 100',
                 example: '(1500kg / 5000kg) × 100 = 30%',
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 l10n.targetExplanation,
                 style: Theme.of(context).textTheme.bodySmall,
@@ -938,7 +957,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               formula,

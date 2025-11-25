@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnalyticsOverviewCard extends StatelessWidget {
@@ -8,7 +7,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
     super.key,
     required this.stats,
   });
-  final OverallStats stats;
+  final Map<String, dynamic> stats;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
                   AppIcons.dashboard,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Overview',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -42,13 +41,13 @@ class AnalyticsOverviewCard extends StatelessWidget {
                 Expanded(child: _buildStatItem(
                   context,
                   '🏋️',
-                  stats.totalWorkouts.toString(),
+                  (stats['totalWorkouts'] ?? 0).toString(),
                   'Workouts',
                 )),
                 Expanded(child: _buildStatItem(
                   context,
                   '💪',
-                  stats.totalExercises.toString(),
+                  (stats['totalExercises'] ?? 0).toString(),
                   'Exercises',
                 )),
               ],
@@ -59,13 +58,13 @@ class AnalyticsOverviewCard extends StatelessWidget {
                 Expanded(child: _buildStatItem(
                   context,
                   '🔢',
-                  stats.totalSets.toString(),
+                  (stats['totalSets'] ?? 0).toString(),
                   'Total Sets',
                 )),
                 Expanded(child: _buildStatItem(
                   context,
                   '⚖️',
-                  '${(stats.totalVolume / 1000).toStringAsFixed(1)}t',
+                  '${((stats['totalVolume'] ?? 0) / 1000).toStringAsFixed(1)}t',
                   'Total Volume',
                 )),
               ],
@@ -95,7 +94,7 @@ class AnalyticsOverviewCard extends StatelessWidget {
             emoji,
             style: const TextStyle(fontSize: 24),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             value,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(

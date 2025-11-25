@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/providers/wor
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget for celebrating personal record achievements
 class PRCelebrationWidget extends ConsumerWidget {
@@ -79,7 +81,7 @@ class PRCelebrationWidget extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '${currentPRs.length}',
@@ -135,7 +137,7 @@ class PRCelebrationWidget extends ConsumerWidget {
             height: 24,
             decoration: BoxDecoration(
               color: colorScheme.secondary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
               child: Icon(
@@ -344,7 +346,11 @@ class PRCelebrationDialog extends ConsumerWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(AppIcons.share, size: 16),
+                          const SemanticIcon(
+  icon: AppIcons.share,
+  semanticLabel: 'Share',
+  size: AppIconSize.tiny,
+),
                           const SizedBox(width: 8),
                           Text(l10n.share),
                         ],

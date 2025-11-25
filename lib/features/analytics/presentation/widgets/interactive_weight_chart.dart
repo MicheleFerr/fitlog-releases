@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grafico interattivo per tracciare il progresso del peso
 /// con gesture support per zoom, pan e dettagli on-tap
@@ -347,7 +346,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           fitInsideHorizontally: true,
           fitInsideVertically: true,
           tooltipPadding: const EdgeInsets.all(8),
-          // TODO: tooltipRoundedRadius deprecated in fl_chart - use custom painter if needed
+          tooltipRoundedRadius: 8,
           getTooltipItems: (spots) {
             return spots.map((spot) {
               final index = spot.spotIndex;
@@ -389,20 +388,20 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           _buildStatItem(
             label: 'Data',
             value: DateFormat('d MMM yyyy').format(data.date),
-            icon: AppIcons.calendar,
+            icon: Icons.calendar_today,
             theme: theme,
           ),
           _buildStatItem(
             label: 'Peso',
             value: '${data.weight.toStringAsFixed(1)} kg',
-            icon: AppIcons.weight,
+            icon: Icons.monitor_weight,
             theme: theme,
           ),
           _buildStatItem(
             label: 'Variazione',
             value: '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} kg',
             subtitle: '${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(1)}%',
-            icon: change >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
+            icon: change >= 0 ? Icons.trending_up : Icons.trending_down,
             color: change >= 0 ? context.colors.error : context.colors.success,
             theme: theme,
           ),
@@ -464,7 +463,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             theme: theme,
           ),
           if (widget.targetWeight != null) ...[
-            SizedBox(width: 24),
+            const SizedBox(width: 24),
             _buildLegendItem(
               color: context.colors.success,
               label: 'Obiettivo',
@@ -493,7 +492,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
             border: isDashed ? Border.all(color: color, width: 1) : null,
           ),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Text(
           label,
           style: theme.textTheme.bodySmall,
@@ -512,7 +511,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.lineChart,
+            Icons.show_chart,
             size: 64,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),

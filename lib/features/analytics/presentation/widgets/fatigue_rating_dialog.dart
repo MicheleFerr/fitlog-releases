@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/workout_fatigue.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FatigueRatingDialog extends StatefulWidget {
 
@@ -86,7 +86,10 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                prefixIcon: const Icon(AppIcons.noteAdd),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.noteAdd,
+  semanticLabel: 'Note add',
+),
               ),
             ),
             

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🎯 TIER-1 IMPROVEMENT COMPONENTS
 /// Componenti riutilizzabili per rendere Analytics tier-1
@@ -557,7 +556,7 @@ class InsightCard extends StatelessWidget {
             ),
           ),
           if (action != null) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             action!,
           ],
         ],
@@ -822,7 +821,7 @@ class StreakWidget extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.shade400,  // Material orange shade
+            context.colors.secondary.withValues(alpha: 0.8),  // Theme orange
             context.warningColor,
           ],
           begin: Alignment.topLeft,
@@ -933,7 +932,7 @@ class StreakWidget extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
                   value: progressToMilestone,
                   minHeight: 8,
@@ -948,7 +947,7 @@ class StreakWidget extends StatelessWidget {
           
           // Motivational message
           if (motivationalMessage != null) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

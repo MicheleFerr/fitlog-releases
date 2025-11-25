@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insight_localizer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Carousel widget for displaying training insights
 class InsightsCarousel extends StatefulWidget {
@@ -56,11 +57,11 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
           child: Row(
             children: [
               Icon(
-                AppIcons.info,
+                Icons.info_outline,
                 size: 16,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.insightDisclaimer,
@@ -90,7 +91,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
             },
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         _buildPageIndicator(localizedInsights.length),
       ],
     );
@@ -127,7 +128,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                     ),
                     child: Icon(icon, color: color, size: 20),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +159,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Expanded(
                 child: Text(
                   insight.message,
@@ -177,11 +178,11 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
                 child: Row(
                   children: [
                     Icon(
-                      AppIcons.tip,
+                      Icons.lightbulb_outline,
                       size: 16,
                       color: colorScheme.onPrimaryContainer,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         insight.recommendation,
@@ -226,34 +227,30 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
   Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
     switch (insight.type) {
       case InsightType.achievement:
-        return Colors.green;  // Success color for achievements
+        return context.colors.success;
       case InsightType.warning:
-        return colorScheme.secondary;
+        return context.colors.secondary;
       case InsightType.suggestion:
         return colorScheme.tertiary;
       case InsightType.info:
         return colorScheme.outline;
       case InsightType.motivation:
         return colorScheme.primary;
-      case InsightType.improvement:
-        return Colors.blue;  // Blue for improvement insights
     }
   }
 
   IconData _getIconForInsight(TrainingInsight insight) {
     switch (insight.type) {
       case InsightType.achievement:
-        return AppIcons.complete;
+        return Icons.check_circle;
       case InsightType.warning:
-        return AppIcons.warning;
+        return Icons.warning;
       case InsightType.suggestion:
-        return AppIcons.lightbulb;
+        return Icons.lightbulb;
       case InsightType.info:
-        return AppIcons.infoIcon;
+        return Icons.info;
       case InsightType.motivation:
-        return AppIcons.streak;
-      case InsightType.improvement:
-        return AppIcons.trendingUp;  // Trending up icon for improvements
+        return Icons.local_fire_department;
     }
   }
 
@@ -297,7 +294,7 @@ class _InsightDetailsSheet extends StatelessWidget {
                   style: const TextStyle(fontSize: 32),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -320,19 +317,19 @@ class _InsightDetailsSheet extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Text(
             AppLocalizations.of(context).insight,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             insight.message,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Text(
             AppLocalizations.of(context).recommendation,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -349,7 +346,7 @@ class _InsightDetailsSheet extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  AppIcons.lightbulb,
+                  Icons.lightbulb,
                   color: colorScheme.onPrimaryContainer,
                 ),
                 const SizedBox(width: 12),
@@ -384,17 +381,15 @@ class _InsightDetailsSheet extends StatelessWidget {
   Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
     switch (insight.type) {
       case InsightType.achievement:
-        return Colors.green;  // Success color for achievements
+        return context.colors.success;
       case InsightType.warning:
-        return colorScheme.secondary;
+        return context.colors.secondary;
       case InsightType.suggestion:
         return colorScheme.tertiary;
       case InsightType.info:
         return colorScheme.outline;
       case InsightType.motivation:
         return colorScheme.primary;
-      case InsightType.improvement:
-        return Colors.blue;  // Blue for improvement insights
     }
   }
 

@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grafico avanzato per tracciare la progressione del 1RM (One Rep Max)
 /// con predictive trend lines e analisi del plateau
@@ -170,7 +169,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                   });
                   HapticFeedback.lightImpact();
                 },
-                avatar: const Icon(AppIcons.visibility, size: 18),
+                avatar: const Icon(Icons.visibility, size: 18),
               ),
             );
           }
@@ -292,7 +291,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                       ),
                       if (isSelected)
                         Icon(
-                          AppIcons.complete,
+                          Icons.check_circle,
                           size: 20,
                           color: theme.colorScheme.primary,
                         ),
@@ -572,8 +571,8 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
                   children: [
                     Icon(
                       _plateauAnalysis!.isInPlateau
-                          ? AppIcons.warningAmber
-                          : AppIcons.trendingUp,
+                          ? Icons.warning_amber
+                          : Icons.trending_up,
                       color: _plateauAnalysis!.isInPlateau
                           ? context.colors.secondary
                           : context.colors.success,
@@ -630,7 +629,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
           Row(
             children: [
               const Icon(
-                AppIcons.autoGraph,
+                Icons.auto_graph,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -683,27 +682,27 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildDetailItem(
-            icon: AppIcons.calendar,
+            icon: Icons.calendar_today,
             label: 'Data',
             value: DateFormat('d MMM yyyy').format(_selectedDataPoint!.date),
             theme: theme,
           ),
           _buildDetailItem(
-            icon: AppIcons.workout,
+            icon: Icons.fitness_center,
             label: '1RM',
             value: '${_selectedDataPoint!.weight.toStringAsFixed(1)} kg',
             theme: theme,
           ),
           if (_selectedDataPoint!.actualReps != null)
             _buildDetailItem(
-              icon: AppIcons.repeat,
+              icon: Icons.repeat,
               label: 'Reps',
               value: '${_selectedDataPoint!.actualReps}',
               theme: theme,
             ),
           if (_selectedDataPoint!.rpe != null)
             _buildDetailItem(
-              icon: AppIcons.speed,
+              icon: Icons.speed,
               label: 'RPE',
               value: '${_selectedDataPoint!.rpe}/10',
               theme: theme,
@@ -802,7 +801,7 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.analytics,
+            Icons.analytics_outlined,
             size: 64,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
@@ -967,15 +966,15 @@ class _OneRMProgressionChartState extends State<OneRMProgressionChart>
   IconData _getTimeRangeIcon(ChartTimeRange range) {
     switch (range) {
       case ChartTimeRange.month:
-        return AppIcons.calendar;
+        return Icons.calendar_today;
       case ChartTimeRange.threeMonths:
-        return AppIcons.dateRange;
+        return Icons.date_range;
       case ChartTimeRange.sixMonths:
-        return AppIcons.calendarViewMonth;
+        return Icons.calendar_view_month;
       case ChartTimeRange.year:
-        return AppIcons.calendarMonth;
+        return Icons.calendar_month;
       case ChartTimeRange.all:
-        return AppIcons.allInclusive;
+        return Icons.all_inclusive;
     }
   }
 }

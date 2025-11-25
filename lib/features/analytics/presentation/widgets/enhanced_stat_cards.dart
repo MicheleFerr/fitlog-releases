@@ -3,6 +3,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/enhanced_statistics_dashboard.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
@@ -100,15 +104,15 @@ class EnhancedStatCard extends StatelessWidget {
     switch (trend) {
       case StatTrend.positive:
         trendIcon = AppIcons.trendUp;
-        trendColor = Colors.green;
+        trendColor = context.colors.success;
         break;
       case StatTrend.negative:
         trendIcon = AppIcons.trendDown;
-        trendColor = Colors.red;
+        trendColor = context.colors.error;
         break;
       case StatTrend.neutral:
         trendIcon = AppIcons.trendFlat;
-        trendColor = Colors.grey;
+        trendColor = context.colors.surfaceContainerHighest;
         break;
     }
 
@@ -163,7 +167,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.topExercises,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -228,7 +232,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +243,7 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   '${exercise.totalVolume.toStringAsFixed(0)}kg total volume',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -278,16 +282,18 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            Icon(
-              AppIcons.workout,
-              size: 48,
-              color: Colors.grey.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5,
+),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               localizations.noExerciseData,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey,
+                color: context.colors.surfaceContainerHighest,
               ),
             ),
           ],
@@ -363,12 +369,12 @@ class EnhancedStreakCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   AppIcons.streak,
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.workoutStreak,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -397,8 +403,8 @@ class EnhancedStreakCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.withValues(alpha: 0.2),
-            Colors.red.withValues(alpha: 0.1),
+            context.colors.secondary.withValues(alpha: 0.2),
+            context.colors.error.withValues(alpha: 0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -415,21 +421,21 @@ class EnhancedStreakCard extends StatelessWidget {
                 '${streakData.currentStreak}',
                 'Current Streak',
                 AppIcons.streak,
-                Colors.orange,
+                context.colors.secondary,
               ),
               _buildStreakStat(
                 context,
                 '${streakData.longestStreak}',
                 'Best Streak',
                 AppIcons.achievement,
-                Colors.amber,
+                context.colors.warning,
               ),
               _buildStreakStat(
                 context,
                 '${streakData.weeklyGoal}/${streakData.weeklyGoalTarget}',
                 'Weekly Goal',
                 AppIcons.flag,
-                Colors.green,
+                context.colors.success,
               ),
             ],
           ),
@@ -448,7 +454,7 @@ class EnhancedStreakCard extends StatelessWidget {
     return Column(
       children: [
         Icon(icon, color: color, size: 28),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -459,7 +465,7 @@ class EnhancedStreakCard extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.grey[600],
+            color: context.colors.onSurfaceVariant,
           ),
         ),
       ],
@@ -496,7 +502,7 @@ class EnhancedStreakCard extends StatelessWidget {
             return DecoratedBox(
               decoration: BoxDecoration(
                 color: hasWorkout
-                    ? Colors.green
+                    ? context.colors.success
                     : colorScheme.surfaceContainerLow,
                 shape: BoxShape.circle,
                 border: isToday
@@ -508,7 +514,7 @@ class EnhancedStreakCard extends StatelessWidget {
                   '$day',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: hasWorkout
-                        ? Colors.white
+                        ? context.colors.surface
                         : colorScheme.onSurfaceVariant,
                     fontWeight: hasWorkout ? FontWeight.bold : FontWeight.normal,
                   ),

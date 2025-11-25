@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Heatmap calendar with zoom controls and detailed exercise view
 class EnhancedWorkoutHeatmap extends ConsumerStatefulWidget {
@@ -259,14 +258,14 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
           icon: AppIcons.streak,
           value: currentStreak.toString(),
           label: l10n.currentStreak,
-          color: Colors.orange,
+          color: context.colors.secondary,
           theme: theme,
         ),
         _buildStatCard(
           icon: AppIcons.achievement,
           value: longestStreak.toString(),
           label: l10n.longestStreak,
-          color: Colors.amber,
+          color: context.colors.warning,
           theme: theme,
         ),
       ],
@@ -613,20 +612,20 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
   }
   
   Color _getColorForLevel(WorkoutIntensityLevel level, ThemeData theme) {
-    // Use Material Green palette for intensity levels (MaterialColor has shades)
-    const successBase = Colors.green;
+    // Use theme success color for intensity levels with opacity variations
+    final successBase = context.colors.success;
 
     switch (level) {
       case WorkoutIntensityLevel.none:
         return theme.colorScheme.surfaceContainerHighest;
       case WorkoutIntensityLevel.light:
-        return successBase[200]!;
+        return successBase.withValues(alpha: 0.3);
       case WorkoutIntensityLevel.moderate:
-        return successBase[400]!;
+        return successBase.withValues(alpha: 0.5);
       case WorkoutIntensityLevel.intense:
-        return successBase[600]!;
+        return successBase.withValues(alpha: 0.75);
       case WorkoutIntensityLevel.extreme:
-        return successBase[800]!;
+        return successBase;
     }
   }
   
@@ -997,7 +996,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: set.isWarmup
-                                                ? Colors.orange.withValues(alpha: 0.2)
+                                                ? context.colors.secondary.withValues(alpha: 0.2)
                                                 : theme.colorScheme.primaryContainer,
                                             borderRadius: BorderRadius.circular(8),
                                           ),
@@ -1043,7 +1042,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
   icon: AppIcons.arrowDownward,
   semanticLabel: 'Arrow downward',
   size: AppIconSize.tiny,
-  color: Colors.orange,
+  color: context.colors.secondary,
 ),
                                               ),
                                             if (set.isRestPause)
@@ -1105,9 +1104,9 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
     final color = effort <= 3
         ? context.colors.success
         : effort <= 6
-            ? Colors.orange
+            ? context.colors.warning
             : effort <= 8
-                ? Colors.deepOrange
+                ? context.colors.secondary
                 : context.colors.error;
     
     return Container(

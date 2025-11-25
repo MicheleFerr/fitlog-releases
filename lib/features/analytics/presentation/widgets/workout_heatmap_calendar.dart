@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Heatmap calendario stile GitHub contributions per visualizzare
 /// l'intensità e frequenza degli allenamenti
@@ -114,14 +117,18 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
                   });
                   HapticFeedback.lightImpact();
                 },
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  child: AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return _buildHeatmapGrid(startDate, endDate, theme);
-                    },
+                // ⚡ OPTIMIZATION: RepaintBoundary isolates heatmap repaints
+                // The grid has many animated cells - isolate from parent
+                child: RepaintBoundary(
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return _buildHeatmapGrid(startDate, endDate, theme);
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -159,14 +166,14 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
           icon: AppIcons.streak,
           value: currentStreak.toString(),
           label: 'Streak attuale',
-          color: Colors.orange,
+          color: context.colors.secondary,
           theme: theme,
         ),
         _buildStatCard(
           icon: AppIcons.achievement,
           value: longestStreak.toString(),
           label: 'Record',
-          color: Colors.amber,
+          color: context.colors.warning,
           theme: theme,
         ),
       ],
@@ -366,7 +373,7 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
                             intensity.workoutCount.toString(),
                             style: TextStyle(
                               fontSize: _cellSize / 2,
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -433,8 +440,8 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
                 ? Center(
                     child: Text(
                       intensity.workoutCount.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -478,7 +485,10 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
             ),
           ),
           IconButton(
-            icon: const Icon(AppIcons.addCircleOutline),
+            icon: const SemanticIcon(
+  icon: AppIcons.addCircleOutline,
+  semanticLabel: 'Add circle outline',
+),
             onPressed: () {
               // Navigate to add workout for this date
             },
@@ -497,17 +507,18 @@ class _WorkoutHeatmapCalendarState extends ConsumerState<WorkoutHeatmapCalendar>
   }
   
   Color _getColorForLevel(WorkoutIntensityLevel level, ThemeData theme) {
+    final successColor = context.colors.success;
     switch (level) {
       case WorkoutIntensityLevel.none:
         return theme.colorScheme.surfaceContainerHighest;
       case WorkoutIntensityLevel.light:
-        return Colors.green.shade200;
+        return successColor.withValues(alpha: 0.3);
       case WorkoutIntensityLevel.moderate:
-        return Colors.green.shade400;
+        return successColor.withValues(alpha: 0.5);
       case WorkoutIntensityLevel.intense:
-        return Colors.green.shade600;
+        return successColor.withValues(alpha: 0.7);
       case WorkoutIntensityLevel.extreme:
-        return Colors.green.shade800;
+        return successColor.withValues(alpha: 1.0);
     }
   }
   

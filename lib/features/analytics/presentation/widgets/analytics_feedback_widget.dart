@@ -20,10 +20,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_page_feedback.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget feedback per Analytics con eligibility check
 class AnalyticsFeedbackWidget extends ConsumerStatefulWidget {
@@ -125,7 +125,7 @@ class _AnalyticsFeedbackWidgetState
             color: context.colors.success,
             size: 24,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +137,7 @@ class _AnalyticsFeedbackWidgetState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   context.l10n.analyticsFeedbackThankYouSubtitle,
                   style: textTheme.bodySmall?.copyWith(
@@ -179,7 +179,7 @@ class _AnalyticsFeedbackWidgetState
                 '📊',
                 style: textTheme.headlineSmall,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   context.l10n.analyticsFeedbackQuestion,
@@ -191,7 +191,7 @@ class _AnalyticsFeedbackWidgetState
             ],
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // 👍👎 Buttons
           Row(
@@ -207,7 +207,7 @@ class _AnalyticsFeedbackWidgetState
                 onTap: () => _onFeedbackSelected(true),
               ),
 
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
 
               // 👎 Non utile
               _buildFeedbackButton(
@@ -227,7 +227,7 @@ class _AnalyticsFeedbackWidgetState
             axisAlignment: -1.0,
             child: Column(
               children: [
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // TextField commento
                 TextField(
@@ -272,14 +272,17 @@ class _AnalyticsFeedbackWidgetState
                         ? null
                         : _onSubmitFeedback,
                     icon: submissionState.isLoading
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                             ),
                           )
-                        : Icon(AppIcons.send),
+                        : const SemanticIcon(
+  icon: AppIcons.send,
+  semanticLabel: 'Send',
+),
                     label: Text(
                       submissionState.isLoading
                           ? context.l10n.analyticsFeedbackSubmitting
@@ -293,7 +296,7 @@ class _AnalyticsFeedbackWidgetState
 
           // Error message
           if (submissionState.hasError) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -307,7 +310,7 @@ class _AnalyticsFeedbackWidgetState
                     color: context.colors.error,
                     size: 16,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       context.l10n.analyticsFeedbackError,

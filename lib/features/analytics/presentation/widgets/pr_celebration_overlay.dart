@@ -102,7 +102,7 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
             child: GestureDetector(
               onTap: _dismiss,
               child: Container(
-                color: Colors.black54,
+                color: context.colors.onSurface.withValues(alpha: 0.54),
               ),
             ),
           ),
@@ -132,12 +132,12 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
     final xOffset = random.nextDouble() * 2 - 1; // -1 to 1
     final delay = random.nextDouble() * 0.3;
     final colors = [
-      Colors.yellow,
-      Colors.orange,
-      Colors.red,
-      Colors.purple,
-      Colors.blue,
-      Colors.green,
+      context.colors.warning,
+      context.colors.secondary,
+      context.colors.error,
+      context.colors.tertiary,
+      context.colors.primary,
+      context.colors.success,
     ];
     final color = colors[random.nextInt(colors.length)];
 
@@ -203,11 +203,11 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha(51),
+                        color: context.colors.onSurface.withAlpha(51),
                         blurRadius: 10,
                       ),
                     ],
@@ -228,7 +228,7 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
           Text(
             '🎉 ${context.l10n.newPersonalRecord}!',
             style: context.textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
+              color: context.colors.surface,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -240,7 +240,7 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
           Text(
             widget.pr.exerciseName,
             style: context.textTheme.titleMedium?.copyWith(
-              color: Colors.white.withAlpha(230),
+              color: context.colors.surface.withAlpha(230),
               fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
@@ -254,13 +254,13 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withAlpha(51),
+              color: context.colors.surface.withAlpha(51),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               _formatPRValue(widget.pr),
               style: context.textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: context.colors.surface,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -275,14 +275,14 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
               children: [
                 Icon(
                   AppIcons.trendUp,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: AppIconSize.small,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '+${widget.pr.improvementPercentage.toStringAsFixed(1)}%',
                   style: context.textTheme.bodyLarge?.copyWith(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -295,7 +295,7 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
           TextButton(
             onPressed: _dismiss,
             style: TextButton.styleFrom(
-              backgroundColor: Colors.white.withAlpha(51),
+              backgroundColor: context.colors.surface.withAlpha(51),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -304,7 +304,7 @@ class _PRCelebrationOverlayState extends State<PRCelebrationOverlay>
             child: Text(
               context.l10n.awesome,
               style: context.textTheme.titleSmall?.copyWith(
-                color: Colors.white,
+                color: context.colors.surface,
                 fontWeight: FontWeight.bold,
               ),
             ),

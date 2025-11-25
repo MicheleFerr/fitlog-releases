@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/fatigue_rating_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -133,29 +138,17 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ButtonSegment(
           value: VolumeChartType.daily,
           label: Text(localizations.day),
-          icon: const SemanticIcon(
-  icon: AppIcons.calendarViewDay,
-  semanticLabel: 'Calendar view day',
-  size: AppIconSize.small,
-),
+          icon: Icon(AppIcons.calendarViewDay, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.weekly,
           label: Text(localizations.week),
-          icon: const SemanticIcon(
-  icon: AppIcons.calendarViewWeek,
-  semanticLabel: 'Calendar view week',
-  size: AppIconSize.small,
-),
+          icon: Icon(AppIcons.calendarViewWeek, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.monthly,
           label: Text(localizations.month),
-          icon: const SemanticIcon(
-  icon: AppIcons.calendarViewMonth,
-  semanticLabel: 'Calendar view month',
-  size: AppIconSize.small,
-),
+          icon: Icon(AppIcons.calendarViewMonth, size: 18),
         ),
       ],
       selected: {_currentChartType},
@@ -190,10 +183,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const SemanticIcon(
-  icon: AppIcons.chevronLeft,
-  semanticLabel: 'Chevron left',
-),
+              icon: Icon(AppIcons.chevronLeft),
               onPressed: () {
                 setState(() {
                   _selectedDate = _selectedDate.subtract(const Duration(days: 1));
@@ -233,10 +223,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
+              icon: Icon(AppIcons.chevronRight),
               onPressed: _selectedDate.isBefore(DateTime.now().subtract(const Duration(days: 1)))
                   ? () {
                       setState(() {
@@ -265,10 +252,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: const SemanticIcon(
-  icon: AppIcons.chevronLeft,
-  semanticLabel: 'Chevron left',
-),
+                  icon: Icon(AppIcons.chevronLeft),
                   onPressed: () {
                     setState(() {
                       _selectedWeek--;
@@ -306,10 +290,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 ),
                 const SizedBox(width: 16),
                 IconButton(
-                  icon: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
+                  icon: Icon(AppIcons.chevronRight),
                   onPressed: _isCurrentWeek() ? null : () {
                     setState(() {
                       _selectedWeek++;
@@ -368,10 +349,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const SemanticIcon(
-  icon: AppIcons.chevronLeft,
-  semanticLabel: 'Chevron left',
-),
+              icon: Icon(AppIcons.chevronLeft),
               onPressed: () {
                 setState(() {
                   _selectedMonth--;
@@ -400,10 +378,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const SemanticIcon(
-  icon: AppIcons.chevronRight,
-  semanticLabel: 'Chevron right',
-),
+              icon: Icon(AppIcons.chevronRight),
               onPressed: _isCurrentMonth() ? null : () {
                 setState(() {
                   _selectedMonth++;
@@ -560,9 +535,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 final volumeData = processedData[groupIndex];
                 return BarTooltipItem(
                   _getTooltipText(volumeData, localizations),
-                  theme.textTheme.bodySmall!.copyWith(
+                  TextStyle(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
                 );
               },
@@ -604,10 +580,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   ),
                 ),
                 IconButton(
-                  icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                  icon: Icon(AppIcons.close),
                   onPressed: () {
                     setState(() {
                       _showDetails = false;
@@ -700,25 +673,20 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SemanticIcon(
-                              icon: volumeChange > 5
+                            Icon(
+                              volumeChange > 5 
                                   ? AppIcons.trendUp
-                                  : volumeChange < -5
+                                  : volumeChange < -5 
                                       ? AppIcons.trendDown
                                       : AppIcons.remove,
-                              semanticLabel: volumeChange > 5
-                                  ? 'Trend up'
-                                  : volumeChange < -5
-                                      ? 'Trend down'
-                                      : 'No change',
-                              size: AppIconSize.tiny,
-                              color: volumeChange > 5
+                              size: 14,
+                              color: volumeChange > 5 
                                   ? context.colors.success
-                                  : volumeChange < -5
+                                  : volumeChange < -5 
                                       ? context.colors.error
                                       : context.colors.secondary,
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               volumeChange > 5
                                   ? localizations.improvement
@@ -758,7 +726,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   ],
                 ),
                 if (previousPerformance != null) ...[
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -807,11 +775,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SemanticIcon(
-              icon: AppIcons.workout,
-              semanticLabel: 'Workout',
+            Icon(
+              AppIcons.workout,
               color: theme.colorScheme.primary,
-              size: AppIconSize.small,
+              size: 20,
             ),
           ],
         ),
@@ -1011,10 +978,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }) {
     return Column(
       children: [
-        SemanticIcon(
-          icon: icon,
-          semanticLabel: label,
-          size: AppIconSize.small,
+        Icon(
+          icon,
+          size: 20,
           color: color ?? theme.colorScheme.primary,
         ),
         const SizedBox(height: 4),
@@ -1045,11 +1011,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           children: [
             Row(
               children: [
-                SemanticIcon(
-                  icon: AppIcons.star,
-                  semanticLabel: 'Star',
+                Icon(
+                  AppIcons.star,
                   color: theme.colorScheme.primary,
-                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1080,11 +1044,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           children: [
             Row(
               children: [
-                SemanticIcon(
-                  icon: AppIcons.autoAwesome,
-                  semanticLabel: 'Insights',
+                Icon(
+                  AppIcons.autoAwesome,
                   color: theme.colorScheme.primary,
-                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1141,11 +1103,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             // Muscle Efficiency Score Section
             Row(
               children: [
-                SemanticIcon(
-                  icon: AppIcons.workout,
-                  semanticLabel: 'Workout',
+                Icon(
+                  AppIcons.workout,
                   color: theme.colorScheme.secondary,
-                  size: AppIconSize.medium,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1190,10 +1150,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   const SizedBox(height: 12),
                   FilledButton.icon(
                     onPressed: () => _showFatigueRatingDialog(context),
-                    icon: const SemanticIcon(
-  icon: AppIcons.ai,
-  semanticLabel: 'Ai',
-),
+                    icon: Icon(AppIcons.ai),
                     label: const Text('Rate Today\'s Fatigue'),
                     style: FilledButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,
@@ -1220,12 +1177,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }) {
     return Row(
       children: [
-        SemanticIcon(
-          icon: icon,
-          semanticLabel: title,
-          size: AppIconSize.small,
-          color: theme.colorScheme.primary,
-        ),
+        Icon(icon, size: 20, color: theme.colorScheme.primary),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -1254,12 +1206,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.barChart,
-  semanticLabel: 'Chart',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
-),
+          Icon(
+            AppIcons.barChart,
+            size: 64,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -1332,11 +1282,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                             ),
                           ),
                           const SizedBox(width: 8),
-                          SemanticIcon(
-                            icon: isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
-                            semanticLabel: isExpanded ? 'Collapse' : 'Expand',
+                          Icon(
+                            isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                             color: theme.colorScheme.onSurfaceVariant,
-                            size: AppIconSize.small,
+                            size: 20,
                           ),
                         ],
                       ),
@@ -1375,11 +1324,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         children: [
           Row(
             children: [
-              SemanticIcon(
-                icon: AppIcons.workout,
-                semanticLabel: 'Workout',
+              Icon(
+                AppIcons.workout,
                 color: theme.colorScheme.primary,
-                size: AppIconSize.tiny,
+                size: 16,
               ),
               const SizedBox(width: 8),
               Text(
@@ -1454,25 +1402,20 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SemanticIcon(
-                                icon: volumeChange > 5
+                              Icon(
+                                volumeChange > 5 
                                     ? AppIcons.trendUp
-                                    : volumeChange < -5
+                                    : volumeChange < -5 
                                         ? AppIcons.trendDown
                                         : AppIcons.remove,
-                                semanticLabel: volumeChange > 5
-                                    ? 'Trend up'
-                                    : volumeChange < -5
-                                        ? 'Trend down'
-                                        : 'No change',
-                                size: AppIconSize.tiny,
-                                color: volumeChange > 5
+                                size: 14,
+                                color: volumeChange > 5 
                                     ? context.colors.success
-                                    : volumeChange < -5
+                                    : volumeChange < -5 
                                         ? context.colors.error
                                         : context.colors.secondary,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text(
                                 volumeChange > 5
                                     ? localizations.improvement
@@ -1512,7 +1455,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     ],
                   ),
                   if (previousPerformance != null) ...[
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1853,18 +1796,16 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getMuscleBalanceScore() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'No data';
-
+    
     final muscleVolumes = <String, double>{};
-    for (final workout in activities) {
-      for (final exercise in workout.exercises) {
-        final muscle = _getMuscleGroup(exercise.name);
-        final volume = exercise.sets.fold(0.0, (sum, set) {
-          final weight = set.weight ?? 0.0;
-          final reps = set.reps ?? 0;
-          return sum + (weight * reps);
-        });
-        muscleVolumes[muscle] = (muscleVolumes[muscle] ?? 0) + volume;
-      }
+    for (final activity in activities) {
+      final muscle = _getMuscleGroup(activity.exerciseName);
+      final volume = activity.sets.fold(0.0, (sum, set) {
+        final weight = double.tryParse(set.weight) ?? 0.0;
+        final reps = int.tryParse(set.reps) ?? 0;
+        return sum + (weight * reps);
+      });
+      muscleVolumes[muscle] = (muscleVolumes[muscle] ?? 0) + volume;
     }
     
     if (muscleVolumes.isEmpty) return 'No data';
@@ -1888,14 +1829,12 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getRecoveryRecommendation() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'Rest well';
-
-    final recentVolume = activities.fold(0.0, (sum, workout) {
-      return sum + workout.exercises.fold(0.0, (exerciseSum, exercise) {
-        return exerciseSum + exercise.sets.fold(0.0, (setSum, set) {
-          final weight = set.weight ?? 0.0;
-          final reps = set.reps ?? 0;
-          return setSum + (weight * reps);
-        });
+    
+    final recentVolume = activities.fold(0.0, (sum, activity) {
+      return sum + activity.sets.fold(0.0, (setSum, set) {
+        final weight = double.tryParse(set.weight) ?? 0.0;
+        final reps = int.tryParse(set.reps) ?? 0;
+        return setSum + (weight * reps);
       });
     });
     
@@ -1911,23 +1850,13 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   String _getIntensityScore() {
     final activities = _getFilteredData();
     if (activities.isEmpty) return 'No data';
-
-    var totalEffort = 0.0;
-    var totalExercises = 0;
-
-    for (final workout in activities) {
-      for (final exercise in workout.exercises) {
-        if (exercise.sets.isNotEmpty) {
-          final effortSum = exercise.sets.fold(0.0, (setSum, set) {
-            return setSum + (set.rpe?.toDouble() ?? 5.0);
-          });
-          totalEffort += effortSum / exercise.sets.length;
-          totalExercises++;
-        }
-      }
-    }
-
-    final avgEffort = totalExercises > 0 ? totalEffort / totalExercises : 0.0;
+    
+    final avgEffort = activities.fold(0.0, (sum, activity) {
+      final effortSum = activity.sets.fold(0.0, (setSum, set) {
+        return setSum + (set.effort ?? 5);
+      });
+      return sum + (activity.sets.isEmpty ? 0 : effortSum / activity.sets.length);
+    }) / activities.length;
     
     if (avgEffort > 8) {
       return 'Very High ${avgEffort.toStringAsFixed(1)}/10';
@@ -1962,10 +1891,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   // Show fatigue rating dialog
   void _showFatigueRatingDialog(BuildContext context) {
     final today = DateTime.now();
-    final todayActivities = widget.workouts.where((workout) {
-      return workout.createdAt.year == today.year &&
-             workout.createdAt.month == today.month &&
-             workout.createdAt.day == today.day;
+    final todayActivities = widget.activities.where((activity) {
+      return activity.createdAt.year == today.year &&
+             activity.createdAt.month == today.month &&
+             activity.createdAt.day == today.day;
     }).toList();
     
     if (todayActivities.isEmpty) {
@@ -1977,29 +1906,24 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
       return;
     }
     
-    final totalVolume = todayActivities.fold(0.0, (sum, workout) {
-      return sum + workout.exercises.fold(0.0, (exerciseSum, exercise) {
-        return exerciseSum + exercise.sets.fold(0.0, (setSum, set) {
-          final weight = set.weight ?? 0.0;
-          final reps = set.reps ?? 0;
-          return setSum + (weight * reps);
-        });
+    final totalVolume = todayActivities.fold(0.0, (sum, activity) {
+      return sum + activity.sets.fold(0.0, (setSum, set) {
+        final weight = double.tryParse(set.weight) ?? 0.0;
+        final reps = int.tryParse(set.reps) ?? 0;
+        return setSum + (weight * reps);
       });
     });
-
-    final exercisesPerformed = <String>{};
-    for (final workout in todayActivities) {
-      for (final exercise in workout.exercises) {
-        exercisesPerformed.add(exercise.name);
-      }
-    }
-    final exercisesList = exercisesPerformed.toList();
+    
+    final exercisesPerformed = todayActivities
+        .map((activity) => activity.exerciseName)
+        .toSet()
+        .toList();
     
     showDialog(
       context: context,
       builder: (context) => FatigueRatingDialog(
         totalVolume: totalVolume,
-        exercisesPerformed: exercisesList,
+        exercisesPerformed: exercisesPerformed,
         onRatingSubmitted: (fatigueLevel, notes) {
           // TODO: Save fatigue data to local storage
           HapticFeedback.mediumImpact();
@@ -2016,18 +1940,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   
   // Build recent efficiency scores widget
   Widget _buildRecentEfficiencyScores(ThemeData theme) {
-    // Convert workouts to activities for efficiency calculation
-    final activities = <ExerciseActivity>[];
-    for (final workout in widget.workouts) {
-      for (final exercise in workout.exercises) {
-        // Skip conversion for now - this method is unused
-        // Would need proper ExerciseActivity.fromExercise implementation
-      }
-    }
-
     // Calculate real efficiency score
     final score = MuscleEfficiencyCalculator.calculate(
-      recentActivities: activities,
+      recentActivities: widget.activities,
       currentDate: DateTime.now(),
     );
 
@@ -2108,18 +2023,13 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         color: score.color,
                       ),
                     ),
-                    SemanticIcon(
-                      icon: score.trend == EfficiencyTrend.improving
+                    Icon(
+                      score.trend == EfficiencyTrend.improving
                           ? AppIcons.trendUp
                           : score.trend == EfficiencyTrend.declining
                               ? AppIcons.trendDown
                               : AppIcons.remove,
-                      semanticLabel: score.trend == EfficiencyTrend.improving
-                          ? 'Trend improving'
-                          : score.trend == EfficiencyTrend.declining
-                              ? 'Trend declining'
-                              : 'Trend stable',
-                      size: AppIconSize.small,
+                      size: 20,
                       color: score.trend == EfficiencyTrend.improving
                           ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
@@ -2193,12 +2103,11 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SemanticIcon(
-  icon: AppIcons.tip,
-  semanticLabel: 'Tip',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.primary,
-),
+                  Icon(
+                    AppIcons.tip,
+                    size: 14,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -2269,34 +2178,27 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   
   // Get detailed set information for a specific exercise on a specific date
   List<Map<String, dynamic>> _getExerciseSetsForDate(String exerciseName, DateTime date) {
-    // Find workouts for the given date
-    final relevantWorkouts = widget.workouts.where((w) =>
-      _isSameDay(w.createdAt, date)
+    final activities = widget.activities.where((a) => 
+      _isSameDay(a.createdAt, date) && a.exerciseName == exerciseName
     ).toList();
-
+    
     final List<Map<String, dynamic>> allSets = [];
-
-    for (final workout in relevantWorkouts) {
-      // Find exercises matching the name
-      final exercises = workout.exercises.where((e) => e.name == exerciseName);
-
-      for (final exercise in exercises) {
-        for (int i = 0; i < exercise.sets.length; i++) {
-          final set = exercise.sets[i];
-          final weight = set.weight ?? 0.0;
-          final reps = set.reps ?? 0;
-          final volume = weight * reps;
-
-          allSets.add({
-            'setNumber': i + 1,
-            'weight': weight,
-            'reps': reps,
-            'effort': set.rpe ?? 5,
-            'volume': volume,
-            'workoutId': workout.id,
-            'exerciseId': exercise.id,
-          });
-        }
+    
+    for (final activity in activities) {
+      for (int i = 0; i < activity.sets.length; i++) {
+        final set = activity.sets[i];
+        final weight = double.tryParse(set.weight) ?? 0.0;
+        final reps = int.tryParse(set.reps) ?? 0;
+        final volume = weight * reps;
+        
+        allSets.add({
+          'setNumber': i + 1,
+          'weight': weight,
+          'reps': reps,
+          'effort': set.effort ?? 5,
+          'volume': volume,
+          'activityId': activity.id,
+        });
       }
     }
     
@@ -2358,11 +2260,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
     // Get current user for exercise history
     final currentUserAsync = ref.watch(firebaseUserProvider);
     final userId = currentUserAsync.value?.uid ?? '';
-
-    // TODO: Re-implement exercise stats providers when needed
-    // These providers don't exist yet and need to be created
-    // final exerciseStatsAsync = ref.watch(exerciseStatsProvider(widget.exerciseName));
-    // final exerciseHistoryAsync = ref.watch(exerciseHistoryGroupedProvider(widget.exerciseName));
+    
+    // Watch exercise stats for comparison
+    final exerciseStatsAsync = ref.watch(exerciseStatsProvider(widget.exerciseName));
+    final exerciseHistoryAsync = ref.watch(exerciseHistoryGroupedProvider(widget.exerciseName));
     
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -2401,13 +2302,12 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               ),
               child: Row(
                 children: [
-                  SemanticIcon(
-                    icon: AppIcons.fitnessCenter,
-                    semanticLabel: 'Fitness',
+                  const Icon(
+                    AppIcons.workout,
                     color: context.colors.surface,
-                    size: AppIconSize.small,
+                    size: 20,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2431,11 +2331,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: SemanticIcon(
-                      icon: AppIcons.close,
-                      semanticLabel: 'Close',
+                    icon: const Icon(
+                      AppIcons.close,
                       color: context.colors.surface,
-                      size: AppIconSize.small,
+                      size: 20,
                     ),
                   ),
                 ],
@@ -2484,10 +2383,9 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     _showComparison = !_showComparison;
                   });
                 },
-                icon: SemanticIcon(
-                  icon: _showComparison ? AppIcons.keyboardArrowUp : AppIcons.history,
-                  semanticLabel: _showComparison ? 'Collapse history' : 'Show history',
-                  size: AppIconSize.small,
+                icon: Icon(
+                  _showComparison ? Icons.keyboard_arrow_up : AppIcons.history,
+                  size: 20,
                 ),
                 label: Text(widget.localizations.compareWithHistory),
                 style: OutlinedButton.styleFrom(
@@ -2528,15 +2426,80 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          // TODO: Re-enable when exerciseStatsAsync provider is implemented
-                          Column(
-                            children: [
-                              Text(
-                                'Stats temporarily unavailable',
-                                style: theme.textTheme.bodySmall,
-                              ),
-                            ],
+                          exerciseStatsAsync.when(
+                            data: (stats) => Column(
+                        children: [
+                          _buildStatRow(
+                            icon: AppIcons.trendUp,
+                            label: widget.localizations.bestVolume,
+                            value: stats.maxWeight != null ? '${(stats.maxWeight! * 10).toStringAsFixed(0)}kg' : '--',
+                            theme: theme,
                           ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.workout,
+                            label: widget.localizations.maxWeight,
+                            value: stats.maxWeight != null ? '${stats.maxWeight!.toStringAsFixed(1)}kg' : '--',
+                            theme: theme,
+                          ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.repeat,
+                            label: widget.localizations.mostSets,
+                            value: stats.totalSets.toString(),
+                            theme: theme,
+                          ),
+                        ],
+                      ),
+                      loading: () => Column(
+                        children: [
+                          _buildStatRow(
+                            icon: AppIcons.trendUp,
+                            label: widget.localizations.bestVolume,
+                            value: '...',
+                            theme: theme,
+                          ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.workout,
+                            label: widget.localizations.maxWeight,
+                            value: '...',
+                            theme: theme,
+                          ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.repeat,
+                            label: widget.localizations.mostSets,
+                            value: '...',
+                            theme: theme,
+                          ),
+                        ],
+                      ),
+                      error: (_, __) => Column(
+                        children: [
+                          _buildStatRow(
+                            icon: AppIcons.trendUp,
+                            label: widget.localizations.bestVolume,
+                            value: '--',
+                            theme: theme,
+                          ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.workout,
+                            label: widget.localizations.maxWeight,
+                            value: '--',
+                            theme: theme,
+                          ),
+                          const Divider(height: 1),
+                          _buildStatRow(
+                            icon: AppIcons.repeat,
+                            label: widget.localizations.mostSets,
+                            value: '--',
+                            theme: theme,
+                          ),
+                        ],
+                      ),
+                    ),
                       ],
                     ),
                   ),
@@ -2557,11 +2520,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     child: Row(
                       children: [
-                        SemanticIcon(
-                          icon: AppIcons.listAlt,
-                          semanticLabel: 'List',
+                        Icon(
+                          AppIcons.listAlt,
                           color: theme.colorScheme.primary,
-                          size: AppIconSize.small,
+                          size: 18,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -2609,11 +2571,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          SemanticIcon(
-            icon: icon,
-            semanticLabel: label,
+          Icon(
+            icon,
             color: theme.colorScheme.primary,
-            size: AppIconSize.small,
+            size: 20,
           ),
           const SizedBox(width: 12),
           Expanded(

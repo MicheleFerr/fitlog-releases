@@ -3,6 +3,10 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_bal
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Scientific Muscle Balance Widget with clear bar chart visualization
 ///
@@ -169,7 +173,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                           height: 28,
                           decoration: BoxDecoration(
                             color: colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         // Filled bar
@@ -179,7 +183,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
                             height: 28,
                             decoration: BoxDecoration(
                               color: color,
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                           ),
                         ),
@@ -226,11 +230,11 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
 
     Color statusColor;
     if (isHighRisk) {
-      statusColor = Colors.red;
+      statusColor = context.colors.error;
     } else if (isBalanced) {
-      statusColor = Colors.green;
+      statusColor = context.colors.success;
     } else {
-      statusColor = Colors.orange;
+      statusColor = context.colors.secondary;
     }
 
     return Container(
@@ -306,16 +310,18 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Icon(
-                AppIcons.barChart,
-                size: 48,
-                color: Colors.grey.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.xxlarge,
+  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5,
+),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 l10n.noMuscleGroupData,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
+                  color: context.colors.surfaceContainerHighest,
                 ),
               ),
             ],
@@ -328,19 +334,19 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
   Color _getColorForMuscleGroup(String group, ColorScheme colorScheme) {
     switch (group) {
       case 'Chest':
-        return Colors.blue;
+        return colorScheme.primary;
       case 'Back':
-        return Colors.green;
+        return colorScheme.success;
       case 'Shoulders':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'Legs':
-        return Colors.purple;
+        return context.colors.tertiary;
       case 'Arms':
-        return Colors.red;
+        return colorScheme.error;
       case 'Core':
-        return Colors.teal;
+        return colorScheme.surfaceContainerHigh;
       default:
-        return Colors.grey;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 
@@ -406,7 +412,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             '📚 $reference',
             style: TextStyle(
@@ -415,7 +421,7 @@ class ScientificMuscleBalanceWidget extends StatelessWidget {
               fontSize: 12,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             explanation,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -41,6 +41,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// View modes for streak visualization
 enum StreakViewMode {
@@ -1101,7 +1102,7 @@ class _StreakModalState extends State<StreakModal> {
                       ? const SemanticIcon(
                           icon: AppIcons.check,
                           semanticLabel: '',  // Decorative icon
-                          color: Colors.white,
+                          color: context.colors.surface,
                           size: AppIconSize.large,
                         )
                       : null,

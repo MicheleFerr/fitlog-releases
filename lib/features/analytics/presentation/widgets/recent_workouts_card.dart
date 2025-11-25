@@ -33,7 +33,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                       AppIcons.history,
                       color: context.colors.secondary,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       context.l10n.recentWorkouts,
                       style: context.textTheme.titleMedium?.copyWith(
@@ -61,7 +61,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                   padding: const EdgeInsets.all(32.0),
                   child: Text(
                     context.l10n.noRecentWorkouts,
-                    style: TextStyle(color: context.colors.surfaceVariant),
+                    style: TextStyle(color: context.colors.surfaceContainerHighest),
                   ),
                 ),
               )
@@ -139,7 +139,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             
             // Workout info
             Expanded(
@@ -152,7 +152,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     '${_formatDate(date)} • ${context.l10n.exercisesWithCount(exerciseCount)}',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -224,7 +224,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         // Title and date
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -240,7 +240,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     _formatDate(syntheticActivities.first.createdAt),
                                     style: context.textTheme.bodyMedium?.copyWith(
@@ -332,7 +332,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             color: context.colors.primary,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           label,
           style: context.textTheme.bodySmall?.copyWith(
@@ -388,7 +388,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                 context.l10n.setsCount(activity.sets.length),
                 style: context.textTheme.bodySmall,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 context.l10n.kgVolume(_calculateExerciseVolume(activity).toStringAsFixed(0)),
                 style: context.textTheme.bodySmall?.copyWith(
@@ -551,7 +551,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             ),
             // Additional stats if available
             if (activity.sets.any((s) => s.rpe != null || s.rir != null)) ...[
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -587,8 +587,8 @@ class RecentWorkoutsCard extends StatelessWidget {
     final colors = [
       HSLColor.fromColor(context.colors.success).withLightness(0.7).toColor(),
       HSLColor.fromColor(context.colors.success).withLightness(0.6).toColor(),
-      Colors.orange[400]!,
-      Colors.deepOrange[400]!,
+      context.colors.secondary[400]!,
+      context.colors.warning[400]!,
       HSLColor.fromColor(context.colors.error).withLightness(0.6).toColor(),
     ];
     
@@ -619,7 +619,7 @@ class RecentWorkoutsCard extends StatelessWidget {
             color: context.colors.onSurface.withValues(alpha: 0.6),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleMedium?.copyWith(

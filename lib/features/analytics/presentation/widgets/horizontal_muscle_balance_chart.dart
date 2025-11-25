@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1_muscle_balance_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Horizontal bar chart for muscle balance visualization
 ///
@@ -180,13 +179,13 @@ class HorizontalMuscleBalanceChart extends StatelessWidget {
                                 : theme.colorScheme.onSurface,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Icon(
                         isBalanced
-                          ? AppIcons.complete
+                          ? Icons.check_circle
                           : isUnderworked
-                            ? AppIcons.arrowUpward
-                            : AppIcons.arrowDownward,
+                            ? Icons.arrow_upward
+                            : Icons.arrow_downward,
                         size: 16,
                         color: isBalanced
                           ? context.colors.success
@@ -290,7 +289,7 @@ class HorizontalMuscleBalanceChart extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            AppIcons.tip,
+            Icons.lightbulb_outline,
             size: 20,
             color: theme.colorScheme.primary,
           ),

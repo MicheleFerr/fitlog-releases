@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Volume Heatmap - Shows training volume distribution over time
 class VolumeHeatmap extends StatelessWidget {
@@ -30,7 +32,7 @@ class VolumeHeatmap extends StatelessWidget {
                   AppIcons.calendarMonth,
                   color: context.colors.secondary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Volume Heatmap',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -39,7 +41,7 @@ class VolumeHeatmap extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Container(
               height: 200,
               alignment: Alignment.center,
@@ -50,19 +52,21 @@ class VolumeHeatmap extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    AppIcons.gridOn,
-                    size: 48,
-                    color: context.colors.onSurface.withValues(alpha: 0.3),
+                  SemanticIcon(
+  icon: AppIcons.gridOn,
+  semanticLabel: 'Grid on',
+  size: AppIconSize.xxlarge,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Heatmap implementation coming soon',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     '${activities.length} activities loaded',
                     style: context.textTheme.bodySmall?.copyWith(

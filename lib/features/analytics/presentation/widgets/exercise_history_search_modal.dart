@@ -4,8 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
 
@@ -152,10 +153,16 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     },
                     decoration: InputDecoration(
                       hintText: 'Cerca un esercizio...',
-                      prefixIcon: const Icon(AppIcons.workout),
+                      prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(AppIcons.clear),
+                              icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                               onPressed: () {
                                 setState(() {
                                   _searchController.clear();
@@ -195,10 +202,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.searchOff,
-              size: 64,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -271,11 +280,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.calendar,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               '${activities.length} sessioni',
@@ -284,11 +294,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Icon(
-                              AppIcons.clock,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.clock,
+  semanticLabel: 'Clock',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               _getRelativeTime(lastActivity.createdAt),
@@ -338,7 +349,10 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     _selectedExercise = null;
                   });
                 },
-                icon: const Icon(AppIcons.back),
+                icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
               ),
               Expanded(
                 child: Text(
@@ -653,22 +667,24 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     Expanded(
                       child: Row(
                         children: [
-                          Icon(
-                            AppIcons.workout,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                           const SizedBox(width: 4),
                           Text(
                             '${weight.toStringAsFixed(1)} kg',
                             style: theme.textTheme.bodyMedium,
                           ),
                           const SizedBox(width: 12),
-                          Icon(
-                            AppIcons.repeat,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                           const SizedBox(width: 4),
                           Text(
                             '$reps reps',
@@ -680,7 +696,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: _getEffortColor(set.effort).withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'RPE ${set.effort}',

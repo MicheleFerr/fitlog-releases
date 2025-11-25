@@ -58,7 +58,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
               children: [
                 Icon(
                   _getAdviceIcon(category),
-                  color: Colors.white,
+                  color: context.colors.surface,
                   size: 28,
                 ),
                 const SizedBox(width: 12),
@@ -66,7 +66,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                   child: Text(
                     '💡 Training Insight',
                     style: theme.textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -74,21 +74,21 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: context.colors.surface.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         AppIcons.touchApp,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: context.colors.surface.withValues(alpha: 0.8),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         'Tap for details',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: context.colors.surface.withValues(alpha: 0.8),
                         ),
                       ),
                     ],
@@ -102,7 +102,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
             Text(
               advice.mainMessage,
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.white,
+                color: context.colors.surface,
                 height: 1.4,
               ),
             ),
@@ -112,14 +112,14 @@ class ContextualTrainingAdvisor extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: context.colors.surface.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       advice.subIcon ?? AppIcons.info,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -127,7 +127,7 @@ class ContextualTrainingAdvisor extends StatelessWidget {
                       child: Text(
                         advice.subMessage!,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: context.colors.surface.withValues(alpha: 0.9),
                         ),
                       ),
                     ),
@@ -142,18 +142,21 @@ class ContextualTrainingAdvisor extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildQuickStat(
+                  context,
                   'Volume Change',
                   '${_getVolumeChangePercent().toStringAsFixed(1)}%',
                   _getVolumeChangePercent() > 0 ? AppIcons.trendUp : AppIcons.trendDown,
                   theme,
                 ),
                 _buildQuickStat(
+                  context,
                   'Avg Intensity',
                   _formatIntensity(avgIntensity),
                   AppIcons.flashOn,
                   theme,
                 ),
                 _buildQuickStat(
+                  context,
                   'Recovery',
                   _getRecoveryStatus(),
                   AppIcons.hotel,
@@ -167,22 +170,22 @@ class ContextualTrainingAdvisor extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStat(String label, String value, IconData icon, ThemeData theme) {
+  Widget _buildQuickStat(BuildContext context, String label, String value, IconData icon, ThemeData theme) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withValues(alpha: 0.7), size: 20),
+        Icon(icon, color: context.colors.surface.withValues(alpha: 0.7), size: 20),
         const SizedBox(height: 4),
         Text(
           value,
           style: theme.textTheme.titleSmall?.copyWith(
-            color: Colors.white,
+            color: context.colors.surface,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.white.withValues(alpha: 0.7),
+            color: context.colors.surface.withValues(alpha: 0.7),
           ),
         ),
       ],
@@ -192,15 +195,15 @@ class ContextualTrainingAdvisor extends StatelessWidget {
   List<Color> _getGradientColors(BuildContext context, AdviceCategory category) {
     switch (category) {
       case AdviceCategory.pushHard:
-        return [context.successColor.withOpacity(0.7), context.successColor];
+        return [context.colors.success.withValues(alpha: 0.7), context.colors.success];
       case AdviceCategory.maintainPace:
-        return [context.colors.tertiary.withOpacity(0.7), context.colors.tertiary];
+        return [context.colors.tertiary.withValues(alpha: 0.7), context.colors.tertiary];
       case AdviceCategory.beCareful:
-        return [context.warningColor.withOpacity(0.7), context.warningColor];
+        return [context.colors.warning.withValues(alpha: 0.7), context.colors.warning];
       case AdviceCategory.takeRest:
-        return [context.errorColor.withOpacity(0.7), context.errorColor];
+        return [context.colors.error.withValues(alpha: 0.7), context.colors.error];
       case AdviceCategory.recovery:
-        return [context.colors.primary.withOpacity(0.7), context.colors.primary];
+        return [context.colors.primary.withValues(alpha: 0.7), context.colors.primary];
     }
   }
 
@@ -403,7 +406,7 @@ class _DetailedExplanationSheet extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             _buildExplanationCard(
               context,
@@ -411,9 +414,9 @@ class _DetailedExplanationSheet extends StatelessWidget {
               'Il volume è ${volumeChange > 0 ? "aumentato" : "diminuito"} del ${volumeChange.abs().toStringAsFixed(1)}%',
               _getVolumeExplanation(),
               volumeChange > 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
-              volumeChange > 0 ? context.successColor : context.warningColor,
+              volumeChange > 0 ? context.colors.success : context.colors.warning,
             ),
-            
+
             _buildExplanationCard(
               context,
               'Intensità Media',
@@ -431,14 +434,14 @@ class _DetailedExplanationSheet extends StatelessWidget {
               AppIcons.hotel,
               _getFatigueColor(context),
             ),
-            
+
             _buildExplanationCard(
               context,
               'Frequenza',
               '$workoutCount allenamenti questa settimana',
               _getFrequencyExplanation(),
               AppIcons.calendarToday,
-              context.infoColor,
+              context.colors.tertiary,
             ),
             
             if (!isPremium) ...[
@@ -628,17 +631,17 @@ class _DetailedExplanationSheet extends StatelessWidget {
 
   Color _getIntensityColor(BuildContext context) {
     final rpe = 6 + (avgIntensity - 1) * 4 / 9;
-    if (rpe >= 9) return context.errorColor;
-    if (rpe >= 7.5) return context.warningColor;
+    if (rpe >= 9) return context.colors.error;
+    if (rpe >= 7.5) return context.colors.warning;
     if (rpe >= 6.5) return context.colors.tertiary;
     return context.colors.outline;
   }
 
   Color _getFatigueColor(BuildContext context) {
-    if (avgFatigue < 2) return context.successColor;
+    if (avgFatigue < 2) return context.colors.success;
     if (avgFatigue < 3) return context.colors.tertiary;
-    if (avgFatigue < 4) return context.warningColor;
-    return context.errorColor;
+    if (avgFatigue < 4) return context.colors.warning;
+    return context.colors.error;
   }
 }
 

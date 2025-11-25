@@ -5,8 +5,9 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Volume Landmarks Dashboard
 ///
@@ -73,7 +74,10 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(AppIcons.info),
+                icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
@@ -102,7 +106,7 @@ class VolumeLandmarksCard extends StatelessWidget {
           // Uncategorized exercises warning
           if (uncategorizedExercises.isNotEmpty) ...[
             _buildUncategorizedSection(context, uncategorizedExercises),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
 
           // Scientific citation
@@ -288,7 +292,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: _getZoneColor(zone, theme.colorScheme),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         '●',
@@ -303,7 +307,7 @@ class VolumeLandmarksCard extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         // Zone indicator with dynamic explanations and exercises (expandable)
         _buildZoneIndicator(context, zone, currentSets, landmarks, muscle, exercises),
@@ -433,11 +437,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Icon(
-                AppIcons.keyboardArrowDown,
-                size: 16,
-                color: color,
-              ),
+              SemanticIcon(
+  icon: AppIcons.keyboardArrowDown,
+  semanticLabel: 'Keyboard arrow down',
+  size: AppIconSize.tiny,
+  color: color,
+),
             ],
           ),
         ),
@@ -458,11 +463,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      AppIcons.info,
-                      size: 16,
-                      color: color,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: color,
+),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -480,11 +486,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      AppIcons.tip,
-                      size: 16,
-                      color: color,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.tiny,
+  color: color,
+),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -505,11 +512,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
-                        AppIcons.workout,
-                        size: 16,
-                        color: color,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: color,
+),
                       const SizedBox(width: 8),
                       Text(
                         l10n.exercisesThisWeek,
@@ -732,11 +740,12 @@ class VolumeLandmarksCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              AppIcons.experiment,
-              size: 20,
-              color: theme.colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.experiment,
+  semanticLabel: 'Experiment',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -759,10 +768,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              AppIcons.openInNew,
-              size: 16,
-              color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
             ),
           ],
         ),
@@ -835,7 +846,7 @@ class VolumeLandmarksCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
                     _buildZoneExplanation(
                       context,
@@ -843,21 +854,21 @@ class VolumeLandmarksCard extends StatelessWidget {
                       l10n.mvExplanation,
                       context.colors.surfaceContainerHighest,
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MEV',
                       l10n.mevExplanation,
                       context.colors.secondary,
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MAV',
                       l10n.mavExplanation,
                       context.colors.success,
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     _buildZoneExplanation(
                       context,
                       'MRV',
@@ -940,11 +951,12 @@ class VolumeLandmarksCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  AppIcons.openInNew,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
               ],
             ),
             const SizedBox(height: 12),

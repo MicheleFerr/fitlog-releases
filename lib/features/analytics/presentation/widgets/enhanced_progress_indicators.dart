@@ -3,7 +3,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Progress Ring Indicator
 class EnhancedProgressRing extends StatelessWidget {
@@ -195,12 +194,12 @@ class EnhancedProgressIndicator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  AppIcons.workout,
+                  Icons.fitness_center,
                   color: colorScheme.onPrimaryContainer,
                   size: 20,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +258,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                     context,
                     'Sets',
                     '${progressData.completedSets}',
-                    AppIcons.formatListNumbered,
+                    Icons.format_list_numbered,
                     colorScheme.secondary,
                   ),
                 ),
@@ -269,7 +268,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
                     context,
                     'Volume',
                     '${progressData.currentVolume.toStringAsFixed(0)}kg',
-                    AppIcons.barChart,
+                    Icons.bar_chart,
                     colorScheme.tertiary,
                   ),
                 ),
@@ -297,11 +296,11 @@ class EnhancedProgressIndicator extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isImproving ? AppIcons.trendingUp : AppIcons.trendingFlat,
+            isImproving ? Icons.trending_up : Icons.trending_flat,
             color: isImproving ? context.colors.success : context.colors.secondary,
             size: 16,
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             isImproving ? 'Improving' : 'Steady',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -330,7 +329,7 @@ class EnhancedProgressIndicator extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: color, size: 16),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,7 +451,7 @@ class GoalProgressWidget extends StatelessWidget {
                     size: 24,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,15 +478,15 @@ class GoalProgressWidget extends StatelessWidget {
                       color: context.colors.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Icon(
-                      AppIcons.checkCircle,
+                    child: const Icon(
+                      Icons.check_circle,
                       color: context.colors.success,
                       size: 20,
                     ),
                   ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             EnhancedProgressRing(
               progress: progress,
               size: 100,
@@ -543,11 +542,11 @@ class WeeklyProgressSummary extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.dateRange,
+                  Icons.date_range,
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.weeklyProgress,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -565,7 +564,7 @@ class WeeklyProgressSummary extends StatelessWidget {
                     currentValue: weeklyData.workoutsCompleted.toDouble(),
                     targetValue: 4.0,
                     unit: 'workouts',
-                    icon: AppIcons.workout,
+                    icon: Icons.fitness_center,
                     color: colorScheme.primary,
                   ),
                 ),
@@ -576,7 +575,7 @@ class WeeklyProgressSummary extends StatelessWidget {
                     currentValue: weeklyData.totalVolume,
                     targetValue: 10000.0,
                     unit: 'kg',
-                    icon: AppIcons.barChart,
+                    icon: Icons.bar_chart,
                     color: colorScheme.secondary,
                   ),
                 ),

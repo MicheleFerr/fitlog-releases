@@ -31,7 +31,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -50,9 +49,9 @@ void showMigrationDialog(BuildContext context, WidgetRef ref) {
 
 /// Migration dialog widget
 class _MigrationDialog extends StatefulWidget {
-  final WidgetRef ref;
 
   const _MigrationDialog({required this.ref});
+  final WidgetRef ref;
 
   @override
   State<_MigrationDialog> createState() => _MigrationDialogState();

@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing personal records timeline
 class PRTimelineWidget extends StatelessWidget {
@@ -37,12 +36,12 @@ class PRTimelineWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  AppIcons.emojiEvents,
+                const Icon(
+                  Icons.emoji_events,
                   color: context.colors.warning,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.personalRecords,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -112,7 +111,7 @@ class PRTimelineWidget extends StatelessWidget {
                 size: 16,
                 color: isNew ? context.colors.warning : colorScheme.primary,
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   _getPRTypeLabel(pr.type),
@@ -129,7 +128,7 @@ class PRTimelineWidget extends StatelessWidget {
                     color: context.colors.warning,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text(
+                  child: const Text(
                     'NEW',
                     style: TextStyle(
                       fontSize: 8,
@@ -140,7 +139,7 @@ class PRTimelineWidget extends StatelessWidget {
                 ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             pr.exerciseName,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -149,7 +148,7 @@ class PRTimelineWidget extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             _getFormattedValue(pr),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -157,7 +156,7 @@ class PRTimelineWidget extends StatelessWidget {
               color: colorScheme.primary,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Row(
             children: [
               Text(
@@ -167,15 +166,15 @@ class PRTimelineWidget extends StatelessWidget {
                 ),
               ),
               if (pr.isSignificant) ...[
-                SizedBox(width: 4),
-                Icon(
-                  AppIcons.trendUp,
+                const SizedBox(width: 4),
+                const Icon(
+                  Icons.trending_up,
                   size: 12,
                   color: context.colors.success,
                 ),
                 Text(
                   '+${pr.improvementPercentage.toStringAsFixed(1)}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
                     color: context.colors.success,
                     fontWeight: FontWeight.bold,
@@ -197,15 +196,15 @@ class PRTimelineWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                AppIcons.achievement,
+                Icons.emoji_events,
                 size: 48,
-                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: context.colors.surfaceVariant.withValues(alpha: 0.5),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 localizations.noPRsYet,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.colors.surfaceContainerHighest,
+                  color: context.colors.surfaceVariant,
                 ),
               ),
             ],
@@ -218,17 +217,17 @@ class PRTimelineWidget extends StatelessWidget {
   IconData _getIconForPRType(PRType type) {
     switch (type) {
       case PRType.weight:
-        return AppIcons.workout;
+        return Icons.fitness_center;
       case PRType.reps:
-        return AppIcons.repeat;
+        return Icons.repeat;
       case PRType.volume:
-        return AppIcons.barChart;
+        return Icons.bar_chart;
       case PRType.oneRM:
-        return AppIcons.looksOne;
+        return Icons.looks_one;
       case PRType.totalSets:
-        return AppIcons.formatListNumbered;
+        return Icons.format_list_numbered;
       case PRType.duration:
-        return AppIcons.timer;
+        return Icons.timer;
     }
   }
   

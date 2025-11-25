@@ -17,7 +17,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Monthly summary card comparing current month vs last month
 class MonthlySummaryCard extends StatelessWidget {
@@ -118,7 +117,7 @@ class MonthlySummaryCard extends StatelessWidget {
             ),
             child: Icon(
               AppIcons.trendUp,
-              color: Colors.white,
+              color: context.colors.surface,
               size: AppIconSize.medium,
             ),
           ),

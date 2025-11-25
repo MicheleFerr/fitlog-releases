@@ -34,7 +34,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal for displaying weekly workout details with calendar and goal setter
@@ -205,7 +204,7 @@ class _WeeklyModalState extends State<WeeklyModal> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -265,11 +264,12 @@ class _WeeklyModalState extends State<WeeklyModal> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    AppIcons.achievement,
-                    size: 16,
-                    color: context.colors.onSuccess,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.achievement,
+  semanticLabel: 'Achievement',
+  size: AppIconSize.tiny,
+  color: context.colors.onSuccess,
+),
                   const SizedBox(width: 4),
                   Text(
                     context.l10n.goalAchieved,
@@ -348,11 +348,12 @@ class _WeeklyModalState extends State<WeeklyModal> {
                         : null,
                   ),
                   child: hasWorkout
-                      ? Icon(
-                          AppIcons.checkCircle,
-                          size: 20,
-                          color: context.colors.onSuccess,
-                        )
+                      ? SemanticIcon(
+  icon: AppIcons.checkCircle,
+  semanticLabel: 'Complete',
+  size: AppIconSize.small,
+  color: context.colors.onSuccess,
+)
                       : null,
                 ),
 
@@ -495,11 +496,12 @@ class _WeeklyModalState extends State<WeeklyModal> {
   Widget _buildTipItem(BuildContext context, String tip) {
     return Row(
       children: [
-        Icon(
-          AppIcons.checkCircle,
-          size: 16,
-          color: context.colors.primary,
-        ),
+        SemanticIcon(
+  icon: AppIcons.checkCircle,
+  semanticLabel: 'Complete',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

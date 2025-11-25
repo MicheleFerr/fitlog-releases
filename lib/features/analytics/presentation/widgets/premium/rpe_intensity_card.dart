@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/tier1
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// RPE & Intensity Distribution Card
 ///
@@ -79,7 +81,10 @@ class RPEIntensityCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(AppIcons.info),
+                icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                 onPressed: () => _showInfoDialog(context),
               ),
             ],
@@ -138,7 +143,7 @@ class RPEIntensityCard extends StatelessWidget {
             );
           }),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Scientific Reference
           _buildScientificReference(context),
@@ -159,10 +164,12 @@ class RPEIntensityCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            AppIcons.speedOutlined,
-            size: 64,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          SemanticIcon(
+  icon: AppIcons.speedOutlined,
+  semanticLabel: 'Speed outlined',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -251,7 +258,7 @@ class RPEIntensityCard extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         // Legend
         Wrap(
@@ -612,7 +619,7 @@ class RPEIntensityCard extends StatelessWidget {
         title: Row(
           children: [
             Icon(AppIcons.info, color: theme.colorScheme.primary),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(l10n.rpeInfoTitle),
           ],
         ),
@@ -625,7 +632,7 @@ class RPEIntensityCard extends StatelessWidget {
                 l10n.rpeInfoDescription,
                 style: theme.textTheme.bodyMedium,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildRPEExplanationRow(l10n.rpeScale5_6, l10n.rpeScale5_6Desc, context.successColor),
               _buildRPEExplanationRow(l10n.rpeScale7, l10n.rpeScale7Desc, context.infoColor),
               _buildRPEExplanationRow(l10n.rpeScale8, l10n.rpeScale8Desc, context.warningColor),

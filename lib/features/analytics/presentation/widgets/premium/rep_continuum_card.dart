@@ -4,8 +4,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_ana
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Rep Continuum Distribution Card
 ///
@@ -68,7 +69,10 @@ class RepContinuumCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(AppIcons.info),
+                icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
@@ -90,7 +94,7 @@ class RepContinuumCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Strength Zone
           _buildZoneRow(
@@ -112,7 +116,7 @@ class RepContinuumCard extends StatelessWidget {
             theme.colorScheme.primary,
             l10n.hypertrophyZoneDesc,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Endurance Zone
           _buildZoneRow(
@@ -342,11 +346,12 @@ class RepContinuumCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              AppIcons.experiment,
-              size: 20,
-              color: theme.colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.experiment,
+  semanticLabel: 'Experiment',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -369,10 +374,12 @@ class RepContinuumCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              AppIcons.openInNew,
-              size: 16,
-              color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
             ),
           ],
         ),
@@ -445,7 +452,7 @@ class RepContinuumCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
                     _buildFindingItem(
                       context,
@@ -453,14 +460,14 @@ class RepContinuumCard extends StatelessWidget {
                       AppIcons.fitnessCenter,
                       context.colors.error,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding2,
                       AppIcons.trendUp,
                       theme.colorScheme.primary,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,
@@ -543,11 +550,12 @@ class RepContinuumCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  AppIcons.openInNew,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
               ],
             ),
             const SizedBox(height: 12),

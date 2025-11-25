@@ -5,7 +5,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/contextual_training_advisor.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyDashboardWidget extends StatefulWidget {
 
@@ -326,28 +325,28 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         _buildStatCard(
           'Total Volume',
           '${(_currentWeekData!.totalVolume / 1000).toStringAsFixed(1)}k kg',
-          AppIcons.workout,
+          Icons.fitness_center,
           theme.colorScheme.primary,
           theme,
         ),
         _buildStatCard(
           'Effective Volume',
           '${(_currentWeekData!.effectiveVolume / 1000).toStringAsFixed(1)}k kg',
-          AppIcons.checkCircle,
+          Icons.check_circle,
           context.colors.success,
           theme,
         ),
         _buildStatCard(
           'Avg Intensity',
           '${_currentWeekData!.avgIntensity.toStringAsFixed(1)}/10',
-          AppIcons.localFireDepartment,
+          Icons.local_fire_department,
           context.colors.secondary,
           theme,
         ),
         _buildStatCard(
           'Exercises',
           '${_currentWeekData!.e1RMProgression.length}',
-          AppIcons.formatListNumbered,
+          Icons.format_list_numbered,
           theme.colorScheme.secondary,
           theme,
         ),
@@ -487,10 +486,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           Row(
             children: [
               Icon(
-                AppIcons.achievement,
+                Icons.emoji_events,
                 color: theme.colorScheme.tertiary,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Best Set of the Week',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -498,14 +497,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                 ),
               ),
               if (bestSet.isPR) ...[
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
+                  child: const Text(
                     'PR!',
                     style: TextStyle(
                       color: context.colors.surface,
@@ -527,7 +526,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(AppIcons.workout, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(Icons.fitness_center, size: 16, color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Text(
                 '${bestSet.weight.toStringAsFixed(1)} kg × ${bestSet.reps} reps',
@@ -538,7 +537,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
           const SizedBox(height: 4),
           Row(
             children: [
-              Icon(AppIcons.rocket, size: 16, color: theme.colorScheme.onSurfaceVariant),
+              Icon(Icons.rocket_launch, size: 16, color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Text(
                 'e1RM: ${bestSet.e1RM.toStringAsFixed(1)} kg',
@@ -562,14 +561,14 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text('Data synced to cloud'),
                 backgroundColor: context.colors.success,
               ),
             );
           }
         },
-        icon: const Icon(AppIcons.cloudUpload),
+        icon: const Icon(Icons.cloud_upload),
         label: const Text('Sync to Cloud'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.primary,
@@ -589,7 +588,7 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            AppIcons.workout,
+            Icons.fitness_center,
             size: 64,
             color: theme.colorScheme.onSurfaceVariant,
           ),

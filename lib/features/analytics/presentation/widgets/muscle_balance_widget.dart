@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_e
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget showing muscle group balance analysis
 class MuscleBalanceWidget extends StatelessWidget {
@@ -33,11 +32,11 @@ class MuscleBalanceWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.equalizer,
+                  Icons.equalizer,
                   color: colorScheme.primary,
                   size: 24,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.muscleBalance,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -62,7 +61,7 @@ class MuscleBalanceWidget extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMuscleGroupList(context, colorScheme),
             if (!balance.isBalanced) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildImbalanceWarning(context, localizations),
             ],
           ],
@@ -81,11 +80,11 @@ class MuscleBalanceWidget extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            isBalanced ? AppIcons.complete : AppIcons.warning,
+            isBalanced ? Icons.check_circle : Icons.warning,
             size: 16,
             color: isBalanced ? context.colors.success : context.colors.secondary,
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             isBalanced ? 'Balanced' : 'Imbalanced',
             style: TextStyle(
@@ -106,7 +105,7 @@ class MuscleBalanceWidget extends StatelessWidget {
     return Column(
       children: groups.map((entry) {
         final imbalanceScore = balance.imbalanceScores[entry.key] ?? 0;
-        final color = _getColorForImbalance(imbalanceScore, colorScheme);
+        final color = _getColorForImbalance(imbalanceScore);
         
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -120,7 +119,7 @@ class MuscleBalanceWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   entry.key,
@@ -162,12 +161,12 @@ class MuscleBalanceWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            AppIcons.warningAmber,
+          const Icon(
+            Icons.warning_amber,
             color: context.colors.secondary,
             size: 20,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,15 +199,15 @@ class MuscleBalanceWidget extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                AppIcons.equalizer,
+                Icons.equalizer,
                 size: 48,
-                color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+                color: context.colors.surfaceVariant.withValues(alpha: 0.5),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'No muscle group data available',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.colors.surfaceContainerHighest,
+                  color: context.colors.surfaceVariant,
                 ),
               ),
             ],
@@ -218,17 +217,17 @@ class MuscleBalanceWidget extends StatelessWidget {
     );
   }
 
-  Color _getColorForImbalance(double score, ColorScheme colorScheme) {
+  Color _getColorForImbalance(double score) {
     if (score < 0.5) {
-      return colorScheme.error; // Very underdeveloped
+      return context.colors.error; // Very underdeveloped
     } else if (score < 0.7) {
-      return colorScheme.secondary; // Underdeveloped
+      return context.colors.secondary; // Underdeveloped
     } else if (score < 1.3) {
-      return colorScheme.success; // Balanced
+      return context.colors.success; // Balanced
     } else if (score < 1.5) {
-      return colorScheme.secondary; // Overdeveloped
+      return context.colors.secondary; // Overdeveloped
     } else {
-      return colorScheme.error; // Very overdeveloped
+      return context.colors.error; // Very overdeveloped
     }
   }
 }

@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Radar chart interattivo per visualizzare la forza relativa
 /// dei diversi gruppi muscolari
@@ -174,7 +175,10 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ),
         const SizedBox(width: 12),
         IconButton(
-          icon: const Icon(AppIcons.refresh),
+          icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -335,7 +339,11 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                 ),
               ),
               IconButton(
-                icon: const Icon(AppIcons.close, size: 20),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -358,7 +366,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ),
           
           if (target != null) ...[
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             _buildStrengthBar(
               label: 'Obiettivo',
               value: target,
@@ -369,7 +377,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
           ],
           
           if (previous != null) ...[
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Icon(
@@ -377,7 +385,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                   color: improvement >= 0 ? context.colors.success : context.colors.error,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)} '
                   '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',
@@ -431,7 +439,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / maxValue,
             minHeight: 8,

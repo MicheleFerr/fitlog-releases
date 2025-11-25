@@ -67,7 +67,12 @@ class _LazyChartWrapperState extends State<LazyChartWrapper> {
       );
     }
 
-    return widget.child;
+    // ⚡ OPTIMIZATION: RepaintBoundary isolates chart repaints from parent
+    // Charts often update (animations, touch interactions) and this prevents
+    // the entire parent tree from repainting
+    return RepaintBoundary(
+      child: widget.child,
+    );
   }
 }
 
