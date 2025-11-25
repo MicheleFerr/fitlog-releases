@@ -82,7 +82,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
@@ -90,7 +90,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
                           context.l10n.importing,
                           style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fpdart/fpdart.dart' hide Either, Right, Left;
 import 'package:fpdart/fpdart.dart' as fpdart show Either, Right, Left;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/achievement.dart';
@@ -125,7 +124,7 @@ class AchievementRepositoryImpl implements AchievementRepository {
   ) async {
     // This method delegates to CheckAndUnlockAchievementsUseCase
     // Repository doesn't contain business logic for badge evaluation
-    return fpdart.Right([]);
+    return const fpdart.Right([]);
   }
 
   @override

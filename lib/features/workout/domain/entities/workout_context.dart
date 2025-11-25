@@ -22,6 +22,27 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/experience_l
 /// - Rep ranges (beginner-friendly vs advanced)
 /// - Workout naming (gender-specific tone)
 class WorkoutContext {
+
+  const WorkoutContext({
+    required this.timeAvailable,
+    this.experienceLevel,
+    this.gender,
+    required this.timestamp,
+    this.completionTimeMs,
+  });
+
+  /// Create from Map (for restoration from SharedPreferences)
+  factory WorkoutContext.fromMap(Map<String, dynamic> map) {
+    return WorkoutContext(
+      timeAvailable: map['time_available'] as int,
+      experienceLevel: map['experience_level'] != null
+          ? ExperienceLevel.fromString(map['experience_level'] as String)
+          : null,
+      gender: map['gender'] as String?,
+      timestamp: DateTime.parse(map['timestamp'] as String),
+      completionTimeMs: map['completion_time_ms'] as int?,
+    );
+  }
   /// Time available in minutes (5, 15, 30, or 45)
   final int timeAvailable;
 
@@ -38,14 +59,6 @@ class WorkoutContext {
   /// Total time taken to complete context gathering (milliseconds)
   /// Used for analytics: P50/P75/P90 metrics
   final int? completionTimeMs;
-
-  const WorkoutContext({
-    required this.timeAvailable,
-    this.experienceLevel,
-    this.gender,
-    required this.timestamp,
-    this.completionTimeMs,
-  });
 
   /// Whether user needs experience level selection
   /// True if timeAvailable >= 30 minutes
@@ -122,19 +135,6 @@ class WorkoutContext {
       'has_full_context': hasFullContext,
       'completion_speed_category': completionSpeedCategory,
     };
-  }
-
-  /// Create from Map (for restoration from SharedPreferences)
-  factory WorkoutContext.fromMap(Map<String, dynamic> map) {
-    return WorkoutContext(
-      timeAvailable: map['time_available'] as int,
-      experienceLevel: map['experience_level'] != null
-          ? ExperienceLevel.fromString(map['experience_level'] as String)
-          : null,
-      gender: map['gender'] as String?,
-      timestamp: DateTime.parse(map['timestamp'] as String),
-      completionTimeMs: map['completion_time_ms'] as int?,
-    );
   }
 
   @override

@@ -23,11 +23,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -246,11 +247,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      AppIcons.refresh,
-                      size: 16,
-                      color: colorScheme.primary,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       'Restore',
@@ -344,7 +346,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             // Social proof section
             _buildSocialProofSection(context),
             
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             
             // Continue button
             _buildContinueButton(context),
@@ -398,11 +400,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
               ],
             ),
-            child: Icon(
-              AppIcons.premium,
-              size: 40,
-              color: context.colors.surface,
-            ),
+            child: SemanticIcon(
+  icon: AppIcons.premium,
+  semanticLabel: 'Premium',
+  size: AppIconSize.medium,
+  color: context.colors.surface,
+),
           ),
           
           const SizedBox(height: 24),
@@ -477,7 +480,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             color: colorScheme.onSurface,
           ),
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         ...features.map((feature) => _buildFeatureCard(context, feature)),
       ],
     );
@@ -682,7 +685,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Icon(
                   AppIcons.arrowForwardRounded,
                   color: context.colors.surface,
@@ -873,11 +876,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                             color: isSelected ? colorScheme.primary : Colors.transparent,
                           ),
                           child: isSelected
-                              ? Icon(
-                                  AppIcons.check,
-                                  size: 16,
-                                  color: colorScheme.onPrimary,
-                                )
+                              ? SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.tiny,
+  color: colorScheme.onPrimary,
+)
                               : null,
                         ),
                         
@@ -932,7 +936,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     
                     if (plan == PremiumPlan.yearly) ...[
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
@@ -1208,7 +1212,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(AppIcons.closeRounded),
+                      icon: const SemanticIcon(
+  icon: AppIcons.closeRounded,
+  semanticLabel: 'Close rounded',
+),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -1261,7 +1268,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                                   strokeWidth: 2,
                                 ),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Text(
                                 'Processing...',
                                 style: theme.textTheme.titleMedium?.copyWith(
@@ -1279,7 +1286,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                                 color: context.colors.surface,
                                 size: 24,
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Text(
                                 'Start Free Trial • ${_getPlanTitle(_selectedPlan)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
@@ -1318,7 +1325,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               color: _currentPage == index
                   ? colorScheme.primary
                   : colorScheme.outline.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
           );
         }),
@@ -1431,11 +1438,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                   ],
                 ),
-                child: Icon(
-                  AppIcons.completeOutline,
-                  size: 60,
-                  color: context.colors.surface,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: context.colors.surface,
+),
               ),
               
               const SizedBox(height: 32),
@@ -1544,7 +1552,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           height: 40,
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 20),
         ),
@@ -1620,9 +1628,9 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           SnackBar(
             content: Row(
               children: [
-                Icon(AppIcons.checkCircle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Premium restored successfully!'),
+                Icon(AppIcons.checkCircle, color: context.colors.surface),
+                const SizedBox(width: 8),
+                const Text('Premium restored successfully!'),
               ],
             ),
             backgroundColor: Theme.of(context).colorScheme.primary,

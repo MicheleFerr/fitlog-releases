@@ -20,6 +20,7 @@
 /// - Activate routine: < 50ms
 /// - Load routines: < 200ms
 /// - Analytics overhead: < 10ms per event
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

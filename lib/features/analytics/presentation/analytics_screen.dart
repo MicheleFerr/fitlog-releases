@@ -17,12 +17,11 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volum
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_modal.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_modal.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
@@ -814,7 +813,7 @@ class _QuickStatsSummary extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -936,7 +935,7 @@ class _AnimatedCounter extends StatefulWidget {
   const _AnimatedCounter({
     required this.value,
     required this.style,
-    this.duration = const Duration(milliseconds: 1000),
+    this.duration = const Duration(milliseconds: 800),
   });
 
   final String value; // Can be "123", "12.5t", etc.
@@ -1443,10 +1442,10 @@ class _SkeletonExerciseCard extends StatelessWidget {
           children: [
             // Exercise name skeleton
             _ShimmerBox(width: 200, height: 20, borderRadius: 4),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             // Muscle group skeleton
             _ShimmerBox(width: 100, height: 14, borderRadius: 4),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Stats row skeleton
             Row(
@@ -1458,7 +1457,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,
@@ -1466,7 +1465,7 @@ class _SkeletonExerciseCard extends StatelessWidget {
                     borderRadius: 8,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: _ShimmerBox(
                     width: double.infinity,

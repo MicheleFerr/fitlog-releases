@@ -44,7 +44,7 @@ class LegalDisclaimerModal extends StatelessWidget {
             size: AppIconSize.xlarge,
             color: context.iconError,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               context.l10n.legalDisclaimerTitle,
@@ -64,7 +64,7 @@ class LegalDisclaimerModal extends StatelessWidget {
               context.l10n.legalDisclaimerContent,
               style: context.textTheme.bodyMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Privacy Policy and ToS links
             Row(
               children: [
@@ -80,7 +80,7 @@ class LegalDisclaimerModal extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 TextButton(
                   onPressed: () {
                     // TODO: Open Terms of Service (Task 7)

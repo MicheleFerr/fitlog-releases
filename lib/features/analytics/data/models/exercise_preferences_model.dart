@@ -52,11 +52,6 @@ part 'exercise_preferences_model.g.dart';
 /// - Local caching to minimize reads
 @freezed
 class ExercisePreferencesModel with _$ExercisePreferencesModel {
-  /// Create from Firestore document
-  factory ExercisePreferencesModel.fromJson(Map<String, dynamic> json) =>
-      _$ExercisePreferencesModelFromJson(json);
-
-  const ExercisePreferencesModel._();
 
   const factory ExercisePreferencesModel({
     /// Set of exercise names marked as favorite
@@ -69,6 +64,11 @@ class ExercisePreferencesModel with _$ExercisePreferencesModel {
     /// Used for sync conflict resolution and cache invalidation
     @TimestampConverter() DateTime? lastUpdated,
   }) = _ExercisePreferencesModel;
+  /// Create from Firestore document
+  factory ExercisePreferencesModel.fromJson(Map<String, dynamic> json) =>
+      _$ExercisePreferencesModelFromJson(json);
+
+  const ExercisePreferencesModel._();
 
   /// Convert favorites List to Set for O(1) lookup
   ///

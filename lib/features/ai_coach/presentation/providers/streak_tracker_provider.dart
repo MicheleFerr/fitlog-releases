@@ -8,7 +8,7 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/streak_repository.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/repositories/streak_calculator.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/streak_data.dart';
 
 /// Streak Tracker State Notifier

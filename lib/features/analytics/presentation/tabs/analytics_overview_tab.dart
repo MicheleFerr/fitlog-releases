@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Provider for weekly workout goal (default: 5 workouts per week)
 final weeklyWorkoutGoalProvider = StateProvider<int>((ref) => 5);
@@ -165,6 +169,43 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                     },
                   ),
                   const SizedBox(height: 16),
+
+                  // Weekly Dashboard with e1RM Tracker
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                AppIcons.dashboard,
+                                color: theme.colorScheme.primary,
+                                size: AppIconSize.medium,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.weeklyDashboard,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          WeeklyDashboardWidget(
+                            activities: _convertWorkoutsToActivities(widget.workouts),
+                            isPremium: true, // Show full dashboard
+                            onDataSync: (data) {
+                              HapticFeedback.mediumImpact();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -275,10 +316,12 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
           child: Center(
             child: Column(
               children: [
-                Icon(
-                  AppIcons.workout,
-                  size: 48,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -324,7 +367,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             ...recent.map((workout) => _buildWorkoutItem(context, workout)),
           ],
         ),
@@ -393,7 +436,10 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               Navigator.pushNamed(context, '/workout');
             },
-            icon: const Icon(AppIcons.add),
+            icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
             label: Text(l10n.startWorkout),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -409,7 +455,10 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
             onPressed: () {
               // Navigate to detailed stats
             },
-            icon: const Icon(AppIcons.barChart),
+            icon: const SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+),
             label: Text(l10n.viewStats),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -554,7 +603,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('No completed exercises found in your workouts'),
+          content: const Text('No completed exercises found in your workouts'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -619,7 +668,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Unable to load exercise activities'),
+          content: const Text('Unable to load exercise activities'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -641,7 +690,7 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final l10n = AppLocalizations.of(context);
     switch (period) {
       case TimePeriod.week:
-        return l10n.thisWeekProgress;
+        return l10n.thisWeek;
       case TimePeriod.month:
         return l10n.thisMonthProgress;
       case TimePeriod.year:
@@ -807,6 +856,28 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     }
     return l10n.justNow;
   }
+
+  /// Converts workouts to exercise activities for WeeklyDashboardWidget
+  List<ExerciseActivity> _convertWorkoutsToActivities(List<Workout> workouts) {
+    final activities = <ExerciseActivity>[];
+
+    for (final workout in workouts) {
+      for (final exercise in workout.exercises) {
+        // Only convert exercises with completed sets
+        if (exercise.sets.any((set) => set.isCompleted)) {
+          final activity = ExerciseActivity.fromExercise(
+            exercise: exercise,
+            userEmail: '', // Not needed for analytics
+            workoutName: workout.name,
+            workoutDate: workout.createdAt,
+          );
+          activities.add(activity);
+        }
+      }
+    }
+
+    return activities;
+  }
 }
 
 // Enhanced modal with muscle group filters
@@ -921,7 +992,10 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -1001,10 +1075,12 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  AppIcons.workout,
-                                  size: 48,
-                                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
@@ -1080,7 +1156,7 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    l10n.workoutsCount(stats.workoutCount),
+                    l10n.workoutsCount(stats.workoutCount, 4),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                     ),
@@ -1240,11 +1316,12 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(
-                                      AppIcons.workout,
-                                      size: 16,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                                     const SizedBox(width: 4),
                                     Text(
                                       '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)} kg',
@@ -1253,11 +1330,12 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    Icon(
-                                      AppIcons.repeat,
-                                      size: 16,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                                     const SizedBox(width: 4),
                                     Text(
                                       AppLocalizations.of(context).repsCount(reps),
@@ -1287,11 +1365,12 @@ class _AllActivitiesModalState extends State<_AllActivitiesModal> {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(
-                                            AppIcons.speed,
-                                            size: 12,
-                                            color: theme.colorScheme.onSecondaryContainer,
-                                          ),
+                                          SemanticIcon(
+  icon: AppIcons.speed,
+  semanticLabel: 'Speed',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSecondaryContainer,
+),
                                           const SizedBox(width: 4),
                                           Text(
                                             AppLocalizations.of(context).rpeWithValue(rpe.toString()),
@@ -1516,7 +1595,7 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
           boxShadow: shrinkOffset > 0
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),

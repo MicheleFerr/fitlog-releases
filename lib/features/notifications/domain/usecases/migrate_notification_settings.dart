@@ -10,7 +10,6 @@
 /// MIGRATE NOTIFICATION SETTINGS USE CASE - v1.0 → v2.0 migration
 library;
 
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/frequency_cap.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_settings_repository.dart';
 
@@ -38,9 +37,9 @@ import 'package:gymbro_flutter_new/features/notifications/domain/repositories/no
 ///
 /// **GDPR Note**: Grandfathered users assumed implicit consent (consentTimestamp = now)
 class MigrateNotificationSettings {
-  final NotificationSettingsRepository _repository;
 
   MigrateNotificationSettings(this._repository);
+  final NotificationSettingsRepository _repository;
 
   /// Execute migration
   ///

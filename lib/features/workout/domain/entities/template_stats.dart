@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Statistics for a workout template
 ///
 /// Tracks usage metrics to show freshness and engagement.
 /// Used to display "last performed" metadata in template cards.
 class TemplateStats {
+
+  const TemplateStats({
+    this.lastPerformed,
+    this.totalCompletions = 0,
+    this.avgDuration,
+  });
+
+  /// Create empty stats (never performed)
+  factory TemplateStats.empty() {
+    return const TemplateStats(
+      lastPerformed: null,
+      totalCompletions: 0,
+      avgDuration: null,
+    );
+  }
   /// Last time this template was used (null if never)
   final DateTime? lastPerformed;
 
@@ -15,12 +29,6 @@ class TemplateStats {
 
   /// Average duration of completed workouts (null if never completed)
   final Duration? avgDuration;
-
-  const TemplateStats({
-    this.lastPerformed,
-    this.totalCompletions = 0,
-    this.avgDuration,
-  });
 
   /// Format last performed date with contextual messaging
   ///
@@ -31,7 +39,7 @@ class TemplateStats {
   /// - "🔄 Riprendi?" if performed long ago (≥ 14 days)
   String formattedLastPerformed(BuildContext context) {
     if (lastPerformed == null) {
-      return "Template Stats New";
+      return 'Template Stats New';
     }
 
     final now = DateTime.now();
@@ -46,16 +54,16 @@ class TemplateStats {
 
     if (daysDifference == 0) {
       // Performed today
-      return "Template Stats Today";
+      return 'Template Stats Today';
     } else if (daysDifference == 1) {
       // Performed yesterday
-      return "Template Stats Yesterday";
+      return 'Template Stats Yesterday';
     } else if (daysDifference < 14) {
       // Performed recently (< 2 weeks)
-      return "Performed $daysDifference days ago";
+      return 'Performed $daysDifference days ago';
     } else {
       // Performed long ago (≥ 2 weeks) - encourage resuming
-      return "Template Stats Resume";
+      return 'Template Stats Resume';
     }
   }
 
@@ -132,15 +140,6 @@ class TemplateStats {
   String toString() {
     return 'TemplateStats(lastPerformed: $lastPerformed, '
         'totalCompletions: $totalCompletions, avgDuration: $avgDuration)';
-  }
-
-  /// Create empty stats (never performed)
-  factory TemplateStats.empty() {
-    return const TemplateStats(
-      lastPerformed: null,
-      totalCompletions: 0,
-      avgDuration: null,
-    );
   }
 
   /// Copy with new values

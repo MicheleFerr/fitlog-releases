@@ -33,7 +33,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/messag
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/chat_input.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/suggestion_chips.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/onboarding_modal.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -170,7 +170,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           // Back navigation button (show only when tree has parent)
           if (chatState.tree?.getParentNode() != null)
             IconButton(
-              icon: SemanticIcon(
+              icon: const SemanticIcon(
                 icon: AppIcons.arrowBack,
                 semanticLabel: 'Back to parent',
                 size: AppIconSize.medium,

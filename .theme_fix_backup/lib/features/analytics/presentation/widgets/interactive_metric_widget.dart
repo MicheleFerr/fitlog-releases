@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget interattivo che mostra una metrica con tooltip esplicativo
 class InteractiveMetricWidget extends StatelessWidget {
@@ -70,10 +74,12 @@ class InteractiveMetricWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Icon(
-                            Icons.info_outline,
-                            size: 14,
-                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                          SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                           ),
                         ],
                       ),
@@ -152,7 +158,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
       initialChildSize: 0.6,
       minChildSize: 0.4,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -264,7 +270,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
                             Row(
                               children: [
                                 Icon(
-                                  Icons.functions,
+                                  AppIcons.functions,
                                   color: theme.colorScheme.primary,
                                   size: 20,
                                 ),
@@ -353,23 +359,23 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
     switch (_selectedLevel) {
       case 0:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
-        levelColor = Colors.green;
+        levelIcon = AppIcons.rocketLaunch;
+        levelColor = context.colors.success;
         break;
       case 1:
         explanation = widget.intermediateExplanation;
-        levelIcon = Icons.fitness_center;
-        levelColor = Colors.orange;
+        levelIcon = AppIcons.fitnessCenter;
+        levelColor = context.colors.secondary;
         break;
       case 2:
         explanation = widget.advancedExplanation;
-        levelIcon = Icons.emoji_events;
-        levelColor = Colors.red;
+        levelIcon = AppIcons.emojiEvents;
+        levelColor = context.colors.error;
         break;
       default:
         explanation = widget.beginnerExplanation;
-        levelIcon = Icons.rocket_launch;
-        levelColor = Colors.green;
+        levelIcon = AppIcons.rocketLaunch;
+        levelColor = context.colors.success;
     }
     
     return Container(
@@ -421,7 +427,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
           Row(
             children: [
               Icon(
-                Icons.lightbulb_outline,
+                AppIcons.tip,
                 color: theme.colorScheme.secondary,
                 size: 24,
               ),
@@ -478,7 +484,7 @@ class _ExplanationSheetState extends State<_ExplanationSheet> {
           Row(
             children: [
               Icon(
-                Icons.tips_and_updates,
+                AppIcons.tipsAndUpdates,
                 color: theme.colorScheme.tertiary,
                 size: 24,
               ),

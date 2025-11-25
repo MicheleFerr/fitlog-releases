@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AddExerciseStep extends StatefulWidget {
 
@@ -176,11 +178,12 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.workout,
-            size: 80,
-            color: colorScheme.primary,
-          ),
+          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
           const SizedBox(height: 32),
           Text(
             l10n.addExerciseStepTitle,
@@ -205,7 +208,10 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
           if (!_showDemo) ...[
             FilledButton.icon(
               onPressed: _startDemo,
-              icon: const Icon(AppIcons.play),
+              icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
               label: Text(l10n.onboardingTryItOut),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -241,7 +247,7 @@ class _AddExerciseStepState extends State<AddExerciseStep> with TickerProviderSt
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: colorScheme.primary,
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 'Database',
@@ -500,7 +506,7 @@ class _ExerciseResultCard extends StatelessWidget {
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: colorScheme.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 AppIcons.workout,

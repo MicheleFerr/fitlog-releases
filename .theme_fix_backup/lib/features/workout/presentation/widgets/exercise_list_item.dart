@@ -22,7 +22,6 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_start_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/warmup_suggestion_card.dart';
@@ -39,12 +38,21 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_picker_modal.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/counting_mode_warning_dialog.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_contribution_modal.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_card_feedback.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/community_advice_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/calculation_metadata_display.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
 
 class ExerciseListItem extends ConsumerStatefulWidget {
   const ExerciseListItem({
@@ -74,7 +82,6 @@ class ExerciseListItem extends ConsumerStatefulWidget {
 }
 
 class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
-  bool _exerciseStarted = false;
   ExerciseActivity? _lastActivity;
   bool _loadingHistory = false;
   bool _warmupSuggestionDismissed = false;
@@ -89,6 +96,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   bool? _cachedCompletionStatus;
   // REFACTORED: Community suggestions → exerciseSuggestionsProvider
   Map<String, dynamic>? _exerciseData;
+  // APRE metadata banner state
+  bool _showMetadataBanner = false; // Collapsed by default
 
   bool get isProMode => ref.read(appConfigProvider).isProMode ?? false;
 
@@ -142,6 +151,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   @override
   void initState() {
     super.initState();
+
+    // 🐛 DEBUG: Test logs removed from production (uncomment if needed for debugging)
+    // if (kDebugMode) {
+    //   debugPrint('🚨 [ExerciseListItem.initState] WIDGET COSTRUITO: ${widget.exercise.name}');
+    //   debugPrint('✅ [ExerciseListItem.initState] kDebugMode = TRUE, countingMode=${widget.exercise.countingMode.name}');
+    // }
+
     _loadLastActivity();
     _notesController = TextEditingController(text: widget.exercise.notes ?? '');
     _notesController.addListener(_onNotesChanged);
@@ -170,6 +186,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   @override
   void didUpdateWidget(ExerciseListItem oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // ✅ FIX: Trigger rebuild if counting mode changed
+    // This ensures UI updates when user switches between weight/reps and time modes
+    if (oldWidget.exercise.countingMode != widget.exercise.countingMode) {
+      // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+      // if (kDebugMode) {
+      //   debugPrint(
+      //     '🔄 [ExerciseListItem.didUpdateWidget] COUNTING MODE CHANGED: '
+      //     '${oldWidget.exercise.countingMode.name} → ${widget.exercise.countingMode.name} '
+      //     'for ${widget.exercise.name}',
+      //   );
+      // }
+      // Trigger rebuild to update UI (set input fields, display format, etc.)
+      setState(() {});
+    }
 
     // Check if auto-collapse should be triggered after widget update
     final config = ref.read(appConfigProvider);
@@ -331,10 +362,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       // - Already auto-collapsed before
       // - User manually expanded
       if (_areAllSetsCompleted() &&
-          _expansionState.isExpanded &&
+          _isExpanded && // FIX: Use ref.watch() instead of ref.read()
           !_autoCollapseInProgress &&
-          !_expansionState.hasAutoCollapsed &&
-          !_expansionState.userManuallyExpanded) {
+          !_hasAutoCollapsed && // FIX: Use ref.watch() instead of ref.read()
+          !_userManuallyExpanded) { // FIX: Use ref.watch() instead of ref.read()
         if (kDebugMode) {
           debugPrint('✅ AUTO-COLLAPSE TRIGGERED for ${widget.exercise.name}');
         }
@@ -394,7 +425,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         context,
         message:
             '✅ ${context.l10n.exerciseCompletedTapToExpand(widget.exercise.name)}',
-        backgroundColor: Colors.green,
+        backgroundColor: context.successColor,
         actionLabel: context.l10n.expandLabel,
         onAction: () {
           // REFACTORED: Use provider to expand
@@ -456,7 +487,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     if (currentUser?.email != null) {
       final repository = ExerciseActivityRepository();
       final activities = await repository.getActivitiesByExercise(
-        userEmail: currentUser!.email!,
+        userId: currentUser!.email!, // ⚠️ Parameter name is userId (expects user ID/email string)
         exerciseName: widget.exercise.name,
         limit: 1,
       );
@@ -614,6 +645,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   @override
   Widget build(BuildContext context) {
+    // 🐛 DEBUG: Log build with counting mode (debug only, removed from production)
+    // Uncomment if needed for debugging:
+    // if (kDebugMode) {
+    //   debugPrint('🎨 [ExerciseListItem.build] Building ${widget.exercise.name}, countingMode=${widget.exercise.countingMode.name}');
+    // }
+
     // Listen for autocollapse signals from provider
     ref.listen<AutoCollapseState>(
       exerciseAutoCollapseProvider(widget.exercise.id),
@@ -633,13 +670,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     return Card(
       elevation: 2,
-      color: isCompleted && !_expansionState.isExpanded
-          ? Colors.green.withValues(alpha: 0.05)
+      color: isCompleted && !_isExpanded // FIX: Use ref.watch() instead of ref.read()
+          ? context.successContainer
           : null,
       child: InkWell(
         onTap: widget.isReorderMode
             ? null // Disable tap in reorder mode
-            : !_expansionState.isExpanded
+            : !_isExpanded // FIX: Use ref.watch() instead of ref.read()
             ? () {
                 // EXPAND: Card is collapsed, expand it
                 _cancelAutoCollapse();
@@ -669,7 +706,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     }
                   : widget
                         .onTap), // EDIT: Card is expanded but exercise not complete, allow editing
-        onLongPress: () => _showExerciseOptions(context),
+        onLongPress: () {
+          // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+          // if (kDebugMode) {
+          //   debugPrint('👆 [InkWell.onLongPress] LONG PRESS DETECTED on ${widget.exercise.name}');
+          // }
+          _showExerciseOptions(context);
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -680,7 +723,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               Row(
                 children: [
                   _buildExerciseTypeIcon(context),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -697,7 +740,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               },
                             );
                           },
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Row(
@@ -709,12 +752,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 18,
-                                  color: context.colors.primary.withOpacity(
-                                    0.7,
-                                  ),
+                                SemanticIcon(
+                                  icon: AppIcons.info,
+                                  semanticLabel: 'Information',
+                                  size: AppIconSize.small,
+                                  color: context.colors.primary.withValues(alpha: 0.7),
                                 ),
                               ],
                             ),
@@ -741,39 +783,37 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.deepPurple.withOpacity(
-                                        0.15,
-                                      ),
+                                      color: context.colors.primary.withValues(alpha: 
+                                        0.15),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: Colors.deepPurple.withOpacity(
-                                          0.4,
-                                        ),
+                                        color: context.colors.primary.withValues(alpha: 
+                                          0.4),
                                         width: 1,
                                       ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(
-                                          Icons.auto_awesome,
-                                          size: 14,
-                                          color: Colors.deepPurple,
+                                        SemanticIcon(
+                                          icon: AppIcons.autoAwesome,
+                                          semanticLabel: 'AI suggestion',
+                                          size: AppIconSize.tiny,
+                                          color: context.colors.primary,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           'APRE ${widget.exercise.apreProtocol ?? 6}',
-                                          style: const TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
-                                            color: Colors.deepPurple,
+                                            color: context.colors.primary,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Rest timer indicator (tappable) - conditional on showCustomTimers
                               if (config.showCustomTimers ?? isProMode) ...[
@@ -805,25 +845,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          widget.exercise.restTime != null
-                                              ? Icons.timer_outlined
-                                              : Icons.timer_off_outlined,
-                                          size: 14,
-                                          color:
-                                              widget.exercise.restTime != null
+                                        SemanticIcon(
+                                          icon: AppIcons.timer,
+                                          semanticLabel: 'Rest timer',
+                                          size: AppIconSize.tiny,
+                                          color: widget.exercise.restTime != null
                                               ? context.colors.primary
                                               : context.colors.onSurfaceVariant,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           widget.exercise.restTime != null
                                               ? _formatRestTime(
                                                   widget.exercise.restTime!,
                                                 )
                                               : 'Default',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
                                             color:
                                                 widget.exercise.restTime != null
@@ -833,16 +870,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                                       .onSurfaceVariant,
                                           ),
                                         ),
-                                        const SizedBox(width: 2),
-                                        Icon(
-                                          Icons.edit,
-                                          size: 10,
-                                          color:
-                                              widget.exercise.restTime != null
-                                              ? context.colors.primary
-                                                    .withValues(alpha: 0.7)
-                                              : context.colors.onSurfaceVariant
-                                                    .withValues(alpha: 0.7),
+                                        SizedBox(width: 2),
+                                        SemanticIcon(
+                                          icon: AppIcons.edit,
+                                          semanticLabel: 'Edit',
+                                          size: AppIconSize.tiny,
+                                          color: widget.exercise.restTime != null
+                                              ? context.colors.primary.withValues(alpha: 0.7)
+                                              : context.colors.onSurfaceVariant,
                                         ),
                                       ],
                                     ),
@@ -875,44 +910,44 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          Icons.unfold_less,
-                                          size: 14,
+                                        SemanticIcon(
+                                          icon: AppIcons.unfoldLess,
+                                          semanticLabel: 'Collapse',
+                                          size: AppIconSize.tiny,
                                           color: context.colors.tertiary,
                                         ),
-                                        const SizedBox(width: 4),
+                                        SizedBox(width: 4),
                                         Text(
                                           '${_autoCollapseState.countdown}',
-                                          style: TextStyle(
-                                            fontSize: 11,
+                                          style: context.textTheme.labelSmall?.copyWith(
                                             fontWeight: FontWeight.w600,
                                             color: context.colors.tertiary,
                                           ),
                                         ),
-                                        const SizedBox(width: 2),
-                                        Icon(
-                                          Icons.close,
-                                          size: 10,
-                                          color: context.colors.tertiary
-                                              .withValues(alpha: 0.7),
+                                        SizedBox(width: 2),
+                                        SemanticIcon(
+                                          icon: AppIcons.close,
+                                          semanticLabel: 'Close',
+                                          size: AppIconSize.tiny,
+                                          color: context.colors.tertiary.withValues(alpha: 0.7),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // TUT chip - moved here
                               if (config.showTutInfo ?? isProMode) ...[
                                 _buildTutChip(context),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Quick Info icon
                               if (config.showQuickInfoIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.info_outline,
-                                  color: Colors.blue,
+                                  icon: AppIcons.info,
+                                  color: context.infoColor,
                                   onTap: () async {
                                     final data =
                                         await _loadExerciseDataFromJson();
@@ -921,14 +956,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     }
                                   },
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Warmup icon
                               if (config.showWarmupIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.whatshot,
-                                  color: Colors.orange,
+                                  icon: AppIcons.whatshot,
+                                  color: context.warningColor,
                                   onTap: () async {
                                     final data =
                                         await _loadExerciseDataFromJson();
@@ -939,14 +974,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     }
                                   },
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                               ],
                               // Prevention icon
                               if (config.showPreventionIcon ?? isProMode) ...[
                                 _buildQuickActionIcon(
                                   context: context,
-                                  icon: Icons.shield_outlined,
-                                  color: Colors.green,
+                                  icon: AppIcons.shieldOutlined,
+                                  color: context.successColor,
                                   onTap: () async {
                                     final data =
                                         await _loadExerciseDataFromJson();
@@ -985,9 +1020,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         case 'duplicate':
                           _duplicateExercise();
                           break;
-                        case 'counting_mode':
-                          _showCountingModeSelector(context);
-                          break;
+                        // case 'counting_mode':  // TODO: Implement _showCountingModeSelector
+                        //   _showCountingModeSelector(context);
+                        //   break;
                         case 'delete':
                           _showDeleteConfirmation(context);
                           break;
@@ -1012,20 +1047,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           value: 'auto_adjustment',
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.auto_awesome,
-                                size: 20,
-                                color:
-                                    widget.exercise.autoAdjustmentType != null
+                              SemanticIcon(
+                                icon: AppIcons.autoAwesome,
+                                semanticLabel: 'AI suggestion',
+                                size: AppIconSize.small,
+                                color: widget.exercise.autoAdjustmentType != null
                                     ? context.colors.primary
                                     : null,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 context.l10n.autoAdjustment,
                                 style:
                                     widget.exercise.autoAdjustmentType != null
-                                    ? TextStyle(
+                                    ? context.textTheme.bodyMedium?.copyWith(
                                         color: context.colors.primary,
                                         fontWeight: FontWeight.w600,
                                       )
@@ -1041,15 +1076,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: context.colors.primaryContainer,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                                   ),
                                   child: Text(
                                     widget.exercise.autoAdjustmentType ==
                                             AutoAdjustmentType.apre
                                         ? 'APRE'
                                         : 'RPE',
-                                    style: TextStyle(
-                                      fontSize: 10,
+                                    style: context.textTheme.labelSmall?.copyWith(
                                       color: context.colors.onPrimaryContainer,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -1062,15 +1096,20 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         const PopupMenuDivider(),
 
                         // Basic items always shown
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete, size: 20, color: Colors.red),
+                              SemanticIcon(
+                                icon: AppIcons.delete,
+                                semanticLabel: 'Delete',
+                                size: AppIconSize.small,
+                                color: context.errorColor,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 'Delete',
-                                style: TextStyle(color: Colors.red),
+                                style: context.textTheme.bodyMedium?.copyWith(color: context.errorColor),
                               ),
                             ],
                           ),
@@ -1079,13 +1118,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         // Advanced options - conditional
                         if (showAdvanced) ...[
                           const PopupMenuDivider(),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.edit,
+                                  semanticLabel: 'Edit',
+                                  size: AppIconSize.small,
+                                ),
                                 SizedBox(width: 8),
-                                Text('Edit'),
+                                Text(context.l10n.exerciseListEdit),
                               ],
                             ),
                           ),
@@ -1093,19 +1136,27 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'change_exercise',
                             child: Row(
                               children: [
-                                const Icon(Icons.swap_horiz, size: 20),
-                                const SizedBox(width: 8),
+                                SemanticIcon(
+                                  icon: AppIcons.swapHoriz,
+                                  semanticLabel: 'Change exercise',
+                                  size: AppIconSize.small,
+                                ),
+                                SizedBox(width: 8),
                                 Text(context.l10n.exerciseChangeVariation),
                               ],
                             ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'duplicate',
                             child: Row(
                               children: [
-                                Icon(Icons.copy, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.copy,
+                                  semanticLabel: 'Duplicate',
+                                  size: AppIconSize.small,
+                                ),
                                 SizedBox(width: 8),
-                                Text('Duplicate'),
+                                Text(context.l10n.exerciseListDuplicate),
                               ],
                             ),
                           ),
@@ -1113,29 +1164,38 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
                         // Insights - conditional
                         if (showInsights && showAdvanced)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'insight',
                             child: Row(
                               children: [
-                                Icon(Icons.insights, size: 20),
+                                SemanticIcon(
+                                  icon: AppIcons.insights,
+                                  semanticLabel: 'View insights',
+                                  size: AppIconSize.small,
+                                ),
                                 SizedBox(width: 8),
-                                Text('Insight'),
+                                Text(context.l10n.exerciseListInsight),
                               ],
                             ),
                           ),
 
                         // Counting mode - conditional
-                        if (showAdvanced)
-                          PopupMenuItem(
-                            value: 'counting_mode',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.format_list_numbered, size: 20),
-                                const SizedBox(width: 8),
-                                Text(context.l10n.changeCountingMode),
-                              ],
-                            ),
-                          ),
+                        // TODO: Implement counting mode selector + localization
+                        // if (showAdvanced)
+                        //   PopupMenuItem(
+                        //     value: 'counting_mode',
+                        //     child: Row(
+                        //       children: [
+                        //         SemanticIcon(
+                        //         icon: AppIcons.formatListNumbered,
+                        //         semanticLabel: 'Formatlistnumbered',
+                        //         size: AppIconSize.small,
+                        //         ),
+                        //         SizedBox(width: 8),
+                        //         Text(context.l10n.changeCountingMode),
+                        //       ],
+                        //     ),
+                        //   ),
 
                         // Community advice - conditional
                         if (showCommunity && showAdvanced)
@@ -1143,8 +1203,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             value: 'community_advice',
                             child: Row(
                               children: [
-                                const Icon(Icons.lightbulb_outline, size: 20),
-                                const SizedBox(width: 8),
+                                SemanticIcon(
+                                  icon: AppIcons.tip,
+                                  semanticLabel: 'Tips',
+                                  size: AppIconSize.small,
+                                ),
+                                SizedBox(width: 8),
                                 Text(context.l10n.communityAdvice),
                               ],
                             ),
@@ -1157,7 +1221,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               // Notes section - conditional on showExerciseNotes
               if (config.showExerciseNotes ?? isProMode) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 GestureDetector(
                   onTap: _toggleNotesEdit,
                   child: AnimatedContainer(
@@ -1185,15 +1249,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           turns: _isEditingNotes
                               ? 0.125
                               : 0, // 45 degree rotation
-                          child: Icon(
-                            _isEditingNotes ? Icons.edit : Icons.note,
-                            size: 16,
+                          child: SemanticIcon(
+                            icon: _isEditingNotes ? AppIcons.edit : AppIcons.note,
+                            semanticLabel: _isEditingNotes ? 'Edit note' : 'Note',
+                            size: AppIconSize.tiny,
                             color: _isEditingNotes
                                 ? context.colors.primary
                                 : context.colors.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         Expanded(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
@@ -1204,8 +1269,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     autofocus: true,
                                     maxLines: null,
                                     style: context.textTheme.bodySmall,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Aggiungi note...',
+                                    decoration: InputDecoration(
+                                      hintText: context.l10n.exerciseListAddNotesHint,
                                       border: InputBorder.none,
                                       contentPadding: EdgeInsets.zero,
                                       isDense: true,
@@ -1216,7 +1281,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                     key: const ValueKey('notes-text'),
                                     widget.exercise.notes?.isNotEmpty == true
                                         ? widget.exercise.notes!
-                                        : 'Tocca per aggiungere note',
+                                        : context.l10n.exerciseListTapToAddNotes,
                                     style: context.textTheme.bodySmall
                                         ?.copyWith(
                                           color:
@@ -1259,22 +1324,6 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
               const SizedBox(height: 12),
 
-              // Start button for first set duration tracking
-              if ((config.setDurationTracking ?? false) &&
-                  !_exerciseStarted &&
-                  widget.exercise.sets.isNotEmpty &&
-                  widget.exercise.sets.where((s) => s.isCompleted).isEmpty)
-                ExerciseStartButton(
-                  exerciseId: widget.exercise.id,
-                  exerciseName: widget.exercise.name,
-                  onStarted: () {
-                    setState(() {
-                      _exerciseStarted = true;
-                    });
-                  },
-                  isFirstSet: true,
-                ),
-
               // Warmup suggestion (smart display logic)
               if (_shouldShowWarmupSuggestion())
                 WarmupSuggestionCard(
@@ -1314,12 +1363,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.fitness_center,
+                      SemanticIcon(
+                        icon: AppIcons.workout,
+                        semanticLabel: 'Workout',
+                        size: AppIconSize.tiny,
                         color: context.colors.onSurfaceVariant,
-                        size: 16,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.length} ${widget.exercise.sets.length == 1 ? 'set' : 'sets'}',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -1330,11 +1380,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       if (widget.exercise.sets
                           .where((s) => s.isCompleted)
                           .isNotEmpty) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           '• ${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length} completati',
                           style: context.textTheme.bodySmall?.copyWith(
-                            color: Colors.green,
+                            color: context.successColor,
                             fontSize: 12,
                           ),
                         ),
@@ -1342,7 +1392,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ],
                   ),
                 )
-              else if (_expansionState.isExpanded || !isCompleted)
+              else if (_isExpanded || !isCompleted) // FIX: Use ref.watch() instead of ref.read()
                 _buildSetsSection(context, config)
               else
                 // Show compact summary when collapsed
@@ -1350,16 +1400,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 16,
+                      SemanticIcon(
+                        icon: AppIcons.complete,
+                        semanticLabel: 'Complete',
+                        size: AppIconSize.tiny,
+                        color: context.successColor,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Text(
                         '${widget.exercise.sets.where((s) => s.isCompleted).length} sets completati',
                         style: context.textTheme.bodySmall?.copyWith(
-                          color: Colors.green,
+                          color: context.successColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -1391,11 +1442,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       );
 
       return gifUrlAsync.when(
-        data: (gifUrl) => ExerciseGifWidget(
-          gifUrl: gifUrl,
-          exerciseName: widget.exercise.name,
-          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-          iconColor: colorScheme.primary,
+        // ⚡ REPAINT OPTIMIZATION: RepaintBoundary isolates GIF animation from parent repaints
+        // GIF widget has AutomaticKeepAliveClientMixin + RepaintBoundary = optimal performance
+        data: (gifUrl) => RepaintBoundary(
+          child: ExerciseGifWidget(
+            gifUrl: gifUrl,
+            exerciseName: widget.exercise.name,
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+            iconColor: colorScheme.primary,
+          ),
         ),
         loading: () => Container(
           width: 56,
@@ -1422,10 +1477,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             color: colorScheme.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            Icons.fitness_center,
+          child: SemanticIcon(
+            icon: AppIcons.workout,
+            semanticLabel: 'Workout',
             color: colorScheme.primary,
-            size: 20,
+            size: AppIconSize.small,
           ),
         ),
       );
@@ -1437,19 +1493,19 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
     switch (widget.exercise.type) {
       case ExerciseType.superset:
-        icon = Icons.repeat;
+        icon = AppIcons.repeat;
         color = colorScheme.secondary;
         break;
       case ExerciseType.dropset:
-        icon = Icons.trending_down;
+        icon = AppIcons.trendDown;
         color = colorScheme.tertiary;
         break;
       case ExerciseType.restPause:
-        icon = Icons.pause_circle;
+        icon = AppIcons.pauseCircle;
         color = colorScheme.error;
         break;
       case ExerciseType.single:
-        icon = Icons.fitness_center;
+        icon = AppIcons.workout;
         color = colorScheme.primary;
         break;
     }
@@ -1461,22 +1517,27 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(icon, color: color, size: 20),
+      child: SemanticIcon(
+        icon: icon,
+        semanticLabel: 'Suggestion',
+        color: color,
+        size: AppIconSize.small,
+      ),
     );
   }
 
   IconData _getSuggestionIcon(ContributionType type) {
     switch (type) {
       case ContributionType.tip:
-        return Icons.lightbulb_outline;
+        return AppIcons.tip;
       case ContributionType.warning:
-        return Icons.warning_amber_rounded;
+        return AppIcons.warningAmberRounded;
       case ContributionType.correction:
-        return Icons.edit_note;
+        return AppIcons.editNote;
       case ContributionType.technique:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       default:
-        return Icons.tips_and_updates;
+        return AppIcons.tipsAndUpdates;
     }
   }
 
@@ -1555,18 +1616,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.speed,
-              size: 14,
+            SemanticIcon(
+              icon: AppIcons.speed,
+              semanticLabel: 'Speed',
+              size: AppIconSize.tiny,
               color: isDefault
                   ? context.colors.onSurfaceVariant
                   : context.colors.primary,
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text(
               _formatTutDisplay(tutText),
-              style: TextStyle(
-                fontSize: 11,
+              style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isDefault
                     ? context.colors.onSurfaceVariant
@@ -1617,7 +1678,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: color.withValues(alpha: 0.4), width: 1),
         ),
-        child: Icon(icon, size: 14, color: color),
+        child: SemanticIcon(
+          icon: icon,
+          semanticLabel: 'Quick action',
+          size: AppIconSize.tiny,
+          color: color,
+        ),
       ),
     );
   }
@@ -1641,12 +1707,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.play_circle_outline,
-                  size: 20,
+                SemanticIcon(
+                  icon: AppIcons.playCircleOutline,
+                  semanticLabel: 'Playcircleoutline',
+                  size: AppIconSize.small,
                   color: context.colors.tertiary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.executeDropset,
@@ -1656,11 +1723,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forwardios',
+                  size: AppIconSize.tiny,
                   color: context.colors.tertiary,
-                ),
+                )
               ],
             ),
           ),
@@ -1684,12 +1752,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.play_circle_outline,
-                  size: 20,
+                SemanticIcon(
+                  icon: AppIcons.playCircleOutline,
+                  semanticLabel: 'Playcircleoutline',
+                  size: AppIconSize.small,
                   color: context.colors.primary,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.executeRestPause,
@@ -1699,11 +1768,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
+                SemanticIcon(
+                  icon: AppIcons.forwardIos,
+                  semanticLabel: 'Forwardios',
+                  size: AppIconSize.tiny,
                   color: context.colors.primary,
-                ),
+                )
               ],
             ),
           ),
@@ -1722,12 +1792,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.add_circle_outline,
-              size: 18,
+            SemanticIcon(
+              icon: AppIcons.addCircleOutline,
+              semanticLabel: 'Addcircleoutline',
+              size: AppIconSize.small,
               color: context.colors.onSurfaceVariant,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'No sets yet - tap to add',
               style: context.textTheme.bodySmall?.copyWith(
@@ -1746,7 +1817,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         Row(
           children: [
             Text(
-              'Sets (${widget.exercise.sets.where((s) => s.isCompleted).length}/${widget.exercise.sets.length})',
+              context.l10n.exerciseListSetsProgress(
+                widget.exercise.sets.where((s) => s.isCompleted).length.toString(),
+                widget.exercise.sets.length.toString(),
+              ),
               style: context.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
@@ -1762,8 +1836,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           ],
         ),
         const SizedBox(height: 8),
-        ...widget.exercise.sets.asMap().entries.map(
-          (entry) => _buildSetItem(context, entry.key, entry.value, config),
+        ...widget.exercise.sets.asMap().entries.expand(
+          (entry) => [
+            _buildSetItem(context, entry.key, entry.value, config),
+            // Inject metadata banner after Set 4 if APRE enabled
+            if (entry.key == 3 && widget.exercise.useAPRE && widget.exercise.sets.length >= 4)
+              _buildMetadataBanner(context),
+          ],
         ),
         const SizedBox(height: 8),
         // Add set button (with smooth animated collapse button when completed)
@@ -1787,7 +1866,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               child: FadeTransition(opacity: animation, child: child),
             );
           },
-          child: _areAllSetsCompleted() && _expansionState.isExpanded
+          child: _areAllSetsCompleted() && _isExpanded // FIX: Use ref.watch() instead of ref.read()
               ? Row(
                   key: const ValueKey('buttons_with_collapse'),
                   children: [
@@ -1799,8 +1878,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: context.colors.primaryContainer.withOpacity(
-                              0.2,
+                            color: context.colors.primaryContainer.withOpacity( 0.2,
                             ),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
@@ -1812,12 +1890,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.add_circle_outline,
-                                size: 20,
+                              SemanticIcon(
+                                icon: AppIcons.addCircleOutline,
+                                semanticLabel: 'Addcircleoutline',
+                                size: AppIconSize.small,
                                 color: context.colors.primary,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(
                                 context.l10n.addSet,
                                 style: context.textTheme.labelLarge?.copyWith(
@@ -1863,8 +1942,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                   .withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: context.colors.secondary.withOpacity(
-                                  0.3,
+                                color: context.colors.secondary.withOpacity( 0.3,
                                 ),
                                 style: BorderStyle.solid,
                                 width: 1.5,
@@ -1873,12 +1951,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.unfold_less,
-                                  size: 20,
+                                SemanticIcon(
+                                  icon: AppIcons.unfoldLess,
+                                  semanticLabel: 'Collapse',
+                                  size: AppIconSize.small,
                                   color: context.colors.secondary,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   context.l10n.collapseExercise,
                                   style: context.textTheme.labelLarge?.copyWith(
@@ -1912,12 +1991,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.add_circle_outline,
-                          size: 20,
+                        SemanticIcon(
+                          icon: AppIcons.addCircleOutline,
+                          semanticLabel: 'Addcircleoutline',
+                          size: AppIconSize.small,
                           color: context.colors.primary,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           context.l10n.addSet,
                           style: context.textTheme.labelLarge?.copyWith(
@@ -1950,10 +2030,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         padding: const EdgeInsets.only(right: 20),
         margin: const EdgeInsets.only(bottom: 6),
         decoration: BoxDecoration(
-          color: Colors.red.shade400,
+          color: context.errorColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 24),
+        child: SemanticIcon(
+   icon: AppIcons.deleteOutline,
+   semanticLabel: 'Delete',
+   size: AppIconSize.medium,
+   color: context.colors.surface,
+ ),
       ),
       confirmDismiss: (direction) async {
         // Show smooth animated confirmation dialog
@@ -1963,7 +2048,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           context: context,
           barrierDismissible: true,
           barrierLabel: 'Dismiss',
-          barrierColor: Colors.black54,
+          barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
           transitionDuration: const Duration(milliseconds: 250),
           pageBuilder: (context, animation, secondaryAnimation) {
             return Container(); // Not used with transitionBuilder
@@ -1997,7 +2082,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(true),
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                      style: TextButton.styleFrom(foregroundColor: context.errorColor),
                       child: Text(l10n.delete),
                     ),
                   ],
@@ -2025,16 +2110,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             color: isWarmup
-                ? Colors.orange.withValues(alpha: 0.05) // Warmup color
+                ? context.warningContainer // Warmup color
                 : set.isCompleted
                 ? context.colors.tertiary.withValues(alpha: 0.1)
                 : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
             border: isWarmup
-                ? Border.all(color: Colors.orange.withValues(alpha: 0.3))
+                ? Border.all(color: context.warningColor.withValues(alpha: 0.3))
                 : set.isCompleted
-                ? Border.all(color: context.colors.tertiary.withValues(alpha: 0.3))
-                : null,
+                ? Border.all(color: context.colors.tertiary.withValues(alpha: 0.3)) : null,
           ),
           child: Row(
             children: [
@@ -2044,7 +2128,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 height: 24,
                 decoration: BoxDecoration(
                   color: isWarmup
-                      ? Colors.orange.withValues(alpha: 0.3)
+                      ? context.warningColor.withValues(alpha: 0.3)
                       : set.isCompleted
                       ? context.colors.tertiary
                       : context.colors.outline.withValues(alpha: 0.3),
@@ -2052,10 +2136,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
                 child: Center(
                   child: isWarmup
-                      ? const Icon(
-                          Icons.local_fire_department,
-                          size: 14,
-                          color: Colors.orange,
+                      ? SemanticIcon(
+                          icon: AppIcons.streak,
+                          semanticLabel: 'Warmup set',
+                          size: AppIconSize.tiny,
+                          color: context.warningColor,
                         )
                       : Text(
                           '${index + 1}',
@@ -2069,7 +2154,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
 
               // Warmup badge
               if (isWarmup) ...[
@@ -2079,15 +2164,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(4),
+                    color: context.warningContainer,
+                    borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                   ),
                   child: Text(
                     'W',
-                    style: TextStyle(
-                      fontSize: 10,
+                    style: context.textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade700,
+                      color: context.warningColor,
                     ),
                   ),
                 ),
@@ -2101,34 +2185,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     // Determine counting mode to show appropriate fields
                     ..._buildSetDetailsForMode(set, config),
 
-                    // RPE indicator if completed
+                    // RPE indicator if completed - using atomic RpeIndicator widget
                     if (set.isCompleted && set.rpe != null) ...[
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getRpeIndicatorColor(
-                            set.rpe!,
-                          ).withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: _getRpeIndicatorColor(
-                              set.rpe!,
-                            ).withValues(alpha: 0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          'RPE ${set.rpe}',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: _getRpeIndicatorColor(set.rpe!),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      RpeIndicator(rpe: set.rpe!, compact: true),
                     ],
 
                     // Quick edit hint
@@ -2140,14 +2200,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                       decoration: BoxDecoration(
                         color: context.colors.outline.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                       ),
                       child: Text(
                         '✏️',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: context.colors.onSurfaceVariant.withOpacity(
-                            0.6,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSurfaceVariant.withOpacity( 0.6,
                           ),
                         ),
                       ),
@@ -2167,16 +2225,18 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: set.isCompleted
-                        ? Icon(
-                            Icons.check_circle,
+                        ? SemanticIcon(
+                            icon: AppIcons.complete,
+                            semanticLabel: 'Set completed',
                             key: const ValueKey('completed'),
-                            size: 20,
+                            size: AppIconSize.small,
                             color: context.colors.tertiary,
                           )
-                        : Icon(
-                            Icons.radio_button_unchecked,
+                        : SemanticIcon(
+                            icon: AppIcons.radioButtonUnchecked,
+                            semanticLabel: 'Set not completed',
                             key: const ValueKey('uncompleted'),
-                            size: 20,
+                            size: AppIconSize.small,
                             color: context.colors.outline,
                           ),
                   ),
@@ -2217,7 +2277,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     widget.onExerciseUpdate!(updatedExercise);
 
     // Show feedback
-    SnackBarService.showInfo(context, 'Set ${newSet.setNumber} added');
+    SnackBarService.showInfo(
+      context,
+      context.l10n.exerciseListSetAdded(newSet.setNumber.toString()),
+    );
 
     HapticFeedback.lightImpact();
   }
@@ -2312,163 +2375,96 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   }
 
   void _showExerciseOptions(BuildContext context) {
-    HapticFeedback.mediumImpact();
+    // 🐛 DEBUG: Log removed from production (uncomment if needed for debugging)
+    // if (kDebugMode) {
+    //   debugPrint('📝 [_showExerciseOptions] Showing options menu for ${widget.exercise.name}');
+    // }
 
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        minChildSize: 0.3,
-        maxChildSize: 0.7,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle bar
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: context.colors.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Scrollable content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.only(bottom: 20),
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.edit),
-                      title: const Text('Modifica nome e note'),
-                      subtitle: const Text(
-                        'Personalizza nome esercizio e aggiungi note',
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showExerciseEditor(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.info_outline),
-                      title: const Text('Info esercizio'),
-                      subtitle: const Text('Muscoli coinvolti e tecnica'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showExerciseInfoModal(scaffoldContext, exerciseData);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.whatshot, color: Colors.orange),
-                      title: const Text('Info riscaldamento'),
-                      subtitle: const Text('Consigli per il warmup'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            _hasWarmupData(exerciseData) &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showWarmupModal(scaffoldContext, exerciseData);
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(
-                        Icons.shield_outlined,
-                        color: Colors.green,
-                      ),
-                      title: const Text('Prevenzione infortuni'),
-                      subtitle: const Text('Consigli per evitare infortuni'),
-                      onTap: () async {
-                        // Cattura il context prima di chiudere il menu
-                        final scaffoldContext = context;
-                        Navigator.pop(context);
-                        final exerciseData = await _loadExerciseDataFromJson();
-                        if (exerciseData != null &&
-                            _hasInjuryPreventionData(exerciseData) &&
-                            mounted &&
-                            scaffoldContext.mounted) {
-                          _showInjuryPreventionModal(
-                            scaffoldContext,
-                            exerciseData,
-                          );
-                        }
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.history),
-                      title: const Text('Storico'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showExerciseHistory(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.copy),
-                      title: const Text('Duplica esercizio'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _duplicateExercise();
-                      },
-                    ),
-                    const Divider(),
-                    // 🆕 Segnala problema
-                    ListTile(
-                      leading: const Icon(
-                        Icons.flag_outlined,
-                        color: Colors.orange,
-                      ),
-                      title: const Text('Segnala problema'),
-                      subtitle: const Text('Bug, errori o suggerimenti'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        // Show feedback dialog
-                        ExerciseFeedbackButton.showFeedbackDialog(
-                          context,
-                          exerciseId: widget.exercise.id,
-                          exerciseName: widget.exercise.name,
-                          version: '1.0.0',
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: Icon(Icons.delete, color: context.colors.error),
-                      title: Text(
-                        'Elimina esercizio',
-                        style: TextStyle(color: context.colors.error),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _showDeleteConfirmation(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    ExerciseOptionsModal.show(
+      context,
+      widget.exercise,
+      onEdit: () => _showExerciseEditor(context),
+      onHistory: () => _showExerciseHistory(context),
+      onDuplicate: () => _duplicateExercise(),
+      onDelete: () => _showDeleteConfirmation(context),
+      onChangeCountingMode: () {
+        // 🐛 DEBUG: Now with kDebugMode guard for production safety
+        if (kDebugMode) {
+          debugPrint('🔘 [onChangeCountingMode] CALLBACK TRIGGERED!');
+        }
+        _handleCountingModeChange(context);
+      },
     );
+  }
+
+  Future<void> _handleCountingModeChange(BuildContext context) async {
+    // 🐛 DEBUG: Entry point (now with kDebugMode guard for production safety)
+    if (kDebugMode) {
+      debugPrint('🚀 [_handleCountingModeChange] METHOD CALLED for ${widget.exercise.name}');
+      debugPrint('   Current mode: ${widget.exercise.countingMode.name}');
+    }
+
+    // Show counting mode picker
+    final newMode = await CountingModePickerModal.show(
+      context,
+      currentMode: widget.exercise.countingMode,
+    );
+
+    // 🐛 DEBUG: After modal (now with kDebugMode guard for production safety)
+    if (kDebugMode) {
+      debugPrint('📱 [_handleCountingModeChange] Modal returned: ${newMode?.name ?? "NULL (cancelled)"}');
+    }
+
+    // User cancelled
+    if (newMode == null || !mounted) return;
+
+    // Check if there are completed sets
+    final completedSetsCount = ref.read(currentWorkoutProvider.notifier).getCompletedSetsCount(widget.exercise.id);
+
+    if (completedSetsCount > 0) {
+      // Show warning dialog
+      final action = await CountingModeWarningDialog.show(
+        context,
+        completedSetsCount: completedSetsCount,
+        fromMode: widget.exercise.countingMode.getDisplayName(context.l10n),
+        toMode: newMode.getDisplayName(context.l10n),
+      );
+
+      // User cancelled
+      if (action == CountingModeWarningAction.cancelled || !mounted) return;
+
+      // TODO: Handle reset action if user chose reset
+      // For now, we always keep data (action == keep || action == reset)
+    }
+
+    // Change counting mode in provider
+    if (mounted) {
+      // 🐛 DEBUG: Now with kDebugMode guard for production safety
+      if (kDebugMode) {
+        debugPrint('🔄 [_handleCountingModeChange] CALLING changeExerciseCountingMode: ${widget.exercise.countingMode.name} → ${newMode.name}');
+      }
+
+      ref.read(currentWorkoutProvider.notifier).changeExerciseCountingMode(
+        widget.exercise.id,
+        newMode,
+      );
+
+      // 🐛 DEBUG: Now with kDebugMode guard for production safety
+      if (kDebugMode) {
+        debugPrint('✅ [_handleCountingModeChange] changeExerciseCountingMode CALLED');
+      }
+
+      // Show success feedback
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.countingModeChanged),
+            duration: const Duration(seconds: 2),
+            backgroundColor: context.colors.primary,
+          ),
+        );
+      }
+    }
   }
 
   void _openContributionModal(ContributionType type, {String? contextType}) {
@@ -2495,7 +2491,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         initialChildSize: 0.6,
         minChildSize: 0.4,
         maxChildSize: 0.9,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -2521,8 +2517,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.edit, color: context.colors.primary),
-                    const SizedBox(width: 12),
+                    SemanticIcon(
+
+                      icon: AppIcons.edit,
+
+                      semanticLabel: 'Edit',
+
+                      color: context.colors.primary,
+
+                    ),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Modifica esercizio',
@@ -2533,7 +2537,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
+                      icon: SemanticIcon(
+   icon: AppIcons.close,
+   semanticLabel: 'Close',
+ ),
                     ),
                   ],
                 ),
@@ -2697,13 +2704,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Title
               Row(
                 children: [
-                  Icon(Icons.timer, color: context.colors.primary),
-                  const SizedBox(width: 12),
+                  SemanticIcon(
+
+                    icon: AppIcons.timer,
+
+                    semanticLabel: 'Timer',
+
+                    color: context.colors.primary,
+
+                  ),
+                  SizedBox(width: 12),
                   Text(
                     'Rest Timer Settings',
                     style: context.textTheme.titleLarge?.copyWith(
@@ -2712,14 +2727,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
-                'Set rest time between sets for "${widget.exercise.name}"',
+                context.l10n.exerciseListSetRestTimeMessage(widget.exercise.name),
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Default option
               Card(
@@ -2737,20 +2752,21 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     padding: const EdgeInsets.all(12),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.timer_off,
+                        SemanticIcon(
+                          icon: AppIcons.timerOff,
+                          semanticLabel: 'Timeroff',
                           color: selectedTime == null
                               ? context.colors.primary
                               : context.colors.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Use Default Timer',
-                                style: TextStyle(
+                                context.l10n.exerciseListUseDefaultTimer,
+                                style: context.textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: selectedTime == null
                                       ? context.colors.primary
@@ -2758,9 +2774,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 ),
                               ),
                               Text(
-                                'Uses global rest timer (2 minutes)',
-                                style: TextStyle(
-                                  fontSize: 12,
+                                context.l10n.exerciseListUsesGlobalRestTimer,
+                                style: context.textTheme.bodySmall?.copyWith(
                                   color: context.colors.onSurfaceVariant,
                                 ),
                               ),
@@ -2768,25 +2783,26 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
                         ),
                         if (selectedTime == null)
-                          Icon(
-                            Icons.check_circle,
+                          SemanticIcon(
+                            icon: AppIcons.complete,
+                            semanticLabel: 'Complete',
                             color: context.colors.primary,
-                          ),
+                          )
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               // Quick options
               Text(
-                'Quick Options',
+                context.l10n.exerciseListQuickOptions,
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -2812,7 +2828,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(context.l10n.exerciseListCancel),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -2830,12 +2846,12 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                               SnackBarService.showInfo(
                                 context,
                                 selectedTime != null
-                                    ? '⏱️ Rest timer set to ${_formatRestTime(selectedTime!)}'
-                                    : '⏱️ Using default rest timer',
+                                    ? context.l10n.exerciseListRestTimerSetTo(_formatRestTime(selectedTime!))
+                                    : context.l10n.exerciseListUsingDefaultTimer,
                               );
                             }
                           : null,
-                      child: const Text('Save'),
+                      child: Text(context.l10n.exerciseListSave),
                     ),
                   ),
                 ],
@@ -2873,9 +2889,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 ),
               ),
 
-              const Text(
-                'Set Rest Timer',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                context.l10n.exerciseListSetRestTimer,
+                style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
@@ -2920,7 +2936,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     });
                   }
                 },
-                icon: const Icon(Icons.edit, size: 18),
+                icon: SemanticIcon(
+   icon: AppIcons.edit,
+   semanticLabel: 'Edit',
+   size: AppIconSize.small,
+ ),
                 label: Text(
                   selectedTime != null &&
                           ![
@@ -2932,8 +2952,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             240,
                             300,
                           ].contains(selectedTime)
-                      ? 'Custom: ${_formatTime(selectedTime!)}'
-                      : 'Custom',
+                      ? context.l10n.exerciseListCustomTime(_formatTime(selectedTime!))
+                      : context.l10n.exerciseListCustom,
                 ),
               ),
 
@@ -2945,7 +2965,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text(context.l10n.exerciseListCancel),
                   ),
                   const SizedBox(width: 12),
                   FilledButton(
@@ -2960,11 +2980,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             // Show confirmation
                             SnackBarService.showInfo(
                               context,
-                              '⏱️ Rest timer set to ${_formatTime(selectedTime!)}',
+                              context.l10n.exerciseListRestTimerSetTo(_formatTime(selectedTime!)),
                             );
                           }
                         : null,
-                    child: const Text('Confirm'),
+                    child: Text(context.l10n.exerciseListConfirm),
                   ),
                 ],
               ),
@@ -2985,7 +3005,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     return showDialog<int>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Custom Rest Time'),
+        title: Text(context.l10n.exerciseListCustomRestTime),
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -2993,7 +3013,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Minutes', style: TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListMinutes, style: context.textTheme.bodySmall),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -3013,13 +3033,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ],
             ),
             const SizedBox(width: 16),
-            const Text(':', style: TextStyle(fontSize: 24)),
+            Text(':', style: context.textTheme.headlineSmall),
             const SizedBox(width: 16),
             // Seconds picker
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Seconds', style: TextStyle(fontSize: 12)),
+                Text(context.l10n.exerciseListSeconds, style: context.textTheme.bodySmall),
                 const SizedBox(height: 8),
                 SizedBox(
                   width: 60,
@@ -3043,14 +3063,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.exerciseListCancel),
           ),
           FilledButton(
             onPressed: () {
               final totalSeconds = (minutes * 60) + seconds;
               Navigator.pop(context, totalSeconds > 0 ? totalSeconds : null);
             },
-            child: const Text('Set'),
+            child: Text(context.l10n.exerciseListSetButton),
           ),
         ],
       ),
@@ -3086,7 +3106,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
 
   /// Get counting mode for current exercise
   ExerciseCountingMode _getCountingMode() {
-    return ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    final mode = ExerciseCountingModeService.getModeFromWorkoutExercise(widget.exercise);
+    // 🐛 DEBUG: Log counting mode (debug only, removed from production)
+    // Uncomment if needed for debugging:
+    // if (kDebugMode) {
+    //   debugPrint('🎯 [_getCountingMode] Returning mode: ${mode.name} for ${widget.exercise.name}');
+    // }
+    return mode;
   }
 
   /// Build set details widgets based on counting mode
@@ -3105,9 +3131,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 decoration: set.isCompleted ? TextDecoration.lineThrough : null,
               ),
             ),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text('×', style: context.textTheme.bodySmall),
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
           ],
           if (set.reps != null)
             Text(
@@ -3191,19 +3217,23 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       ),
       child: Column(
         children: [
-          Icon(icon, size: 20, color: color),
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: 'Icon',
+            size: AppIconSize.small,
+            color: color,
+          ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 16,
+            style: context.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.8)),
+            style: context.textTheme.labelSmall?.copyWith(color: color.withValues(alpha: 0.8)),
           ),
         ],
       ),
@@ -3226,9 +3256,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Exercise Notes',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                'Exercise Notes', // TODO: Add localization
+                style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -3286,7 +3316,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           FilledButton(
             onPressed: () {
@@ -3366,11 +3396,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     HapticFeedback.selectionClick();
 
     // Use V2 quick edit with superset support
+    // ✅ FIX: Pass counting mode so quick edit shows correct fields (time/reps/weighted)
     context.showQuickEditOverlayV2(
       exerciseSet: set,
       onSave: widget.onSetUpdate!,
       position: position,
       previousSet: previousSet,
+      countingMode: widget.exercise.countingMode, // ✅ Pass counting mode
     );
   }
 
@@ -3501,7 +3533,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           SnackBarService.showCustom(
             context,
             message: '🔥 Warmup set ${set.setNumber} completed!',
-            backgroundColor: Colors.orange.shade600,
+            backgroundColor: context.warningColor,
           );
         } else {
           SnackBarService.showInfo(
@@ -3639,11 +3671,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             );
           }
 
-          // Update set with RPE, actual reps, weight and calculated duration
+          // Update set with RPE, actual reps/weight/time based on counting mode
+          // ✅ NEW: For time-based exercises, actualReps contains total seconds
+          // ✅ NEW: For reps-only exercises, actualReps contains reps and actualWeight is 0
+          // ✅ NEW: For weighted exercises, both actualReps and actualWeight are used
+          final countingMode = widget.exercise.countingMode;
           final updatedSet = set.copyWith(
-            actualReps: actualReps,
+            actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+            seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
             rpe: rpe,
-            weight: actualWeight,
+            weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
             isCompleted: true,
             completedAt: DateTime.now(),
             setDurationMillis: duration, // ✅ Salva durata esecuzione
@@ -3698,18 +3735,51 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           _handleRPESuggestion(suggestedWeight);
         },
         onConfirm: (actualReps, actualWeight, rpe) {
-          if (rpe == 0) {
-            // User chose to mark as incomplete
+          // ✅ NEW: Handle toggle state via rpe special codes
+          // rpe = -1 → User toggled OFF completion (unmarca)
+          // rpe = 0  → User skipped RPE but kept completion
+          // rpe > 0  → Normal RPE value
+
+          if (rpe == -1) {
+            // ✅ User toggled OFF completion → unmarca set
             _toggleSetCompletion(set);
             SnackBarService.showInfo(
               context,
               '↩️ Set ${set.setNumber} marked as incomplete',
             );
-          } else {
-            // Update set with new RPE values - preserve existing duration if present
+          } else if (rpe == 0) {
+            // ✅ User skipped RPE but kept completion → update without RPE
+            final countingMode = widget.exercise.countingMode;
             final updatedSet = set.copyWith(
-              actualReps: actualReps,
-              weight: actualWeight,
+              actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+              seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
+              weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
+              rpe: null, // Remove RPE if skipped
+              isCompleted: true,
+            );
+
+            widget.onSetToggleComplete!(updatedSet);
+
+            // Haptic feedback for set update
+            try {
+              HapticFeedbackService.setCompletion(ref);
+            } catch (e) {
+              if (kDebugMode) {
+                debugPrint('Haptic feedback error: $e');
+              }
+            }
+
+            SnackBarService.showInfo(
+              context,
+              '✅ Set ${set.setNumber} updated',
+            );
+          } else {
+            // ✅ Normal RPE value → update set with RPE
+            final countingMode = widget.exercise.countingMode;
+            final updatedSet = set.copyWith(
+              actualReps: countingMode == ExerciseCountingMode.time ? null : actualReps,
+              seconds: countingMode == ExerciseCountingMode.time ? actualReps : null,
+              weight: countingMode == ExerciseCountingMode.weighted ? actualWeight : null,
               rpe: rpe,
               isCompleted: true,
             );
@@ -3771,13 +3841,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
-  Color _getRpeIndicatorColor(int rpe) {
-    if (rpe <= 6) return Colors.green;
-    if (rpe <= 7) return Colors.lightGreen;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
-  }
+  // _getRpeIndicatorColor removed - now using atomic RpeIndicator widget from shared/
 
   void _startRestTimerWithSetInfo(
     BuildContext context,
@@ -3878,15 +3942,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 builder: (context, value, child) {
                   return Transform.scale(
                     scale: 0.8 + (0.2 * value),
-                    child: Icon(
-                      Icons.insights,
-                      size: 14,
+                    child: SemanticIcon(
+                      icon: AppIcons.insights,
+                      semanticLabel: 'Insights',
+                      size: AppIconSize.tiny,
                       color: context.colors.primary,
                     ),
                   );
                 },
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               Text(
                 'Ultimo: ${maxWeight.toStringAsFixed(1)}kg x $maxReps ($timeAgo)',
                 style: context.textTheme.labelSmall?.copyWith(
@@ -3894,10 +3959,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.chevron_right,
-                size: 14,
+              SizedBox(width: 4),
+              SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: 'Chevronright',
+                size: AppIconSize.tiny,
                 color: context.colors.primary.withValues(alpha: 0.7),
               ),
             ],
@@ -3987,7 +4053,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       if (currentUser?.email != null) {
         final repository = ExerciseActivityRepository();
         activities = await repository.getActivitiesByExercise(
-          userEmail: currentUser!.email!,
+          userId: currentUser!.email!, // ⚠️ Parameter name is userId (expects user ID/email string)
           exerciseName: widget.exercise.name,
           limit: 10,
         );
@@ -4010,7 +4076,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.95,
-        builder: (context, scrollController) => Container(
+        builder: (context, scrollController) => DecoratedBox(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -4033,8 +4099,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.history, color: context.colors.primary),
-                    const SizedBox(width: 12),
+                    SemanticIcon(
+
+                      icon: AppIcons.history,
+
+                      semanticLabel: 'History',
+
+                      color: context.colors.primary,
+
+                    ),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -4067,12 +4141,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.fitness_center,
-                              size: 48,
+                            SemanticIcon(
+                              icon: AppIcons.workout,
+                              semanticLabel: 'Workout',
+                              size: AppIconSize.medium,
                               color: context.colors.outline,
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                             Text(
                               'Nessun allenamento precedente',
                               style: context.textTheme.titleMedium,
@@ -4143,8 +4218,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: context.colors.secondaryContainer.withValues(
-                        alpha: 0.5,
+                      color: context.colors.secondaryContainer.withValues( alpha: 0.5,
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -4177,7 +4251,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Dettaglio serie
             ExpansionTile(
@@ -4212,23 +4286,22 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Text(
                         '${weight.toStringAsFixed(1)}kg x $reps',
                         style: context.textTheme.bodyMedium,
                       ),
                       if (set.effort > 0) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: _getEffortColorByNumber(
-                              set.effort,
+                            color: _getEffortColorByNumber( set.effort,
                             ).withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
                           ),
                           child: Text(
                             'RPE ${set.effort}',
@@ -4259,7 +4332,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
             color: context.colors.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 2),
+        SizedBox(height: 2),
         Text(
           value,
           style: context.textTheme.titleSmall?.copyWith(
@@ -4273,23 +4346,23 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   Color _getEffortColor(String effort) {
     switch (effort.toLowerCase()) {
       case 'easy':
-        return Colors.green;
+        return context.successColor;
       case 'medium':
-        return Colors.orange;
+        return context.warningColor;
       case 'hard':
-        return Colors.red;
+        return context.errorColor;
       default:
-        return Colors.grey;
+        return context.colors.outline;
     }
   }
 
   Color _getEffortColorByNumber(int effort) {
     if (effort <= 6) {
-      return Colors.green;
+      return context.successColor;
     } else if (effort <= 8) {
-      return Colors.orange;
+      return context.warningColor;
     } else {
-      return Colors.red;
+      return context.errorColor;
     }
   }
 
@@ -4442,12 +4515,16 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 16, color: color),
+              SemanticIcon(
+                icon: icon,
+                semanticLabel: 'Icon',
+                size: AppIconSize.tiny,
+                color: color,
+              ),
               const SizedBox(width: 6),
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
+                style: context.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: color,
                 ),
@@ -4470,7 +4547,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.preWorkoutMobility,
           value: data['mobilitaPre'],
-          icon: Icons.accessibility_new,
+          icon: AppIcons.accessibility,
         ),
       );
     }
@@ -4479,7 +4556,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.muscleActivation,
           value: data['attivazionePre'],
-          icon: Icons.flash_on,
+          icon: AppIcons.flashOn,
         ),
       );
     }
@@ -4487,9 +4564,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.preparation,
-          groupIcon: Icons.accessibility_new,
+          groupIcon: AppIcons.accessibility,
           items: preparationItems,
-          accentColor: Colors.orange,
+          accentColor: context.warningColor,
         ),
       );
     }
@@ -4501,7 +4578,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.warmupSets,
           value: data['warmupSets'].toString(),
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
         ),
       );
     }
@@ -4510,7 +4587,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.warmupDuration,
           value: data['tempoWarmup'],
-          icon: Icons.timer,
+          icon: AppIcons.timer,
         ),
       );
     }
@@ -4518,9 +4595,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.specificWarmup,
-          groupIcon: Icons.whatshot,
+          groupIcon: AppIcons.whatshot,
           items: warmupItems,
-          accentColor: Colors.deepOrange,
+          accentColor: context.warningColor,
         ),
       );
     }
@@ -4532,8 +4609,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.warmupAndMobility,
-        icon: Icons.whatshot,
-        color: Colors.orange,
+        icon: AppIcons.whatshot,
+        color: context.warningColor,
         groups: groups,
         onCorrection: () {
           Navigator.pop(context);
@@ -4561,7 +4638,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.primaryMuscles,
           value: data['focus'],
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
         ),
       );
     }
@@ -4570,7 +4647,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.secondaryMuscles,
           value: data['muscoliSecondari'],
-          icon: Icons.sports_gymnastics,
+          icon: AppIcons.sportsGymnastics,
         ),
       );
     }
@@ -4578,7 +4655,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.targetMuscles,
-          groupIcon: Icons.fitness_center,
+          groupIcon: AppIcons.workout,
           items: muscleItems,
           accentColor: context.colors.primary,
         ),
@@ -4592,7 +4669,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.difficultyLevel,
           value: data['difficolta'],
-          icon: Icons.trending_up,
+          icon: AppIcons.trendUp,
         ),
       );
     }
@@ -4601,7 +4678,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.exerciseType,
           value: data['tipoEsercizio'],
-          icon: Icons.category,
+          icon: AppIcons.category,
         ),
       );
     }
@@ -4610,7 +4687,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.equipment,
           value: data['attrezzatura'],
-          icon: Icons.build,
+          icon: AppIcons.build,
         ),
       );
     }
@@ -4619,7 +4696,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.movementPattern,
           value: data['patternMovimento'],
-          icon: Icons.repeat,
+          icon: AppIcons.repeat,
         ),
       );
     }
@@ -4627,9 +4704,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.exerciseDetails,
-          groupIcon: Icons.info_outline,
+          groupIcon: AppIcons.info,
           items: detailItems,
-          accentColor: Colors.blue.shade600,
+          accentColor: context.infoColor,
         ),
       );
     }
@@ -4639,9 +4716,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.repRange,
-          groupIcon: Icons.format_list_numbered,
+          groupIcon: AppIcons.formatListNumbered,
           items: [_ModalItem(label: '', value: data['rangeRipetizioni'])],
-          accentColor: Colors.purple.shade600,
+          accentColor: context.colors.primary,
         ),
       );
     }
@@ -4653,7 +4730,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.exerciseInformation,
-        icon: Icons.info,
+        icon: AppIcons.info,
         color: context.colors.primary,
         groups: groups,
         onCorrection: () {
@@ -4688,7 +4765,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.injuryPrevention,
           value: data['prevenzioneInfortuni'],
-          icon: Icons.shield,
+          icon: AppIcons.shield,
         ),
       );
     }
@@ -4697,7 +4774,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.technicalNotes,
           value: data['noteTecniche'],
-          icon: Icons.note,
+          icon: AppIcons.note,
         ),
       );
     }
@@ -4706,7 +4783,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
         _ModalItem(
           label: context.l10n.technicalDrills,
           value: data['drillTecnico'],
-          icon: Icons.sports,
+          icon: AppIcons.sports,
         ),
       );
     }
@@ -4714,9 +4791,9 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.safetyAndTechnique,
-          groupIcon: Icons.health_and_safety,
+          groupIcon: AppIcons.healthAndSafety,
           items: safetyItems,
-          accentColor: Colors.red.shade600,
+          accentColor: context.errorColor,
         ),
       );
     }
@@ -4726,15 +4803,15 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       groups.add(
         _GroupedModalSection(
           groupTitle: context.l10n.recovery,
-          groupIcon: Icons.ac_unit,
+          groupIcon: AppIcons.acUnit,
           items: [
             _ModalItem(
               label: context.l10n.recommendedCooldown,
               value: data['cooldownConsigliato'],
-              icon: Icons.ac_unit,
+              icon: AppIcons.acUnit,
             ),
           ],
-          accentColor: Colors.cyan.shade600,
+          accentColor: context.colors.tertiary,
         ),
       );
     }
@@ -4746,8 +4823,8 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       builder: (context) => _buildGroupedPremiumModal(
         context: context,
         title: context.l10n.safetyAndPrevention,
-        icon: Icons.health_and_safety,
-        color: Colors.red.shade600,
+        icon: AppIcons.healthAndSafety,
+        color: context.errorColor,
         groups: groups,
         onCorrection: () {
           Navigator.pop(context);
@@ -4790,7 +4867,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       initialChildSize: 0.6,
       minChildSize: 0.3,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -4803,7 +4880,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: context.colors.onSurface.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -4838,9 +4915,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(icon, color: color, size: 28),
+                    child: SemanticIcon(
+   icon: icon,
+   semanticLabel: 'Icon',
+   color: color,
+   size: AppIconSize.large,
+ ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4851,7 +4933,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -4870,7 +4952,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: SemanticIcon(
+   icon: AppIcons.close,
+   semanticLabel: 'Close',
+   size: AppIconSize.small,
+ ),
                     ),
                   ),
                 ],
@@ -4921,22 +5007,19 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             ),
                             child: Row(
                               children: [
-                                Icon(
-                                  group.groupIcon,
-                                  size: 20,
-                                  color:
-                                      group.accentColor ??
-                                      context.colors.primary,
+                                SemanticIcon(
+                                  icon: group.groupIcon,
+                                  semanticLabel: 'Group',
+                                  size: AppIconSize.small,
+                                  color: group.accentColor ?? context.colors.primary,
                                 ),
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10),
                                 Text(
                                   group.groupTitle,
                                   style: context.textTheme.titleMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            group.accentColor ??
-                                            context.colors.primary,
+                                        color: group.accentColor ?? context.colors.primary,
                                       ),
                                 ),
                               ],
@@ -4972,9 +5055,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (item.icon != null) ...[
-                                          Icon(
-                                            item.icon,
-                                            size: 16,
+                                          SemanticIcon(
+                                            icon: item.icon!,
+                                            semanticLabel: 'Item icon',
+                                            size: AppIconSize.tiny,
                                             color:
                                                 context.colors.onSurfaceVariant,
                                           ),
@@ -5020,7 +5104,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -5043,7 +5127,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onCorrection,
-                          icon: const Icon(Icons.edit_note, size: 18),
+                          icon: SemanticIcon(
+   icon: AppIcons.editNote,
+   semanticLabel: 'Edit note',
+   size: AppIconSize.small,
+ ),
                           label: const Text('Correggi info'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
@@ -5051,13 +5139,17 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                         ),
                       ),
                     if (onCorrection != null && onAddTip != null)
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                     if (onAddTip != null)
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: onAddTip,
-                          icon: const Icon(Icons.lightbulb_outline, size: 18),
-                          label: const Text('Aggiungi tip'),
+                          icon: SemanticIcon(
+   icon: AppIcons.tip,
+   semanticLabel: 'Tips',
+   size: AppIconSize.small,
+ ),
+                          label: Text('Aggiungi tip'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(0, 40),
                             foregroundColor: context.colors.primary,
@@ -5085,7 +5177,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
       initialChildSize: 0.6,
       minChildSize: 0.3,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -5098,7 +5190,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: context.colors.onSurface.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -5133,9 +5225,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                       ),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(icon, color: color, size: 28),
+                    child: SemanticIcon(
+   icon: icon,
+   semanticLabel: 'Icon',
+   color: color,
+   size: AppIconSize.large,
+ ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -5146,7 +5243,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           widget.exercise.name,
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -5165,7 +5262,11 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                             .withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, size: 20),
+                      child: SemanticIcon(
+   icon: AppIcons.close,
+   semanticLabel: 'Close',
+   size: AppIconSize.small,
+ ),
                     ),
                   ),
                 ],
@@ -5204,12 +5305,13 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                           children: [
                             Row(
                               children: [
-                                Icon(
-                                  section.icon,
-                                  size: 20,
+                                SemanticIcon(
+                                  icon: section.icon,
+                                  semanticLabel: 'Section',
+                                  size: AppIconSize.small,
                                   color: context.colors.primary,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   section.title,
                                   style: context.textTheme.titleMedium
@@ -5217,7 +5319,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12),
                             Text(
                               section.content,
                               style: context.textTheme.bodyLarge?.copyWith(
@@ -5373,6 +5475,119 @@ extension _ExerciseListItemHelpers on _ExerciseListItemState {
     setState(() {
       _warmupSuggestionDismissed = true;
     });
+  }
+
+  /// Builds collapsible metadata banner for APRE calculations
+  Widget _buildMetadataBanner(BuildContext context) {
+    final calculations = _parseCalculationMetadata();
+
+    // Don't show banner if no calculations available
+    if (calculations == null) return const SizedBox.shrink();
+
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: Column(
+        children: [
+          SizedBox(height: 12),
+          // Collapsible header
+          InkWell(
+            onTap: () {
+              setState(() {
+                _showMetadataBanner = !_showMetadataBanner;
+              });
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: context.colors.primary.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.expandLess,
+                    semanticLabel: 'Collapse',
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _showMetadataBanner
+                          ? context.l10n.apreHideCalculationDetails
+                          : context.l10n.apreShowCalculationDetails,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SemanticIcon(
+                    icon: AppIcons.info,
+                    semanticLabel: 'Information',
+                    size: AppIconSize.small,
+                    color: context.colors.primary,
+                  )
+                ],
+              ),
+            ),
+          ),
+          // Expanded metadata details
+          if (_showMetadataBanner) ...[
+            const SizedBox(height: 8),
+            CalculationMetadataDisplay(
+              calculations: calculations,
+              lastCalculationDate: widget.exercise.lastCalculationDate,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Parses calculation metadata from JSON string
+  Map<String, dynamic>? _parseCalculationMetadata() {
+    if (widget.exercise.calculationMetadata == null) return null;
+
+    try {
+      final decoded = jsonDecode(widget.exercise.calculationMetadata!);
+      // Convert to expected format for CalculationMetadataDisplay
+      return {
+        'confidence': _parseConfidence(decoded['confidence']),
+        'dataPoints': decoded['dataPoints'] ?? 0,
+        'formula': decoded['formula'] ?? 'Brzycki',
+        'dataAge': Duration(days: decoded['dataAge']?['inDays'] ?? 0),
+        'standardDeviation': decoded['standardDeviation']?.toDouble() ?? 0.0,
+      };
+    } catch (e) {
+      debugPrint('⚠️ Error parsing calculation metadata: $e');
+      return null;
+    }
+  }
+
+  /// Parses confidence string to enum
+  CalculationConfidence _parseConfidence(dynamic confidence) {
+    if (confidence == null) return CalculationConfidence.unknown;
+    if (confidence is CalculationConfidence) return confidence;
+
+    final confStr = confidence.toString().toLowerCase();
+    switch (confStr) {
+      case 'veryhigh':
+        return CalculationConfidence.veryHigh;
+      case 'high':
+        return CalculationConfidence.high;
+      case 'medium':
+        return CalculationConfidence.medium;
+      case 'low':
+        return CalculationConfidence.low;
+      default:
+        return CalculationConfidence.unknown;
+    }
   }
 }
 

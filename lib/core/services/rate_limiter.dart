@@ -1,15 +1,24 @@
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/core/utils/secure_logger.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 
-/// Servizio di rate limiting per prevenire abusi e spam.
+/// @deprecated Use [CooldownLimiter] instead to avoid naming conflict with
+/// RateLimiter (token bucket) in shared/domain/security/rate_limiter.dart.
+@Deprecated('Use CooldownLimiter instead - avoids naming conflict with RateLimiter')
+typedef RateLimiter = CooldownLimiter;
+
+/// Servizio di cooldown per prevenire abusi e spam.
 ///
 /// Limita il numero di operazioni che un utente può eseguire in un dato
 /// periodo di tempo (es. max 1 reset password ogni 60 secondi).
 ///
+/// **Note**: This is a simple cooldown-based limiter (static class).
+/// For API rate limiting with token bucket algorithm, use:
+/// `lib/shared/domain/security/rate_limiter.dart`
+///
 /// Esempio:
 /// ```dart
 /// // Verifica se l'utente può inviare reset password
-/// if (!RateLimiter.canAttempt('password_reset')) {
+/// if (!CooldownLimiter.canAttempt('password_reset')) {
 ///   ScaffoldMessenger.of(context).showSnackBar(
 ///     SnackBar(content: Text('Troppi tentativi. Riprova tra un minuto.')),
 ///   );
@@ -19,7 +28,7 @@ import 'package:gymbro_flutter_new/core/utils/secure_logger.dart';
 /// // Procedi con l'operazione
 /// await authService.sendPasswordResetEmail(email);
 /// ```
-class RateLimiter {
+class CooldownLimiter {
   // Mappa che tiene traccia dell'ultimo tentativo per ogni operazione
   static final Map<String, DateTime> _lastAttempts = {};
 
@@ -184,13 +193,17 @@ class RateLimiter {
   }
 }
 
-/// Mixin per aggiungere facilmente rate limiting a qualsiasi classe.
+/// @deprecated Use [CooldownLimiterMixin] instead.
+@Deprecated('Use CooldownLimiterMixin instead')
+typedef RateLimiterMixin = CooldownLimiterMixin;
+
+/// Mixin per aggiungere facilmente cooldown limiting a qualsiasi classe.
 ///
 /// Esempio:
 /// ```dart
-/// class AuthService with RateLimiterMixin {
+/// class AuthService with CooldownLimiterMixin {
 ///   Future<void> sendPasswordReset(String email) async {
-///     if (!checkRateLimit('password_reset')) {
+///     if (!checkCooldown('password_reset')) {
 ///       throw Exception('Too many attempts');
 ///     }
 ///
@@ -198,27 +211,37 @@ class RateLimiter {
 ///   }
 /// }
 /// ```
-mixin RateLimiterMixin {
-  /// Verifica il rate limit per un'operazione.
-  bool checkRateLimit(
+mixin CooldownLimiterMixin {
+  /// Verifica il cooldown per un'operazione.
+  bool checkCooldown(
     String operation, {
     Duration? cooldown,
     String? userId,
   }) {
-    return RateLimiter.canAttempt(
+    return CooldownLimiter.canAttempt(
       operation,
       cooldown: cooldown,
       userId: userId,
     );
   }
 
+  /// @deprecated Use [checkCooldown] instead.
+  @Deprecated('Use checkCooldown instead')
+  bool checkRateLimit(
+    String operation, {
+    Duration? cooldown,
+    String? userId,
+  }) {
+    return checkCooldown(operation, cooldown: cooldown, userId: userId);
+  }
+
   /// Ottiene il messaggio di cooldown.
   String getCooldownMessage(String operation, {String? userId}) {
-    return RateLimiter.getCooldownMessage(operation, userId: userId);
+    return CooldownLimiter.getCooldownMessage(operation, userId: userId);
   }
 
   /// Verifica se in cooldown.
   bool isInCooldown(String operation, {String? userId}) {
-    return RateLimiter.isInCooldown(operation, userId: userId);
+    return CooldownLimiter.isInCooldown(operation, userId: userId);
   }
 }

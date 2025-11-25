@@ -20,6 +20,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/patch_event_tracker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Dialog per sottomettere correzioni agli esercizi
 class PatchSubmissionDialog extends ConsumerStatefulWidget {
@@ -220,7 +221,7 @@ class _PatchSubmissionDialogState
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations l10n = context.l10n;
+    final AppLocalizations l10n = context.l10n;
 
     return Container(
       decoration: BoxDecoration(
@@ -316,7 +317,7 @@ class _PatchSubmissionDialogState
         ),
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
+          icon: const Icon(
             AppIcons.close,
             size: AppIconSize.medium,
           ),
@@ -367,7 +368,7 @@ class _PatchSubmissionDialogState
 
   Widget _buildFieldSelector(BuildContext context, AppLocalizations l10n) {
     return DropdownButtonFormField<String>(
-      value: _selectedField,
+      initialValue: _selectedField,
       decoration: InputDecoration(
         labelText: l10n.selectFieldToCorrect,
         prefixIcon: Icon(AppIcons.edit, size: AppIconSize.medium),
@@ -409,11 +410,12 @@ class _PatchSubmissionDialogState
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.info,
-                size: 16,
-                color: context.colors.error,
-              ),
+              SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: context.colors.error,
+),
               const SizedBox(width: 8),
               Text(
                 l10n.currentValue,
@@ -491,7 +493,7 @@ class _PatchSubmissionDialogState
         onPressed: _isSubmitting ? null : _submitPatch,
         style: ElevatedButton.styleFrom(
           backgroundColor: context.colors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: context.colors.surface,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -500,7 +502,7 @@ class _PatchSubmissionDialogState
         child: _isSubmitting
             ? LoadingIndicator(
                 size: AppIconSize.medium,
-                color: Colors.white,
+                color: context.colors.surface,
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -510,7 +512,7 @@ class _PatchSubmissionDialogState
                   Text(
                     l10n.submitCorrection,
                     style: context.textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

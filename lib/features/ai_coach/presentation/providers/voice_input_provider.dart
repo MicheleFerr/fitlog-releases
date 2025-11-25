@@ -27,15 +27,15 @@ enum VoiceInputState {
 
 /// Voice input notifier state
 class VoiceInputNotifierState {
-  final VoiceInputState state;
-  final String recognizedText;
-  final String? errorMessage;
 
   const VoiceInputNotifierState({
     this.state = VoiceInputState.idle,
     this.recognizedText = '',
     this.errorMessage,
   });
+  final VoiceInputState state;
+  final String recognizedText;
+  final String? errorMessage;
 
   VoiceInputNotifierState copyWith({
     VoiceInputState? state,
@@ -52,10 +52,10 @@ class VoiceInputNotifierState {
 
 /// Voice input notifier
 class VoiceInputNotifier extends StateNotifier<VoiceInputNotifierState> {
-  final stt.SpeechToText _speechToText = stt.SpeechToText();
-  bool _isInitialized = false;
 
   VoiceInputNotifier() : super(const VoiceInputNotifierState());
+  final stt.SpeechToText _speechToText = stt.SpeechToText();
+  bool _isInitialized = false;
 
   /// Initialize speech recognition
   Future<bool> initialize() async {

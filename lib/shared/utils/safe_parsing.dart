@@ -15,7 +15,7 @@
 /// **Usage**:
 /// ```dart
 /// // ✅ SAFE - Won't crash on invalid input
-/// final color = parseColorSafe('#2196F3', fallback: Colors.blue);
+/// final color = parseColorSafe('#2196F3', fallback: context.colors.primary);
 /// final age = parseIntSafe(userInput, fallback: 0);
 /// final date = parseDateTimeSafe(jsonDate, fallback: DateTime.now());
 /// ```
@@ -40,7 +40,7 @@ import 'package:flutter/foundation.dart';
 /// final red = parseColorSafe('red'); // → Material Red 500
 ///
 /// // Invalid input → fallback
-/// final invalid = parseColorSafe('invalid', fallback: Colors.grey); // → grey
+/// final invalid = parseColorSafe('invalid', fallback: context.colors.surfaceVariant); // → grey
 /// ```
 Color parseColorSafe(
   String? colorString, {

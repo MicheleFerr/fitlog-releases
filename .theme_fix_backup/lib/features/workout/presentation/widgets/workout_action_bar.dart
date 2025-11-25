@@ -4,6 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🎯 TIER-1 WORKOUT ACTION BAR
 /// Undo/Redo system with batch operations
@@ -101,7 +105,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                       children: [
                         // Undo button
                         _ActionButton(
-                          icon: Icons.undo,
+                          icon: AppIcons.undo,
                           label: l10n.undo,
                           enabled: undoRedoState.canUndo,
                           onTap: () {
@@ -115,7 +119,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                         
                         // Redo button
                         _ActionButton(
-                          icon: Icons.redo,
+                          icon: AppIcons.redo,
                           label: l10n.redo,
                           enabled: undoRedoState.canRedo,
                           onTap: () {
@@ -147,7 +151,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                             turns: _isExpanded ? 0.5 : 0,
                             duration: const Duration(milliseconds: 200),
                             child: Icon(
-                              Icons.expand_more,
+                              AppIcons.expandMore,
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
@@ -298,11 +302,12 @@ class _OfflineIndicatorState extends State<_OfflineIndicator>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.cloud_off,
-                size: 16,
-                color: theme.colorScheme.onErrorContainer,
-              ),
+              SemanticIcon(
+  icon: AppIcons.cloudOff,
+  semanticLabel: 'Cloud off',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onErrorContainer,
+),
               const SizedBox(width: 4),
               Text(
                 '${widget.pendingCount}',
@@ -327,7 +332,7 @@ class _BatchOperationsMenu extends ConsumerWidget {
     
     return PopupMenuButton<BatchOperation>(
       icon: Icon(
-        Icons.flash_on,
+        AppIcons.flashOn,
         color: theme.colorScheme.primary,
       ),
       shape: RoundedRectangleBorder(
@@ -342,7 +347,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.completeAll,
           child: Row(
             children: [
-              const Icon(Icons.done_all, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.doneAll,
+  semanticLabel: 'Done all',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.completeAllSets),
             ],
@@ -352,7 +361,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.clearAll,
           child: Row(
             children: [
-              const Icon(Icons.clear_all, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.clearAll,
+  semanticLabel: 'Clear all',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.clearAllSets),
             ],
@@ -362,7 +375,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.copyFromLast,
           child: Row(
             children: [
-              const Icon(Icons.content_copy, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.copy,
+  semanticLabel: 'Copy',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.copyFromLastWorkout),
             ],
@@ -372,7 +389,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.progressiveOverload,
           child: Row(
             children: [
-              const Icon(Icons.trending_up, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.applyProgressiveOverload),
             ],
@@ -441,11 +462,12 @@ class _ActionHistory extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 2),
             child: Row(
               children: [
-                Icon(
-                  Icons.history,
-                  size: 14,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                 const SizedBox(width: 8),
                 Text(
                   action.description,
@@ -528,7 +550,7 @@ class _ActionToastState extends State<_ActionToast>
     
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 0.8, end: 1)
+        tween: Tween<double>(begin: 0.8, end: 1.0)
           .chain(CurveTween(curve: Curves.elasticOut)),
         weight: 20,
       ),
@@ -567,7 +589,7 @@ class _ActionToastState extends State<_ActionToast>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: context.colors.onSurface.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -577,7 +599,7 @@ class _ActionToastState extends State<_ActionToast>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.check_circle,
+                    AppIcons.complete,
                     color: theme.colorScheme.onInverseSurface,
                     size: 18,
                   ),
@@ -684,8 +706,8 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
               duration: const Duration(milliseconds: 200),
               child: Icon(
                 wakelockState.isEnabled
-                  ? Icons.mobile_screen_share
-                  : Icons.mobile_off,
+                  ? AppIcons.mobileScreenShare
+                  : AppIcons.mobileOff,
                 key: ValueKey(wakelockState.isEnabled),
                 size: 20,
                 color: wakelockState.isEnabled

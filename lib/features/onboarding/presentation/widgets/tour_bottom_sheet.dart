@@ -62,7 +62,7 @@ class TourBottomSheet extends ConsumerWidget {
                   current: step.position + 1,
                   total: step.totalSteps,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Title
                 Text(
@@ -72,7 +72,7 @@ class TourBottomSheet extends ConsumerWidget {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
 
                 // Description
                 Text(
@@ -85,7 +85,7 @@ class TourBottomSheet extends ConsumerWidget {
 
                 // Bullet points (for COMPLEX steps only)
                 if (step.hasBulletPoints) ...[
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   ...step.bulletPointKeys.map(
                     (key) => Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -152,7 +152,7 @@ class TourBottomSheet extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
 
                     // Skip tour button (hidden on last step)
                     if (!(usesManager ? manager!.isLastStep : tourState!.isLastStep))
@@ -251,7 +251,7 @@ class _ProgressIndicator extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
 
         // Progress bar
         Expanded(
@@ -317,14 +317,14 @@ class _AutoAdvanceIndicatorState extends State<_AutoAdvanceIndicator>
               size: AppIconSize.small,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               context.l10n.autoAdvanceIn(remaining),
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(2),
@@ -382,14 +382,7 @@ String _getLocalizedString(BuildContext context, String key) {
     'tourHistoryTitle': (l) => l.tourHistoryTitle,
     'tourHistoryDescription': (l) => l.tourHistoryDescription,
 
-    // Step 6: Routine Center
-    'tourRoutineCenterTitle': (l) => l.tourRoutineCenterTitle,
-    'tourRoutineCenterDescription': (l) => l.tourRoutineCenterDescription,
-    'tourRoutineCenterBullet1': (l) => l.tourRoutineCenterBullet1,
-    'tourRoutineCenterBullet2': (l) => l.tourRoutineCenterBullet2,
-    'tourRoutineCenterBullet3': (l) => l.tourRoutineCenterBullet3,
-
-    // Step 7: Community
+    // Step 6: Community
     'tourCommunityTitle': (l) => l.tourCommunityTitle,
     'tourCommunityDescription': (l) => l.tourCommunityDescription,
 

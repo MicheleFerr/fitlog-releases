@@ -59,7 +59,7 @@ class FooterDisclaimer extends StatelessWidget {
                   size: 14, // Smaller than tiny for ultra-compact footer
                   color: context.colors.onSurface.withValues(alpha: 0.6),
                 ),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     context.l10n.footerDisclaimerShort,
@@ -74,7 +74,7 @@ class FooterDisclaimer extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               context.l10n.footerDisclaimerTapHint,
               style: context.textTheme.bodySmall?.copyWith(

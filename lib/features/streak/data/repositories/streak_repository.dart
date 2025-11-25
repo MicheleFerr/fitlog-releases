@@ -8,9 +8,9 @@ abstract class StreakRepository {
 }
 
 class StreakRepositoryImpl implements StreakRepository {
-  final WorkoutRepository _workoutRepository;
 
   StreakRepositoryImpl(this._workoutRepository);
+  final WorkoutRepository _workoutRepository;
 
   @override
   Future<WorkoutStreak> getCurrentStreak() async {

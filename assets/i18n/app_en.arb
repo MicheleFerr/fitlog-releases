@@ -1892,6 +1892,10 @@
   "@analytics": {
     "description": "Analytics quick action"
   },
+  "detailedAnalysis": "Detailed Analysis",
+  "@detailedAnalysis": {
+    "description": "Button to access detailed exercise analysis"
+  },
   "trackProgress": "Track progress",
   "@trackProgress": {
     "description": "Analytics subtitle"

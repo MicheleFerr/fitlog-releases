@@ -5,6 +5,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_selection_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🚀 TIER-1: Optimized selection sheet with lazy loading
 class ExerciseSelectionSheet extends ConsumerStatefulWidget {
@@ -65,7 +69,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -169,7 +173,11 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
               onPressed: () {
                 ref.read(exerciseSelectionProvider.notifier).clearSelection();
               },
-              icon: const Icon(Icons.clear_all, size: 20),
+              icon: const SemanticIcon(
+  icon: AppIcons.clearAll,
+  semanticLabel: 'Clear all',
+  size: AppIconSize.small,
+),
               label: Text(l10n.clearAll),
             ),
         ],
@@ -188,10 +196,16 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         controller: _searchController,
         decoration: InputDecoration(
           hintText: l10n.searchExercises,
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                   onPressed: () {
                     _searchController.clear();
                     ref.read(exerciseSelectionProvider.notifier).updateSearch('');
@@ -261,10 +275,12 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -325,7 +341,7 @@ class _ExerciseSelectionSheetState extends ConsumerState<ExerciseSelectionSheet>
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -417,11 +433,12 @@ class ExerciseSelectionTile extends ConsumerWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        Icon(
-                          Icons.fitness_center,
-                          size: 12,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -439,7 +456,7 @@ class ExerciseSelectionTile extends ConsumerWidget {
                           decoration: BoxDecoration(
                             color: _getDifficultyColor(exercise.difficolta, theme)
                                 .withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             exercise.difficolta,
@@ -464,11 +481,12 @@ class ExerciseSelectionTile extends ConsumerWidget {
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.check,
-                    size: 16,
-                    color: theme.colorScheme.onPrimary,
-                  ),
+                  child: SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onPrimary,
+),
                 )
               else
                 Container(
@@ -498,11 +516,12 @@ class ExerciseSelectionTile extends ConsumerWidget {
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(
-          Icons.fitness_center,
-          size: 30,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
+        child: SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant,
+),
       );
     }
     
@@ -531,11 +550,12 @@ class ExerciseSelectionTile extends ConsumerWidget {
           width: 60,
           height: 60,
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-          child: Icon(
-            Icons.broken_image,
-            size: 30,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
+          child: SemanticIcon(
+  icon: AppIcons.brokenImage,
+  semanticLabel: 'Broken image',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant,
+),
         ),
       ),
     );
@@ -544,11 +564,11 @@ class ExerciseSelectionTile extends ConsumerWidget {
   Color _getDifficultyColor(String difficulty, ThemeData theme) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return theme.colorScheme.success;
       case 'intermedio':
-        return Colors.orange;
+        return theme.colorScheme.secondary;
       case 'avanzato':
-        return Colors.red;
+        return theme.colorScheme.error;
       default:
         return theme.colorScheme.onSurfaceVariant;
     }

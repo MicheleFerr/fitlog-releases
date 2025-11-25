@@ -6,6 +6,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseProgressScreen extends ConsumerStatefulWidget {
   const ExerciseProgressScreen({super.key});
@@ -42,7 +45,10 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -83,10 +89,16 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
               },
               decoration: InputDecoration(
                 hintText: context.l10n.searchExercisesPlaceholder,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
+                        icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                         onPressed: () {
                           setState(() {
                             _searchController.clear();
@@ -117,7 +129,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
     if (exercises.isEmpty) {
       return EnhancedEmptyState(
         type: EmptyStateType.info,
-        icon: Icons.fitness_center,
+        icon: AppIcons.workout,
         title: _searchQuery.isEmpty
             ? context.l10n.noExercisesFound
             : context.l10n.noExercisesFound,
@@ -125,12 +137,13 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
             ? context.l10n.noExercisesFoundDesc
             : 'No exercises match "$_searchQuery"',
         primaryActionLabel: context.l10n.startWorkout,
-        primaryActionIcon: Icons.add,
+        primaryActionIcon: AppIcons.add,
         onPrimaryAction: () => context.push('/workout'),
       );
     }
 
     return ListView.builder(
+      key: const PageStorageKey('exercise_progress_list'),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: exercises.length,
       itemBuilder: (context, index) {
@@ -167,7 +180,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.fitness_center,
+                      AppIcons.workout,
                       color: context.colors.primary,
                       size: 24,
                     ),
@@ -186,11 +199,12 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 14,
-                              color: context.colors.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               '${metrics.totalSessions} ${context.l10n.totalSessions}',
@@ -199,11 +213,12 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Icon(
-                              Icons.access_time,
-                              size: 14,
-                              color: context.colors.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.clock,
+  semanticLabel: 'Clock',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               _getRelativeTime(metrics.lastWorkoutDate),
@@ -228,19 +243,19 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                   _buildStatItem(
                     context.l10n.maxWeight,
                     '${metrics.maxWeight.toStringAsFixed(1)} kg',
-                    Colors.blue,
+                    context.colors.primary,
                   ),
                   _buildStatItem(
                     context.l10n.avgReps,
                     metrics.averageReps.toStringAsFixed(0),
-                    Colors.green,
+                    context.colors.success,
                   ),
                   _buildStatItem(
                     context.l10n.averageRPE,
                     metrics.averageRPE > 0
                         ? metrics.averageRPE.toStringAsFixed(1)
                         : 'N/A',
-                    Colors.orange,
+                    context.colors.secondary,
                   ),
                 ],
               ),
@@ -280,18 +295,18 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
 
     switch (trend) {
       case TrendDirection.improving:
-        icon = Icons.trending_up;
-        color = Colors.green;
+        icon = AppIcons.trendingUp;
+        color = context.colors.success;
         label = context.l10n.improving;
         break;
       case TrendDirection.declining:
-        icon = Icons.trending_down;
-        color = Colors.red;
+        icon = AppIcons.trendingDown;
+        color = context.colors.error;
         label = context.l10n.declining;
         break;
       case TrendDirection.stable:
-        icon = Icons.remove;
-        color = Colors.grey;
+        icon = AppIcons.remove;
+        color = context.colors.surfaceContainerHighest;
         label = context.l10n.stable;
         break;
     }

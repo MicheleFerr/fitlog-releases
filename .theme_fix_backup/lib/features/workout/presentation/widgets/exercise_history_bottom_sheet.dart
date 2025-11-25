@@ -19,6 +19,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
 
@@ -125,7 +129,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: context.colors.onSurface.withValues(alpha: 0.06),
             blurRadius: 40,
             offset: const Offset(0, -12),
             spreadRadius: 0,
@@ -213,7 +217,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                           ] : null,
                         ),
                         child: Icon(
-                          Icons.insights_rounded,
+                          AppIcons.insightsRounded,
                           color: theme.colorScheme.primary,
                           size: 20 + 6 * progress, // Smaller icon
                         ),
@@ -257,19 +261,19 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () => Navigator.pop(context),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                           child: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surface.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: theme.colorScheme.outline.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
                             child: Icon(
-                              Icons.close_rounded,
+                              AppIcons.closeRounded,
                               color: theme.colorScheme.onSurfaceVariant,
                               size: 20,
                             ),
@@ -345,21 +349,21 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       _StatCardData(
         label: l10n.maxWeight,
         value: stats.maxWeight != null ? '${stats.maxWeight!.toStringAsFixed(1)}kg' : '--',
-        icon: Icons.fitness_center_rounded,
+        icon: AppIcons.fitnessCenterRounded,
         color: theme.colorScheme.primary,
         isPrimary: true,
       ),
       _StatCardData(
         label: l10n.totalSets,
         value: stats.totalSets.toString(),
-        icon: Icons.repeat_rounded,
+        icon: AppIcons.repeatRounded,
         color: theme.colorScheme.secondary,
         isPrimary: false,
       ),
       _StatCardData(
         label: l10n.avgWeight,
         value: stats.avgWeight > 0 ? '${stats.avgWeight.toStringAsFixed(1)}kg' : '--',
-        icon: Icons.trending_up_rounded,
+        icon: AppIcons.trendingUpRounded,
         color: theme.colorScheme.tertiary,
         isPrimary: false,
       ),
@@ -368,7 +372,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
         value: stats.lastWorkout != null 
           ? DateFormat('MMM d').format(stats.lastWorkout!)
           : '--',
-        icon: Icons.schedule_rounded,
+        icon: AppIcons.scheduleRounded,
         color: theme.colorScheme.outline,
         isPrimary: false,
       ),
@@ -386,10 +390,10 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.analytics_rounded,
+                  AppIcons.analyticsRounded,
                   color: theme.colorScheme.primary,
                   size: 18,
                 ),
@@ -475,7 +479,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
           BoxShadow(
             color: stat.isPrimary 
               ? stat.color.withValues(alpha: 0.1)
-              : Colors.black.withValues(alpha: 0.02),
+              : context.colors.onSurface.withValues(alpha: 0.02),
             blurRadius: stat.isPrimary ? 12 : 8,
             offset: const Offset(0, 3),
           ),
@@ -594,10 +598,10 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.secondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    Icons.history_rounded,
+                    AppIcons.historyRounded,
                     color: theme.colorScheme.secondary,
                     size: 18,
                   ),
@@ -705,7 +709,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                                 turns: isExpanded ? 0.5 : 0.0,
                                 duration: const Duration(milliseconds: 200),
                                 child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
+                                  AppIcons.keyboardArrowDownRounded,
                                   color: theme.colorScheme.primary,
                                   size: 24,
                                 ),
@@ -765,7 +769,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.01),
+                color: context.colors.onSurface.withValues(alpha: 0.01),
                 blurRadius: 4,
                 offset: const Offset(0, 1),
               ),
@@ -784,11 +788,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                           color: theme.colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
-                          Icons.fitness_center_rounded,
-                          size: 16,
-                          color: theme.colorScheme.primary,
-                        ),
+                        child: SemanticIcon(
+  icon: AppIcons.fitnessCenterRounded,
+  semanticLabel: 'Fitness center rounded',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -808,11 +813,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                           color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
-                          Icons.repeat_rounded,
-                          size: 16,
-                          color: theme.colorScheme.secondary,
-                        ),
+                        child: SemanticIcon(
+  icon: AppIcons.repeatRounded,
+  semanticLabel: 'Repeat rounded',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.secondary,
+),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -857,7 +863,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
           title: Row(
             children: [
               Icon(
-                Icons.edit_rounded,
+                AppIcons.editRounded,
                 color: theme.colorScheme.primary,
                 size: 24,
               ),
@@ -967,10 +973,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.history_rounded,
-                size: 64,
-                color: theme.colorScheme.primary.withValues(alpha: 0.7),
+              child: SemanticIcon(
+  icon: AppIcons.historyRounded,
+  semanticLabel: 'History rounded',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
               ),
             ),
             const SizedBox(height: 24),
@@ -1035,7 +1043,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                     height: 24,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -1044,7 +1052,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                     height: 16,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ],
@@ -1075,7 +1083,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 height: 20,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               const SizedBox(height: 12),
@@ -1112,10 +1120,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline_rounded,
-            size: 64,
-            color: theme.colorScheme.error.withValues(alpha: 0.7),
+          SemanticIcon(
+  icon: AppIcons.errorOutlineRounded,
+  semanticLabel: 'Error outline rounded',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error.withValues(alpha: 0.7,
+),
           ),
           const SizedBox(height: 16),
           Text(
@@ -1154,13 +1164,13 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     if (dateOnly == today) {
-      return Icons.today_rounded;
+      return AppIcons.todayRounded;
     } else if (dateOnly == yesterday) {
-      return Icons.schedule_rounded;
+      return AppIcons.scheduleRounded;
     } else if (now.difference(dateOnly).inDays < 7) {
-      return Icons.date_range_rounded;
+      return AppIcons.dateRangeRounded;
     } else {
-      return Icons.calendar_month_rounded;
+      return AppIcons.calendarMonthRounded;
     }
   }
 }

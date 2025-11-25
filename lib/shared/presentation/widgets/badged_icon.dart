@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Icon with badge/counter overlay
 ///
@@ -211,7 +211,7 @@ class BadgedIcon extends StatelessWidget {
                     ? Text(
                         badge!,
                         style: context.textTheme.labelSmall?.copyWith(
-                          color: badgeTextColor ?? Colors.white,
+                          color: badgeTextColor ?? context.colors.surface,
                           fontSize: badge!.length > 2 ? 9 : 10,
                           fontWeight: FontWeight.bold,
                           height: 1.0,

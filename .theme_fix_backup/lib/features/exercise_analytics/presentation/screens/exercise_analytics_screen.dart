@@ -16,6 +16,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Schermata per analizzare le statistiche di singoli esercizi
 class ExerciseAnalyticsScreen extends ConsumerStatefulWidget {
@@ -132,12 +136,18 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const SemanticIcon(
+  icon: AppIcons.arrowBackIos,
+  semanticLabel: 'Arrow back ios',
+),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const SemanticIcon(
+  icon: AppIcons.filter,
+  semanticLabel: 'Filter',
+),
             onPressed: () => _showFilterOptions(context),
           ),
         ],
@@ -171,7 +181,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
@@ -196,13 +206,13 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             decoration: InputDecoration(
               hintText: 'Cerca esercizi o categorie...',
               prefixIcon: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear,
+                        AppIcons.clear,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onPressed: () {
@@ -238,7 +248,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -250,7 +260,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Esercizi Tracciati',
               _mockExercises.length.toString(),
-              Icons.fitness_center,
+              AppIcons.workout,
               colorScheme.primary,
             ),
           ),
@@ -259,7 +269,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Volume Totale',
               '${_mockExercises.fold<double>(0, (sum, ex) => sum + ex.totalVolume).toInt()}kg',
-              Icons.trending_up,
+              AppIcons.trendUp,
               colorScheme.secondary,
             ),
           ),
@@ -268,7 +278,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
             child: _buildStatCard(
               'Sessioni',
               _mockExercises.fold<int>(0, (sum, ex) => sum + ex.sessionsCount).toString(),
-              Icons.history,
+              AppIcons.history,
               colorScheme.tertiary,
             ),
           ),
@@ -318,10 +328,12 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurface.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -460,15 +472,15 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
 
     switch (trend) {
       case _Trend.increasing:
-        icon = Icons.trending_up;
-        color = Colors.green;
+        icon = AppIcons.trendingUp;
+        color = context.colors.success;
         break;
       case _Trend.decreasing:
-        icon = Icons.trending_down;
-        color = Colors.red;
+        icon = AppIcons.trendingDown;
+        color = context.colors.error;
         break;
       case _Trend.stable:
-        icon = Icons.trending_flat;
+        icon = AppIcons.trendFlat;
         color = colorScheme.onSurface.withValues(alpha: 0.6);
         break;
     }
@@ -517,7 +529,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         maxChildSize: 0.9,
         minChildSize: 0.5,
         builder: (context, scrollController) {
-          return Container(
+          return DecoratedBox(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

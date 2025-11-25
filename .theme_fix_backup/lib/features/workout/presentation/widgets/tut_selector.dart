@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TutSelector extends StatefulWidget {
   const TutSelector({
@@ -52,7 +55,7 @@ class _TutSelectorState extends State<TutSelector> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: theme.colorScheme.primary.withValues(alpha: 0.3),
           ),
@@ -60,11 +63,12 @@ class _TutSelectorState extends State<TutSelector> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.timer_outlined,
-              size: 14,
-              color: theme.colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
             const SizedBox(width: 4),
             Text(
               _formatTutValue(_phases),
@@ -75,10 +79,12 @@ class _TutSelectorState extends State<TutSelector> {
               ),
             ),
             const SizedBox(width: 4),
-            Icon(
-              Icons.expand_more,
-              size: 12,
-              color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            SemanticIcon(
+  icon: AppIcons.expandMore,
+  semanticLabel: 'Expand',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
             ),
           ],
         ),
@@ -110,11 +116,12 @@ class _TutSelectorState extends State<TutSelector> {
           // Header
           Row(
             children: [
-              Icon(
-                Icons.timer_outlined,
-                size: 20,
-                color: theme.colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
               const SizedBox(width: 8),
               Text(
                 l10n.tutTitle,
@@ -131,11 +138,12 @@ class _TutSelectorState extends State<TutSelector> {
                       _isExpanded = false;
                     });
                   },
-                  icon: Icon(
-                    Icons.close,
-                    size: 18,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                  icon: SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(
                     minWidth: 24,
@@ -288,7 +296,7 @@ class _TutSelectorState extends State<TutSelector> {
         const SizedBox(height: 8),
 
         // Value Selector
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.3),

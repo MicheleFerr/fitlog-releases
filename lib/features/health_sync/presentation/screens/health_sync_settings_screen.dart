@@ -192,7 +192,7 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
           title: context.l10n.healthDataWorkouts,
           subtitle: context.l10n.healthSyncWorkoutsDescription,
           dataType: HealthDataType.workout,
-          isGranted: permissions[HealthDataType.workout]?.name == 'authorized',
+          isGranted: permissions[HealthDataType.workout] == PermissionState.authorized,
         ),
 
         const SizedBox(height: 8),
@@ -204,7 +204,7 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
           title: context.l10n.healthDataBodyWeight,
           subtitle: context.l10n.healthSyncBodyWeightDescription,
           dataType: HealthDataType.bodyWeight,
-          isGranted: permissions[HealthDataType.bodyWeight]?.name == 'authorized',
+          isGranted: permissions[HealthDataType.bodyWeight] == PermissionState.authorized,
         ),
       ],
     );
@@ -256,8 +256,8 @@ class HealthSyncSettingsScreen extends ConsumerWidget {
     dynamic permissionStatus,
   ) {
     final permissions = permissionStatus.permissions as Map;
-    final workoutGranted = permissions[HealthDataType.workout]?.name == 'authorized';
-    final weightGranted = permissions[HealthDataType.bodyWeight]?.name == 'authorized';
+    final workoutGranted = permissions[HealthDataType.workout] == PermissionState.authorized;
+    final weightGranted = permissions[HealthDataType.bodyWeight] == PermissionState.authorized;
 
     return Column(
       children: [

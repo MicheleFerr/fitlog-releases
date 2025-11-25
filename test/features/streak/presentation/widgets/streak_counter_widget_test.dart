@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/features/streak/domain/entities/workout_strea
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/widgets/streak_counter_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations_en.dart';
 
 void main() {
   Widget buildWidget(WorkoutStreak? streak, {bool isLoading = false, Object? error}) {
@@ -22,11 +21,11 @@ void main() {
           return streak!;
         }),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('en'),
-        home: const Scaffold(
+        locale: Locale('en'),
+        home: Scaffold(
           body: StreakCounterWidget(),
         ),
       ),

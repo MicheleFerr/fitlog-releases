@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Skip Recovery BottomSheet - Modal for recovering skipped routine days
 class SkipRecoveryBottomSheet extends ConsumerStatefulWidget {
@@ -215,7 +216,7 @@ class _SkipRecoveryBottomSheetState
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(
+                  icon: const Icon(
                     AppIcons.close,
                     size: AppIconSize.medium,
                   ),
@@ -294,11 +295,12 @@ class _SkipRecoveryBottomSheetState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.completeOutline,
-              size: 64,
-              color: context.colors.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: context.colors.primary,
+),
             const SizedBox(height: 16),
             Text(
               context.l10n.routineNoSkippedDays,
@@ -488,10 +490,12 @@ class _SkipRecoveryBottomSheetState
                   ),
                 ),
               ),
-              Icon(
-                AppIcons.forward,
-                size: 18,
-                color: context.colors.onSurface.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.small,
+  color: context.colors.onSurface.withValues(alpha: 0.5,
+),
               ),
             ],
           ),

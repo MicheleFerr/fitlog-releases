@@ -27,13 +27,13 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.
 
 /// Response template with variables
 class ResponseTemplate {
-  final String text;
-  final List<String> requiredVariables;
 
   const ResponseTemplate({
     required this.text,
     this.requiredVariables = const [],
   });
+  final String text;
+  final List<String> requiredVariables;
 
   /// Replace variables in template
   String format(Map<String, String> variables) {
@@ -334,14 +334,14 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(text: "Ciao {username}! Come va l'allenamento oggi? 💪"),
-        const ResponseTemplate(text: "Hey {username}! Pronto per analizzare i tuoi progressi?"),
-        const ResponseTemplate(text: "Ciao! Cosa vuoi sapere sui tuoi allenamenti?"),
+        const ResponseTemplate(text: 'Hey {username}! Pronto per analizzare i tuoi progressi?'),
+        const ResponseTemplate(text: 'Ciao! Cosa vuoi sapere sui tuoi allenamenti?'),
       ];
     }
     return [
       const ResponseTemplate(text: "Hey {username}! How's your training going today? 💪"),
-      const ResponseTemplate(text: "Hi {username}! Ready to analyze your progress?"),
-      const ResponseTemplate(text: "Hello! What would you like to know about your workouts?"),
+      const ResponseTemplate(text: 'Hi {username}! Ready to analyze your progress?'),
+      const ResponseTemplate(text: 'Hello! What would you like to know about your workouts?'),
     ];
   }
 
@@ -349,11 +349,11 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Ottimo lavoro {username}! Negli ultimi {period} hai migliorato di {metric}. {recommendation}",
+          text: 'Ottimo lavoro {username}! Negli ultimi {period} hai migliorato di {metric}. {recommendation}',
           requiredVariables: ['username', 'period', 'metric', 'recommendation'],
         ),
         const ResponseTemplate(
-          text: "La tua progressione è {trend}. {metric} negli ultimi {period}. {recommendation}",
+          text: 'La tua progressione è {trend}. {metric} negli ultimi {period}. {recommendation}',
           requiredVariables: ['trend', 'metric', 'period', 'recommendation'],
         ),
       ];
@@ -364,7 +364,7 @@ class ResponseRepository {
         requiredVariables: ['username', 'period', 'metric', 'recommendation'],
       ),
       const ResponseTemplate(
-        text: "Your progression trend is {trend}. {metric} over {period}. {recommendation}",
+        text: 'Your progression trend is {trend}. {metric} over {period}. {recommendation}',
         requiredVariables: ['trend', 'metric', 'period', 'recommendation'],
       ),
     ];
@@ -374,18 +374,18 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Il tuo volume settimanale è {volume}. {recommendation}",
+          text: 'Il tuo volume settimanale è {volume}. {recommendation}',
           requiredVariables: ['volume', 'recommendation'],
         ),
         const ResponseTemplate(
-          text: "{assessment} Stai facendo {sets_per_week} serie/settimana. {recommendation}",
+          text: '{assessment} Stai facendo {sets_per_week} serie/settimana. {recommendation}',
           requiredVariables: ['assessment', 'sets_per_week', 'recommendation'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "Your weekly volume is {volume}. {recommendation}",
+        text: 'Your weekly volume is {volume}. {recommendation}',
         requiredVariables: ['volume', 'recommendation'],
       ),
       const ResponseTemplate(
@@ -399,22 +399,22 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Il tuo punteggio di recupero è {score}/100. {recommendation}",
+          text: 'Il tuo punteggio di recupero è {score}/100. {recommendation}',
           requiredVariables: ['score', 'recommendation'],
         ),
         const ResponseTemplate(
-          text: "{status_emoji} Recupero: {status}. Ultima sessione: {hours_ago} ore fa. {recommendation}",
+          text: '{status_emoji} Recupero: {status}. Ultima sessione: {hours_ago} ore fa. {recommendation}',
           requiredVariables: ['status_emoji', 'status', 'hours_ago', 'recommendation'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "Your recovery score is {score}/100. {recommendation}",
+        text: 'Your recovery score is {score}/100. {recommendation}',
         requiredVariables: ['score', 'recommendation'],
       ),
       const ResponseTemplate(
-        text: "{status_emoji} Recovery: {status}. Last session: {hours_ago}h ago. {recommendation}",
+        text: '{status_emoji} Recovery: {status}. Last session: {hours_ago}h ago. {recommendation}',
         requiredVariables: ['status_emoji', 'status', 'hours_ago', 'recommendation'],
       ),
     ];
@@ -424,14 +424,14 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Equilibrio gruppi muscolari: {balance_score}%. {lagging_groups} {recommendation}",
+          text: 'Equilibrio gruppi muscolari: {balance_score}%. {lagging_groups} {recommendation}',
           requiredVariables: ['balance_score', 'lagging_groups', 'recommendation'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "Muscle group balance: {balance_score}%. {lagging_groups} {recommendation}",
+        text: 'Muscle group balance: {balance_score}%. {lagging_groups} {recommendation}',
         requiredVariables: ['balance_score', 'lagging_groups', 'recommendation'],
       ),
     ];
@@ -441,22 +441,22 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Per {exercise}: {form_cue}. {safety_tip}",
+          text: 'Per {exercise}: {form_cue}. {safety_tip}',
           requiredVariables: ['exercise', 'form_cue', 'safety_tip'],
         ),
         const ResponseTemplate(
-          text: "La tecnica è fondamentale! Concentrati su: {form_cue}",
+          text: 'La tecnica è fondamentale! Concentrati su: {form_cue}',
           requiredVariables: ['form_cue'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "For {exercise}: {form_cue}. {safety_tip}",
+        text: 'For {exercise}: {form_cue}. {safety_tip}',
         requiredVariables: ['exercise', 'form_cue', 'safety_tip'],
       ),
       const ResponseTemplate(
-        text: "Technique is key! Focus on: {form_cue}",
+        text: 'Technique is key! Focus on: {form_cue}',
         requiredVariables: ['form_cue'],
       ),
     ];
@@ -465,15 +465,15 @@ class ResponseRepository {
   List<ResponseTemplate> _getMotivationTemplates(String locale) {
     if (locale == 'it') {
       return [
-        const ResponseTemplate(text: "💪 Non mollare! Ogni ripetizione conta. {achievement}"),
-        const ResponseTemplate(text: "Ricorda perché hai iniziato. {recent_progress}"),
-        const ResponseTemplate(text: "I plateau sono temporanei. {strategy}"),
+        const ResponseTemplate(text: '💪 Non mollare! Ogni ripetizione conta. {achievement}'),
+        const ResponseTemplate(text: 'Ricorda perché hai iniziato. {recent_progress}'),
+        const ResponseTemplate(text: 'I plateau sono temporanei. {strategy}'),
       ];
     }
     return [
       const ResponseTemplate(text: "💪 Don't give up! Every rep counts. {achievement}"),
-      const ResponseTemplate(text: "Remember why you started. {recent_progress}"),
-      const ResponseTemplate(text: "Plateaus are temporary. {strategy}"),
+      const ResponseTemplate(text: 'Remember why you started. {recent_progress}'),
+      const ResponseTemplate(text: 'Plateaus are temporary. {strategy}'),
     ];
   }
 
@@ -481,14 +481,14 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "Basandomi sui tuoi dati: {current_split}. {recommendation}",
+          text: 'Basandomi sui tuoi dati: {current_split}. {recommendation}',
           requiredVariables: ['current_split', 'recommendation'],
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "Based on your data: {current_split}. {recommendation}",
+        text: 'Based on your data: {current_split}. {recommendation}',
         requiredVariables: ['current_split', 'recommendation'],
       ),
     ];
@@ -510,17 +510,17 @@ class ResponseRepository {
       return [
         // Template 0: PR data (has_data = true)
         const ResponseTemplate(
-          text: "🏋️ Il tuo record personale per {exercise_name}:\n\n"
-              "💪 **1RM stimato**: {pr_1rm} kg\n"
-              "🎯 **Miglior set**: {pr_weight} kg × {pr_reps} ripetizioni\n"
-              "📅 **Data**: {pr_date}\n\n"
-              "📊 *1RM calcolato con formula Epley: (peso × reps / 37.5) + peso*\n\n"
-              "Continua così! 💯",
+          text: '🏋️ Il tuo record personale per {exercise_name}:\n\n'
+              '💪 **1RM stimato**: {pr_1rm} kg\n'
+              '🎯 **Miglior set**: {pr_weight} kg × {pr_reps} ripetizioni\n'
+              '📅 **Data**: {pr_date}\n\n'
+              '📊 *1RM calcolato con formula Epley: (peso × reps / 37.5) + peso*\n\n'
+              'Continua così! 💯',
           requiredVariables: ['exercise_name', 'pr_1rm', 'pr_weight', 'pr_reps', 'pr_date'],
         ),
         // Template 1: No data found (has_data = false)
         const ResponseTemplate(
-          text: "Non ho trovato dati storici per {exercise_name}. Inizia a registrare i tuoi allenamenti per tracciare i progressi! 📊",
+          text: 'Non ho trovato dati storici per {exercise_name}. Inizia a registrare i tuoi allenamenti per tracciare i progressi! 📊',
           requiredVariables: ['exercise_name'],
         ),
         // Template 2: Matches found (match_count > 0)
@@ -535,19 +535,19 @@ class ResponseRepository {
         ),
         // Template 4: Generic fallback
         const ResponseTemplate(
-          text: "Cerchiamo il tuo massimale! Di quale esercizio vuoi sapere il record?",
+          text: 'Cerchiamo il tuo massimale! Di quale esercizio vuoi sapere il record?',
         ),
       ];
     }
     return [
       // Template 0: PR data (has_data = true) (EN)
       const ResponseTemplate(
-        text: "🏋️ Your personal record for {exercise_name}:\n\n"
-            "💪 **Estimated 1RM**: {pr_1rm} kg\n"
-            "🎯 **Best set**: {pr_weight} kg × {pr_reps} reps\n"
-            "📅 **Date**: {pr_date}\n\n"
-            "📊 *1RM calculated with Epley formula: (weight × reps / 37.5) + weight*\n\n"
-            "Keep it up! 💯",
+        text: '🏋️ Your personal record for {exercise_name}:\n\n'
+            '💪 **Estimated 1RM**: {pr_1rm} kg\n'
+            '🎯 **Best set**: {pr_weight} kg × {pr_reps} reps\n'
+            '📅 **Date**: {pr_date}\n\n'
+            '📊 *1RM calculated with Epley formula: (weight × reps / 37.5) + weight*\n\n'
+            'Keep it up! 💯',
         requiredVariables: ['exercise_name', 'pr_1rm', 'pr_weight', 'pr_reps', 'pr_date'],
       ),
       // Template 1: No data found (has_data = false) (EN)
@@ -576,28 +576,28 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "🤖 Ecco cosa posso fare per te:\n\n"
-              "📈 **Progressione**: \"Come sto progredendo?\", \"Mostrami i miei record\"\n"
-              "💪 **Volume**: \"Sto allenandomi troppo?\", \"Volume ottimale?\"\n"
-              "😴 **Recupero**: \"Devo riposare?\", \"Sono recuperato?\"\n"
-              "⚖️ **Equilibrio**: \"I miei muscoli sono bilanciati?\"\n"
-              "🎯 **Tecnica**: \"Consigli sulla tecnica\", \"Come fare squat?\"\n"
-              "🔥 **Motivazione**: \"Ho bisogno di motivazione\"\n"
-              "📅 **Piano**: \"Serve un nuovo programma?\"\n\n"
-              "💡 **Tip**: Fai domande naturali, rispondo in base ai tuoi dati di allenamento!",
+          text: '🤖 Ecco cosa posso fare per te:\n\n'
+              '📈 **Progressione**: "Come sto progredendo?", "Mostrami i miei record"\n'
+              '💪 **Volume**: "Sto allenandomi troppo?", "Volume ottimale?"\n'
+              '😴 **Recupero**: "Devo riposare?", "Sono recuperato?"\n'
+              '⚖️ **Equilibrio**: "I miei muscoli sono bilanciati?"\n'
+              '🎯 **Tecnica**: "Consigli sulla tecnica", "Come fare squat?"\n'
+              '🔥 **Motivazione**: "Ho bisogno di motivazione"\n'
+              '📅 **Piano**: "Serve un nuovo programma?"\n\n'
+              '💡 **Tip**: Fai domande naturali, rispondo in base ai tuoi dati di allenamento!',
         ),
       ];
     }
     return [
       const ResponseTemplate(
         text: "🤖 Here's what I can do for you:\n\n"
-            "📈 **Progression**: \"How am I progressing?\", \"Show my PRs\"\n"
-            "💪 **Volume**: \"Am I training too much?\", \"Optimal volume?\"\n"
-            "😴 **Recovery**: \"Should I rest?\", \"Am I recovered?\"\n"
-            "⚖️ **Balance**: \"Are my muscles balanced?\"\n"
-            "🎯 **Form**: \"Form tips\", \"How to squat?\"\n"
-            "🔥 **Motivation**: \"Need motivation\"\n"
-            "📅 **Plan**: \"Need a new program?\"\n\n"
+            '📈 **Progression**: "How am I progressing?", "Show my PRs"\n'
+            '💪 **Volume**: "Am I training too much?", "Optimal volume?"\n'
+            '😴 **Recovery**: "Should I rest?", "Am I recovered?"\n'
+            '⚖️ **Balance**: "Are my muscles balanced?"\n'
+            '🎯 **Form**: "Form tips", "How to squat?"\n'
+            '🔥 **Motivation**: "Need motivation"\n'
+            '📅 **Plan**: "Need a new program?"\n\n'
             "💡 **Tip**: Ask natural questions, I'll answer based on your workout data!",
       ),
     ];
@@ -607,21 +607,21 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: "🤔 Non ho capito bene la tua richiesta.\n\n"
-              "Posso aiutarti con: **progressi**, **volume**, **recupero**, **equilibrio muscolare**, **tecnica**, **motivazione**.\n\n"
-              "❓ Prova a riformulare, ad esempio:\n"
-              "• \"Come sto progredendo?\"\n"
-              "• \"Devo riposare?\"\n"
-              "• \"Qual è il mio massimale di panca?\"\n\n"
+          text: '🤔 Non ho capito bene la tua richiesta.\n\n'
+              'Posso aiutarti con: **progressi**, **volume**, **recupero**, **equilibrio muscolare**, **tecnica**, **motivazione**.\n\n'
+              '❓ Prova a riformulare, ad esempio:\n'
+              '• "Come sto progredendo?"\n'
+              '• "Devo riposare?"\n'
+              '• "Qual è il mio massimale di panca?"\n\n'
               "💡 Scrivi **'aiuto'** per vedere tutte le mie capacità.",
         ),
         const ResponseTemplate(
-          text: "⚠️ Non sono sicuro di cosa intendi.\n\n"
-              "Posso rispondere a domande su:\n"
-              "• Progressione e record personali\n"
-              "• Volume di allenamento\n"
-              "• Recupero e riposo\n"
-              "• Equilibrio muscolare\n\n"
+          text: '⚠️ Non sono sicuro di cosa intendi.\n\n'
+              'Posso rispondere a domande su:\n'
+              '• Progressione e record personali\n'
+              '• Volume di allenamento\n'
+              '• Recupero e riposo\n'
+              '• Equilibrio muscolare\n\n'
               "🔄 Prova a riformulare o scrivi **'aiuto'** per la lista completa.",
         ),
       ];
@@ -629,20 +629,20 @@ class ResponseRepository {
     return [
       const ResponseTemplate(
         text: "🤔 I didn't quite understand your request.\n\n"
-            "I can help with: **progress**, **volume**, **recovery**, **muscle balance**, **form**, **motivation**.\n\n"
-            "❓ Try rephrasing, for example:\n"
-            "• \"How am I progressing?\"\n"
-            "• \"Should I rest?\"\n"
+            'I can help with: **progress**, **volume**, **recovery**, **muscle balance**, **form**, **motivation**.\n\n'
+            '❓ Try rephrasing, for example:\n'
+            '• "How am I progressing?"\n'
+            '• "Should I rest?"\n'
             "• \"What's my bench press max?\"\n\n"
             "💡 Type **'help'** to see all my capabilities.",
       ),
       const ResponseTemplate(
         text: "⚠️ I'm not sure what you mean.\n\n"
-            "I can answer questions about:\n"
-            "• Progression and personal records\n"
-            "• Training volume\n"
-            "• Recovery and rest\n"
-            "• Muscle balance\n\n"
+            'I can answer questions about:\n'
+            '• Progression and personal records\n'
+            '• Training volume\n'
+            '• Recovery and rest\n'
+            '• Muscle balance\n\n'
             "🔄 Try rephrasing or type **'help'** for the complete list.",
       ),
     ];
@@ -650,7 +650,7 @@ class ResponseRepository {
 
   String _getFallbackResponse(String locale) {
     return locale == 'it'
-        ? "Scusa, non riesco a rispondere a questo. Prova con domande su allenamento e progressi."
+        ? 'Scusa, non riesco a rispondere a questo. Prova con domande su allenamento e progressi.'
         : "Sorry, I can't answer that. Try asking about training and progress.";
   }
 
@@ -664,37 +664,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Dettagli numeri",
-            intent: "progression.details",
-            emoji: "📊",
+            label: 'Dettagli numeri',
+            intent: 'progression.details',
+            emoji: '📊',
           ),
           const FollowUpChip(
-            label: "Migliori esercizi",
-            intent: "progression.best_exercises",
-            emoji: "💪",
+            label: 'Migliori esercizi',
+            intent: 'progression.best_exercises',
+            emoji: '💪',
           ),
           const FollowUpChip(
-            label: "Esercizi in stallo",
-            intent: "progression.worst_exercises",
-            emoji: "⚠️",
+            label: 'Esercizi in stallo',
+            intent: 'progression.worst_exercises',
+            emoji: '⚠️',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Number details",
-          intent: "progression.details",
-          emoji: "📊",
+          label: 'Number details',
+          intent: 'progression.details',
+          emoji: '📊',
         ),
         const FollowUpChip(
-          label: "Best exercises",
-          intent: "progression.best_exercises",
-          emoji: "💪",
+          label: 'Best exercises',
+          intent: 'progression.best_exercises',
+          emoji: '💪',
         ),
         const FollowUpChip(
-          label: "Stalled exercises",
-          intent: "progression.worst_exercises",
-          emoji: "⚠️",
+          label: 'Stalled exercises',
+          intent: 'progression.worst_exercises',
+          emoji: '⚠️',
         ),
       ];
     }
@@ -704,37 +704,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Trend ultimi mesi",
-            intent: "progression.trend",
-            emoji: "📈",
+            label: 'Trend ultimi mesi',
+            intent: 'progression.trend',
+            emoji: '📈',
           ),
           const FollowUpChip(
-            label: "Confronto esercizi",
-            intent: "progression.compare",
-            emoji: "🔄",
+            label: 'Confronto esercizi',
+            intent: 'progression.compare',
+            emoji: '🔄',
           ),
           const FollowUpChip(
-            label: "Obiettivi",
-            intent: "progression.goals",
-            emoji: "🎯",
+            label: 'Obiettivi',
+            intent: 'progression.goals',
+            emoji: '🎯',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Recent trend",
-          intent: "progression.trend",
-          emoji: "📈",
+          label: 'Recent trend',
+          intent: 'progression.trend',
+          emoji: '📈',
         ),
         const FollowUpChip(
-          label: "Compare exercises",
-          intent: "progression.compare",
-          emoji: "🔄",
+          label: 'Compare exercises',
+          intent: 'progression.compare',
+          emoji: '🔄',
         ),
         const FollowUpChip(
-          label: "Goals",
-          intent: "progression.goals",
-          emoji: "🎯",
+          label: 'Goals',
+          intent: 'progression.goals',
+          emoji: '🎯',
         ),
       ];
     }
@@ -743,27 +743,27 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const FollowUpChip(
-          label: "Vai ad Analytics",
-          intent: "navigation.analytics",
-          emoji: "📱",
+          label: 'Vai ad Analytics',
+          intent: 'navigation.analytics',
+          emoji: '📱',
         ),
         const FollowUpChip(
-          label: "Nuovo allenamento",
-          intent: "navigation.workout",
-          emoji: "🏋️",
+          label: 'Nuovo allenamento',
+          intent: 'navigation.workout',
+          emoji: '🏋️',
         ),
       ];
     }
     return [
       const FollowUpChip(
-        label: "Go to Analytics",
-        intent: "navigation.analytics",
-        emoji: "📱",
+        label: 'Go to Analytics',
+        intent: 'navigation.analytics',
+        emoji: '📱',
       ),
       const FollowUpChip(
-        label: "New workout",
-        intent: "navigation.workout",
-        emoji: "🏋️",
+        label: 'New workout',
+        intent: 'navigation.workout',
+        emoji: '🏋️',
       ),
     ];
   }
@@ -774,37 +774,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Volume per gruppo",
-            intent: "volume.per_group",
-            emoji: "📈",
+            label: 'Volume per gruppo',
+            intent: 'volume.per_group',
+            emoji: '📈',
           ),
           const FollowUpChip(
-            label: "Confronto settimane",
-            intent: "volume.weekly_comparison",
-            emoji: "🔄",
+            label: 'Confronto settimane',
+            intent: 'volume.weekly_comparison',
+            emoji: '🔄',
           ),
           const FollowUpChip(
-            label: "Raccomandazioni",
-            intent: "volume.recommendations",
-            emoji: "💡",
+            label: 'Raccomandazioni',
+            intent: 'volume.recommendations',
+            emoji: '💡',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Volume per group",
-          intent: "volume.per_group",
-          emoji: "📈",
+          label: 'Volume per group',
+          intent: 'volume.per_group',
+          emoji: '📈',
         ),
         const FollowUpChip(
-          label: "Weekly comparison",
-          intent: "volume.weekly_comparison",
-          emoji: "🔄",
+          label: 'Weekly comparison',
+          intent: 'volume.weekly_comparison',
+          emoji: '🔄',
         ),
         const FollowUpChip(
-          label: "Recommendations",
-          intent: "volume.recommendations",
-          emoji: "💡",
+          label: 'Recommendations',
+          intent: 'volume.recommendations',
+          emoji: '💡',
         ),
       ];
     }
@@ -814,27 +814,27 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Ottimizza volume",
-            intent: "volume.optimize",
-            emoji: "⚡",
+            label: 'Ottimizza volume',
+            intent: 'volume.optimize',
+            emoji: '⚡',
           ),
           const FollowUpChip(
-            label: "Ridurre affaticamento",
-            intent: "volume.reduce_fatigue",
-            emoji: "😴",
+            label: 'Ridurre affaticamento',
+            intent: 'volume.reduce_fatigue',
+            emoji: '😴',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Optimize volume",
-          intent: "volume.optimize",
-          emoji: "⚡",
+          label: 'Optimize volume',
+          intent: 'volume.optimize',
+          emoji: '⚡',
         ),
         const FollowUpChip(
-          label: "Reduce fatigue",
-          intent: "volume.reduce_fatigue",
-          emoji: "😴",
+          label: 'Reduce fatigue',
+          intent: 'volume.reduce_fatigue',
+          emoji: '😴',
         ),
       ];
     }
@@ -843,17 +843,17 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const FollowUpChip(
-          label: "Vai ad Analytics",
-          intent: "navigation.analytics",
-          emoji: "📱",
+          label: 'Vai ad Analytics',
+          intent: 'navigation.analytics',
+          emoji: '📱',
         ),
       ];
     }
     return [
       const FollowUpChip(
-        label: "Go to Analytics",
-        intent: "navigation.analytics",
-        emoji: "📱",
+        label: 'Go to Analytics',
+        intent: 'navigation.analytics',
+        emoji: '📱',
       ),
     ];
   }
@@ -864,37 +864,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Qualità sonno",
-            intent: "recovery.sleep_quality",
-            emoji: "😴",
+            label: 'Qualità sonno',
+            intent: 'recovery.sleep_quality',
+            emoji: '😴',
           ),
           const FollowUpChip(
-            label: "Tempi recupero",
-            intent: "recovery.rest_times",
-            emoji: "🕐",
+            label: 'Tempi recupero',
+            intent: 'recovery.rest_times',
+            emoji: '🕐',
           ),
           const FollowUpChip(
-            label: "Segnali overtraining",
-            intent: "recovery.overtraining_signs",
-            emoji: "🚨",
+            label: 'Segnali overtraining',
+            intent: 'recovery.overtraining_signs',
+            emoji: '🚨',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Sleep quality",
-          intent: "recovery.sleep_quality",
-          emoji: "😴",
+          label: 'Sleep quality',
+          intent: 'recovery.sleep_quality',
+          emoji: '😴',
         ),
         const FollowUpChip(
-          label: "Rest times",
-          intent: "recovery.rest_times",
-          emoji: "🕐",
+          label: 'Rest times',
+          intent: 'recovery.rest_times',
+          emoji: '🕐',
         ),
         const FollowUpChip(
-          label: "Overtraining signs",
-          intent: "recovery.overtraining_signs",
-          emoji: "🚨",
+          label: 'Overtraining signs',
+          intent: 'recovery.overtraining_signs',
+          emoji: '🚨',
         ),
       ];
     }
@@ -904,27 +904,27 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Strategie recupero",
-            intent: "recovery.strategies",
-            emoji: "💡",
+            label: 'Strategie recupero',
+            intent: 'recovery.strategies',
+            emoji: '💡',
           ),
           const FollowUpChip(
-            label: "Deload necessario?",
-            intent: "recovery.deload",
-            emoji: "📉",
+            label: 'Deload necessario?',
+            intent: 'recovery.deload',
+            emoji: '📉',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Recovery strategies",
-          intent: "recovery.strategies",
-          emoji: "💡",
+          label: 'Recovery strategies',
+          intent: 'recovery.strategies',
+          emoji: '💡',
         ),
         const FollowUpChip(
-          label: "Need deload?",
-          intent: "recovery.deload",
-          emoji: "📉",
+          label: 'Need deload?',
+          intent: 'recovery.deload',
+          emoji: '📉',
         ),
       ];
     }
@@ -939,37 +939,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Gruppi deboli",
-            intent: "balance.lagging_groups",
-            emoji: "🔍",
+            label: 'Gruppi deboli',
+            intent: 'balance.lagging_groups',
+            emoji: '🔍',
           ),
           const FollowUpChip(
-            label: "Push/Pull ratio",
-            intent: "balance.push_pull_ratio",
-            emoji: "⚖️",
+            label: 'Push/Pull ratio',
+            intent: 'balance.push_pull_ratio',
+            emoji: '⚖️',
           ),
           const FollowUpChip(
-            label: "Esercizi correttivi",
-            intent: "balance.corrective_exercises",
-            emoji: "🎯",
+            label: 'Esercizi correttivi',
+            intent: 'balance.corrective_exercises',
+            emoji: '🎯',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Lagging groups",
-          intent: "balance.lagging_groups",
-          emoji: "🔍",
+          label: 'Lagging groups',
+          intent: 'balance.lagging_groups',
+          emoji: '🔍',
         ),
         const FollowUpChip(
-          label: "Push/Pull ratio",
-          intent: "balance.push_pull_ratio",
-          emoji: "⚖️",
+          label: 'Push/Pull ratio',
+          intent: 'balance.push_pull_ratio',
+          emoji: '⚖️',
         ),
         const FollowUpChip(
-          label: "Corrective exercises",
-          intent: "balance.corrective_exercises",
-          emoji: "🎯",
+          label: 'Corrective exercises',
+          intent: 'balance.corrective_exercises',
+          emoji: '🎯',
         ),
       ];
     }
@@ -984,37 +984,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Video tutorial",
-            intent: "form.video_tutorials",
-            emoji: "🎥",
+            label: 'Video tutorial',
+            intent: 'form.video_tutorials',
+            emoji: '🎥',
           ),
           const FollowUpChip(
-            label: "Errori comuni",
-            intent: "form.common_mistakes",
-            emoji: "⚠️",
+            label: 'Errori comuni',
+            intent: 'form.common_mistakes',
+            emoji: '⚠️',
           ),
           const FollowUpChip(
-            label: "Setup ottimale",
-            intent: "form.optimal_setup",
-            emoji: "🔧",
+            label: 'Setup ottimale',
+            intent: 'form.optimal_setup',
+            emoji: '🔧',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Video tutorials",
-          intent: "form.video_tutorials",
-          emoji: "🎥",
+          label: 'Video tutorials',
+          intent: 'form.video_tutorials',
+          emoji: '🎥',
         ),
         const FollowUpChip(
-          label: "Common mistakes",
-          intent: "form.common_mistakes",
-          emoji: "⚠️",
+          label: 'Common mistakes',
+          intent: 'form.common_mistakes',
+          emoji: '⚠️',
         ),
         const FollowUpChip(
-          label: "Optimal setup",
-          intent: "form.optimal_setup",
-          emoji: "🔧",
+          label: 'Optimal setup',
+          intent: 'form.optimal_setup',
+          emoji: '🔧',
         ),
       ];
     }
@@ -1029,37 +1029,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Ultimi successi",
-            intent: "motivation.recent_achievements",
-            emoji: "🏆",
+            label: 'Ultimi successi',
+            intent: 'motivation.recent_achievements',
+            emoji: '🏆',
           ),
           const FollowUpChip(
-            label: "Obiettivi prossimi",
-            intent: "motivation.next_goals",
-            emoji: "🎯",
+            label: 'Obiettivi prossimi',
+            intent: 'motivation.next_goals',
+            emoji: '🎯',
           ),
           const FollowUpChip(
-            label: "Strategie mentali",
-            intent: "motivation.mental_strategies",
-            emoji: "💭",
+            label: 'Strategie mentali',
+            intent: 'motivation.mental_strategies',
+            emoji: '💭',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Recent wins",
-          intent: "motivation.recent_achievements",
-          emoji: "🏆",
+          label: 'Recent wins',
+          intent: 'motivation.recent_achievements',
+          emoji: '🏆',
         ),
         const FollowUpChip(
-          label: "Next goals",
-          intent: "motivation.next_goals",
-          emoji: "🎯",
+          label: 'Next goals',
+          intent: 'motivation.next_goals',
+          emoji: '🎯',
         ),
         const FollowUpChip(
-          label: "Mental strategies",
-          intent: "motivation.mental_strategies",
-          emoji: "💭",
+          label: 'Mental strategies',
+          intent: 'motivation.mental_strategies',
+          emoji: '💭',
         ),
       ];
     }
@@ -1074,37 +1074,37 @@ class ResponseRepository {
       if (locale == 'it') {
         return [
           const FollowUpChip(
-            label: "Frequenza ottimale",
-            intent: "plan.optimal_frequency",
-            emoji: "📅",
+            label: 'Frequenza ottimale',
+            intent: 'plan.optimal_frequency',
+            emoji: '📅',
           ),
           const FollowUpChip(
-            label: "Quando cambiare",
-            intent: "plan.when_to_change",
-            emoji: "🔄",
+            label: 'Quando cambiare',
+            intent: 'plan.when_to_change',
+            emoji: '🔄',
           ),
           const FollowUpChip(
-            label: "Esercizi chiave",
-            intent: "plan.key_exercises",
-            emoji: "💪",
+            label: 'Esercizi chiave',
+            intent: 'plan.key_exercises',
+            emoji: '💪',
           ),
         ];
       }
       return [
         const FollowUpChip(
-          label: "Optimal frequency",
-          intent: "plan.optimal_frequency",
-          emoji: "📅",
+          label: 'Optimal frequency',
+          intent: 'plan.optimal_frequency',
+          emoji: '📅',
         ),
         const FollowUpChip(
-          label: "When to change",
-          intent: "plan.when_to_change",
-          emoji: "🔄",
+          label: 'When to change',
+          intent: 'plan.when_to_change',
+          emoji: '🔄',
         ),
         const FollowUpChip(
-          label: "Key exercises",
-          intent: "plan.key_exercises",
-          emoji: "💪",
+          label: 'Key exercises',
+          intent: 'plan.key_exercises',
+          emoji: '💪',
         ),
       ];
     }

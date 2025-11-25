@@ -18,16 +18,16 @@ import 'dart:math' as math;
 
 /// BM25 parameters for fitness domain
 class BM25Parameters {
-  /// Term frequency saturation parameter (typically 1.2-2.0)
-  final double k1;
-
-  /// Document length normalization (typically 0.75)
-  final double b;
 
   const BM25Parameters({
     this.k1 = 1.5, // Slightly higher for fitness terms importance
     this.b = 0.75,  // Standard normalization
   });
+  /// Term frequency saturation parameter (typically 1.2-2.0)
+  final double k1;
+
+  /// Document length normalization (typically 0.75)
+  final double b;
 
   /// Optimized parameters for short queries (1-3 words)
   static const BM25Parameters shortQuery = BM25Parameters(
@@ -43,13 +43,7 @@ class BM25Parameters {
 }
 
 /// Document representation for BM25 scoring
-class BM25Document {
-  final String id;
-  final String content;
-  final Map<String, int> termFrequencies;
-  final int documentLength;
-  final DateTime? timestamp;
-  final double? boost; // Optional relevance boost
+class BM25Document { // Optional relevance boost
 
   BM25Document({
     required this.id,
@@ -59,6 +53,12 @@ class BM25Document {
     this.boost,
   })  : termFrequencies = termFrequencies ?? _computeTermFrequencies(content),
         documentLength = content.split(' ').length;
+  final String id;
+  final String content;
+  final Map<String, int> termFrequencies;
+  final int documentLength;
+  final DateTime? timestamp;
+  final double? boost;
 
   static Map<String, int> _computeTermFrequencies(String content) {
     final terms = _tokenize(content);
@@ -84,6 +84,10 @@ class BM25Document {
 
 /// BM25 search engine for fitness data
 class BM25SearchEngine {
+
+  BM25SearchEngine({
+    this.parameters = const BM25Parameters(),
+  });
   final List<BM25Document> documents = [];
   final BM25Parameters parameters;
 
@@ -126,10 +130,6 @@ class BM25SearchEngine {
     'or': 0.3,
     'but': 0.3,
   };
-
-  BM25SearchEngine({
-    this.parameters = const BM25Parameters(),
-  });
 
   /// Add a document to the search index
   void addDocument(BM25Document document) {
@@ -316,15 +316,15 @@ class BM25SearchEngine {
 
 /// Search result with relevance information
 class SearchResult {
-  final BM25Document document;
-  final double score;
-  final Set<String> matchedTerms;
 
   const SearchResult({
     required this.document,
     required this.score,
     required this.matchedTerms,
   });
+  final BM25Document document;
+  final double score;
+  final Set<String> matchedTerms;
 
   /// Normalized score (0-1 range)
   double get normalizedScore => (score / 100).clamp(0.0, 1.0);

@@ -2,12 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-// UNIFIED SYSTEM IMPORT
-import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+/// Provider for template quota (used/max templates)
+final templateQuotaProvider = FutureProvider.autoDispose<({int used, int max})>((ref) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  if (userId == null) return (used: 0, max: 5);
+
+  try {
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+
+    if (!userDoc.exists) return (used: 0, max: 5);
+
+    final data = userDoc.data()!;
+    final quotaData = data['templateQuota'] as Map<String, dynamic>?;
+
+    if (quotaData == null) return (used: 0, max: 5);
+
+    final used = quotaData['usedPrivateTemplates'] as int? ?? 0;
+    final max = quotaData['maxPrivateTemplates'] as int? ?? 5;
+
+    return (used: used, max: max);
+  } catch (e) {
+    debugPrint('❌ Error fetching template quota: $e');
+    return (used: 0, max: 5);
+  }
+});
 
 /// Debug logger for template carousel widget (TEMPORARY FOR DEBUGGING)
 class _CarouselLogger {
@@ -48,59 +79,19 @@ class TemplateCarousel extends ConsumerWidget {
 
     _CarouselLogger.log('Context and theme obtained');
 
-    // UNIFIED SYSTEM: Usa il repository unificato per templates utente
-    _CarouselLogger.step('PROVIDER', 'Watching userTemplatesProvider...');
-    final unifiedTemplatesAsync = ref.watch(userTemplatesProvider);
-    _CarouselLogger.step('PROVIDER', 'Provider state: ${unifiedTemplatesAsync.runtimeType}');
+    // LEGACY SYSTEM: Usa il repository legacy per templates utente
+    _CarouselLogger.step('PROVIDER', 'Watching customWorkoutTemplatesProvider...');
+    final userTemplatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    final quotaAsync = ref.watch(templateQuotaProvider);
+    _CarouselLogger.step('PROVIDER', 'Provider state: ${userTemplatesAsync.runtimeType}');
 
-    // Converti a formato legacy per compatibilità UI
-    _CarouselLogger.step('CONVERSION', 'Converting unified templates to legacy format...');
-    final userTemplatesAsync = unifiedTemplatesAsync.when(
-      data: (unifiedTemplates) {
-        _CarouselLogger.step('CONVERSION', 'Processing ${unifiedTemplates.length} unified templates');
-
-        // Show both custom and predefined templates in the carousel
-        final availableTemplates = unifiedTemplates.toList();
-        _CarouselLogger.step('CONVERSION', 'Found ${availableTemplates.length} available templates');
-        _CarouselLogger.step('CONVERSION', 'Template breakdown:');
-        final customCount = unifiedTemplates.where((t) => t.isCustom).length;
-        final predefinedCount = unifiedTemplates.where((t) => !t.isCustom).length;
-        _CarouselLogger.step('CONVERSION', '  - Custom: $customCount');
-        _CarouselLogger.step('CONVERSION', '  - Predefined: $predefinedCount');
-
-        final limitedTemplates = availableTemplates.take(5).toList(); // Mostra solo i primi 5 nel carousel
-        _CarouselLogger.step('CONVERSION', 'Limited to ${limitedTemplates.length} templates for carousel');
-
-        final legacyTemplates = limitedTemplates
-            .map((unified) {
-              _CarouselLogger.step('CONVERSION', 'Converting template: ${unified.name}');
-              return TemplateBridge.toLegacy(unified);
-            })
-            .toList();
-
-        _CarouselLogger.step('CONVERSION', '✅ Successfully converted ${legacyTemplates.length} templates to legacy format');
-        return AsyncValue.data(legacyTemplates);
-      },
-      loading: () {
-        _CarouselLogger.step('PROVIDER', '⏳ Provider is in LOADING state');
-        return const AsyncValue.loading();
-      },
-      error: (error, stack) {
-        _CarouselLogger.error('💥 Provider is in ERROR state', error);
-        _CarouselLogger.error('Error details: $error');
-        _CarouselLogger.error('Stack trace: $stack');
-        return AsyncValue.error(error, stack);
-      },
-    );
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Section Header
+        // Section Header with Quota Badge
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 l10n.yourTemplates,
@@ -109,16 +100,56 @@ class TemplateCarousel extends ConsumerWidget {
                   color: colorScheme.onSurface,
                 ),
               ),
+              const SizedBox(width: 8),
+              // Quota Badge
+              quotaAsync.when(
+                data: (quota) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: quota.used >= quota.max - 1
+                        ? colorScheme.error.withValues(alpha: 0.1)
+                        : quota.used >= quota.max - 2
+                            ? colorScheme.tertiary.withValues(alpha: 0.1)
+                            : colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: quota.used >= quota.max - 1
+                          ? colorScheme.error.withValues(alpha: 0.3)
+                          : quota.used >= quota.max - 2
+                              ? colorScheme.tertiary.withValues(alpha: 0.3)
+                              : colorScheme.primary.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: Text(
+                    l10n.templateQuotaUsed(quota.used, quota.max),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: quota.used >= quota.max - 1
+                          ? colorScheme.error
+                          : quota.used >= quota.max - 2
+                              ? colorScheme.tertiary
+                              : colorScheme.primary,
+                    ),
+                  ),
+                ),
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+              const Spacer(),
               TextButton.icon(
                 onPressed: () => _navigateToTemplates(context),
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: colorScheme.primary,
-                ),
+                icon: SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                 label: Text(
                   l10n.seeAll,
-                  style: TextStyle(color: colorScheme.primary),
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: colorScheme.primary,
+                  ),
                 ),
               ),
             ],
@@ -132,8 +163,8 @@ class TemplateCarousel extends ConsumerWidget {
           height: 180,
           child: userTemplatesAsync.when(
             loading: () => _buildLoadingCarousel(colorScheme),
-            error: (error, stackTrace) => _buildErrorState(colorScheme, l10n, ref),
-            data: (templates) => _buildTemplatesCarousel(context, ref, templates, colorScheme, l10n),
+            error: (error, stackTrace) => _buildErrorState(theme, colorScheme, l10n, ref),
+            data: (templates) => _buildTemplatesCarousel(context, ref, templates, theme, colorScheme, l10n),
           ),
         ),
       ],
@@ -156,7 +187,7 @@ class TemplateCarousel extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(ColorScheme colorScheme, AppLocalizations l10n, WidgetRef ref) {
+  Widget _buildErrorState(ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
@@ -171,14 +202,14 @@ class TemplateCarousel extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               color: colorScheme.error,
               size: 32,
             ),
             const SizedBox(height: 8),
             Text(
               l10n.errorLoadingTemplates,
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.error,
                 fontWeight: FontWeight.w600,
               ),
@@ -186,9 +217,9 @@ class TemplateCarousel extends ConsumerWidget {
             const SizedBox(height: 4),
             TextButton(
               onPressed: () {
-                _CarouselLogger.log('🔄 Retry button pressed - invalidating userTemplatesProvider');
-                // Invalidate the correct provider for unified system
-                ref.invalidate(userTemplatesProvider);
+                _CarouselLogger.log('🔄 Retry button pressed - invalidating customWorkoutTemplatesProvider');
+                // Invalidate the provider to reload templates
+                ref.invalidate(customWorkoutTemplatesProvider);
                 _CarouselLogger.log('✅ Provider invalidated');
               },
               child: Text(l10n.retry),
@@ -203,11 +234,12 @@ class TemplateCarousel extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     List<WorkoutTemplate> templates,
+    ThemeData theme,
     ColorScheme colorScheme,
     AppLocalizations l10n,
   ) {
     if (templates.isEmpty) {
-      return _buildEmptyState(context, colorScheme, l10n);
+      return _buildEmptyState(context, theme, colorScheme, l10n);
     }
 
     return ListView.builder(
@@ -216,12 +248,12 @@ class TemplateCarousel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       itemBuilder: (context, index) {
         final template = templates[index];
-        return _buildTemplateCard(context, ref, template, colorScheme, l10n);
+        return _buildTemplateCard(context, ref, template, theme, colorScheme, l10n);
       },
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, ColorScheme colorScheme, AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, ThemeData theme, ColorScheme colorScheme, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       decoration: BoxDecoration(
@@ -236,25 +268,23 @@ class TemplateCarousel extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: colorScheme.primary,
               size: 48,
             ),
             const SizedBox(height: 12),
             Text(
               l10n.noTemplatesYet,
-              style: TextStyle(
+              style: theme.textTheme.titleMedium?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               l10n.createFirstTemplate,
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.7),
-                fontSize: 14,
               ),
               textAlign: TextAlign.center,
             ),
@@ -273,6 +303,7 @@ class TemplateCarousel extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     WorkoutTemplate template,
+    ThemeData theme,
     ColorScheme colorScheme,
     AppLocalizations l10n,
   ) {
@@ -284,7 +315,7 @@ class TemplateCarousel extends ConsumerWidget {
         child: InkWell(
           onTap: () => _onTemplateSelected(context, ref, template),
           borderRadius: BorderRadius.circular(16),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -314,7 +345,7 @@ class TemplateCarousel extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           color: colorScheme.primary,
                           size: 20,
                         ),
@@ -326,9 +357,8 @@ class TemplateCarousel extends ConsumerWidget {
                           children: [
                             Text(
                               template.name,
-                              style: TextStyle(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
                                 color: colorScheme.onSurface,
                               ),
                               maxLines: 2,
@@ -338,8 +368,7 @@ class TemplateCarousel extends ConsumerWidget {
                               const SizedBox(height: 2),
                               Text(
                                 template.difficulty!,
-                                style: TextStyle(
-                                  fontSize: 12,
+                                style: theme.textTheme.labelSmall?.copyWith(
                                   color: colorScheme.onSurface.withValues(alpha: 0.7),
                                 ),
                               ),
@@ -352,30 +381,32 @@ class TemplateCarousel extends ConsumerWidget {
                   const Spacer(),
                   Row(
                     children: [
-                      Icon(
-                        Icons.schedule,
-                        size: 16,
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurface.withValues(alpha: 0.7,
+),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '~${_estimateTemplateDuration(template)} ${l10n.minutes}',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                       const Spacer(),
-                      Icon(
-                        Icons.fitness_center,
-                        size: 16,
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurface.withValues(alpha: 0.7,
+),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '${template.exercises.length}',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_template.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseSelectorModal extends ConsumerStatefulWidget {
 
@@ -71,7 +74,10 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
       ),
       child: Row(
         children: [
-          const Icon(Icons.fitness_center),
+          const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -83,7 +89,10 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
           ),
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.close),
+            icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
           ),
         ],
       ),
@@ -100,14 +109,20 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
         },
         decoration: InputDecoration(
           hintText: 'Search exercises...',
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(
                   onPressed: () {
                     _searchController.clear();
                     ref.read(exerciseSearchQueryProvider.notifier).state = '';
                   },
-                  icon: const Icon(Icons.clear),
+                  icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                 )
               : null,
           border: OutlineInputBorder(
@@ -119,14 +134,26 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
   }
 
   Widget _buildTabBar(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Theme.of(context).colorScheme.surface,
       child: TabBar(
         controller: _tabController,
         tabs: const [
-          Tab(text: 'Search', icon: Icon(Icons.search, size: 20)),
-          Tab(text: 'Categories', icon: Icon(Icons.category, size: 20)),
-          Tab(text: 'Popular', icon: Icon(Icons.star, size: 20)),
+          Tab(text: 'Search', icon: SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+  size: AppIconSize.small,
+)),
+          Tab(text: 'Categories', icon: SemanticIcon(
+  icon: AppIcons.category,
+  semanticLabel: 'Category',
+  size: AppIconSize.small,
+)),
+          Tab(text: 'Popular', icon: SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+  size: AppIconSize.small,
+)),
         ],
       ),
     );
@@ -177,7 +204,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: _getCategoryIcon(category),
+        leading: Icon(_getCategoryIcon(category)),
         title: Text(
           category.name.toUpperCase(),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -185,7 +212,11 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
           ),
         ),
         subtitle: Text(_getCategoryDescription(category)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+),
         onTap: () {
           ref.read(exerciseCategoryFilterProvider.notifier).state = category;
           _tabController.animateTo(0); // Switch to search tab
@@ -217,7 +248,7 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
             shape: BoxShape.circle,
           ),
           child: Icon(
-            _getCategoryIcon(exercise.category).icon,
+            _getCategoryIcon(exercise.category),
             color: _getCategoryColor(exercise.category),
             size: 20,
           ),
@@ -272,10 +303,12 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(height: 16),
           Text(
@@ -294,10 +327,12 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.error,
           ),
           const SizedBox(height: 16),
           Text(
@@ -319,24 +354,24 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
     );
   }
 
-  Icon _getCategoryIcon(ExerciseCategory category) {
+  IconData _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.cardio:
-        return const Icon(Icons.directions_run);
+        return AppIcons.cardio;
       case ExerciseCategory.back:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.shoulders:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.arms:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.legs:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.abs:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
       case ExerciseCategory.other:
-        return const Icon(Icons.fitness_center);
+        return AppIcons.workout;
     }
   }
 

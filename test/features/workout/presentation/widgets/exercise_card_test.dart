@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 // Mock classes
 class MockWidgetRef extends Mock implements WidgetRef {}
@@ -77,7 +78,7 @@ void main() {
               children: testExercise.sets.map((set) {
                 return ListTile(
                   leading: Icon(
-                    set.isCompleted ? Icons.check_circle : Icons.circle_outlined,
+                    set.isCompleted ? AppIcons.checkCircle : AppIcons.circleOutlined,
                     color: set.isCompleted ? Colors.green : Colors.grey,
                   ),
                   title: Text('Set ${set.setNumber}'),
@@ -89,8 +90,8 @@ void main() {
         ),
       );
 
-      expect(find.byIcon(Icons.check_circle), findsOneWidget);
-      expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
+      expect(find.byIcon(AppIcons.checkCircle), findsOneWidget);
+      expect(find.byIcon(AppIcons.circleOutlined), findsOneWidget);
       expect(find.text('Set 1'), findsOneWidget);
       expect(find.text('Set 2'), findsOneWidget);
     });
@@ -104,7 +105,7 @@ void main() {
               trailing: testExercise.restTime != null
                   ? Chip(
                       label: Text('${testExercise.restTime}s rest'),
-                      avatar: const Icon(Icons.timer, size: 16),
+                      avatar: Icon(AppIcons.timer, size: 16),
                     )
                   : null,
             ),
@@ -113,7 +114,7 @@ void main() {
       );
 
       expect(find.text('90s rest'), findsOneWidget);
-      expect(find.byIcon(Icons.timer), findsOneWidget);
+      expect(find.byIcon(AppIcons.timer), findsOneWidget);
     });
 
     testWidgets('shows notes when available', (tester) async {
@@ -128,7 +129,7 @@ void main() {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Icon(Icons.note, size: 16),
+                        Icon(AppIcons.note, size: 16),
                         const SizedBox(width: 4),
                         Text(testExercise.notes!),
                       ],
@@ -141,7 +142,7 @@ void main() {
       );
 
       expect(find.text('Focus on form'), findsOneWidget);
-      expect(find.byIcon(Icons.note), findsOneWidget);
+      expect(find.byIcon(AppIcons.note), findsOneWidget);
     });
 
     testWidgets('handles tap interactions', (tester) async {
@@ -193,10 +194,10 @@ void main() {
           Card(
             child: ListTile(
               title: Text(testExercise.name),
-              subtitle: Row(
+              subtitle: const Row(
                 children: [
-                  const Icon(Icons.fitness_center, size: 16),
-                  const SizedBox(width: 4),
+                  Icon(AppIcons.workout, size: 16),
+                  SizedBox(width: 4),
                   Text('Barbell'),
                 ],
               ),
@@ -206,7 +207,7 @@ void main() {
       );
 
       expect(find.text('Barbell'), findsOneWidget);
-      expect(find.byIcon(Icons.fitness_center), findsOneWidget);
+      expect(find.byIcon(AppIcons.workout), findsOneWidget);
     });
 
     testWidgets('handles long exercise names', (tester) async {
@@ -248,7 +249,7 @@ void main() {
             child: ListTile(
               title: Text(testExercise.name),
               leading: Chip(
-                label: Text('Chest'),
+                label: const Text('Chest'),
                 backgroundColor: Colors.blue.shade100,
               ),
             ),

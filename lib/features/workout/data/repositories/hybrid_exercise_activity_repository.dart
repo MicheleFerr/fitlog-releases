@@ -16,6 +16,7 @@ library;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
@@ -434,11 +435,13 @@ class HybridExerciseActivityRepository {
   
   /// Sincronizza tutti i workout non sincronizzati (per upgrade premium)
   Future<SyncResult> syncAllPendingWorkouts() async {
-    // Check if user is admin (bypass premium check)
-    final userEmail = _auth.currentUser?.email ?? '';
-    final isAdmin = userEmail == 'ferrara-michele@hotmail.it' || 
-                   userEmail.contains('admin@');
-    
+    // ========================================
+    // 🔐 SECURITY: Check admin via custom claims (secure)
+    // ========================================
+    // REPLACED: userEmail == 'ferrara-michele@hotmail.it' || userEmail.contains('admin@') (insecure)
+    // NEW: Uses Firebase Custom Claims (server-validated)
+    final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+
     if (!_isPremiumUser && !isAdmin) {
       return SyncResult(
         success: false,

@@ -27,10 +27,6 @@ import 'package:gymbro_flutter_new/features/routine/data/models/routine_model.da
 
 /// Migration result for a single routine
 class RoutineMigrationResult {
-  final String routineId;
-  final bool success;
-  final String? errorMessage;
-  final Map<String, dynamic>? backupData;
 
   const RoutineMigrationResult({
     required this.routineId,
@@ -38,17 +34,14 @@ class RoutineMigrationResult {
     this.errorMessage,
     this.backupData,
   });
+  final String routineId;
+  final bool success;
+  final String? errorMessage;
+  final Map<String, dynamic>? backupData;
 }
 
 /// Overall migration report
 class MigrationReport {
-  final int totalRoutines;
-  final int successCount;
-  final int failureCount;
-  final List<RoutineMigrationResult> results;
-  final DateTime startTime;
-  final DateTime endTime;
-  final bool isDryRun;
 
   const MigrationReport({
     required this.totalRoutines,
@@ -59,6 +52,13 @@ class MigrationReport {
     required this.endTime,
     required this.isDryRun,
   });
+  final int totalRoutines;
+  final int successCount;
+  final int failureCount;
+  final List<RoutineMigrationResult> results;
+  final DateTime startTime;
+  final DateTime endTime;
+  final bool isDryRun;
 
   Duration get duration => endTime.difference(startTime);
 
@@ -93,13 +93,13 @@ Migration Report:
 /// );
 /// ```
 class RoutineMigrationService {
+
+  RoutineMigrationService({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _firestore;
 
   static const String _routinesCollection = 'routines';
   static const String _backupsCollection = 'routine_backups_v1';
-
-  RoutineMigrationService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   // ──────────────────────────────────────────────────────────────────────────
   // PUBLIC API

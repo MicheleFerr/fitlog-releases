@@ -15,6 +15,8 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Opzione aggiuntiva per il menu del long press
 class DraggableActionOption {
@@ -172,7 +174,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Titolo
             Padding(
@@ -183,7 +185,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                     widget.icon,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     widget.label,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -193,7 +195,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Opzione principale (azione normale)
             ListTile(
@@ -210,7 +212,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ),
               ),
               title: Text(widget.label),
-              subtitle: Text('Azione principale'),
+              subtitle: const Text('Azione principale'),
               onTap: () {
                 Navigator.of(context).pop();
                 widget.onPressed();
@@ -233,7 +235,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                   ),
                 ),
                 title: const Text('Storico'),
-                subtitle: Text('Visualizza workout precedenti'),
+                subtitle: const Text('Visualizza workout precedenti'),
                 onTap: () {
                   Navigator.of(context).pop();
                   widget.onShowHistory!();
@@ -263,7 +265,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               )),
             
             // Informazione drag
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(12),
@@ -276,12 +278,14 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.swipe,
-                    size: 18,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  SemanticIcon(
+  icon: AppIcons.swipe,
+  semanticLabel: 'Swipe',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onPrimaryContainer,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Trascina il pulsante per spostarlo',
@@ -294,7 +298,7 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
                 ],
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),

@@ -21,7 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_preset.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Enhanced Preset Card - Modern card design with metadata
 class EnhancedPresetCard extends StatelessWidget {
@@ -112,7 +113,7 @@ class EnhancedPresetCard extends StatelessWidget {
             child: Icon(
               _getPresetIcon(),
               size: 64,
-              color: Colors.white.withValues(alpha: 0.9),
+              color: context.colors.surface.withValues(alpha: 0.9),
             ),
           ),
         ),
@@ -173,7 +174,7 @@ class EnhancedPresetCard extends StatelessWidget {
       child: Text(
         difficultyText,
         style: context.textTheme.labelSmall?.copyWith(
-          color: Colors.white,
+          color: context.colors.surface,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -213,11 +214,12 @@ class EnhancedPresetCard extends StatelessWidget {
     return Row(
       children: [
         // Duration
-        Icon(
-          AppIcons.timer,
-          size: 16,
-          color: context.colors.onSurfaceVariant,
-        ),
+        SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
         const SizedBox(width: 4),
         Text(
           '${preset.estimatedDuration} ${context.l10n.minutes}',
@@ -228,11 +230,12 @@ class EnhancedPresetCard extends StatelessWidget {
         const SizedBox(width: 16),
 
         // Days per week
-        Icon(
-          AppIcons.calendar,
-          size: 16,
-          color: context.colors.onSurfaceVariant,
-        ),
+        SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
         const SizedBox(width: 4),
         Text(
           '${preset.frequencyDays} ${context.l10n.daysPerWeek}',

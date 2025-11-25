@@ -25,6 +25,8 @@ import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_anal
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tab displaying routine-specific analytics
 class AnalyticsRoutineTab extends ConsumerWidget {
@@ -56,18 +58,20 @@ class AnalyticsRoutineTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.calendarTodayOutlined,
-              size: 80,
-              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.calendarTodayOutlined,
+  semanticLabel: 'Calendar today outlined',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant.withValues(alpha: 0.5,
+),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Text(
               'No Active Routine',
               style: context.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Create and activate a routine to see analytics here',
               style: context.textTheme.bodyLarge?.copyWith(
@@ -80,7 +84,10 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               onPressed: () {
                 // TODO: Navigate to routine creation
               },
-              icon: const Icon(AppIcons.add),
+              icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               label: const Text('Create Routine'),
             ),
           ],
@@ -96,17 +103,18 @@ class AnalyticsRoutineTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 80,
-              color: context.colors.error,
-            ),
-            SizedBox(height: 24),
+            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+            const SizedBox(height: 24),
             Text(
               'Error Loading Analytics',
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               error,
               style: context.textTheme.bodyLarge?.copyWith(
@@ -189,7 +197,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 size: 28,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +208,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     'Active Routine Analytics',
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -268,7 +276,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 subtitle: '${metrics.recoveredDays} recovered',
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildKPICard(
                 context,
@@ -302,7 +310,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             Row(
               children: [
                 Icon(icon, color: color, size: 20),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   title,
                   style: context.textTheme.bodySmall?.copyWith(
@@ -311,7 +319,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               value,
               style: context.textTheme.headlineMedium?.copyWith(
@@ -319,7 +327,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 color: color,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               subtitle,
               style: context.textTheme.bodySmall?.copyWith(
@@ -350,7 +358,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                     color: context.colors.onPrimaryContainer,
                     size: 32,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     '${metrics.currentStreak}',
                     style: context.textTheme.headlineLarge?.copyWith(
@@ -369,7 +377,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             ),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Card(
             color: context.colors.secondaryContainer,
@@ -382,7 +390,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                     color: context.colors.onSecondaryContainer,
                     size: 32,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     '${metrics.longestStreak}',
                     style: context.textTheme.headlineLarge?.copyWith(
@@ -421,7 +429,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         ...topInsights.map((insight) => _buildInsightCard(context, insight)),
       ],
     );
@@ -449,7 +457,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               insight.icon!,
               style: const TextStyle(fontSize: 24),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
           ],
           Expanded(
             child: Column(
@@ -463,7 +471,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                   ),
                 ),
                 if (insight.actionLabel != null) ...[
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     insight.actionLabel!,
                     style: context.textTheme.bodySmall?.copyWith(
@@ -497,7 +505,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                   color: context.colors.primary,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Template Distribution',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -545,7 +553,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           LinearProgressIndicator(
             value: percentage,
             backgroundColor: context.colors.surfaceContainerHighest,
@@ -573,7 +581,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                   color: context.colors.primary,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Weekly Pattern',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -614,7 +622,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           LinearProgressIndicator(
             value: pattern.adherenceRate,
             backgroundColor: context.colors.surfaceContainerHighest,
@@ -642,7 +650,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                   color: context.colors.primary,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'Weekly Adherence Trend',
                   style: context.textTheme.titleMedium?.copyWith(
@@ -651,7 +659,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Chart visualization coming soon',
               style: context.textTheme.bodySmall?.copyWith(

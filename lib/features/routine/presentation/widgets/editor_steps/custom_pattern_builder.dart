@@ -16,8 +16,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Custom pattern builder widget
 class CustomPatternBuilder extends ConsumerStatefulWidget {
@@ -65,11 +63,11 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
           Row(
             children: [
               Icon(
-                AppIcons.editCalendar,
+                Icons.edit_calendar,
                 color: context.colors.tertiary,
                 size: 28,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +91,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             ],
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Current days list
           if (customDays.isNotEmpty) ...[
@@ -104,9 +102,9 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 color: context.colors.onSurface,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             _buildDaysList(customDays),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
 
           // Add day buttons
@@ -116,7 +114,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             children: [
               ElevatedButton.icon(
                 onPressed: () => _showAddWorkoutDialog(context),
-                icon: Icon(AppIcons.workout, size: 18),
+                icon: const Icon(Icons.fitness_center, size: 18),
                 label: Text(context.l10n.customPatternAddWorkout),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
@@ -129,7 +127,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               ),
               OutlinedButton.icon(
                 onPressed: _addRestDay,
-                icon: Icon(AppIcons.bed, size: 18),
+                icon: const Icon(Icons.bed, size: 18),
                 label: Text(context.l10n.customPatternAddRest),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: context.colors.secondary),
@@ -182,10 +180,10 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  AppIcons.dragHandle,
+                  Icons.drag_handle,
                   color: context.colors.onSurfaceVariant,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -195,7 +193,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    isRest ? AppIcons.bed : AppIcons.workout,
+                    isRest ? Icons.bed : Icons.fitness_center,
                     color: isRest
                         ? context.colors.onSecondaryContainer
                         : context.colors.onPrimaryContainer,
@@ -217,7 +215,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
               ),
             ),
             trailing: IconButton(
-              icon: Icon(AppIcons.delete, color: context.colors.error),
+              icon: Icon(Icons.delete, color: context.colors.error),
               onPressed: () => _removeDay(index),
               tooltip: context.l10n.customPatternRemoveDay,
             ),
@@ -243,7 +241,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
           return Column(
             children: [
               // Handle
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
                 width: 40,
                 height: 4,
@@ -252,7 +250,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Header
               Padding(
@@ -260,11 +258,11 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                 child: Row(
                   children: [
                     Icon(
-                      AppIcons.workout,
+                      Icons.fitness_center,
                       color: context.colors.primary,
                       size: 28,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         context.l10n.customPatternSelectTemplate,
@@ -274,7 +272,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(AppIcons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () => Navigator.pop(sheetContext),
                     ),
                   ],
@@ -290,14 +288,12 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
 
                     return templatesAsync.when(
                       loading: () => const Center(
-                        child: LoadingIndicator(),
+                        child: CircularProgressIndicator(),
                       ),
                       error: (error, stack) => Center(
                         child: Text(
                           'Error: $error',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colors.error,
-                          ),
+                          style: TextStyle(color: context.colors.error),
                         ),
                       ),
                       data: (templates) {
@@ -307,11 +303,11 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  AppIcons.inbox,
+                                  Icons.inbox,
                                   size: 64,
                                   color: context.colors.onSurface.withValues(alpha: 0.3),
                                 ),
-                                SizedBox(height: 16),
+                                const SizedBox(height: 16),
                                 Text(
                                   context.l10n.customPatternNoTemplates,
                                   style: context.textTheme.bodyLarge?.copyWith(
@@ -334,8 +330,6 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                               template,
                               onTap: () {
                                 Navigator.pop(sheetContext);
-                                // Pattern.sequence contains display names for UI
-                                // The actual template IDs are managed in the schedule
                                 _addWorkoutDay(template.name);
                               },
                             );
@@ -370,22 +364,22 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
             children: [
               // Icon
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: template.isCustom
                       ? context.colors.primaryContainer
                       : context.colors.secondaryContainer,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  template.isCustom ? AppIcons.person : AppIcons.star,
+                  template.isCustom ? Icons.person : Icons.star,
                   color: template.isCustom
                       ? context.colors.onPrimaryContainer
                       : context.colors.onSecondaryContainer,
                   size: 24,
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
 
               // Info
               Expanded(
@@ -398,15 +392,15 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
-                          AppIcons.workout,
+                          Icons.fitness_center,
                           size: 14,
                           color: context.colors.onSurface.withValues(alpha: 0.6),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           '${template.exercises.length} ${context.l10n.exercises}',
                           style: context.textTheme.bodySmall?.copyWith(
@@ -414,13 +408,13 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
                           ),
                         ),
                         if (template.estimatedDuration > 0) ...[
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Icon(
-                            AppIcons.schedule,
+                            Icons.schedule,
                             size: 14,
                             color: context.colors.onSurface.withValues(alpha: 0.6),
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           Text(
                             '${template.estimatedDuration} min',
                             style: context.textTheme.bodySmall?.copyWith(
@@ -436,7 +430,7 @@ class _CustomPatternBuilderState extends ConsumerState<CustomPatternBuilder> {
 
               // Arrow
               Icon(
-                AppIcons.forwardIos,
+                Icons.arrow_forward_ios,
                 size: 16,
                 color: context.colors.onSurface.withValues(alpha: 0.4),
               ),

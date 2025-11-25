@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_anal
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
+import 'package:gymbro_flutter_new/features/analytics/domain/services/analytics_calculation_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
@@ -233,15 +234,32 @@ class AnalyticsState {
   }
 }
 
-/// Analytics state notifier
+/// Analytics state notifier (THIN PROVIDER PATTERN)
+///
+/// **Design Philosophy**: Provider is THIN - only state management
+/// **Business Logic**: Delegated to AnalyticsCalculationService
+///
+/// **Responsibilities**:
+/// - Load data from repositories
+/// - Update state
+/// - Coordinate between services
+/// - Handle errors
+///
+/// **NOT Responsible For**:
+/// - Calculations (→ AnalyticsCalculationService)
+/// - Volume logic (→ VolumeCalculator)
+/// - Trend analysis (→ TrendAnalyzer)
+/// - PR tracking (→ PRTracker)
 class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
 
   AnalyticsNotifier({
     required HybridExerciseActivityRepository activityRepository,
     required PRTracker prTracker,
+    required AnalyticsCalculationService calculationService,
     String? userId,
   })  : _activityRepository = activityRepository,
         _prTracker = prTracker,
+        _calculationService = calculationService,
         _userId = userId,
         super(AnalyticsState.initial()) {
     if (_userId != null) {
@@ -250,6 +268,7 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
   }
   final HybridExerciseActivityRepository _activityRepository;
   final PRTracker _prTracker;
+  final AnalyticsCalculationService _calculationService;
   final String? _userId;
 
   /// Load all analytics data
@@ -286,8 +305,8 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
         userId: _userId,
       );
 
-      // Calculate trends for top exercises
-      final exerciseTrends = await _calculateExerciseTrends(activities);
+      // Calculate trends for top exercises (delegated to service)
+      final exerciseTrends = await _calculationService.calculateExerciseTrends(activities);
 
       state = state.copyWith(
         activities: activities,
@@ -353,226 +372,46 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
     }
   }
 
-  /// Get volume data for specific period
+  /// Get volume data for specific period (delegated to service)
   Map<DateTime, double> getVolumeByPeriod(AnalysisPeriod period) {
-    final volumeData = <DateTime, double>{};
-    
-    for (final activity in state.activities) {
-      DateTime periodKey;
-      
-      switch (period) {
-        case AnalysisPeriod.week:
-          final weekStart = _getWeekStart(activity.createdAt);
-          periodKey = weekStart;
-        case AnalysisPeriod.month:
-          periodKey = DateTime(activity.createdAt.year, activity.createdAt.month);
-        case AnalysisPeriod.quarter:
-          final quarter = ((activity.createdAt.month - 1) ~/ 3) + 1;
-          periodKey = DateTime(activity.createdAt.year, (quarter - 1) * 3 + 1);
-        case AnalysisPeriod.year:
-          periodKey = DateTime(activity.createdAt.year);
-      }
-      
-      final volume = VolumeCalculator.calculateTotalVolume(activity.sets);
-      volumeData[periodKey] = (volumeData[periodKey] ?? 0) + volume;
-    }
-    
-    return volumeData;
+    return _calculationService.getVolumeByPeriod(state.activities, period);
   }
 
-  /// Get 1RM progression for an exercise
+  /// Get 1RM progression for an exercise (delegated to service)
   Map<DateTime, double> get1RMProgression(String exerciseId) {
-    final progression = <DateTime, double>{};
-    
-    final exerciseActivities = state.activities
-        .where((a) => a.exerciseId == exerciseId)
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    
-    for (final activity in exerciseActivities) {
-      double max1RM = 0;
-      
-      for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
-        final weight = double.tryParse(set.weight) ?? 0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        
-        if (weight > 0 && reps > 0) {
-          final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
-          if (estimated1RM > max1RM) {
-            max1RM = estimated1RM;
-          }
-        }
-      }
-      
-      if (max1RM > 0) {
-        progression[activity.createdAt] = max1RM;
-      }
-    }
-    
-    return progression;
+    return _calculationService.get1RMProgression(state.activities, exerciseId);
   }
 
-  /// Get workout frequency stats
+  /// Get workout frequency stats (delegated to service)
   Map<String, dynamic> getFrequencyStats() {
-    final stats = <String, dynamic>{};
-    
-    // Last 30 days
-    final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-    final recentActivities = state.activities
-        .where((a) => a.createdAt.isAfter(thirtyDaysAgo))
-        .toList();
-    
-    // Unique workout days
-    final workoutDays = recentActivities
-        .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
-        .toSet();
-    
-    stats['daysInLast30'] = workoutDays.length;
-    stats['avgPerWeek'] = (workoutDays.length / 4.3).round();
-    
-    // Day distribution
-    final dayDistribution = <int, int>{};
-    for (final activity in recentActivities) {
-      final dayOfWeek = activity.createdAt.weekday;
-      dayDistribution[dayOfWeek] = (dayDistribution[dayOfWeek] ?? 0) + 1;
-    }
-    stats['dayDistribution'] = dayDistribution;
-    
-    // Current streak
-    stats['currentStreak'] = _calculateCurrentStreak();
-    
-    return stats;
+    return _calculationService.getFrequencyStats(state.activities);
   }
 
-  /// Get exercise-specific stats
+  /// Get exercise-specific stats (delegated to service)
   Map<String, dynamic> getExerciseStats(String exerciseId) {
-    final exerciseActivities = state.activities
-        .where((a) => a.exerciseId == exerciseId)
-        .toList();
-    
-    if (exerciseActivities.isEmpty) {
-      return {};
-    }
-    
-    final stats = <String, dynamic>{};
-    
-    // Volume stats
-    final volumeStats = VolumeCalculator.getVolumeStats(exerciseActivities);
-    stats['volumeStats'] = volumeStats;
-    
-    // Best performance
-    double maxWeight = 0;
-    int maxReps = 0;
-    double max1RM = 0;
-    
-    for (final activity in exerciseActivities) {
-      for (final set in activity.sets.where((s) => s.done && !s.isWarmup)) {
-        final weight = double.tryParse(set.weight) ?? 0;
-        final reps = int.tryParse(set.reps) ?? 0;
-        
-        if (weight > maxWeight) maxWeight = weight;
-        if (reps > maxReps) maxReps = reps;
-        
-        if (weight > 0 && reps > 0) {
-          final estimated1RM = OneRMCalculator.calculateAverage(weight, reps);
-          if (estimated1RM > max1RM) max1RM = estimated1RM;
-        }
-      }
-    }
-    
-    stats['maxWeight'] = maxWeight;
-    stats['maxReps'] = maxReps;
-    stats['estimated1RM'] = max1RM;
-    
-    // Trend
-    final trend = TrendAnalyzer.analyzeStrengthTrend(state.activities, exerciseId);
-    stats['trend'] = trend;
-    
-    // Plateau detection
-    final plateau = TrendAnalyzer.detectPlateau(state.activities, exerciseId);
-    stats['plateau'] = plateau;
-    
-    return stats;
+    return _calculationService.getExerciseStats(state.activities, exerciseId);
   }
 
-  // Private helper methods
-  
-  Future<Map<String, TrendAnalysis>> _calculateExerciseTrends(
-    List<ExerciseActivity> activities,
-  ) async {
-    final trends = <String, TrendAnalysis>{};
-    
-    // Get top 5 exercises
-    final exerciseCounts = <String, int>{};
-    for (final activity in activities) {
-      exerciseCounts[activity.exerciseId] = 
-          (exerciseCounts[activity.exerciseId] ?? 0) + 1;
-    }
-    
-    final topExercises = exerciseCounts.entries
-        .toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    
-    for (final exercise in topExercises.take(5)) {
-      trends[exercise.key] = TrendAnalyzer.analyzeStrengthTrend(
-        activities,
-        exercise.key,
-      );
-    }
-    
-    return trends;
-  }
-
-  DateTime _getWeekStart(DateTime date) {
-    final dayOfWeek = date.weekday;
-    return date.subtract(Duration(days: dayOfWeek - 1));
-  }
-
-  int _calculateCurrentStreak() {
-    if (state.activities.isEmpty) return 0;
-    
-    final sortedActivities = state.activities.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
-    final uniqueDates = sortedActivities
-        .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
-        .toSet()
-        .toList()
-      ..sort((a, b) => b.compareTo(a));
-    
-    if (uniqueDates.isEmpty) return 0;
-    
-    // Check if last workout was today or yesterday
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    
-    if (uniqueDates.first != today && uniqueDates.first != yesterday) {
-      return 0;
-    }
-    
-    int streak = 1;
-    for (int i = 1; i < uniqueDates.length; i++) {
-      if (uniqueDates[i - 1].difference(uniqueDates[i]).inDays == 1) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    
-    return streak;
-  }
+  // NOTE: All calculation logic moved to AnalyticsCalculationService
+  // This notifier is now THIN - only state management
 }
 
-/// Main analytics provider
+/// Calculation service provider (singleton)
+final analyticsCalculationServiceProvider = Provider<AnalyticsCalculationService>((ref) {
+  return AnalyticsCalculationService();
+});
+
+/// Main analytics provider (THIN PROVIDER PATTERN)
 final analyticsProvider = StateNotifierProvider<AnalyticsNotifier, AnalyticsState>((ref) {
   final user = ref.watch(firebaseUserProvider).valueOrNull;
   final activityRepository = ref.read(hybridExerciseActivityRepositoryProvider);
   final prTracker = PRTracker();
-  
+  final calculationService = ref.read(analyticsCalculationServiceProvider);
+
   return AnalyticsNotifier(
     activityRepository: activityRepository,
     prTracker: prTracker,
+    calculationService: calculationService,
     userId: user?.email,
   );
 });
@@ -639,10 +478,90 @@ final exerciseListProvider = Provider<List<({String id, String name, int count})
 /// Provider for workout recommendations
 final workoutRecommendationsProvider = Provider<List<String>>((ref) {
   final state = ref.watch(analyticsProvider);
-  
+
   // Return insights recommendations
   return state.insights
       .take(5)
       .map((insight) => insight.recommendation)
       .toList();
+});
+
+// ============================================================================
+// MEMOIZED PROVIDERS (from memoized_analytics_provider.dart)
+// ============================================================================
+
+/// Memoized analytics stats
+class AnalyticsStats {
+  const AnalyticsStats({
+    required this.totalWorkouts,
+    required this.totalVolume,
+    required this.currentStreak,
+    required this.consistency,
+    required this.volumeTrend,
+    required this.workoutTrend,
+  });
+
+  final int totalWorkouts;
+  final double totalVolume;
+  final int currentStreak;
+  final int consistency;
+  final double volumeTrend;
+  final double workoutTrend;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnalyticsStats &&
+          runtimeType == other.runtimeType &&
+          totalWorkouts == other.totalWorkouts &&
+          totalVolume == other.totalVolume &&
+          currentStreak == other.currentStreak &&
+          consistency == other.consistency &&
+          volumeTrend == other.volumeTrend &&
+          workoutTrend == other.workoutTrend;
+
+  @override
+  int get hashCode =>
+      totalWorkouts.hashCode ^
+      totalVolume.hashCode ^
+      currentStreak.hashCode ^
+      consistency.hashCode ^
+      volumeTrend.hashCode ^
+      workoutTrend.hashCode;
+}
+
+/// Time period for filtering
+enum TimePeriod { week, month, year, all }
+
+/// Provider for global memoized stats
+final globalAnalyticsStatsProvider = Provider<AnalyticsStats>((ref) {
+  final state = ref.watch(analyticsProvider);
+  final calculationService = ref.read(analyticsCalculationServiceProvider);
+
+  final totalWorkouts = state.activities.length;
+  final totalVolume = VolumeCalculator.calculateTotalVolume(
+    state.activities.expand((a) => a.sets).toList(),
+  );
+  final currentStreak = calculationService.calculateCurrentStreak(state.activities);
+
+  // Consistency (last 30 days)
+  final now = DateTime.now();
+  final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+  final last30DaysWorkouts = state.activities
+      .where((a) => a.createdAt.isAfter(thirtyDaysAgo))
+      .toList();
+
+  final uniqueDays = last30DaysWorkouts
+      .map((a) => DateTime(a.createdAt.year, a.createdAt.month, a.createdAt.day))
+      .toSet();
+  final consistency = (uniqueDays.length / 30 * 100).round();
+
+  return AnalyticsStats(
+    totalWorkouts: totalWorkouts,
+    totalVolume: totalVolume,
+    currentStreak: currentStreak,
+    consistency: consistency,
+    volumeTrend: 0,
+    workoutTrend: 0,
+  );
 });

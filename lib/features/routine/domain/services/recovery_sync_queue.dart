@@ -35,6 +35,23 @@ class RecoverySyncQueueItem {
     this.priority = 0,
   });
 
+  /// Create from JSON (from Hive)
+  factory RecoverySyncQueueItem.fromJson(Map<String, dynamic> json) {
+    return RecoverySyncQueueItem(
+      id: json['id'] as String,
+      routineId: json['routineId'] as String,
+      workoutId: json['workoutId'] as String,
+      userId: json['userId'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      syncedAt: json['syncedAt'] != null
+          ? DateTime.parse(json['syncedAt'] as String)
+          : null,
+      retryCount: json['retryCount'] as int? ?? 0,
+      lastError: json['lastError'] as String?,
+      priority: json['priority'] as int? ?? 0,
+    );
+  }
+
   /// Unique identifier for this queue item
   final String id;
 
@@ -80,23 +97,6 @@ class RecoverySyncQueueItem {
     'lastError': lastError,
     'priority': priority,
   };
-
-  /// Create from JSON (from Hive)
-  factory RecoverySyncQueueItem.fromJson(Map<String, dynamic> json) {
-    return RecoverySyncQueueItem(
-      id: json['id'] as String,
-      routineId: json['routineId'] as String,
-      workoutId: json['workoutId'] as String,
-      userId: json['userId'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      syncedAt: json['syncedAt'] != null
-          ? DateTime.parse(json['syncedAt'] as String)
-          : null,
-      retryCount: json['retryCount'] as int? ?? 0,
-      lastError: json['lastError'] as String?,
-      priority: json['priority'] as int? ?? 0,
-    );
-  }
 
   /// Create a copy with modifications
   RecoverySyncQueueItem copyWith({

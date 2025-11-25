@@ -5,6 +5,10 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -169,7 +173,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                         turns: _isExpanded ? 0.5 : 0,
                         duration: const Duration(milliseconds: 300),
                         child: Icon(
-                          Icons.expand_more,
+                          AppIcons.expandMore,
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
                       ),
@@ -246,25 +250,25 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _StatItem(
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           value: stats.currentStreak.toString(),
           label: 'Streak',
-          color: Colors.orange,
+          color: context.colors.secondary,
         ),
         _StatItem(
-          icon: Icons.star,
+          icon: AppIcons.star,
           value: stats.totalPoints.toString(),
           label: 'Punti',
-          color: Colors.amber,
+          color: context.colors.warning,
         ),
         _StatItem(
-          icon: Icons.check_circle,
+          icon: AppIcons.complete,
           value: stats.approvedContributions.toString(),
           label: 'Approvati',
-          color: Colors.green,
+          color: context.colors.success,
         ),
         _StatItem(
-          icon: Icons.emoji_events,
+          icon: AppIcons.achievement,
           value: '#${stats.weeklyRank > 0 ? stats.weeklyRank : '-'}',
           label: 'Rank',
           color: theme.colorScheme.primary,
@@ -301,7 +305,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                 _isExpanded = true;
               });
             },
-            icon: const Icon(Icons.how_to_vote),
+            icon: const SemanticIcon(
+  icon: AppIcons.howToVote,
+  semanticLabel: 'How to vote',
+),
             label: Text('Review $count contributi'),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
@@ -315,7 +322,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
         const SizedBox(width: 12),
         IconButton.filled(
           onPressed: widget.onViewAll,
-          icon: const Icon(Icons.arrow_forward),
+          icon: const SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+),
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
             foregroundColor: theme.colorScheme.primary,
@@ -330,7 +340,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: widget.onViewAll,
-        icon: const Icon(Icons.explore),
+        icon: const SemanticIcon(
+  icon: AppIcons.explore,
+  semanticLabel: 'Explore',
+),
         label: const Text('Esplora Community'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,
@@ -400,7 +413,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                 color: index == _currentIndex
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
@@ -418,11 +431,12 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.celebration,
-            size: 48,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
+          SemanticIcon(
+  icon: AppIcons.celebration,
+  semanticLabel: 'Celebration',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onPrimaryContainer,
+),
           const SizedBox(height: 12),
           Text(
             'Tutto reviewato!',
@@ -491,9 +505,9 @@ class _AnimatedIconState extends State<_AnimatedIcon>
               transform: GradientRotation(_controller.value * 2 * math.pi),
             ),
           ),
-          child: const Icon(
-            Icons.people,
-            color: Colors.white,
+          child: Icon(
+            AppIcons.people,
+            color: context.colors.surface,
             size: 24,
           ),
         );
@@ -572,7 +586,7 @@ class _MiniContributionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _getTypeIcon(contribution.type),
+              _getTypeIcon(context, contribution.type),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -613,10 +627,13 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(false);
                 },
-                icon: const Icon(Icons.close),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.red.withValues(alpha: 0.1),
-                  foregroundColor: Colors.red,
+                  backgroundColor: context.colors.error.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.error,
                 ),
               ),
               IconButton.filled(
@@ -624,10 +641,13 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(true);
                 },
-                icon: const Icon(Icons.check),
+                icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.green.withValues(alpha: 0.1),
-                  foregroundColor: Colors.green,
+                  backgroundColor: context.colors.success.withValues(alpha: 0.1),
+                  foregroundColor: context.colors.success,
                 ),
               ),
             ],
@@ -637,30 +657,30 @@ class _MiniContributionCard extends StatelessWidget {
     );
   }
   
-  Widget _getTypeIcon(ContributionType type) {
+  Widget _getTypeIcon(BuildContext context, ContributionType type) {
     IconData icon;
     Color color;
-    
+
     switch (type) {
       case ContributionType.tip:
-        icon = Icons.lightbulb;
-        color = Colors.amber;
+        icon = AppIcons.lightbulb;
+        color = context.colors.warning;
         break;
       case ContributionType.warning:
-        icon = Icons.warning;
-        color = Colors.orange;
+        icon = AppIcons.warning;
+        color = context.colors.secondary;
         break;
       case ContributionType.correction:
-        icon = Icons.edit;
-        color = Colors.blue;
+        icon = AppIcons.edit;
+        color = context.colors.primary;
         break;
       case ContributionType.technique:
-        icon = Icons.fitness_center;
-        color = Colors.purple;
+        icon = AppIcons.fitnessCenter;
+        color = context.colors.tertiary;
         break;
       default:
-        icon = Icons.info;
-        color = Colors.grey;
+        icon = AppIcons.info;
+        color = context.colors.surfaceContainerHighest;
     }
     
     return Container(

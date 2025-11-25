@@ -36,9 +36,6 @@ import 'package:gymbro_flutter_new/features/notifications/domain/entities/unifie
 /// 7. Save to history (if consent given)
 /// ```
 class ScheduleSmartNotificationV2 {
-  final NotificationSettingsRepository _settingsRepository;
-  final NotificationHistoryRepository _historyRepository;
-  final NotificationRepository _notificationRepository;
 
   ScheduleSmartNotificationV2({
     required NotificationSettingsRepository settingsRepository,
@@ -47,6 +44,9 @@ class ScheduleSmartNotificationV2 {
   })  : _settingsRepository = settingsRepository,
         _historyRepository = historyRepository,
         _notificationRepository = notificationRepository;
+  final NotificationSettingsRepository _settingsRepository;
+  final NotificationHistoryRepository _historyRepository;
+  final NotificationRepository _notificationRepository;
 
   /// Execute smart scheduling
   ///

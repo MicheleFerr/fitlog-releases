@@ -12,7 +12,6 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_history_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/repositories/notification_history_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_settings_provider_v2.dart';
@@ -65,11 +64,6 @@ final notificationHistoryProvider = FutureProvider.family<
 
 /// Parameters for notification history queries
 class NotificationHistoryParams {
-  final int limit;
-  final DateTime? since;
-  final DateTime? until;
-  final List<NotificationType>? types;
-  final bool unreadOnly;
 
   const NotificationHistoryParams({
     this.limit = 50,
@@ -78,6 +72,11 @@ class NotificationHistoryParams {
     this.types,
     this.unreadOnly = false,
   });
+  final int limit;
+  final DateTime? since;
+  final DateTime? until;
+  final List<NotificationType>? types;
+  final bool unreadOnly;
 
   @override
   bool operator ==(Object other) {

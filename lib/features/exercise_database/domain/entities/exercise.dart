@@ -1,12 +1,37 @@
+/// 🏋️ Exercise Definition Entity
+///
+/// Represents an exercise definition from the exercise database/catalog.
+/// This is the DEFINITION of an exercise (name, muscles, equipment, etc.)
+/// NOT an instance of an exercise in a workout.
+///
+/// For workout exercise instances, see:
+/// `lib/features/workout/domain/entities/exercise.dart`
+library;
+
 import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 
 part 'exercise.g.dart';
 
-@HiveType(typeId: 2)
-class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
+/// @deprecated Use [ExerciseDefinition] instead to avoid naming conflicts
+/// with workout Exercise entity.
+///
+/// This typedef exists for backward compatibility during migration.
+@Deprecated('Use ExerciseDefinition instead - avoids naming conflict with workout Exercise')
+typedef Exercise = ExerciseDefinition;
 
-  Exercise({
+/// Exercise definition from the database catalog
+///
+/// Contains static information about an exercise:
+/// - Name, muscles targeted, equipment required
+/// - Difficulty level, movement pattern
+/// - Technical notes, warmup recommendations
+///
+/// This is stored in Hive and loaded from JSON exercise database.
+@HiveType(typeId: 2)
+class ExerciseDefinition extends Equatable {
+
+  ExerciseDefinition({
     required this.id,
     required this.nome,
     required this.focus,
@@ -36,8 +61,8 @@ class Exercise extends Equatable { // Spiegazione del tempo di esecuzione
         searchableFields = searchableFields ?? _buildSearchableFields(nome, aliases);
 
   // Factory constructor per creare da JSON
-  factory Exercise.fromJson(Map<String, dynamic> json) {
-    return Exercise(
+  factory ExerciseDefinition.fromJson(Map<String, dynamic> json) {
+    return ExerciseDefinition(
       id: json['id'] ?? '',
       nome: json['nome'] ?? '',
       focus: _parseCommaSeparated(json['focus']),

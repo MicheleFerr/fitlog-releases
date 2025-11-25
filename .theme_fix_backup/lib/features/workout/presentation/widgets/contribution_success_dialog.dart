@@ -15,6 +15,7 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/animated_xp_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ContributionSuccessDialog extends ConsumerStatefulWidget {
 
@@ -124,30 +125,30 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
   IconData _getIcon() {
     switch (widget.contributionType) {
       case ContributionType.correction:
-        return Icons.edit;
+        return AppIcons.edit;
       case ContributionType.tip:
-        return Icons.lightbulb;
+        return AppIcons.lightbulb;
       case ContributionType.warning:
-        return Icons.warning;
+        return AppIcons.warning;
       case ContributionType.variant:
-        return Icons.tune;
+        return AppIcons.tune;
       case ContributionType.translation:
-        return Icons.translate;
+        return AppIcons.translate;
       case ContributionType.technique:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
     }
   }
   
   Color _getColor() {
     switch (widget.contributionType) {
       case ContributionType.correction:
-        return Colors.blue;
+        return context.colors.primary;
       case ContributionType.tip:
-        return Colors.green;
+        return context.colors.success;
       case ContributionType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case ContributionType.variant:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ContributionType.translation:
         return Colors.teal;
       case ContributionType.technique:
@@ -238,9 +239,9 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
                                       colors: [color, color.withValues(alpha: 0.8)],
                                     ),
                                   ),
-                                  child: const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
+                                  child: Icon(
+                                    AppIcons.check,
+                                    color: context.colors.surface,
                                     size: 40,
                                   ),
                                 ),

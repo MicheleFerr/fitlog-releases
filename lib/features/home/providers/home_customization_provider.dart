@@ -39,8 +39,8 @@ class HomeCustomizationNotifier extends StateNotifier<List<HomeWidgetConfig>> {
           final widgetsList = data['homeWidgets'] as List<dynamic>;
           // Safe Map casting with validation (Task 6.1)
           final configs = widgetsList
-              .where((json) => json is Map<String, dynamic>)
-              .map((json) => HomeWidgetConfig.fromJson(json as Map<String, dynamic>))
+              .whereType<Map<String, dynamic>>()
+              .map((json) => HomeWidgetConfig.fromJson(json))
               .toList();
 
           // Merge with defaults to include any new widgets

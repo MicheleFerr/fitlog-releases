@@ -17,6 +17,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_cal
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Analytics screen with lazy loading and optimized performance
 class LazyAnalyticsScreen extends ConsumerStatefulWidget {
@@ -68,8 +71,11 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+
+    // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
     final authState = ref.watch(authStateProvider);
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
+    final isLoading = ref.watch(lazyAnalyticsProvider.select((state) => state.isLoading));
+    final error = ref.watch(lazyAnalyticsProvider.select((state) => state.error));
     final isLoadingMore = ref.watch(isLoadingMoreAnalyticsProvider);
     final activitiesCount = ref.watch(analyticsActivitiesCountProvider);
     final currentPhase = ref.watch(currentLoadingPhaseProvider);
@@ -93,7 +99,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         ),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: Icon(AppIcons.back),
+          icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -104,20 +113,29 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             onPressed: () {
               ref.read(lazyAnalyticsProvider.notifier).refresh();
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(AppIcons.moreVert),
+            icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(AppIcons.download),
+                    const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
                     const SizedBox(width: 8),
                     Text(localizations.exportData),
                   ],
@@ -127,7 +145,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 value: 'settings',
                 child: Row(
                   children: [
-                    const Icon(AppIcons.settings),
+                    const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                     const SizedBox(width: 8),
                     Text(localizations.settings),
                   ],
@@ -166,11 +187,15 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   }
 
   Widget _buildOverviewTab(
-    BuildContext context, 
+    BuildContext context,
     AppLocalizations localizations,
     bool isLoadingMore,
   ) {
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
+    // ⚡ OPTIMIZATION: Select only needed fields to avoid rebuilds
+    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
+    final recentPRs = ref.watch(lazyAnalyticsProvider.select((state) => state.recentPRs));
+    final workouts = ref.watch(lazyAnalyticsProvider.select((state) => state.workouts));
+    final hasMoreData = ref.watch(lazyAnalyticsProvider.select((state) => state.hasMoreData));
     
     return RefreshIndicator(
       onRefresh: () => ref.read(lazyAnalyticsProvider.notifier).refresh(),
@@ -183,42 +208,42 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Quick Stats
-                _buildQuickStats(context, localizations, analyticsState),
+                _buildQuickStats(context, localizations, activities, workouts),
                 const SizedBox(height: 16),
-                
+
                 // Recent PRs
-                if (analyticsState.recentPRs.isNotEmpty) ...[
+                if (recentPRs.isNotEmpty) ...[
                   _buildSectionTitle(context, localizations.personalRecords),
                   const SizedBox(height: 8),
-                  PRTimelineWidget(personalRecords: analyticsState.recentPRs),
+                  PRTimelineWidget(personalRecords: recentPRs),
                   const SizedBox(height: 16),
                 ],
-                
+
                 // Muscle Balance (Scientific)
                 _buildSectionTitle(context, localizations.muscleBalance),
                 const SizedBox(height: 8),
                 ScientificMuscleBalanceWidget(
-                  activities: analyticsState.activities,
+                  activities: activities,
                   showRatios: true,
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Workout Frequency
                 _buildSectionTitle(context, localizations.workoutFrequency),
                 const SizedBox(height: 8),
-                WorkoutFrequencyChart(workouts: analyticsState.workouts),
+                WorkoutFrequencyChart(workouts: workouts),
                 const SizedBox(height: 16),
 
                 // Top Exercises
                 _buildSectionTitle(context, localizations.topExercises),
                 const SizedBox(height: 8),
                 ExerciseStatsCard(
-                  workouts: analyticsState.workouts,
+                  workouts: workouts,
                 ),
               ]),
             ),
           ),
-          
+
           // Loading indicator at bottom
           if (isLoadingMore)
             SliverToBoxAdapter(
@@ -226,15 +251,15 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 message: ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
               ),
             ),
-          
+
           // End of data indicator
-          if (!analyticsState.hasMoreData && analyticsState.activities.isNotEmpty)
+          if (!hasMoreData && activities.isNotEmpty)
             SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.all(16),
                 child: Center(
                   child: Text(
-                    'All workouts loaded (${analyticsState.activities.length} total)',
+                    'All workouts loaded (${activities.length} total)',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
@@ -246,11 +271,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   }
 
   Widget _buildStrengthTab(
-    BuildContext context, 
+    BuildContext context,
     AppLocalizations localizations,
     bool isLoadingMore,
   ) {
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
+    // ⚡ OPTIMIZATION: Select only needed fields
+    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
+    final exerciseTrends = ref.watch(lazyAnalyticsProvider.select((state) => state.exerciseTrends));
     
     return CustomScrollView(
       controller: _scrollController,
@@ -261,7 +288,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             delegate: SliverChildListDelegate([
               // Strength Progression Chart
               StrengthProgressionChart(
-                activities: analyticsState.activities,
+                activities: activities,
                 selectedExerciseId: _selectedExerciseId,
                 onExerciseSelected: (exerciseId) {
                   setState(() {
@@ -270,12 +297,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Exercise-specific trends
-              if (analyticsState.exerciseTrends.isNotEmpty) ...[
+              if (exerciseTrends.isNotEmpty) ...[
                 _buildSectionTitle(context, 'Exercise Trends'),
                 const SizedBox(height: 8),
-                ...analyticsState.exerciseTrends.entries.map((entry) => 
+                ...exerciseTrends.entries.map((entry) =>
                   _buildTrendCard(context, entry.key, entry.value)
                 ),
               ],
@@ -295,11 +322,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   }
 
   Widget _buildVolumeTab(
-    BuildContext context, 
+    BuildContext context,
     AppLocalizations localizations,
     bool isLoadingMore,
   ) {
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
+    // ⚡ OPTIMIZATION: Select only needed fields
+    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
+    final volumeProgression = ref.watch(lazyAnalyticsProvider.select((state) => state.volumeProgression));
     
     return CustomScrollView(
       controller: _scrollController,
@@ -330,12 +359,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   }
 
   Widget _buildInsightsTab(
-    BuildContext context, 
+    BuildContext context,
     AppLocalizations localizations,
     bool isLoadingMore,
   ) {
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
-    
+    // ⚡ OPTIMIZATION: Select only needed fields
+    final insights = ref.watch(lazyAnalyticsProvider.select((state) => state.insights));
+    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
+
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -344,13 +375,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               // Insights Carousel
-              if (analyticsState.insights.isNotEmpty) ...[
-                InsightsCarousel(insights: analyticsState.insights),
+              if (insights.isNotEmpty) ...[
+                InsightsCarousel(insights: insights),
                 const SizedBox(height: 16),
               ],
-              
+
               // Training recommendations
-              _buildTrainingRecommendations(context, localizations, analyticsState),
+              _buildTrainingRecommendations(context, localizations, activities),
             ]),
           ),
         ),
@@ -370,7 +401,8 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildQuickStats(
     BuildContext context,
     AppLocalizations localizations,
-    LazyAnalyticsState analyticsState,
+    List activities,
+    List workouts,
   ) {
     final theme = Theme.of(context);
     final currentPhase = ref.watch(currentLoadingPhaseProvider);
@@ -493,13 +525,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             Text(
               '${trend.percentageChange.toStringAsFixed(1)}%',
               style: TextStyle(
-                color: isImproving ? Colors.green : Colors.orange,
+                color: isImproving ? context.colors.success : Colors.orange,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Icon(
               isImproving ? AppIcons.trendUp : AppIcons.trendFlat,
-              color: isImproving ? Colors.green : Colors.orange,
+              color: isImproving ? context.colors.success : Colors.orange,
             ),
           ],
         ),
@@ -570,13 +602,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           children: [
             Icon(
               isPositive ? AppIcons.arrowUpward : AppIcons.arrowDownward,
-              color: isPositive ? Colors.green : Colors.red,
+              color: isPositive ? context.colors.success : context.colors.error,
               size: 16,
             ),
             Text(
               '${change.abs().toStringAsFixed(1)}%',
               style: TextStyle(
-                color: isPositive ? Colors.green : Colors.red,
+                color: isPositive ? context.colors.success : context.colors.error,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -640,15 +672,15 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Color _getInsightColor(InsightType type) {
     switch (type) {
       case InsightType.improvement:
-        return Colors.green;
+        return context.colors.success;
       case InsightType.warning:
         return Colors.orange;
       case InsightType.achievement:
         return Colors.amber;
       case InsightType.suggestion:
-        return Colors.blue;
+        return context.colors.primary;
       default:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
   
@@ -661,10 +693,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(AppIcons.lock, size: 64),
-            SizedBox(height: 16),
+            const SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.medium,
+),
+            const SizedBox(height: 16),
             Text(localizations.signInRequired),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => context.go('/auth'),
               child: Text(localizations.signIn),
@@ -680,7 +716,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(AppIcons.error, size: 64, color: Colors.red),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
           const SizedBox(height: 16),
           Text(error),
           const SizedBox(height: 16),
@@ -698,10 +739,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.workout, size: 64),
-          SizedBox(height: 16),
+          const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+),
+          const SizedBox(height: 16),
           Text(localizations.noWorkoutsYet),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => context.go('/workout'),
             child: Text(localizations.startWorkout),

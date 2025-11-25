@@ -26,7 +26,6 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/widgets/step_feedback_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Fitness questionnaire screen with step-by-step flow
 class FitnessQuestionnaireScreen extends ConsumerStatefulWidget {
@@ -261,7 +260,7 @@ class _FitnessQuestionnaireScreenState
         title: Text(context.l10n.fitnessQuestionnaireTitle),
         backgroundColor: context.colors.surface,
         leading: IconButton(
-          icon: Icon(AppIcons.close),
+          icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -316,7 +315,7 @@ class _FitnessQuestionnaireScreenState
         color: context.colors.surface,
         boxShadow: [
           BoxShadow(
-            color: context.colors.onSurface.withValues(alpha: 0.1),
+            color: context.colors.shadow.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),
@@ -331,7 +330,7 @@ class _FitnessQuestionnaireScreenState
                 child: Text(context.l10n.fitnessQuestionnaireBackButton),
               ),
             ),
-          if (_currentStep > 0) SizedBox(width: 12),
+          if (_currentStep > 0) const SizedBox(width: 12),
           Expanded(
             child: FilledButton(
               onPressed: _currentStep == _totalSteps
@@ -377,14 +376,14 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessMedicalClearanceTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.fitnessMedicalClearanceDescription,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // PAR-Q+ Core Questions
             _buildCheckbox(
@@ -430,7 +429,7 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessAcsmTitle,
               style: context.textTheme.titleMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             _buildCheckbox(
               context.l10n.fitnessAcsmAge,
@@ -463,7 +462,7 @@ class _FitnessQuestionnaireScreenState
               (val) => setState(() => _hasHighBloodPressure = val ?? false),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Clearance status card
             if (clearance.needsMedicalClearance)
@@ -473,8 +472,8 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(AppIcons.warning, color: context.colors.error),
-                      SizedBox(width: 12),
+                      Icon(Icons.warning, color: context.colors.error),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           clearance.getClearanceMessage(Localizations.localeOf(context).languageCode),
@@ -492,8 +491,8 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(AppIcons.infoIcon, color: context.colors.secondary),
-                      SizedBox(width: 12),
+                      Icon(Icons.info, color: context.colors.secondary),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           clearance.getClearanceMessage(Localizations.localeOf(context).languageCode),
@@ -511,8 +510,8 @@ class _FitnessQuestionnaireScreenState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      Icon(AppIcons.complete, color: context.colors.primary),
-                      SizedBox(width: 12),
+                      Icon(Icons.check_circle, color: context.colors.primary),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           clearance.getClearanceMessage(Localizations.localeOf(context).languageCode),
@@ -561,7 +560,7 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessQuestionnaireDemographicsTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             TextFormField(
               decoration: InputDecoration(
@@ -581,7 +580,7 @@ class _FitnessQuestionnaireScreenState
               },
               onChanged: (value) => _bodyweightKg = double.tryParse(value),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             TextFormField(
               decoration: InputDecoration(
@@ -600,24 +599,24 @@ class _FitnessQuestionnaireScreenState
               },
               onChanged: (value) => _age = int.tryParse(value),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             Text(
               context.l10n.fitnessQuestionnaireSexLabel,
               style: context.textTheme.titleSmall,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             SegmentedButton<BiologicalSex>(
               segments: [
                 ButtonSegment(
                   value: BiologicalSex.male,
                   label: Text(context.l10n.fitnessQuestionnaireSexMale),
-                  icon: Icon(AppIcons.male),
+                  icon: const Icon(Icons.male),
                 ),
                 ButtonSegment(
                   value: BiologicalSex.female,
                   label: Text(context.l10n.fitnessQuestionnaireSexFemale),
-                  icon: const Icon(AppIcons.female),
+                  icon: const Icon(Icons.female),
                 ),
               ],
               selected: {_sex},
@@ -651,31 +650,22 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessQuestionnaireExperienceTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             Text(
               context.l10n.fitnessQuestionnaireExperienceLevelLabel,
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            RadioGroup<ExperienceLevel>(
-              groupValue: _experienceLevel,
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _experienceLevel = val);
-                }
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: ExperienceLevel.values.map((level) {
-                  return RadioListTile<ExperienceLevel>(
-                    title: Text(_getExperienceLevelLabel(level)),
-                    value: level,
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 16),
+            ...ExperienceLevel.values.map((level) {
+              return RadioListTile<ExperienceLevel>(
+                title: Text(_getExperienceLevelLabel(level)),
+                value: level,
+                groupValue: _experienceLevel,
+                onChanged: (val) => setState(() => _experienceLevel = val!),
+              );
+            }),
+            const SizedBox(height: 16),
 
             TextFormField(
               decoration: InputDecoration(
@@ -730,14 +720,14 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessQuestionnaireMaxLiftsTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.fitnessQuestionnaireMaxLiftsDescription,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurface.withValues(alpha: 0.7),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             TextFormField(
               decoration: InputDecoration(
@@ -749,7 +739,7 @@ class _FitnessQuestionnaireScreenState
               initialValue: _benchPressMax?.toString(),
               onChanged: (value) => _benchPressMax = double.tryParse(value),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             TextFormField(
               decoration: InputDecoration(
@@ -761,7 +751,7 @@ class _FitnessQuestionnaireScreenState
               initialValue: _squatMax?.toString(),
               onChanged: (value) => _squatMax = double.tryParse(value),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             TextFormField(
               decoration: InputDecoration(
@@ -773,7 +763,7 @@ class _FitnessQuestionnaireScreenState
               initialValue: _deadliftMax?.toString(),
               onChanged: (value) => _deadliftMax = double.tryParse(value),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             TextFormField(
               decoration: InputDecoration(
@@ -813,7 +803,7 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessInjuryHistoryTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             CheckboxListTile(
               title: Text(context.l10n.fitnessQuestionnaireInjuryHistoryLabel),
@@ -823,7 +813,7 @@ class _FitnessQuestionnaireScreenState
             ),
 
             if (_hasInjuryHistory) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: context.l10n.fitnessInjuryType,
@@ -833,7 +823,7 @@ class _FitnessQuestionnaireScreenState
                 initialValue: _injuryType,
                 onChanged: (value) => _injuryType = value,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               DropdownButtonFormField<InjuryRegion>(
                 decoration: InputDecoration(
@@ -849,7 +839,7 @@ class _FitnessQuestionnaireScreenState
                 }).toList(),
                 onChanged: (val) => setState(() => _injuryRegion = val),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               TextFormField(
                 decoration: InputDecoration(
@@ -860,7 +850,7 @@ class _FitnessQuestionnaireScreenState
                 initialValue: _monthsSinceInjury?.toString(),
                 onChanged: (value) => _monthsSinceInjury = int.tryParse(value),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               CheckboxListTile(
                 title: Text(context.l10n.fitnessQuestionnaireFullyRecovered),
@@ -876,7 +866,7 @@ class _FitnessQuestionnaireScreenState
                 contentPadding: EdgeInsets.zero,
               ),
 
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 '${context.l10n.fitnessQuestionnaireCurrentPainLevel}: $_currentPainLevel/10',
                 style: context.textTheme.titleSmall,
@@ -918,61 +908,43 @@ class _FitnessQuestionnaireScreenState
               context.l10n.fitnessQuestionnaireGoalsTitle,
               style: context.textTheme.headlineSmall,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             Text(
               context.l10n.fitnessQuestionnaireTrainingGoalLabel,
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            RadioGroup<TrainingGoal>(
-              groupValue: _trainingGoal,
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _trainingGoal = val);
-                }
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: TrainingGoal.values.map((goal) {
-                  return RadioListTile<TrainingGoal>(
-                    title: Text(_getTrainingGoalLabel(goal)),
-                    value: goal,
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 16),
+            ...TrainingGoal.values.map((goal) {
+              return RadioListTile<TrainingGoal>(
+                title: Text(_getTrainingGoalLabel(goal)),
+                value: goal,
+                groupValue: _trainingGoal,
+                onChanged: (val) => setState(() => _trainingGoal = val!),
+              );
+            }),
+            const SizedBox(height: 16),
 
             Text(
               context.l10n.fitnessQuestionnaireSuggestionStyleLabel,
               style: context.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            RadioGroup<SuggestionStyle>(
-              groupValue: _suggestionStyle,
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _suggestionStyle = val);
-                }
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: SuggestionStyle.values.map((style) {
-                  return RadioListTile<SuggestionStyle>(
-                    title: Text(_getSuggestionStyleLabel(style)),
-                    value: style,
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 16),
+            ...SuggestionStyle.values.map((style) {
+              return RadioListTile<SuggestionStyle>(
+                title: Text(_getSuggestionStyleLabel(style)),
+                value: style,
+                groupValue: _suggestionStyle,
+                onChanged: (val) => setState(() => _suggestionStyle = val!),
+              );
+            }),
+            const SizedBox(height: 16),
 
             Text(
               context.l10n.fitnessQuestionnaireSelfAssessmentTitle,
               style: context.textTheme.titleSmall,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.fitnessQuestionnaireSelfAssessmentDescription,
               style: context.textTheme.bodySmall?.copyWith(
@@ -980,23 +952,14 @@ class _FitnessQuestionnaireScreenState
               ),
             ),
             const SizedBox(height: 8),
-            RadioGroup<SelfReportCalibration>(
-              groupValue: _selfReportCalibration,
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _selfReportCalibration = val);
-                }
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: SelfReportCalibration.values.map((calibration) {
-                  return RadioListTile<SelfReportCalibration>(
-                    title: Text(calibration.getLabel(Localizations.localeOf(context).languageCode)),
-                    value: calibration,
-                  );
-                }).toList(),
-              ),
-            ),
+            ...SelfReportCalibration.values.map((calibration) {
+              return RadioListTile<SelfReportCalibration>(
+                title: Text(calibration.getLabel(Localizations.localeOf(context).languageCode)),
+                value: calibration,
+                groupValue: _selfReportCalibration,
+                onChanged: (val) => setState(() => _selfReportCalibration = val!),
+              );
+            }),
 
             // Feedback widget for step 5
             StepFeedbackWidget(
@@ -1058,27 +1021,27 @@ class _FitnessQuestionnaireScreenState
             context.l10n.fitnessQuestionnaireReviewTitle,
             style: context.textTheme.headlineSmall,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.fitnessQuestionnaireReviewDescription,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           _buildReviewCard(context.l10n.fitnessQuestionnaireReviewDemographics, [
             '${context.l10n.fitnessQuestionnaireReviewBodyweight}: ${_bodyweightKg?.toStringAsFixed(1)} kg',
             '${context.l10n.fitnessQuestionnaireReviewAge}: $_age',
             '${context.l10n.fitnessQuestionnaireReviewSex}: ${_getSexLabel(_sex)}',
           ]),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           _buildReviewCard(context.l10n.fitnessQuestionnaireReviewExperience, [
             '${context.l10n.fitnessQuestionnaireReviewLevel}: ${_getExperienceLevelLabel(_experienceLevel)}',
             if (_monthsOfTraining != null) '${context.l10n.fitnessQuestionnaireReviewTraining}: $_monthsOfTraining ${context.l10n.fitnessQuestionnaireReviewMonths}',
           ]),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           if (_benchPressMax != null || _squatMax != null || _deadliftMax != null || _overheadPressMax != null)
             _buildReviewCard(context.l10n.fitnessQuestionnaireReviewMaxLifts, [
@@ -1088,7 +1051,7 @@ class _FitnessQuestionnaireScreenState
               if (_overheadPressMax != null) '${context.l10n.fitnessQuestionnaireReviewOHP}: ${_overheadPressMax!.toStringAsFixed(1)} kg',
             ]),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildReviewCard(context.l10n.fitnessQuestionnaireReviewGoals, [
             '${context.l10n.fitnessQuestionnaireReviewTrainingGoal}: ${_getTrainingGoalLabel(_trainingGoal)}',
             '${context.l10n.fitnessQuestionnaireReviewSuggestionStyle}: ${_getSuggestionStyleLabel(_suggestionStyle)}',

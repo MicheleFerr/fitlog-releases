@@ -19,18 +19,9 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/search/bm25_search.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/embeddings/embedding_service.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/storage/in_memory_vector_store.dart';
-import 'dart:typed_data';
 
 /// Hybrid search engine combining BM25 and vector embeddings
-class HybridSearchEngine {
-  final BM25SearchEngine bm25Engine;
-  final EmbeddingService embeddingService;
-  final InMemoryVectorStore vectorStore;
-
-  // Configuration
-  double bm25Weight = 0.4; // 40% weight to BM25 (keyword matching)
-  double embeddingWeight = 0.6; // 60% weight to embeddings (semantic)
-  final double rrfK = 60.0; // RRF constant (standard value)
+class HybridSearchEngine { // RRF constant (standard value)
 
   HybridSearchEngine({
     required this.bm25Engine,
@@ -39,6 +30,14 @@ class HybridSearchEngine {
     this.bm25Weight = 0.4,
     this.embeddingWeight = 0.6,
   });
+  final BM25SearchEngine bm25Engine;
+  final EmbeddingService embeddingService;
+  final InMemoryVectorStore vectorStore;
+
+  // Configuration
+  double bm25Weight = 0.4; // 40% weight to BM25 (keyword matching)
+  double embeddingWeight = 0.6; // 60% weight to embeddings (semantic)
+  final double rrfK = 60.0;
 
   /// Perform hybrid search combining BM25 and vector search
   Future<List<HybridSearchResult>> search({
@@ -237,6 +236,19 @@ class HybridSearchEngine {
 
 /// Hybrid search result with scores from both methods
 class HybridSearchResult {
+
+  const HybridSearchResult({
+    required this.documentId,
+    required this.content,
+    required this.bm25Score,
+    required this.vectorScore,
+    required this.bm25RRF,
+    required this.vectorRRF,
+    required this.fusedScore,
+    this.bm25Rank,
+    this.vectorRank,
+    this.timestamp,
+  });
   final String documentId;
   final String content;
 
@@ -257,19 +269,6 @@ class HybridSearchResult {
 
   // Metadata
   final DateTime? timestamp;
-
-  const HybridSearchResult({
-    required this.documentId,
-    required this.content,
-    required this.bm25Score,
-    required this.vectorScore,
-    required this.bm25RRF,
-    required this.vectorRRF,
-    required this.fusedScore,
-    this.bm25Rank,
-    this.vectorRank,
-    this.timestamp,
-  });
 
   /// Check if document was found in both searches
   bool get isInBothSearches => bm25Rank != null && vectorRank != null;

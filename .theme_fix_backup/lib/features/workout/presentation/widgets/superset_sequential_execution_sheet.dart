@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
-import 'package:gymbro_flutter_new/features/shared/presentation/extensions/context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_selector_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
@@ -70,7 +73,6 @@ class _SupersetSequentialExecutionSheetState
       set: exerciseSet,
       targetReps: exerciseData.targetReps ?? 10,
       exercise: firstExercise,
-      countingMode: firstExercise.countingMode, // ✅ NUOVO: Pass counting mode for proper UI
 
       // ✅ SUPERSET MODE
       isPartOfSuperset: true,
@@ -197,7 +199,7 @@ class _SupersetSequentialExecutionSheetState
     // Show QuickEditOverlayV2
     showDialog(
       context: context,
-      barrierColor: Colors.black26,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.26),
       builder: (context) => Stack(
         children: [
           // Dismiss on tap outside
@@ -297,7 +299,7 @@ class _SupersetSequentialExecutionSheetState
             Row(
               children: [
                 Icon(
-                  Icons.repeat,
+                  AppIcons.repeat,
                   color: context.colors.secondary,
                   size: 28,
                 ),
@@ -323,7 +325,10 @@ class _SupersetSequentialExecutionSheetState
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
@@ -355,7 +360,7 @@ class _SupersetSequentialExecutionSheetState
                   child: Row(
                     children: [
                       Icon(
-                        isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+                        isCompleted ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
                         color: isCompleted
                             ? context.colors.secondary
                             : context.colors.outline,
@@ -376,10 +381,12 @@ class _SupersetSequentialExecutionSheetState
                                   ),
                                 ),
                                 // ✅ Visual hint for double-tap
-                                Icon(
-                                  Icons.edit,
-                                  size: 14,
-                                  color: context.colors.outline.withValues(alpha: 0.5),
+                                SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+  color: context.colors.outline.withValues(alpha: 0.5,
+),
                                 ),
                               ],
                             ),
@@ -410,11 +417,12 @@ class _SupersetSequentialExecutionSheetState
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: context.colors.onPrimaryContainer,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: context.colors.onPrimaryContainer,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -433,7 +441,10 @@ class _SupersetSequentialExecutionSheetState
             // Pulsante per eseguire il round
             FilledButton.icon(
               onPressed: completedExercises > 0 ? null : _executeRound,
-              icon: const Icon(Icons.fitness_center),
+              icon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
               label: Text(
                 completedExercises > 0
                     ? context.l10n.completed

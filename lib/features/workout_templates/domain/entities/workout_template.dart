@@ -1,12 +1,16 @@
-/// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+/// 🏋️‍♂️ Community Workout Template Entity
+///
 /// 📁 Layer: domain
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: entity
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
+/// This is for COMMUNITY/PUBLIC templates (shareable with others).
+/// For internal workout templates used during workouts, see:
+/// `lib/features/workout/domain/entities/workout_template.dart`
+///
 /// Dependencies:
 /// - Riverpod: None
 /// - Firebase: Firestore structure
@@ -18,6 +22,13 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 
 part 'workout_template.freezed.dart';
 part 'workout_template.g.dart';
+
+/// @deprecated Use [CommunityWorkoutTemplate] instead to avoid naming conflicts
+/// with workout internal WorkoutTemplate entity.
+///
+/// This typedef exists for backward compatibility during migration.
+@Deprecated('Use CommunityWorkoutTemplate instead - avoids naming conflict with workout WorkoutTemplate')
+typedef WorkoutTemplate = CommunityWorkoutTemplate;
 
 enum TemplateVisibility {
   private,   // Solo visibile al creatore
@@ -39,8 +50,8 @@ enum TemplateCategory {
 }
 
 @freezed
-class WorkoutTemplate with _$WorkoutTemplate {
-  const factory WorkoutTemplate({
+class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
+  const factory CommunityWorkoutTemplate({
     required String id,
     required String userId,
     required String name,
@@ -77,10 +88,10 @@ class WorkoutTemplate with _$WorkoutTemplate {
     
     // Muscoli target
     @Default([]) List<String> targetMuscles,
-  }) = _WorkoutTemplate;
+  }) = _CommunityWorkoutTemplate;
 
-  factory WorkoutTemplate.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutTemplateFromJson(json);
+  factory CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) =>
+      _$CommunityWorkoutTemplateFromJson(json);
 }
 
 @freezed

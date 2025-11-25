@@ -13,6 +13,8 @@ library;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Opzione per il FAB espandibile
 class ExpandableFabOption {
@@ -211,7 +213,7 @@ class _ExpandableFABState extends State<ExpandableFAB>
                       sigmaY: _blurAnimation.value,
                     ),
                     child: Container(
-                      color: Colors.black.withValues(alpha: 0.2 * _morphAnimation.value),
+                      color: context.colors.onSurface.withValues(alpha: 0.2 * _morphAnimation.value),
                     ),
                   );
                 },
@@ -314,14 +316,14 @@ class _ExpandableFABState extends State<ExpandableFAB>
                     boxShadow: [
                       // Ombra principale
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.12),
+                        color: context.colors.onSurface.withValues(alpha: 0.12),
                         blurRadius: lerpDouble(8, 24, _morphAnimation.value)!,
                         offset: Offset(0, lerpDouble(4, 12, _morphAnimation.value)!),
                         spreadRadius: lerpDouble(0, 2, _morphAnimation.value)!,
                       ),
                       // Ombra secondaria per profondità
                       if (_isExpanded) BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: context.colors.onSurface.withValues(alpha: 0.08),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -358,7 +360,7 @@ class _ExpandableFABState extends State<ExpandableFAB>
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(currentRadius),
                                           border: Border.all(
-                                            color: Colors.white.withValues(alpha: 0.1 * _glowAnimation.value),
+                                            color: context.colors.surface.withValues(alpha: 0.1 * _glowAnimation.value),
                                             width: 0.5,
                                           ),
                                         ),
@@ -452,7 +454,7 @@ class _ExpandableFABState extends State<ExpandableFAB>
                                       child: IconButton(
                                         onPressed: _toggle,
                                         icon: Icon(
-                                          Icons.close,
+                                          AppIcons.close,
                                           color: colorScheme.onSurface,
                                           size: 20,
                                         ),

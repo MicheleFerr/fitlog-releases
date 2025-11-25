@@ -17,8 +17,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Schermata per analizzare le statistiche di singoli esercizi
 class ExerciseAnalyticsScreen extends ConsumerStatefulWidget {
@@ -130,17 +131,23 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text('Analytics Esercizi'),
+        title: const Text('Analytics Esercizi'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBackIos),
+          icon: const SemanticIcon(
+  icon: AppIcons.arrowBackIos,
+  semanticLabel: 'Arrow back ios',
+),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.filter),
+            icon: const SemanticIcon(
+  icon: AppIcons.filter,
+  semanticLabel: 'Filter',
+),
             onPressed: () => _showFilterOptions(context),
           ),
         ],
@@ -292,7 +299,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
           ),
           child: Icon(icon, color: color, size: 20),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
@@ -321,10 +328,12 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.searchOff,
-              size: 64,
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurface.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -552,14 +561,14 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           'Categoria: ${exercise.category}',
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
                         // Detailed Stats
                         Text(
@@ -568,7 +577,7 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
                         _buildDetailRow('Peso Massimo', '${exercise.maxWeight} kg'),
                         _buildDetailRow('Ultimo Peso', '${exercise.lastWeight} kg'),
@@ -576,14 +585,14 @@ class _ExerciseAnalyticsScreenState extends ConsumerState<ExerciseAnalyticsScree
                         _buildDetailRow('Sessioni', exercise.sessionsCount.toString()),
                         _buildDetailRow('RPE Medio', exercise.avgRpe.toString()),
 
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         Text(
                           'Funzionalità in arrivo:',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           '• Grafici dei progressi\n• Storico completo\n• Analisi forme\n• Confronti temporali',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(

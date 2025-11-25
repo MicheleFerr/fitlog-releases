@@ -148,6 +148,12 @@ class ExerciseFuzzySearchIsolate {
     // Normalizza query
     final normalizedQuery = _normalizeQuery(message.query);
 
+    // Estrai token dalla query (min 2 caratteri)
+    final queryTokens = normalizedQuery
+        .split(RegExp(r'\s+'))
+        .where((t) => t.length >= 2)
+        .toList();
+
     // Threshold dinamici per query corte
     final effectiveStrictThreshold = normalizedQuery.length < 4
         ? 0.60
@@ -158,7 +164,7 @@ class ExerciseFuzzySearchIsolate {
 
     // Fuzzy search con fuzzy_bolt
     // NOTE: skipIsolate=true perché siamo GIÀ in un isolate!
-    final results = await FuzzyBolt.searchWithScores<Exercise>(
+    var results = await FuzzyBolt.searchWithScores<Exercise>(
       message.exercises,
       normalizedQuery,
       selectors: [
@@ -171,11 +177,43 @@ class ExerciseFuzzySearchIsolate {
       maxResults: message.maxResults, // No *2, optimized
     );
 
+    // FALLBACK: Se fuzzy_bolt non trova risultati e query ha 2+ token,
+    // cerca esercizi che contengono TUTTI i token (order-agnostic)
+    if (results.isEmpty && queryTokens.length >= 2) {
+      final fallbackMatches = message.exercises.where((e) {
+        final nameTokens = _normalizeString(e.nome).split(RegExp(r'\s+'));
+        return queryTokens.every((qt) =>
+            nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
+      }).take(message.maxResults).toList();
+
+      // Esegui fuzzy search sugli esercizi trovati per avere score
+      if (fallbackMatches.isNotEmpty) {
+        results = await FuzzyBolt.searchWithScores<Exercise>(
+          fallbackMatches,
+          normalizedQuery,
+          selectors: [
+            (e) => _normalizeString(e.nome),
+            (e) => e.aliases.map((a) => _normalizeString(a)).join(' '),
+          ],
+          strictThreshold: 0.1, // Threshold molto basso per fallback
+          typeThreshold: 0.1,
+          skipIsolate: true,
+          maxResults: message.maxResults,
+        );
+      }
+    }
+
     // Converti in formato serializzabile + apply ML boosts
     final searchResults = results.map((r) {
       final normalizedNome = _normalizeString(r.item.nome);
       final isExactNameMatch = normalizedNome.contains(normalizedQuery);
       final isStartOfName = normalizedNome.startsWith(normalizedQuery);
+
+      // ORDER-AGNOSTIC MATCHING: controlla se TUTTI i token query
+      // appaiono nel nome (in qualsiasi ordine)
+      final nameTokens = normalizedNome.split(RegExp(r'\s+'));
+      final allTokensMatch = queryTokens.isNotEmpty && queryTokens.every((qt) =>
+          nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt)));
 
       // 1. Fuzzy score con name match boost
       double fuzzyScore = r.score;
@@ -184,6 +222,10 @@ class ExerciseFuzzySearchIsolate {
         if (isStartOfName) {
           fuzzyScore = fuzzyScore * 1.2;
         }
+      }
+      // Boost se tutti i token della query sono nel nome (order-agnostic)
+      if (allTokensMatch) {
+        fuzzyScore = fuzzyScore * 1.4;
       }
       fuzzyScore = fuzzyScore > 1.0 ? 1.0 : fuzzyScore;
 

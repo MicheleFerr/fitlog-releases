@@ -63,6 +63,7 @@ dependencies:
   package_info_plus: ^9.0.0
   connectivity_plus: ^6.0.5
   timeago: ^3.7.0  # Relative time formatting
+  flutter_dotenv: ^5.1.0  # 🔐 SECURITY: Environment variable management
 
   # PDF Generation & Sharing
   pdf: ^3.11.0
@@ -151,6 +152,9 @@ dev_dependencies:
   firebase_core_platform_interface: any
   hive: any
   mockito: any
+  state_notifier: any
+  cloud_firestore_platform_interface: any
+  firebase_auth_platform_interface: any
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -167,6 +171,7 @@ flutter:
     - docs/legal/TERMS_OF_SERVICE_IT.md
     - docs/legal/TERMS_OF_SERVICE_EN.md
     - assets/data/
+    - .env  # 🔐 SECURITY: Environment variables (gitignored)
 
   # Enable generation of the app_localizations.dart file
   generate: true

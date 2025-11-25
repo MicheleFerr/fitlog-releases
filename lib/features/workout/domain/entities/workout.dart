@@ -133,8 +133,16 @@ extension WorkoutExtensions on Workout {
   }
 }
 
-// Pre-built workout templates
-class WorkoutTemplate {
+/// Static exercise suggestions database organized by category.
+///
+/// **⚠️ NAMING CLARIFICATION**: This class was previously named `WorkoutTemplate`
+/// which caused confusion with the actual template entities:
+/// - `lib/features/workout/domain/entities/workout_template.dart` (user templates)
+/// - `lib/features/workout_templates/domain/entities/workout_template.dart` (community templates)
+///
+/// This class provides STATIC exercise name suggestions for autocomplete/picker UI.
+/// It is NOT a workout template entity.
+class ExerciseSuggestions {
   static const Map<ExerciseCategory, List<String>> exerciseDatabase = {
     ExerciseCategory.chest: [
       'Panca Piana',

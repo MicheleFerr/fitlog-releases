@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Builder widget for creating dropset exercises
 /// Reuses UI patterns from SupersetBuilderWidget
@@ -131,7 +133,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
       context,
       MaterialPageRoute(
         builder: (context) => const ExerciseSearchScreen(
-          allowMultipleSelection: false,
+          multiSelectMode: false,
         ),
       ),
     );
@@ -201,7 +203,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.fitness_center, color: Theme.of(context).colorScheme.error),
+                      Icon(AppIcons.workout, color: Theme.of(context).colorScheme.error),
                       const SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
@@ -508,7 +510,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.trending_down,
+              AppIcons.trendDown,
               color: theme.colorScheme.error,
               size: 24,
             ),
@@ -564,7 +566,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: theme.colorScheme.error,
                   size: 20,
                 ),
@@ -579,7 +581,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                   setState(() => _selectedExercise = null);
                   HapticFeedback.lightImpact();
                 },
-                icon: Icon(Icons.close, color: theme.colorScheme.error),
+                icon: Icon(AppIcons.close, color: theme.colorScheme.error),
               ),
             ),
           )
@@ -594,7 +596,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add_circle_outline, color: theme.colorScheme.error),
+                    Icon(AppIcons.addCircleOutline, color: theme.colorScheme.error),
                     const SizedBox(width: 8),
                     Text(
                       l10n.addExercise,
@@ -634,7 +636,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
               value: _initialWeight > 0
                   ? _initialWeight.formatWeight(unit)
                   : l10n.selectWeight,
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               onTap: () => _showWeightPicker(context),
               theme: theme,
             ),
@@ -644,9 +646,9 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
             // Target reps button
             _buildPickerButton(
               context: context,
-              label: l10n.targetReps,
+              label: l10n.targetReps(_targetReps),
               value: '$_targetReps ${l10n.reps}',
-              icon: Icons.repeat,
+              icon: AppIcons.repeat,
               onTap: () => _showRepsPicker(context),
               theme: theme,
             ),
@@ -768,7 +770,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                 ],
               ),
             ),
-            Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurfaceVariant),
+            Icon(AppIcons.arrowDropDown, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),
       ),
@@ -788,7 +790,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
           children: [
             Row(
               children: [
-                Icon(Icons.preview, color: theme.colorScheme.error),
+                Icon(AppIcons.preview, color: theme.colorScheme.error),
                 const SizedBox(width: 8),
                 Text(
                   l10n.dropStagesPreview,
@@ -848,7 +850,9 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                             ),
                           ),
                           Text(
-                            '${stage.percentageOfMax}% ${l10n.ofMax}',
+                            // TODO: DropSetStage doesn't have percentageOfMax yet - need to calculate from weight
+                            // widget.stages doesn't exist - using _initialWeight as reference
+                            '${_initialWeight > 0 ? (stage.weight * 100 / _initialWeight).toInt() : 100}% ${l10n.ofMax}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -887,7 +891,10 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
           backgroundColor: theme.colorScheme.error,
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        icon: const Icon(Icons.add_circle),
+        icon: const SemanticIcon(
+  icon: AppIcons.addCircle,
+  semanticLabel: 'Add circle',
+),
         label: Text(l10n.createDropset),
       ),
     );

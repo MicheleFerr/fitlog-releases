@@ -33,7 +33,6 @@ part 'conversation_node.g.dart';
 
 @freezed
 class ConversationNode with _$ConversationNode {
-  const ConversationNode._();
 
   const factory ConversationNode({
     /// Unique node ID (UUID)
@@ -54,6 +53,7 @@ class ConversationNode with _$ConversationNode {
     /// Whether this node is the current active node
     @Default(false) bool isCurrent,
   }) = _ConversationNode;
+  const ConversationNode._();
 
   /// Create from JSON (Hive deserialization)
   factory ConversationNode.fromJson(Map<String, dynamic> json) =>

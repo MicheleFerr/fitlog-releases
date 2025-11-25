@@ -82,7 +82,7 @@ void main() {
       addTearDown(container.dispose);
 
       when(() => mockRepository.getWorkouts(limit: 50))
-          .thenAnswer((_) async => Left(ServerFailure('Network error')));
+          .thenAnswer((_) async => const Left(ServerFailure('Network error')));
 
       expect(
         () => container.read(recentWorkoutsProvider(7).future),

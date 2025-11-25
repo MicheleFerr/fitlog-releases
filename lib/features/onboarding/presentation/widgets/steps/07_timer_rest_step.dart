@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TimerRestStep extends StatefulWidget {
 
@@ -102,11 +104,12 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.timer,
-            size: 80,
-            color: colorScheme.primary,
-          ),
+          SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
           const SizedBox(height: 32),
           Text(
             l10n.onboardingTimerRestTitle,
@@ -131,7 +134,10 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
           if (!_showDemo) ...[
             FilledButton.icon(
               onPressed: _startDemo,
-              icon: const Icon(AppIcons.play),
+              icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
               label: Text(l10n.onboardingTryItOut),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -202,7 +208,10 @@ class _TimerRestStepState extends State<TimerRestStep> with TickerProviderStateM
                     if (!_timerRunning && !_isCompleted) ...[
                       FilledButton.icon(
                         onPressed: _startTimer,
-                        icon: const Icon(AppIcons.play),
+                        icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
                         label: Text(
                           Localizations.localeOf(context).languageCode == 'it'
                               ? 'Avvia Timer Riposo'
@@ -319,11 +328,12 @@ class _MockTimerOverlay extends StatelessWidget {
           ),
           if (!isCompleted) ...[
             const SizedBox(width: 6),
-            Icon(
-              AppIcons.pause,
-              size: 12,
-              color: colorScheme.onSurfaceVariant,
-            ),
+            SemanticIcon(
+  icon: AppIcons.pause,
+  semanticLabel: 'Pause',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurfaceVariant,
+),
           ],
         ],
       ),

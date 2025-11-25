@@ -21,12 +21,8 @@ import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.da
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/intelligent_notification_service.dart';
-// Achievement notification service for PR, streak, and volume notifications
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/achievement_notification_provider.dart';
-// MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
-// import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart'; // REMOVED: cleanup
 // 🔥 Streak Achievement Notification Service for workout completion triggers
-import 'package:gymbro_flutter_new/features/notifications/presentation/services/streak_achievement_notification_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/streak_achievement_notification_service.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 // Auto-sync for cached progress stats
@@ -41,8 +37,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_re
 import 'package:gymbro_flutter_new/features/settings/presentation/providers/apre_calculation_config_provider.dart';
 // 🔒 Feature Flags
 import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
-// 🔒 Security: Input sanitization
-import 'package:gymbro_flutter_new/shared/domain/services/input_sanitizer.dart';
+// 🔒 Security: Input validation & sanitization (consolidated)
+import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart';
 // Haptic feedback
 import 'package:gymbro_flutter_new/shared/presentation/services/haptic_feedback_service.dart';
 // ⏱️ Unified Timer for rest timer auto-start
@@ -58,13 +54,16 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
 // ✅ NEW: Recovery detection for missed workouts
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
 // 📊 Exercise Records Cache for Exercise Detail Screen
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_records_provider.dart';
+// 📊 Analytics Repository for updating analytics collection
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
+// 📊 Workout to Analytics Converter utility
+import 'package:gymbro_flutter_new/features/analytics/data/converters/workout_to_analytics_converter.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/workout_event_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 // 💾 Template Cache Service for auto-saving modifications
@@ -471,11 +470,11 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
     try {
       // 🔒 SECURITY: Sanitize user input to prevent XSS/injection attacks
-      final sanitizedWorkoutName = InputSanitizer.sanitizeName(workout.name);
-      final sanitizedWorkoutNotes = InputSanitizer.sanitizeText(workout.notes ?? '');
+      final sanitizedWorkoutName = InputValidator.sanitizeName(workout.name);
+      final sanitizedWorkoutNotes = InputValidator.sanitizeText(workout.notes ?? '');
 
       // Validate workout data before save
-      final validation = InputSanitizer.validateWorkoutData(
+      final validation = InputValidator.validateWorkoutData(
         workoutName: sanitizedWorkoutName,
         notes: sanitizedWorkoutNotes,
         exerciseNames: workout.exercises.map((e) => e.name).toList(),
@@ -489,13 +488,13 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
       // 1. Convert Workout to WorkoutHistoryDetail (with sanitized data)
       final exercisesHistory = workout.exercises.map((exercise) {
         // 🔒 Sanitize exercise data
-        final sanitizedExerciseName = InputSanitizer.sanitizeName(exercise.name);
-        final sanitizedExerciseNotes = InputSanitizer.sanitizeText(exercise.notes ?? '', maxLength: 500);
+        final sanitizedExerciseName = InputValidator.sanitizeName(exercise.name);
+        final sanitizedExerciseNotes = InputValidator.sanitizeText(exercise.notes ?? '', maxLength: 500);
 
         final setsHistory = exercise.sets.map((set) {
           // 🔒 Sanitize set notes
           final sanitizedSetNotes = set.notes != null
-              ? InputSanitizer.sanitizeText(set.notes!, maxLength: 200)
+              ? InputValidator.sanitizeText(set.notes!, maxLength: 200)
               : null;
 
           return SetHistoryDetail(
@@ -549,6 +548,37 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
 
           if (kDebugMode) {
             debugLog(LogCategory.workout, '✅ [WorkoutProvider] Workout saved to Hive local storage');
+          }
+
+          // 📊 ANALYTICS: Update analytics collection for each exercise
+          // Uses WorkoutToAnalyticsConverter utility to centralize conversion logic
+          // This populates users/{userId}/analytics/{exerciseName} for efficient querying
+          try {
+            final analyticsRepo = ref.read(analyticsRepositoryProvider);
+            final analyticsData = WorkoutToAnalyticsConverter.convert(workout);
+
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '📊 [WorkoutProvider] Converting ${analyticsData.length} exercises to analytics');
+            }
+
+            // Update analytics for each exercise
+            for (final data in analyticsData) {
+              await analyticsRepo.updateExerciseHistory(
+                userId: userId,
+                exerciseName: data.exerciseName,
+                muscleGroup: data.muscleGroup,
+                session: data.session,
+              );
+            }
+
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Analytics updated for ${analyticsData.length} exercises');
+            }
+          } catch (analyticsError) {
+            // Non-critical error - log but don't fail workout save
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to update analytics: $analyticsError');
+            }
           }
 
           // 💾 CACHING: Invalidate analytics cache after workout completion
@@ -876,36 +906,14 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
           return;
         }
 
-        // ✅ NEW: Achievement Notifications with BATCHING (Anti-Spam)
-        // Collects all achievements for 3 seconds then sends ONE notification
+        // ✅ Achievement Notifications - Streak Milestones
+        // Uses unified notification system via StreakAchievementNotificationService
         try {
-          final achievementService = ref.read(achievementNotificationServiceProvider);
-          // 1. Detect Personal Records and queue them
-          final prUseCase = ref.read(detectPersonalRecordsUseCaseProvider);
-          final prs = await prUseCase.execute(currentUser.uid, workout);
-
-          if (prs.isNotEmpty) {
-            final queuedCount = await achievementService.notifyMultiplePRs(prs, workoutId: workout.id);
-            debugLog(LogCategory.workout, '📦 [Batching] Queued $queuedCount PRs for batch ${workout.id}');
-          }
-
-          // 2. Queue Streak Milestone
-          final streakAsync = await ref.read(currentStreakProvider.future);
-          if (streakAsync > 0) {
-            await achievementService.queueStreakAchievement(streakAsync, workoutId: workout.id);
-            debugLog(LogCategory.workout, '📦 [Batching] Queued streak milestone: $streakAsync days');
-          }
-
-          // 3. Queue Volume Milestone
-          final progressData = await ref.read(progressDataProvider.future);
-          if (progressData != null && progressData.totalVolume > 0) {
-            await achievementService.queueVolumeAchievement(progressData.totalVolume, workoutId: workout.id);
-            debugLog(LogCategory.workout, '📦 [Batching] Queued volume milestone: ${progressData.totalVolume}kg');
-          }
-
-          debugLog(LogCategory.workout, '📦 [Batching] All achievements queued - will send 1 notification in 3s');
-                } catch (achievementError) {
-          debugLog(LogCategory.workout, '⚠️ [Achievements] Failed to queue achievement notifications: $achievementError');
+          final streakService = ref.read(streakAchievementNotificationServiceProvider);
+          await streakService.checkAndNotifyStreak();
+          debugLog(LogCategory.workout, '🏆 [Achievements] Checked streak milestones via unified notification system');
+        } catch (achievementError) {
+          debugLog(LogCategory.workout, '⚠️ [Achievements] Failed to check streak achievements: $achievementError');
           // Non-critical - continue with other operations
         }
 
@@ -944,7 +952,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             //   completionDate: workout.endTime ?? DateTime.now(),
             // );
 
-            final isRecovery = false; // v2.0: Always false (feature not implemented)
+            const isRecovery = false; // v2.0: Always false (feature not implemented)
 
             if (isRecovery) {
               debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
@@ -2013,9 +2021,9 @@ class WorkoutHistoryNotifier extends StateNotifier<List<Workout>> {
   }
 }
 
-// Exercise templates provider
+// Exercise suggestions provider (static exercise name database for autocomplete)
 final exerciseTemplatesProvider = Provider<Map<ExerciseCategory, List<String>>>((ref) {
-  return WorkoutTemplate.exerciseDatabase;
+  return ExerciseSuggestions.exerciseDatabase;
 });
 
 // Exercise search provider
@@ -2028,7 +2036,7 @@ final filteredExercisesProvider = Provider<List<String>>((ref) {
     return [];
   }
   
-  return WorkoutTemplate.searchExercises(searchQuery);
+  return ExerciseSuggestions.searchExercises(searchQuery);
 });
 
 // Selected exercise category for modal

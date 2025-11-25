@@ -19,8 +19,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dashboard showing routine statistics
 class StatsDashboard extends StatelessWidget {
@@ -57,11 +55,11 @@ class StatsDashboard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                AppIcons.analytics,
+                Icons.analytics,
                 color: context.colors.primary,
                 size: 24,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Progress Overview',
                 style: context.textTheme.titleMedium?.copyWith(
@@ -72,7 +70,7 @@ class StatsDashboard extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Progress bar
           Column(
@@ -97,7 +95,7 @@ class StatsDashboard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
@@ -109,7 +107,7 @@ class StatsDashboard extends StatelessWidget {
                       AlwaysStoppedAnimation<Color>(context.colors.primary),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 '${routine.completedDays} of ${routine.totalWorkoutDays} workouts completed',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -127,43 +125,43 @@ class StatsDashboard extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: AppIcons.trendUp,
+                  icon: Icons.trending_up,
                   label: 'Adherence',
                   value: '${routine.adherenceRate.toInt()}%',
-                  color: _getAdherenceColor(routine.adherenceRate, context),
+                  color: _getAdherenceColor(context, routine.adherenceRate),
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: AppIcons.streak,
+                  icon: Icons.local_fire_department,
                   label: 'Streak',
                   value: '${routine.currentStreak}',
-                  color: context.colors.secondary,
+                  color: context.colors.warning,
                 ),
               ),
             ],
           ),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           Row(
             children: [
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: AppIcons.eventBusy,
+                  icon: Icons.event_busy,
                   label: 'Skips',
                   value: '${routine.skipTracker.totalSkips}',
                   color: context.colors.error,
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
                   context,
-                  icon: AppIcons.refresh,
+                  icon: Icons.refresh,
                   label: 'Recovered',
                   value: '${routine.skipTracker.totalRecoveries}',
                   color: context.colors.primary,
@@ -196,7 +194,7 @@ class StatsDashboard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color, size: 20),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             value,
             style: context.textTheme.titleLarge?.copyWith(
@@ -204,7 +202,7 @@ class StatsDashboard extends StatelessWidget {
               color: context.colors.onSurface,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             label,
             style: context.textTheme.bodySmall?.copyWith(
@@ -216,11 +214,11 @@ class StatsDashboard extends StatelessWidget {
     );
   }
 
-  Color _getAdherenceColor(double adherence, BuildContext context) {
+  Color _getAdherenceColor(BuildContext context, double adherence) {
     if (adherence >= 80) {
       return context.colors.success;
     } else if (adherence >= 60) {
-      return context.colors.secondary;
+      return context.colors.warning;
     } else {
       return context.colors.error;
     }

@@ -22,8 +22,9 @@ import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedba
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// User feedback history screen
 ///
@@ -282,11 +283,12 @@ class _UserFeedbackHistoryScreenState
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        AppIcons.admin,
-                        size: 16,
-                        color: context.colors.primary,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -297,11 +299,12 @@ class _UserFeedbackHistoryScreenState
                           ),
                         ),
                       ),
-                      Icon(
-                        AppIcons.chevronRight,
-                        size: 16,
-                        color: context.colors.primary,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
                     ],
                   ),
                 ),
@@ -349,11 +352,12 @@ class _UserFeedbackHistoryScreenState
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            Icon(
-              AppIcons.feedbackOutlined,
-              size: 64,
-              color: context.colors.onSurfaceVariant,
-            ),
+            SemanticIcon(
+  icon: AppIcons.feedbackOutlined,
+  semanticLabel: 'Feedback outlined',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant,
+),
             const SizedBox(height: 16),
             Text(
               context.l10n.noFeedbackSubmittedYet,
@@ -407,11 +411,12 @@ class _UserFeedbackHistoryScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.lock,
-              size: 64,
-              color: context.colors.error,
-            ),
+            SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
             const SizedBox(height: 16),
             Text(
               'Please sign in',
@@ -467,7 +472,10 @@ class _UserFeedbackHistoryScreenState
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(AppIcons.close),
+                    icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -531,11 +539,12 @@ class _UserFeedbackHistoryScreenState
                             children: [
                               Row(
                                 children: [
-                                  Icon(
-                                    AppIcons.admin,
-                                    size: 20,
-                                    color: context.colors.primary,
-                                  ),
+                                  SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
                                   const SizedBox(width: 8),
                                   Text(
                                     context.l10n.adminResponse,

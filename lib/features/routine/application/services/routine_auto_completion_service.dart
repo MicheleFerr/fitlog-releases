@@ -34,15 +34,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/routine/application/services/routine_matching_service.dart';
-import 'package:gymbro_flutter_new/features/routine/application/services/routine_swap_flow.dart';
 import 'package:gymbro_flutter_new/features/routine/application/services/routine_notification_service.dart';
-import 'package:gymbro_flutter_new/features/routine/application/services/routine_reminder_service.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/flexible_routine_repository.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_repository_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Result of routine auto-completion attempt

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget to display a banner when Beta Mode is active
 class BetaModeBanner extends ConsumerWidget {
@@ -42,12 +44,14 @@ class BetaModeBanner extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.science,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onTertiary,
+                SemanticIcon(
+  icon: AppIcons.science,
+  semanticLabel: 'Science',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onTertiary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   'BETA MODE - All Premium Features Unlocked',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -56,11 +60,13 @@ class BetaModeBanner extends ConsumerWidget {
                     letterSpacing: 0.5,
                   ),
                 ),
-                SizedBox(width: 8),
-                Icon(
-                  AppIcons.science,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onTertiary,
+                const SizedBox(width: 8),
+                SemanticIcon(
+  icon: AppIcons.science,
+  semanticLabel: 'Science',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onTertiary,
                 ),
               ],
             ),
@@ -92,12 +98,14 @@ class BetaModeIndicator extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            AppIcons.science,
-            size: 14,
-            color: Theme.of(context).colorScheme.onTertiaryContainer,
+          SemanticIcon(
+  icon: AppIcons.science,
+  semanticLabel: 'Science',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onTertiaryContainer,
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             'BETA',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(

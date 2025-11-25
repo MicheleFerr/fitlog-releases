@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 
 /// Quick Start Screen - First screen shown to new users
@@ -140,7 +139,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     ),
                   ),
 
-                  SizedBox(height: 32),
+                  const SizedBox(height: 32),
 
                   // Title
                   Text(
@@ -153,7 +152,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Subtitle
                   Text(
@@ -165,7 +164,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 48),
+                  const SizedBox(height: 48),
 
                   // Question
                   Text(
@@ -178,7 +177,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
                   // Question description
                   Text(
@@ -190,7 +189,7 @@ class _QuickStartScreenState extends ConsumerState<QuickStartScreen>
                     textAlign: TextAlign.center,
                   ),
 
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
                   // Beginner option
                   _ExperienceLevelCard(
@@ -318,7 +317,7 @@ class _ExperienceLevelCard extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
 
             // Text content
             Expanded(
@@ -333,7 +332,7 @@ class _ExperienceLevelCard extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: context.textTheme.bodyMedium?.copyWith(

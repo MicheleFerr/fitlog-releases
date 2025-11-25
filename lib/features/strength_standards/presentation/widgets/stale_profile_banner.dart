@@ -75,7 +75,7 @@ class StaleProfileBanner extends ConsumerWidget {
               size: 24,
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +87,7 @@ class StaleProfileBanner extends ConsumerWidget {
                     color: context.colors.onSecondaryContainer,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   _getSubtitle(context, daysSinceUpdate),
                   style: context.textTheme.bodySmall?.copyWith(
@@ -97,7 +97,7 @@ class StaleProfileBanner extends ConsumerWidget {
               ],
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           FilledButton.tonal(
             onPressed: () => _onUpdateProfile(context),
             style: FilledButton.styleFrom(

@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/volume_progress_chart_3d.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/muscle_efficiency_calculator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Enhanced Volume Progress Chart with interactive date selection and detailed views
 class EnhancedVolumeProgressChart extends ConsumerStatefulWidget {
@@ -126,17 +138,17 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ButtonSegment(
           value: VolumeChartType.daily,
           label: Text(localizations.day),
-          icon: const Icon(Icons.calendar_view_day, size: 18),
+          icon: Icon(AppIcons.calendarViewDay, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.weekly,
           label: Text(localizations.week),
-          icon: const Icon(Icons.calendar_view_week, size: 18),
+          icon: Icon(AppIcons.calendarViewWeek, size: 18),
         ),
         ButtonSegment(
           value: VolumeChartType.monthly,
           label: Text(localizations.month),
-          icon: const Icon(Icons.calendar_view_month, size: 18),
+          icon: Icon(AppIcons.calendarViewMonth, size: 18),
         ),
       ],
       selected: {_currentChartType},
@@ -171,7 +183,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left),
+              icon: Icon(AppIcons.chevronLeft),
               onPressed: () {
                 setState(() {
                   _selectedDate = _selectedDate.subtract(const Duration(days: 1));
@@ -211,7 +223,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon: Icon(AppIcons.chevronRight),
               onPressed: _selectedDate.isBefore(DateTime.now().subtract(const Duration(days: 1)))
                   ? () {
                       setState(() {
@@ -240,7 +252,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.chevron_left),
+                  icon: Icon(AppIcons.chevronLeft),
                   onPressed: () {
                     setState(() {
                       _selectedWeek--;
@@ -278,7 +290,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 ),
                 const SizedBox(width: 16),
                 IconButton(
-                  icon: const Icon(Icons.chevron_right),
+                  icon: Icon(AppIcons.chevronRight),
                   onPressed: _isCurrentWeek() ? null : () {
                     setState(() {
                       _selectedWeek++;
@@ -337,7 +349,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left),
+              icon: Icon(AppIcons.chevronLeft),
               onPressed: () {
                 setState(() {
                   _selectedMonth--;
@@ -366,7 +378,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             ),
             const SizedBox(width: 16),
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon: Icon(AppIcons.chevronRight),
               onPressed: _isCurrentMonth() ? null : () {
                 setState(() {
                   _selectedMonth++;
@@ -568,7 +580,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(AppIcons.close),
                   onPressed: () {
                     setState(() {
                       _showDetails = false;
@@ -626,9 +638,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: volumeChange > 5 
-                    ? Colors.green.withValues(alpha: 0.3)
+                    ? context.colors.success.withValues(alpha: 0.3)
                     : volumeChange < -5 
-                        ? Colors.red.withValues(alpha: 0.3)
+                        ? context.colors.error.withValues(alpha: 0.3)
                         : theme.colorScheme.outline.withValues(alpha: 0.2),
                 width: 1,
               ),
@@ -652,10 +664,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: volumeChange > 5 
-                              ? Colors.green.withValues(alpha: 0.2)
+                              ? context.colors.success.withValues(alpha: 0.2)
                               : volumeChange < -5 
-                                  ? Colors.red.withValues(alpha: 0.2)
-                                  : Colors.orange.withValues(alpha: 0.2),
+                                  ? context.colors.error.withValues(alpha: 0.2)
+                                  : context.colors.secondary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -663,16 +675,16 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           children: [
                             Icon(
                               volumeChange > 5 
-                                  ? Icons.trending_up
+                                  ? AppIcons.trendUp
                                   : volumeChange < -5 
-                                      ? Icons.trending_down
-                                      : Icons.remove,
+                                      ? AppIcons.trendDown
+                                      : AppIcons.remove,
                               size: 14,
                               color: volumeChange > 5 
-                                  ? Colors.green
+                                  ? context.colors.success
                                   : volumeChange < -5 
-                                      ? Colors.red
-                                      : Colors.orange,
+                                      ? context.colors.error
+                                      : context.colors.secondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -683,10 +695,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                       : localizations.stall,
                               style: theme.textTheme.labelSmall?.copyWith(
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -728,9 +740,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                         '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: volumeChange > 0 
-                              ? Colors.green
+                              ? context.colors.success
                               : volumeChange < 0 
-                                  ? Colors.red
+                                  ? context.colors.error
                                   : theme.colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                         ),
@@ -764,7 +776,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
               ),
             ),
             Icon(
-              Icons.fitness_center,
+              AppIcons.workout,
               color: theme.colorScheme.primary,
               size: 20,
             ),
@@ -818,7 +830,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         ),
         
         // Table content
-        Container(
+        DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(
               color: theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -928,28 +940,28 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem(
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             label: localizations.totalVolume,
             value: '${(totalVolume / 1000).toStringAsFixed(1)}k kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: Icons.analytics,
+            icon: AppIcons.analytics,
             label: localizations.average,
             value: '${avgVolume.toStringAsFixed(0)} kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: Icons.rocket_launch,
+            icon: AppIcons.rocket,
             label: localizations.record,
             value: '${maxVolume.toStringAsFixed(0)} kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: trend > 0 ? Icons.trending_up : Icons.trending_down,
+            icon: trend > 0 ? AppIcons.trendUp : AppIcons.trendDown,
             label: localizations.trend,
             value: '${trend > 0 ? '+' : ''}${trend.toStringAsFixed(1)}%',
-            color: trend > 0 ? Colors.green : Colors.red,
+            color: trend > 0 ? context.colors.success : context.colors.error,
             theme: theme,
           ),
         ],
@@ -1000,7 +1012,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             Row(
               children: [
                 Icon(
-                  Icons.star,
+                  AppIcons.star,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -1033,7 +1045,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             Row(
               children: [
                 Icon(
-                  Icons.auto_awesome,
+                  AppIcons.autoAwesome,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -1048,7 +1060,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             const SizedBox(height: 12),
             // Performance Predictions
             _buildPremiumInsight(
-              icon: Icons.psychology,
+              icon: AppIcons.ai,
               title: 'Performance Trends',
               value: _getAIPrediction(),
               theme: theme,
@@ -1056,7 +1068,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             const SizedBox(height: 8),
             // Muscle Balance Score
             _buildPremiumInsight(
-              icon: Icons.balance,
+              icon: AppIcons.balance,
               title: localizations.muscleBalance,
               value: _getMuscleBalanceScore(),
               theme: theme,
@@ -1064,7 +1076,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             const SizedBox(height: 8),
             // Recovery Recommendation
             _buildPremiumInsight(
-              icon: Icons.bedtime,
+              icon: AppIcons.bedtime,
               title: localizations.recoveryRecommendation,
               value: _getRecoveryRecommendation(),
               theme: theme,
@@ -1072,7 +1084,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             const SizedBox(height: 8),
             // Training Intensity Score
             _buildPremiumInsight(
-              icon: Icons.speed,
+              icon: AppIcons.speed,
               title: localizations.trainingIntensity,
               value: _getIntensityScore(),
               theme: theme,
@@ -1092,7 +1104,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
             Row(
               children: [
                 Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: theme.colorScheme.secondary,
                 ),
                 const SizedBox(width: 8),
@@ -1138,7 +1150,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                   const SizedBox(height: 12),
                   FilledButton.icon(
                     onPressed: () => _showFatigueRatingDialog(context),
-                    icon: const Icon(Icons.psychology),
+                    icon: Icon(AppIcons.ai),
                     label: const Text('Rate Today\'s Fatigue'),
                     style: FilledButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,
@@ -1195,7 +1207,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.bar_chart,
+            AppIcons.barChart,
             size: 64,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),
@@ -1271,7 +1283,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           ),
                           const SizedBox(width: 8),
                           Icon(
-                            isExpanded ? Icons.expand_less : Icons.expand_more,
+                            isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                             color: theme.colorScheme.onSurfaceVariant,
                             size: 20,
                           ),
@@ -1313,7 +1325,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           Row(
             children: [
               Icon(
-                Icons.fitness_center,
+                AppIcons.workout,
                 color: theme.colorScheme.primary,
                 size: 16,
               ),
@@ -1355,9 +1367,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: volumeChange > 5 
-                          ? Colors.green.withValues(alpha: 0.3)
+                          ? context.colors.success.withValues(alpha: 0.3)
                           : volumeChange < -5 
-                              ? Colors.red.withValues(alpha: 0.3)
+                              ? context.colors.error.withValues(alpha: 0.3)
                               : theme.colorScheme.outline.withValues(alpha: 0.2),
                       width: 1,
                     ),
@@ -1381,10 +1393,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: volumeChange > 5 
-                                ? Colors.green.withValues(alpha: 0.2)
+                                ? context.colors.success.withValues(alpha: 0.2)
                                 : volumeChange < -5 
-                                    ? Colors.red.withValues(alpha: 0.2)
-                                    : Colors.orange.withValues(alpha: 0.2),
+                                    ? context.colors.error.withValues(alpha: 0.2)
+                                    : context.colors.secondary.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -1392,16 +1404,16 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                             children: [
                               Icon(
                                 volumeChange > 5 
-                                    ? Icons.trending_up
+                                    ? AppIcons.trendUp
                                     : volumeChange < -5 
-                                        ? Icons.trending_down
-                                        : Icons.remove,
+                                        ? AppIcons.trendDown
+                                        : AppIcons.remove,
                                 size: 14,
                                 color: volumeChange > 5 
-                                    ? Colors.green
+                                    ? context.colors.success
                                     : volumeChange < -5 
-                                        ? Colors.red
-                                        : Colors.orange,
+                                        ? context.colors.error
+                                        : context.colors.secondary,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -1412,10 +1424,10 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                                         : localizations.stall,
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: volumeChange > 5 
-                                      ? Colors.green
+                                      ? context.colors.success
                                       : volumeChange < -5 
-                                          ? Colors.red
-                                          : Colors.orange,
+                                          ? context.colors.error
+                                          : context.colors.secondary,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1457,9 +1469,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                           '${volumeChange > 0 ? '+' : ''}${volumeChange.toStringAsFixed(1)}%',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: volumeChange > 0 
-                                ? Colors.green
+                                ? context.colors.success
                                 : volumeChange < 0 
-                                    ? Colors.red
+                                    ? context.colors.error
                                     : theme.colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.bold,
                           ),
@@ -1918,7 +1930,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Fatigue level $fatigueLevel recorded'),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colors.success,
             ),
           );
         },
@@ -2013,16 +2025,16 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                     ),
                     Icon(
                       score.trend == EfficiencyTrend.improving
-                          ? Icons.trending_up
+                          ? AppIcons.trendUp
                           : score.trend == EfficiencyTrend.declining
-                              ? Icons.trending_down
-                              : Icons.remove,
+                              ? AppIcons.trendDown
+                              : AppIcons.remove,
                       size: 20,
                       color: score.trend == EfficiencyTrend.improving
-                          ? Colors.green
+                          ? context.colors.success
                           : score.trend == EfficiencyTrend.declining
-                              ? Colors.red
-                              : Colors.grey,
+                              ? context.colors.error
+                              : context.colors.surfaceContainerHighest,
                     ),
                   ],
                 ),
@@ -2092,7 +2104,7 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.lightbulb_outline,
+                    AppIcons.tip,
                     size: 14,
                     color: theme.colorScheme.primary,
                   ),
@@ -2124,9 +2136,9 @@ class _EnhancedVolumeProgressChartState extends ConsumerState<EnhancedVolumeProg
   }
 
   Color _getComponentColor(double value) {
-    if (value >= 80) return Colors.green;
-    if (value >= 60) return Colors.orange;
-    return Colors.red;
+    if (value >= 80) return context.colors.success;
+    if (value >= 60) return context.colors.secondary;
+    return context.colors.error;
   }
   
   Widget _buildScoreItem(String day, int? score, Color color, ThemeData theme) {
@@ -2259,10 +2271,10 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: context.colors.onSurface.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -2291,8 +2303,8 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.fitness_center,
-                    color: Colors.white,
+                    AppIcons.workout,
+                    color: context.colors.surface,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -2304,14 +2316,14 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                         Text(
                           widget.exerciseName,
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           DateFormat('EEEE, d MMMM yyyy').format(widget.date),
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: context.colors.surface.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -2320,8 +2332,8 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
                     icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
+                      AppIcons.close,
+                      color: context.colors.surface,
                       size: 20,
                     ),
                   ),
@@ -2339,21 +2351,21 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
               child: Column(
                 children: [
                   _buildStatRow(
-                    icon: Icons.fitness_center,
+                    icon: AppIcons.workout,
                     label: widget.localizations.totalVolume,
                     value: '${totalVolume.toStringAsFixed(0)}kg',
                     theme: theme,
                   ),
                   const Divider(height: 1),
                   _buildStatRow(
-                    icon: Icons.repeat,
+                    icon: AppIcons.repeat,
                     label: widget.localizations.sets,
                     value: totalSets.toString(),
                     theme: theme,
                   ),
                   const Divider(height: 1),
                   _buildStatRow(
-                    icon: Icons.trending_up,
+                    icon: AppIcons.trendUp,
                     label: '${widget.localizations.average} ${widget.localizations.weight}',
                     value: '${avgWeight.toStringAsFixed(1)}kg',
                     theme: theme,
@@ -2372,7 +2384,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                   });
                 },
                 icon: Icon(
-                  _showComparison ? Icons.keyboard_arrow_up : Icons.history,
+                  _showComparison ? Icons.keyboard_arrow_up : AppIcons.history,
                   size: 20,
                 ),
                 label: Text(widget.localizations.compareWithHistory),
@@ -2418,21 +2430,21 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                             data: (stats) => Column(
                         children: [
                           _buildStatRow(
-                            icon: Icons.trending_up,
+                            icon: AppIcons.trendUp,
                             label: widget.localizations.bestVolume,
                             value: stats.maxWeight != null ? '${(stats.maxWeight! * 10).toStringAsFixed(0)}kg' : '--',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.fitness_center,
+                            icon: AppIcons.workout,
                             label: widget.localizations.maxWeight,
                             value: stats.maxWeight != null ? '${stats.maxWeight!.toStringAsFixed(1)}kg' : '--',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.repeat,
+                            icon: AppIcons.repeat,
                             label: widget.localizations.mostSets,
                             value: stats.totalSets.toString(),
                             theme: theme,
@@ -2442,21 +2454,21 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                       loading: () => Column(
                         children: [
                           _buildStatRow(
-                            icon: Icons.trending_up,
+                            icon: AppIcons.trendUp,
                             label: widget.localizations.bestVolume,
                             value: '...',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.fitness_center,
+                            icon: AppIcons.workout,
                             label: widget.localizations.maxWeight,
                             value: '...',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.repeat,
+                            icon: AppIcons.repeat,
                             label: widget.localizations.mostSets,
                             value: '...',
                             theme: theme,
@@ -2466,21 +2478,21 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                       error: (_, __) => Column(
                         children: [
                           _buildStatRow(
-                            icon: Icons.trending_up,
+                            icon: AppIcons.trendUp,
                             label: widget.localizations.bestVolume,
                             value: '--',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.fitness_center,
+                            icon: AppIcons.workout,
                             label: widget.localizations.maxWeight,
                             value: '--',
                             theme: theme,
                           ),
                           const Divider(height: 1),
                           _buildStatRow(
-                            icon: Icons.repeat,
+                            icon: AppIcons.repeat,
                             label: widget.localizations.mostSets,
                             value: '--',
                             theme: theme,
@@ -2509,7 +2521,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
                     child: Row(
                       children: [
                         Icon(
-                          Icons.list_alt,
+                          AppIcons.listAlt,
                           color: theme.colorScheme.primary,
                           size: 18,
                         ),
@@ -2597,13 +2609,13 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
     // Effort color based on value
     Color effortColor;
     if (effort >= 9) {
-      effortColor = Colors.red;
+      effortColor = context.colors.error;
     } else if (effort >= 7) {
-      effortColor = Colors.orange;
+      effortColor = context.colors.secondary;
     } else if (effort >= 5) {
-      effortColor = Colors.green;
+      effortColor = context.colors.success;
     } else {
-      effortColor = Colors.blue;
+      effortColor = context.colors.primary;
     }
     
     return Padding(
@@ -2616,7 +2628,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
             height: 28,
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Center(
               child: Text(
@@ -2646,7 +2658,7 @@ class _ExerciseDetailsDialogState extends ConsumerState<ExerciseDetailsDialog> {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: effortColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               '$effort',

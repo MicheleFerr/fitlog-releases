@@ -19,7 +19,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/im
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_parsing_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/percentage_conversion_service.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 

@@ -32,25 +32,25 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Suggestion chip data model
 class SuggestionChip {
-  final String label;
-  final String query;
-  final IconData icon;
 
   const SuggestionChip({
     required this.label,
     required this.query,
     required this.icon,
   });
+  final String label;
+  final String query;
+  final IconData icon;
 }
 
 /// Suggestion chips widget
 class SuggestionChips extends StatelessWidget {
-  final Function(String query) onSuggestionTap;
 
   const SuggestionChips({
     super.key,
     required this.onSuggestionTap,
   });
+  final Function(String query) onSuggestionTap;
 
   @override
   Widget build(BuildContext context) {
@@ -97,13 +97,13 @@ class SuggestionChips extends StatelessWidget {
 
 /// Single suggestion chip button
 class _SuggestionChipButton extends StatelessWidget {
-  final SuggestionChip suggestion;
-  final VoidCallback onTap;
 
   const _SuggestionChipButton({
     required this.suggestion,
     required this.onTap,
   });
+  final SuggestionChip suggestion;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.d
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 /// Analytics initialization provider
 ///
@@ -58,7 +58,12 @@ final analyticsInitializationProvider = FutureProvider<void>((ref) async {
     await analytics.setUserId(userId);
 
     if (kDebugMode) {
-      debugPrint('📊 Analytics user ID set: $userId');
+      // Safe to use ! operator here since we checked userId != null above
+      final safeUserId = userId!;
+      final truncatedId = safeUserId.length > 8
+          ? safeUserId.substring(0, 8)
+          : safeUserId;
+      debugPrint('📊 Analytics user ID set: $truncatedId...');
     }
   } else {
     // Clear user ID if user logged out

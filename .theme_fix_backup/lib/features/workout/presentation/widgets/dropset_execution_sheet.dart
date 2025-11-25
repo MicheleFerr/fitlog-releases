@@ -5,6 +5,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
 
@@ -42,7 +46,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
     for (int i = 0; i < widget.dropset.stages.length; i++) {
       final stage = widget.dropset.stages[i];
       _weights[i] = stage.weight; // Already in kg
-      _reps[i] = stage.targetReps;
+      _reps[i] = stage.reps;
       _rpes[i] = 7; // Default RPE
       _completedDrops[i] = false;
     }
@@ -190,7 +194,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   }
 
   void _showRepsPicker(BuildContext context, int dropIndex) {
-    int selectedReps = _reps[dropIndex] ?? widget.dropset.stages[dropIndex].targetReps;
+    int selectedReps = _reps[dropIndex] ?? widget.dropset.stages[dropIndex].reps;
 
     showModalBottomSheet(
       context: context,
@@ -291,7 +295,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -328,7 +332,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                                   ),
@@ -361,7 +365,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
+                        icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       ),
                     ],
                   ),
@@ -455,11 +462,6 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    if (stage.percentageOfMax != null)
-                                      Text(
-                                        '${stage.percentageOfMax}% del massimale',
-                                        style: Theme.of(context).textTheme.bodySmall,
-                                      ),
                                   ],
                                 ),
                               ),
@@ -467,8 +469,8 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 onPressed: () => _toggleDropCompletion(index),
                                 icon: Icon(
                                   isCompleted 
-                                      ? Icons.check_circle 
-                                      : Icons.radio_button_unchecked,
+                                      ? AppIcons.checkCircle 
+                                      : AppIcons.radioButtonUnchecked,
                                   color: isCompleted
                                       ? Theme.of(context).colorScheme.secondary
                                       : null,
@@ -499,10 +501,12 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.fitness_center,
-                                          size: 20,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -515,7 +519,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -541,10 +545,12 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.repeat,
-                                          size: 20,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -552,12 +558,12 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${_reps[index] ?? stage.targetReps} ${AppLocalizations.of(context).reps}',
+                                                '${_reps[index] ?? stage.reps} ${AppLocalizations.of(context).reps}',
                                                 style: Theme.of(context).textTheme.bodyLarge,
                                               ),
-                                              if (stage.targetReps > 0)
+                                              if (stage.reps > 0)
                                                 Text(
-                                                  'Target: ${stage.targetReps}',
+                                                  'Target: ${stage.reps}',
                                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                                   ),
@@ -567,7 +573,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                         ),
                                         if (!isCompleted)
                                           Icon(
-                                            Icons.arrow_drop_down,
+                                            AppIcons.arrowDropDown,
                                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                                           ),
                                       ],
@@ -618,7 +624,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                                 ? FontWeight.bold
                                                 : FontWeight.normal,
                                             color: _rpes[index] == rpe
-                                                ? Colors.white
+                                                ? context.colors.surface
                                                 : null,
                                           ),
                                         ),
@@ -641,10 +647,12 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    Icons.warning_amber_rounded,
-                                    size: 16,
-                                    color: Theme.of(context).colorScheme.error,
+                                  SemanticIcon(
+  icon: AppIcons.warningAmberRounded,
+  semanticLabel: 'Warning amber rounded',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.error,
                                   ),
                                   const SizedBox(width: 8),
                                   Expanded(
@@ -676,7 +684,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete ? _completeDropSet : null,
-                  icon: const Icon(Icons.check),
+                  icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                   label: const Text('Completa Dropset'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error,
@@ -692,10 +703,10 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
   }
   
   Color _getRPEColor(int rpe) {
-    if (rpe <= 6) return Colors.green;
-    if (rpe <= 7) return Colors.lightGreen;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
+    if (rpe <= 6) return context.colors.success;
+    if (rpe <= 7) return context.colors.success;
+    if (rpe <= 8) return context.colors.secondary;
+    if (rpe <= 9) return context.colors.warning;
+    return context.colors.error;
   }
 }

@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Step 1: Basic information form
 class BasicInfoStep extends ConsumerStatefulWidget {
@@ -70,7 +72,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.routineBasicInfoSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -78,7 +80,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               ),
             ),
 
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
 
             // Routine name
             TextFormField(
@@ -86,7 +88,10 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineNameLabel,
                 hintText: context.l10n.routineNameHint,
-                prefixIcon: Icon(AppIcons.label),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.label,
+  semanticLabel: 'Label',
+),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -111,7 +116,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               },
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Description (optional)
             TextFormField(
@@ -119,7 +124,10 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               decoration: InputDecoration(
                 labelText: context.l10n.routineDescriptionLabel,
                 hintText: context.l10n.routineDescriptionHint,
-                prefixIcon: Icon(AppIcons.template),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.template,
+  semanticLabel: 'Template',
+),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -135,7 +143,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               },
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Routine type
             Text(
@@ -145,10 +153,10 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             _buildTypeSelector(context, state.type),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Date range
             Text(
@@ -158,7 +166,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
@@ -169,7 +177,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                     onTap: () => _selectStartDate(context, state.startDate),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: _buildDateField(
                     context,
@@ -185,7 +193,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Duration info chip
             _buildDurationInfo(context, state.startDate, state.endDate),
@@ -277,7 +285,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                           : context.colors.onSurface.withValues(alpha: 0.7),
                       size: 24,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         label,
@@ -297,7 +305,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                       ),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   subtitle,
                   style: context.textTheme.bodySmall?.copyWith(
@@ -339,15 +347,16 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
                 color: context.colors.onSurface.withValues(alpha: 0.6),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Row(
               children: [
-                Icon(
-                  AppIcons.calendar,
-                  size: 20,
-                  color: context.colors.primary,
-                ),
-                SizedBox(width: 8),
+                SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
+                const SizedBox(width: 8),
                 Text(
                   _formatDate(date),
                   style: context.textTheme.titleMedium?.copyWith(
@@ -401,7 +410,7 @@ class _BasicInfoStepState extends ConsumerState<BasicInfoStep> {
             color: context.colors.primary,
             size: 20,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             context.l10n.routineDurationInfo(durationText),
             style: context.textTheme.bodyMedium?.copyWith(

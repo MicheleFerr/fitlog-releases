@@ -15,6 +15,9 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_list_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Modal semplificato per quick pick di esercizi
 /// Usato in Community per "Contribuisci"
@@ -85,7 +88,10 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
@@ -100,10 +106,16 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: l10n.searchExercisesHint,
-                prefixIcon: const Icon(AppIcons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(AppIcons.clear),
+                        icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                         onPressed: () {
                           _searchController.clear();
                           setState(() => _searchQuery = '');
@@ -143,7 +155,12 @@ class _QuickExercisePickerState extends ConsumerState<QuickExercisePicker> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(AppIcons.error, size: 64, color: Colors.red),
+                    SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
                     const SizedBox(height: 16),
                     Text('${l10n.errorLoadingData}: $error'),
                     const SizedBox(height: 16),

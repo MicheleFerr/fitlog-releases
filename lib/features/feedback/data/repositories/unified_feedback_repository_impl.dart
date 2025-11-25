@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_fee
 import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedback_type.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/repositories/i_unified_feedback_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart'; // 🔐 SECURITY: XSS/injection prevention
 
 class UnifiedFeedbackRepositoryImpl implements IUnifiedFeedbackRepository {
   UnifiedFeedbackRepositoryImpl({
@@ -20,6 +21,9 @@ class UnifiedFeedbackRepositoryImpl implements IUnifiedFeedbackRepository {
   }) : _firestore = firestore;
 
   final FirebaseFirestore _firestore;
+
+  /// 🔐 SECURITY: Input validator for XSS/injection prevention
+  final InputValidator _validator = InputValidator();
 
   /// Firestore collection reference
   CollectionReference<Map<String, dynamic>> get _feedbackCollection =>
@@ -53,9 +57,37 @@ class UnifiedFeedbackRepositoryImpl implements IUnifiedFeedbackRepository {
         );
       }
 
-      // 2. Create Firestore document
+      // 🔐 SECURITY: Check for dangerous patterns in message
+      if (_validator.containsDangerousPatterns(feedback.message)) {
+        return const Left(
+          ValidationFailure(
+            'Invalid characters detected in feedback message',
+            code: 'DANGEROUS_PATTERNS_DETECTED',
+          ),
+        );
+      }
+
+      // 🔐 SECURITY: Sanitize message before storing
+      final sanitizedMessage = _validator.sanitize(feedback.message);
+
+      // Validate sanitized message length
+      if (sanitizedMessage.trim().length < 10) {
+        return const Left(
+          ValidationFailure(
+            'Feedback message too short (minimum 10 characters after sanitization)',
+            code: 'MESSAGE_TOO_SHORT',
+          ),
+        );
+      }
+
+      // 2. Create sanitized feedback data for Firestore
+      // Note: We modify the JSON representation rather than the entity itself
+      final feedbackJson = feedback.toJson();
+      feedbackJson['message'] = sanitizedMessage; // 🔐 SECURITY: Replace with sanitized message
+
+      // 3. Create Firestore document
       final docRef = _feedbackCollection.doc(feedback.id);
-      await docRef.set(feedback.toJson());
+      await docRef.set(feedbackJson);
 
       return Right(feedback.id);
     } on FirebaseException catch (e) {
@@ -460,13 +492,37 @@ class UnifiedFeedbackRepositoryImpl implements IUnifiedFeedbackRepository {
         );
       }
 
+      // 🔐 SECURITY: Check for dangerous patterns in admin note
+      if (_validator.containsDangerousPatterns(note)) {
+        return const Left(
+          ValidationFailure(
+            'Invalid characters detected in admin note',
+            code: 'DANGEROUS_PATTERNS_DETECTED',
+          ),
+        );
+      }
+
+      // 🔐 SECURITY: Sanitize admin note before storing
+      final sanitizedNote = _validator.sanitize(note);
+
+      // Validate sanitized note length
+      if (sanitizedNote.trim().isEmpty) {
+        return const Left(
+          ValidationFailure(
+            'Note cannot be empty after sanitization',
+            code: 'EMPTY_NOTE_AFTER_SANITIZATION',
+          ),
+        );
+      }
+
       // Get current feedback to append note
       final feedbackResult = await getFeedbackById(feedbackId);
 
       return feedbackResult.fold(
         (failure) => Left(failure),
         (feedback) async {
-          final updatedFeedback = feedback.addAdminNote(note);
+          // Use sanitized note instead of original
+          final updatedFeedback = feedback.addAdminNote(sanitizedNote); // 🔐 SECURITY: Using sanitized note
 
           await _feedbackCollection.doc(feedbackId).update({
             'adminNotes': updatedFeedback.adminNotes,

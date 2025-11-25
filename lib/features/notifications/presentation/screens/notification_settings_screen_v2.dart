@@ -24,7 +24,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
@@ -1350,13 +1349,13 @@ class NotificationSettingsScreenV2 extends ConsumerWidget {
 // === Quiet Hours Picker Dialog ===
 
 class _QuietHoursPickerDialog extends StatefulWidget {
-  final DateTime startTime;
-  final DateTime endTime;
 
   const _QuietHoursPickerDialog({
     required this.startTime,
     required this.endTime,
   });
+  final DateTime startTime;
+  final DateTime endTime;
 
   @override
   State<_QuietHoursPickerDialog> createState() => _QuietHoursPickerDialogState();

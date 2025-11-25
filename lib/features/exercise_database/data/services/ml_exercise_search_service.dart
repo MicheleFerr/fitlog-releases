@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/repositorie
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/i_exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_search_isolate.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
-import 'package:gymbro_flutter_new/shared/domain/services/i_analytics_service.dart';
+import 'package:gymbro_flutter_new/core/services/analytics/i_analytics_service.dart';
 
 /// ML-enhanced fuzzy search service implementation
 ///
@@ -132,11 +132,14 @@ class MLExerciseSearchService implements IExerciseSearchService {
     }
 
     // Track search start
-    await _analytics.trackSearch(
-      query: query,
-      resultsCount: 0, // Will update later
-      userBoostEnabled: effectiveConfig.enableUserBoost,
-      categoryBoostEnabled: effectiveConfig.enableCategoryBoost,
+    await _analytics.logEvent(
+      name: 'exercise_search_start',
+      parameters: {
+        'query': query,
+        'results_count': 0, // Will update later
+        'user_boost_enabled': effectiveConfig.enableUserBoost,
+        'category_boost_enabled': effectiveConfig.enableCategoryBoost,
+      },
     );
 
     try {
@@ -177,13 +180,16 @@ class MLExerciseSearchService implements IExerciseSearchService {
           .toList();
 
       // Track search completion with result count
-      await _analytics.logEvent('exercise_search_completed', parameters: {
-        'query': query,
-        'results_count': results.length,
-        'user_boost_enabled': effectiveConfig.enableUserBoost,
-        'category_boost_enabled': effectiveConfig.enableCategoryBoost,
-        'has_ml_weights': effectiveConfig.mlWeights != null,
-      });
+      await _analytics.logEvent(
+        name: 'exercise_search_completed',
+        parameters: {
+          'query': query,
+          'results_count': results.length,
+          'user_boost_enabled': effectiveConfig.enableUserBoost,
+          'category_boost_enabled': effectiveConfig.enableCategoryBoost,
+          'has_ml_weights': effectiveConfig.mlWeights != null,
+        },
+      );
 
       return results;
     } catch (e) {
@@ -192,10 +198,13 @@ class MLExerciseSearchService implements IExerciseSearchService {
       }
 
       // Track search error
-      await _analytics.logEvent('exercise_search_error', parameters: {
-        'query': query,
-        'error': e.toString(),
-      });
+      await _analytics.logEvent(
+        name: 'exercise_search_error',
+        parameters: {
+          'query': query,
+          'error': e.toString(),
+        },
+      );
 
       return [];
     }

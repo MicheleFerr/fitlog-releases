@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 // Model per Achievement
 class Achievement {
@@ -22,26 +24,27 @@ class Achievement {
   });
 
   factory Achievement.fromJson(Map<String, dynamic> json) {
+    // Safe parsing with defaults (Task 6.1)
     return Achievement(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      emoji: json['emoji'],
-      xpReward: json['xpReward'],
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? 'Unknown',
+      description: json['description'] as String? ?? '',
+      emoji: json['emoji'] as String? ?? '🏆',
+      xpReward: (json['xpReward'] as num?)?.toInt() ?? 0,
       color: _getColorFromType(AchievementType.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => AchievementType.general,
       )),
-      isUnlocked: json['isUnlocked'] ?? false,
-      unlockedAt: json['unlockedAt'] != null 
-        ? DateTime.parse(json['unlockedAt'])
+      isUnlocked: json['isUnlocked'] as bool? ?? false,
+      unlockedAt: json['unlockedAt'] != null
+        ? DateTime.parse(json['unlockedAt'] as String)
         : null,
       isNew: false,
       type: AchievementType.values.firstWhere(
         (e) => e.name == json['type'],
         orElse: () => AchievementType.general,
       ),
-      metadata: json['metadata'],
+      metadata: json['metadata'] as Map<String, dynamic>?,
     );
   }
   final String id;
@@ -101,17 +104,17 @@ enum AchievementType {
 Color _getColorFromType(AchievementType type) {
   switch (type) {
     case AchievementType.workout:
-      return Colors.blue;
+      return const Color(0xFF2196F3); // Material Blue (primary)
     case AchievementType.streak:
       return Colors.orange;
     case AchievementType.volume:
-      return Colors.green;
+      return const Color(0xFF4CAF50); // Material Green (success)
     case AchievementType.pr:
-      return Colors.red;
+      return const Color(0xFFF44336); // Material Red (error)
     case AchievementType.community:
       return Colors.purple;
     case AchievementType.general:
-      return Colors.grey;
+      return const Color(0xFFBDBDBD); // Material Grey 400 (surfaceVariant)
   }
 }
 
@@ -162,7 +165,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa il tuo primo allenamento',
       emoji: '🎯',
       xpReward: 50,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -172,7 +175,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 5 allenamenti',
       emoji: '🏃',
       xpReward: 100,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -182,7 +185,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 10 allenamenti',
       emoji: '💪',
       xpReward: 200,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -192,7 +195,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 25 allenamenti',
       emoji: '🏋️',
       xpReward: 500,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -202,7 +205,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 50 allenamenti',
       emoji: '🎖️',
       xpReward: 1000,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -256,7 +259,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 1000kg totali',
       emoji: '📦',
       xpReward: 100,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -266,7 +269,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 5000kg totali',
       emoji: '🚛',
       xpReward: 250,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -276,7 +279,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 10000kg totali',
       emoji: '🏗️',
       xpReward: 500,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -288,7 +291,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Stabilisci il tuo primo PR',
       emoji: '📈',
       xpReward: 50,
-      color: Colors.red,
+      color: const Color(0xFFF44336), // Material Red (error)
       isUnlocked: false,
       type: AchievementType.pr,
     ),
@@ -298,7 +301,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Stabilisci 5 PR',
       emoji: '💥',
       xpReward: 150,
-      color: Colors.red,
+      color: const Color(0xFFF44336), // Material Red (error)
       isUnlocked: false,
       type: AchievementType.pr,
     ),
@@ -359,9 +362,12 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       if (userAchievementsDoc.exists) {
         final data = userAchievementsDoc.data() ?? {};
         final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
-        
+
+        // Safe Map casting (Task 6.1)
         for (final entry in achievements.entries) {
-          unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+          if (entry.value is Map<String, dynamic>) {
+            unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+          }
         }
       }
       
@@ -369,12 +375,16 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       final updatedAchievements = _allAchievements.map((achievement) {
         if (unlockedIds.containsKey(achievement.id)) {
           final unlockedData = unlockedIds[achievement.id]!;
+          // Safe Timestamp parsing (Task 6.1)
+          final unlockedAtTimestamp = unlockedData['unlockedAt'];
+          final unlockedAtDate = unlockedAtTimestamp is Timestamp
+              ? unlockedAtTimestamp.toDate()
+              : null;
+
           return achievement.copyWith(
             isUnlocked: true,
-            unlockedAt: unlockedData['unlockedAt'] != null
-                ? (unlockedData['unlockedAt'] as Timestamp).toDate()
-                : null,
-            isNew: _isNew(unlockedData['unlockedAt']),
+            unlockedAt: unlockedAtDate,
+            isNew: _isNew(unlockedAtTimestamp),
           );
         }
         return achievement;

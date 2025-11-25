@@ -10,12 +10,12 @@ void main() {
     testWidgets('should display all goal type options', (tester) async {
       // Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            locale: const Locale('en'),
-            home: const GoalSelectionScreen(),
+            locale: Locale('en'),
+            home: GoalSelectionScreen(),
           ),
         ),
       );
@@ -56,12 +56,12 @@ void main() {
     testWidgets('should display title and subtitle', (tester) async {
       // Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            locale: const Locale('en'),
-            home: const GoalSelectionScreen(),
+            locale: Locale('en'),
+            home: GoalSelectionScreen(),
           ),
         ),
       );

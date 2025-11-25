@@ -354,7 +354,7 @@ void main() {
 
         // Get all contributions
         final resultsStream = repository.getContributions();
-        var results = await resultsStream.first;
+        final results = await resultsStream.first;
 
         // Act - Sort by upvotes (helpful)
         results.sort((a, b) => b.upvotes.compareTo(a.upvotes));
@@ -370,7 +370,7 @@ void main() {
 
         // Get all contributions
         final resultsStream = repository.getContributions();
-        var results = await resultsStream.first;
+        final results = await resultsStream.first;
 
         // Act - Sort by saves
         results.sort((a, b) => b.saves.compareTo(a.saves));
@@ -386,7 +386,7 @@ void main() {
 
         // Get all contributions
         final resultsStream = repository.getContributions();
-        var results = await resultsStream.first;
+        final results = await resultsStream.first;
 
         // Act - Sort by trending (recent activity)
         results.sort((a, b) {

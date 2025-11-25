@@ -1,14 +1,26 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: core/data/repositories
 /// 🎯 Feature: core
 /// 🔧 Type: base repository
 /// 🌍 Localization: N/A
 /// 🎨 Theme: N/A
 /// 📱 Platform: Universal
-/// 
+///
+/// ✅ SINGLE SOURCE OF TRUTH for hybrid (local + cloud) repositories
+///
 /// CRITICAL: ALL new features MUST extend this base repository
 /// to ensure automatic local storage and premium sync!
+///
+/// **Features:**
+/// - Automatic local-first storage (instant saves)
+/// - Premium sync to Firestore (queued background sync)
+/// - Full CRUD operations (save, get, getAll, update, delete)
+/// - Sync queue management with retry logic
+/// - Memory-safe disposal pattern (waitForDisposal)
+///
+/// **For SHARED data (exercise database, etc.):**
+/// @see OptimizedBaseHybridRepository - specialized version with 24h caching
 library;
 
 import 'dart:async';

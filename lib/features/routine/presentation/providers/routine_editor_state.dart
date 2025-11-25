@@ -19,6 +19,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_pattern.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_types.dart';
 
 /// State for routine editor wizard
 class RoutineEditorState {

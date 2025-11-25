@@ -21,8 +21,8 @@ library;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/services/daily_workout_reminder_service.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/services/streak_achievement_notification_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/daily_workout_reminder_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/streak_achievement_notification_service.dart';
 
 /// Initializer widget for notification services
 ///

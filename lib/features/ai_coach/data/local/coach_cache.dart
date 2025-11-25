@@ -74,10 +74,10 @@ class FeatureGateCacheEntry {
 /// In-memory cache with TTL validation
 /// Note: Cache is cleared on app restart (by design)
 class CoachCache {
-  /// Singleton instance
-  static final CoachCache instance = CoachCache._();
 
   CoachCache._();
+  /// Singleton instance
+  static final CoachCache instance = CoachCache._();
 
   /// Cache storage (userId → entry)
   final Map<String, FeatureGateCacheEntry> _cache = {};
@@ -98,7 +98,7 @@ class CoachCache {
     if (entry == null) {
       _misses++;
       if (kDebugMode) {
-        debugPrint('❌ [CoachCache] MISS for user $userId (no entry)');
+        debugPrint('❌ [CoachCache] MISS for user ${userId.substring(0, 8.clamp(0, userId.length))}... (no entry)');
       }
       return null;
     }
@@ -162,7 +162,7 @@ class CoachCache {
     final entry = _cache[userId];
     if (entry == null) {
       if (kDebugMode) {
-        debugPrint('⚠️ [CoachCache] Cannot update - no entry for user $userId');
+        debugPrint('⚠️ [CoachCache] Cannot update - no entry for user ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
       return;
     }
@@ -174,7 +174,7 @@ class CoachCache {
 
     if (kDebugMode) {
       debugPrint(
-        '🔄 [CoachCache] UPDATED $featureName → $enabled for user $userId',
+        '🔄 [CoachCache] UPDATED $featureName → $enabled for user ${userId.substring(0, 8.clamp(0, userId.length))}...',
       );
     }
   }
@@ -187,9 +187,9 @@ class CoachCache {
 
     if (kDebugMode) {
       if (removed != null) {
-        debugPrint('🗑️ [CoachCache] INVALIDATED for user $userId');
+        debugPrint('🗑️ [CoachCache] INVALIDATED for user ${userId.substring(0, 8.clamp(0, userId.length))}...');
       } else {
-        debugPrint('⚠️ [CoachCache] No entry to invalidate for user $userId');
+        debugPrint('⚠️ [CoachCache] No entry to invalidate for user ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
     }
   }

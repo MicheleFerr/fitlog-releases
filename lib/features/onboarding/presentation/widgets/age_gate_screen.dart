@@ -85,7 +85,7 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
       // Show error: birth date required
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please select your date of birth'),
+          content: const Text('Please select your date of birth'),
           backgroundColor: context.colors.error,
         ),
       );
@@ -139,7 +139,7 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
               size: AppIconSize.large,
               color: context.iconWarning,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(context.l10n.ageMinorWarningTitle),
             ),
@@ -187,19 +187,19 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
               size: AppIconSize.xxlarge,
               color: context.iconPrimary,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Text(
               context.l10n.ageGateTitle,
               style: context.textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               context.l10n.ageGateInstructions,
               style: context.textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             OutlinedButton.icon(
               onPressed: _selectBirthDate,
               icon: SemanticIcon(
@@ -217,7 +217,7 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
                 padding: const EdgeInsets.all(16),
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             FilledButton(
               onPressed: _verifyContinue,
               style: FilledButton.styleFrom(
@@ -225,7 +225,7 @@ class _AgeGateScreenState extends State<AgeGateScreen> {
               ),
               child: Text(context.l10n.ageGateContinue),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Required by GDPR and Italian privacy laws',
               style: context.textTheme.bodySmall?.copyWith(

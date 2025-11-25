@@ -3,6 +3,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_analyzer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Rep Continuum Distribution Card
 ///
@@ -65,7 +69,10 @@ class RepContinuumCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.info_outline),
+                icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                 onPressed: () => _showScientificExplanation(context),
               ),
             ],
@@ -95,7 +102,7 @@ class RepContinuumCard extends StatelessWidget {
             l10n.strengthZone,
             data.strengthPercentage,
             data.strengthSets,
-            Colors.red,
+            context.colors.error,
             l10n.strengthZoneDesc,
           ),
           const SizedBox(height: 12),
@@ -117,7 +124,7 @@ class RepContinuumCard extends StatelessWidget {
             l10n.enduranceZone,
             data.endurancePercentage,
             data.enduranceSets,
-            Colors.green,
+            context.colors.success,
             l10n.enduranceZoneDesc,
           ),
           const SizedBox(height: 20),
@@ -213,13 +220,13 @@ class RepContinuumCard extends StatelessWidget {
               Expanded(
                 flex: (data.strengthPercentage * 100).toInt(),
                 child: Container(
-                  color: Colors.red,
+                  color: context.colors.error,
                   alignment: Alignment.center,
                   child: data.strengthPercentage > 15
                       ? Text(
                           '${data.strengthPercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -236,8 +243,8 @@ class RepContinuumCard extends StatelessWidget {
                   child: data.hypertrophyPercentage > 15
                       ? Text(
                           '${data.hypertrophyPercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -249,13 +256,13 @@ class RepContinuumCard extends StatelessWidget {
               Expanded(
                 flex: (data.endurancePercentage * 100).toInt(),
                 child: Container(
-                  color: Colors.green,
+                  color: context.colors.success,
                   alignment: Alignment.center,
                   child: data.endurancePercentage > 15
                       ? Text(
                           '${data.endurancePercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -279,19 +286,19 @@ class RepContinuumCard extends StatelessWidget {
 
     if (data.hypertrophyPercentage >= 60) {
       recommendation = l10n.repContinuumRecommendationBalanced;
-      icon = Icons.check_circle;
-      iconColor = Colors.green;
+      icon = AppIcons.checkCircle;
+      iconColor = context.colors.success;
     } else if (data.strengthPercentage > 50) {
       recommendation = l10n.repContinuumRecommendationStrength;
-      icon = Icons.fitness_center;
-      iconColor = Colors.red;
+      icon = AppIcons.fitnessCenter;
+      iconColor = context.colors.error;
     } else if (data.endurancePercentage > 50) {
       recommendation = l10n.repContinuumRecommendationEndurance;
-      icon = Icons.timer;
-      iconColor = Colors.green;
+      icon = AppIcons.timer;
+      iconColor = context.colors.success;
     } else {
       recommendation = l10n.repContinuumRecommendationMixed;
-      icon = Icons.info_outline;
+      icon = AppIcons.info;
       iconColor = theme.colorScheme.primary;
     }
 
@@ -339,11 +346,12 @@ class RepContinuumCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              Icons.science_outlined,
-              size: 20,
-              color: theme.colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.experiment,
+  semanticLabel: 'Experiment',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -366,10 +374,12 @@ class RepContinuumCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              Icons.open_in_new,
-              size: 16,
-              color: theme.colorScheme.primary.withValues(alpha: 0.7),
+            SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
             ),
           ],
         ),
@@ -447,22 +457,22 @@ class RepContinuumCard extends StatelessWidget {
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding1,
-                      Icons.fitness_center,
-                      Colors.red,
+                      AppIcons.fitnessCenter,
+                      context.colors.error,
                     ),
                     const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding2,
-                      Icons.trending_up,
+                      AppIcons.trendUp,
                       theme.colorScheme.primary,
                     ),
                     const SizedBox(height: 8),
                     _buildFindingItem(
                       context,
                       l10n.repContinuumFinding3,
-                      Icons.timer,
-                      Colors.green,
+                      AppIcons.timer,
+                      context.colors.success,
                     ),
                     const SizedBox(height: 20),
 
@@ -517,7 +527,7 @@ class RepContinuumCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.article_outlined,
+                  AppIcons.articleOutlined,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 12),
@@ -540,11 +550,12 @@ class RepContinuumCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.open_in_new,
-                  size: 20,
-                  color: theme.colorScheme.primary,
-                ),
+                SemanticIcon(
+  icon: AppIcons.openInNew,
+  semanticLabel: 'Open in new',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
               ],
             ),
             const SizedBox(height: 12),

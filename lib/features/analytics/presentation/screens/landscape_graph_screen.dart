@@ -224,7 +224,7 @@ class _LandscapeGraphScreenState extends ConsumerState<LandscapeGraphScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             color: context.colors.surfaceContainerHighest,
-            child: Wrap(
+            child: const Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [

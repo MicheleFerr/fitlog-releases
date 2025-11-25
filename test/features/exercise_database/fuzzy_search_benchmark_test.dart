@@ -38,7 +38,7 @@ void main() {
       repository = JsonExerciseRepository(locale: const Locale('it'));
       exercises = await repository.getAllExercises();
 
-      print('\n' + '='*80);
+      print('\n${'='*80}');
       print('FUZZY SEARCH BENCHMARK - Layer 2 Performance & Precision Test');
       print('='*80);
       print('Total exercises loaded: ${exercises.length}');
@@ -53,61 +53,61 @@ void main() {
 
       final testQueries = [
         // Category 1: Common typos (10 queries)
-        _TestQuery(
+        const _TestQuery(
           query: 'pnca',
           expectedInTop5: 'panca',
           category: 'TYPO',
           description: 'Common typo: pnca → panca',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'bilancere',
           expectedInTop5: 'bilanciere',
           category: 'TYPO',
           description: 'Common typo: bilancere → bilanciere',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'sqat',
           expectedInTop5: 'squat',
           category: 'TYPO',
           description: 'Common typo: sqat → squat',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'stcco',
           expectedInTop5: 'stacco',
           category: 'TYPO',
           description: 'Common typo: stcco → stacco',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'trazioni sbar',
           expectedInTop5: 'sbarra',
           category: 'TYPO',
           description: 'Partial typo: sbar → sbarra',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'curl riccioli',
           expectedInTop5: 'curl',
           category: 'TYPO',
           description: 'IT/EN mix: riccioli = curl',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'benchpress',
           expectedInTop5: 'bench press',
           category: 'TYPO',
           description: 'Missing space: benchpress → bench press',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'dumbell',
           expectedInTop5: 'dumbbell',
           category: 'TYPO',
           description: 'Missing letter: dumbell → dumbbell',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'pullup',
           expectedInTop5: 'pull up',
           category: 'TYPO',
           description: 'Missing space: pullup → pull up',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'deadlft',
           expectedInTop5: 'deadlift',
           category: 'TYPO',
@@ -115,49 +115,49 @@ void main() {
         ),
 
         // Category 2: Muscle group queries (8 queries)
-        _TestQuery(
+        const _TestQuery(
           query: 'petto',
           expectedInTop5: 'pettorali',
           category: 'MUSCLE',
           description: 'Muscle synonym: petto → pettorali',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'bicipiti',
           expectedInTop5: 'biceps',
           category: 'MUSCLE',
           description: 'IT/EN muscle: bicipiti → biceps',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'dorsali',
           expectedInTop5: 'dorso',
           category: 'MUSCLE',
           description: 'Muscle synonym: dorsali → dorso',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'quad',
           expectedInTop5: 'quadricipiti',
           category: 'MUSCLE',
           description: 'Abbreviation: quad → quadricipiti',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'glutei',
           expectedInTop5: 'gluteo',
           category: 'MUSCLE',
           description: 'Plural: glutei → gluteo',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'addominali',
           expectedInTop5: 'core',
           category: 'MUSCLE',
           description: 'Synonym: addominali → core',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'trapezi',
           expectedInTop5: 'trapezio',
           category: 'MUSCLE',
           description: 'Plural: trapezi → trapezio',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'femorali',
           expectedInTop5: 'femorale',
           category: 'MUSCLE',
@@ -165,37 +165,37 @@ void main() {
         ),
 
         // Category 3: Equipment queries (6 queries)
-        _TestQuery(
+        const _TestQuery(
           query: 'manubri',
           expectedInTop5: 'dumbbell',
           category: 'EQUIPMENT',
           description: 'IT/EN equipment: manubri → dumbbell',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'bilanciere',
           expectedInTop5: 'barbell',
           category: 'EQUIPMENT',
           description: 'IT/EN equipment: bilanciere → barbell',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'corpo libero',
           expectedInTop5: 'bodyweight',
           category: 'EQUIPMENT',
           description: 'IT/EN equipment: corpo libero → bodyweight',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'cavi',
           expectedInTop5: 'cable',
           category: 'EQUIPMENT',
           description: 'IT/EN equipment: cavi → cable',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'kettlebell',
           expectedInTop5: 'kb',
           category: 'EQUIPMENT',
           description: 'Abbreviation: kettlebell → kb',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'elastici',
           expectedInTop5: 'elastico',
           category: 'EQUIPMENT',
@@ -203,25 +203,25 @@ void main() {
         ),
 
         // Category 4: Movement patterns (4 queries)
-        _TestQuery(
+        const _TestQuery(
           query: 'panca inclinata',
           expectedInTop5: 'panca',
           category: 'MOVEMENT',
           description: 'Pattern: panca inclinata',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'squat accosciata',
           expectedInTop5: 'squat',
           category: 'MOVEMENT',
           description: 'Synonym: squat = accosciata',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'stacco rumeno',
           expectedInTop5: 'stacco',
           category: 'MOVEMENT',
           description: 'Pattern variant: stacco rumeno',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'trazioni alla sbarra',
           expectedInTop5: 'trazione',
           category: 'MOVEMENT',
@@ -229,13 +229,13 @@ void main() {
         ),
 
         // Category 5: Complex queries (2 queries)
-        _TestQuery(
+        const _TestQuery(
           query: 'esercizio per bicipiti con manubri',
           expectedInTop5: 'bicipiti',
           category: 'COMPLEX',
           description: 'Long query: 6 tokens (IT dataset)',
         ),
-        _TestQuery(
+        const _TestQuery(
           query: 'panca piana con bilanciere per petto',
           expectedInTop5: 'panca',
           category: 'COMPLEX',
@@ -310,7 +310,7 @@ void main() {
       // CALCULATE METRICS
       // ============================================================
 
-      print('\n' + '='*80);
+      print('\n${'='*80}');
       print('BENCHMARK RESULTS');
       print('='*80);
 
@@ -344,7 +344,7 @@ void main() {
         print('  $category: ${(categoryPrecision * 100).toStringAsFixed(1)}% (${categoryResults.where((r) => r.foundExpected).length}/${categoryResults.length})');
       }
 
-      print('\n' + '='*80);
+      print('\n${'='*80}');
       print('CALIBRATION RECOMMENDATIONS');
       print('='*80);
 
@@ -369,7 +369,7 @@ void main() {
         print('   3. minScore threshold');
       }
 
-      print('\n' + '='*80);
+      print('\n${'='*80}');
       print('FAILED QUERIES (NOT found in top 5):');
       print('='*80);
 
@@ -390,7 +390,7 @@ void main() {
         }
       }
 
-      print('\n' + '='*80);
+      print('\n${'='*80}');
       print('TODO: Update FuzzySearchService.DEFAULT_MIN_SCORE based on these results');
       print('='*80);
       print('');

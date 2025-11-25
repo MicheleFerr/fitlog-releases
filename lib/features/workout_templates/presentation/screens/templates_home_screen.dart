@@ -37,6 +37,8 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/widge
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TemplatesHomeScreen extends ConsumerStatefulWidget {
   const TemplatesHomeScreen({super.key});
@@ -168,15 +170,24 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               indicatorWeight: 3,
               tabs: [
                 Tab(
-                  icon: const Icon(AppIcons.person),
+                  icon: const SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+),
                   text: l10n.myTemplates,
                 ),
                 Tab(
-                  icon: const Icon(AppIcons.explore),
+                  icon: const SemanticIcon(
+  icon: AppIcons.explore,
+  semanticLabel: 'Explore',
+),
                   text: l10n.discover,
                 ),
                 Tab(
-                  icon: const Icon(AppIcons.trendUp),
+                  icon: const SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+),
                   text: l10n.trending,
                 ),
               ],
@@ -195,7 +206,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
       floatingActionButton: _tabController.index == 0
           ? FloatingActionButton.extended(
               onPressed: () => _createNewTemplate(context),
-              icon: const Icon(AppIcons.add),
+              icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               label: Text(l10n.newTemplate),
               backgroundColor: colorScheme.primary,
             )
@@ -270,10 +284,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      AppIcons.workout,
-                      size: 80,
-                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -292,7 +308,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     const SizedBox(height: 24),
                     FilledButton.icon(
                       onPressed: () => _createNewTemplate(context),
-                      icon: const Icon(AppIcons.add),
+                      icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
                       label: Text(l10n.createTemplate),
                     ),
                   ],
@@ -370,11 +389,17 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       value: 'edit',
-                      child: ListTile(leading: const Icon(AppIcons.edit), title: Text(l10n.edit)),
+                      child: ListTile(leading: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+), title: Text(l10n.edit)),
                     ),
                     PopupMenuItem<String>(
                       value: 'delete',
-                      child: ListTile(leading: const Icon(AppIcons.delete), title: Text(l10n.delete)),
+                      child: ListTile(leading: const SemanticIcon(
+  icon: AppIcons.delete,
+  semanticLabel: 'Delete',
+), title: Text(l10n.delete)),
                     ),
                   ],
                 ),
@@ -405,7 +430,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
               child: TextField(
                 decoration: InputDecoration(
                   hintText: l10n.searchTemplates,
-                  prefixIcon: const Icon(AppIcons.search),
+                  prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                   filled: true,
                   fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   border: OutlineInputBorder(
@@ -413,7 +441,10 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                     borderSide: BorderSide.none,
                   ),
                   suffixIcon: IconButton(
-                    icon: const Icon(AppIcons.tune),
+                    icon: const SemanticIcon(
+  icon: AppIcons.tune,
+  semanticLabel: 'Tune',
+),
                     onPressed: () => _showFilters(context),
                   ),
                 ),
@@ -530,7 +561,7 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
               leading: Icon(AppIcons.edit, color: colorScheme.primary),
               title: Text(l10n.createManually),
@@ -702,11 +733,12 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                         top: 4,
                         right: 4,
                         child: IconButton(
-                          icon: Icon(
-                            AppIcons.iconCopy,
-                            size: 18,
-                            color: colorScheme.primary,
-                          ),
+                          icon: SemanticIcon(
+  icon: AppIcons.iconCopy,
+  semanticLabel: 'Icon copy',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                           tooltip: l10n.copyExample,
                           onPressed: () {
                             Clipboard.setData(ClipboardData(text: _getJsonFormatExample()));
@@ -1314,7 +1346,10 @@ class PublicTemplateCard extends StatelessWidget {
                         ? NetworkImage(template.authorPhotoUrl!)
                         : null,
                     child: template.authorPhotoUrl == null
-                        ? const Icon(AppIcons.person)
+                        ? const SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -1339,7 +1374,10 @@ class PublicTemplateCard extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: onDownload,
-                    icon: const Icon(AppIcons.download),
+                    icon: const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
                     style: IconButton.styleFrom(
                       backgroundColor: colorScheme.primaryContainer,
                     ),
@@ -1358,7 +1396,12 @@ class PublicTemplateCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(AppIcons.star, size: 16, color: Colors.amber),
+                  const SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+  size: AppIconSize.tiny,
+  color: Colors.amber,
+),
                   const SizedBox(width: 4),
                   Text(
                     template.averageRating.toStringAsFixed(1),
@@ -1374,14 +1417,24 @@ class PublicTemplateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  Icon(AppIcons.download, size: 16, color: colorScheme.onSurfaceVariant),
+                  SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                   const SizedBox(width: 4),
                   Text(
                     '${template.downloadCount}',
                     style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(width: 16),
-                  Icon(AppIcons.workout, size: 16, color: colorScheme.onSurfaceVariant),
+                  SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                   const SizedBox(width: 4),
                   Text(
                     l10n.exercisesCount(template.exercises.length),

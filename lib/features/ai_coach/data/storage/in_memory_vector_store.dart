@@ -21,16 +21,6 @@ import 'package:flutter/foundation.dart';
 
 /// Stored embedding entity (in-memory)
 class StoredEmbedding {
-  final String id;
-  final String documentId;
-  final String userId;
-  final String documentType;
-  final String content;
-  final List<double> embedding;
-  final double boost;
-  final DateTime timestamp;
-  final DateTime? lastAccessedAt;
-  final DateTime? expiresAt;
 
   StoredEmbedding({
     required this.documentId,
@@ -44,6 +34,16 @@ class StoredEmbedding {
     this.expiresAt,
   })  : id = '${userId}_${documentId}_${DateTime.now().millisecondsSinceEpoch}',
         timestamp = timestamp ?? DateTime.now();
+  final String id;
+  final String documentId;
+  final String userId;
+  final String documentType;
+  final String content;
+  final List<double> embedding;
+  final double boost;
+  final DateTime timestamp;
+  final DateTime? lastAccessedAt;
+  final DateTime? expiresAt;
 
   /// Copy with updated fields
   StoredEmbedding copyWith({
@@ -82,7 +82,7 @@ class InMemoryVectorStore {
     _storage.putIfAbsent(userId, () => []).add(embedding);
 
     if (kDebugMode) {
-      debugPrint('📦 [VectorStore] Stored embedding: ${embedding.documentId} (user: $userId)');
+      debugPrint('📦 [VectorStore] Stored embedding: ${embedding.documentId} (user: ${userId.substring(0, 8.clamp(0, userId.length))}...)');
     }
   }
 
@@ -230,7 +230,7 @@ class InMemoryVectorStore {
     userEmbeddings.removeWhere((e) => e.documentId == documentId);
 
     if (kDebugMode) {
-      debugPrint('🗑️ [VectorStore] Deleted embedding: $documentId (user: $userId)');
+      debugPrint('🗑️ [VectorStore] Deleted embedding: $documentId (user: ${userId.substring(0, 8.clamp(0, userId.length))}...)');
     }
   }
 
@@ -239,7 +239,7 @@ class InMemoryVectorStore {
     _storage.remove(userId);
 
     if (kDebugMode) {
-      debugPrint('🗑️ [VectorStore] Deleted all embeddings for user: $userId');
+      debugPrint('🗑️ [VectorStore] Deleted all embeddings for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
     }
   }
 
@@ -277,7 +277,7 @@ class InMemoryVectorStore {
     final deletedCount = initialCount - userEmbeddings.length;
 
     if (kDebugMode && deletedCount > 0) {
-      debugPrint('🗑️ [VectorStore] Deleted $deletedCount old embeddings (user: $userId)');
+      debugPrint('🗑️ [VectorStore] Deleted $deletedCount old embeddings (user: ${userId.substring(0, 8.clamp(0, userId.length))}...)');
     }
 
     return deletedCount;
@@ -372,19 +372,19 @@ class InMemoryVectorStore {
 
 /// Vector search result with similarity score
 class VectorSearchResult {
-  final StoredEmbedding embedding;
-  final double similarity;
 
   VectorSearchResult({
     required this.embedding,
     required this.similarity,
   });
+  final StoredEmbedding embedding;
+  final double similarity;
 }
 
 /// Helper class for scored embeddings
 class _ScoredEmbedding {
-  final StoredEmbedding embedding;
-  final double score;
 
   _ScoredEmbedding(this.embedding, this.score);
+  final StoredEmbedding embedding;
+  final double score;
 }

@@ -1500,6 +1500,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get analytics => 'Analytics';
 
   @override
+  String get detailedAnalysis => 'Analisi Dettagliata';
+
+  @override
   String get trackProgress => 'Traccia progressi';
 
   @override

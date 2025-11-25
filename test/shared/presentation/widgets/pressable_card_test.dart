@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/pressable_card.dart';
 
@@ -61,7 +60,7 @@ void main() {
       // Multiple Transforms may exist in the widget tree, so just check at least one
       expect(
         find.byWidgetPredicate(
-          (widget) => widget is Transform && widget.transform != null,
+          (widget) => widget is Transform,
         ),
         findsWidgets,
       );

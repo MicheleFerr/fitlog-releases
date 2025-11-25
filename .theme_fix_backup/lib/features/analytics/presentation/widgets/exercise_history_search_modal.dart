@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistorySearchModal extends StatefulWidget {
 
@@ -92,7 +96,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
       initialChildSize: 0.9,
       minChildSize: 0.5,
       maxChildSize: 0.95,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -120,7 +124,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                   Row(
                     children: [
                       Icon(
-                        Icons.search,
+                        AppIcons.search,
                         color: theme.colorScheme.primary,
                         size: 28,
                       ),
@@ -149,10 +153,16 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     },
                     decoration: InputDecoration(
                       hintText: 'Cerca un esercizio...',
-                      prefixIcon: const Icon(Icons.fitness_center),
+                      prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear),
+                              icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                               onPressed: () {
                                 setState(() {
                                   _searchController.clear();
@@ -192,10 +202,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -268,11 +280,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               '${activities.length} sessioni',
@@ -281,11 +294,12 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                               ),
                             ),
                             const SizedBox(width: 12),
-                            Icon(
-                              Icons.access_time,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.clock,
+  semanticLabel: 'Clock',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               _getRelativeTime(lastActivity.createdAt),
@@ -307,7 +321,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     ),
                   ),
                   Icon(
-                    Icons.chevron_right,
+                    AppIcons.chevronRight,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ],
@@ -335,7 +349,10 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     _selectedExercise = null;
                   });
                 },
-                icon: const Icon(Icons.arrow_back),
+                icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
               ),
               Expanded(
                 child: Text(
@@ -417,29 +434,29 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
           _buildStatItem(
             'Max Weight',
             '${maxWeight.toStringAsFixed(1)} kg',
-            Icons.fitness_center,
+            AppIcons.workout,
             theme.colorScheme.primary,
             theme,
           ),
           _buildStatItem(
             'Total Sets',
             totalSets.toString(),
-            Icons.format_list_numbered,
-            Colors.orange,
+            AppIcons.formatListNumbered,
+            context.colors.secondary,
             theme,
           ),
           _buildStatItem(
             'Total Reps',
             totalReps.toString(),
-            Icons.repeat,
-            Colors.green,
+            AppIcons.repeat,
+            context.colors.success,
             theme,
           ),
           _buildStatItem(
             'Total Volume',
             '${(totalVolume / 1000).toStringAsFixed(1)}k',
-            Icons.bar_chart,
-            Colors.blue,
+            AppIcons.barChart,
+            context.colors.primary,
             theme,
           ),
         ],
@@ -650,22 +667,24 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     Expanded(
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.fitness_center,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                           const SizedBox(width: 4),
                           Text(
                             '${weight.toStringAsFixed(1)} kg',
                             style: theme.textTheme.bodyMedium,
                           ),
                           const SizedBox(width: 12),
-                          Icon(
-                            Icons.repeat,
-                            size: 16,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                           const SizedBox(width: 4),
                           Text(
                             '$reps reps',
@@ -677,7 +696,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: _getEffortColor(set.effort).withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'RPE ${set.effort}',
@@ -728,20 +747,20 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
   
   IconData _getExerciseIcon(String exerciseName) {
     final name = exerciseName.toLowerCase();
-    if (name.contains('squat') || name.contains('leg')) return Icons.airline_seat_recline_normal;
-    if (name.contains('bench') || name.contains('chest')) return Icons.airline_seat_flat;
-    if (name.contains('deadlift') || name.contains('stacco')) return Icons.fitness_center;
-    if (name.contains('curl') || name.contains('bicep')) return Icons.sports_gymnastics;
-    if (name.contains('shoulder') || name.contains('spalle')) return Icons.accessibility_new;
-    if (name.contains('back') || name.contains('dorso')) return Icons.rowing;
-    return Icons.fitness_center;
+    if (name.contains('squat') || name.contains('leg')) return AppIcons.airlineSeatReclineNormal;
+    if (name.contains('bench') || name.contains('chest')) return AppIcons.airlineSeatFlat;
+    if (name.contains('deadlift') || name.contains('stacco')) return AppIcons.fitnessCenter;
+    if (name.contains('curl') || name.contains('bicep')) return AppIcons.sportsGymnastics;
+    if (name.contains('shoulder') || name.contains('spalle')) return AppIcons.accessibilityNew;
+    if (name.contains('back') || name.contains('dorso')) return AppIcons.rowing;
+    return AppIcons.fitnessCenter;
   }
   
   Color _getEffortColor(int effort) {
-    if (effort >= 9) return Colors.red;
-    if (effort >= 7) return Colors.orange;
-    if (effort >= 5) return Colors.yellow;
-    return Colors.green;
+    if (effort >= 9) return context.colors.error;
+    if (effort >= 7) return context.colors.secondary;
+    if (effort >= 5) return context.colors.warning;
+    return context.colors.success;
   }
   
   String _getRelativeTime(DateTime date) {

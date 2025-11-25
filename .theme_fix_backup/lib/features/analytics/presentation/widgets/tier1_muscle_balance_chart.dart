@@ -4,6 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tier-1 Muscle Balance Radar Chart with full explanations and customization
 class Tier1MuscleBalanceChart extends ConsumerStatefulWidget {
@@ -209,7 +213,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     return Row(
       children: [
         Icon(
-          Icons.analytics,
+          AppIcons.analytics,
           color: theme.colorScheme.primary,
         ),
         const SizedBox(width: 8),
@@ -229,7 +233,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               return Transform.scale(
                 scale: _pulseAnimation.value,
                 child: Icon(
-                  Icons.help_outline,
+                  AppIcons.help,
                   color: theme.colorScheme.primary,
                 ),
               );
@@ -257,7 +261,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             HapticFeedback.lightImpact();
           },
           avatar: Icon(
-            _showComparison ? Icons.visibility : Icons.visibility_off,
+            _showComparison ? AppIcons.visibility : AppIcons.visibilityOff,
             size: 18,
           ),
         ),
@@ -265,7 +269,10 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         
         // Reset animation
         IconButton(
-          icon: const Icon(Icons.refresh),
+          icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -277,7 +284,11 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         
         // Edit targets
         TextButton.icon(
-          icon: const Icon(Icons.edit, size: 18),
+          icon: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.small,
+),
           label: Text(l10n.editTargets),
           onPressed: _showTargetEditDialog,
         ),
@@ -350,8 +361,8 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     if (_showComparison) {
       dataSets.add(
         RadarDataSet(
-          fillColor: Colors.orange.withValues(alpha: 0.15),
-          borderColor: Colors.orange.withValues(alpha: 0.7),
+          fillColor: context.colors.secondary.withValues(alpha: 0.15),
+          borderColor: context.colors.secondary.withValues(alpha: 0.7),
           borderWidth: 2,
           entryRadius: 3,
           dataEntries: MuscleGroup.values.map((muscle) {
@@ -367,7 +378,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
     dataSets.add(
       RadarDataSet(
         fillColor: Colors.transparent,
-        borderColor: Colors.green.withValues(alpha: 0.4),
+        borderColor: context.colors.success.withValues(alpha: 0.4),
         borderWidth: 1.5,
         entryRadius: 0,
         dataEntries: MuscleGroup.values.map((muscle) {
@@ -402,13 +413,13 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               ),
               if (_showComparison)
                 _buildLegendItem(
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   label: l10n.lastMonth,
                   value: _calculateAveragePreviousStrength(),
                   theme: theme,
                 ),
               _buildLegendItem(
-                color: Colors.green,
+                color: context.colors.success,
                 label: l10n.target,
                 value: _calculateAverageTarget(),
                 isDashed: true,
@@ -531,7 +542,11 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 20),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -544,7 +559,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           
           // Strength metrics with explanations
           _buildMetricRow(
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             label: l10n.currentStrength,
             value: data.currentStrength,
             color: theme.colorScheme.primary,
@@ -557,10 +572,10 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
           
           // Target with edit button
           _buildEditableMetricRow(
-            icon: Icons.flag,
+            icon: AppIcons.flag,
             label: l10n.targetStrength,
             value: data.targetStrength,
-            color: Colors.green,
+            color: context.colors.success,
             onEdit: () => _editTarget(_selectedMuscle!, data.targetStrength),
             theme: theme,
             l10n: l10n,
@@ -572,17 +587,17 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: (improvement >= 0 ? Colors.green : Colors.red).withValues(alpha: 0.1),
+                color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: (improvement >= 0 ? Colors.green : Colors.red).withValues(alpha: 0.3),
+                  color: (improvement >= 0 ? context.colors.success : context.colors.error).withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
-                    improvement >= 0 ? Icons.trending_up : Icons.trending_down,
-                    color: improvement >= 0 ? Colors.green : Colors.red,
+                    improvement >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
+                    color: improvement >= 0 ? context.colors.success : context.colors.error,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -594,7 +609,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                           '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)}% '
                           '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: improvement >= 0 ? Colors.green : Colors.red,
+                            color: improvement >= 0 ? context.colors.success : context.colors.error,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -621,10 +636,12 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.bar_chart,
-                      size: 16,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.7,
+),
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -709,7 +726,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / 100,
             minHeight: 8,
@@ -770,7 +787,12 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(Icons.edit, size: 14, color: color),
+                    SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+  color: color,
+),
                   ],
                 ),
               ),
@@ -779,7 +801,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / 100,
             minHeight: 8,
@@ -935,7 +957,7 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               formula,
@@ -989,9 +1011,9 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   }
 
   Color _getBalanceColor(double balance) {
-    if (balance >= 80) return Colors.green;
-    if (balance >= 60) return Colors.orange;
-    return Colors.red;
+    if (balance >= 80) return context.colors.success;
+    if (balance >= 60) return context.colors.secondary;
+    return context.colors.error;
   }
 
   String _getBalanceRating(double balance, AppLocalizations l10n) {
@@ -1062,17 +1084,17 @@ class _Tier1MuscleBalanceChartState extends ConsumerState<Tier1MuscleBalanceChar
   IconData _getMuscleIcon(MuscleGroup muscle) {
     switch (muscle) {
       case MuscleGroup.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case MuscleGroup.back:
-        return Icons.straighten;
+        return AppIcons.straighten;
       case MuscleGroup.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case MuscleGroup.arms:
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case MuscleGroup.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case MuscleGroup.core:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
     }
   }
 }

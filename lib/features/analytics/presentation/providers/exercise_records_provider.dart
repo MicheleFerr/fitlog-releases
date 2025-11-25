@@ -40,17 +40,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_records.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
 /// In-memory cache entry for computed records
 class _CachedRecords {
-  final ExerciseRecords records;
-  final DateTime cachedAt;
 
   _CachedRecords({
     required this.records,
     required this.cachedAt,
   });
+  final ExerciseRecords records;
+  final DateTime cachedAt;
 
   /// Check if cache is still valid (10 min TTL)
   bool get isValid {
@@ -108,7 +108,7 @@ final exerciseRecordsProvider = FutureProvider.autoDispose
   // Get exercise history (from Firestore stream with Riverpod caching)
   final historyStream = ref.watch(exerciseHistoryStreamProvider(userId));
 
-  final allHistories = await historyStream.when(
+  final allHistories = historyStream.when(
     data: (histories) => histories,
     loading: () => throw Exception('Loading exercise history...'),
     error: (error, stack) => throw Exception('Failed to load history: $error'),

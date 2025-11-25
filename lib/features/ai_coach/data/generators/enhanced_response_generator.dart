@@ -630,11 +630,11 @@ class EnhancedResponseGenerator {
         final daysAgo = DateTime.now().difference(date).inDays;
 
         if (daysAgo == 0) {
-          return "Great workout today! 💪";
+          return 'Great workout today! 💪';
         } else if (daysAgo == 1) {
-          return "You trained yesterday - nice consistency!";
+          return 'You trained yesterday - nice consistency!';
         } else if (daysAgo < 7) {
-          return "Last workout was $daysAgo days ago.";
+          return 'Last workout was $daysAgo days ago.';
         }
       }
     }
@@ -657,11 +657,11 @@ class EnhancedResponseGenerator {
       if (value > 100) {
         return "🔥 Incredible strength! You're in the 100kg+ club!";
       } else if (value > 60) {
-        return "💪 Solid PR! Keep pushing for new heights!";
+        return '💪 Solid PR! Keep pushing for new heights!';
       } else {
-        return "👏 Great progress! Every PR is a step forward!";
+        return '👏 Great progress! Every PR is a step forward!';
       }
     }
-    return "Keep up the great work!";
+    return 'Keep up the great work!';
   }
 }

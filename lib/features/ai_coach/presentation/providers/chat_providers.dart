@@ -174,11 +174,6 @@ final clearConversationHistoryProvider = Provider<ClearConversationHistory>((ref
 
 /// Chat state
 class ChatState {
-  final List<AIMessage> messages;
-  final bool isLoading;
-  final bool isStreaming;
-  final String? error;
-  final ConversationTree? tree;
 
   const ChatState({
     this.messages = const [],
@@ -187,6 +182,11 @@ class ChatState {
     this.error,
     this.tree,
   });
+  final List<AIMessage> messages;
+  final bool isLoading;
+  final bool isStreaming;
+  final String? error;
+  final ConversationTree? tree;
 
   ChatState copyWith({
     List<AIMessage>? messages,
@@ -207,11 +207,6 @@ class ChatState {
 
 /// Chat state notifier
 class ChatNotifier extends StateNotifier<ChatState> {
-  final SendChatMessage sendChatMessageUseCase;
-  final GetConversationHistory getConversationHistoryUseCase;
-  final ClearConversationHistory clearConversationHistoryUseCase;
-  final ChatRepository chatRepository;
-  final String userId;
 
   ChatNotifier({
     required this.sendChatMessageUseCase,
@@ -222,6 +217,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }) : super(const ChatState()) {
     _loadHistory();
   }
+  final SendChatMessage sendChatMessageUseCase;
+  final GetConversationHistory getConversationHistoryUseCase;
+  final ClearConversationHistory clearConversationHistoryUseCase;
+  final ChatRepository chatRepository;
+  final String userId;
 
   /// Load conversation history on init
   Future<void> _loadHistory() async {

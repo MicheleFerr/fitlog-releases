@@ -18,7 +18,6 @@
 /// **No External Dependencies**: 100% local, instant, free, private
 library;
 
-import 'dart:ui' show PlatformDispatcher;
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
@@ -27,6 +26,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversatio
 import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_repository.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/chatbot_datasource.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/hive_chat_local_datasource.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart'; // 🔐 SECURITY: XSS/injection prevention
 import 'package:uuid/uuid.dart';
 
 /// Chat repository implementation (pattern-based bot)
@@ -44,14 +44,17 @@ import 'package:uuid/uuid.dart';
 /// });
 /// ```
 class ChatRepositoryImpl implements ChatRepository {
-  final ChatBotDatasource botDatasource;
-  final HiveChatLocalDatasource localDatasource;
-  final Uuid _uuid = const Uuid();
 
   ChatRepositoryImpl({
     required this.botDatasource,
     required this.localDatasource,
   });
+  final ChatBotDatasource botDatasource;
+  final HiveChatLocalDatasource localDatasource;
+  final Uuid _uuid = const Uuid();
+
+  /// 🔐 SECURITY: Input validator for XSS/injection prevention
+  final InputValidator _validator = InputValidator();
 
   // ========================================================================
   // Message Streaming
@@ -64,15 +67,44 @@ class ChatRepositoryImpl implements ChatRepository {
     String? systemPrompt,
   }) async* {
     try {
-      if (kDebugMode) {
-        debugPrint('💬 [ChatBot] Sending message for user: $userId');
-        debugPrint('💬 [ChatBot] Message: $message');
+      // 🔐 SECURITY: Sanitize user input to prevent XSS/injection attacks
+      final sanitizedMessage = _validator.sanitize(message);
+
+      // 🔐 SECURITY: Check for dangerous patterns
+      if (_validator.containsDangerousPatterns(message)) {
+        yield Left(
+          ValidationFailure(
+            'Invalid characters detected in message',
+            code: 'DANGEROUS_PATTERNS_DETECTED',
+          ),
+        );
+        return;
       }
 
-      // 1. Save user message to Hive immediately
+      // Validate message length after sanitization
+      if (sanitizedMessage.trim().isEmpty) {
+        yield Left(
+          const ValidationFailure(
+            'Message cannot be empty',
+            code: 'EMPTY_MESSAGE',
+          ),
+        );
+        return;
+      }
+
+      if (kDebugMode) {
+        debugPrint('💬 [ChatBot] Sending message for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
+        // Only log first 50 chars of sanitized message (avoid logging full user input)
+        final logPreview = sanitizedMessage.length > 50
+            ? '${sanitizedMessage.substring(0, 50)}...'
+            : sanitizedMessage;
+        debugPrint('💬 [ChatBot] Message preview: $logPreview');
+      }
+
+      // 1. Save user message to Hive immediately (with sanitized content)
       final userMessage = AIMessage(
         id: _uuid.v4(),
-        content: message,
+        content: sanitizedMessage, // 🔐 SECURITY: Using sanitized message
         role: MessageRole.user,
         timestamp: DateTime.now(),
         isStreaming: false,
@@ -102,9 +134,9 @@ class ChatRepositoryImpl implements ChatRepository {
         'locale': localeCode, // ✅ FIXED: Now uses real locale!
       };
 
-      // 3. Stream bot response
+      // 3. Stream bot response (use sanitized message for bot prompt)
       await for (final botMessage in botDatasource.sendMessage(
-        prompt: message,
+        prompt: sanitizedMessage, // 🔐 SECURITY: Using sanitized message
         userId: userId,
         userContext: userContext,
       )) {
@@ -144,7 +176,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('💬 [ChatBot] Fetching conversation history for user: $userId');
+        debugPrint('💬 [ChatBot] Fetching conversation history for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
         debugPrint('💬 [ChatBot] Limit: $limit, beforeTimestamp: $beforeTimestamp');
       }
 
@@ -165,7 +197,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error fetching conversation history: $e');
       }
 
-      return Left(CacheFailure('Failed to load conversation history'));
+      return const Left(CacheFailure('Failed to load conversation history'));
     }
   }
 
@@ -175,7 +207,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async* {
     try {
       if (kDebugMode) {
-        debugPrint('💬 [ChatBot] Watching conversation for user: $userId');
+        debugPrint('💬 [ChatBot] Watching conversation for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       // Stream updates from Hive (reactive)
@@ -187,7 +219,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error watching conversation: $e');
       }
 
-      yield Left(CacheFailure('Failed to watch conversation updates'));
+      yield const Left(CacheFailure('Failed to watch conversation updates'));
     }
   }
 
@@ -201,7 +233,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('💬 [ChatBot] Clearing conversation history for user: $userId');
+        debugPrint('💬 [ChatBot] Clearing conversation history for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       // Clear from Hive cache
@@ -217,7 +249,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error clearing conversation history: $e');
       }
 
-      return Left(CacheFailure('Failed to clear conversation history'));
+      return const Left(CacheFailure('Failed to clear conversation history'));
     }
   }
 
@@ -228,7 +260,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('💬 [ChatBot] Getting conversation context for user: $userId');
+        debugPrint('💬 [ChatBot] Getting conversation context for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       // Fetch last N messages from cache
@@ -257,7 +289,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error getting conversation context: $e');
       }
 
-      return Left(CacheFailure('Failed to get conversation context'));
+      return const Left(CacheFailure('Failed to get conversation context'));
     }
   }
 
@@ -269,7 +301,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, void>> saveTree(ConversationTree tree) async {
     try {
       if (kDebugMode) {
-        debugPrint('🌲 [ChatBot] Saving conversation tree for user: ${tree.userId}');
+        debugPrint('🌲 [ChatBot] Saving conversation tree for user: ${tree.userId.substring(0, 8.clamp(0, tree.userId.length))}...');
       }
 
       await localDatasource.saveTree(tree);
@@ -280,7 +312,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error saving tree: $e');
       }
 
-      return Left(CacheFailure('Failed to save conversation tree'));
+      return const Left(CacheFailure('Failed to save conversation tree'));
     }
   }
 
@@ -290,7 +322,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('🌲 [ChatBot] Loading conversation tree for user: $userId');
+        debugPrint('🌲 [ChatBot] Loading conversation tree for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       final tree = await localDatasource.loadTree(userId: userId);
@@ -301,7 +333,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error loading tree: $e');
       }
 
-      return Left(CacheFailure('Failed to load conversation tree'));
+      return const Left(CacheFailure('Failed to load conversation tree'));
     }
   }
 
@@ -311,7 +343,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async* {
     try {
       if (kDebugMode) {
-        debugPrint('🌲 [ChatBot] Watching conversation tree for user: $userId');
+        debugPrint('🌲 [ChatBot] Watching conversation tree for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       // Stream updates from Hive (reactive)
@@ -323,7 +355,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error watching tree: $e');
       }
 
-      yield Left(CacheFailure('Failed to watch conversation tree updates'));
+      yield const Left(CacheFailure('Failed to watch conversation tree updates'));
     }
   }
 
@@ -333,7 +365,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       if (kDebugMode) {
-        debugPrint('🌲 [ChatBot] Clearing conversation tree for user: $userId');
+        debugPrint('🌲 [ChatBot] Clearing conversation tree for user: ${userId.substring(0, 8.clamp(0, userId.length))}...');
       }
 
       await localDatasource.clearTree(userId: userId);
@@ -344,7 +376,7 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('❌ [ChatBot] Error clearing tree: $e');
       }
 
-      return Left(CacheFailure('Failed to clear conversation tree'));
+      return const Left(CacheFailure('Failed to clear conversation tree'));
     }
   }
 }

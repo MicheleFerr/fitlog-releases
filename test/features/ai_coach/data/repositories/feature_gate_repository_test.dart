@@ -187,12 +187,12 @@ void main() {
     test('should evaluate minDaysSinceRegistration rule', () async {
       final configs = repository.getAllFeatureGates();
       // Add a test config with days since registration rule
-      final testConfig = FeatureGateConfig(
+      const testConfig = FeatureGateConfig(
         feature: AiCoachFeature.insights,
         displayNameKey: 'test',
         descriptionKey: 'test',
         rules: [
-          const GateRule(
+          GateRule(
             type: GateRuleType.minDaysSinceRegistration,
             value: 7,
           ),

@@ -6,6 +6,9 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhan
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_stat_cards.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/enhanced_progress_indicators.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Enhanced Statistics Dashboard with Material 3 design and responsive layout
 class EnhancedStatisticsDashboard extends ConsumerWidget {
@@ -31,11 +34,17 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         backgroundColor: colorScheme.surfaceContainerHighest,
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             onPressed: () => _refreshData(ref),
           ),
           IconButton(
-            icon: const Icon(AppIcons.filter),
+            icon: const SemanticIcon(
+  icon: AppIcons.filter,
+  semanticLabel: 'Filter',
+),
             onPressed: () => _showFilterDialog(context),
           ),
         ],
@@ -109,11 +118,12 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.trendUp,
-                size: 32,
-                color: colorScheme.onPrimaryContainer,
-              ),
+              SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.xlarge,
+  color: colorScheme.onPrimaryContainer,
+),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -310,7 +320,7 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                   size: 28,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   localizations.progressTracking,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -380,28 +390,33 @@ class EnhancedStatisticsDashboard extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.analytics,
-            size: 120,
-            color: Colors.grey.withValues(alpha: 0.5),
+          SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5,
+),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Text(
             localizations.noWorkoutData,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey,
+              color: context.colors.surfaceContainerHighest,
             ),
           ),
           const SizedBox(height: 12),
           Text(
             localizations.completeWorkoutsToSeeAnalytics,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: context.colors.surfaceContainerHighest),
           ),
           const SizedBox(height: 32),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pushNamed('/workout'),
-            icon: const Icon(AppIcons.play),
+            icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
             label: Text(localizations.startFirstWorkout),
           ),
         ],
@@ -547,7 +562,7 @@ class _StatisticsFilterDialogState extends State<StatisticsFilterDialog> {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               localizations.muscleGroups,
               style: Theme.of(context).textTheme.titleMedium,

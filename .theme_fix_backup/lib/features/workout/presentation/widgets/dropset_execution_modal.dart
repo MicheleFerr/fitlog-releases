@@ -5,6 +5,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal for executing DropSet exercises during workouts
 ///
@@ -260,7 +263,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.trending_down,
+                  AppIcons.trendDown,
                   color: context.colors.tertiary,
                   size: 28,
                 ),
@@ -299,11 +302,12 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.timer,
-                      size: 16,
-                      color: context.colors.onSecondaryContainer,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: context.colors.onSecondaryContainer,
+),
                     const SizedBox(width: 4),
                     StreamBuilder(
                       stream: Stream.periodic(const Duration(seconds: 1)),
@@ -358,7 +362,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
           ),
           const SizedBox(height: 8),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
@@ -385,7 +389,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
       child: Row(
         children: [
           Icon(
-            Icons.flash_on,
+            AppIcons.flashOn,
             color: context.colors.onTertiaryContainer,
             size: 20,
           ),
@@ -448,7 +452,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 child: Center(
                   child: isCompleted
                       ? Icon(
-                          Icons.check,
+                          AppIcons.check,
                           color: context.colors.onTertiary,
                           size: 24,
                         )
@@ -484,13 +488,14 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
-                          Icons.fitness_center,
-                          size: 16,
-                          color: isCurrent
+                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: isCurrent
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
-                        ),
+),
                         const SizedBox(width: 4),
                         Text(
                           '${stage.weight.toStringAsFixed(1)} kg',
@@ -504,13 +509,14 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                           ),
                         ),
                         const SizedBox(width: 12),
-                        Icon(
-                          Icons.repeat,
-                          size: 16,
-                          color: isCurrent
+                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: isCurrent
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
-                        ),
+),
                         const SizedBox(width: 4),
                         Text(
                           context.l10n.targetReps(stage.reps),
@@ -544,7 +550,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 )
               else if (isUpcoming)
                 Icon(
-                  Icons.lock_outline,
+                  AppIcons.lockOutline,
                   color: context.colors.onSurfaceVariant,
                   size: 20,
                 ),
@@ -600,15 +606,18 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   ),
                 ),
                 icon: _isCompleting
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: context.colors.surface,
                         ),
                       )
-                    : const Icon(Icons.check_circle),
+                    : const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+),
                 label: Text(
                   context.l10n.completeDropset,
                   style: const TextStyle(
@@ -631,7 +640,10 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: const Icon(Icons.check),
+                icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                 label: Text(
                   context.l10n.completeStage(_currentStageIndex + 1),
                   style: const TextStyle(

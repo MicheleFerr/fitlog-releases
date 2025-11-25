@@ -89,7 +89,7 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
         mainAxisSize: MainAxisSize.min,
         children: [
           indicator,
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             message!,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -103,8 +103,12 @@ class LoadingIndicator extends StatelessWidget { // Se true, copre schermo con s
       );
     }
 
-    // Wrapper per centrare
-    indicator = Center(child: indicator);
+    // Center solo per overlay o grandi dimensioni (standalone loading)
+    // Per inline usage (suffixIcon, badge, etc.) il Center espande il widget
+    // causando layout issues - non serve per size ≤ 24px
+    if (overlay || size > 24) {
+      indicator = Center(child: indicator);
+    }
 
     // Se overlay, aggiungi sfondo semi-trasparente
     if (overlay) {

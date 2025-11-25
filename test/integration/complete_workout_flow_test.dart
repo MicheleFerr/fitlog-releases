@@ -10,8 +10,8 @@ import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exe
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_auto_save_provider.dart';
-// MIGRATION: Using bridge provider for backward compatibility
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart';
+// ✅ MIGRATION COMPLETE: Now uses unified notification provider directly
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/unified_notification_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/skip_analytics_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';

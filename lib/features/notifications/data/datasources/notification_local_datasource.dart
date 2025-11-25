@@ -14,7 +14,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/frequency_cap.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/quiet_hours.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 
@@ -26,6 +25,8 @@ import 'package:gymbro_flutter_new/features/notifications/domain/entities/unifie
 /// - Migration v1.0 → v2.0 (individual keys → JSON)
 /// - Offline fallback
 class NotificationLocalDataSource {
+
+  NotificationLocalDataSource(this._prefs);
   final SharedPreferences _prefs;
 
   // SharedPreferences keys
@@ -52,8 +53,6 @@ class NotificationLocalDataSource {
     'notif_dnd_end',
     'notif_reminder_minutes',
   ];
-
-  NotificationLocalDataSource(this._prefs);
 
   // === NotificationSettings Operations ===
 

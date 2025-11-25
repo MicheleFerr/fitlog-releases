@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseSelectionDialog extends StatefulWidget {
 
@@ -82,7 +84,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l10n.selectExercise),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             '${l10n.originalExercise}: "${widget.originalExerciseName}"',
             style: context.textTheme.bodyMedium?.copyWith(
@@ -102,11 +104,14 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: l10n.searchExercises,
-                prefixIcon: Icon(AppIcons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 border: const OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Suggested matches
             if (_filteredMatches.isNotEmpty) ...[
@@ -129,12 +134,13 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            AppIcons.searchOff,
-                            size: 48,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          SizedBox(height: 16),
+                          SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.xxlarge,
+  color: colorScheme.onSurfaceVariant,
+),
+                          const SizedBox(height: 16),
                           Text(
                             l10n.noExercisesFound,
                             style: context.textTheme.bodyLarge?.copyWith(
@@ -167,7 +173,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('${l10n.targetMuscles}: ${match.exercise.focus}'),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Row(
                                     children: [
                                       Container(
@@ -186,7 +192,7 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelectionDialog> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,

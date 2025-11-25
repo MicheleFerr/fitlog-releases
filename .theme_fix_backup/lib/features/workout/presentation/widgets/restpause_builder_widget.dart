@@ -7,6 +7,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Builder widget for creating rest-pause exercises
 /// Reuses UI patterns from SupersetBuilderWidget and DropsetBuilderWidget
@@ -115,7 +118,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
       context,
       MaterialPageRoute(
         builder: (context) => const ExerciseSearchScreen(
-          allowMultipleSelection: false,
+          multiSelectMode: false,
         ),
       ),
     );
@@ -185,7 +188,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.fitness_center, color: Theme.of(context).colorScheme.tertiary),
+                      Icon(AppIcons.workout, color: Theme.of(context).colorScheme.tertiary),
                       const SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
@@ -488,7 +491,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.timer,
+              AppIcons.timer,
               color: theme.colorScheme.tertiary,
               size: 24,
             ),
@@ -544,7 +547,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.fitness_center,
+                  AppIcons.workout,
                   color: theme.colorScheme.tertiary,
                   size: 20,
                 ),
@@ -559,7 +562,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                   setState(() => _selectedExercise = null);
                   HapticFeedback.lightImpact();
                 },
-                icon: Icon(Icons.close, color: theme.colorScheme.tertiary),
+                icon: Icon(AppIcons.close, color: theme.colorScheme.tertiary),
               ),
             ),
           )
@@ -574,7 +577,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add_circle_outline, color: theme.colorScheme.tertiary),
+                    Icon(AppIcons.addCircleOutline, color: theme.colorScheme.tertiary),
                     const SizedBox(width: 8),
                     Text(
                       l10n.addExercise,
@@ -614,7 +617,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
               value: _weight > 0
                   ? _weight.formatWeight(unit)
                   : l10n.selectWeight,
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               onTap: () => _showWeightPicker(context),
               theme: theme,
             ),
@@ -624,9 +627,9 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
             // Target reps button
             _buildPickerButton(
               context: context,
-              label: l10n.targetReps,
+              label: l10n.targetReps(_targetReps),
               value: '$_targetReps ${l10n.reps}',
-              icon: Icons.repeat,
+              icon: AppIcons.repeat,
               onTap: () => _showRepsPicker(context),
               theme: theme,
             ),
@@ -714,11 +717,12 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -780,7 +784,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                 ],
               ),
             ),
-            Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurfaceVariant),
+            Icon(AppIcons.arrowDropDown, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),
       ),
@@ -796,7 +800,10 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
           backgroundColor: theme.colorScheme.tertiary,
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        icon: const Icon(Icons.add_circle),
+        icon: const SemanticIcon(
+  icon: AppIcons.addCircle,
+  semanticLabel: 'Add circle',
+),
         label: Text(l10n.createRestPause),
       ),
     );

@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart' as unified;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -82,7 +80,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
               TextButton(
                 onPressed: _isLoading ? null : _saveTemplate,
                 child: _isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 16,
                         height: 16,
                         child: LoadingIndicator(),
@@ -116,7 +114,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                     maxLines: 2,
                     onChanged: (_) => _markAsChanged(),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   // Toggle pubblico/privato
                   /* Card(
                     child: Padding(
@@ -249,24 +247,24 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   color: context.colors.onSurface.withValues(alpha: 0.3,
 ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             context.l10n.noExercisesYet,
             style: context.textTheme.headlineSmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.tapToAddExercise,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _showAddExercise,
-            icon: SemanticIcon(
+            icon: const SemanticIcon(
   icon: AppIcons.add,
   semanticLabel: 'Add',
 ),
@@ -298,7 +296,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(AppIcons.delete, color: context.colors.surface, size: 28),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 context.l10n.delete,
                 style: context.textTheme.labelSmall?.copyWith(
@@ -338,7 +336,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                           color: context.colors.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       // Exercise info
                       Expanded(
                         child: Column(
@@ -350,7 +348,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Row(
                               children: [
                                 Text(
@@ -361,7 +359,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                                   ),
                                 ),
                                 if (exerciseTemplate.restTime != null) ...[
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
@@ -383,7 +381,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
   size: AppIconSize.medium,
   color: context.colors.primary,
 ),
-                                        SizedBox(width: 2),
+                                        const SizedBox(width: 2),
                                         Text(
                                           _formatRestTime(
                                               exerciseTemplate.restTime!),
@@ -405,14 +403,14 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                       // Rest timer button
                       IconButton.filledTonal(
                         onPressed: () => _showRestTimePicker(index),
-                        icon: SemanticIcon(
+                        icon: const SemanticIcon(
   icon: AppIcons.timer,
   semanticLabel: 'Timer',
 ),
                         iconSize: 20,
                         tooltip: 'Timer Recupero',
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       // Expand/collapse icon
                       Icon(
                         isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
@@ -456,7 +454,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             Row(
               children: [
                 Icon(icon, size: 12, color: color),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -466,7 +464,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             Text(
               value,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -526,7 +524,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     // Weight Picker Button
                     Expanded(
                       child: _buildPickerButton(
@@ -547,9 +545,9 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text('×', style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     // Reps Picker Button
                     Expanded(
                       child: _buildPickerButton(
@@ -568,12 +566,12 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     // Remove set button
                     if (exerciseTemplate.sets.length > 1)
                       IconButton(
                         onPressed: () => _removeSet(exerciseIndex, setIndex),
-                        icon: SemanticIcon(
+                        icon: const SemanticIcon(
   icon: AppIcons.removeCircleOutline,
   semanticLabel: 'Remove circle outline',
 ),
@@ -591,7 +589,7 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: OutlinedButton.icon(
               onPressed: () => _addSet(exerciseIndex),
-              icon: SemanticIcon(
+              icon: const SemanticIcon(
   icon: AppIcons.add,
   semanticLabel: 'Add',
 ),
@@ -757,61 +755,16 @@ class _EditTemplateScreenState extends ConsumerState<EditTemplateScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final unifiedRepository = ref.read(unifiedTemplateRepositoryProvider);
-      final existingTemplate =
-          await unifiedRepository.getTemplateById(widget.template.id);
+      final templateToSave = widget.template.copyWith(
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        exercises: _exercises,
+        updatedAt: DateTime.now(),
+      );
 
-      final unified.UnifiedWorkoutTemplate templateToSave;
+      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(templateToSave);
 
-      if (existingTemplate != null) {
-        // Template exists in unified repo, update it
-        templateToSave = existingTemplate.copyWith(
-          name: _nameController.text.trim(),
-          description: _descriptionController.text.trim(),
-          exercisesRaw: _exercises.map((e) => e.toJson()).toList(),
-          isPublic: _isPublic,
-          visibility: _isPublic
-              ? unified.UnifiedTemplateVisibility.public
-              : unified.UnifiedTemplateVisibility.private,
-          updatedAt: DateTime.now(),
-          version: (existingTemplate.version ?? 0) + 1,
-        );
-      } else {
-        // Template not found, this is a legacy template being migrated.
-        // Create a new UnifiedWorkoutTemplate from the screen data.
-        final user = ref.read(authStateProvider).value;
-        templateToSave = unified.UnifiedWorkoutTemplate(
-          id: widget.template.id, // IMPORTANT: Keep the original ID
-          name: _nameController.text.trim(),
-          description: _descriptionController.text.trim(),
-          exercisesRaw: _exercises.map((e) => e.toJson()).toList(),
-          isPublic: _isPublic,
-          visibility: _isPublic
-              ? unified.UnifiedTemplateVisibility.public
-              : unified.UnifiedTemplateVisibility.private,
-          createdAt: widget.template.createdAt,
-          updatedAt: DateTime.now(),
-          version: 1,
-          isCustom: widget.template.isCustom,
-          userId: widget.template.userId ?? user?.uid,
-          authorName: widget.template.authorName,
-          source: unified.TemplateSource.legacy, // Mark as migrated
-          // Copy other relevant fields from the legacy template
-          tags: widget.template.tags,
-          estimatedDuration: widget.template.estimatedDuration,
-          usageCount: widget.template.usageCount,
-          downloadCount: widget.template.downloadCount,
-          averageRating: widget.template.averageRating,
-          reviewCount: widget.template.reviewCount,
-          difficulty: widget.template.difficulty,
-          imageUrl: widget.template.imageUrl,
-        );
-      }
-
-      await unifiedRepository.updateTemplate(templateToSave);
-
-      ref.invalidate(userTemplatesProvider);
-      ref.invalidate(customWorkoutTemplatesProvider); // Invalidate this too
+      ref.invalidate(customWorkoutTemplatesProvider);
 
       setState(() {
         _isLoading = false;

@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/migration/presentation/providers/migration_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class MigrationScreen extends ConsumerWidget {
   const MigrationScreen({super.key});
@@ -61,11 +62,11 @@ class MigrationScreen extends ConsumerWidget {
                   // Progress
                   if (migrationState.isLoading) ...[
                     _buildProgressCard(context, migrationState),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                   ],
 
                   // Extra space at bottom for action buttons
-                  SizedBox(height: 120),
+                  const SizedBox(height: 120),
                 ],
               ),
             ),
@@ -108,7 +109,7 @@ class MigrationScreen extends ConsumerWidget {
                   color: colorScheme.onPrimaryContainer,
                   size: 24,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.dataMigration,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -117,14 +118,14 @@ class MigrationScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               l10n.dataMigrationDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onPrimaryContainer,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             if (!state.hasDataToMigrate && !state.isLoading)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -163,7 +164,7 @@ class MigrationScreen extends ConsumerWidget {
               l10n.migrationOptions,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Time window option
             Row(
@@ -292,7 +293,7 @@ class MigrationScreen extends ConsumerWidget {
 
             // Errors
             if (result.errors.isNotEmpty) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -308,7 +309,7 @@ class MigrationScreen extends ConsumerWidget {
                         color: colorScheme.onErrorContainer,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     ...result.errors.map((error) => Text(
                       '• $error',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -322,7 +323,7 @@ class MigrationScreen extends ConsumerWidget {
 
             // Workout groups preview
             if (result.workoutGroups.isNotEmpty && state.status == MigrationStatus.analyzed) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 l10n.workoutGroupsPreview,
                 style: Theme.of(context).textTheme.labelLarge,
@@ -376,12 +377,12 @@ class MigrationScreen extends ConsumerWidget {
                 : l10n.migrating,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             LinearProgressIndicator(
               value: state.progress,
               backgroundColor: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             if (state.currentMessage != null)
               Text(
                 state.currentMessage!,
@@ -417,7 +418,7 @@ class MigrationScreen extends ConsumerWidget {
             size: 16,
             color: color ?? defaultColor,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
@@ -460,7 +461,10 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: state.isLoading ? null : () => notifier.previewMigration(),
-              icon: const Icon(AppIcons.search),
+              icon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
               label: Text(l10n.analyzeData),
             ),
           ),
@@ -472,7 +476,10 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: () => _showConfirmationDialog(context, notifier),
-              icon: const Icon(AppIcons.syncIcon),
+              icon: const SemanticIcon(
+  icon: AppIcons.syncIcon,
+  semanticLabel: 'Sync icon',
+),
               label: Text(l10n.startMigration),
             ),
           ),
@@ -485,14 +492,17 @@ class MigrationScreen extends ConsumerWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => notifier.reset(),
-              icon: Icon(AppIcons.refresh),
+              icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
               label: Text(l10n.reset),
             ),
           ),
         ],
 
         // Back button
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
           child: TextButton(

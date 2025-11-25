@@ -1,12 +1,16 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
+/// This is for COMMUNITY/PUBLIC templates (shareable with others).
+/// For internal workout template cards, see:
+/// `lib/features/workout/presentation/widgets/template_card.dart`
+///
 /// Dependencies:
 /// - Riverpod: None
 /// - Firebase: None
@@ -18,12 +22,16 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-class TemplateCard extends StatelessWidget {
-  
-  const TemplateCard({
+/// @deprecated Use [CommunityTemplateCard] instead to avoid naming conflicts
+/// with workout internal TemplateCard widget.
+@Deprecated('Use CommunityTemplateCard instead - avoids naming conflict with workout TemplateCard')
+typedef TemplateCard = CommunityTemplateCard;
+
+class CommunityTemplateCard extends StatelessWidget {
+
+  const CommunityTemplateCard({
     super.key,
     required this.template,
     required this.onTap,
@@ -31,7 +39,7 @@ class TemplateCard extends StatelessWidget {
     this.onDelete,
     this.onShare,
   });
-  final WorkoutTemplate template;
+  final CommunityWorkoutTemplate template;
   final VoidCallback onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -77,7 +85,7 @@ class TemplateCard extends StatelessWidget {
                     color: context.colors.surface,
                     size: 20,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       template.category.name.toUpperCase(),
@@ -105,7 +113,7 @@ class TemplateCard extends StatelessWidget {
                             size: 12,
                             color: context.colors.surface,
                           ),
-                          SizedBox(width: 2),
+                          const SizedBox(width: 2),
                           Text(
                             'PUBLIC',
                             style: theme.textTheme.labelSmall?.copyWith(
@@ -196,7 +204,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onEdit!();
                       },
-                      icon: const Icon(AppIcons.edit, size: 18),
+                      icon: Icon(AppIcons.edit, size: 18),
                       tooltip: 'Edit',
                     ),
                   if (onShare != null)
@@ -205,7 +213,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onShare!();
                       },
-                      icon: const Icon(AppIcons.share, size: 18),
+                      icon: Icon(AppIcons.share, size: 18),
                       tooltip: 'Share',
                     ),
                   if (onDelete != null)
@@ -273,8 +281,7 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.mixed:
         return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:
-        // TODO: primaryGrey doesn't exist - using surfaceVariant instead
-        return context.colors.surfaceVariant;
+        return context.colors.onSurfaceVariant;
     }
   }
   
@@ -283,7 +290,7 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.strength:
         return AppIcons.workout;
       case TemplateCategory.hypertrophy:
-        return AppIcons.expandIcon;
+        return AppIcons.expand;
       case TemplateCategory.endurance:
         return AppIcons.cardio;
       case TemplateCategory.powerlifting:
@@ -293,7 +300,7 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.crossfit:
         return AppIcons.sports;
       case TemplateCategory.calisthenics:
-        return AppIcons.accessibilityIcon;
+        return AppIcons.accessibility;
       case TemplateCategory.cardio:
         return AppIcons.favorite;
       case TemplateCategory.mixed:

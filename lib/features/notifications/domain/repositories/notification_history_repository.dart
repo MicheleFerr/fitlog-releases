@@ -11,7 +11,6 @@
 library;
 
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 
 /// Repository interface for notification history operations
 ///

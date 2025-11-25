@@ -14,6 +14,7 @@
 /// - Provider dependency injection (userId required)
 /// - Stream providers (activeRoutine, userRoutines)
 /// - Computed providers (hasActiveRoutine, routineCount, isRoutineCreationComplete)
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

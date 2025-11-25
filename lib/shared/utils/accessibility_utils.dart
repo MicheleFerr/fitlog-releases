@@ -21,15 +21,15 @@
 /// ```dart
 /// // Test contrast ratio
 /// final ratio = AccessibilityUtils.getContrastRatio(
-///   Colors.white,
-///   Colors.black,
+///   context.colors.surface,
+///   context.colors.onSurface,
 /// );
 /// print(ratio); // 21.0 (massimo contrasto)
 ///
 /// // Check WCAG conformance
 /// final isAccessible = AccessibilityUtils.meetsWCAG_AA(
-///   foreground: Colors.blue,
-///   background: Colors.white,
+///   foreground: context.colors.primary,
+///   background: context.colors.surface,
 /// );
 /// ```
 ///
@@ -37,6 +37,7 @@ library;
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Utility class per accessibility checks
 class AccessibilityUtils {
@@ -73,8 +74,8 @@ class AccessibilityUtils {
   /// Esempio:
   /// ```dart
   /// final ratio = AccessibilityUtils.getContrastRatio(
-  ///   Colors.white,  // foreground
-  ///   Colors.blue,   // background
+  ///   context.colors.surface,  // foreground
+  ///   context.colors.primary,   // background
   /// );
   /// ```
   static double getContrastRatio(Color foreground, Color background) {
@@ -127,8 +128,8 @@ class AccessibilityUtils {
   /// Esempio:
   /// ```dart
   /// if (AccessibilityUtils.meetsWCAG_AA(
-  ///   foreground: Colors.blue,
-  ///   background: Colors.white,
+  ///   foreground: context.colors.primary,
+  ///   background: context.colors.surface,
   /// )) {
   ///   print('Testo accessibile!');
   /// }
@@ -184,14 +185,14 @@ class AccessibilityUtils {
   ///
   /// Esempio:
   /// ```dart
-  /// final textColor = AccessibilityUtils.suggestTextColor(Colors.blue);
-  /// // Returns Colors.white o Colors.black
+  /// final textColor = AccessibilityUtils.suggestTextColor(context.colors.primary);
+  /// // Returns context.colors.surface o context.colors.onSurface
   /// ```
   static Color suggestTextColor(Color background) {
-    final whiteRatio = getContrastRatio(Colors.white, background);
-    final blackRatio = getContrastRatio(Colors.black, background);
+    final whiteRatio = getContrastRatio(context.colors.surface, background);
+    final blackRatio = getContrastRatio(context.colors.onSurface, background);
 
-    return whiteRatio > blackRatio ? Colors.white : Colors.black;
+    return whiteRatio > blackRatio ? context.colors.surface : context.colors.onSurface;
   }
 
   /// Verifica se un colore è "chiaro" (luminance > 0.5)
@@ -217,8 +218,8 @@ class AccessibilityUtils {
   /// Esempio:
   /// ```dart
   /// print(AccessibilityUtils.getAccessibilityReport(
-  ///   foreground: Colors.blue,
-  ///   background: Colors.white,
+  ///   foreground: context.colors.primary,
+  ///   background: context.colors.surface,
   ///   label: 'Primary Button',
   /// ));
   /// ```

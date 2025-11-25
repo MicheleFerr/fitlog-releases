@@ -18,11 +18,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for selecting recovery date for a skipped workout
 class RecoveryPickerDialog extends StatefulWidget {
@@ -86,16 +83,16 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: context.colors.primary.withValues(alpha: 0.2),
+                      color: Colors.blue.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      AppIcons.refresh,
-                      color: context.colors.primary,
+                    child: const Icon(
+                      Icons.refresh,
+                      color: Colors.blue,
                       size: 24,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,9 +104,9 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                             color: context.colors.onSurface,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'From ${_formatDate(context, widget.originalDate)}',
+                          'From ${_formatDate(widget.originalDate)}',
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: context.colors.onSurface.withValues(alpha: 0.7),
                           ),
@@ -120,26 +117,26 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ],
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Info message
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: context.colors.primary.withValues(alpha: 0.1),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: context.colors.primary.withValues(alpha: 0.3),
+                    color: Colors.blue.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      AppIcons.infoOutline,
-                      color: context.colors.primary,
+                    const Icon(
+                      Icons.info_outline,
+                      color: Colors.blue,
                       size: 20,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Select a future date to make up for this missed workout. Choose a rest day or add an extra session.',
@@ -152,12 +149,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Suggested dates section
               _buildSuggestedDates(),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Calendar
               Text(
@@ -167,9 +164,9 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   color: context.colors.onSurface,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-              DecoratedBox(
+              Container(
                 decoration: BoxDecoration(
                   color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
@@ -188,8 +185,8 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       color: context.colors.primary.withValues(alpha: 0.3),
                       shape: BoxShape.circle,
                     ),
-                    selectedDecoration: BoxDecoration(
-                      color: context.colors.primary,
+                    selectedDecoration: const BoxDecoration(
+                      color: Colors.blue,
                       shape: BoxShape.circle,
                     ),
                     outsideDaysVisible: false,
@@ -212,7 +209,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
               // Validation error
               if (_validationError != null) ...[
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -222,11 +219,11 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   child: Row(
                     children: [
                       Icon(
-                        AppIcons.error,
+                        Icons.error_outline,
                         color: context.colors.error,
                         size: 20,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           _validationError!,
@@ -246,7 +243,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
               if (_selectedDay != null && _validationError == null)
                 _buildImpactPreview(),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Actions
               Row(
@@ -259,14 +256,14 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                       style: TextStyle(color: context.colors.onSurface),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: (_selectedDay == null || _validationError != null)
                         ? null
                         : _confirmRecovery,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colors.primary,
-                      foregroundColor: context.colors.surface,
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 12,
@@ -303,7 +300,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
             color: context.colors.onSurface,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -315,12 +312,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? context.colors.primary
+                      ? Colors.blue
                       : context.colors.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? context.colors.primary
+                        ? Colors.blue
                         : context.colors.primary.withValues(alpha: 0.3),
                   ),
                 ),
@@ -328,24 +325,24 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      AppIcons.calendar,
+                      Icons.calendar_today,
                       size: 16,
-                      color: isSelected ? context.colors.surface : context.colors.primary,
+                      color: isSelected ? Colors.white : context.colors.primary,
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
-                      _formatDateShort(context, date),
+                      _formatDateShort(date),
                       style: context.textTheme.bodyMedium?.copyWith(
-                        color: isSelected ? context.colors.surface : context.colors.onSurface,
+                        color: isSelected ? Colors.white : context.colors.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       '(Rest day)',
                       style: context.textTheme.bodySmall?.copyWith(
                         color: isSelected
-                            ? context.colors.surface.withValues(alpha: 0.8)
+                            ? Colors.white.withValues(alpha: 0.8)
                             : context.colors.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
@@ -366,7 +363,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
 
     Color? backgroundColor;
     if (isRestDay) {
-      backgroundColor = context.colors.success.withValues(alpha: 0.2);
+      backgroundColor = Colors.green.withValues(alpha: 0.2);
     } else if (isOccupied) {
       backgroundColor = context.colors.error.withValues(alpha: 0.1);
     }
@@ -394,10 +391,10 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.primary.withValues(alpha: 0.1),
+        color: Colors.blue.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: context.colors.primary.withValues(alpha: 0.3),
+          color: Colors.blue.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -405,12 +402,12 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.completeOutline,
-                color: context.colors.primary,
+              const Icon(
+                Icons.check_circle_outline,
+                color: Colors.blue,
                 size: 20,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Recovery impact',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -422,16 +419,16 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           ),
           const SizedBox(height: 12),
           _buildImpactRow(
-            icon: AppIcons.trendUp,
+            icon: Icons.trending_up,
             label: 'Adherence Rate',
             value: 'Will improve',
             isPositive: true,
           ),
           const SizedBox(height: 8),
           _buildImpactRow(
-            icon: AppIcons.eventAvailable,
+            icon: Icons.event_available,
             label: 'Recovery Date',
-            value: _formatDate(context, _selectedDay!),
+            value: _formatDate(_selectedDay!),
             isPositive: true,
           ),
         ],
@@ -452,7 +449,7 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           size: 18,
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
@@ -462,17 +459,17 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
           ),
         ),
         if (isPositive)
-          Icon(
-            AppIcons.arrowUpward,
+          const Icon(
+            Icons.arrow_upward,
             size: 14,
-            color: context.colors.primary,
+            color: Colors.blue,
           ),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           value,
           style: context.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: context.colors.primary,
+            color: Colors.blue,
           ),
         ),
       ],
@@ -534,15 +531,19 @@ class _RecoveryPickerDialogState extends State<RecoveryPickerDialog> {
     Navigator.of(context).pop(_selectedDay);
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
-    final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('MMM d, y', locale);
-    return dateFormat.format(date);
+  String _formatDate(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
-  String _formatDateShort(BuildContext context, DateTime date) {
-    final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('MMM d', locale);
-    return dateFormat.format(date);
+  String _formatDateShort(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return '${months[date.month - 1]} ${date.day}';
   }
 }

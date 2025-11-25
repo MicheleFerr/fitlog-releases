@@ -14,7 +14,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/app_lifecycle_man
 import 'package:gymbro_flutter_new/shared/domain/entities/theme_mode_adapter.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_state.dart';
 import 'package:gymbro_flutter_new/firebase_options.dart';
+import 'package:gymbro_flutter_new/core/config/environment_config.dart'; // 🔐 SECURITY: Environment variables
 import 'package:gymbro_flutter_new/core/security/app_check_config.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; // 🔐 SECURITY: Secure logging
 import 'package:gymbro_flutter_new/shared/data/hive_timestamp_adapter.dart';
 import 'package:gymbro_flutter_new/core/config/admob_config.dart';
 import 'package:gymbro_flutter_new/shared/data/services/consent_service.dart';
@@ -23,11 +25,12 @@ import 'package:gymbro_flutter_new/shared/data/models/feedback_settings_model.da
 import 'package:gymbro_flutter_new/shared/data/models/history_view_settings_model.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
+// Removed: exercise_fuzzy_matcher.dart - overengineered, deleted
 import 'package:gymbro_flutter_new/shared/domain/security/device_security_checker.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/services/privacy_safe_analytics.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // 🔐 SECURITY: Hive encryption migration
 // 🔔 DEEP LINKING: Required imports for cold-start notification deep linking
 import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -43,6 +46,27 @@ void main() async {
   // MUST be called before scheduling any notifications
   // Uses IANA timezone database for accurate scheduling across timezones
   tz.initializeTimeZones();
+
+  // ========================================
+  // 🔐 SECURITY: Load Environment Variables from .env
+  // ========================================
+  // MUST be called before Firebase.initializeApp()
+  // Loads sensitive Firebase API keys from .env file (not in version control)
+  try {
+    await EnvironmentConfig.load();
+    if (kDebugMode) {
+      debugPrint('✅ Environment configuration loaded successfully');
+    }
+  } catch (e) {
+    // Critical: Cannot proceed without environment config
+    if (kDebugMode) {
+      debugPrint('❌ FATAL: Failed to load .env file');
+      debugPrint('   Error: $e');
+      debugPrint('   Make sure .env exists (copy from .env.example)');
+    }
+    // For now, we'll let it continue but Firebase will fail if keys are missing
+    // In production, you might want to show an error screen
+  }
 
   // ========================================
   // 🔔 DEEP LINKING: Cold-Start Detection (T=0ms to T=250ms)
@@ -160,6 +184,66 @@ void main() async {
   // This pre-opens: user_consents, privacy (app_config opened on-demand by AppConfigNotifier)
   // Must be called AFTER adapter registration, BEFORE any service uses boxes
   await HiveBoxManagerEnhanced.initialize();
+
+  // ========================================
+  // 🔐 SECURITY: One-Time Migration to Encrypted Hive Boxes
+  // ========================================
+  // Migrates 4 sensitive boxes from unencrypted to AES-256 encrypted:
+  // - user_consents (GDPR consent data)
+  // - privacy (privacy settings)
+  // - app_config (user preferences)
+  // - user_profile_cache (PII: email, displayName)
+  //
+  // This runs ONCE on app update. Uses SharedPreferences flag to prevent re-running.
+  // MUST run AFTER Hive.initFlutter() and adapter registration
+  // MUST run BEFORE any service that uses these boxes (PrivacyManager, etc.)
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    const migrationKey = 'hive_encryption_migrated_v1';
+    final alreadyMigrated = prefs.getBool(migrationKey) ?? false;
+
+    if (!alreadyMigrated) {
+      if (kDebugMode) {
+        debugPrint('🔐 [Security] Starting one-time Hive encryption migration...');
+        debugPrint('   Migrating 4 sensitive boxes to AES-256 encryption');
+      }
+
+      // Run migration for all sensitive boxes
+      final results = await HiveMigrationService.migrateAllSensitiveBoxes();
+
+      if (kDebugMode) {
+        debugPrint('🔐 [Security] Migration results:');
+        results.forEach((boxName, migrated) {
+          final status = migrated ? '✅ Migrated' : '⚠️ Skipped (already encrypted or missing)';
+          debugPrint('   - $boxName: $status');
+        });
+      }
+
+      // Mark migration as complete (even if some boxes were skipped)
+      // This prevents re-running migration on every app launch
+      await prefs.setBool(migrationKey, true);
+
+      if (kDebugMode) {
+        final migratedCount = results.values.where((v) => v).length;
+        debugPrint('🔐 [Security] ✅ Migration complete: $migratedCount/${results.length} boxes encrypted');
+        debugPrint('   Flag set: $migrationKey = true');
+      }
+    } else {
+      if (kDebugMode) {
+        debugPrint('🔐 [Security] Encryption already applied (skipping migration)');
+      }
+    }
+  } catch (e, stackTrace) {
+    // CRITICAL: Log migration errors but DON'T crash the app
+    // Users can still use the app even if migration fails (boxes will remain unencrypted)
+    if (kDebugMode) {
+      debugPrint('❌ [Security] Hive encryption migration failed: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+      debugPrint('⚠️ App will continue with unencrypted boxes (user data at risk!)');
+    }
+    // TODO: Consider adding telemetry to track migration failures in production
+  }
 
   // ========================================
   // NOW Hive is ready: Initialize services that depend on it
@@ -349,8 +433,8 @@ Future<void> _initializeStorage() async {
   // ⚡ PERFORMANCE OPTIMIZATION: Open basic boxes in parallel
   // This reduces app startup time by ~30-40% (from ~19s to ~12s)
 
-  // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
-  print('📦 [Storage] Starting initialization...');
+  // 🔐 SECURITY: Use SecureLogger (debug-only, no production logs)
+  SecureLogger.debug('Starting storage initialization');
 
   await Future.wait([
     _openBox('auth_box'),
@@ -363,8 +447,8 @@ Future<void> _initializeStorage() async {
     // ✅ FIX: Removed analytics_cache - already opened in HiveBoxManagerEnhanced.initialize()
   ]);
 
-  // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
-  print('📦 [Storage] ✅ Basic boxes opened successfully');
+  // 🔐 SECURITY: Use SecureLogger (debug-only, no production logs)
+  SecureLogger.debug('Basic boxes opened successfully');
 
   // ⚡ PERFORMANCE: Initialize datasources and services in parallel
   // This reduces sequential waits and improves startup time by ~20-30%
@@ -379,16 +463,7 @@ Future<void> _initializeStorage() async {
       () => ExerciseUsageTracker().initialize(),
     ),
 
-    // Persistent fuzzy search isolate (saves 200ms per search)
-    _safeInitialize(
-      'ExerciseFuzzyMatcher',
-      () => ExerciseFuzzyMatcher.initialize(),
-      onSuccess: () {
-        if (kDebugMode) {
-          debugPrint('✅ Fuzzy search isolate initialized');
-        }
-      },
-    ),
+    // Removed: ExerciseFuzzyMatcher - overengineered, simple token matching is sufficient
   ]);
 
   // 🔔 NOTIFICATION SERVICES: Initialize notification system after storage
@@ -438,15 +513,17 @@ Future<void> _safeInitialize(
 Future<void> _openBox<T>(String boxName) async {
   final boxManager = HiveBoxManagerEnhanced();
   try {
-    // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
-    print('📦 [Storage] Opening box: $boxName');
+    // 🔐 SECURITY: Use SecureLogger (debug-only, no production logs)
+    SecureLogger.debug('Opening box', data: {'boxName': boxName});
     await boxManager.openBox<T>(boxName);
-    // DIAGNOSTIC: Always print in both Debug and Release mode (for debugging)
-    print('📦 [Storage] ✅ Opened: $boxName');
+    SecureLogger.debug('Box opened successfully', data: {'boxName': boxName});
   } catch (e, stackTrace) {
-    // DIAGNOSTIC: Log errors ALWAYS (critical for debugging Release mode)
-    print('❌ [Storage] FAILED to open $boxName box: $e');
-    print('📍 [Storage] Stack trace: $stackTrace');
+    // 🔐 SECURITY: Use SecureLogger with structured error data
+    SecureLogger.error('Failed to open box',
+      error: e,
+      stackTrace: stackTrace,
+      data: {'boxName': boxName},
+    );
 
     // Handle corrupted boxes that need recovery
     if ((boxName == 'app_config' && e.toString().contains('typeId')) ||

@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/usecases/schedule_workout_reminders.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_decision.dart';
 
 void main() {
   late ScheduleWorkoutReminders usecase;

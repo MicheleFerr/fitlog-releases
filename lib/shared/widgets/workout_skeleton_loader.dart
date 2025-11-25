@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Skeleton loader widget for workout history items
 /// Shows animated placeholder while loading real data
@@ -18,14 +16,9 @@ class WorkoutSkeletonLoader extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    final baseColor = context.colors.surfaceContainerHighest;
-    final highlightColor = isDark
-        ? HSLColor.fromColor(baseColor).withLightness(0.15).toColor()
-        : HSLColor.fromColor(baseColor).withLightness(0.95).toColor();
-
     return Shimmer.fromColors(
-      baseColor: baseColor,
-      highlightColor: highlightColor,
+      baseColor: isDark ? Colors.grey[800]! : Colors.grey[300]!,
+      highlightColor: isDark ? Colors.grey[700]! : Colors.grey[100]!,
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -40,7 +33,7 @@ class WorkoutSkeletonLoader extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colors.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -51,8 +44,8 @@ class WorkoutSkeletonLoader extends StatelessWidget {
             width: 120,
             height: 14,
             decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
           const SizedBox(height: 12),
@@ -62,8 +55,8 @@ class WorkoutSkeletonLoader extends StatelessWidget {
             width: 200,
             height: 20,
             decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
           const SizedBox(height: 8),
@@ -75,8 +68,8 @@ class WorkoutSkeletonLoader extends StatelessWidget {
                 width: 80,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: context.colors.surface,
-                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
               const SizedBox(width: 16),
@@ -84,8 +77,8 @@ class WorkoutSkeletonLoader extends StatelessWidget {
                 width: 60,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: context.colors.surface,
-                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ],
@@ -113,7 +106,7 @@ class LoadMoreIndicator extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const LoadingIndicator(),
+            const CircularProgressIndicator(),
             const SizedBox(height: 8),
             Text(
               message,

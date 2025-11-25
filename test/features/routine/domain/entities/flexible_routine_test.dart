@@ -14,6 +14,7 @@
 /// - JSON serialization/deserialization
 /// - Edge cases (empty sets, boundary values)
 /// - Immutability guarantees
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';

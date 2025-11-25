@@ -40,7 +40,6 @@ part 'analytics_set.g.dart';
 
 @freezed
 class AnalyticsSet with _$AnalyticsSet {
-  const AnalyticsSet._();
 
   const factory AnalyticsSet({
     /// Weight lifted in kg (must be > 0)
@@ -52,6 +51,7 @@ class AnalyticsSet with _$AnalyticsSet {
     /// When the set was performed
     required DateTime date,
   }) = _AnalyticsSet;
+  const AnalyticsSet._();
 
   /// Create from JSON (Firestore deserialization)
   factory AnalyticsSet.fromJson(Map<String, dynamic> json) =>

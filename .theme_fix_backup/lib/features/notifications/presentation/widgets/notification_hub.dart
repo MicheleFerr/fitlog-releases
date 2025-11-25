@@ -7,6 +7,10 @@ import 'package:gymbro_flutter_new/features/notifications/presentation/providers
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class NotificationHub extends ConsumerWidget {
   const NotificationHub({super.key});
@@ -34,9 +38,9 @@ class NotificationHub extends ConsumerWidget {
             child: InkWell(
               onTap: () => _showNotificationPanel(context, ref),
               borderRadius: BorderRadius.circular(22),
-              child: const Icon(
-                Icons.notifications_outlined,
-                color: Colors.white,
+              child: Icon(
+                AppIcons.notificationsOutlined,
+                color: context.colors.surface,
                 size: 22,
               ),
             ),
@@ -53,17 +57,17 @@ class NotificationHub extends ConsumerWidget {
               height: 20,
               padding: const EdgeInsets.symmetric(horizontal: 6),
               decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(10),
+                color: context.colors.error,
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   width: 2,
                 ),
               ),
               child: Text(
                 unreadCount > 99 ? '99+' : unreadCount.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: context.colors.surface,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
@@ -107,7 +111,7 @@ class NotificationPanel extends ConsumerWidget {
             height: 4,
             margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.3),
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -118,7 +122,7 @@ class NotificationPanel extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.notifications,
+                  AppIcons.notifications,
                   color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
@@ -228,10 +232,12 @@ class NotificationPanel extends ConsumerWidget {
               ),
               const Spacer(),
               if (user != null)
-                Icon(
-                  Icons.verified_user,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                SemanticIcon(
+  icon: AppIcons.verifiedUser,
+  semanticLabel: 'Verified user',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.primary.withValues(alpha: 0.6),
                 ),
             ],
           ),
@@ -275,27 +281,28 @@ class NotificationPanel extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
+                  color: context.colors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.3),
+                    color: context.colors.success.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.trending_up,
-                      size: 14,
-                      color: Colors.green,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.trendingUp,
+  semanticLabel: 'Trending up',
+  size: AppIconSize.tiny,
+  color: context.colors.success,
+),
                     const SizedBox(width: 4),
                     Text(
                       'Volume +${quickStatsAsync.value!.formattedVolumeIncrease}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Colors.green,
+                        color: context.colors.success,
                       ),
                     ),
                   ],
@@ -335,10 +342,12 @@ class NotificationPanel extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.notifications_none,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.notificationsNone,
+  semanticLabel: 'Notifications none',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onSurface.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -395,16 +404,16 @@ class NotificationTile extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: context.colors.error,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
+        child: Icon(
+          AppIcons.delete,
+          color: context.colors.surface,
         ),
       ),
       onDismissed: (_) => onDismiss(),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: notification.isRead 
               ? Theme.of(context).colorScheme.surface
@@ -428,7 +437,7 @@ class NotificationTile extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                      color: _getTypeColor(context, notification.type).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
@@ -477,10 +486,12 @@ class NotificationTile extends StatelessWidget {
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              Icon(
-                                Icons.arrow_forward,
-                                size: 14,
-                                color: Theme.of(context).colorScheme.primary,
+                              SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.primary,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -505,7 +516,7 @@ class NotificationTile extends StatelessWidget {
                       height: 8,
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                 ],
@@ -517,22 +528,22 @@ class NotificationTile extends StatelessWidget {
     );
   }
 
-  Color _getTypeColor(NotificationType type) {
+  Color _getTypeColor(BuildContext context, NotificationType type) {
     switch (type) {
       case NotificationType.aiTip:
-        return Colors.purple;
+        return context.colors.tertiary;
       case NotificationType.achievement:
-        return Colors.amber;
+        return context.colors.warning;
       case NotificationType.milestone:
-        return Colors.green;
+        return context.colors.success;
       case NotificationType.progress:
-        return Colors.blue;
+        return context.colors.primary;
       case NotificationType.reminder:
-        return Colors.orange;
+        return context.colors.secondary;
       case NotificationType.social:
         return Colors.pink;
       case NotificationType.system:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 }

@@ -29,13 +29,13 @@ import 'package:gymbro_flutter_new/features/routine/data/models/routine_model.da
 /// - Automatic `updatedAt` timestamp management
 /// - Only one active routine per user enforcement
 class FirebaseRoutineRepository implements RoutineRepository {
+
+  FirebaseRoutineRepository({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
   final FirebaseFirestore _firestore;
 
   /// Collection reference for routines
   static const String _collectionName = 'routines';
-
-  FirebaseRoutineRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _routinesCollection =>
       _firestore.collection(_collectionName);

@@ -36,33 +36,6 @@ class FeedbackConfig {
     this.scaleOverride,
   });
 
-  /// Base tier for default feedback values
-  final FeedbackTier baseTier;
-
-  /// Override for animation duration (null = use tier default)
-  final Duration? durationOverride;
-
-  /// Override for haptic feedback style (null = use tier default)
-  final HapticFeedbackStyle? hapticOverride;
-
-  /// Override for scale factor (null = use tier default)
-  final double? scaleOverride;
-
-  // ============================================
-  // Getters with Fallback Pattern
-  // ============================================
-
-  /// Animation duration (override or tier default)
-  Duration get duration => durationOverride ?? baseTier.duration;
-
-  /// Haptic feedback style (override or tier default)
-  ///
-  /// Returns null if both override and tier default are null (no haptic).
-  HapticFeedbackStyle? get hapticStyle => hapticOverride ?? baseTier.hapticStyle;
-
-  /// Scale factor for animation (override or tier default)
-  double get scaleFactor => scaleOverride ?? baseTier.scaleFactor;
-
   // ============================================
   // Factory Constructors (Common Presets)
   // ============================================
@@ -127,4 +100,31 @@ class FeedbackConfig {
         baseTier: FeedbackTier.standard,
         hapticOverride: null, // Explicit no haptic
       );
+
+  /// Base tier for default feedback values
+  final FeedbackTier baseTier;
+
+  /// Override for animation duration (null = use tier default)
+  final Duration? durationOverride;
+
+  /// Override for haptic feedback style (null = use tier default)
+  final HapticFeedbackStyle? hapticOverride;
+
+  /// Override for scale factor (null = use tier default)
+  final double? scaleOverride;
+
+  // ============================================
+  // Getters with Fallback Pattern
+  // ============================================
+
+  /// Animation duration (override or tier default)
+  Duration get duration => durationOverride ?? baseTier.duration;
+
+  /// Haptic feedback style (override or tier default)
+  ///
+  /// Returns null if both override and tier default are null (no haptic).
+  HapticFeedbackStyle? get hapticStyle => hapticOverride ?? baseTier.hapticStyle;
+
+  /// Scale factor for animation (override or tier default)
+  double get scaleFactor => scaleOverride ?? baseTier.scaleFactor;
 }

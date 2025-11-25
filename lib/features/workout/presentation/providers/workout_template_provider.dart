@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
-import 'package:gymbro_flutter_new/shared/domain/helpers/template_migration_helpers.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
@@ -64,48 +62,12 @@ final customWorkoutTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTe
   final legacyTemplates = await repository.getCustomTemplates();
   debugPrint('🔍 customWorkoutTemplatesProvider: Got ${legacyTemplates.length} legacy templates');
 
-  // 2. Prendi i template dal repository unificato (nuovi)
-  try {
-    final unifiedTemplates = await ref.watch(userTemplatesProvider.future);
-    debugPrint('🔍 customWorkoutTemplatesProvider: Got ${unifiedTemplates.length} unified templates');
-
-    // 3. Converti i template unificati in formato legacy e filtra solo i custom
-    final convertedTemplates = unifiedTemplates
-      .where((t) => t.isCustom)
-      .map((t) => TemplateMigrationHelpers.toLegacyTemplate(t))
-      .toList();
-    debugPrint('🔍 customWorkoutTemplatesProvider: Converted ${convertedTemplates.length} custom unified templates');
-
-    // 4. Combina e rimuovi duplicati usando l'ID come chiave
-    final allTemplates = <String, WorkoutTemplate>{};
-
-    // Aggiungi prima i template legacy
-    for (final template in legacyTemplates) {
-      allTemplates[template.id] = template;
-      debugPrint('  - Legacy: ${template.name} (${template.id})');
-    }
-
-    // Aggiungi i template unificati (sovrascrivendo duplicati)
-    for (final template in convertedTemplates) {
-      allTemplates[template.id] = template;
-      debugPrint('  - Unified: ${template.name} (${template.id})');
-    }
-
-    final result = allTemplates.values.toList();
-    debugPrint('🔍 customWorkoutTemplatesProvider: Returning ${result.length} total unique templates');
-
-    return result;
-  } catch (e) {
-    // Se c'è un errore con il repository unificato, ritorna almeno i template legacy
-    debugPrint('⚠️ customWorkoutTemplatesProvider: Error loading unified templates: $e');
-    debugPrint('🔍 customWorkoutTemplatesProvider: Falling back to legacy templates only');
-
-    for (final template in legacyTemplates) {
-      debugPrint('  - ${template.name}: isCustom=${template.isCustom}, id=${template.id}');
-    }
-
-    return legacyTemplates;
+  for (final template in legacyTemplates) {
+    debugPrint('  - ${template.name}: isCustom=${template.isCustom}, id=${template.id}');
   }
+
+  debugPrint('🔍 customWorkoutTemplatesProvider: Returning ${legacyTemplates.length} templates');
+  return legacyTemplates;
 });
 
 // Template più utilizzati (per quick start)
@@ -255,7 +217,6 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
       ref.invalidate(templateSearchResultsProvider);
       ref.invalidate(filteredTemplatesProvider);
       ref.invalidate(availableTemplateTagsProvider);
-      ref.invalidate(userTemplatesProvider);
       
       // Force refresh dei provider che potrebbero essere cached
       try {
@@ -299,24 +260,11 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
         debugPrint('🗑️ PROVIDER: Deleting template with ID: $templateId');
       }
 
-      // Delete from unified repository first (handles all sources)
-      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
-      await unifiedRepo.deleteTemplate(templateId);
+      // Delete from legacy repository
+      final repository = ref.read(workoutTemplateRepositoryProvider);
+      await repository.deleteTemplate(templateId);
       if (kDebugMode) {
-        debugPrint('🗑️ PROVIDER: Deleted from unified repository');
-      }
-
-      // Also try legacy repository for backward compatibility
-      try {
-        final repository = ref.read(workoutTemplateRepositoryProvider);
-        await repository.deleteTemplate(templateId);
-        if (kDebugMode) {
-          debugPrint('🗑️ PROVIDER: Also deleted from legacy repository');
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          debugPrint('ℹ️ PROVIDER: Not in legacy repository (expected for new templates)');
-        }
+        debugPrint('🗑️ PROVIDER: Deleted from legacy repository');
       }
 
       // Rimuovi dalla lista locale
@@ -337,12 +285,10 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
       ref.invalidate(templateSearchResultsProvider);
       ref.invalidate(filteredTemplatesProvider);
       ref.invalidate(availableTemplateTagsProvider);
-      ref.invalidate(userTemplatesProvider);
 
       // Force refresh key providers
       await Future.wait([
         ref.refresh(customWorkoutTemplatesProvider.future),
-        ref.refresh(userTemplatesProvider.future),
       ]).catchError((e) {
         if (kDebugMode) {
           debugPrint('⚠️ PROVIDER: Error refreshing providers after delete: $e');
@@ -401,7 +347,6 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
       ref.invalidate(templateSearchResultsProvider);
       ref.invalidate(filteredTemplatesProvider);
       ref.invalidate(availableTemplateTagsProvider);
-      ref.invalidate(userTemplatesProvider);
       
       if (kDebugMode) {
         debugPrint('✅ PROVIDER: Template creation completed');

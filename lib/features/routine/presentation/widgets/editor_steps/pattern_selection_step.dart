@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_patt
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/custom_pattern_builder.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Step 2: Pattern selection
 class PatternSelectionStep extends ConsumerWidget {
@@ -44,7 +46,7 @@ class PatternSelectionStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.routinePatternChooseDescription,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -52,12 +54,12 @@ class PatternSelectionStep extends ConsumerWidget {
             ),
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Toggle between preset and custom
           _buildPatternModeToggle(context, ref, state),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Show preset patterns or custom builder
           if (state.usePresetPattern) ...[
@@ -120,7 +122,7 @@ class PatternSelectionStep extends ConsumerWidget {
                           : context.colors.onSurface.withValues(alpha: 0.6),
                       size: 20,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       context.l10n.routinePatternPreset,
                       style: context.textTheme.labelLarge?.copyWith(
@@ -160,7 +162,7 @@ class PatternSelectionStep extends ConsumerWidget {
                           : context.colors.onSurface.withValues(alpha: 0.6),
                       size: 20,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       context.l10n.routinePatternCustom,
                       style: context.textTheme.labelLarge?.copyWith(
@@ -242,7 +244,7 @@ class PatternSelectionStep extends ConsumerWidget {
                             size: 24,
                           ),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +258,7 @@ class PatternSelectionStep extends ConsumerWidget {
                                       : context.colors.onSurface,
                                 ),
                               ),
-                              SizedBox(height: 2),
+                              const SizedBox(height: 2),
                               Text(
                                 '${context.l10n.routineWorkoutCount(workoutDays)}, ${context.l10n.routineRestCount(restDays)}',
                                 style: context.textTheme.bodySmall?.copyWith(
@@ -283,7 +285,7 @@ class PatternSelectionStep extends ConsumerWidget {
 
                     // Show details only if selected or no pattern is selected
                     if (!shouldCollapse) ...[
-                      SizedBox(height: 12),
+                      const SizedBox(height: 12),
                       Text(
                         _getLocalizedPatternDescription(pattern, context),
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -344,7 +346,7 @@ class PatternSelectionStep extends ConsumerWidget {
                       ? context.colors.secondary
                       : context.colors.primary,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   _formatDayLabel(day),
                   style: context.textTheme.labelSmall?.copyWith(
@@ -386,7 +388,7 @@ class PatternSelectionStep extends ConsumerWidget {
             color: context.colors.secondary,
             size: 32,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,7 +400,7 @@ class PatternSelectionStep extends ConsumerWidget {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   'Create your own custom workout sequence - Coming soon!',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -489,7 +491,7 @@ class PatternSelectionStep extends ConsumerWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   AppIcons.calendarViewWeek,
@@ -497,7 +499,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   size: 24,
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -583,7 +585,7 @@ class PatternSelectionStep extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       context.l10n.routineTotalWorkouts(totalWorkoutDays),
                       style: context.textTheme.bodySmall?.copyWith(
@@ -645,12 +647,14 @@ class PatternSelectionStep extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.calendarMonth,
-                  size: 16,
-                  color: context.colors.onSurface.withValues(alpha: 0.6),
+                SemanticIcon(
+  icon: AppIcons.calendarMonth,
+  semanticLabel: 'Calendar month',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurface.withValues(alpha: 0.6,
+),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   '${_getTotalMonths(startDate, endDate) - monthsToShow.length} more months...',
                   style: context.textTheme.bodySmall?.copyWith(
@@ -836,7 +840,7 @@ class PatternSelectionStep extends ConsumerWidget {
               color: day.isRest
                   ? context.colors.secondaryContainer
                   : context.colors.primaryContainer,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: day.isRest
                     ? context.colors.secondary.withValues(alpha: 0.3)
@@ -869,7 +873,7 @@ class PatternSelectionStep extends ConsumerWidget {
               ],
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
 
           // Day info
           Expanded(
@@ -888,7 +892,7 @@ class PatternSelectionStep extends ConsumerWidget {
                         ? context.colors.secondary
                         : context.colors.primary,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -931,7 +935,7 @@ class PatternSelectionStep extends ConsumerWidget {
     return Column(
       children: [
         Icon(icon, color: color, size: 20),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
           style: context.textTheme.titleMedium?.copyWith(

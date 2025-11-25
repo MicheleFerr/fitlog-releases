@@ -197,7 +197,7 @@ class ExportService {
   ) {
     final sortedPRs = personalRecords.toList()
       ..sort((a, b) => b.achievedAt.compareTo(a.achievedAt));
-    
+
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -271,7 +271,7 @@ class ExportService {
     List<AnalyticsActivity> activities,
   ) {
     final recentActivities = activities.take(30).toList();
-    
+
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -371,7 +371,7 @@ class ExportService {
         pw.SizedBox(height: 20),
         ...highPriorityInsights.map((insight) => pw.Container(
           margin: const pw.EdgeInsets.only(bottom: 15),
-          padding: const pw.EdgeInsets.all(10),
+          padding: const pw.EdgeInsets.all(8),
           decoration: pw.BoxDecoration(
             border: pw.Border.all(),
             borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),

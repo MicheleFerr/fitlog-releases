@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_swap.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Gradient action card with personality and accessibility
 ///
@@ -174,11 +174,11 @@ class _GradientActionCardState extends State<GradientActionCard>
                           outlinedIcon: widget.outlinedIcon,
                           filledIcon: widget.filledIcon,
                           isPressed: _isPressed,
-                          color: Colors.white,
+                          color: context.colors.surface,
                           size: 48,
                         ),
 
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
                         // Title (centered)
                         Text(
@@ -186,7 +186,7 @@ class _GradientActionCardState extends State<GradientActionCard>
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: context.colors.surface,
                                   ),
                           textAlign: TextAlign.center,
                           maxLines: 1,

@@ -17,6 +17,7 @@ library;
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -34,7 +35,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_
 
 // Import unawaited for fire-and-forget futures
 // ignore: unused_import
-import 'dart:async' show unawaited;
 
 /// Hybrid implementation of WorkoutRepository
 /// - Free users: Local storage only (Hive)
@@ -110,11 +110,12 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   }
   
   /// Check if current user is admin (always has cloud access)
-  bool get isAdminUser {
-    // Check if user email is admin email
-    final email = _cachedUserProfile?.email ?? _auth.currentUser?.email ?? '';
-    return email.contains('michele.cozzolino93@gmail.com') || 
-           email.contains('admin@');
+  ///
+  /// 🔐 SECURITY: Uses Firebase Custom Claims (server-validated)
+  /// REPLACED: email.contains('michele.cozzolino93@gmail.com') || email.contains('admin@') (insecure)
+  /// NEW: Async check via AdminRoleHelper.isCurrentUserAdmin()
+  Future<bool> get isAdminUser async {
+    return await AdminRoleHelper.isCurrentUserAdmin();
   }
   
   /// Check if we have internet connection
@@ -149,7 +150,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         );
 
         // If premium user or admin, sync to cloud asynchronously
-        if (isPremiumUser || isAdminUser) {
+        if (isPremiumUser || await isAdminUser) {
           _syncToCloudInBackground(
             workoutModel: workoutModel,
             userId: currentUser.uid,
@@ -188,7 +189,7 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
         }
 
         // Sync to cloud if premium or admin
-        if (isPremiumUser || isAdminUser) {
+        if (isPremiumUser || await isAdminUser) {
           _syncToCloudInBackground(
             workoutModel: workoutModel,
             userId: currentUser.uid,
@@ -221,9 +222,9 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       if (localWorkout != null) {
         return right(localWorkout.toDomain());
       }
-      
+
       // If premium or admin and not found locally, try cloud
-      if ((isPremiumUser || isAdminUser) && await hasConnection) {
+      if ((isPremiumUser || await isAdminUser) && await hasConnection) {
         final remoteWorkout = await _remoteDataSource.getWorkout(
           workoutId,
           currentUser.uid,
@@ -254,9 +255,9 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       if (currentUser == null) {
         return left(const AuthenticationFailure('User not authenticated'));
       }
-      
+
       // For admin users, always prioritize cloud data
-      if (isAdminUser && await hasConnection) {
+      if (await isAdminUser && await hasConnection) {
         try {
           // Get cloud workouts directly
           final remoteWorkouts = await _remoteDataSource.getWorkouts(

@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tab Cronologia: mostra lo storico delle esecuzioni dell'esercizio raggruppate per data
 class ExerciseHistoryTab extends ConsumerStatefulWidget {
@@ -68,12 +70,13 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.errorOutline,
-              size: 64,
-              color: context.colors.error,
-            ),
-            SizedBox(height: 16),
+            SemanticIcon(
+  icon: AppIcons.errorOutline,
+  semanticLabel: 'Error outline',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+            const SizedBox(height: 16),
             Text(
               context.l10n.errorLoadingHistory,
               style: context.textTheme.bodyLarge?.copyWith(
@@ -91,19 +94,21 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.history,
-            size: 64,
-            color: context.colors.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.medium,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             context.l10n.noHistoryYet,
             style: context.textTheme.titleMedium?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.startWorkoutToSeeHistory,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -164,7 +169,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                   ),
 
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
 
                   // Data e info
                   Expanded(
@@ -178,7 +183,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                             color: context.colors.onSurface,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           '$totalSets ${context.l10n.sets} · ${totalVolume.toStringAsFixed(0)} kg ${context.l10n.totalVolume}',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -247,7 +252,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
             ),
           ),
 
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
 
           // Peso e reps
           Expanded(
@@ -256,12 +261,13 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      AppIcons.fitnessCenter,
-                      size: 16,
-                      color: context.colors.primary,
-                    ),
-                    SizedBox(width: 4),
+                    SemanticIcon(
+  icon: AppIcons.fitnessCenter,
+  semanticLabel: 'Fitness center',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
+                    const SizedBox(width: 4),
                     Text(
                       '${weight.toStringAsFixed(1)} kg',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -269,13 +275,14 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                         color: context.colors.onSurface,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Icon(
-                      AppIcons.repeat,
-                      size: 16,
-                      color: context.colors.secondary,
-                    ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 8),
+                    SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: context.colors.secondary,
+),
+                    const SizedBox(width: 4),
                     Text(
                       '$reps ${context.l10n.reps}',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -285,7 +292,7 @@ class _ExerciseHistoryTabState extends ConsumerState<ExerciseHistoryTab> {
                     ),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   workoutName,
                   style: context.textTheme.labelSmall?.copyWith(

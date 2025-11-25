@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 // Model per Achievement
 class Achievement {
@@ -102,17 +104,17 @@ enum AchievementType {
 Color _getColorFromType(AchievementType type) {
   switch (type) {
     case AchievementType.workout:
-      return Colors.blue;
+      return const Color(0xFF2196F3); // Material Blue (primary)
     case AchievementType.streak:
       return Colors.orange;
     case AchievementType.volume:
-      return Colors.green;
+      return const Color(0xFF4CAF50); // Material Green (success)
     case AchievementType.pr:
-      return Colors.red;
+      return const Color(0xFFF44336); // Material Red (error)
     case AchievementType.community:
       return Colors.purple;
     case AchievementType.general:
-      return Colors.grey;
+      return const Color(0xFFBDBDBD); // Material Grey 400 (surfaceVariant)
   }
 }
 
@@ -163,7 +165,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa il tuo primo allenamento',
       emoji: '🎯',
       xpReward: 50,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -173,7 +175,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 5 allenamenti',
       emoji: '🏃',
       xpReward: 100,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -183,7 +185,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 10 allenamenti',
       emoji: '💪',
       xpReward: 200,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -193,7 +195,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 25 allenamenti',
       emoji: '🏋️',
       xpReward: 500,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -203,7 +205,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Completa 50 allenamenti',
       emoji: '🎖️',
       xpReward: 1000,
-      color: Colors.blue,
+      color: const Color(0xFF2196F3), // Material Blue (primary)
       isUnlocked: false,
       type: AchievementType.workout,
     ),
@@ -257,7 +259,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 1000kg totali',
       emoji: '📦',
       xpReward: 100,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -267,7 +269,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 5000kg totali',
       emoji: '🚛',
       xpReward: 250,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -277,7 +279,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Solleva 10000kg totali',
       emoji: '🏗️',
       xpReward: 500,
-      color: Colors.green,
+      color: const Color(0xFF4CAF50), // Material Green (success)
       isUnlocked: false,
       type: AchievementType.volume,
     ),
@@ -289,7 +291,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Stabilisci il tuo primo PR',
       emoji: '📈',
       xpReward: 50,
-      color: Colors.red,
+      color: const Color(0xFFF44336), // Material Red (error)
       isUnlocked: false,
       type: AchievementType.pr,
     ),
@@ -299,7 +301,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Stabilisci 5 PR',
       emoji: '💥',
       xpReward: 150,
-      color: Colors.red,
+      color: const Color(0xFFF44336), // Material Red (error)
       isUnlocked: false,
       type: AchievementType.pr,
     ),

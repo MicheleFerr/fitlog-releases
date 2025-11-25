@@ -25,6 +25,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumPurchaseScreenV2 extends ConsumerStatefulWidget {
   const PremiumPurchaseScreenV2({super.key});
@@ -215,7 +219,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            Icons.arrow_back,
+            AppIcons.back,
             color: colorScheme.onSurface,
             size: 20,
           ),
@@ -243,11 +247,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.refresh,
-                      size: 16,
-                      color: colorScheme.primary,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       'Restore',
@@ -271,7 +276,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final colorScheme = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -384,22 +389,23 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.amber,
+              color: context.colors.warning,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.withValues(alpha: 0.4),
+                  color: context.colors.warning.withValues(alpha: 0.4),
                   blurRadius: 16,
                   spreadRadius: 0,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.workspace_premium,
-              size: 40,
-              color: Colors.white,
-            ),
+            child: SemanticIcon(
+  icon: AppIcons.premium,
+  semanticLabel: 'Premium',
+  size: AppIconSize.medium,
+  color: context.colors.surface,
+),
           ),
           
           const SizedBox(height: 24),
@@ -435,28 +441,28 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     
     final features = [
       _FeatureData(
-        icon: Icons.cloud_sync_rounded,
-        title: 'Cloud Sync',
+        icon: AppIcons.cloudSyncRounded,
+        title: context.l10n.cloudSync,
         description: 'Access your workouts on any device',
         gradient: [colorScheme.primary, colorScheme.secondary],
         delay: 0,
       ),
       _FeatureData(
-        icon: Icons.backup_rounded,
+        icon: AppIcons.backupRounded,
         title: 'Auto Backup',
         description: 'Never lose your progress again',
         gradient: [colorScheme.secondary, colorScheme.tertiary],
         delay: 200,
       ),
       _FeatureData(
-        icon: Icons.analytics_rounded,
+        icon: AppIcons.analyticsRounded,
         title: 'Advanced Analytics',
         description: 'Detailed insights & progress tracking',
         gradient: [colorScheme.tertiary, colorScheme.primary],
         delay: 400,
       ),
       _FeatureData(
-        icon: Icons.people_rounded,
+        icon: AppIcons.peopleRounded,
         title: 'Community Access',
         description: 'Connect with other athletes',
         gradient: [colorScheme.primary, colorScheme.tertiary],
@@ -468,7 +474,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Premium Features',
+          context.l10n.premiumFeatures,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
@@ -505,7 +511,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 // Glass morphism effect
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     spreadRadius: 0,
                     offset: const Offset(0, 4),
@@ -528,7 +534,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                       ),
                       child: Icon(
                         feature.icon,
-                        color: Colors.white,
+                        color: context.colors.surface,
                         size: 24,
                       ),
                     ),
@@ -559,7 +565,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     
                     Icon(
-                      Icons.check_circle,
+                      AppIcons.complete,
                       color: colorScheme.primary,
                       size: 20,
                     ),
@@ -592,9 +598,9 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ...List.generate(5, (index) => 
-                const Icon(
-                  Icons.star_rounded,
-                  color: Colors.amber,
+                Icon(
+                  AppIcons.starRounded,
+                  color: context.colors.warning,
                   size: 20,
                 )
               ),
@@ -673,16 +679,16 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Choose Your Plan',
+                  context.l10n.chooseYourPlan,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(
-                  Icons.arrow_forward_rounded,
-                  color: Colors.white,
+                Icon(
+                  AppIcons.arrowForwardRounded,
+                  color: context.colors.surface,
                   size: 20,
                 ),
               ],
@@ -709,7 +715,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   const SizedBox(height: 20),
                   
                   Text(
-                    'Choose Your Plan',
+                    context.l10n.chooseYourPlan,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: colorScheme.onSurface,
@@ -870,11 +876,12 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                             color: isSelected ? colorScheme.primary : Colors.transparent,
                           ),
                           child: isSelected
-                              ? Icon(
-                                  Icons.check,
-                                  size: 16,
-                                  color: colorScheme.onPrimary,
-                                )
+                              ? SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.tiny,
+  color: colorScheme.onPrimary,
+)
                               : null,
                         ),
                         
@@ -941,7 +948,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         child: Text(
                           '🔥 Most Popular Choice',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -951,18 +958,18 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 ),
                 
                 // Save badge (top right)
-                if (info['save']!.isNotEmpty)
+                if (_getSaveBadge(plan).isNotEmpty)
                   Positioned(
                     top: 0,
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isPopular ? Colors.amber : colorScheme.tertiary,
+                        color: isPopular ? context.colors.warning : colorScheme.tertiary,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: (isPopular ? Colors.amber : colorScheme.tertiary)
+                            color: (isPopular ? context.colors.warning : colorScheme.tertiary)
                                 .withValues(alpha: 0.3),
                             blurRadius: 8,
                             spreadRadius: 0,
@@ -971,9 +978,9 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         ],
                       ),
                       child: Text(
-                        info['save']!,
+                        _getSaveBadge(plan),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: isPopular ? Colors.black : colorScheme.onTertiary,
+                          color: isPopular ? context.colors.onSurface : colorScheme.onTertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -1017,7 +1024,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.security_rounded,
+                  AppIcons.securityRounded,
                   'Secure Payment',
                   '256-bit SSL',
                 ),
@@ -1030,7 +1037,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.cancel_rounded,
+                  AppIcons.cancelRounded,
                   'Easy Cancel',
                   'Anytime',
                 ),
@@ -1043,7 +1050,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               Expanded(
                 child: _buildTrustBadge(
                   context,
-                  Icons.privacy_tip_rounded,
+                  AppIcons.privacyTipRounded,
                   'Privacy First',
                   'No tracking',
                 ),
@@ -1123,7 +1130,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             TextButton(
               onPressed: () => _openUrl('https://gymbro.app/privacy'),
               child: Text(
-                'Privacy Policy',
+                context.l10n.privacyPolicy,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -1141,7 +1148,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
             TextButton(
               onPressed: () => _openUrl('https://gymbro.app/terms'),
               child: Text(
-                'Terms of Service',
+                context.l10n.termsOfService,
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontSize: 12,
@@ -1190,7 +1197,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                 child: Row(
                   children: [
                     Icon(
-                      Icons.error_outline_rounded,
+                      AppIcons.errorOutlineRounded,
                       color: colorScheme.onErrorContainer,
                     ),
                     const SizedBox(width: 12),
@@ -1205,7 +1212,10 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(Icons.close_rounded),
+                      icon: const SemanticIcon(
+  icon: AppIcons.closeRounded,
+  semanticLabel: 'Close rounded',
+),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -1250,11 +1260,11 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   strokeWidth: 2,
                                 ),
                               ),
@@ -1262,7 +1272,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                               Text(
                                 'Processing...',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1271,16 +1281,16 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
-                                Icons.rocket_launch_rounded,
-                                color: Colors.white,
+                              Icon(
+                                AppIcons.rocketLaunchRounded,
+                                color: context.colors.surface,
                                 size: 24,
                               ),
                               const SizedBox(width: 12),
                               Text(
                                 'Start Free Trial • ${_getPlanTitle(_selectedPlan)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: context.colors.surface,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -1315,7 +1325,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               color: _currentPage == index
                   ? colorScheme.primary
                   : colorScheme.outline.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
           );
         }),
@@ -1327,8 +1337,8 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
-    return Container(
-      color: Colors.black.withValues(alpha: 0.6),
+    return ColoredBox(
+      color: context.colors.onSurface.withValues(alpha: 0.6),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Center(
@@ -1340,7 +1350,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: context.colors.onSurface.withValues(alpha: 0.2),
                   blurRadius: 20,
                   spreadRadius: 0,
                   offset: const Offset(0, 10),
@@ -1359,9 +1369,9 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       strokeWidth: 3,
                     ),
                   ),
@@ -1428,17 +1438,18 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.check_circle_outline_rounded,
-                  size: 60,
-                  color: Colors.white,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: context.colors.surface,
+),
               ),
               
               const SizedBox(height: 32),
               
               Text(
-                'You\'re Premium!',
+                context.l10n.yourePremium,
                 style: theme.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: colorScheme.onSurface,
@@ -1470,26 +1481,26 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   children: [
                     _buildPremiumFeature(
                       context,
-                      'Cloud Sync',
+                      context.l10n.cloudSync,
                       'Active',
-                      Icons.cloud_done_rounded,
-                      Colors.green,
+                      AppIcons.cloudDoneRounded,
+                      context.colors.success,
                     ),
                     const Divider(height: 24),
                     _buildPremiumFeature(
                       context,
                       'Auto Backup',
                       'Enabled',
-                      Icons.backup_rounded,
-                      Colors.blue,
+                      AppIcons.backupRounded,
+                      context.colors.primary,
                     ),
                     const Divider(height: 24),
                     _buildPremiumFeature(
                       context,
                       'Community Access',
                       'Full Access',
-                      Icons.people_rounded,
-                      Colors.orange,
+                      AppIcons.peopleRounded,
+                      context.colors.secondary,
                     ),
                   ],
                 ),
@@ -1503,13 +1514,13 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.settings_rounded,
+                      AppIcons.settingsRounded,
                       color: colorScheme.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Manage Subscription',
+                      context.l10n.manageSubscription,
                       style: TextStyle(
                         color: colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -1541,7 +1552,7 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
           height: 40,
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 20),
         ),
@@ -1568,11 +1579,22 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
   String _getPlanTitle(PremiumPlan? plan) {
     switch (plan) {
       case PremiumPlan.monthly:
-        return 'Monthly';
+        return context.l10n.monthly;
       case PremiumPlan.yearly:
-        return 'Yearly';
+        return context.l10n.yearly;
       case PremiumPlan.lifetime:
-        return 'Lifetime';
+        return context.l10n.lifetime;
+      default:
+        return '';
+    }
+  }
+
+  String _getSaveBadge(PremiumPlan plan) {
+    switch (plan) {
+      case PremiumPlan.yearly:
+        return context.l10n.saveThirtyThreePercent;
+      case PremiumPlan.lifetime:
+        return context.l10n.bestValue;
       default:
         return '';
     }
@@ -1595,37 +1617,40 @@ class _PremiumPurchaseScreenV2State extends ConsumerState<PremiumPurchaseScreenV
     try {
       await ref.read(premiumUpgradeProvider.notifier).restorePurchases();
 
-      if (mounted) {
-        final userProfile = ref.read(unifiedUserProfileProvider).valueOrNull;
-        if (userProfile?.isPremium ?? false) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text('Premium restored successfully!'),
-                ],
-              ),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+      if (!mounted) return;
+
+      final userProfile = ref.read(unifiedUserProfileProvider).valueOrNull;
+
+      if (!context.mounted) return;
+
+      if (userProfile?.isPremium ?? false) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(AppIcons.checkCircle, color: context.colors.surface),
+                const SizedBox(width: 8),
+                const Text('Premium restored successfully!'),
+              ],
             ),
-          );
-          Navigator.of(context).pop();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('No purchases found to restore'),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          );
-        }
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('No purchases found to restore'),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {

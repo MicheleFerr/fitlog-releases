@@ -101,7 +101,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
             children: [
               // Header
               _buildHeader(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Description
               Text(
@@ -205,7 +205,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
           date: _startDate,
           onTap: () => _selectDate(isStartDate: true),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         // End date
         _buildDatePickerTile(
@@ -246,7 +246,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
               size: AppIconSize.medium,
               color: context.colors.primary,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,7 +257,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     date != null
                         ? DateFormat.yMMMd().format(date)
@@ -294,7 +294,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
             size: AppIconSize.small,
             color: context.colors.onPrimaryContainer,
           ),
-          SizedBox(width: 6),
+          const SizedBox(width: 6),
           Text(
             '$duration ${context.l10n.days}',
             style: context.textTheme.labelMedium?.copyWith(
@@ -347,7 +347,7 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
             size: AppIconSize.small,
             color: context.colors.onErrorContainer,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               _validationError!,
@@ -374,13 +374,13 @@ class _PauseRoutineModalState extends ConsumerState<PauseRoutineModal> {
             child: Text(context.l10n.cancel),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           flex: 2,
           child: FilledButton.icon(
             onPressed: _isSubmitting ? null : _handleSubmit,
             icon: _isSubmitting
-                ? SizedBox(
+                ? const SizedBox(
                     width: 16,
                     height: 16,
                     child: LoadingIndicator(),

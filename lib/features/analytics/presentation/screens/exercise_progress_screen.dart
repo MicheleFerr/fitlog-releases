@@ -6,8 +6,9 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_p
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseProgressScreen extends ConsumerStatefulWidget {
   const ExerciseProgressScreen({super.key});
@@ -44,7 +45,10 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(AppIcons.back),
+          icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -85,10 +89,16 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
               },
               decoration: InputDecoration(
                 hintText: context.l10n.searchExercisesPlaceholder,
-                prefixIcon: const Icon(AppIcons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: Icon(AppIcons.clear),
+                        icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                         onPressed: () {
                           setState(() {
                             _searchController.clear();
@@ -175,7 +185,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                       size: 24,
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,28 +196,30 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.calendar,
-                              size: 14,
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                            SizedBox(width: 4),
+                            SemanticIcon(
+  icon: AppIcons.calendar,
+  semanticLabel: 'Calendar',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
+                            const SizedBox(width: 4),
                             Text(
                               '${metrics.totalSessions} ${context.l10n.totalSessions}',
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colors.onSurfaceVariant,
                               ),
                             ),
-                            SizedBox(width: 12),
-                            Icon(
-                              AppIcons.clock,
-                              size: 14,
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 12),
+                            SemanticIcon(
+  icon: AppIcons.clock,
+  semanticLabel: 'Clock',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurfaceVariant,
+),
+                            const SizedBox(width: 4),
                             Text(
                               _getRelativeTime(metrics.lastWorkoutDate),
                               style: context.textTheme.bodySmall?.copyWith(
@@ -222,7 +234,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
                   _buildTrendIndicator(metrics.weightTrend),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Stats row
               Row(
@@ -264,7 +276,7 @@ class _ExerciseProgressScreenState extends ConsumerState<ExerciseProgressScreen>
             color: color,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           label,
           style: context.textTheme.bodySmall?.copyWith(

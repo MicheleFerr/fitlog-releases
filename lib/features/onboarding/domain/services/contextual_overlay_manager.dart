@@ -163,11 +163,6 @@ class ContextualOverlayManager {
     // PHASE 3: Feature Discovery & Advanced
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    'routineCenterIntro': OverlayConfig(
-      message: 'Create workout routines to follow a structured program',
-      actionLabel: 'Explore',
-      duration: Duration(seconds: 8),
-    ),
     'analyticsIntro': OverlayConfig(
       message: 'Track your progress and PRs over time',
       actionLabel: 'View',
@@ -213,9 +208,6 @@ enum OverlayTrigger {
 
   /// Show when user hovers over exercise card for 3+ seconds
   exerciseCardLongPress,
-
-  /// Show when user opens routine center for first time
-  routineCenterFirstOpen,
 
   /// Show when user opens analytics for first time
   analyticsFirstOpen,

@@ -19,6 +19,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -127,7 +129,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                     
                     // FAQ
                     _buildFAQSection(context),
-                    SizedBox(height: 100),
+                    const SizedBox(height: 100),
                   ]),
                 ),
               ),
@@ -151,11 +153,12 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Icon(
-              AppIcons.rocket,
-              size: 64,
-              color: colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.rocket,
+  semanticLabel: 'Rocket',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
             const SizedBox(height: 16),
             Text(
               context.l10n.unlockYourFullPotential,
@@ -164,7 +167,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.syncAcrossAllDevices,
               style: theme.textTheme.bodyLarge,
@@ -338,7 +341,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                             ),
                             decoration: BoxDecoration(
                               color: colorScheme.tertiary.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               savings,
@@ -522,7 +525,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 foregroundColor: colorScheme.onPrimary,
                 minimumSize: const Size.fromHeight(56),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(24),
                 ),
               ),
               child: _isProcessingUpgrade
@@ -537,7 +540,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(AppIcons.rocket),
+                        const SemanticIcon(
+  icon: AppIcons.rocket,
+  semanticLabel: 'Rocket',
+),
                         const SizedBox(width: 8),
                         Text(
                           context.l10n.startFreeTrialThen,
@@ -570,11 +576,12 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.verified,
-                size: 100,
-                color: colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.verified,
+  semanticLabel: 'Verified',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
               const SizedBox(height: 24),
               Text(
                 context.l10n.yourePremium,
@@ -608,7 +615,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 onPressed: () {
                   // Navigate to subscription management
                 },
-                icon: const Icon(AppIcons.settings),
+                icon: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                 label: Text(context.l10n.manageSubscription),
               ),
             ],
@@ -663,7 +673,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             content: Row(
               children: [
                 Icon(AppIcons.checkCircle, color: Theme.of(context).colorScheme.onPrimary),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(context.l10n.welcomeToPremium),
               ],
             ),

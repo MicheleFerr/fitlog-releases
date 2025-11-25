@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
@@ -162,18 +163,21 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
           // Do Not Disturb Section
           _buildSectionHeader(context, '🌙 Do Not Disturb'),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           _buildDoNotDisturbSection(context, ref, settings, hasPermission),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Test Notification Button
           if (hasPermission)
             Center(
               child: ElevatedButton.icon(
                 onPressed: () => _sendTestNotification(context, ref),
-                icon: Icon(AppIcons.send),
-                label: Text('Send Test Notification'),
+                icon: const SemanticIcon(
+  icon: AppIcons.send,
+  semanticLabel: 'Send',
+),
+                label: const Text('Send Test Notification'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: context.colors.primary,
                   foregroundColor: context.colors.onPrimary,
@@ -185,7 +189,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
               ),
             ),
 
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -207,7 +211,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 AppIcons.warningRounded,
                 color: context.colors.onErrorContainer,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   'Notifications are disabled',
@@ -219,14 +223,14 @@ class NotificationSettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Please enable notifications in your device settings to receive workout reminders.',
             style: context.textTheme.bodySmall?.copyWith(
               color: context.colors.onErrorContainer,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           ElevatedButton(
             onPressed: () async {
               final service = ref.read(smartNotificationServiceProvider);
@@ -263,7 +267,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
             AppIcons.schedule,
             color: context.colors.onPrimaryContainer,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               '$count pending ${count == 1 ? 'notification' : 'notifications'}',
@@ -413,7 +417,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Notifications scheduled during this window will be delayed until 7:00 AM',
                 style: context.textTheme.bodySmall?.copyWith(

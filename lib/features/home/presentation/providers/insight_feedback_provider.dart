@@ -3,10 +3,14 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/home/data/repositories/insight_feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_coach_service.dart';
+import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 
 /// Provider for the Insight Feedback Repository
+///
+/// ⚠️ MIGRATION: Now uses unified feedback repository as backend
 final insightFeedbackRepositoryProvider = Provider<InsightFeedbackRepository>((ref) {
-  return InsightFeedbackRepository();
+  final unifiedRepository = ref.watch(unifiedFeedbackRepositoryProvider);
+  return InsightFeedbackRepository(unifiedRepository: unifiedRepository);
 });
 
 /// Provider for feedback state of a specific insight (by hash)

@@ -14,12 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ExerciseTemplate _$ExerciseTemplateFromJson(Map<String, dynamic> json) {
-  return _ExerciseTemplate.fromJson(json);
+ExerciseDefinitionTemplate _$ExerciseDefinitionTemplateFromJson(
+    Map<String, dynamic> json) {
+  return _ExerciseDefinitionTemplate.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ExerciseTemplate {
+mixin _$ExerciseDefinitionTemplate {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
@@ -38,15 +39,16 @@ mixin _$ExerciseTemplate {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ExerciseTemplateCopyWith<ExerciseTemplate> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ExerciseDefinitionTemplateCopyWith<ExerciseDefinitionTemplate>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ExerciseTemplateCopyWith<$Res> {
-  factory $ExerciseTemplateCopyWith(
-          ExerciseTemplate value, $Res Function(ExerciseTemplate) then) =
-      _$ExerciseTemplateCopyWithImpl<$Res, ExerciseTemplate>;
+abstract class $ExerciseDefinitionTemplateCopyWith<$Res> {
+  factory $ExerciseDefinitionTemplateCopyWith(ExerciseDefinitionTemplate value,
+          $Res Function(ExerciseDefinitionTemplate) then) =
+      _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
+          ExerciseDefinitionTemplate>;
   @useResult
   $Res call(
       {String id,
@@ -67,9 +69,10 @@ abstract class $ExerciseTemplateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ExerciseTemplateCopyWithImpl<$Res, $Val extends ExerciseTemplate>
-    implements $ExerciseTemplateCopyWith<$Res> {
-  _$ExerciseTemplateCopyWithImpl(this._value, this._then);
+class _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
+        $Val extends ExerciseDefinitionTemplate>
+    implements $ExerciseDefinitionTemplateCopyWith<$Res> {
+  _$ExerciseDefinitionTemplateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -161,11 +164,12 @@ class _$ExerciseTemplateCopyWithImpl<$Res, $Val extends ExerciseTemplate>
 }
 
 /// @nodoc
-abstract class _$$ExerciseTemplateImplCopyWith<$Res>
-    implements $ExerciseTemplateCopyWith<$Res> {
-  factory _$$ExerciseTemplateImplCopyWith(_$ExerciseTemplateImpl value,
-          $Res Function(_$ExerciseTemplateImpl) then) =
-      __$$ExerciseTemplateImplCopyWithImpl<$Res>;
+abstract class _$$ExerciseDefinitionTemplateImplCopyWith<$Res>
+    implements $ExerciseDefinitionTemplateCopyWith<$Res> {
+  factory _$$ExerciseDefinitionTemplateImplCopyWith(
+          _$ExerciseDefinitionTemplateImpl value,
+          $Res Function(_$ExerciseDefinitionTemplateImpl) then) =
+      __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -187,11 +191,13 @@ abstract class _$$ExerciseTemplateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ExerciseTemplateImplCopyWithImpl<$Res>
-    extends _$ExerciseTemplateCopyWithImpl<$Res, _$ExerciseTemplateImpl>
-    implements _$$ExerciseTemplateImplCopyWith<$Res> {
-  __$$ExerciseTemplateImplCopyWithImpl(_$ExerciseTemplateImpl _value,
-      $Res Function(_$ExerciseTemplateImpl) _then)
+class __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>
+    extends _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
+        _$ExerciseDefinitionTemplateImpl>
+    implements _$$ExerciseDefinitionTemplateImplCopyWith<$Res> {
+  __$$ExerciseDefinitionTemplateImplCopyWithImpl(
+      _$ExerciseDefinitionTemplateImpl _value,
+      $Res Function(_$ExerciseDefinitionTemplateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -213,7 +219,7 @@ class __$$ExerciseTemplateImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$ExerciseTemplateImpl(
+    return _then(_$ExerciseDefinitionTemplateImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -280,8 +286,8 @@ class __$$ExerciseTemplateImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseTemplateImpl implements _ExerciseTemplate {
-  const _$ExerciseTemplateImpl(
+class _$ExerciseDefinitionTemplateImpl implements _ExerciseDefinitionTemplate {
+  const _$ExerciseDefinitionTemplateImpl(
       {required this.id,
       required this.name,
       required this.description,
@@ -302,8 +308,9 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
         _instructions = instructions,
         _metadata = metadata;
 
-  factory _$ExerciseTemplateImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseTemplateImplFromJson(json);
+  factory _$ExerciseDefinitionTemplateImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$ExerciseDefinitionTemplateImplFromJson(json);
 
   @override
   final String id;
@@ -367,14 +374,14 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
 
   @override
   String toString() {
-    return 'ExerciseTemplate(id: $id, name: $name, description: $description, category: $category, type: $type, muscleGroups: $muscleGroups, equipment: $equipment, instructions: $instructions, imageUrl: $imageUrl, videoUrl: $videoUrl, difficulty: $difficulty, metadata: $metadata, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ExerciseDefinitionTemplate(id: $id, name: $name, description: $description, category: $category, type: $type, muscleGroups: $muscleGroups, equipment: $equipment, instructions: $instructions, imageUrl: $imageUrl, videoUrl: $videoUrl, difficulty: $difficulty, metadata: $metadata, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExerciseTemplateImpl &&
+            other is _$ExerciseDefinitionTemplateImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
@@ -426,20 +433,21 @@ class _$ExerciseTemplateImpl implements _ExerciseTemplate {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ExerciseTemplateImplCopyWith<_$ExerciseTemplateImpl> get copyWith =>
-      __$$ExerciseTemplateImplCopyWithImpl<_$ExerciseTemplateImpl>(
-          this, _$identity);
+  _$$ExerciseDefinitionTemplateImplCopyWith<_$ExerciseDefinitionTemplateImpl>
+      get copyWith => __$$ExerciseDefinitionTemplateImplCopyWithImpl<
+          _$ExerciseDefinitionTemplateImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseTemplateImplToJson(
+    return _$$ExerciseDefinitionTemplateImplToJson(
       this,
     );
   }
 }
 
-abstract class _ExerciseTemplate implements ExerciseTemplate {
-  const factory _ExerciseTemplate(
+abstract class _ExerciseDefinitionTemplate
+    implements ExerciseDefinitionTemplate {
+  const factory _ExerciseDefinitionTemplate(
       {required final String id,
       required final String name,
       required final String description,
@@ -454,10 +462,10 @@ abstract class _ExerciseTemplate implements ExerciseTemplate {
       final Map<String, dynamic>? metadata,
       final bool isActive,
       final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$ExerciseTemplateImpl;
+      final DateTime? updatedAt}) = _$ExerciseDefinitionTemplateImpl;
 
-  factory _ExerciseTemplate.fromJson(Map<String, dynamic> json) =
-      _$ExerciseTemplateImpl.fromJson;
+  factory _ExerciseDefinitionTemplate.fromJson(Map<String, dynamic> json) =
+      _$ExerciseDefinitionTemplateImpl.fromJson;
 
   @override
   String get id;
@@ -491,6 +499,6 @@ abstract class _ExerciseTemplate implements ExerciseTemplate {
   DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
-  _$$ExerciseTemplateImplCopyWith<_$ExerciseTemplateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ExerciseDefinitionTemplateImplCopyWith<_$ExerciseDefinitionTemplateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

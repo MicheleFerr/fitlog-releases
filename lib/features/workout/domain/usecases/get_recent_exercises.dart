@@ -5,9 +5,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 /// Retrieves unique exercise names from recent workouts (newest first)
 /// Limited by the provided limit parameter (default 10)
 class GetRecentExercises {
-  final WorkoutRepository _repository;
 
   GetRecentExercises(this._repository);
+  final WorkoutRepository _repository;
 
   /// Get list of recently used exercise names
   ///

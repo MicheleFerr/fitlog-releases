@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// A widget that overlays a blur effect on premium features for free users
 class PremiumFeatureOverlay extends StatelessWidget {
@@ -63,7 +66,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
                 context.push('/premium');
               },
               borderRadius: BorderRadius.circular(12),
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -84,11 +87,12 @@ class PremiumFeatureOverlay extends StatelessWidget {
                           color: theme.colorScheme.primaryContainer,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.lock_outline,
-                          size: 40,
-                          color: theme.colorScheme.primary,
-                        ),
+                        child: SemanticIcon(
+  icon: AppIcons.lockOutline,
+  semanticLabel: 'Lock outline',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary,
+),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -119,7 +123,7 @@ class PremiumFeatureOverlay extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.star,
+                              AppIcons.star,
                               color: theme.colorScheme.onPrimary,
                               size: 20,
                             ),

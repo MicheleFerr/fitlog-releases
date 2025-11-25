@@ -700,66 +700,66 @@ void main() {
       });
     });
 
-    group('📚 WorkoutTemplate', () {
+    group('📚 ExerciseSuggestions', () {
       test('exerciseDatabase contains all categories', () {
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.chest), true);
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.back), true);
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.shoulders), true);
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.arms), true);
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.legs), true);
-        expect(WorkoutTemplate.exerciseDatabase.containsKey(ExerciseCategory.abs), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.chest), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.back), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.shoulders), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.arms), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.legs), true);
+        expect(ExerciseSuggestions.exerciseDatabase.containsKey(ExerciseCategory.abs), true);
       });
 
       test('getExercisesForCategory returns correct exercises', () {
-        final chestExercises = WorkoutTemplate.getExercisesForCategory(ExerciseCategory.chest);
+        final chestExercises = ExerciseSuggestions.getExercisesForCategory(ExerciseCategory.chest);
         expect(chestExercises, contains('Panca Piana'));
         expect(chestExercises, contains('Panca Inclinata'));
         expect(chestExercises, contains('Dips'));
 
-        final backExercises = WorkoutTemplate.getExercisesForCategory(ExerciseCategory.back);
+        final backExercises = ExerciseSuggestions.getExercisesForCategory(ExerciseCategory.back);
         expect(backExercises, contains('Trazioni'));
         expect(backExercises, contains('Lat Machine'));
         expect(backExercises, contains('Stacchi'));
 
-        final legExercises = WorkoutTemplate.getExercisesForCategory(ExerciseCategory.legs);
+        final legExercises = ExerciseSuggestions.getExercisesForCategory(ExerciseCategory.legs);
         expect(legExercises, contains('Squat'));
         expect(legExercises, contains('Leg Press'));
         expect(legExercises, contains('Affondi'));
       });
 
       test('getExercisesForCategory returns empty list for cardio', () {
-        final cardioExercises = WorkoutTemplate.getExercisesForCategory(ExerciseCategory.cardio);
+        final cardioExercises = ExerciseSuggestions.getExercisesForCategory(ExerciseCategory.cardio);
         expect(cardioExercises, isEmpty);
       });
 
       test('searchExercises finds exercises by query', () {
-        final results = WorkoutTemplate.searchExercises('squat');
+        final results = ExerciseSuggestions.searchExercises('squat');
         expect(results, contains('Squat'));
 
-        final pancaResults = WorkoutTemplate.searchExercises('panca');
+        final pancaResults = ExerciseSuggestions.searchExercises('panca');
         expect(pancaResults, contains('Panca Piana'));
         expect(pancaResults, contains('Panca Inclinata'));
         expect(pancaResults, contains('Panca Declinata'));
       });
 
       test('searchExercises is case insensitive', () {
-        final upperResults = WorkoutTemplate.searchExercises('SQUAT');
+        final upperResults = ExerciseSuggestions.searchExercises('SQUAT');
         expect(upperResults, contains('Squat'));
 
-        final lowerResults = WorkoutTemplate.searchExercises('squat');
+        final lowerResults = ExerciseSuggestions.searchExercises('squat');
         expect(lowerResults, contains('Squat'));
 
-        final mixedResults = WorkoutTemplate.searchExercises('SqUaT');
+        final mixedResults = ExerciseSuggestions.searchExercises('SqUaT');
         expect(mixedResults, contains('Squat'));
       });
 
       test('searchExercises returns empty list for non-matching query', () {
-        final results = WorkoutTemplate.searchExercises('xyz123');
+        final results = ExerciseSuggestions.searchExercises('xyz123');
         expect(results, isEmpty);
       });
 
       test('searchExercises returns partial matches', () {
-        final results = WorkoutTemplate.searchExercises('curl');
+        final results = ExerciseSuggestions.searchExercises('curl');
         expect(results, contains('Curl Bilanciere'));
         expect(results, contains('Hammer Curl'));
         expect(results, contains('Curl Manubri'));
@@ -768,7 +768,7 @@ void main() {
 
       test('all exercises in database are unique within category', () {
         for (final category in ExerciseCategory.values) {
-          final exercises = WorkoutTemplate.getExercisesForCategory(category);
+          final exercises = ExerciseSuggestions.getExercisesForCategory(category);
           final uniqueExercises = exercises.toSet();
           expect(uniqueExercises.length, exercises.length,
               reason: 'Category ${category.name} has duplicate exercises');

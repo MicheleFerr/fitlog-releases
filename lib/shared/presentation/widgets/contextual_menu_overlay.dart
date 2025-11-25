@@ -37,7 +37,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///       ContextualMenuItem(
 ///         icon: AppIcons.delete,
 ///         label: 'Delete',
-///         color: Colors.red,
+///         color: context.colors.error,
 ///         onTap: () => _handleDelete(),
 ///       ),
 ///     ],
@@ -274,7 +274,7 @@ class _ContextualMenuItemWidget extends StatelessWidget {
               size: 20,
               color: effectiveColor,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 item.label,

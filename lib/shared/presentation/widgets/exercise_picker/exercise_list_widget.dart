@@ -13,6 +13,9 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/exercise_picker_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget base che mostra una lista di esercizi filtrabili
 /// Usato come componente riutilizzabile da vari picker
@@ -140,7 +143,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: Theme.of(context).textTheme.bodySmall,
@@ -153,7 +156,10 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
             ? (isSelected
                 ? Icon(AppIcons.complete,
                     color: Theme.of(context).colorScheme.primary)
-                : Icon(AppIcons.radioButtonUnchecked))
+                : const SemanticIcon(
+  icon: AppIcons.radioButtonUnchecked,
+  semanticLabel: 'Radio button unchecked',
+))
             : null,
         onTap: () => widget.config.strategy.onExerciseTap(context, exercise),
       ),
@@ -164,7 +170,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
     if (isSelected && widget.config.strategy.showSelectionIndicator) {
       return CircleAvatar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(AppIcons.check, color: Colors.white),
+        child: Icon(AppIcons.check, color: context.colors.surface),
       );
     }
 
@@ -230,17 +236,19 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.searchOff,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             l10n.noExercisesFound,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             l10n.tryModifyingFilters,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -255,13 +263,13 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
         return Colors.orange;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 }

@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WarmupSuggestionCard extends ConsumerStatefulWidget {
   
@@ -212,11 +215,12 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.fitness_center,
-                      size: 20,
-                      color: theme.colorScheme.primary,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -239,7 +243,7 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                       ),
                     ),
                     Icon(
-                      _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      _isExpanded ? AppIcons.expandLess : AppIcons.expandMore,
                       color: theme.colorScheme.onSurfaceVariant,
                       size: 24,
                     ),
@@ -286,11 +290,12 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                             _toggleExpanded();
                             widget.onDismiss?.call();
                           },
-                          icon: Icon(
-                            Icons.close,
-                            size: 18,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                          icon: SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                         ),
                       ],
                     ),
@@ -354,7 +359,11 @@ class _WarmupSuggestionCardState extends ConsumerState<WarmupSuggestionCard>
                     padding: const EdgeInsets.all(16),
                     child: FilledButton.icon(
                       onPressed: _addAllWarmupSets,
-                      icon: const Icon(Icons.add, size: 16),
+                      icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.tiny,
+),
                       label: Text(l10n.addAll),
                       style: FilledButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),

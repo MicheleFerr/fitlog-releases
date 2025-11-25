@@ -867,20 +867,20 @@ void main() {
       final now = DateTime.now();
       final setsWithOutliers = [
         // Consistent data around 100kg 1RM
-        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(Duration(days: 1))),
-        _MockSetWithDate(weight: 98.0, reps: 5, date: now.subtract(Duration(days: 2))),
-        _MockSetWithDate(weight: 102.0, reps: 5, date: now.subtract(Duration(days: 3))),
-        _MockSetWithDate(weight: 99.0, reps: 5, date: now.subtract(Duration(days: 4))),
-        _MockSetWithDate(weight: 101.0, reps: 5, date: now.subtract(Duration(days: 5))),
+        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(const Duration(days: 1))),
+        _MockSetWithDate(weight: 98.0, reps: 5, date: now.subtract(const Duration(days: 2))),
+        _MockSetWithDate(weight: 102.0, reps: 5, date: now.subtract(const Duration(days: 3))),
+        _MockSetWithDate(weight: 99.0, reps: 5, date: now.subtract(const Duration(days: 4))),
+        _MockSetWithDate(weight: 101.0, reps: 5, date: now.subtract(const Duration(days: 5))),
 
         // Outliers (significantly different)
-        _MockSetWithDate(weight: 50.0, reps: 5, date: now.subtract(Duration(days: 6))), // Too light
-        _MockSetWithDate(weight: 150.0, reps: 5, date: now.subtract(Duration(days: 7))), // Too heavy
+        _MockSetWithDate(weight: 50.0, reps: 5, date: now.subtract(const Duration(days: 6))), // Too light
+        _MockSetWithDate(weight: 150.0, reps: 5, date: now.subtract(const Duration(days: 7))), // Too heavy
 
         // More consistent data
-        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(Duration(days: 8))),
-        _MockSetWithDate(weight: 99.0, reps: 5, date: now.subtract(Duration(days: 9))),
-        _MockSetWithDate(weight: 101.0, reps: 5, date: now.subtract(Duration(days: 10))),
+        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(const Duration(days: 8))),
+        _MockSetWithDate(weight: 99.0, reps: 5, date: now.subtract(const Duration(days: 9))),
+        _MockSetWithDate(weight: 101.0, reps: 5, date: now.subtract(const Duration(days: 10))),
       ];
 
       // Act
@@ -913,8 +913,8 @@ void main() {
       // Arrange
       final now = DateTime.now();
       final sets = [
-        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(Duration(days: 1))),
-        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(Duration(days: 2))),
+        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(const Duration(days: 1))),
+        _MockSetWithDate(weight: 100.0, reps: 5, date: now.subtract(const Duration(days: 2))),
       ];
 
       // Act
@@ -1111,7 +1111,7 @@ void main() {
       // Act
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 0,
-        dataAge: Duration(days: 1),
+        dataAge: const Duration(days: 1),
         standardDeviation: 2.0,
         estimated1RM: 100.0,
       );
@@ -1125,7 +1125,7 @@ void main() {
       // But we test the edge case to ensure robustness
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 0,
-        dataAge: Duration(days: 1),
+        dataAge: const Duration(days: 1),
         standardDeviation: 2.0,
         estimated1RM: 100.0,
       );
@@ -1140,7 +1140,7 @@ void main() {
       // veryHigh requires: >=10 points, <=7 days, <=5% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 15,
-        dataAge: Duration(days: 1),
+        dataAge: const Duration(days: 1),
         standardDeviation: 3.0, // 3% of 100kg = 3kg
         estimated1RM: 100.0,
       );
@@ -1154,7 +1154,7 @@ void main() {
       // veryHigh requires: >=10 points, <=7 days, <=5% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 10,
-        dataAge: Duration(days: 7),
+        dataAge: const Duration(days: 7),
         standardDeviation: 5.0, // Exactly 5% of 100kg = 5kg
         estimated1RM: 100.0,
       );
@@ -1170,7 +1170,7 @@ void main() {
       // high requires: >=7 points, <=14 days, <=8% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 8,
-        dataAge: Duration(days: 10),
+        dataAge: const Duration(days: 10),
         standardDeviation: 6.0, // 6% of 100kg = 6kg
         estimated1RM: 100.0,
       );
@@ -1184,7 +1184,7 @@ void main() {
       // high requires: >=7 points, <=14 days, <=8% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 7,
-        dataAge: Duration(days: 14),
+        dataAge: const Duration(days: 14),
         standardDeviation: 8.0, // Exactly 8% of 100kg = 8kg
         estimated1RM: 100.0,
       );
@@ -1200,7 +1200,7 @@ void main() {
       // medium requires: >=4 points, <=30 days, <=12% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 5,
-        dataAge: Duration(days: 20),
+        dataAge: const Duration(days: 20),
         standardDeviation: 10.0, // 10% of 100kg = 10kg
         estimated1RM: 100.0,
       );
@@ -1214,7 +1214,7 @@ void main() {
       // medium requires: >=4 points, <=30 days, <=12% SD
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 4,
-        dataAge: Duration(days: 30),
+        dataAge: const Duration(days: 30),
         standardDeviation: 12.0, // Exactly 12% of 100kg = 12kg
         estimated1RM: 100.0,
       );
@@ -1230,7 +1230,7 @@ void main() {
       // low requires: >=1 point (any age/SD that doesn't meet higher thresholds)
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 3,
-        dataAge: Duration(days: 50),
+        dataAge: const Duration(days: 50),
         standardDeviation: 20.0, // 20% SD - very high variability
         estimated1RM: 100.0,
       );
@@ -1243,7 +1243,7 @@ void main() {
       // Arrange: Just 1 data point (minimum for low confidence)
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 1,
-        dataAge: Duration(days: 100),
+        dataAge: const Duration(days: 100),
         standardDeviation: 50.0, // 50% SD - extremely high variability
         estimated1RM: 100.0,
       );
@@ -1259,7 +1259,7 @@ void main() {
       // Should NOT qualify for veryHigh (requires <=7 days)
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 15, // Many points (normally veryHigh)
-        dataAge: Duration(days: 14), // Too old for veryHigh (>7 days), but OK for high (<=14 days)
+        dataAge: const Duration(days: 14), // Too old for veryHigh (>7 days), but OK for high (<=14 days)
         standardDeviation: 3.0, // Low SD (3%)
         estimated1RM: 100.0,
       );
@@ -1274,7 +1274,7 @@ void main() {
       // Should NOT qualify for veryHigh (requires <=5% SD)
       final confidence = APREAutoRegulationService.calculateConfidence(
         dataPoints: 15, // Many points (normally veryHigh)
-        dataAge: Duration(days: 1), // Recent data (OK for veryHigh)
+        dataAge: const Duration(days: 1), // Recent data (OK for veryHigh)
         standardDeviation: 10.0, // High variability (10% SD > 5% threshold)
         estimated1RM: 100.0,
       );

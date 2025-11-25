@@ -6,14 +6,13 @@ import 'package:gymbro_flutter_new/features/notifications/domain/repositories/no
 import 'package:gymbro_flutter_new/features/notifications/domain/use_cases/schedule_notification_use_case.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/notification_platform_adapter.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/adapters/platform_adapter_factory.dart';
-import 'package:gymbro_flutter_new/features/notifications/data/repositories/local_notification_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/services/fcm_service.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
 import 'package:gymbro_flutter_new/core/utils/debug_logger.dart';
 import 'package:flutter/foundation.dart';
-// 🔔 WARM-START: Import for GoRouter navigation
-import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/app/app.dart' show routerProvider;
+// ✅ CONSOLIDATED: Import notificationRepositoryProvider from single source
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart'
+    show notificationRepositoryProvider;
 
 /// Unified notification provider that serves as the single source of truth
 /// for all notification functionality in the app
@@ -518,10 +517,8 @@ class UnifiedNotificationProvider extends StateNotifier<UnifiedNotificationState
       // Listen to delivery receipts
       _deliveryReceiptSubscription = _repository.deliveryReceiptStream.listen(
         (receipt) {
-          final updatedDeliveryStatus = {
-            ...state.deliveryStatus,
-            receipt.notificationId: receipt,
-          };
+          final updatedDeliveryStatus = Map<String, NotificationDeliveryReceipt>.from(state.deliveryStatus)
+            ..[receipt.notificationId] = receipt;
 
           state = state.copyWith(deliveryStatus: updatedDeliveryStatus);
 
@@ -991,59 +988,8 @@ final notificationSystemStatusProvider = Provider<NotificationSystemStatus>((ref
 });
 
 // === DEPENDENCY PROVIDERS ===
-// ✅ FIXED: Now uses LocalNotificationRepository (real implementation)
-// 🔔 WARM-START: Includes navigation callback for notification taps
-// NOTE: This provider duplicates the one in notification_providers.dart
-// Both need the same navigation callback for warm-start deep linking
-final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
-  // 🔔 WARM-START: Get GoRouter for navigation
-  final router = ref.read(routerProvider);
-
-  return LocalNotificationRepository(
-    ref: ref, // 🔔 FIX: Pass ref to read NotificationSettings v2.0
-    onNotificationTapped: (payload) {
-      // 🔔 WARM-START: Handle notification tap when app is already running
-      // Uses same handler as notification_providers.dart
-      _handleNotificationTap(router, payload);
-    },
-  );
-});
-
-/// Handle notification tap (warm-start) - DUPLICATED from notification_providers.dart
-/// TODO: Consolidate both providers into single source
-void _handleNotificationTap(GoRouter router, Map<String, dynamic> payload) {
-  try {
-    final typeString = payload['type'] as String?;
-    if (typeString == null) return;
-
-    final type = NotificationType.values.firstWhere(
-      (t) => t.toString() == typeString,
-      orElse: () => NotificationType.workoutReminder,
-    );
-
-    final routeMap = {
-      NotificationType.workoutReminder: '/workout',
-      NotificationType.achievementUnlocked: '/analytics',
-      NotificationType.progressMilestone: '/analytics',
-      NotificationType.restReminder: '/routine',
-      NotificationType.workoutSummary: '/analytics',
-      NotificationType.streakReminder: '/analytics',
-      NotificationType.timerComplete: '/workout',
-    };
-
-    final route = routeMap[type] ?? '/';
-    router.go(route);
-
-    if (kDebugMode) {
-      debugPrint('🔔 [Warm-start] Navigated to: $route (type: $type)');
-    }
-  } catch (e, stackTrace) {
-    if (kDebugMode) {
-      debugPrint('❌ [Warm-start] Navigation error: $e');
-      debugPrint('📍 Stack trace: $stackTrace');
-    }
-  }
-}
+// ✅ CONSOLIDATED: Now imports notificationRepositoryProvider from notification_providers.dart
+// This avoids duplication and maintains a single source of truth
 
 final scheduleNotificationUseCaseProvider = Provider<ScheduleNotificationUseCase>((ref) {
   final repository = ref.watch(notificationRepositoryProvider);

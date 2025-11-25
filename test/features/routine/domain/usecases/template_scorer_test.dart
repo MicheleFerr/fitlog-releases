@@ -16,6 +16,7 @@
 /// NOTE: Current implementation has stubbed _extractMuscleGroupsFromTemplate
 /// which always returns empty set → all scores are 0.0. Tests verify the
 /// scoring *logic* is correct even though stub prevents realistic scores.
+library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/usecases/template_scorer.dart';
@@ -80,7 +81,7 @@ void main() {
           name: 'Legs Day',
         );
 
-        final desiredGroups = const {'Quads', 'Glutes', 'Hamstrings'};
+        const desiredGroups = {'Quads', 'Glutes', 'Hamstrings'};
 
         final score1 = scorer.scoreTemplate(
           template: template,

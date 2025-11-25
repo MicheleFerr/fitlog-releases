@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/repositories/local_notification_repository.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/services/smart_notification_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/smart_notification_service.dart';
 // 🔔 WARM-START: Import for GoRouter navigation
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/app/app.dart' show routerProvider;

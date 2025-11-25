@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
@@ -29,7 +32,7 @@ class ExerciseDetailsModal extends StatelessWidget {
       initialChildSize: 0.7,
       maxChildSize: 0.9,
       minChildSize: 0.5,
-      builder: (context, scrollController) => Container(
+      builder: (context, scrollController) => DecoratedBox(
         decoration: BoxDecoration(
           color: context.colors.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -103,7 +106,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             // Focus Badge
             _buildInfoChip(
               context,
-              icon: Icons.fitness_center,
+              icon: AppIcons.workout,
               label: exercise.focusDisplayName,
               color: context.colors.primary,
             ),
@@ -119,7 +122,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         // Equipment
         _buildInfoChip(
           context,
-          icon: Icons.sports_gymnastics,
+          icon: AppIcons.sportsGymnastics,
           label: exercise.attrezzatura,
           color: context.colors.tertiary,
         ),
@@ -185,11 +188,11 @@ class ExerciseDetailsModal extends StatelessWidget {
   Color _getDifficultyColor(BuildContext context) {
     switch (exercise.difficolta.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
         return context.colors.onSurface;
     }
@@ -218,11 +221,12 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.primaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  Icons.lightbulb_outline,
-                  size: 20,
-                  color: context.colors.onPrimaryContainer,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.small,
+  color: context.colors.onPrimaryContainer,
+),
               ),
               const SizedBox(width: 12),
               Text(
@@ -266,11 +270,12 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.secondaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  Icons.wb_sunny_outlined,
-                  size: 20,
-                  color: context.colors.onSecondaryContainer,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.wbSunnyOutlined,
+  semanticLabel: 'Wb sunny outlined',
+  size: AppIconSize.small,
+  color: context.colors.onSecondaryContainer,
+),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -285,7 +290,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               IconButton(
                 onPressed: () => WarmupInfoDialog.show(context),
                 icon: Icon(
-                  Icons.info_outline,
+                  AppIcons.info,
                   color: context.colors.primary,
                   size: 20,
                 ),

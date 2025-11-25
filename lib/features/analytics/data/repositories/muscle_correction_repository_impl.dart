@@ -32,7 +32,6 @@ import 'package:gymbro_flutter_new/features/analytics/data/local/hive_muscle_cor
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/muscle_correction_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
-import 'package:hive/hive.dart';
 
 /// Implementation of muscle correction repository
 ///

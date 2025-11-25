@@ -8,12 +8,8 @@
 	<array>
 		<string>Default</string>
 	</array>
-	<!-- Critical alerts temporarily disabled - needs provisioning profile update
-	<key>com.apple.developer.messages.critical-messaging</key>
+	<key>com.apple.developer.healthkit</key>
 	<true/>
-	<key>com.apple.developer.usernotifications.critical-alerts</key>
-	<true/>
-	-->
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.com.michele.gymbro.flutter</string>

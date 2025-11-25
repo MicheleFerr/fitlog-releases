@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class AdvancedFeaturesStep extends StatelessWidget {
 
@@ -20,11 +22,12 @@ class AdvancedFeaturesStep extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.autoAwesome,
-            size: 80,
-            color: colorScheme.primary,
-          ),
+          SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
           const SizedBox(height: 32),
           Text(
             AppLocalizations.of(context).onboardingAdvancedFeaturesTitle,

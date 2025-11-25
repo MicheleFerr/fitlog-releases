@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Radar chart interattivo per visualizzare la forza relativa
 /// dei diversi gruppi muscolari
@@ -165,13 +169,16 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
               HapticFeedback.lightImpact();
             },
             avatar: Icon(
-              _showComparison ? Icons.visibility : Icons.visibility_off,
+              _showComparison ? AppIcons.visibility : AppIcons.visibilityOff,
               size: 18,
             ),
           ),
         const SizedBox(width: 12),
         IconButton(
-          icon: const Icon(Icons.refresh),
+          icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
           onPressed: () {
             _animationController.reset();
             _animationController.forward();
@@ -204,8 +211,8 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
     if (_showComparison && widget.previousStrength != null) {
       dataSets.add(
         RadarDataSet(
-          fillColor: Colors.orange.withValues(alpha: 0.2),
-          borderColor: Colors.orange.withValues(alpha: 0.7),
+          fillColor: context.colors.secondary.withValues(alpha: 0.2),
+          borderColor: context.colors.secondary.withValues(alpha: 0.7),
           borderWidth: 2,
           entryRadius: 3,
           dataEntries: MuscleGroup.values.map((muscle) {
@@ -221,7 +228,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
       dataSets.add(
         RadarDataSet(
           fillColor: Colors.transparent,
-          borderColor: Colors.green.withValues(alpha: 0.5),
+          borderColor: context.colors.success.withValues(alpha: 0.5),
           borderWidth: 1,
           entryRadius: 0,
           dataEntries: MuscleGroup.values.map((muscle) {
@@ -248,13 +255,13 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
         ),
         if (_showComparison && widget.previousStrength != null)
           _buildLegendItem(
-            color: Colors.orange,
+            color: context.colors.secondary,
             label: 'Precedente',
             theme: theme,
           ),
         if (widget.targetStrength != null)
           _buildLegendItem(
-            color: Colors.green,
+            color: context.colors.success,
             label: 'Obiettivo',
             isDashed: true,
             theme: theme,
@@ -332,7 +339,11 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.close, size: 20),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+  size: AppIconSize.small,
+),
                 onPressed: () {
                   setState(() {
                     _selectedMuscle = null;
@@ -360,7 +371,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
               label: 'Obiettivo',
               value: target,
               maxValue: 100,
-              color: Colors.green,
+              color: context.colors.success,
               theme: theme,
             ),
           ],
@@ -370,8 +381,8 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
             Row(
               children: [
                 Icon(
-                  improvement >= 0 ? Icons.trending_up : Icons.trending_down,
-                  color: improvement >= 0 ? Colors.green : Colors.red,
+                  improvement >= 0 ? AppIcons.trendingUp : AppIcons.trendingDown,
+                  color: improvement >= 0 ? context.colors.success : context.colors.error,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -379,7 +390,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
                   '${improvement >= 0 ? '+' : ''}${improvement.toStringAsFixed(1)} '
                   '(${improvementPercent >= 0 ? '+' : ''}${improvementPercent.toStringAsFixed(1)}%)',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: improvement >= 0 ? Colors.green : Colors.red,
+                    color: improvement >= 0 ? context.colors.success : context.colors.error,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -428,7 +439,7 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: LinearProgressIndicator(
             value: value / maxValue,
             minHeight: 8,
@@ -502,17 +513,17 @@ class _MuscleStrengthRadarChartState extends State<MuscleStrengthRadarChart>
   IconData _getMuscleIcon(MuscleGroup muscle) {
     switch (muscle) {
       case MuscleGroup.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case MuscleGroup.back:
-        return Icons.straighten;
+        return AppIcons.straighten;
       case MuscleGroup.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case MuscleGroup.arms:
-        return Icons.sports_handball;
+        return AppIcons.sportsHandball;
       case MuscleGroup.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case MuscleGroup.core:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
     }
   }
   

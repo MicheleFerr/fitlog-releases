@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🎨 Centralized icon constants for GymBro app
 ///
@@ -179,7 +178,7 @@ class AppIcons {
   static const IconData back = Icons.arrow_back;
 
   /// → Forward
-  static const IconData forward = Icons.arrow_forward;
+  static const IconData forward = Icons.forward;
 
   /// → Forward iOS style
   static const IconData forwardIos = Icons.arrow_forward_ios;
@@ -207,16 +206,16 @@ class AppIcons {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ℹ️ Info
-  static const IconData info = Icons.info_outline;
+  static const IconData info = Icons.info;
 
   /// ⚠️ Error
-  static const IconData error = Icons.error_outline;
+  static const IconData error = Icons.error;
 
   /// ⚠️ Warning
   static const IconData warning = Icons.warning;
 
   /// ❓ Help
-  static const IconData help = Icons.help_outline;
+  static const IconData help = Icons.help;
 
   /// 💡 Tip/Suggestion
   static const IconData tip = Icons.lightbulb_outline;
@@ -250,7 +249,7 @@ class AppIcons {
   static const IconData save = Icons.save;
 
   /// 📋 Copy
-  static const IconData copy = Icons.content_copy;
+  static const IconData copy = Icons.copy;
 
   /// 📋 Paste
   static const IconData paste = Icons.content_paste;
@@ -310,7 +309,7 @@ class AppIcons {
   static const IconData searchOff = Icons.search_off;
 
   /// 🎛️ Filter
-  static const IconData filter = Icons.filter_list;
+  static const IconData filter = Icons.filter;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // ⚙️ SETTINGS & ADMIN
@@ -364,7 +363,7 @@ class AppIcons {
   static const IconData download = Icons.download;
 
   /// 📤 Upload
-  static const IconData upload = Icons.cloud_upload;
+  static const IconData upload = Icons.upload;
 
   /// 📷 Camera
   static const IconData camera = Icons.camera_alt;
@@ -462,7 +461,7 @@ class AppIcons {
   static const IconData editRounded = Icons.edit_rounded;
 
   // error_outline variants (total: 54 usages)
-  static const IconData errorOutlineRounded = Icons.error_outline_rounded;
+  static const IconData errorOutlineRounded = Icons.error_rounded;
 
   // calendar_today variants (total: 41 usages)
   static const IconData calendarTodayOutlined = Icons.calendar_today_outlined;
@@ -482,7 +481,7 @@ class AppIcons {
   static const IconData emojiEventsOutlined = Icons.emoji_events_outlined;
 
   // play_arrow variants (total: 34 usages)
-  static const IconData playArrowRounded = Icons.play_arrow_rounded;
+  static const IconData playArrowRounded = Icons.play_circle_filled;
 
   // search variants (total: 29 usages)
   static const IconData searchOutlined = Icons.search_outlined;
@@ -510,7 +509,7 @@ class AppIcons {
   static const IconData autoAwesomeOutlined = Icons.auto_awesome_outlined;
 
   // info variants (total: 17 usages)
-  static const IconData infoOutlined = Icons.info_outlined;
+  static const IconData infoOutlined = Icons.info;
 
   // settings variants (total: 16 usages)
   static const IconData settingsOutlined = Icons.settings_outlined;
@@ -535,7 +534,7 @@ class AppIcons {
   static const IconData cancelRounded = Icons.cancel_rounded;
 
   // arrow_forward variants (total: 12 usages)
-  static const IconData arrowForwardRounded = Icons.arrow_forward_rounded;
+  static const IconData arrowForwardRounded = Icons.forward_rounded;
 
   // pause variants (total: 11 usages)
   static const IconData pauseRounded = Icons.pause_rounded;
@@ -549,7 +548,7 @@ class AppIcons {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   // ACTION (18 icons)
-  static const IconData contentCopyRounded = Icons.content_copy_rounded;
+  static const IconData contentCopyRounded = Icons.copy_rounded;
   static const IconData create = Icons.create;
   static const IconData dragHandle = Icons.drag_handle;
   static const IconData dragIndicator = Icons.drag_indicator;
@@ -557,7 +556,7 @@ class AppIcons {
   static const IconData editNote = Icons.edit_note;
   static const IconData filter9Plus = Icons.filter_9_plus;
   static const IconData filterAltOff = Icons.filter_alt_off;
-  static const IconData filterListOutlined = Icons.filter_list_outlined;
+  static const IconData filterListOutlined = Icons.filter_outlined;
   static const IconData mobileScreenShare = Icons.mobile_screen_share;
   static const IconData noteAdd = Icons.note_add;
   static const IconData personAdd = Icons.person_add;
@@ -574,7 +573,7 @@ class AppIcons {
   static const IconData stackedLineChart = Icons.stacked_line_chart;
   static const IconData tableChart = Icons.table_chart;
   static const IconData trendingNeutral = Icons.trending_neutral;
-  static const IconData trendingUpRounded = Icons.trending_up_rounded;
+  static const IconData trendingUpRounded = Icons.trending_up;
 
   // COMMUNICATION (9 icons)
   static const IconData alternateEmail = Icons.alternate_email;
@@ -603,8 +602,8 @@ class AppIcons {
   // EMOJI (1 icons)
 
   // FITNESS (8 icons)
-  static const IconData fitnessCenterOutlined = Icons.fitness_center_outlined;
-  static const IconData fitnessCenterRounded = Icons.fitness_center_rounded;
+  static const IconData fitnessCenterOutlined = Icons.fitness_center;
+  static const IconData fitnessCenterRounded = Icons.fitness_center;
   static const IconData healthAndSafety = Icons.health_and_safety;
   static const IconData sports = Icons.sports;
   static const IconData sportsFootball = Icons.sports_football;
@@ -884,16 +883,16 @@ class AppIcons {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /// ℹ️ Info icon (alias for info)
-  static const IconData infoIcon = Icons.info_outline;
+  static const IconData infoIcon = Icons.info;
 
   /// 🔄 Sync icon (alias for sync)
   static const IconData syncIcon = Icons.sync;
 
   /// ☁️ Cloud upload (alias for upload)
-  static const IconData cloudUpload = Icons.cloud_upload;
+  static const IconData cloudUpload = Icons.upload;
 
   /// 📋 Copy icon (alias for copy)
-  static const IconData iconCopy = Icons.content_copy;
+  static const IconData iconCopy = Icons.copy;
 
   /// 📦 Miscellaneous/Category
   static const IconData misc = Icons.category;
@@ -930,7 +929,7 @@ class AppIcons {
   static const IconData localFireDepartment = Icons.local_fire_department;
 
   /// ❓ Help outline
-  static const IconData helpOutline = Icons.help_outline;
+  static const IconData helpOutline = Icons.help;
 
   /// ⏰ Access time/Clock
   static const IconData accessTime = Icons.access_time;
@@ -973,13 +972,19 @@ class AppIcons {
   static const IconData emojiEvents = Icons.emoji_events;
 
   /// ⚠️ Error outline (base variant)
-  static const IconData errorOutline = Icons.error_outline;
+  static const IconData errorOutline = Icons.error;
 
   /// ℹ️ Info outline (base variant)
-  static const IconData infoOutline = Icons.info_outline;
+  static const IconData infoOutline = Icons.info;
 
   /// 📈 Trending up (base variant)
   static const IconData trendingUp = Icons.trending_up;
+
+  /// 📈 Trending (alias for trendingUp)
+  static const IconData trending = Icons.trending_up;
+
+  /// 📤 Publish/Upload
+  static const IconData publish = Icons.publish;
 
   /// ▶️ Play arrow (base variant)
   static const IconData playArrow = Icons.play_arrow;
@@ -1003,7 +1008,7 @@ class AppIcons {
 /// ```dart
 /// final timerIcons = IconGroups.timer;
 /// Icon(timerIcons.active)  // Timer running
-/// Icon(timerIcons.paused)  // Timer paused
+/// Icon(timerAppIcons.paused)  // Timer paused
 /// ```
 class IconGroups {
   IconGroups._();

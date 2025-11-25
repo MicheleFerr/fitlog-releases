@@ -11,7 +11,6 @@ mixin TourTargetKeysMixin<T extends StatefulWidget> on State<T> {
   final GlobalKey smartWorkoutCardKey = GlobalKey(debugLabel: 'smartWorkoutCard');
   final GlobalKey analyticsCardKey = GlobalKey(debugLabel: 'analyticsCard');
   final GlobalKey historyCardKey = GlobalKey(debugLabel: 'historyCard');
-  final GlobalKey routineCenterCardKey = GlobalKey(debugLabel: 'routineCenterCard');
   final GlobalKey communityCardKey = GlobalKey(debugLabel: 'communityCard');
   final GlobalKey notificationHubKey = GlobalKey(debugLabel: 'notificationHub');
 
@@ -22,7 +21,6 @@ mixin TourTargetKeysMixin<T extends StatefulWidget> on State<T> {
         'smartWorkout': smartWorkoutCardKey,
         'analytics': analyticsCardKey,
         'history': historyCardKey,
-        'routineCenter': routineCenterCardKey,
         'community': communityCardKey,
         'notifications': notificationHubKey,
       };

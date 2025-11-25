@@ -41,7 +41,6 @@ part 'exercise_history.g.dart';
 
 @freezed
 class ExerciseHistory with _$ExerciseHistory {
-  const ExerciseHistory._();
 
   const factory ExerciseHistory({
     /// Name of the exercise (e.g., "Bench Press", "Squat")
@@ -53,6 +52,7 @@ class ExerciseHistory with _$ExerciseHistory {
     /// All sessions performed for this exercise (sorted by date)
     required List<ExerciseSession> sessions,
   }) = _ExerciseHistory;
+  const ExerciseHistory._();
 
   /// Create from JSON (Firestore deserialization)
   factory ExerciseHistory.fromJson(Map<String, dynamic> json) =>

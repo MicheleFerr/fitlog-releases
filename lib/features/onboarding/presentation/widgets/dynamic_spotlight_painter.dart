@@ -11,6 +11,15 @@ import 'package:flutter/material.dart';
 ///   - Path operations to create the "hole" effect
 ///   - Optimized shouldRepaint for performance
 class DynamicSpotlightPainter extends CustomPainter {
+
+  DynamicSpotlightPainter({
+    required this.spotlightBounds,
+    required this.opacity,
+    this.borderRadius = 4.0,
+    this.overlayColor = const Color.fromARGB(128, 0, 0, 0),
+    this.borderPaint,
+    this.padding = 8.0,
+  });
   /// The bounds of the widget to spotlight
   final Rect? spotlightBounds;
 
@@ -28,15 +37,6 @@ class DynamicSpotlightPainter extends CustomPainter {
 
   /// Padding around the target widget
   final double padding;
-
-  DynamicSpotlightPainter({
-    required this.spotlightBounds,
-    required this.opacity,
-    this.borderRadius = 4.0,
-    this.overlayColor = const Color.fromARGB(128, 0, 0, 0),
-    this.borderPaint,
-    this.padding = 8.0,
-  });
 
   @override
   void paint(Canvas canvas, Size size) {

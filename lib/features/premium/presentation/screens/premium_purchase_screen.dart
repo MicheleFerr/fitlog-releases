@@ -15,11 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumPurchaseScreen extends ConsumerStatefulWidget {
   const PremiumPurchaseScreen({super.key});
@@ -182,7 +183,12 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
       ),
       child: Column(
         children: [
-          Icon(AppIcons.star, size: 48, color: context.colors.warning),
+          SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+  size: AppIconSize.xxlarge,
+  color: context.colors.warning,
+),
           const SizedBox(height: 16),
           Text(
             context.l10n.unlockGymbroPremium,
@@ -501,7 +507,7 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
         color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -537,7 +543,10 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
                     ),
                     IconButton(
                       onPressed: () => ref.read(premiumUpgradeProvider.notifier).clearError(),
-                      icon: const Icon(AppIcons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       color: colorScheme.onErrorContainer,
                     ),
                   ],
@@ -577,9 +586,9 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
   
   Widget _buildLoadingOverlay(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return ColoredBox(
-      color: Colors.black54,
+      color: context.colors.onSurface.withValues(alpha: 0.54),
       child: Center(
         child: Card(
           child: Padding(
@@ -624,11 +633,12 @@ class _PremiumPurchaseScreenState extends ConsumerState<PremiumPurchaseScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.complete,
-                size: 80,
-                color: colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
               const SizedBox(height: 24),
               Text(
                 context.l10n.yourePremium,

@@ -25,6 +25,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_history_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class NotificationCenterScreenV2 extends ConsumerStatefulWidget {
   const NotificationCenterScreenV2({super.key});
@@ -70,7 +71,7 @@ class _NotificationCenterScreenV2State
           ),
           // Mark all as read
           IconButton(
-            icon: const Icon(Icons.done_all),
+            icon: Icon(AppIcons.doneAll),
             onPressed: () {
               ref.read(markAllAsReadProvider)();
             },
@@ -87,7 +88,7 @@ class _NotificationCenterScreenV2State
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: context.l10n.search,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: Icon(AppIcons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -124,7 +125,7 @@ class _NotificationCenterScreenV2State
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.notifications_off,
+                  AppIcons.notificationsOffOutlined,
                   size: 64,
                   color: context.colors.onSurface.withValues(alpha: 0.5),
                 ),
@@ -153,7 +154,7 @@ class _NotificationCenterScreenV2State
                   color: context.colors.error,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 20),
-                  child: const Icon(Icons.delete, color: Colors.white),
+                  child: Icon(AppIcons.delete, color: context.colors.surface),
                 ),
                 onDismissed: (_) {
                   ref.read(deleteNotificationProvider)(notification.id);
@@ -195,7 +196,7 @@ class _NotificationCenterScreenV2State
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: notification.isRead
-            ? context.colors.surfaceVariant
+            ? context.colors.surfaceContainerHighest
             : context.colors.primary.withValues(alpha: 0.2),
         child: Icon(
           _getIconForType(notification.type),
@@ -227,15 +228,13 @@ class _NotificationCenterScreenV2State
   IconData _getIconForType(NotificationType type) {
     switch (type) {
       case NotificationType.workoutReminder:
-        return Icons.fitness_center;
-      case NotificationType.recoveryAlert:
-        return Icons.healing;
-      case NotificationType.streakMotivation:
-        return Icons.local_fire_department;
-      case NotificationType.restDayReminder:
-        return Icons.bed;
+        return AppIcons.workout;
+      case NotificationType.restReminder:
+        return AppIcons.healing;
+      case NotificationType.streakReminder:
+        return AppIcons.localFireDepartment;
       default:
-        return Icons.notifications;
+        return AppIcons.notifications;
     }
   }
 

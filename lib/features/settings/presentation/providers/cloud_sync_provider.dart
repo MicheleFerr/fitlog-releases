@@ -13,9 +13,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
 
 /// Cloud sync state
 class CloudSyncState {
@@ -480,13 +481,20 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
     final profileAsync = _ref.read(userProfileProvider);
     final profile = profileAsync.valueOrNull;
     if (profile == null) return false;
-    
-    // Admin always can sync
-    if (profile.email.contains('michele.cozzolino93@gmail.com') ||
-        profile.email.contains('admin@')) {
+
+    // ========================================
+    // 🔐 SECURITY: Check admin via custom claims (secure)
+    // ========================================
+    // REPLACED: Email check (insecure)
+    // OLD: if (profile.email.contains('michele.cozzolino93@gmail.com') ||
+    //          profile.email.contains('admin@'))
+    // NEW: Use Firebase Custom Claims (server-validated)
+    final isAdmin = _ref.read(isAdminProvider);
+
+    if (isAdmin) {
       return true;
     }
-    
+
     // Premium users can sync
     return profile.isPremium;
   }

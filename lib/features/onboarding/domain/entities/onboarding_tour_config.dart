@@ -2,14 +2,14 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboardin
 
 /// Configuration for the Home Screen Guided Tour
 ///
-/// Defines all 8 steps of the tour with their properties.
+/// Defines all 7 steps of the tour with their properties.
 /// Based on research: adaptive pacing (auto 20s for SIMPLE, user-controlled for COMPLEX)
 /// achieves 70% completion + 85% satisfaction.
 ///
 /// New: FAB step re-added as final step with top-positioned bottom sheet.
 class OnboardingTourConfig {
   /// Total number of steps in the tour
-  static const int totalSteps = 8;
+  static const int totalSteps = 7;
 
   /// Standard auto-advance duration for SIMPLE steps
   static const Duration simpleStepDuration = Duration(seconds: 20);
@@ -43,19 +43,7 @@ class OnboardingTourConfig {
           totalSteps: totalSteps,
         ),
 
-        // Step 3: Routine Center (SIMPLE - 20s auto)
-        const OnboardingTourStep(
-          id: 'routineCenter',
-          titleKey: 'tourRoutineCenterTitle',
-          descriptionKey: 'tourRoutineCenterDescription',
-          type: TourStepType.simple,
-          autoAdvanceDuration: simpleStepDuration,
-          targetWidgetKey: 'routineCenterCard',
-          position: 2,
-          totalSteps: totalSteps,
-        ),
-
-        // Step 4: Analytics (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
+        // Step 3: Analytics (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
         const OnboardingTourStep(
           id: 'analytics',
           titleKey: 'tourAnalyticsTitle',
@@ -68,12 +56,12 @@ class OnboardingTourConfig {
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
           targetWidgetKey: 'analytics',
-          position: 3,
+          position: 2,
           totalSteps: totalSteps,
           bottomSheetPosition: BottomSheetPosition.top,
         ),
 
-        // Step 5: History (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
+        // Step 4: History (NEW - SIMPLE - 20s auto - bottom sheet positioned at top)
         const OnboardingTourStep(
           id: 'history',
           titleKey: 'tourHistoryTitle',
@@ -81,12 +69,12 @@ class OnboardingTourConfig {
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
           targetWidgetKey: 'history',
-          position: 4,
+          position: 3,
           totalSteps: totalSteps,
           bottomSheetPosition: BottomSheetPosition.top,
         ),
 
-        // Step 6: Community (SIMPLE - 20s auto)
+        // Step 5: Community (SIMPLE - 20s auto)
         const OnboardingTourStep(
           id: 'community',
           titleKey: 'tourCommunityTitle',
@@ -94,11 +82,11 @@ class OnboardingTourConfig {
           type: TourStepType.simple,
           autoAdvanceDuration: simpleStepDuration,
           targetWidgetKey: 'communityCard',
-          position: 5,
+          position: 4,
           totalSteps: totalSteps,
         ),
 
-        // Step 7: Notification Hub (SIMPLE - 15s auto)
+        // Step 6: Notification Hub (SIMPLE - 15s auto)
         const OnboardingTourStep(
           id: 'notifications',
           titleKey: 'tourNotificationsTitle',
@@ -106,11 +94,11 @@ class OnboardingTourConfig {
           type: TourStepType.simple,
           autoAdvanceDuration: briefStepDuration,
           targetWidgetKey: 'notifications',
-          position: 6,
+          position: 5,
           totalSteps: totalSteps,
         ),
 
-        // Step 8: FAB (NEW - COMPLEX - user-controlled - bottom sheet positioned at top)
+        // Step 7: FAB (NEW - COMPLEX - user-controlled - bottom sheet positioned at top)
         // This is the final step - user must press button to continue to workout
         const OnboardingTourStep(
           id: 'fab',
@@ -118,7 +106,7 @@ class OnboardingTourConfig {
           descriptionKey: 'tourFabDescription',
           type: TourStepType.complex,
           targetWidgetKey: 'fab',
-          position: 7,
+          position: 6,
           totalSteps: totalSteps,
           bottomSheetPosition: BottomSheetPosition.top,
         ),

@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseUpdateDialog extends ConsumerStatefulWidget {
 
@@ -87,14 +89,16 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                     shape: BoxShape.circle,
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                  child: Icon(
-                    AppIcons.systemUpdate,
-                    size: 40,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                  child: SemanticIcon(
+  icon: AppIcons.systemUpdate,
+  semanticLabel: 'System update',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.onPrimary,
                   ),
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Titolo
                 Text(
@@ -106,7 +110,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Descrizione
                 Text(
@@ -117,7 +121,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Pulsante di download
                 SizedBox(
@@ -135,7 +139,10 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                               ),
                             ),
                           )
-                        : const Icon(AppIcons.download),
+                        : const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
                     label: Text(
                       widget.isLoading
                           ? l10n.downloading
@@ -151,7 +158,7 @@ class _ExerciseUpdateDialogState extends ConsumerState<ExerciseUpdateDialog>
                   ),
                 ),
 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
 
                 // Note informative
                 Text(

@@ -329,6 +329,14 @@ These cover initial setup and configuration:
 - `ERROR_KB.md`
 
 ### UX Flows & System Reports
+
+#### 📊 Analytics System
+- `UX_FLOWS/analytics/ANALYTICS_SYSTEM_OVERVIEW.md` ✅ **NEW!** 🎯 **START HERE** (Complete Analytics System - v2.0, Muscle Distribution, Streak Calendar, Volume Modals, Jan 2025)
+- `UX_FLOWS/analytics/MUSCLE_DISTRIBUTION_DOCUMENTATION.md` ✅ **NEW!** (Muscle Distribution with Radar Chart - 6 muscle groups, time period filtering, comparison, Jan 2025)
+- `UX_FLOWS/analytics/STREAK_MODAL_DOCUMENTATION.md` ✅ **NEW!** (GitHub-style Calendar - Monthly view, streak tracking, milestone animations, Jan 2025)
+- `UX_FLOWS/analytics/VOLUME_MODAL_DOCUMENTATION.md` ✅ **NEW!** (Weekly Volume Breakdown - Bar chart, top exercises, trend indicators, Jan 2025)
+
+#### 🏋️ Routine Center
 - `UX_FLOWS/routine_center/ROUTINE_CENTER_V2_IMPLEMENTATION.md` ✅ **NEW!** 🎯 **START HERE** (v2.0 Complete Implementation - 37/37 tasks, 100% test coverage, Jan 2025)
 - `UX_FLOWS/routine_center/SMART_WORKOUT_CTA_SYSTEM_REPORT.md` 🎯 **UPDATED!** (Smart Workout CTA - FlexibleRoutine-based system, Nov 2025)
 - `UX_FLOWS/routine_center/ROUTINE_CENTER_SYSTEM_REPORT.md` 📋 (Routine Center architecture & complete system)

@@ -308,10 +308,7 @@ void main() {
 
 // Helper functions
 Workout _createWorkout({
-      id: 'test-id',
-      createdAt: DateTime(2024, 1, 1),
-      updatedAt: DateTime(2024, 1, 1),
-  String? templateId,
+      String? templateId,
   DateTime? endTime,
 }) {
   return Workout(

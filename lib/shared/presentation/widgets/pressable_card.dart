@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Reusable wrapper widget that provides minimal flat card styling with
 /// standardized press animations and haptic feedback.
@@ -22,7 +21,10 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 ///   onTap: () => context.goNamed('analytics'),
 ///   child: Column(
 ///     children: [
-///       Icon(AppIcons.analytics),
+///       SemanticIcon(
+///         icon: AppIcons.analytics,
+///         semanticLabel: 'Analytics',
+///       ),
 ///       Text('Analytics'),
 ///     ],
 ///   ),
@@ -146,7 +148,7 @@ class _PressableCardState extends State<PressableCard>
                 : null,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
+                color: context.colors.onSurface.withValues(alpha: 0.06),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

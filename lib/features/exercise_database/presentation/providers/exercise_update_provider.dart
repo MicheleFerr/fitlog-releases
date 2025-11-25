@@ -136,7 +136,7 @@ class ExerciseUpdateNotifier extends StateNotifier<ExerciseUpdateState> {
           // Mostra snackbar di successo
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('✅ Database esercizi aggiornato!'),
+              content: const Text('✅ Database esercizi aggiornato!'),
               backgroundColor: Theme.of(context).colorScheme.primary,
               behavior: SnackBarBehavior.floating,
             ),

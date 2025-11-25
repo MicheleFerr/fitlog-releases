@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/optimized_progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
 class OptimizedUnifiedStatsCard extends ConsumerStatefulWidget {
@@ -37,7 +38,8 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   // Cache for data to prevent unnecessary rebuilds
   DashboardStats? _cachedStats;
   AchievementData? _cachedAchievementData;
-  UserContributionStats? _cachedUserStats;
+  // UserContributionStats? _cachedUserStats; // TODO: Define UserContributionStats class
+  dynamic _cachedUserStats; // Temporary workaround
   DateTime? _lastDataFetch;
   
   @override
@@ -118,7 +120,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   // OPTIMIZATION: Cache data and only rebuild when necessary
-  bool _shouldRebuildData(DashboardStats? newStats, AchievementData? newAchievement, UserContributionStats? newUser) {
+  bool _shouldRebuildData(DashboardStats? newStats, AchievementData? newAchievement, dynamic newUser) {
     if (_cachedStats == null || _cachedAchievementData == null || _cachedUserStats == null) {
       return true;
     }
@@ -142,7 +144,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
       (value) => value.whenData((stats) => stats.totalPoints),
     ));
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
@@ -218,9 +220,9 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    color: Colors.white,
+                  child: Icon(
+                    AppIcons.autoAwesome,
+                    color: context.colors.surface,
                     size: 16,
                   ),
                 ),
@@ -233,9 +235,9 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '🏆 Progressi & Achievement',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                context.l10n.progressAndAchievement,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 _getMotivationalText(dashboardStatsAsync.value?.currentStreak ?? 0),
@@ -323,8 +325,8 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           child: Center(
             child: Text(
               '$level',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.colors.surface,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -342,7 +344,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
               ),
             ),
             Text(
-              'Livello $level',
+              context.l10n.levelLabel(level),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
@@ -383,15 +385,15 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     'LV',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     '$level',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: context.colors.surface,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -423,7 +425,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '$currentLevelXP / $requiredXP XP per il livello ${level + 1}',
+                    context.l10n.xpToNextLevel(currentLevelXP, requiredXP, level + 1),
                     style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
                   ),
                 ],
@@ -475,7 +477,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                 ],
                 border: isMilestone ? Border.all(
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: context.colors.surface.withValues(alpha: 0.5),
                   width: 2,
                 ) : null,
               ),
@@ -485,7 +487,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   Text(
                     levelTitle.toUpperCase(),
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       fontSize: 7,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
@@ -493,16 +495,16 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                   ),
                   Text(
                     '$level',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: context.colors.surface,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   if (isMilestone)
                     Icon(
-                      Icons.star,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      AppIcons.star,
+                      color: context.colors.surface.withValues(alpha: 0.9),
                       size: 12,
                     ),
                 ],
@@ -518,7 +520,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.bolt,
+              AppIcons.bolt,
               color: theme.colorScheme.primary,
               size: 24,
             ),
@@ -542,12 +544,12 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Livello $level', style: theme.textTheme.bodySmall),
+                  Text(context.l10n.levelLabel(level), style: theme.textTheme.bodySmall),
                   Text(
                     '$currentLevelXP / $requiredXP XP',
                     style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  Text('Livello ${level + 1}', style: theme.textTheme.bodySmall),
+                  Text(context.l10n.levelLabel(level + 1), style: theme.textTheme.bodySmall),
                 ],
               ),
               const SizedBox(height: 8),
@@ -577,30 +579,30 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.people,
+                icon: AppIcons.people,
                 label: 'Community',
                 value: '$communityXP XP',
-                color: Colors.blue,
+                color: context.colors.primary,
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.emoji_events,
+                icon: AppIcons.achievement,
                 label: 'Achievement',
                 value: '$achievementXP XP',
-                color: Colors.orange,
+                color: context.colors.secondary,
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,
-                icon: Icons.local_fire_department,
+                icon: AppIcons.streak,
                 label: 'Streak',
                 value: '${stats.currentStreak}',
-                color: Colors.red,
+                color: context.colors.error,
               ),
             ),
           ],
@@ -660,15 +662,15 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
             Container(
               width: 60,
               height: 60,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.green,
+                color: context.colors.success,
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   '1',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -729,13 +731,13 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              AppIcons.error,
               color: theme.colorScheme.error,
               size: 48,
             ),
             const SizedBox(height: 8),
             Text(
-              'Errore caricamento dati',
+              context.l10n.errorLoadingData,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.error,
               ),
@@ -747,19 +749,19 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
   }
   
   String _getMotivationalText(int streak) {
-    if (streak >= 30) return '🔥 Inarrestabile! 30+ giorni di streak!';
-    if (streak >= 14) return '💪 Campione! 2 settimane consecutive!';
-    if (streak >= 7) return '⭐ Ottimo! Una settimana completa!';
-    if (streak >= 3) return '🚀 Bene! Mantieni il ritmo!';
-    if (streak >= 1) return '✨ Iniziato! Continua così!';
-    return '🎯 Inizia oggi il tuo percorso!';
+    if (streak >= 30) return context.l10n.motivationalUnstoppable;
+    if (streak >= 14) return context.l10n.motivationalChampion;
+    if (streak >= 7) return context.l10n.motivationalGreat;
+    if (streak >= 3) return context.l10n.motivationalGood;
+    if (streak >= 1) return context.l10n.motivationalStarted;
+    return context.l10n.motivationalStartToday;
   }
   
   Color _getLevelColor(int level) {
-    if (level >= 20) return Colors.purple;
-    if (level >= 15) return Colors.deepOrange;
-    if (level >= 10) return Colors.orange;
-    if (level >= 5) return Colors.blue;
-    return Colors.green;
+    if (level >= 20) return context.colors.tertiary;
+    if (level >= 15) return context.colors.warning;
+    if (level >= 10) return context.colors.secondary;
+    if (level >= 5) return context.colors.primary;
+    return context.colors.success;
   }
 }

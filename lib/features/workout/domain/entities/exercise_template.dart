@@ -18,29 +18,6 @@ class ExerciseTemplate with _$ExerciseTemplate {
     String? notes,
   }) = _ExerciseTemplate;
 
-  const ExerciseTemplate._();
-
-  factory ExerciseTemplate.fromJson(Map<String, dynamic> json) =>
-      _$ExerciseTemplateFromJson(json);
-
-  /// Create pre-filled sets from template
-  ///
-  /// Returns list of ExerciseSet with template's default values
-  /// Sets are numbered sequentially (1, 2, 3, ...)
-  /// All sets are marked as not completed and not warmup
-  List<ExerciseSet> createSets() {
-    return List.generate(
-      defaultSets,
-      (index) => ExerciseSet(
-        setNumber: index + 1,
-        weight: defaultWeight,
-        reps: defaultReps,
-        isCompleted: false,
-        isWarmup: false,
-      ),
-    );
-  }
-
   /// Create template from last workout of this exercise
   ///
   /// If no previous sets exist, returns template with default values
@@ -82,6 +59,29 @@ class ExerciseTemplate with _$ExerciseTemplate {
       defaultWeight: avgWeight,
       defaultReps: avgReps,
       defaultSets: completedSets.length,
+    );
+  }
+
+  const ExerciseTemplate._();
+
+  factory ExerciseTemplate.fromJson(Map<String, dynamic> json) =>
+      _$ExerciseTemplateFromJson(json);
+
+  /// Create pre-filled sets from template
+  ///
+  /// Returns list of ExerciseSet with template's default values
+  /// Sets are numbered sequentially (1, 2, 3, ...)
+  /// All sets are marked as not completed and not warmup
+  List<ExerciseSet> createSets() {
+    return List.generate(
+      defaultSets,
+      (index) => ExerciseSet(
+        setNumber: index + 1,
+        weight: defaultWeight,
+        reps: defaultReps,
+        isCompleted: false,
+        isWarmup: false,
+      ),
     );
   }
 }

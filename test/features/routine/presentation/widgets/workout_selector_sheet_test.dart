@@ -18,13 +18,13 @@ void main() {
       name: 'Winter Arc',
       type: RoutineType.weekly,
       startDate: now,
-      endDate: now.add(Duration(days: 90)),
-      pattern: RoutinePattern(
+      endDate: now.add(const Duration(days: 90)),
+      pattern: const RoutinePattern(
         name: 'ABC Pattern',
         sequence: ['giorno-a', 'giorno-b', 'giorno-c'],
       ),
       schedule: {},
-      skipTracker: SkipTracker(
+      skipTracker: const SkipTracker(
         skippedDays: {},
         recoveredDays: {},
       ),
@@ -38,7 +38,7 @@ void main() {
         id: 'workout-1',
         name: 'Giorno A',
         startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(minutes: 45)),
+        endTime: DateTime.now().add(const Duration(minutes: 45)),
         exercises: [],
         notes: null,
         templateId: 'giorno-a',
@@ -48,8 +48,8 @@ void main() {
       Workout(
         id: 'workout-2',
         name: 'Giorno B',
-        startTime: DateTime.now().subtract(Duration(days: 1)),
-        endTime: DateTime.now().subtract(Duration(days: 1)).add(Duration(minutes: 50)),
+        startTime: DateTime.now().subtract(const Duration(days: 1)),
+        endTime: DateTime.now().subtract(const Duration(days: 1)).add(const Duration(minutes: 50)),
         exercises: [],
         notes: null,
         templateId: 'giorno-b',
@@ -199,7 +199,7 @@ void main() {
       final container = ProviderContainer(
         overrides: [
           recentWorkoutsProvider(7).overrideWith(
-            (_) => Future.delayed(Duration(seconds: 5), () => mockWorkouts),
+            (_) => Future.delayed(const Duration(seconds: 5), () => mockWorkouts),
           ),
         ],
       );

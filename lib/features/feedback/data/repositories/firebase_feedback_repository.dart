@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/feedback/domain/repositories/feedbac
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedback_type.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/repositories/i_unified_feedback_repository.dart' hide FeedbackStatistics;
+import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart'; // 🔐 SECURITY: Secure logging
 
 /// Firebase implementation of FeedbackRepository
 class FirebaseFeedbackRepository implements FeedbackRepository {
@@ -74,12 +75,13 @@ class FirebaseFeedbackRepository implements FeedbackRepository {
           );
 
           // Fire and forget - don't block
-          _unifiedRepository!.submitFeedback(unifiedFeedback).then(
+          _unifiedRepository.submitFeedback(unifiedFeedback).then(
             (result) => result.fold(
               (failure) {
-                // Log error but don't throw (backward compatibility)
-                // ignore: avoid_print
-                print('⚠️ General feedback to unified system failed: ${failure.message}');
+                // 🔐 SECURITY: Use SecureLogger (debug-only, no production logs)
+                SecureLogger.warning('General feedback to unified system failed', data: {
+                  'failureMessage': failure.message,
+                });
               },
               (_) {
                 // Success - no action needed

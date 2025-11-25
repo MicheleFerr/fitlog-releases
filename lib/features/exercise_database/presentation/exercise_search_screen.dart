@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
@@ -13,7 +14,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_history_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_customization_screen.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_search_service.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_fuzzy_matcher.dart';
+// Removed: exercise_fuzzy_matcher.dart - using simple ExerciseSearchService instead
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_usage_tracker.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_search_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/missing_exercise_provider.dart';
@@ -23,7 +24,6 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseSearchScreen extends ConsumerStatefulWidget { // New: Just select and return exercise template (for DropSet/Rest-Pause)
 
@@ -58,8 +58,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   bool _showDifficultyFilter = false;
   bool _showEquipmentFilter = false;
 
-  // Fuzzy search state
-  Timer? _searchDebounce;
+  // 🔐 SECURITY: Fuzzy search state with proper debouncing
+  late final Debouncer _searchDebouncer;
   List<ExerciseFuzzyResult> _fuzzyResults = [];
   bool _isSearching = false;
   bool _useFuzzyResults = false;
@@ -71,13 +71,22 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   @override
   void initState() {
     super.initState();
+    // 🔐 SECURITY: Initialize search debouncer (400ms delay)
+    _searchDebouncer = Debouncer(
+      duration: const Duration(milliseconds: 400),
+      onError: (error, stackTrace) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [ExerciseSearch] Debouncer error: $error');
+        }
+      },
+    );
     _loadUsageStats();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _searchDebounce?.cancel();
+    _searchDebouncer.dispose(); // 🔐 SECURITY: Proper cleanup
     super.dispose();
   }
 
@@ -116,7 +125,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             SemanticIcon(
   icon: AppIcons.feedbackOutlined,
@@ -135,7 +144,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               'Come vuoi gestire "${exercise.nome}"?',
               style: context.textTheme.bodyMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               '• Riduci priorità: L\'esercizio apparirà meno in alto\n• Rimuovi dai popolari: L\'esercizio non sarà più suggerito come frequente',
               style: context.textTheme.bodySmall?.copyWith(
@@ -147,25 +156,25 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Annulla'),
+            child: const Text('Annulla'),
           ),
           TextButton.icon(
             onPressed: () => Navigator.of(context).pop('decrement'),
-            icon: SemanticIcon(
+            icon: const SemanticIcon(
   icon: AppIcons.arrowDownward,
   semanticLabel: 'Arrow downward',
   size: AppIconSize.small,
 ),
-            label: Text('Riduci priorità'),
+            label: const Text('Riduci priorità'),
           ),
           FilledButton.icon(
             onPressed: () => Navigator.of(context).pop('remove'),
-            icon: SemanticIcon(
+            icon: const SemanticIcon(
   icon: AppIcons.deleteOutline,
   semanticLabel: 'Delete outline',
   size: AppIconSize.small,
 ),
-            label: Text('Rimuovi'),
+            label: const Text('Rimuovi'),
             style: FilledButton.styleFrom(
               backgroundColor: context.colors.errorContainer,
               foregroundColor: context.colors.onErrorContainer,
@@ -256,9 +265,6 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   }
 
   Future<void> _performFuzzySearch(String query) async {
-    // Cancel previous timer
-    _searchDebounce?.cancel();
-
     if (query.trim().isEmpty || query.length < 2) {
       setState(() {
         _useFuzzyResults = false;
@@ -278,8 +284,8 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       }
     });
 
-    // Debounce for 400ms (increased from 300ms for better batching)
-    _searchDebounce = Timer(const Duration(milliseconds: 400), () async {
+    // 🔐 SECURITY: Use Debouncer for search throttling (400ms delay)
+    _searchDebouncer.run(() async {
       if (!mounted) return;
 
       final searchStartTime = DateTime.now();
@@ -364,7 +370,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         _searchQuery = '';
         _useFuzzyResults = false;
         _fuzzyResults = [];
-        _searchDebounce?.cancel();
+        _searchDebouncer.cancel();
       }
     });
   }
@@ -380,7 +386,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
         title: Text('${l10n.searchExercises} (${_selectedExercises.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: SemanticIcon(
+          icon: const SemanticIcon(
   icon: AppIcons.back,
   semanticLabel: 'Back',
 ),
@@ -442,7 +448,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                                   _useFuzzyResults = false;
                                   _fuzzyResults = [];
                                 });
-                                _searchDebounce?.cancel();
+                                _searchDebouncer.cancel(); // 🔐 SECURITY: Cancel pending search
                               },
                             )
                           : null),
@@ -469,7 +475,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     l10n.filters,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -631,7 +637,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   size: AppIconSize.tiny,
   color: context.colors.primary,
 ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 '${_fuzzyResults.length} ${l10n.exercisesFound}',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -639,7 +645,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   color: context.colors.primary,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 '(Smart Search)',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -703,7 +709,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                 color: context.colors.primary,
                 size: 28,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   l10n.exerciseNotFound,
@@ -715,19 +721,19 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             l10n.exerciseNotFoundHelpText,
             style: context.textTheme.bodyMedium?.copyWith(
               color: context.colors.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: _showAddTemporaryExerciseDialog,
-              icon: SemanticIcon(
+              icon: const SemanticIcon(
   icon: AppIcons.addCircleOutline,
   semanticLabel: 'Add circle outline',
 ),
@@ -757,7 +763,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
               AppIcons.workout,
               color: context.colors.primary,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(l10n.addTemporaryExercise),
             ),
@@ -1026,7 +1032,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   _showDifficultyFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.difficulty,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -1034,7 +1040,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 if (_selectedDifficulty.isNotEmpty) ...[
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
@@ -1089,7 +1095,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   _showEquipmentFilter ? AppIcons.expandMore : AppIcons.chevronRight,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.equipment,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -1097,7 +1103,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
                 if (_selectedEquipment.isNotEmpty) ...[
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
@@ -1230,7 +1236,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: context.textTheme.bodySmall,
@@ -1285,7 +1291,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     } else if (matchScore >= 0.70) {
       matchColor = Colors.orange;
     } else {
-      matchColor = context.colors.surfaceVariant;
+      matchColor = context.colors.surfaceContainerHighest;
     }
 
     // Check if exercise is frequent or trending (ML-enhanced)
@@ -1341,7 +1347,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
             ),
             // Auto-correct icon
             if (wasAutoCorrected) ...[
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               SemanticIcon(
   icon: AppIcons.autoFixHigh,
   semanticLabel: 'Auto fix high',
@@ -1432,7 +1438,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   exercise.attrezzatura,
                   style: context.textTheme.bodySmall,
@@ -1464,7 +1470,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
                   ),
                 ),
               // Spacer
-              if (!isSelected && !widget.selectionMode) SizedBox(width: 4),
+              if (!isSelected && !widget.selectionMode) const SizedBox(width: 4),
               // Selection icon
               isSelected
                   ? Icon(AppIcons.complete, color: context.colors.primary)
@@ -1511,7 +1517,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
     final l10n = context.l10n;
     return ListView(
       children: [
-        SizedBox(height: 64),
+        const SizedBox(height: 64),
         SemanticIcon(
   icon: AppIcons.searchOff,
   semanticLabel: 'Search off',
@@ -1519,13 +1525,13 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
   color: context.colors.onSurface.withValues(alpha: 0.5,
 ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text(
           l10n.noExercisesFound,
           style: context.textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           l10n.tryModifyingFilters,
           style: context.textTheme.bodyMedium?.copyWith(
@@ -1606,7 +1612,7 @@ class _ExerciseSearchScreenState extends ConsumerState<ExerciseSearchScreen> {
       case 'avanzato':
         return context.colors.error;
       default:
-        return context.colors.surfaceVariant;
+        return context.colors.surfaceContainerHighest;
     }
   }
 

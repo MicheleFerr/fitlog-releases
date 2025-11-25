@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 
 /// Custom exceptions for HiveBoxManagerEnhanced operations
 class BoxOpenException implements Exception {
@@ -51,6 +52,22 @@ class HiveBoxManagerEnhanced {
 
   bool _isDisposed = false;
   static bool _isHiveInitialized = false;
+
+  /// 🔐 SECURITY: Boxes that require AES-256 encryption
+  ///
+  /// These boxes contain sensitive user data and MUST be encrypted:
+  /// - GDPR-regulated data (consent history)
+  /// - PII (email, displayName)
+  /// - Privacy settings
+  /// - User preferences
+  ///
+  /// Encryption is applied AUTOMATICALLY when opening these boxes.
+  static const List<String> _sensitiveBoxes = [
+    'user_consents',       // GDPR consent history
+    'privacy',             // Privacy settings
+    'app_config',          // User preferences
+    'user_profile_cache',  // Cached user profile (email, displayName)
+  ];
 
   /// Initialize HiveBoxManagerEnhanced and pre-open critical boxes
   ///
@@ -155,6 +172,15 @@ class HiveBoxManagerEnhanced {
       return _openBoxes[name] as Box<E>;
     }
 
+    // 🔐 SECURITY: Auto-encrypt sensitive boxes if no cipher provided
+    HiveCipher? cipher = encryptionCipher;
+    if (_sensitiveBoxes.contains(name) && cipher == null) {
+      if (kDebugMode) {
+        debugPrint('🔐 [HiveBoxManagerEnhanced] Box "$name" is sensitive → auto-encrypting with AES-256...');
+      }
+      cipher = await HiveEncryptionManager.getEncryptionCipher();
+    }
+
     // Try opening with retry logic
     Box<E>? box;
     int attempt = 0;
@@ -168,7 +194,7 @@ class HiveBoxManagerEnhanced {
 
         box = await Hive.openBox<E>(
           name,
-          encryptionCipher: encryptionCipher,
+          encryptionCipher: cipher,  // 🔐 Uses auto-encryption cipher for sensitive boxes
         );
 
         _openBoxes[name] = box;
@@ -273,6 +299,15 @@ class HiveBoxManagerEnhanced {
       return _openLazyBoxes[name] as LazyBox<E>;
     }
 
+    // 🔐 SECURITY: Auto-encrypt sensitive boxes if no cipher provided
+    HiveCipher? cipher = encryptionCipher;
+    if (_sensitiveBoxes.contains(name) && cipher == null) {
+      if (kDebugMode) {
+        debugPrint('🔐 [HiveBoxManagerEnhanced] Lazy box "$name" is sensitive → auto-encrypting with AES-256...');
+      }
+      cipher = await HiveEncryptionManager.getEncryptionCipher();
+    }
+
     // Try opening with retry logic (similar to openBox)
     LazyBox<E>? box;
     int attempt = 0;
@@ -282,7 +317,7 @@ class HiveBoxManagerEnhanced {
       try {
         box = await Hive.openLazyBox<E>(
           name,
-          encryptionCipher: encryptionCipher,
+          encryptionCipher: cipher,  // 🔐 Uses auto-encryption cipher for sensitive boxes
         );
 
         _openLazyBoxes[name] = box;

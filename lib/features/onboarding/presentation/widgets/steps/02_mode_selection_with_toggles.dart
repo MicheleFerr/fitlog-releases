@@ -4,6 +4,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class ModeSelectionWithTogglesStep extends ConsumerStatefulWidget {
 
@@ -394,7 +395,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                 children: [
                   Icon(
                     feature.startsWith('✓') ? AppIcons.check : AppIcons.close,
-                    color: feature.startsWith('✓') ? color : Colors.grey,
+                    color: feature.startsWith('✓') ? color : context.colors.surfaceContainerHighest,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
@@ -458,7 +459,7 @@ class _ModeSelectionWithTogglesStepState extends ConsumerState<ModeSelectionWith
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Row(
                     children: [
-                      const Icon(AppIcons.toggleOff, color: Colors.grey, size: 16),
+                      Icon(AppIcons.toggleOff, color: context.colors.surfaceContainerHighest, size: 16),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

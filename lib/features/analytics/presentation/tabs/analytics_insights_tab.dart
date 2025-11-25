@@ -14,6 +14,9 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class AnalyticsInsightsTab extends ConsumerStatefulWidget {
 
@@ -193,11 +196,12 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    AppIcons.admin,
-                    size: 16,
-                    color: theme.colorScheme.onPrimary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onPrimary,
+),
                   const SizedBox(width: 4),
                   Text(
                     l10n.adminMode,
@@ -228,11 +232,12 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 color: theme.colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                AppIcons.lock,
-                size: 64,
-                color: theme.colorScheme.primary,
-              ),
+              child: SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary,
+),
             ),
             const SizedBox(height: 32),
             Text(
@@ -275,10 +280,13 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               l10n.personalizedRecommendations,
               theme,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             FilledButton.icon(
               onPressed: () => context.push('/premium'),
-              icon: const Icon(AppIcons.star),
+              icon: const SemanticIcon(
+  icon: AppIcons.star,
+  semanticLabel: 'Star',
+),
               label: Text(l10n.unlockPremium),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -307,7 +315,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
               color: theme.colorScheme.primary,
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               text,
@@ -363,7 +371,11 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                       });
                       HapticFeedback.lightImpact();
                     },
-                    icon: const Icon(AppIcons.clearAll, size: 18),
+                    icon: const SemanticIcon(
+  icon: AppIcons.clearAll,
+  semanticLabel: 'Clear all',
+  size: AppIconSize.small,
+),
                     label: Text(l10n.clearFilters),
                   ),
               ],
@@ -381,10 +393,12 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      Icon(
-                        AppIcons.filterAltOff,
-                        size: 48,
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                      SemanticIcon(
+  icon: AppIcons.filterAltOff,
+  semanticLabel: 'Filter alt off',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -529,7 +543,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 : AppIcons.infoOutline;
 
     final color = type == 'warning' ? Colors.orange
-                 : type == 'success' ? Colors.green
+                 : type == 'success' ? context.colors.success
                  : theme.colorScheme.primary;
 
     return Padding(
@@ -584,11 +598,12 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                         padding: const EdgeInsets.only(top: 4),
                         child: Row(
                           children: [
-                            Icon(
-                              AppIcons.experiment,
-                              size: 14,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                            SemanticIcon(
+  icon: AppIcons.experiment,
+  semanticLabel: 'Experiment',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                             const SizedBox(width: 4),
                             Text(
                               l10n.tapForScientificExplanation,
@@ -604,10 +619,12 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 ),
               ),
               if (reason != null)
-                Icon(
-                  AppIcons.chevronRight,
-                  size: 20,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                SemanticIcon(
+  icon: AppIcons.chevronRight,
+  semanticLabel: 'Chevron right',
+  size: AppIconSize.small,
+  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
+),
                 ),
             ],
           ),

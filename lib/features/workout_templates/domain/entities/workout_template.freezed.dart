@@ -14,12 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-WorkoutTemplate _$WorkoutTemplateFromJson(Map<String, dynamic> json) {
-  return _WorkoutTemplate.fromJson(json);
+CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
+    Map<String, dynamic> json) {
+  return _CommunityWorkoutTemplate.fromJson(json);
 }
 
 /// @nodoc
-mixin _$WorkoutTemplate {
+mixin _$CommunityWorkoutTemplate {
   String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
@@ -51,15 +52,15 @@ mixin _$WorkoutTemplate {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $WorkoutTemplateCopyWith<WorkoutTemplate> get copyWith =>
+  $CommunityWorkoutTemplateCopyWith<CommunityWorkoutTemplate> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $WorkoutTemplateCopyWith<$Res> {
-  factory $WorkoutTemplateCopyWith(
-          WorkoutTemplate value, $Res Function(WorkoutTemplate) then) =
-      _$WorkoutTemplateCopyWithImpl<$Res, WorkoutTemplate>;
+abstract class $CommunityWorkoutTemplateCopyWith<$Res> {
+  factory $CommunityWorkoutTemplateCopyWith(CommunityWorkoutTemplate value,
+          $Res Function(CommunityWorkoutTemplate) then) =
+      _$CommunityWorkoutTemplateCopyWithImpl<$Res, CommunityWorkoutTemplate>;
   @useResult
   $Res call(
       {String id,
@@ -85,9 +86,10 @@ abstract class $WorkoutTemplateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WorkoutTemplateCopyWithImpl<$Res, $Val extends WorkoutTemplate>
-    implements $WorkoutTemplateCopyWith<$Res> {
-  _$WorkoutTemplateCopyWithImpl(this._value, this._then);
+class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
+        $Val extends CommunityWorkoutTemplate>
+    implements $CommunityWorkoutTemplateCopyWith<$Res> {
+  _$CommunityWorkoutTemplateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -204,11 +206,12 @@ class _$WorkoutTemplateCopyWithImpl<$Res, $Val extends WorkoutTemplate>
 }
 
 /// @nodoc
-abstract class _$$WorkoutTemplateImplCopyWith<$Res>
-    implements $WorkoutTemplateCopyWith<$Res> {
-  factory _$$WorkoutTemplateImplCopyWith(_$WorkoutTemplateImpl value,
-          $Res Function(_$WorkoutTemplateImpl) then) =
-      __$$WorkoutTemplateImplCopyWithImpl<$Res>;
+abstract class _$$CommunityWorkoutTemplateImplCopyWith<$Res>
+    implements $CommunityWorkoutTemplateCopyWith<$Res> {
+  factory _$$CommunityWorkoutTemplateImplCopyWith(
+          _$CommunityWorkoutTemplateImpl value,
+          $Res Function(_$CommunityWorkoutTemplateImpl) then) =
+      __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -235,11 +238,13 @@ abstract class _$$WorkoutTemplateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$WorkoutTemplateImplCopyWithImpl<$Res>
-    extends _$WorkoutTemplateCopyWithImpl<$Res, _$WorkoutTemplateImpl>
-    implements _$$WorkoutTemplateImplCopyWith<$Res> {
-  __$$WorkoutTemplateImplCopyWithImpl(
-      _$WorkoutTemplateImpl _value, $Res Function(_$WorkoutTemplateImpl) _then)
+class __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>
+    extends _$CommunityWorkoutTemplateCopyWithImpl<$Res,
+        _$CommunityWorkoutTemplateImpl>
+    implements _$$CommunityWorkoutTemplateImplCopyWith<$Res> {
+  __$$CommunityWorkoutTemplateImplCopyWithImpl(
+      _$CommunityWorkoutTemplateImpl _value,
+      $Res Function(_$CommunityWorkoutTemplateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -266,7 +271,7 @@ class __$$WorkoutTemplateImplCopyWithImpl<$Res>
     Object? requiredEquipment = null,
     Object? targetMuscles = null,
   }) {
-    return _then(_$WorkoutTemplateImpl(
+    return _then(_$CommunityWorkoutTemplateImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -353,8 +358,8 @@ class __$$WorkoutTemplateImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$WorkoutTemplateImpl implements _WorkoutTemplate {
-  const _$WorkoutTemplateImpl(
+class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
+  const _$CommunityWorkoutTemplateImpl(
       {required this.id,
       required this.userId,
       required this.name,
@@ -380,8 +385,8 @@ class _$WorkoutTemplateImpl implements _WorkoutTemplate {
         _requiredEquipment = requiredEquipment,
         _targetMuscles = targetMuscles;
 
-  factory _$WorkoutTemplateImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WorkoutTemplateImplFromJson(json);
+  factory _$CommunityWorkoutTemplateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommunityWorkoutTemplateImplFromJson(json);
 
   @override
   final String id;
@@ -470,14 +475,14 @@ class _$WorkoutTemplateImpl implements _WorkoutTemplate {
 
   @override
   String toString() {
-    return 'WorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
+    return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$WorkoutTemplateImpl &&
+            other is _$CommunityWorkoutTemplateImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.name, name) || other.name == name) &&
@@ -546,20 +551,20 @@ class _$WorkoutTemplateImpl implements _WorkoutTemplate {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$WorkoutTemplateImplCopyWith<_$WorkoutTemplateImpl> get copyWith =>
-      __$$WorkoutTemplateImplCopyWithImpl<_$WorkoutTemplateImpl>(
-          this, _$identity);
+  _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
+      get copyWith => __$$CommunityWorkoutTemplateImplCopyWithImpl<
+          _$CommunityWorkoutTemplateImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WorkoutTemplateImplToJson(
+    return _$$CommunityWorkoutTemplateImplToJson(
       this,
     );
   }
 }
 
-abstract class _WorkoutTemplate implements WorkoutTemplate {
-  const factory _WorkoutTemplate(
+abstract class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
+  const factory _CommunityWorkoutTemplate(
       {required final String id,
       required final String userId,
       required final String name,
@@ -579,10 +584,10 @@ abstract class _WorkoutTemplate implements WorkoutTemplate {
       final int? estimatedDurationMinutes,
       final String? difficultyLevel,
       final List<String> requiredEquipment,
-      final List<String> targetMuscles}) = _$WorkoutTemplateImpl;
+      final List<String> targetMuscles}) = _$CommunityWorkoutTemplateImpl;
 
-  factory _WorkoutTemplate.fromJson(Map<String, dynamic> json) =
-      _$WorkoutTemplateImpl.fromJson;
+  factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) =
+      _$CommunityWorkoutTemplateImpl.fromJson;
 
   @override
   String get id;
@@ -627,8 +632,8 @@ abstract class _WorkoutTemplate implements WorkoutTemplate {
   List<String> get targetMuscles;
   @override
   @JsonKey(ignore: true)
-  _$$WorkoutTemplateImplCopyWith<_$WorkoutTemplateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 TemplateReview _$TemplateReviewFromJson(Map<String, dynamic> json) {

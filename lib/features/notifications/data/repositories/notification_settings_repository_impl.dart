@@ -37,9 +37,6 @@ import 'package:gymbro_flutter_new/features/notifications/data/sync/notification
 /// - Write: SharedPreferences immediate, Firestore debounced
 class NotificationSettingsRepositoryImpl
     implements NotificationSettingsRepository {
-  final NotificationLocalDataSource _localDataSource;
-  final NotificationRemoteDataSource _remoteDataSource;
-  final NotificationSyncManager _syncManager;
 
   NotificationSettingsRepositoryImpl({
     required NotificationLocalDataSource localDataSource,
@@ -48,6 +45,9 @@ class NotificationSettingsRepositoryImpl
   })  : _localDataSource = localDataSource,
         _remoteDataSource = remoteDataSource,
         _syncManager = syncManager;
+  final NotificationLocalDataSource _localDataSource;
+  final NotificationRemoteDataSource _remoteDataSource;
+  final NotificationSyncManager _syncManager;
 
   // === CRUD Operations ===
 

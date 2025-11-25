@@ -24,7 +24,7 @@ import 'package:gymbro_flutter_new/shared/domain/models/feedback_config.dart';
 ///   builder: (context, animation) {
 ///     return ExpandingStripContainer(
 ///       animation: animation,  // ← Shared animation
-///       stripColor: Colors.blue,
+///       stripColor: context.colors.primary,
 ///       child: CardContent(),
 ///     );
 ///   },

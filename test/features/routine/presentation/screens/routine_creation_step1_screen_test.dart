@@ -14,6 +14,7 @@
 /// - Continue button action (shows snackbar)
 /// - Back button action (resets state + pops)
 /// - Visual feedback (selected card elevation/color change)
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_creation_step1_screen.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 void main() {
   group('RoutineCreationStep1Screen Widget Tests', () {
@@ -36,18 +38,18 @@ void main() {
     Widget buildTestWidget({List<Override> overrides = const []}) {
       return ProviderScope(
         overrides: overrides,
-        child: MaterialApp(
-          localizationsDelegates: const [
+        child: const MaterialApp(
+          localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [
+          supportedLocales: [
             Locale('en'), // English
             Locale('it'), // Italian
           ],
-          home: const RoutineCreationStep1Screen(),
+          home: RoutineCreationStep1Screen(),
         ),
       );
     }
@@ -65,7 +67,7 @@ void main() {
         expect(find.text('Create Routine'), findsOneWidget);
 
         // Close button (leading)
-        expect(find.byIcon(Icons.close), findsOneWidget);
+        expect(find.byIcon(AppIcons.close), findsOneWidget);
       });
 
       testWidgets('renders step indicator showing 1/2', (WidgetTester tester) async {
@@ -119,10 +121,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // At least 2 outline circle icons visible (GridView lazy loads)
-        expect(find.byIcon(Icons.circle_outlined), findsAtLeastNWidgets(2));
+        expect(find.byIcon(AppIcons.circleOutlined), findsAtLeastNWidgets(2));
 
         // No checkmark icons (selected state)
-        expect(find.byIcon(Icons.check_circle), findsNothing);
+        expect(find.byIcon(AppIcons.checkCircle), findsNothing);
       });
     });
 
@@ -144,18 +146,18 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
+              supportedLocales: [
                 Locale('en'),
                 Locale('it'),
               ],
-              home: const RoutineCreationStep1Screen(),
+              home: RoutineCreationStep1Screen(),
             ),
           ),
         );
@@ -194,18 +196,18 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
+              supportedLocales: [
                 Locale('en'),
                 Locale('it'),
               ],
-              home: const RoutineCreationStep1Screen(),
+              home: RoutineCreationStep1Screen(),
             ),
           ),
         );
@@ -213,10 +215,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // 1 checkmark icon (selected card)
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
+        expect(find.byIcon(AppIcons.checkCircle), findsOneWidget);
 
         // At least 1 outline circle icon (unselected cards, may be offstage)
-        expect(find.byIcon(Icons.circle_outlined), findsAtLeastNWidgets(1));
+        expect(find.byIcon(AppIcons.circleOutlined), findsAtLeastNWidgets(1));
       });
 
       testWidgets('can change selection by tapping different card',
@@ -232,18 +234,18 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
+              supportedLocales: [
                 Locale('en'),
                 Locale('it'),
               ],
-              home: const RoutineCreationStep1Screen(),
+              home: RoutineCreationStep1Screen(),
             ),
           ),
         );
@@ -386,7 +388,7 @@ void main() {
         );
 
         // Tap back button (close icon)
-        await tester.tap(find.byIcon(Icons.close));
+        await tester.tap(find.byIcon(AppIcons.close));
         await tester.pumpAndSettle();
 
         // Verify provider reset to null
@@ -402,7 +404,7 @@ void main() {
         expect(find.text('Create Routine'), findsOneWidget);
 
         // Tap back button (close icon)
-        await tester.tap(find.byIcon(Icons.close));
+        await tester.tap(find.byIcon(AppIcons.close));
         await tester.pumpAndSettle();
 
         // Verify screen popped (no longer visible)

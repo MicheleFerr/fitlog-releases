@@ -26,9 +26,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Chat input widget
 class ChatInput extends ConsumerStatefulWidget {
-  final TextEditingController controller;
-  final Function(String) onSend;
-  final bool enabled;
 
   const ChatInput({
     super.key,
@@ -36,6 +33,9 @@ class ChatInput extends ConsumerStatefulWidget {
     required this.onSend,
     this.enabled = true,
   });
+  final TextEditingController controller;
+  final Function(String) onSend;
+  final bool enabled;
 
   @override
   ConsumerState<ChatInput> createState() => _ChatInputState();

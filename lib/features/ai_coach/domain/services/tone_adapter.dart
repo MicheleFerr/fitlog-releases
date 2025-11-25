@@ -26,12 +26,7 @@ enum FitnessGoal {
 }
 
 /// Tone profile configuration
-class ToneProfile {
-  final ExperienceLevel experienceLevel;
-  final FitnessGoal? primaryGoal;
-  final bool isEncouraging; // More motivational language
-  final bool isDetailed; // Longer, more detailed responses
-  final bool isTechnical; // Uses technical fitness terminology
+class ToneProfile { // Uses technical fitness terminology
 
   const ToneProfile({
     required this.experienceLevel,
@@ -40,6 +35,11 @@ class ToneProfile {
     this.isDetailed = true,
     this.isTechnical = false,
   });
+  final ExperienceLevel experienceLevel;
+  final FitnessGoal? primaryGoal;
+  final bool isEncouraging; // More motivational language
+  final bool isDetailed; // Longer, more detailed responses
+  final bool isTechnical;
 
   /// Default tone profile for new users
   static const ToneProfile defaultProfile = ToneProfile(
@@ -220,7 +220,7 @@ class ToneAdapter {
         return [
           'Great start!',
           "You're doing awesome!",
-          "Every rep counts!",
+          'Every rep counts!',
           "You've got this!",
           'Keep up the great work!',
           'Progress takes time - be patient!',

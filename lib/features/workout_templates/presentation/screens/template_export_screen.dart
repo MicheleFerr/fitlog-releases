@@ -18,7 +18,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/export_format.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/presentation/provi
 // import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/template_selection_widget.dart';
 // import 'package:gymbro_flutter_new/features/workout_templates/presentation/widgets/premium_export_features_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Screen for exporting workout templates
 class TemplateExportScreen extends ConsumerStatefulWidget {
@@ -44,7 +45,7 @@ class TemplateExportScreen extends ConsumerStatefulWidget {
 
 class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
   List<WorkoutTemplate> _selectedTemplates = [];
-  ExportFormat _selectedFormat = ExportFormat.json;
+  final ExportFormat _selectedFormat = ExportFormat.json;
   bool _includeAnalytics = false;
   bool _isExporting = false;
   
@@ -87,7 +88,10 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
               if (user.accountTier != AccountTier.free)
                 IconButton(
                   onPressed: () => _showExportLimits(context, l10n),
-                  icon: const Icon(AppIcons.info),
+                  icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                 ),
             ],
           ),
@@ -354,7 +358,10 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: () => _exportTemplates(ExportAction.download),
-              icon: const Icon(AppIcons.download),
+              icon: const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
               label: Text(l10n.downloadJson),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
@@ -366,7 +373,10 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           const SizedBox(width: 12),
           ElevatedButton.icon(
             onPressed: () => _exportTemplates(ExportAction.share),
-            icon: const Icon(AppIcons.share),
+            icon: const SemanticIcon(
+  icon: AppIcons.share,
+  semanticLabel: 'Share',
+),
             label: Text(l10n.share),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.secondary,
@@ -377,7 +387,10 @@ class _TemplateExportScreenState extends ConsumerState<TemplateExportScreen> {
           const SizedBox(width: 12),
           ElevatedButton.icon(
             onPressed: () => _exportTemplates(ExportAction.copy),
-            icon: const Icon(AppIcons.iconCopy),
+            icon: const SemanticIcon(
+  icon: AppIcons.iconCopy,
+  semanticLabel: 'Icon copy',
+),
             label: Text(l10n.copy),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.tertiary,

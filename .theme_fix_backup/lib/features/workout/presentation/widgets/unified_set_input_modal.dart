@@ -9,6 +9,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 // Extension for easy modal showing
 extension UnifiedSetInputModalExtension on BuildContext {
@@ -24,9 +28,9 @@ extension UnifiedSetInputModalExtension on BuildContext {
     // Validate inputs
     if (exerciseSet == null) {
       ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(
-          content: Text('Error: Unable to edit this set'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('Error: Unable to edit this set'),
+          backgroundColor: colors.error,
         ),
       );
       return;
@@ -99,7 +103,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black54,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
@@ -131,7 +135,7 @@ class UnifiedSetInputModal extends ConsumerStatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black54,
+      barrierColor: context.colors.onSurface.withValues(alpha: 0.54),
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
@@ -214,7 +218,10 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
         _supersetReps[exerciseName] = exerciseSet?.reps ?? 10;
         _supersetSeconds[exerciseName] = exerciseSet?.seconds ?? 60; // ✅ NUOVO
         _supersetRpes[exerciseName] = exerciseSet?.rpe;
-        _supersetCompleted[exerciseName] = exerciseSet?.isCompleted ?? false;
+        // ✅ FIX: Default to completed during workout for superset exercises
+        _supersetCompleted[exerciseName] = widget.isInWorkout
+            ? true
+            : (exerciseSet?.isCompleted ?? false);
       }
 
       // Set current values to first exercise
@@ -230,7 +237,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
       _selectedReps = widget.exerciseSet.reps ?? widget.previousSet?.reps ?? 10;
       _selectedSeconds = widget.exerciseSet.seconds ?? widget.previousSet?.seconds ?? 60; // ✅ NUOVO: Default 60 seconds
       _selectedRpe = widget.exerciseSet.rpe;
-      _isCompleted = widget.exerciseSet.isCompleted;
+      // ✅ FIX: Default to completed during workout so RPE is immediately visible and set is marked as done
+      _isCompleted = widget.isInWorkout ? true : widget.exerciseSet.isCompleted;
     }
 
     _updateRir();
@@ -546,13 +554,13 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
           offset: Offset(0, MediaQuery.of(context).size.height * _slideAnimation.value),
           child: Opacity(
             opacity: _fadeAnimation.value,
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: context.colors.onSurface.withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),
@@ -598,7 +606,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          widget.isSuperset ? Icons.repeat : Icons.fitness_center,
+                                          widget.isSuperset ? AppIcons.repeat : AppIcons.workout,
                                           size: 16,
                                           color: colorScheme.onPrimaryContainer,
                                         ),
@@ -638,9 +646,9 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                               HapticFeedback.mediumImpact();
                                             },
                                             icon: Icon(
-                                              _isCompleted 
-                                                ? Icons.check_circle 
-                                                : Icons.radio_button_unchecked,
+                                              _isCompleted
+                                                ? AppIcons.complete
+                                                : AppIcons.radioButtonUnchecked,
                                               color: _isCompleted 
                                                 ? colorScheme.tertiary 
                                                 : colorScheme.outline,
@@ -669,7 +677,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               if (widget.isSuperset && widget.supersetExerciseNames != null && _tabController != null)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 12),
-                                  child: Container(
+                                  child: DecoratedBox(
                                     decoration: BoxDecoration(
                                       color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                       borderRadius: BorderRadius.circular(12),
@@ -699,11 +707,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               if (isCompleted) ...[
-                                                Icon(
-                                                  Icons.check_circle,
-                                                  size: 16,
-                                                  color: colorScheme.tertiary,
-                                                ),
+                                                SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.tiny,
+  color: colorScheme.tertiary,
+),
                                                 const SizedBox(width: 4),
                                               ],
                                               Flexible(
@@ -745,11 +754,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.content_copy,
-                                      size: 16,
-                                      color: colorScheme.secondary,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.copy,
+  semanticLabel: 'Copy',
+  size: AppIconSize.tiny,
+  color: colorScheme.secondary,
+),
                                     const SizedBox(width: 8),
                                     Text(
                                       'Copy from Set ${widget.previousSet!.setNumber}: '
@@ -777,11 +787,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(
-                                          Icons.history,
-                                          size: 14,
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           l10n.recentWeights,
@@ -866,11 +877,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.fitness_center,
-                                          size: 18,
-                                          color: colorScheme.primary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Weight',
@@ -1013,11 +1025,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.repeat,
-                                          size: 18,
-                                          color: colorScheme.secondary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.small,
+  color: colorScheme.secondary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Reps',
@@ -1153,11 +1166,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.timer,
-                                          size: 18,
-                                          color: colorScheme.tertiary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.small,
+  color: colorScheme.tertiary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Duration',
@@ -1309,11 +1323,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               children: [
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.speed,
-                                      size: 18,
-                                      color: colorScheme.tertiary,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.speed,
+  semanticLabel: 'Speed',
+  size: AppIconSize.small,
+  color: colorScheme.tertiary,
+),
                                     const SizedBox(width: 8),
                                     Text(
                                       'RPE - Rate of Perceived Exertion',
@@ -1336,15 +1351,15 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     // Color based on RPE value
                                     Color chipColor;
                                     if (rpe <= 6) {
-                                      chipColor = Colors.green;
+                                      chipColor = context.colors.success;
                                     } else if (rpe <= 7) {
-                                      chipColor = Colors.lightGreen;
+                                      chipColor = context.colors.success;
                                     } else if (rpe <= 8) {
-                                      chipColor = Colors.orange;
+                                      chipColor = context.colors.secondary;
                                     } else if (rpe <= 9) {
-                                      chipColor = Colors.deepOrange;
+                                      chipColor = context.colors.warning;
                                     } else {
-                                      chipColor = Colors.red;
+                                      chipColor = context.colors.error;
                                     }
                                     
                                     return Material(
@@ -1410,11 +1425,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          Icons.info_outline,
-                                          size: 16,
-                                          color: colorScheme.primary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                                         const SizedBox(width: 8),
                                         Expanded(
                                           child: Text(
@@ -1449,8 +1465,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                             children: [
                               Icon(
                                 widget.countingMode == ExerciseCountingMode.time
-                                    ? Icons.timer
-                                    : Icons.calculate,
+                                    ? AppIcons.timer
+                                    : AppIcons.calculate,
                                 size: 16,
                                 color: colorScheme.tertiary,
                               ),
@@ -1479,18 +1495,18 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               gradient: LinearGradient(
                                 colors: [
                                   _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                    ? Colors.orange.withValues(alpha: 0.15)
-                                    : Colors.green.withValues(alpha: 0.15),
+                                    ? context.colors.secondary.withValues(alpha: 0.15)
+                                    : context.colors.success.withValues(alpha: 0.15),
                                   _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                    ? Colors.deepOrange.withValues(alpha: 0.1)
-                                    : Colors.lightGreen.withValues(alpha: 0.1),
+                                    ? context.colors.warning.withValues(alpha: 0.1)
+                                    : context.colors.success.withValues(alpha: 0.1),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                  ? Colors.orange.withValues(alpha: 0.5)
-                                  : Colors.green.withValues(alpha: 0.5),
+                                  ? context.colors.secondary.withValues(alpha: 0.5)
+                                  : context.colors.success.withValues(alpha: 0.5),
                                 width: 2,
                               ),
                             ),
@@ -1501,11 +1517,11 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   children: [
                                     Icon(
                                       _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                        ? Icons.trending_up
-                                        : Icons.trending_down,
+                                        ? AppIcons.trendUp
+                                        : AppIcons.trendDown,
                                       color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                        ? Colors.orange
-                                        : Colors.green,
+                                        ? context.colors.secondary
+                                        : context.colors.success,
                                       size: 24,
                                     ),
                                     const SizedBox(width: 12),
@@ -1518,8 +1534,8 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             style: theme.textTheme.titleSmall?.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                                ? Colors.orange
-                                                : Colors.green,
+                                                ? context.colors.secondary
+                                                : context.colors.success,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
@@ -1543,7 +1559,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         style: theme.textTheme.bodySmall,
                                       ),
                                     ),
-                                    Icon(Icons.arrow_forward, size: 16, color: colorScheme.onSurfaceVariant),
+                                    SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
@@ -1584,12 +1605,16 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         HapticFeedback.mediumImpact();
                                         Navigator.of(context).pop();
                                       },
-                                      icon: const Icon(Icons.check, size: 18),
+                                      icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.small,
+),
                                       label: Text(l10n.accept),
                                       style: FilledButton.styleFrom(
                                         backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase
-                                          ? Colors.orange
-                                          : Colors.green,
+                                          ? context.colors.secondary
+                                          : context.colors.success,
                                       ),
                                     ),
                                   ],
@@ -1641,7 +1666,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        _isCompleted ? Icons.check_circle : Icons.save,
+                                        _isCompleted ? AppIcons.complete : AppIcons.save,
                                         size: 20,
                                       ),
                                       const SizedBox(width: 8),

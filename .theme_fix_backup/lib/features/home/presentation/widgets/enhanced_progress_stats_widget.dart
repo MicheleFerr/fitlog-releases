@@ -13,6 +13,10 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/level_info
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/weekly_distribution_modal.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -151,8 +155,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   children: [
                     Text(
                       '${levelInfo.level}',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: context.colors.surface,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -160,7 +164,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     Text(
                       'LVL',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: context.colors.surface.withValues(alpha: 0.9),
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                       ),
@@ -272,7 +276,11 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, size: 20),
+                  icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+  size: AppIconSize.small,
+),
                   onPressed: () => _showOptionsMenu(context),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -352,7 +360,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                   onPressed: () => _showOptionsMenu(context),
                 ),
               ],
@@ -424,8 +435,8 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           children: [
             Text(
               '${levelInfo.level}',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.colors.surface,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
@@ -433,7 +444,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
             Text(
               'LVL',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.9),
+                color: context.colors.surface.withValues(alpha: 0.9),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
               ),
@@ -455,7 +466,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.workoutsLabel,
         value: '${stats['daysInLast30'] ?? 0}',
-        icon: Icons.calendar_today,
+        icon: AppIcons.calendar,
       ));
     }
     
@@ -464,7 +475,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.avgPerWeek,
         value: '${stats['avgPerWeek'] ?? 0}',
-        icon: Icons.schedule,
+        icon: AppIcons.schedule,
       ));
     }
     
@@ -473,7 +484,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
         context,
         label: l10n.streakLabel,
         value: '${stats['currentStreak'] ?? 0}',
-        icon: Icons.local_fire_department,
+        icon: AppIcons.streak,
       ));
     }
     
@@ -526,10 +537,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.fitness_center,
+          icon: AppIcons.workout,
           label: l10n.totalWorkouts,
           value: '${analyticsState.activities.length}',
-          color: Colors.blue,
+          color: context.colors.primary,
           subtitle: l10n.sinceRegistration,
         ),
       ));
@@ -539,10 +550,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.calendar_today,
+          icon: AppIcons.calendar,
           label: l10n.thisMonth,
           value: '${frequencyStats['daysInLast30'] ?? 0}',
-          color: Colors.orange,
+          color: context.colors.secondary,
           subtitle: l10n.activeDays,
         ),
       ));
@@ -552,10 +563,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       stats.add(Expanded(
         child: _buildStatCard(
           context,
-          icon: Icons.local_fire_department,
+          icon: AppIcons.streak,
           label: l10n.currentStreak,
           value: '${frequencyStats['currentStreak'] ?? 0}',
-          color: Colors.red,
+          color: context.colors.error,
           subtitle: l10n.consecutiveDays,
         ),
       ));
@@ -752,7 +763,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
                   radius: spot.y > 0 ? 4 : 2,
-                  color: Colors.white,
+                  color: context.colors.surface,
                   strokeWidth: 2,
                   strokeColor: spot.y > 0 
                     ? theme.colorScheme.primary 
@@ -871,10 +882,12 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.fitness_center,
-            size: 48,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 12),
           Text(
@@ -901,7 +914,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -921,7 +934,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.dashboard_customize),
+                leading: const SemanticIcon(
+  icon: AppIcons.dashboardCustomize,
+  semanticLabel: 'Dashboard customize',
+),
                 title: Text(l10n.changeLayout),
                 onTap: () {
                   Navigator.pop(context);
@@ -929,7 +945,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.checklist),
+                leading: const SemanticIcon(
+  icon: AppIcons.checklist,
+  semanticLabel: 'Checklist',
+),
                 title: Text(l10n.selectMetrics),
                 onTap: () {
                   Navigator.pop(context);
@@ -937,7 +956,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.restore),
+                leading: const SemanticIcon(
+  icon: AppIcons.restore,
+  semanticLabel: 'Restore',
+),
                 title: Text(l10n.resetDefaults),
                 onTap: () {
                   Navigator.pop(context);
@@ -959,7 +981,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
+      builder: (context) => DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -978,10 +1000,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 ),
               ),
               const SizedBox(height: 16),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.fullView),
-                subtitle: Text(AppLocalizations.of(context).completeStatistics),
-                value: ProgressWidgetLayout.full,
+              RadioGroup<ProgressWidgetLayout>(
                 groupValue: currentLayout,
                 onChanged: (value) {
                   if (value != null) {
@@ -989,30 +1008,26 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                     Navigator.pop(context);
                   }
                 },
-              ),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.compactView),
-                subtitle: Text(AppLocalizations.of(context).essentialStatistics),
-                value: ProgressWidgetLayout.compact,
-                groupValue: currentLayout,
-                onChanged: (value) {
-                  if (value != null) {
-                    ref.read(progressWidgetPreferencesProvider.notifier).setLayout(value);
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              RadioListTile<ProgressWidgetLayout>(
-                title: Text(l10n.minimalView),
-                subtitle: Text(AppLocalizations.of(context).levelAndXpOnly),
-                value: ProgressWidgetLayout.minimal,
-                groupValue: currentLayout,
-                onChanged: (value) {
-                  if (value != null) {
-                    ref.read(progressWidgetPreferencesProvider.notifier).setLayout(value);
-                    Navigator.pop(context);
-                  }
-                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.fullView),
+                      subtitle: Text(AppLocalizations.of(context).completeStatistics),
+                      value: ProgressWidgetLayout.full,
+                    ),
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.compactView),
+                      subtitle: Text(AppLocalizations.of(context).essentialStatistics),
+                      value: ProgressWidgetLayout.compact,
+                    ),
+                    RadioListTile<ProgressWidgetLayout>(
+                      title: Text(l10n.minimalView),
+                      subtitle: Text(AppLocalizations.of(context).levelAndXpOnly),
+                      value: ProgressWidgetLayout.minimal,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16),
             ],
@@ -1265,7 +1280,7 @@ class _MetricsSelectionSheetState extends ConsumerState<_MetricsSelectionSheet> 
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),

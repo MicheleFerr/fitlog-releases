@@ -34,9 +34,6 @@ import 'package:gymbro_flutter_new/features/notifications/domain/repositories/no
 ///
 /// **Warning**: Irreversible operation! User data cannot be recovered.
 class DeleteAllNotificationData {
-  final NotificationSettingsRepository _settingsRepository;
-  final NotificationHistoryRepository _historyRepository;
-  final NotificationRepository _notificationRepository;
 
   DeleteAllNotificationData({
     required NotificationSettingsRepository settingsRepository,
@@ -45,6 +42,9 @@ class DeleteAllNotificationData {
   })  : _settingsRepository = settingsRepository,
         _historyRepository = historyRepository,
         _notificationRepository = notificationRepository;
+  final NotificationSettingsRepository _settingsRepository;
+  final NotificationHistoryRepository _historyRepository;
+  final NotificationRepository _notificationRepository;
 
   /// Execute complete data deletion
   ///
@@ -100,7 +100,7 @@ class DeleteAllNotificationData {
 
       // Check settings reset to defaults
       final settings = await _settingsRepository.getSettings();
-      if (settings.hasValidConsent) return false; // Should be revoked
+      if (settings.consentTimestamp != null) return false; // Should be revoked
 
       // Check history cleared
       final unreadCount = await _historyRepository.getUnreadCount();

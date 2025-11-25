@@ -14,10 +14,7 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 
 class TemplateQuotaIndicator extends StatelessWidget {
   
@@ -37,7 +34,8 @@ class TemplateQuotaIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
+    final l10n = AppLocalizations.of(context);
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -59,12 +57,11 @@ class TemplateQuotaIndicator extends StatelessWidget {
         children: [
           Row(
             children: [
-              SemanticIcon(
-  icon: AppIcons.package,
-  semanticLabel: 'Package',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
+              Icon(
+                Icons.inventory_2,
+                size: 20,
+                color: colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Template Quota',
@@ -100,7 +97,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             label: 'Private Templates',
             used: usedPrivate,
             max: maxPrivate,
-            icon: AppIcons.lock,
+            icon: Icons.lock,
             color: colorScheme.primary,
           ),
           
@@ -112,7 +109,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
             label: 'Public Templates',
             used: usedPublic,
             max: maxPublic,
-            icon: AppIcons.public,
+            icon: Icons.public,
             color: colorScheme.secondary,
           ),
           
@@ -129,7 +126,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    AppIcons.star,
+                    Icons.star,
                     color: colorScheme.tertiary,
                     size: 20,
                   ),
@@ -200,7 +197,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
                 color: isFull 
                     ? colorScheme.error 
                     : isAlmostFull 
-                        ? context.colors.secondary 
+                        ? Colors.orange 
                         : colorScheme.onSurface,
               ),
             ),
@@ -208,7 +205,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
             value: percentage,
             minHeight: 8,
@@ -217,7 +214,7 @@ class TemplateQuotaIndicator extends StatelessWidget {
               isFull 
                   ? colorScheme.error 
                   : isAlmostFull 
-                      ? context.colors.secondary 
+                      ? Colors.orange 
                       : color,
             ),
           ),

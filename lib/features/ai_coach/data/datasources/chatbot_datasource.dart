@@ -58,17 +58,6 @@ import 'package:uuid/uuid.dart';
 /// }
 /// ```
 class ChatBotDatasource {
-  final IntentDetector intentDetector;
-  final ResponseRepository responseRepository;
-  final WorkoutRepository workoutRepository;
-  final AnalyzerRegistry analyzerRegistry;
-  final HybridExerciseRepository exerciseRepository;
-  final SimpleEntityExtractor entityExtractor;
-  final AnalyticsRepository analyticsRepository;
-  final AICoachAnalytics aiCoachAnalytics;
-  final ToneAdapter toneAdapter;
-  final ToneProfile toneProfile;
-  final Uuid _uuid = const Uuid();
 
   ChatBotDatasource({
     required this.intentDetector,
@@ -82,6 +71,17 @@ class ChatBotDatasource {
     required this.toneAdapter,
     required this.toneProfile,
   });
+  final IntentDetector intentDetector;
+  final ResponseRepository responseRepository;
+  final WorkoutRepository workoutRepository;
+  final AnalyzerRegistry analyzerRegistry;
+  final HybridExerciseRepository exerciseRepository;
+  final SimpleEntityExtractor entityExtractor;
+  final AnalyticsRepository analyticsRepository;
+  final AICoachAnalytics aiCoachAnalytics;
+  final ToneAdapter toneAdapter;
+  final ToneProfile toneProfile;
+  final Uuid _uuid = const Uuid();
 
   /// Send message and stream bot response
   ///

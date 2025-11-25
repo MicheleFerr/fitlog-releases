@@ -26,10 +26,6 @@ enum MockAchievementType {
 
 /// Mock achievement data model
 class MockAchievement {
-  final MockAchievementType type;
-  final String title;
-  final String description;
-  final String? emoji;
 
   const MockAchievement({
     required this.type,
@@ -37,6 +33,10 @@ class MockAchievement {
     required this.description,
     this.emoji,
   });
+  final MockAchievementType type;
+  final String title;
+  final String description;
+  final String? emoji;
 }
 
 /// Mock achievement notification service with realistic test data

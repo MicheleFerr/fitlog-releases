@@ -18,6 +18,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Enhanced analytics screen with advanced features
 class EnhancedAnalyticsScreen extends ConsumerStatefulWidget {
@@ -69,7 +72,10 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         title: Text(localizations.analytics),
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
-          icon: Icon(AppIcons.back),
+          icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -80,20 +86,29 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         ),
         actions: [
           IconButton(
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             onPressed: () {
               ref.read(analyticsProvider.notifier).refresh();
             },
           ),
           PopupMenuButton<String>(
-            icon: const Icon(AppIcons.moreVert),
+            icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(AppIcons.download),
+                    const SemanticIcon(
+  icon: AppIcons.download,
+  semanticLabel: 'Download',
+),
                     const SizedBox(width: 8),
                     Text(localizations.exportData),
                   ],
@@ -103,7 +118,10 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 value: 'settings',
                 child: Row(
                   children: [
-                    const Icon(AppIcons.settings),
+                    const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                     const SizedBox(width: 8),
                     Text(localizations.settings),
                   ],
@@ -388,8 +406,8 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                     ? AppIcons.trendingUp
                     : AppIcons.trendingDown,
                 color: volumeProgression.weeklyChange > 0
-                    ? Colors.green
-                    : Colors.red,
+                    ? context.colors.success
+                    : context.colors.error,
               ),
             ],
           ),
@@ -410,7 +428,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
     return Column(
       children: [
         Icon(icon, size: 24, color: effectiveColor),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -488,7 +506,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
           label,
           style: Theme.of(context).textTheme.bodySmall,
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -508,7 +526,10 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: ListTile(
         title: Text(exercise.name),
         subtitle: Text('${exercise.count} sessions'),
-        trailing: const Icon(AppIcons.forwardIos),
+        trailing: const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+),
         onTap: onTap,
       ),
     );
@@ -562,7 +583,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
     double volume,
   ) {
     final isPositive = change > 0;
-    final color = isPositive ? Colors.green : Colors.red;
+    final color = isPositive ? context.colors.success : context.colors.error;
     
     return Column(
       children: [
@@ -626,7 +647,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildRecommendationCard(BuildContext context, String recommendation) {
     return Card(
       child: ListTile(
-        leading: const Icon(AppIcons.tip, color: Colors.amber),
+        leading: Icon(AppIcons.tip, color: Colors.amber),
         title: Text(recommendation),
       ),
     );
@@ -652,9 +673,9 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                       ? AppIcons.trendDown
                       : AppIcons.trendFlat,
               color: trend.type == TrendType.improving
-                  ? Colors.green
+                  ? context.colors.success
                   : trend.type == TrendType.declining
-                      ? Colors.red
+                      ? context.colors.error
                       : Colors.orange,
             ),
           ),
@@ -672,11 +693,16 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.lock, size: 64, color: Colors.grey),
+            SemanticIcon(
+  icon: AppIcons.lock,
+  semanticLabel: 'Lock',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest,
+),
             const SizedBox(height: 16),
             Text(
               localizations.pleaseLogin,
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(fontSize: 18, color: context.colors.surfaceContainerHighest),
             ),
           ],
         ),
@@ -702,17 +728,22 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.error, size: 64, color: Colors.red),
-          SizedBox(height: 16),
+          SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+          const SizedBox(height: 16),
           Text(
-            'Error loading analytics',
+            context.l10n.errorLoadingAnalytics,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
             error,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: context.colors.surfaceContainerHighest),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
@@ -731,24 +762,32 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(AppIcons.workout, size: 80, color: Colors.grey),
-          SizedBox(height: 24),
+          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest,
+),
+          const SizedBox(height: 24),
           Text(
             localizations.noWorkoutData,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey,
+              color: context.colors.surfaceContainerHighest,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             localizations.startWorkoutToSeeAnalytics,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: context.colors.surfaceContainerHighest),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => context.go('/workout'),
-            icon: const Icon(AppIcons.play),
+            icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
             label: Text(localizations.startWorkout),
           ),
         ],

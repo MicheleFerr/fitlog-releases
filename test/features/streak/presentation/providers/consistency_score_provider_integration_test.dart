@@ -46,15 +46,15 @@ void main() {
           overrides: [
             workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
+          child: const MaterialApp(
+            localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(
+            home: Scaffold(
               body: ConsistencyScoreWidget(),
             ),
           ),
@@ -117,15 +117,15 @@ void main() {
           overrides: [
             workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
+          child: const MaterialApp(
+            localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(
+            home: Scaffold(
               body: ConsistencyScoreWidget(),
             ),
           ),
@@ -175,15 +175,15 @@ void main() {
           overrides: [
             workoutRepositoryProvider.overrideWithValue(mockWorkoutRepository),
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
+          child: const MaterialApp(
+            localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(
+            home: Scaffold(
               body: ConsistencyScoreWidget(),
             ),
           ),

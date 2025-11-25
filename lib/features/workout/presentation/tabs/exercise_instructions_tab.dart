@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Provider per filtrare esercizi alternativi basati sulla categoria
 final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
@@ -159,7 +161,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
                   context,
                   _getDifficultyIcon(exercise.difficolta),
                   exercise.difficolta,
-                  _getDifficultyColor(exercise.difficolta),
+                  _getDifficultyColor(context, exercise.difficolta),
                 ),
 
                 // Equipment
@@ -220,10 +222,12 @@ class ExerciseInstructionsTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.searchOff,
-              size: 64,
-              color: context.colors.outline.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: context.colors.outline.withValues(alpha: 0.5,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -262,16 +266,16 @@ class ExerciseInstructionsTab extends ConsumerWidget {
   }
 
   /// Get difficulty color
-  Color _getDifficultyColor(String difficulty) {
+  Color _getDifficultyColor(BuildContext context, String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
         return Colors.orange;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 }

@@ -12,6 +12,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget for collecting user feedback on questionnaire steps
 class StepFeedbackWidget extends StatefulWidget {
@@ -67,8 +68,8 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                   children: [
                     Icon(
                       _currentRating != null
-                          ? Icons.check_circle
-                          : Icons.feedback_outlined,
+                          ? AppIcons.complete
+                          : AppIcons.feedbackOutlined,
                       color: _currentRating != null
                           ? context.colors.primary
                           : context.colors.onSurfaceVariant,
@@ -95,8 +96,8 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                     else
                       Icon(
                         _isExpanded
-                            ? Icons.expand_less
-                            : Icons.expand_more,
+                            ? AppIcons.expandLess
+                            : AppIcons.expandMore,
                         color: context.colors.onSurfaceVariant,
                       ),
                   ],
@@ -149,7 +150,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                isSelected ? Icons.star : Icons.star_border,
+                                isSelected ? AppIcons.star : AppIcons.starOutline,
                                 color: isSelected
                                     ? context.colors.onPrimary
                                     : context.colors.onPrimaryContainer,
@@ -203,7 +204,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.star,
+                  AppIcons.star,
                   color: context.colors.primary,
                   size: size,
                 ),
@@ -220,7 +221,7 @@ class _StepFeedbackWidgetState extends State<StepFeedbackWidget> {
           }
 
           return Icon(
-            index < rating ? Icons.star : Icons.star_border,
+            index < rating ? AppIcons.star : AppIcons.starOutline,
             color: context.colors.primary,
             size: size,
           );

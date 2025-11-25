@@ -9,9 +9,6 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/firebase_template_provider.dart';
-// UNIFIED SYSTEM IMPORT
-import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
@@ -27,8 +24,10 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/privacy/consent_dialog.dart';
 // Secure Logging
-import 'package:gymbro_flutter_new/shared/utils/secure_logger.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -97,7 +96,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             button: true,
             hint: l10n.backHint,
             child: IconButton(
-              icon: Icon(AppIcons.back),
+              icon: const SemanticIcon(
+  icon: AppIcons.back,
+  semanticLabel: 'Back',
+),
               onPressed: () {
                 if (Navigator.of(context).canPop()) {
                   Navigator.of(context).pop();
@@ -124,7 +126,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                     focusNode: _syncButtonFocusNode,
                     icon: Stack(
                       children: [
-                        const Icon(AppIcons.cloud),
+                        const SemanticIcon(
+  icon: AppIcons.cloud,
+  semanticLabel: 'Cloud',
+),
                         if (firebaseState.isSyncing)
                           Positioned(
                             right: 0,
@@ -132,8 +137,8 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                             child: Container(
                               width: 8,
                               height: 8,
-                              decoration: const BoxDecoration(
-                                color: Colors.blue,
+                              decoration: BoxDecoration(
+                                color: context.colors.primary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -167,7 +172,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             hint: l10n.createTemplateHint,
             child: IconButton(
               focusNode: _createButtonFocusNode,
-              icon: const Icon(AppIcons.add),
+              icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               onPressed: () => _showCreateTemplateModal(context),
               tooltip: l10n.createTemplate,
             ),
@@ -176,9 +184,18 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: l10n.allExercises.replaceAll(' Exercises', ''), icon: const Icon(AppIcons.list)),
-            Tab(text: l10n.popularTemplates, icon: const Icon(AppIcons.trendUp)),
-            Tab(text: l10n.myTemplates, icon: const Icon(AppIcons.person)),
+            Tab(text: l10n.allExercises.replaceAll(' Exercises', ''), icon: const SemanticIcon(
+  icon: AppIcons.list,
+  semanticLabel: 'List',
+)),
+            Tab(text: l10n.popularTemplates, icon: const SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+)),
+            Tab(text: l10n.myTemplates, icon: const SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+)),
           ],
         ),
       ),
@@ -192,10 +209,16 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
               focusNode: _searchFocusNode,
               decoration: InputDecoration(
                 hintText: context.l10n.workoutTemplateSearchHint,
-                prefixIcon: const Icon(AppIcons.search),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(AppIcons.clear),
+                        icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                         onPressed: () {
                           _searchController.clear();
                           ref.read(templateSearchQueryProvider.notifier).state = '';
@@ -238,25 +261,21 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     final searchQuery = ref.watch(templateSearchQueryProvider);
 
     if (searchQuery.isEmpty) {
-      // UNIFIED SYSTEM: Usa il repository unificato
-      final unifiedTemplatesAsync = ref.watch(userTemplatesProvider);
+      // LEGACY SYSTEM: Usa il repository legacy
+      final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
-      // Converti UnifiedWorkoutTemplate a WorkoutTemplate per compatibilità UI
-      final templatesAsync = unifiedTemplatesAsync.when(
-        data: (unifiedTemplates) => AsyncValue.data(
-          unifiedTemplates.map((unified) => TemplateBridge.toLegacy(unified)).toList()
-        ),
-        loading: () => const AsyncValue.loading(),
-        error: (error, stack) => AsyncValue.error(error, stack),
-      );
-      
       return templatesAsync.when(
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(AppIcons.error, size: 64, color: Colors.red),
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
               const SizedBox(height: 16),
               Text(context.l10n.erroreError),
               const SizedBox(height: 16),
@@ -281,21 +300,9 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   Widget _buildPopularTemplatesTab() {
-    // UNIFIED SYSTEM: Per ora usa template pubblici, in futuro implementare ordinamento per popolarità
-    final unifiedTemplatesAsync = ref.watch(publicTemplatesProvider(
-      const PublicTemplateQuery(limit: 20)
-    ));
+    // LEGACY SYSTEM: Usa popularTemplatesProvider
+    final popularTemplatesAsync = ref.watch(popularTemplatesProvider);
 
-    final popularTemplatesAsync = unifiedTemplatesAsync.when(
-      data: (unifiedTemplates) => AsyncValue.data(
-        unifiedTemplates
-            .map((unified) => TemplateBridge.toLegacy(unified))
-            .toList()
-      ),
-      loading: () => const AsyncValue.loading(),
-      error: (error, stack) => AsyncValue.error(error, stack),
-    );
-    
     return popularTemplatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
       error: (error, stack) => Center(child: Text(context.l10n.erroreError)),
@@ -305,13 +312,18 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(AppIcons.trendUp, size: 64, color: Colors.grey),
+                SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest,
+),
                 const SizedBox(height: 16),
                 Text(context.l10n.workoutTemplateNoPopularYet),
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateMostUsedWillAppear,
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: context.colors.surfaceContainerHighest),
                 ),
               ],
             ),
@@ -329,8 +341,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
 
     debugPrint('🔍 MyTemplatesTab - Using customWorkoutTemplatesProvider (same as WorkoutScreen)');
 
-    // Non serve più convertire da UnifiedWorkoutTemplate perché customWorkoutTemplatesProvider
-    // restituisce già WorkoutTemplate
+    // customWorkoutTemplatesProvider returns WorkoutTemplate directly (legacy system)
     
     return customTemplatesAsync.when(
       loading: () => const Center(child: LoadingIndicator()),
@@ -346,18 +357,26 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(AppIcons.workout, size: 64, color: Colors.grey),
+                SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest,
+),
                 const SizedBox(height: 16),
                 Text(context.l10n.workoutTemplateNoCustom),
                 const SizedBox(height: 8),
                 Text(
                   context.l10n.workoutTemplateCreateFirstCustom,
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: context.colors.surfaceContainerHighest),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () => _showCreateTemplateModal(context),
-                  icon: const Icon(AppIcons.add),
+                  icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
                   label: Text(context.l10n.creaTemplate),
                 ),
               ],
@@ -376,7 +395,12 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.searchOff, size: 64, color: Colors.grey),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: context.colors.surfaceContainerHighest,
+),
             const SizedBox(height: 16),
             Text(context.l10n.workoutTemplateNoneFound),
           ],
@@ -419,14 +443,11 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         updatedAt: DateTime.now(),
       );
 
-      // Save to unified repository
-      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
-      final unifiedTemplate = TemplateBridge.fromLegacy(duplicatedTemplate);
-      await unifiedRepo.createTemplate(unifiedTemplate);
+      // Save to legacy repository
+      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(duplicatedTemplate);
 
       // Invalidate providers to refresh list
       ref.invalidate(customWorkoutTemplatesProvider);
-      ref.invalidate(userTemplatesProvider);
 
       if (mounted) {
         SnackBarService.showSuccess(
@@ -461,7 +482,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
               leading: Icon(AppIcons.edit, color: context.colors.primary),
               title: Text(context.l10n.createManually),
@@ -517,17 +538,8 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
     final l10n = context.l10n;
 
     try {
-      // UNIFIED SYSTEM: Incrementa contatore utilizzo usando repository unificato
-      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
-      final unifiedTemplate = await unifiedRepo.getTemplateById(template.id);
-
-      if (unifiedTemplate != null) {
-        final updatedTemplate = unifiedTemplate.copyWith(
-          useCount: unifiedTemplate.useCount + 1,
-          version: (unifiedTemplate.version ?? 0) + 1,
-        );
-        await unifiedRepo.updateTemplate(updatedTemplate);
-      }
+      // LEGACY SYSTEM: Incrementa contatore utilizzo
+      await ref.read(workoutTemplateNotifierProvider.notifier).incrementUsage(template.id);
 
       // Crea workout dal template con templateId
       final workoutNotifier = ref.read(currentWorkoutProvider.notifier);
@@ -602,20 +614,20 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
         workoutNotifier.addExercise(exercise);
       }
 
-      // Mostra messaggio di successo
-      if (mounted) {
-        SnackBarService.showCustom(
-          context,
-          message: '✅ ${l10n.startWorkout} "${template.name}"!',
-          backgroundColor: Colors.green,
-          actionLabel: l10n.viewDetails,
-          onAction: () => context.go('/workout'),
-        );
-      }
-
-      // Vai alla schermata workout
+      // 🔧 FIX: Naviga PRIMA alla schermata workout
+      // Così l'utente vede subito il risultato
       if (mounted) {
         context.go('/workout');
+      }
+
+      // Mostra messaggio di successo DOPO la navigazione
+      // 🔧 FIX: Usa showSuccess semplice invece di showCustom con action ridondante
+      // Il pulsante "Visualizza Dettagli" era inutile perché si naviga già a /workout
+      if (mounted) {
+        SnackBarService.showSuccess(
+          context,
+          l10n.workoutStarted(template.name),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -649,28 +661,35 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
   }
 
   void _deleteTemplate(WorkoutTemplate template) {
+    // 🔧 FIX: Salva il root context PRIMA di aprire dialogs
+    // per evitare problemi con context invalidati dopo il pop
+    final rootContext = context;
+    final rootNavigator = Navigator.of(rootContext, rootNavigator: true);
+
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.workoutTemplateDeleteTitle),
-        content: Text(context.l10n.workoutTemplateDeleteConfirm(template.name)),
+      context: rootContext,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(dialogContext.l10n.workoutTemplateDeleteTitle),
+        content: Text(dialogContext.l10n.workoutTemplateDeleteConfirm(template.name)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(context.l10n.workoutTemplateCancel),
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(dialogContext.l10n.workoutTemplateCancel),
           ),
           FilledButton(
             onPressed: () async {
-              Navigator.of(context).pop();
+              // Chiudi il dialog di conferma
+              Navigator.of(dialogContext).pop();
 
-              // Show loading indicator
-              showDialog(
-                context: context,
+              // Show loading indicator usando il rootNavigator
+              // ignore: unawaited_futures - dialog intenzionalmente non awaited
+              unawaited(showDialog(
+                context: rootContext,
                 barrierDismissible: false,
-                builder: (context) => const Center(
+                builder: (_) => const Center(
                   child: LoadingIndicator(),
                 ),
-              );
+              ));
 
               try {
                 SecureLogger.info('Starting template deletion', metadata: {
@@ -678,34 +697,12 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                   'templateName': template.name,
                 });
 
-                // Step 1: Delete from unified repository (handles all sources)
-                final unifiedRepository = ref.read(unifiedTemplateRepositoryProvider);
-                await unifiedRepository.deleteTemplate(template.id);
-                SecureLogger.success('Deleted from unified repository');
+                // Delete using workoutTemplateNotifierProvider (handles all repositories)
+                await ref.read(workoutTemplateNotifierProvider.notifier).deleteTemplate(template.id);
+                SecureLogger.success('Template deleted successfully');
 
-                // Step 2: Try to delete from legacy repository as well (for safety)
-                try {
-                  final legacyRepository = ref.read(workoutTemplateRepositoryProvider);
-                  await legacyRepository.deleteTemplate(template.id);
-                  SecureLogger.success('Deleted from legacy repository');
-                } catch (e) {
-                  SecureLogger.info('Not in legacy repository (expected for new templates)');
-                }
-
-                // Step 3: Try to delete from hybrid repository (for newer templates)
-                try {
-                  final hybridRepository = ref.read(hybridTemplateRepositoryProvider);
-                  await hybridRepository.deleteTemplate(template.id);
-                  SecureLogger.success('Deleted from hybrid repository');
-                } catch (e) {
-                  SecureLogger.info('Not in hybrid repository');
-                }
-
-                // Step 4: Invalidate ALL providers and wait for refresh
+                // Invalidate providers to refresh UI
                 SecureLogger.info('Invalidating all template providers');
-
-                // Invalidate providers
-                ref.invalidate(userTemplatesProvider);
                 ref.invalidate(customWorkoutTemplatesProvider);
                 ref.invalidate(allWorkoutTemplatesProvider);
                 ref.invalidate(popularTemplatesProvider);
@@ -721,43 +718,42 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 // Force refresh the providers
                 try {
                   await ref.refresh(customWorkoutTemplatesProvider.future);
-                  await ref.refresh(userTemplatesProvider.future);
                 } catch (e) {
                   SecureLogger.warning('Error refreshing providers', metadata: {'error': e.toString()});
                 }
 
                 SecureLogger.success('Template deletion completed successfully');
 
-                // Dismiss loading indicator
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                // 🔧 FIX: Dismiss loading usando rootNavigator
+                if (rootNavigator.canPop()) {
+                  rootNavigator.pop();
                 }
 
                 // Show success message
-                if (context.mounted) {
+                if (rootContext.mounted) {
                   SnackBarService.showSuccess(
-                    context,
+                    rootContext,
                     '✅ Template "${template.name}" eliminato',
                   );
                 }
               } catch (e) {
                 SecureLogger.error('Error deleting template', error: e);
 
-                // Dismiss loading indicator
-                if (Navigator.of(context).canPop()) {
-                  Navigator.of(context).pop();
+                // 🔧 FIX: Dismiss loading usando rootNavigator
+                if (rootNavigator.canPop()) {
+                  rootNavigator.pop();
                 }
 
                 // Show error message
-                if (context.mounted) {
+                if (rootContext.mounted) {
                   SnackBarService.showError(
-                    context,
+                    rootContext,
                     'Errore nell\'eliminazione: $e',
                   );
                 }
               }
             },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            style: FilledButton.styleFrom(backgroundColor: dialogContext.colors.error),
             child: const Text('Elimina'),
           ),
         ],
@@ -775,7 +771,10 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
           return AlertDialog(
             title: Row(
               children: [
-                const Icon(AppIcons.cloud),
+                const SemanticIcon(
+  icon: AppIcons.cloud,
+  semanticLabel: 'Cloud',
+),
                 const SizedBox(width: 8),
                 Text(context.l10n.workoutTemplateSyncStatus),
               ],

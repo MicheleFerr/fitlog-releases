@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_tour_config.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_tour_step.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/utils/spotlight_positioning.dart';
-import 'package:gymbro_flutter_new/core/extensions/context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Manages the state and flow of the onboarding tour
 ///
@@ -16,6 +16,11 @@ import 'package:gymbro_flutter_new/core/extensions/context_extensions.dart';
 ///
 /// Extends ChangeNotifier to notify listeners when state changes.
 class OnboardingTourManager extends ChangeNotifier {
+
+  OnboardingTourManager(
+    this._targetKeys, {
+    VoidCallback? onTourCompleted,
+  }) : _onTourCompleted = onTourCompleted;
   /// Current step index (0-based)
   int _currentStepIndex = 0;
 
@@ -71,11 +76,6 @@ class OnboardingTourManager extends ChangeNotifier {
 
   /// Whether we're on the first step
   bool get isFirstStep => _currentStepIndex == 0;
-
-  OnboardingTourManager(
-    this._targetKeys, {
-    VoidCallback? onTourCompleted,
-  }) : _onTourCompleted = onTourCompleted;
 
   /// Starts the tour from the beginning
   ///

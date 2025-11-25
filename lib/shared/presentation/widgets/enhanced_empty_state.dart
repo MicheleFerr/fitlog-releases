@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Tipi di empty state disponibili
 enum EmptyStateType {
@@ -117,7 +118,7 @@ class EnhancedEmptyState extends StatelessWidget {
             // Icona animata
             _buildAnimatedIcon(effectiveColor),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Titolo
             Text(
@@ -128,7 +129,7 @@ class EnhancedEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Descrizione
             Text(
@@ -166,13 +167,13 @@ class EnhancedEmptyState extends StatelessWidget {
   Color _getEffectiveColor(ColorScheme colorScheme) {
     switch (type) {
       case EmptyStateType.info:
-        return Colors.blue;
+        return colorScheme.primary;
       case EmptyStateType.motivational:
         return colorScheme.primary;
       case EmptyStateType.warning:
         return Colors.orange;
       case EmptyStateType.success:
-        return Colors.green;
+        return colorScheme.success;
       case EmptyStateType.error:
         return colorScheme.error;
       case EmptyStateType.custom:
@@ -223,7 +224,7 @@ class EnhancedEmptyState extends StatelessWidget {
               color: quoteColor,
               size: 24,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               motivationalQuote!,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -251,7 +252,7 @@ class EnhancedEmptyState extends StatelessWidget {
               color: Colors.amber,
               size: 20,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +292,7 @@ class EnhancedEmptyState extends StatelessWidget {
             label: Text(primaryActionLabel!),
             style: FilledButton.styleFrom(
               backgroundColor: effectiveColor,
-              foregroundColor: Colors.white,
+              foregroundColor: context.colors.surface,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),

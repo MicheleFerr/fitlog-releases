@@ -33,9 +33,9 @@ import 'package:gymbro_flutter_new/features/notifications/domain/repositories/no
 /// 4. User taps "Agree and Continue"
 /// 5. → This use case executed → consentTimestamp recorded
 class RecordConsent {
-  final NotificationSettingsRepository _repository;
 
   RecordConsent(this._repository);
+  final NotificationSettingsRepository _repository;
 
   /// Execute consent recording
   ///

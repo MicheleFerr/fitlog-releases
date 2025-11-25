@@ -1,10 +1,28 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: core/data/repositories
 /// 🎯 Feature: core
 /// 🔧 Type: base repository (OPTIMIZED VERSION)
-/// 
-/// OPTIMIZED: Riduce query Firebase per controllo premium
+///
+/// ⚠️ IMPORTANT: This is a SPECIALIZED version of BaseHybridRepository
+///
+/// **When to use OptimizedBaseHybridRepository:**
+/// - For SHARED data (e.g., exercise database) that doesn't need full sync
+/// - When requiresPremiumForCloud = false (no premium checking needed)
+/// - When you need 24h caching for premium status (reduces Firebase queries)
+///
+/// **When to use BaseHybridRepository instead:**
+/// - For USER-SPECIFIC data (workouts, analytics, settings)
+/// - When you need full sync operations (getAll, get, update, delete)
+/// - When you need waitForDisposal() for safe cleanup
+///
+/// **Key differences:**
+/// - Uses StreamSubscription for auth (vs Timer polling in Base)
+/// - Has 24h cache for premium status (vs 5-min refresh in Base)
+/// - Missing: getAll(), get(), update(), delete(), getSyncStats()
+/// - Different UserProfile import (user_profile.dart vs consolidated)
+///
+/// @see BaseHybridRepository for full-featured repository base
 library;
 
 import 'dart:async';

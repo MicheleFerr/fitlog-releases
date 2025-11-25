@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:gymbro_flutter_new/features/streak/domain/entities/workout_streak.dart';
 import 'package:gymbro_flutter_new/features/streak/data/repositories/streak_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';

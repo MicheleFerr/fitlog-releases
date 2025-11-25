@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/debug/exercise_history_debug.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class ExerciseHistoryDebugScreen extends ConsumerStatefulWidget {
   const ExerciseHistoryDebugScreen({super.key});
@@ -42,9 +41,9 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
       await debugFunction();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Debug function completed. Check console for output.'),
-            backgroundColor: context.colors.success,
+          const SnackBar(
+            content: Text('Debug function completed. Check console for output.'),
+            backgroundColor: Colors.green,
           ),
         );
       }
@@ -53,7 +52,7 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Debug function failed: $e'),
-            backgroundColor: context.colors.error,
+            backgroundColor: Colors.red,
           ),
         );
       }

@@ -37,18 +37,18 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 
 /// Onboarding modal widget
 class OnboardingModal extends StatelessWidget {
-  final String userName;
-  final VoidCallback onDismiss;
 
   const OnboardingModal({
     super.key,
     required this.userName,
     required this.onDismiss,
   });
+  final String userName;
+  final VoidCallback onDismiss;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -208,15 +208,15 @@ class OnboardingModal extends StatelessWidget {
 
 /// Capability item widget
 class _CapabilityItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String example;
 
   const _CapabilityItem({
     required this.icon,
     required this.title,
     required this.example,
   });
+  final IconData icon;
+  final String title;
+  final String example;
 
   @override
   Widget build(BuildContext context) {

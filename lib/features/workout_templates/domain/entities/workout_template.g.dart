@@ -6,9 +6,9 @@ part of 'workout_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WorkoutTemplateImpl _$$WorkoutTemplateImplFromJson(
+_$CommunityWorkoutTemplateImpl _$$CommunityWorkoutTemplateImplFromJson(
         Map<String, dynamic> json) =>
-    _$WorkoutTemplateImpl(
+    _$CommunityWorkoutTemplateImpl(
       id: json['id'] as String,
       userId: json['userId'] as String,
       name: json['name'] as String,
@@ -44,8 +44,8 @@ _$WorkoutTemplateImpl _$$WorkoutTemplateImplFromJson(
           const [],
     );
 
-Map<String, dynamic> _$$WorkoutTemplateImplToJson(
-        _$WorkoutTemplateImpl instance) =>
+Map<String, dynamic> _$$CommunityWorkoutTemplateImplToJson(
+        _$CommunityWorkoutTemplateImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

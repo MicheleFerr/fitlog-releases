@@ -43,7 +43,7 @@ void main() {
     test('should call repository getTierStatuses', () async {
       // Arrange
       final mockStatuses = [
-        RecoveryTierStatus(
+        const RecoveryTierStatus(
           tier: RecoveryTier.basic,
           isUnlocked: true,
           currentWorkouts: 10,
@@ -80,7 +80,7 @@ void main() {
   group('tierStatusProvider', () {
     test('should call repository getTierStatus with correct tier', () async {
       // Arrange
-      final mockStatus = RecoveryTierStatus(
+      const mockStatus = RecoveryTierStatus(
         tier: RecoveryTier.basic,
         isUnlocked: true,
         currentWorkouts: 10,
@@ -88,7 +88,7 @@ void main() {
         config: RecoveryTierConfig.basic,
       );
       when(mockRepository.getTierStatus(RecoveryTier.basic))
-          .thenAnswer((_) async => Right(mockStatus));
+          .thenAnswer((_) async => const Right(mockStatus));
 
       // Act
       final result =

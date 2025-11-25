@@ -1484,6 +1484,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analytics => 'Analytics';
 
   @override
+  String get detailedAnalysis => 'Detailed Analysis';
+
+  @override
   String get trackProgress => 'Track progress';
 
   @override

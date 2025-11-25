@@ -13,7 +13,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kDebugMode, debugPrint
-import 'package:flutter/material.dart' hide TimeOfDay; // For Material widgets (hide TimeOfDay conflict)
+// For Material widgets (hide TimeOfDay conflict)
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -48,7 +48,7 @@ class LocalNotificationRepository implements NotificationRepository {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // iOS initialization
-    final iosSettings = DarwinInitializationSettings(
+    const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
@@ -56,7 +56,7 @@ class LocalNotificationRepository implements NotificationRepository {
       // onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
     );
 
-    final initializationSettings = InitializationSettings(
+    const initializationSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
@@ -192,8 +192,8 @@ class LocalNotificationRepository implements NotificationRepository {
 
     // Convert UnifiedNotification to WorkoutNotification for legacy code
     // TODO: Refactor to use UnifiedNotification directly
-    final channelId = 'workout_channel';
-    final channelName = 'Workout Notifications';
+    const channelId = 'workout_channel';
+    const channelName = 'Workout Notifications';
 
     final androidDetails = AndroidNotificationDetails(
       channelId,

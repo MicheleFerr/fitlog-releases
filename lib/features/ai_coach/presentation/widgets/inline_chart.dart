@@ -48,10 +48,6 @@ import 'package:intl/intl.dart';
 
 /// Inline chart widget for AI Coach responses
 class InlineChart extends StatelessWidget {
-  final InlineChartType type;
-  final String? title;
-  final List<ChartDataPoint> data;
-  final String? unit;
 
   const InlineChart({
     super.key,
@@ -113,6 +109,10 @@ class InlineChart extends StatelessWidget {
       unit: unit,
     );
   }
+  final InlineChartType type;
+  final String? title;
+  final List<ChartDataPoint> data;
+  final String? unit;
 
   @override
   Widget build(BuildContext context) {
@@ -394,16 +394,16 @@ class InlineChart extends StatelessWidget {
 }
 
 /// Chart data point
-class ChartDataPoint {
-  final DateTime date;
-  final double value;
-  final String? label; // Optional custom label for X-axis
+class ChartDataPoint { // Optional custom label for X-axis
 
   ChartDataPoint({
     required this.date,
     required this.value,
     this.label,
   });
+  final DateTime date;
+  final double value;
+  final String? label;
 }
 
 /// Chart type enum

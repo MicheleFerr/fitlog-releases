@@ -24,6 +24,8 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Skip Recovery Dialog
 class SkipRecoveryDialog extends ConsumerStatefulWidget {
@@ -166,7 +168,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   color: context.colors.primary,
                   size: 28,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   context.l10n.routineRecoverSkippedDays,
                   style: context.textTheme.headlineSmall?.copyWith(
@@ -176,11 +178,14 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.routineRecoverSkippedDaysSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -200,12 +205,13 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        AppIcons.error,
-                        size: 48,
-                        color: context.colors.error,
-                      ),
-                      SizedBox(height: 16),
+                      SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.xxlarge,
+  color: context.colors.error,
+),
+                      const SizedBox(height: 16),
                       Text(
                         _error!,
                         style: context.textTheme.bodyLarge,
@@ -221,17 +227,18 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        AppIcons.completeOutline,
-                        size: 64,
-                        color: context.colors.primary,
-                      ),
-                      SizedBox(height: 16),
+                      SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: context.colors.primary,
+),
+                      const SizedBox(height: 16),
                       Text(
                         context.l10n.routineNoSkippedDays,
                         style: context.textTheme.titleLarge,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         context.l10n.routineOnTrack,
                         style: context.textTheme.bodyMedium?.copyWith(
@@ -271,7 +278,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
 
                     // Available Recovery Days
                     Expanded(
@@ -284,7 +291,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           if (_selectedSkippedDay == null)
                             Expanded(
                               child: Center(
@@ -362,7 +369,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                         ? context.colors.primary
                         : context.colors.onSurface.withValues(alpha: 0.5),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     _formatDate(day.date),
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -371,7 +378,7 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   ),
                 ],
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.only(left: 28),
                 child: Text(
@@ -400,12 +407,13 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              Icon(
-                AppIcons.eventAvailable,
-                size: 20,
-                color: context.colors.primary,
-              ),
-              SizedBox(width: 12),
+              SemanticIcon(
+  icon: AppIcons.eventAvailable,
+  semanticLabel: 'Event available',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   _formatDate(day.date),
@@ -414,10 +422,12 @@ class _SkipRecoveryDialogState extends ConsumerState<SkipRecoveryDialog> {
                   ),
                 ),
               ),
-              Icon(
-                AppIcons.forward,
-                size: 18,
-                color: context.colors.onSurface.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.small,
+  color: context.colors.onSurface.withValues(alpha: 0.5,
+),
               ),
             ],
           ),

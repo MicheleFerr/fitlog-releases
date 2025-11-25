@@ -29,6 +29,14 @@ class LocalPatch {
     required this.appliedAt,
   });
 
+  factory LocalPatch.fromJson(Map<String, dynamic> json) => LocalPatch(
+        patchId: json['patchId'] as String,
+        exerciseId: json['exerciseId'] as String,
+        fieldName: json['fieldName'] as String,
+        newValue: json['newValue'],
+        appliedAt: DateTime.parse(json['appliedAt'] as String),
+      );
+
   final String patchId;
   final String exerciseId;
   final String fieldName;
@@ -42,14 +50,6 @@ class LocalPatch {
         'newValue': newValue,
         'appliedAt': appliedAt.toIso8601String(),
       };
-
-  factory LocalPatch.fromJson(Map<String, dynamic> json) => LocalPatch(
-        patchId: json['patchId'] as String,
-        exerciseId: json['exerciseId'] as String,
-        fieldName: json['fieldName'] as String,
-        newValue: json['newValue'],
-        appliedAt: DateTime.parse(json['appliedAt'] as String),
-      );
 }
 
 class PatchManagerService {

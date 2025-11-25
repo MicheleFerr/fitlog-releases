@@ -6,17 +6,17 @@ part of 'exercise.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ExerciseAdapter extends TypeAdapter<Exercise> {
+class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
   @override
   final int typeId = 2;
 
   @override
-  Exercise read(BinaryReader reader) {
+  ExerciseDefinition read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Exercise(
+    return ExerciseDefinition(
       id: fields[0] as String,
       nome: fields[1] as String,
       focus: (fields[2] as List).cast<String>(),
@@ -45,7 +45,7 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
   }
 
   @override
-  void write(BinaryWriter writer, Exercise obj) {
+  void write(BinaryWriter writer, ExerciseDefinition obj) {
     writer
       ..writeByte(24)
       ..writeByte(0)
@@ -104,7 +104,7 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExerciseAdapter &&
+      other is ExerciseDefinitionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

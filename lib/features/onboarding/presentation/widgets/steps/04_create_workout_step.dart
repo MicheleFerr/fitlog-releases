@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CreateWorkoutStep extends StatefulWidget {
 
@@ -98,11 +100,12 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.addCircleOutline,
-            size: 80,
-            color: colorScheme.primary,
-          ),
+          SemanticIcon(
+  icon: AppIcons.addCircleOutline,
+  semanticLabel: 'Add circle outline',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
           const SizedBox(height: 32),
           Text(
             l10n.createWorkoutStepTitle,
@@ -138,10 +141,12 @@ class _CreateWorkoutStepState extends State<CreateWorkoutStep> with TickerProvid
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.videoLibraryOutlined,
-                  size: 64,
-                  color: colorScheme.onSurface.withValues(alpha: 0.4),
+                SemanticIcon(
+  icon: AppIcons.videoLibraryOutlined,
+  semanticLabel: 'Video library outlined',
+  size: AppIconSize.medium,
+  color: colorScheme.onSurface.withValues(alpha: 0.4,
+),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -292,7 +297,10 @@ class _MockFab extends StatelessWidget {
       onPressed: onTap,
       backgroundColor: colorScheme.primary,
       foregroundColor: colorScheme.onPrimary,
-      child: const Icon(AppIcons.add),
+      child: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
     );
   }
 }
@@ -346,7 +354,10 @@ class _MockExpandedFab extends StatelessWidget {
           onPressed: () {},
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
-          child: const Icon(AppIcons.close),
+          child: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
         ),
       ],
     );
@@ -539,7 +550,7 @@ class _InfoChip extends StatelessWidget {
         color: isCompleted
           ? colorScheme.primary.withValues(alpha: 0.1)
           : colorScheme.outline.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

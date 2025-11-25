@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Schermata di dettaglio esercizio con 3 tab: Sommario, Cronologia, Istruzioni
 ///
@@ -247,15 +248,24 @@ class _WorkoutExerciseDetailScreenState
           tabs: [
             Tab(
               text: context.l10n.exerciseDetailSummary,
-              icon: Icon(AppIcons.analytics),
+              icon: const SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+),
             ),
             Tab(
               text: context.l10n.exerciseDetailHistory,
-              icon: Icon(AppIcons.history),
+              icon: const SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+),
             ),
             Tab(
               text: context.l10n.alternativeExercises,
-              icon: const Icon(AppIcons.swapHoriz),
+              icon: const SemanticIcon(
+  icon: AppIcons.swapHoriz,
+  semanticLabel: 'Swap horiz',
+),
             ),
           ],
         ),

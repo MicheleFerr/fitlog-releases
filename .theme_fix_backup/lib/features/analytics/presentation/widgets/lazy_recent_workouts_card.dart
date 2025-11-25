@@ -4,6 +4,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/lazy_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Lazy loading version of RecentWorkoutsCard with progressive data fetching
 class LazyRecentWorkoutsCard extends ConsumerStatefulWidget {
@@ -81,7 +85,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                     Row(
                       children: [
                         Icon(
-                          Icons.history,
+                          AppIcons.history,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                         const SizedBox(width: 8),
@@ -127,10 +131,12 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
               child: Center(
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.fitness_center,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                    SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: Theme.of(context,
+).colorScheme.onSurface.withValues(alpha: 0.3),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -206,19 +212,19 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
     switch (phase) {
       case LoadingPhase.initial:
         phaseText = 'Last 30 days';
-        phaseColor = Colors.green;
+        phaseColor = context.colors.success;
         break;
       case LoadingPhase.extended:
         phaseText = 'Last 3 months';
-        phaseColor = Colors.blue;
+        phaseColor = context.colors.primary;
         break;
       case LoadingPhase.full:
         phaseText = 'Last year';
-        phaseColor = Colors.orange;
+        phaseColor = context.colors.secondary;
         break;
       case LoadingPhase.complete:
         phaseText = 'All time';
-        phaseColor = Colors.purple;
+        phaseColor = context.colors.tertiary;
         break;
     }
     
@@ -332,10 +338,12 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                           const SizedBox(height: 2),
                           Row(
                             children: [
-                              Icon(
-                                Icons.fitness_center,
-                                size: 14,
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -345,10 +353,12 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              Icon(
-                                Icons.scale,
-                                size: 14,
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              SemanticIcon(
+  icon: AppIcons.scale,
+  semanticLabel: 'Scale',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -366,7 +376,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                     
                     // Arrow
                     Icon(
-                      Icons.chevron_right,
+                      AppIcons.chevronRight,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                     ),
                   ],
@@ -405,7 +415,10 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
           onPressed: () {
             ref.read(lazyAnalyticsProvider.notifier).loadMoreData();
           },
-          icon: const Icon(Icons.expand_more),
+          icon: const SemanticIcon(
+  icon: AppIcons.expandMore,
+  semanticLabel: 'Expand',
+),
           label: const Text('Load older workouts'),
         ),
       ),
@@ -469,7 +482,7 @@ class _WorkoutDetailsSheet extends StatelessWidget {
       minChildSize: 0.4,
       expand: false,
       builder: (context, scrollController) {
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -517,7 +530,10 @@ class _WorkoutDetailsSheet extends StatelessWidget {
                           ),
                           IconButton(
                             onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.close),
+                            icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                           ),
                         ],
                       ),

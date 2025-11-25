@@ -63,7 +63,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: SemanticIcon(
+            icon: const SemanticIcon(
   icon: AppIcons.home,
   semanticLabel: 'Home',
 ),
@@ -106,7 +106,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   context.l10n.startTrackingJourney,
                   textAlign: TextAlign.center,
@@ -114,7 +114,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
 
                 // Quick Registration Options
                 Card(
@@ -128,7 +128,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           context.l10n.autoAccountCreation,
                           textAlign: TextAlign.center,
@@ -136,7 +136,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             color: context.colors.onSurface.withValues(alpha: 0.6),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         
                         // Google Sign Up
                         SizedBox(
@@ -144,12 +144,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           child: FilledButton.icon(
                             onPressed: authController.isLoading ? null : _handleGoogleSignUp,
                             icon: authController.isLoading 
-                                ? SizedBox(
+                                ? const SizedBox(
                                     height: 20,
                                     width: 20,
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
-                                : SemanticIcon(
+                                : const SemanticIcon(
   icon: AppIcons.gMobiledata,
   semanticLabel: 'G mobiledata',
   size: AppIconSize.medium,
@@ -171,12 +171,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 foregroundColor: context.colors.surface,
                               ),
                               icon: authController.isLoading
-                                  ? SizedBox(
+                                  ? const SizedBox(
                                       height: 20,
                                       width: 20,
                                       child: CircularProgressIndicator(strokeWidth: 2),
                                     )
-                                  : SemanticIcon(
+                                  : const SemanticIcon(
   icon: AppIcons.apple,
   semanticLabel: 'Apple',
 ),
@@ -189,7 +189,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ),
                 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 
                 // Or divider
                 Row(
@@ -208,7 +208,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ],
                 ),
                 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Name Field
                 TextFormField(
@@ -216,7 +216,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.fullName,
                     hintText: context.l10n.fullNameHint,
-                    prefixIcon: SemanticIcon(
+                    prefixIcon: const SemanticIcon(
   icon: AppIcons.person,
   semanticLabel: 'Profile',
 ),
@@ -232,7 +232,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Email Field
                 TextFormField(
@@ -240,7 +240,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.emailLabel,
                     hintText: context.l10n.emailHint,
-                    prefixIcon: SemanticIcon(
+                    prefixIcon: const SemanticIcon(
   icon: AppIcons.email,
   semanticLabel: 'Email',
 ),
@@ -257,7 +257,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Password Field
                 TextFormField(
@@ -265,7 +265,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.passwordLabel,
                     hintText: context.l10n.passwordHint,
-                    prefixIcon: SemanticIcon(
+                    prefixIcon: const SemanticIcon(
   icon: AppIcons.lock,
   semanticLabel: 'Lock',
 ),
@@ -286,7 +286,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Confirm Password Field
                 TextFormField(
@@ -294,7 +294,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: InputDecoration(
                     labelText: context.l10n.confirmPassword,
                     hintText: context.l10n.confirmPasswordHint,
-                    prefixIcon: SemanticIcon(
+                    prefixIcon: const SemanticIcon(
   icon: AppIcons.lockOutline,
   semanticLabel: 'Lock outline',
 ),
@@ -315,20 +315,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
 
                 // Register Button
                 FilledButton(
                   onPressed: authController.isLoading ? null : _handleRegister,
                   child: authController.isLoading
-                      ? SizedBox(
+                      ? const SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : Text(context.l10n.createAccount),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Divider
                 Row(
@@ -346,19 +346,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     const Expanded(child: Divider()),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Google Sign Up Button
                 OutlinedButton.icon(
                   onPressed: authController.isLoading ? null : _handleGoogleSignUp,
-                  icon: SemanticIcon(
+                  icon: const SemanticIcon(
   icon: AppIcons.gMobiledata,
   semanticLabel: 'G mobiledata',
   size: AppIconSize.medium,
 ),
                   label: Text(context.l10n.signUpWithGoogle),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Apple Sign Up Button (iOS only)
                 if (Platform.isIOS)
@@ -370,7 +370,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     icon: Icon(AppIcons.apple, color: context.colors.onSurface),
                     label: Text(context.l10n.signUpWithApple, style: context.textTheme.labelLarge?.copyWith(color: context.colors.onSurface)),
                   ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
 
                 // Login Link
                 Row(

@@ -21,21 +21,25 @@ import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedba
 import 'package:gymbro_flutter_new/features/feedback/domain/repositories/feedback_repository.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Admin dashboard for managing user feedback
 /// Only accessible to ferrara-michele@hotmail.it
 class AdminFeedbackDashboardScreen extends ConsumerStatefulWidget {
   const AdminFeedbackDashboardScreen({super.key});
 
-  /// Check if current user is admin
-  static bool isAdmin() {
-    final email = FirebaseAuth.instance.currentUser?.email;
-    return email == 'ferrara-michele@hotmail.it';
+  /// Check if current user is admin (via custom claims)
+  ///
+  /// 🔐 SECURITY: Uses Firebase Custom Claims (server-validated)
+  /// REPLACED: email == 'ferrara-michele@hotmail.it' (insecure)
+  static Future<bool> isAdmin() async {
+    return await AdminRoleHelper.isCurrentUserAdmin();
   }
 
   /// Navigate to dashboard (with auth check)
-  static void navigate(BuildContext context) {
-    if (!isAdmin()) {
+  static Future<void> navigate(BuildContext context) async {
+    if (!await isAdmin()) {
       SnackBarService.showError(context, 'Unauthorized access');
       return;
     }
@@ -97,7 +101,7 @@ class _AdminFeedbackDashboardScreenState
     // Auth check
     if (!AdminFeedbackDashboardScreen.isAdmin()) {
       return Scaffold(
-        appBar: AppBar(title: Text('Unauthorized')),
+        appBar: AppBar(title: const Text('Unauthorized')),
         body: Center(
           child: Text(
             'You do not have permission to access this page',
@@ -164,12 +168,13 @@ class _AdminFeedbackDashboardScreenState
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          AppIcons.inbox,
-                          size: 64,
-                          color: context.colors.outline,
-                        ),
-                        SizedBox(height: 16),
+                        SemanticIcon(
+  icon: AppIcons.inbox,
+  semanticLabel: 'Inbox',
+  size: AppIconSize.medium,
+  color: context.colors.outline,
+),
+                        const SizedBox(height: 16),
                         Text(
                           'No feedback in this category',
                           style: context.textTheme.bodyLarge?.copyWith(
@@ -184,20 +189,25 @@ class _AdminFeedbackDashboardScreenState
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: filteredList.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 12),
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final feedback = filteredList[index];
                     return _buildFeedbackCard(feedback);
                   },
                 );
               },
-              loading: () => Center(child: LoadingIndicator()),
+              loading: () => const Center(child: LoadingIndicator()),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcons.error, size: 64, color: context.colors.error),
-                    SizedBox(height: 16),
+                    SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+                    const SizedBox(height: 16),
                     Text(
                       'Error loading feedback',
                       style: context.textTheme.bodyLarge,
@@ -279,7 +289,7 @@ class _AdminFeedbackDashboardScreenState
     return Column(
       children: [
         Icon(icon, color: context.colors.primary, size: 32),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           value,
           style: context.textTheme.headlineSmall?.copyWith(
@@ -319,7 +329,7 @@ class _AdminFeedbackDashboardScreenState
                     style: TextStyle(color: context.colors.onPrimary),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,7 +370,7 @@ class _AdminFeedbackDashboardScreenState
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Category + Rating
             Row(
@@ -381,7 +391,7 @@ class _AdminFeedbackDashboardScreenState
                     ),
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 if (feedback.rating != null)
                   Text(
                     feedback.ratingStars,
@@ -390,7 +400,7 @@ class _AdminFeedbackDashboardScreenState
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Message
             Container(
@@ -432,7 +442,7 @@ class _AdminFeedbackDashboardScreenState
 
             // Admin notes (if any)
             if (feedback.adminNotes != null) ...[
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -444,12 +454,13 @@ class _AdminFeedbackDashboardScreenState
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          AppIcons.admin,
-                          size: 16,
-                          color: context.colors.onTertiaryContainer,
-                        ),
-                        SizedBox(width: 4),
+                        SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+  size: AppIconSize.tiny,
+  color: context.colors.onTertiaryContainer,
+),
+                        const SizedBox(width: 4),
                         Text(
                           'Admin Notes',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -459,7 +470,7 @@ class _AdminFeedbackDashboardScreenState
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       feedback.adminNotes!,
                       style: context.textTheme.bodySmall?.copyWith(
@@ -482,30 +493,39 @@ class _AdminFeedbackDashboardScreenState
                   if (feedback.status == FeedbackStatus.newFeedback)
                     TextButton.icon(
                       onPressed: () => _markAsReviewed(feedback),
-                      icon: Icon(AppIcons.visibility),
-                      label: Text('Mark Reviewed'),
+                      icon: const SemanticIcon(
+  icon: AppIcons.visibility,
+  semanticLabel: 'Show',
+),
+                      label: const Text('Mark Reviewed'),
                     ),
 
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
                   // Resolve with notes
                   ElevatedButton.icon(
                     onPressed: () => _resolveWithNotes(feedback),
-                    icon: Icon(AppIcons.complete),
-                    label: Text('Resolve'),
+                    icon: const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+),
+                    label: const Text('Resolve'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colors.primary,
                       foregroundColor: context.colors.onPrimary,
                     ),
                   ),
 
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
                   // Dismiss
                   TextButton.icon(
                     onPressed: () => _dismissFeedback(feedback),
-                    icon: Icon(AppIcons.cancel),
-                    label: Text('Dismiss'),
+                    icon: const SemanticIcon(
+  icon: AppIcons.cancel,
+  semanticLabel: 'Cancel',
+),
+                    label: const Text('Dismiss'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.colors.error,
                     ),
@@ -537,7 +557,7 @@ class _AdminFeedbackDashboardScreenState
           size: 16,
           color: context.colors.onSurfaceVariant,
         ),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           text,
           style: context.textTheme.bodySmall?.copyWith(
@@ -698,7 +718,7 @@ class _AdminFeedbackDashboardScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),

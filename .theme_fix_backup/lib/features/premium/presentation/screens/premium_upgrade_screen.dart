@@ -17,6 +17,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/premium/presentation/providers/premium_upgrade_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/domain/entities/account_tier.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class PremiumUpgradeScreen extends ConsumerStatefulWidget {
   const PremiumUpgradeScreen({super.key});
@@ -65,7 +69,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     final user = ref.watch(currentUserProvider).value;
     final isPremium = user?.accountTier == AccountTier.premium || 
-                      user?.accountTier == AccountTier.pro;
+                      user?.accountTier == AccountTier.premium;
     
     if (isPremium) {
       // Already premium
@@ -73,7 +77,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     }
     
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -149,14 +153,15 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Icon(
-              Icons.rocket_launch,
-              size: 64,
-              color: colorScheme.primary,
-            ),
+            SemanticIcon(
+  icon: AppIcons.rocket,
+  semanticLabel: 'Rocket',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
             const SizedBox(height: 16),
             Text(
-              'Unlock Your Full Potential',
+              context.l10n.unlockYourFullPotential,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -164,7 +169,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Sync across all devices, access community features, and never lose your progress',
+              context.l10n.syncAcrossAllDevices,
               style: theme.textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -179,19 +184,19 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final colorScheme = theme.colorScheme;
     
     final features = [
-      (Icons.cloud_sync, 'Cross-Device Sync', 'Access your workouts on any device'),
-      (Icons.backup, 'Cloud Backup', 'Never lose your data with automatic backups'),
-      (Icons.people, 'Community Access', 'Share and discover workout templates'),
-      (Icons.speed, 'Priority Sync', 'Real-time updates every 5 minutes'),
-      (Icons.trending_up, 'Advanced Analytics', 'Deep insights into your progress'),
-      (Icons.support_agent, 'Priority Support', 'Get help when you need it'),
+      (AppIcons.cloudSync, 'Cross-Device Sync', 'Access your workouts on any device'),
+      (AppIcons.backup, 'Cloud Backup', 'Never lose your data with automatic backups'),
+      (AppIcons.people, 'Community Access', 'Share and discover workout templates'),
+      (AppIcons.speed, 'Priority Sync', 'Real-time updates every 5 minutes'),
+      (AppIcons.trendUp, 'Advanced Analytics', 'Deep insights into your progress'),
+      (AppIcons.supportAgent, 'Priority Support', 'Get help when you need it'),
     ];
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Premium Features',
+          context.l10n.premiumFeatures,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -209,7 +214,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
             title: Text(feature.$2),
             subtitle: Text(feature.$3),
             trailing: Icon(
-              Icons.check_circle,
+              AppIcons.complete,
               color: colorScheme.primary,
             ),
           ),
@@ -226,14 +231,14 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Choose Your Plan',
+          context.l10n.chooseYourPlan,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
         // Monthly Plan
         _buildPricingCard(
           context,
-          title: 'Monthly',
+          title: context.l10n.monthly,
           price: '\$4.99',
           period: '/month',
           isPopular: false,
@@ -243,10 +248,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Annual Plan
         _buildPricingCard(
           context,
-          title: 'Annual',
+          title: context.l10n.annual,
           price: '\$39.99',
           period: '/year',
-          savings: 'Save 33%',
+          savings: context.l10n.saveThirtyThreePercent,
           isPopular: true,
           onTap: () => _handlePurchase(context, 'annual'),
         ),
@@ -254,10 +259,10 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         // Lifetime Plan
         _buildPricingCard(
           context,
-          title: 'Lifetime',
+          title: context.l10n.lifetime,
           price: '\$99.99',
           period: 'one time',
-          savings: 'Best Value',
+          savings: context.l10n.bestValue,
           isPopular: false,
           onTap: () => _handlePurchase(context, 'lifetime'),
         ),
@@ -280,7 +285,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(
             color: isPopular ? colorScheme.primary : colorScheme.outline,
@@ -307,7 +312,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                     ),
                   ),
                   child: Text(
-                    'POPULAR',
+                    context.l10n.popular,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
@@ -336,7 +341,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                             ),
                             decoration: BoxDecoration(
                               color: colorScheme.tertiary.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               savings,
@@ -368,7 +373,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   ),
                   const SizedBox(width: 8),
                   Icon(
-                    Icons.arrow_forward_ios,
+                    AppIcons.forwardIos,
                     color: colorScheme.primary,
                   ),
                 ],
@@ -385,16 +390,16 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final colorScheme = theme.colorScheme;
     
     final testimonials = [
-      ('John D.', '⭐⭐⭐⭐⭐', 'The sync feature is a game changer! I can start a workout on my phone and finish on my tablet.'),
-      ('Sarah M.', '⭐⭐⭐⭐⭐', 'Community templates saved me hours of planning. Worth every penny!'),
-      ('Mike R.', '⭐⭐⭐⭐⭐', 'Never lost a workout since going premium. The backup is automatic and reliable.'),
+      ('John D.', '⭐⭐⭐⭐⭐', context.l10n.testimonialJohnD),
+      ('Sarah M.', '⭐⭐⭐⭐⭐', context.l10n.testimonialSarahM),
+      ('Mike R.', '⭐⭐⭐⭐⭐', context.l10n.testimonialMikeR),
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'What Users Say',
+          context.l10n.whatUsersSay,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -463,17 +468,17 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     final theme = Theme.of(context);
     
     final faqs = [
-      ('Can I cancel anytime?', 'Yes! You can cancel your subscription anytime from settings.'),
-      ('What happens to my data if I cancel?', 'Your data remains safe locally. You just lose cloud sync.'),
-      ('Can I change plans?', 'Yes, you can upgrade or downgrade anytime.'),
-      ('Is my payment secure?', 'Yes, we use Apple/Google payment systems for maximum security.'),
+      (context.l10n.faqCanICancel, context.l10n.faqCancelAnswer),
+      (context.l10n.faqWhatHappensToData, context.l10n.faqDataAnswer),
+      (context.l10n.faqCanIChangePlans, context.l10n.faqChangePlansAnswer),
+      (context.l10n.faqIsPaymentSecure, context.l10n.faqPaymentSecureAnswer),
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Frequently Asked Questions',
+          context.l10n.frequentlyAskedQuestions,
           style: theme.textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
@@ -500,7 +505,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: context.colors.onSurface.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -520,25 +525,28 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 foregroundColor: colorScheme.onPrimary,
                 minimumSize: const Size.fromHeight(56),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(24),
                 ),
               ),
               child: _isProcessingUpgrade
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 24,
                       width: 24,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                        valueColor: AlwaysStoppedAnimation(context.colors.surface),
                       ),
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.rocket_launch),
+                        const SemanticIcon(
+  icon: AppIcons.rocket,
+  semanticLabel: 'Rocket',
+),
                         const SizedBox(width: 8),
                         Text(
-                          'Start Free Trial - Then \$39.99/year',
+                          context.l10n.startFreeTrialThen,
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
@@ -560,7 +568,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Premium Membership'),
+        title: Text(context.l10n.premiumMembership),
       ),
       body: Center(
         child: Padding(
@@ -568,21 +576,22 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.verified,
-                size: 100,
-                color: colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.verified,
+  semanticLabel: 'Verified',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
               const SizedBox(height: 24),
               Text(
-                'You\'re Premium!',
+                context.l10n.yourePremium,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
-                'Thank you for supporting GymBro',
+                context.l10n.thankYouForSupporting,
                 style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
@@ -594,7 +603,7 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  user?.accountTier.name.toUpperCase() ?? 'PREMIUM',
+                  user?.accountTier.toUpperCase() ?? 'PREMIUM',
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
@@ -606,8 +615,11 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
                 onPressed: () {
                   // Navigate to subscription management
                 },
-                icon: const Icon(Icons.settings),
-                label: const Text('Manage Subscription'),
+                icon: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
+                label: Text(context.l10n.manageSubscription),
               ),
             ],
           ),
@@ -628,13 +640,21 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
     // This handles the case where user starts purchase but doesn't complete
     _pendingRefreshTimer = Timer(const Duration(minutes: 2), () async {
       debugPrint('⏰ 2-minute timer triggered - refreshing profile...');
-      await ref.read(currentUserProvider.notifier).forceRefreshProfile();
+      // TODO: currentUserProvider is StreamProvider, doesn't have .notifier
+      // Need to create a proper StateNotifierProvider with forceRefreshProfile method
+      // await ref.read(currentUserProvider.notifier).forceRefreshProfile();
     });
     
     try {
+      // Convert String plan to PremiumPlan enum
+      final premiumPlan = PremiumPlan.values.firstWhere(
+        (e) => e.name == plan.toLowerCase(),
+        orElse: () => PremiumPlan.monthly, // default fallback
+      );
+
       // Call the purchase provider
       final success = await ref.read(premiumUpgradeProvider.notifier)
-          .purchasePremium(plan);
+          .purchasePremium(premiumPlan);
       
       if (success) {
         // Purchase successful! Cancel the 2-minute timer
@@ -642,52 +662,53 @@ class _PremiumUpgradeScreenState extends ConsumerState<PremiumUpgradeScreen>
         
         // Immediately refresh profile
         debugPrint('✅ Purchase successful - refreshing profile immediately');
-        await ref.read(currentUserProvider.notifier).forceRefreshProfile();
-        
+        // TODO: currentUserProvider is StreamProvider, doesn't have .notifier
+        // await ref.read(currentUserProvider.notifier).forceRefreshProfile();
+
+        if (!context.mounted) return;
+
         // Show success
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text('Welcome to Premium! 🎉'),
-                ],
-              ),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(AppIcons.checkCircle, color: Theme.of(context).colorScheme.onPrimary),
+                const SizedBox(width: 8),
+                Text(context.l10n.welcomeToPremium),
+              ],
             ),
-          );
-          
-          // Navigate back or to premium features
-          Navigator.of(context).pop(true);
-        }
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+
+        // Navigate back or to premium features
+        Navigator.of(context).pop(true);
       } else {
         // Purchase cancelled or failed
         debugPrint('❌ Purchase cancelled/failed - 2-minute timer still active');
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Purchase cancelled'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      debugPrint('❌ Purchase error: $e');
-      
-      if (mounted) {
+
+        if (!context.mounted) return;
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
+            content: Text(context.l10n.purchaseCancelled),
             behavior: SnackBarBehavior.floating,
           ),
         );
       }
+    } catch (e) {
+      debugPrint('❌ Purchase error: $e');
+
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.purchaseError(e.toString())),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() {

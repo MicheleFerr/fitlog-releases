@@ -194,7 +194,7 @@ class FirebaseAnalyticsService implements IAnalyticsService {
       await _analytics.setUserId(id: userId);
 
       if (_debugMode && kDebugMode) {
-        debugPrint('📊 User ID set: $userId');
+        debugPrint('📊 User ID set: ${userId != null ? "${userId.substring(0, 8.clamp(0, userId.length))}..." : "null"}');
       }
     } catch (e) {
       if (kDebugMode) {

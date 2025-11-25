@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_settings_provider_v2.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Privacy Consent Dialog (GDPR Article 7.1)
 ///
@@ -31,13 +32,13 @@ import 'package:gymbro_flutter_new/features/notifications/presentation/providers
 ///   builder: (context) => const PrivacyConsentDialog(),
 /// );
 /// ```
-class PrivacyConsentDialog extends ConsumerStatefulWidget {
-  final String consentVersion; // e.g., '1.0', '1.1', '2.0'
+class PrivacyConsentDialog extends ConsumerStatefulWidget { // e.g., '1.0', '1.1', '2.0'
 
   const PrivacyConsentDialog({
     super.key,
     this.consentVersion = '2.0',
   });
+  final String consentVersion;
 
   @override
   ConsumerState<PrivacyConsentDialog> createState() =>
@@ -54,7 +55,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.privacy_tip, color: context.colors.primary),
+          Icon(AppIcons.privacyTipRounded, color: context.colors.primary),
           const SizedBox(width: 12),
           Text(
             'Privacy & Consent',
@@ -71,7 +72,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: context.colors.surfaceVariant,
+                color: context.colors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -133,7 +134,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
                     _analyticsEnabled = value ?? false;
                   });
                 },
-                title: Text('Enable analytics'),
+                title: const Text('Enable analytics'),
                 subtitle: Text(
                   'Help improve notification relevance',
                   style: context.textTheme.bodySmall,
@@ -143,7 +144,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
 
               // Data retention period
               ListTile(
-                title: Text('Data retention period'),
+                title: const Text('Data retention period'),
                 subtitle: Text('$_retentionDays days'),
                 trailing: DropdownButton<int>(
                   value: _retentionDays,
@@ -176,7 +177,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info, color: context.colors.error, size: 20),
+                  Icon(AppIcons.info, color: context.colors.error, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -203,7 +204,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: Text('Decline'),
+          child: const Text('Decline'),
         ),
         ElevatedButton(
           onPressed: _consentGiven
@@ -231,7 +232,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
                   }
                 }
               : null, // Disabled if consent not given
-          child: Text('Accept'),
+          child: const Text('Accept'),
         ),
       ],
     );
@@ -243,7 +244,7 @@ class _PrivacyConsentDialogState extends ConsumerState<PrivacyConsentDialog> {
       child: Row(
         children: [
           Icon(
-            Icons.check_circle,
+            AppIcons.checkCircle,
             size: 16,
             color: context.colors.primary,
           ),
@@ -269,9 +270,9 @@ class RevokeConsentDialog extends ConsumerWidget {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.warning, color: context.colors.error),
+          Icon(AppIcons.warning, color: context.colors.error),
           const SizedBox(width: 12),
-          Text('Revoke Consent'),
+          const Text('Revoke Consent'),
         ],
       ),
       content: Column(
@@ -308,7 +309,7 @@ class RevokeConsentDialog extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -323,13 +324,13 @@ class RevokeConsentDialog extends ConsumerWidget {
               Navigator.pop(context, true);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('All notification data deleted'),
+                  content: const Text('All notification data deleted'),
                   backgroundColor: context.colors.error,
                 ),
               );
             }
           },
-          child: Text('Revoke & Delete All'),
+          child: const Text('Revoke & Delete All'),
         ),
       ],
     );
@@ -341,7 +342,7 @@ class RevokeConsentDialog extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.close,
+            AppIcons.close,
             size: 20,
             color: context.colors.error,
           ),

@@ -10,6 +10,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Tipi di empty state disponibili
 enum EmptyStateType {
@@ -165,13 +167,13 @@ class EnhancedEmptyState extends StatelessWidget {
   Color _getEffectiveColor(ColorScheme colorScheme) {
     switch (type) {
       case EmptyStateType.info:
-        return Colors.blue;
+        return colorScheme.primary;
       case EmptyStateType.motivational:
         return colorScheme.primary;
       case EmptyStateType.warning:
         return Colors.orange;
       case EmptyStateType.success:
-        return Colors.green;
+        return colorScheme.success;
       case EmptyStateType.error:
         return colorScheme.error;
       case EmptyStateType.custom:
@@ -218,7 +220,7 @@ class EnhancedEmptyState extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              Icons.format_quote,
+              AppIcons.formatQuote,
               color: quoteColor,
               size: 24,
             ),
@@ -246,7 +248,7 @@ class EnhancedEmptyState extends StatelessWidget {
         child: Row(
           children: [
             const Icon(
-              Icons.lightbulb_outline,
+              AppIcons.tip,
               color: Colors.amber,
               size: 20,
             ),
@@ -286,11 +288,11 @@ class EnhancedEmptyState extends StatelessWidget {
               HapticFeedback.mediumImpact();
               onPrimaryAction!();
             },
-            icon: Icon(primaryActionIcon ?? Icons.arrow_forward),
+            icon: Icon(primaryActionIcon ?? AppIcons.forward),
             label: Text(primaryActionLabel!),
             style: FilledButton.styleFrom(
               backgroundColor: effectiveColor,
-              foregroundColor: Colors.white,
+              foregroundColor: context.colors.surface,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
@@ -303,7 +305,7 @@ class EnhancedEmptyState extends StatelessWidget {
               HapticFeedback.lightImpact();
               onSecondaryAction!();
             },
-            icon: Icon(secondaryActionIcon ?? Icons.info_outline),
+            icon: Icon(secondaryActionIcon ?? AppIcons.info),
             label: Text(secondaryActionLabel!),
             style: OutlinedButton.styleFrom(
               foregroundColor: effectiveColor,

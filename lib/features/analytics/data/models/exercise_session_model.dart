@@ -42,7 +42,6 @@ part 'exercise_session_model.freezed.dart';
 
 @freezed
 class ExerciseSessionModel with _$ExerciseSessionModel {
-  const ExerciseSessionModel._();
 
   const factory ExerciseSessionModel({
     /// Name of the exercise (e.g., "Bench Press", "Squat")
@@ -57,6 +56,19 @@ class ExerciseSessionModel with _$ExerciseSessionModel {
     /// When the session was performed (Firestore Timestamp)
     required DateTime date,
   }) = _ExerciseSessionModel;
+
+  /// Create from domain entity
+  factory ExerciseSessionModel.fromDomain(ExerciseSession entity) {
+    return ExerciseSessionModel(
+      exerciseName: entity.exerciseName,
+      muscleGroup: entity.muscleGroup,
+      sets: entity.sets
+          .map((set) => AnalyticsSetModel.fromDomain(set))
+          .toList(),
+      date: entity.date,
+    );
+  }
+  const ExerciseSessionModel._();
 
   /// Create from Firestore JSON
   factory ExerciseSessionModel.fromJson(Map<String, dynamic> json) {
@@ -88,18 +100,6 @@ class ExerciseSessionModel with _$ExerciseSessionModel {
       muscleGroup: muscleGroup,
       sets: sets.map((setModel) => setModel.toDomain()).toList(),
       date: date,
-    );
-  }
-
-  /// Create from domain entity
-  factory ExerciseSessionModel.fromDomain(ExerciseSession entity) {
-    return ExerciseSessionModel(
-      exerciseName: entity.exerciseName,
-      muscleGroup: entity.muscleGroup,
-      sets: entity.sets
-          .map((set) => AnalyticsSetModel.fromDomain(set))
-          .toList(),
-      date: entity.date,
     );
   }
 }

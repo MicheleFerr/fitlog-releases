@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/warmup_info_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Enhanced modal for displaying exercise details with improved aesthetics
 /// following Apple HIG and Material Design 3 principles
@@ -97,7 +98,7 @@ class ExerciseDetailsModal extends StatelessWidget {
             color: context.colors.onSurface,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         // Focus and Equipment Row
         Row(
@@ -109,14 +110,14 @@ class ExerciseDetailsModal extends StatelessWidget {
               label: exercise.focusDisplayName,
               color: context.colors.primary,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
 
             // Difficulty Badge
             _buildDifficultyChip(context),
           ],
         ),
 
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         // Equipment
         _buildInfoChip(
@@ -149,7 +150,7 @@ class ExerciseDetailsModal extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 16, color: color),
-          SizedBox(width: 6),
+          const SizedBox(width: 6),
           Text(
             label,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -220,13 +221,14 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.primaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  AppIcons.tip,
-                  size: 20,
-                  color: context.colors.onPrimaryContainer,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.small,
+  color: context.colors.onPrimaryContainer,
+),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
                 context.l10n.technicalNotes,
                 style: context.textTheme.titleMedium?.copyWith(
@@ -236,7 +238,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Steps
           ..._buildFormattedSteps(context, exercise.noteTecniche!),
@@ -268,13 +270,14 @@ class ExerciseDetailsModal extends StatelessWidget {
                   color: context.colors.secondaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  AppIcons.wbSunnyOutlined,
-                  size: 20,
-                  color: context.colors.onSecondaryContainer,
-                ),
+                child: SemanticIcon(
+  icon: AppIcons.wbSunnyOutlined,
+  semanticLabel: 'Wb sunny outlined',
+  size: AppIconSize.small,
+  color: context.colors.onSecondaryContainer,
+),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   context.l10n.warmupProtocol,
@@ -295,7 +298,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Warmup Phases
           if (exercise.mobilitaPre != null) ...[
@@ -305,7 +308,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               title: context.l10n.warmupPhase1Title.replaceAll('🔄 ', ''),
               content: exercise.mobilitaPre!,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
           ],
 
           if (exercise.attivazionePre != null) ...[
@@ -315,7 +318,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               title: context.l10n.warmupPhase2Title.replaceAll('⚡ ', ''),
               content: exercise.attivazionePre!,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
           ],
 
           if (exercise.warmupSets != null) ...[
@@ -326,7 +329,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               content: exercise.warmupSets!,
               isMonospace: true,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
           ],
 
           if (exercise.tempoWarmup != null) ...[
@@ -368,7 +371,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                 icon,
                 style: const TextStyle(fontSize: 18),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   title,
@@ -380,7 +383,7 @@ class ExerciseDetailsModal extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             content,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -433,7 +436,7 @@ class ExerciseDetailsModal extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 step,

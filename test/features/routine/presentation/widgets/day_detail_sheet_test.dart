@@ -127,7 +127,7 @@ void main() {
         id: 'workout-1',
         name: 'Giorno A',
         startTime: DateTime.now(),
-        endTime: DateTime.now().add(Duration(minutes: 45)),
+        endTime: DateTime.now().add(const Duration(minutes: 45)),
         exercises: [],
         notes: null,
         templateId: 'giorno-a',

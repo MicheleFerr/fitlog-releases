@@ -31,6 +31,12 @@ import 'package:gymbro_flutter_new/features/notifications/domain/entities/unifie
 /// users/{userId}/notificationMetrics (document)
 /// ```
 class NotificationRemoteDataSource {
+
+  NotificationRemoteDataSource({
+    required FirebaseFirestore firestore,
+    required String? userId,
+  })  : _firestore = firestore,
+        _userId = userId;
   final FirebaseFirestore _firestore;
   final String? _userId;
 
@@ -42,12 +48,6 @@ class NotificationRemoteDataSource {
   // History and delivery are collections (3 segments: collection/doc/collection)
   String? get _historyPath => _userId != null ? 'users/$_userId/notificationHistory' : null;
   String? get _deliveryPath => _userId != null ? 'users/$_userId/notificationDelivery' : null;
-
-  NotificationRemoteDataSource({
-    required FirebaseFirestore firestore,
-    required String? userId,
-  })  : _firestore = firestore,
-        _userId = userId;
 
   // === NotificationSettings Operations ===
 

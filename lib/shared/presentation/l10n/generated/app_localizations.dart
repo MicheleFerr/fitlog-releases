@@ -2827,6 +2827,12 @@ abstract class AppLocalizations {
   /// **'Analytics'**
   String get analytics;
 
+  /// Button to access detailed exercise analysis
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Analysis'**
+  String get detailedAnalysis;
+
   /// Analytics subtitle
   ///
   /// In en, this message translates to:

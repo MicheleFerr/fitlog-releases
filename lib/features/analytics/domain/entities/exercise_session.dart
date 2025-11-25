@@ -45,7 +45,6 @@ part 'exercise_session.g.dart';
 
 @freezed
 class ExerciseSession with _$ExerciseSession {
-  const ExerciseSession._();
 
   const factory ExerciseSession({
     /// Name of the exercise (e.g., "Bench Press", "Squat")
@@ -60,6 +59,7 @@ class ExerciseSession with _$ExerciseSession {
     /// When the session was performed
     required DateTime date,
   }) = _ExerciseSession;
+  const ExerciseSession._();
 
   /// Create from JSON (Firestore deserialization)
   factory ExerciseSession.fromJson(Map<String, dynamic> json) =>

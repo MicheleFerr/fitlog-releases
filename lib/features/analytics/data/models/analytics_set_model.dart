@@ -41,7 +41,6 @@ part 'analytics_set_model.freezed.dart';
 
 @freezed
 class AnalyticsSetModel with _$AnalyticsSetModel {
-  const AnalyticsSetModel._();
 
   const factory AnalyticsSetModel({
     /// Weight lifted in kg
@@ -53,6 +52,16 @@ class AnalyticsSetModel with _$AnalyticsSetModel {
     /// When the set was performed (Firestore Timestamp)
     required DateTime date,
   }) = _AnalyticsSetModel;
+
+  /// Create from domain entity
+  factory AnalyticsSetModel.fromDomain(AnalyticsSet entity) {
+    return AnalyticsSetModel(
+      weight: entity.weight,
+      reps: entity.reps,
+      date: entity.date,
+    );
+  }
+  const AnalyticsSetModel._();
 
   /// Create from Firestore JSON
   factory AnalyticsSetModel.fromJson(Map<String, dynamic> json) {
@@ -78,15 +87,6 @@ class AnalyticsSetModel with _$AnalyticsSetModel {
       weight: weight,
       reps: reps,
       date: date,
-    );
-  }
-
-  /// Create from domain entity
-  factory AnalyticsSetModel.fromDomain(AnalyticsSet entity) {
-    return AnalyticsSetModel(
-      weight: entity.weight,
-      reps: entity.reps,
-      date: entity.date,
     );
   }
 }

@@ -21,7 +21,7 @@
 library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart'; // For ScheduledDay
+// For ScheduledDay
 
 part 'routine_pattern.freezed.dart';
 part 'routine_pattern.g.dart';

@@ -128,7 +128,7 @@ class InsightEngagementRepositoryImpl implements InsightEngagementRepository {
     // For MVP, we track events but defer complex aggregation queries
     // to Phase 4 (Analytics Dashboard).
     try {
-      return fpdart.Right({
+      return const fpdart.Right({
         'shown': 0,
         'viewed': 0,
         'dismissed': 0,

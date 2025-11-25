@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_sync_status.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/body_measurement.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 /// Local datasource for health sync data using Hive.
 ///
@@ -173,27 +174,37 @@ abstract class IHealthLocalDatasource {
 }
 
 /// Implementation of [IHealthLocalDatasource] using Hive.
+///
+/// ✅ REFACTORED: Uses [HiveBoxManagerEnhanced] for lazy box opening.
+/// No explicit init() call required - boxes are opened on-demand.
 class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
   static const String _syncStatusBoxName = 'health_sync_status';
   static const String _measurementsBoxName = 'body_measurements';
 
-  Box<Map<dynamic, dynamic>>? _syncStatusBox;
-  Box<List<dynamic>>? _measurementsBox;
+  /// Singleton instance of HiveBoxManagerEnhanced for lazy box opening
+  final HiveBoxManagerEnhanced _boxManager = HiveBoxManagerEnhanced();
+
+  /// Lazily opens sync status box on-demand (cached by HiveBoxManagerEnhanced)
+  Future<Box<Map<dynamic, dynamic>>> _getSyncStatusBox() async {
+    return await _boxManager.openBox<Map<dynamic, dynamic>>(_syncStatusBoxName);
+  }
+
+  /// Lazily opens measurements box on-demand (cached by HiveBoxManagerEnhanced)
+  Future<Box<List<dynamic>>> _getMeasurementsBox() async {
+    return await _boxManager.openBox<List<dynamic>>(_measurementsBoxName);
+  }
 
   @override
   Future<void> init() async {
-    _syncStatusBox = await Hive.openBox<Map<dynamic, dynamic>>(
-      _syncStatusBoxName,
-    );
-    _measurementsBox = await Hive.openBox<List<dynamic>>(
-      _measurementsBoxName,
-    );
+    // ✅ No-op: Boxes are opened lazily on-demand via HiveBoxManagerEnhanced.
+    // This method is kept for backward compatibility with the interface.
   }
 
   @override
   Future<void> dispose() async {
-    await _syncStatusBox?.close();
-    await _measurementsBox?.close();
+    // Close boxes if they were opened
+    await _boxManager.closeBox(_syncStatusBoxName);
+    await _boxManager.closeBox(_measurementsBoxName);
   }
 
   // ============================================================
@@ -202,8 +213,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<void> saveSyncStatus(HealthSyncStatus status) async {
-    final box = _syncStatusBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getSyncStatusBox();
 
     final key = status.dataType.name;
     final json = status.toJson();
@@ -213,8 +223,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<HealthSyncStatus?> getSyncStatus(HealthDataType dataType) async {
-    final box = _syncStatusBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getSyncStatusBox();
 
     final key = dataType.name;
     final json = box.get(key);
@@ -229,9 +238,6 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     required HealthDataType dataType,
     required DateTime since,
   }) async {
-    final box = _syncStatusBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
-
     // Note: For MVP, we store only the latest status per data type.
     // To implement full history, we'd need a different storage strategy
     // (e.g., list of statuses per key, or timestamped keys).
@@ -249,9 +255,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<void> clearSyncStatuses() async {
-    final box = _syncStatusBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
-
+    final box = await _getSyncStatusBox();
     await box.clear();
   }
 
@@ -261,8 +265,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<void> saveMeasurement(BodyMeasurement measurement) async {
-    final box = _measurementsBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getMeasurementsBox();
 
     final key = measurement.dataType.name;
     final existingList = box.get(key) ?? [];
@@ -277,8 +280,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<void> saveMeasurements(List<BodyMeasurement> measurements) async {
-    final box = _measurementsBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getMeasurementsBox();
 
     // Group measurements by data type for efficient batch storage
     final groupedByType = <HealthDataType, List<Map<String, dynamic>>>{};
@@ -308,8 +310,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    final box = _measurementsBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getMeasurementsBox();
 
     final key = dataType.name;
     final jsonList = box.get(key) ?? [];
@@ -330,8 +331,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<BodyMeasurement?> getLatestMeasurement(HealthDataType dataType) async {
-    final box = _measurementsBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
+    final box = await _getMeasurementsBox();
 
     final key = dataType.name;
     final jsonList = box.get(key) ?? [];
@@ -350,9 +350,7 @@ class HealthLocalDatasourceImpl implements IHealthLocalDatasource {
 
   @override
   Future<void> clearMeasurements() async {
-    final box = _measurementsBox;
-    if (box == null) throw StateError('Hive not initialized. Call init() first.');
-
+    final box = await _getMeasurementsBox();
     await box.clear();
   }
 }

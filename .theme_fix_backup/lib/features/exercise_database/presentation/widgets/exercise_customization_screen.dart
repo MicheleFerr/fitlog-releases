@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/exercise_counting_mode_service.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart' as WorkoutExercise;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -14,6 +13,11 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/weight_settings
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/widgets/exercise_details_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:intl/intl.dart';
 
 class ExerciseCustomizationScreen extends ConsumerStatefulWidget { // 🔥 FIX: Add callback parameter
 
@@ -36,12 +40,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   void initState() {
     super.initState();
     _customizations = widget.selectedExercises.map((exercise) {
-      // ✅ NUOVO: Detect counting mode automatically
-      final detectionResult = ExerciseCountingModeService.detectFromDatabaseExercise(exercise);
-      final countingMode = detectionResult.mode;
+      // ✅ Default to weighted mode (DatabaseExercise → Exercise conversion needed for full detection)
+      const countingMode = ExerciseCountingMode.weighted;
 
       // ✅ NUOVO: Create default sets based on counting mode
-      final List<SetCustomization> defaultSets;
+      List<SetCustomization> defaultSets;
       switch (countingMode) {
         case ExerciseCountingMode.weighted:
           defaultSets = [
@@ -76,12 +79,17 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personalizza Esercizi (${_customizations.length})'),
+        title: Text('${l10n.customize} (${_customizations.length})'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const SemanticIcon(
+            icon: AppIcons.back,
+            semanticLabel: 'Back',
+          ),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -91,10 +99,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
           },
         ),
         actions: [
-          TextButton(
+          FilledButton.tonal(
             onPressed: _addAllToWorkout,
-            child: const Text('Aggiungi Tutti'),
+            child: Text(l10n.addAll),
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: ListView.builder(
@@ -168,8 +177,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 ),
                 IconButton(
                   onPressed: () => _showExerciseDetails(customization.exercise),
-                  icon: const Icon(Icons.info_outline),
-                  tooltip: 'Dettagli Esercizio',
+                  icon: const SemanticIcon(
+                    icon: AppIcons.info,
+                    semanticLabel: 'Information',
+                  ),
+                  tooltip: context.l10n.exerciseDetails,
                 ),
               ],
             ),
@@ -185,7 +197,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             Row(
               children: [
                 Text(
-                  'Set',
+                  context.l10n.sets.toUpperCase(),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -193,8 +205,12 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                 const Spacer(),
                 TextButton.icon(
                   onPressed: () => _addSet(exerciseIndex),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Aggiungi Set'),
+                  icon: const SemanticIcon(
+                    icon: AppIcons.add,
+                    semanticLabel: 'Add',
+                    size: AppIconSize.small,
+                  ),
+                  label: Text(context.l10n.addSet),
                 ),
               ],
             ),
@@ -212,26 +228,13 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             }),
             
             const SizedBox(height: 16),
-            
-            // Add Single Exercise Button (only if callback is available)
-            if (widget.onExerciseAdded != null) ...[
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _addSingleExercise(exerciseIndex),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Aggiungi Solo Questo Esercizio'),
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-            
+
             // Notes Section
             TextField(
-              decoration: const InputDecoration(
-                labelText: 'Note aggiuntive (opzionale)',
-                hintText: 'Es: Concentrati sulla forma, aumenta peso la prossima volta...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: context.l10n.notesOptional,
+                hintText: context.l10n.notesHint,
+                border: const OutlineInputBorder(),
                 isDense: true,
               ),
               maxLines: 2,
@@ -265,7 +268,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.fitness_center, size: 16),
+          icon: const SemanticIcon(
+  icon: AppIcons.fitnessCenter,
+  semanticLabel: 'Fitness center',
+  size: AppIconSize.tiny,
+),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.reps,
@@ -276,7 +283,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.repeat, size: 16),
+          icon: const SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+),
         ),
         ButtonSegment<ExerciseCountingMode>(
           value: ExerciseCountingMode.time,
@@ -287,7 +298,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               fontWeight: FontWeight.w500,
             ),
           ),
-          icon: const Icon(Icons.timer, size: 16),
+          icon: const SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+),
         ),
       ],
       selected: {customization.countingMode},
@@ -411,7 +426,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               value: setCustomization.weight == 0
                   ? '-'
                   : setCustomization.weight.toStringAsFixed(1),
-              icon: Icons.fitness_center,
+              icon: AppIcons.fitnessCenter,
               color: Theme.of(context).colorScheme.primary,
               onTap: () => _showWeightPicker(
                 exerciseIndex,
@@ -432,7 +447,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             child: _buildPickerButton(
               label: AppLocalizations.of(context).reps,
               value: '${setCustomization.reps}',
-              icon: Icons.repeat,
+              icon: AppIcons.repeat,
               color: Theme.of(context).colorScheme.secondary,
               onTap: () => _showRepsPicker(exerciseIndex, setIndex, setCustomization),
             ),
@@ -444,7 +459,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
             child: _buildPickerButton(
               label: AppLocalizations.of(context).duration,
               value: _formatDuration(setCustomization.seconds ?? 60),
-              icon: Icons.timer,
+              icon: AppIcons.timer,
               color: Theme.of(context).colorScheme.tertiary,
               onTap: () => _showDurationPicker(exerciseIndex, setIndex, setCustomization),
             ),
@@ -456,7 +471,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         if (_customizations[exerciseIndex].sets.length > 1)
           IconButton(
             onPressed: () => _removeSet(exerciseIndex, setIndex),
-            icon: const Icon(Icons.remove_circle_outline, size: 20),
+            icon: const SemanticIcon(
+  icon: AppIcons.removeCircleOutline,
+  semanticLabel: 'Remove circle outline',
+  size: AppIconSize.small,
+),
             tooltip: 'Rimuovi Set',
           ),
       ],
@@ -516,33 +535,6 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
         sets: currentSets,
       );
     });
-  }
-
-  void _addSingleExercise(int exerciseIndex) {
-    final customization = _customizations[exerciseIndex];
-    final workoutExercise = _convertToWorkoutExercise(customization);
-    
-    // print('🔍 EXERCISE_CUSTOMIZATION: Adding single exercise "${customization.exercise.nome}" via callback: ${widget.onExerciseAdded != null}');
-    
-    // 🔥 FIX: Call the callback to trigger _addExercise in EditTemplateScreen
-    if (widget.onExerciseAdded != null) {
-      // print('🔥 EXERCISE_CUSTOMIZATION: Calling callback for exercise: ${workoutExercise.name}');
-      widget.onExerciseAdded!(workoutExercise);
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('✅ ${customization.exercise.nome} aggiunto al template!'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-      
-      // Navigate back to template screen
-      Navigator.of(context).popUntil((route) => 
-        route.settings.name?.contains('edit_template') == true || route.isFirst);
-    } else {
-      // print('❌ EXERCISE_CUSTOMIZATION: No callback available!');
-    }
   }
 
   void _addAllToWorkout() {
@@ -607,13 +599,13 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'principiante':
-        return Colors.green;
+        return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
-        return Colors.red;
+        return context.colors.error;
       default:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
     }
   }
 
@@ -899,7 +891,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
     );
   }
 
-  /// Show weight picker dialog with unit support (kg/lbs)
+  /// Show weight picker dialog with unit support (kg/lbs) and exercise history
   void _showWeightPicker(
     int exerciseIndex,
     int setIndex,
@@ -907,6 +899,7 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
   ) {
     final theme = Theme.of(context);
     final unit = ref.read(measurementUnitProvider);
+    final exerciseName = _customizations[exerciseIndex].exercise.nome;
 
     // Convert stored weight (kg) to display unit
     double selectedWeight = setCustomization.weight.toDisplayUnit(unit);
@@ -916,9 +909,10 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Container(
-          height: 380,
+          height: MediaQuery.of(context).size.height * 0.65,
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
@@ -953,6 +947,162 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
               ),
               const SizedBox(height: 12),
 
+              // 🆕 History section - Quick fill from previous workouts
+              Consumer(
+                builder: (context, ref, _) {
+                  final historyAsync = ref.watch(recentWeightsWithDetailsProvider(exerciseName));
+
+                  return historyAsync.when(
+                    data: (historyList) {
+                      if (historyList.isEmpty) return const SizedBox.shrink();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              SemanticIcon(
+                                icon: AppIcons.historyRounded,
+                                semanticLabel: 'History',
+                                size: AppIconSize.small,
+                                color: theme.colorScheme.secondary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                AppLocalizations.of(context).recentWeights,
+                                style: theme.textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: theme.colorScheme.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 56,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: historyList.length.clamp(0, 5),
+                              separatorBuilder: (_, __) => const SizedBox(width: 8),
+                              itemBuilder: (context, index) {
+                                final historyItem = historyList[index];
+                                final weight = historyItem.weight ?? 0;
+                                final reps = historyItem.reps ?? 0;
+                                final daysAgo = DateTime.now().difference(historyItem.date).inDays;
+
+                                // Format relative date
+                                String dateLabel;
+                                if (daysAgo == 0) {
+                                  dateLabel = AppLocalizations.of(context).today;
+                                } else if (daysAgo == 1) {
+                                  dateLabel = AppLocalizations.of(context).yesterday;
+                                } else if (daysAgo < 7) {
+                                  dateLabel = AppLocalizations.of(context).daysAgo(daysAgo);
+                                } else {
+                                  dateLabel = DateFormat('d MMM').format(historyItem.date);
+                                }
+
+                                // Convert to display unit
+                                final displayWeight = weight.toDisplayUnit(unit);
+                                final isSelected = (displayWeight - selectedWeight).abs() < 0.05;
+
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      setModalState(() => selectedWeight = displayWeight);
+                                      controller.animateToItem(
+                                        WeightHelper.weightToIndex(displayWeight, unit),
+                                        duration: const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                      HapticFeedback.mediumImpact();
+                                    },
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? theme.colorScheme.primaryContainer
+                                            : theme.colorScheme.surfaceContainerHighest,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
+                                              : theme.colorScheme.outline.withValues(alpha: 0.3),
+                                          width: isSelected ? 2 : 1,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '${WeightHelper.formatPickerWeight(displayWeight, unit)}$unit',
+                                                style: theme.textTheme.titleSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: isSelected
+                                                      ? theme.colorScheme.primary
+                                                      : theme.colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              if (reps > 0) ...[
+                                                Text(
+                                                  ' × $reps',
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    color: isSelected
+                                                        ? theme.colorScheme.primary.withValues(alpha: 0.8)
+                                                        : theme.colorScheme.onSurfaceVariant,
+                                                  ),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                          Text(
+                                            dateLabel,
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onSurfaceVariant,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      );
+                    },
+                    loading: () => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: SizedBox(
+                        height: 56,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                          itemBuilder: (_, __) => Container(
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    error: (_, __) => const SizedBox.shrink(),
+                  );
+                },
+              ),
+
               // Quick increment buttons (custom or default from settings)
               ref.watch(weightSettingsProvider).when(
                 data: (settings) {
@@ -978,7 +1128,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           minimumSize: const Size(80, 36),
                           foregroundColor: theme.colorScheme.error,
                         ),
-                        icon: const Icon(Icons.remove, size: 16),
+                        icon: const SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.tiny,
+),
                         label: Text(
                           increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1),
                           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -1000,7 +1154,11 @@ class _ExerciseCustomizationScreenState extends ConsumerState<ExerciseCustomizat
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           minimumSize: const Size(80, 36),
                         ),
-                        icon: const Icon(Icons.add, size: 16),
+                        icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.tiny,
+),
                         label: Text(
                           '+${increment.toStringAsFixed(increment.truncateToDouble() == increment ? 0 : 1)}',
                           style: const TextStyle(fontWeight: FontWeight.bold),

@@ -30,11 +30,10 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/chart
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/one_rm_progression_chart_analytics.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/reps_progression_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/pr_timeline_chart.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/current_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
@@ -234,7 +233,7 @@ class _ExerciseCharts extends ConsumerWidget {
                 ),
                 text: context.l10n.volume,
               ),
-              Tab(
+              const Tab(
                 icon: SemanticIcon(
                   icon: AppIcons.trendingUp,
                   semanticLabel: '1RM',
@@ -250,7 +249,7 @@ class _ExerciseCharts extends ConsumerWidget {
                 ),
                 text: context.l10n.reps,
               ),
-              Tab(
+              const Tab(
                 icon: SemanticIcon(
                   icon: AppIcons.achievement,
                   semanticLabel: 'PR Timeline',

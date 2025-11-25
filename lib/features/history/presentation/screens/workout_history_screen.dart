@@ -25,6 +25,9 @@ import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -131,7 +134,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(AppIcons.arrowBackIos),
+          icon: const SemanticIcon(
+  icon: AppIcons.arrowBackIos,
+  semanticLabel: 'Arrow back ios',
+),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -158,7 +164,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             onPressed: _toggleSearch,
           ),
           PopupMenuButton<WorkoutSortOption>(
-            icon: const Icon(AppIcons.sort),
+            icon: const SemanticIcon(
+  icon: AppIcons.sort,
+  semanticLabel: 'Sort',
+),
             onSelected: (value) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               ref.read(workoutHistoryFilterProvider.notifier).state =
@@ -353,11 +362,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
-              color: colorScheme.error,
-            ),
+            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: colorScheme.error,
+),
             const SizedBox(height: 16),
             Text(
               l10n.errorLoadingWorkouts,
@@ -396,10 +406,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.history,
-              size: 64,
-              color: colorScheme.primary.withValues(alpha: 0.6),
+            SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.medium,
+  color: colorScheme.primary.withValues(alpha: 0.6,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -462,7 +474,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -545,7 +557,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'edit',
                                       child: Row(
                                         children: [
-                                          Icon(AppIcons.edit, size: 20, color: colorScheme.primary),
+                                          SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                                           const SizedBox(width: 12),
                                           Text(l10n.editWorkout),
                                         ],
@@ -555,7 +572,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'delete',
                                       child: Row(
                                         children: [
-                                          Icon(AppIcons.delete, size: 20, color: colorScheme.error),
+                                          SemanticIcon(
+  icon: AppIcons.delete,
+  semanticLabel: 'Delete',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                                           const SizedBox(width: 12),
                                           Text(l10n.deleteWorkout),
                                         ],

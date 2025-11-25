@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_suggestion.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget that displays smart training suggestions
 class SmartSuggestionsWidget extends ConsumerWidget {
@@ -40,10 +38,10 @@ class SmartSuggestionsWidget extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  AppIcons.tip,
+                  Icons.lightbulb_outline,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   l10n.smartSuggestions,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -92,7 +90,7 @@ class SmartSuggestionTile extends ConsumerWidget {
                 child: Text(
                   _getPriorityText(l10n, suggestion.priority),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: context.colors.surface,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -111,20 +109,20 @@ class SmartSuggestionTile extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             suggestion.title,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             suggestion.description,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           if (suggestion.reasoning.isNotEmpty) ...[
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -134,11 +132,11 @@ class SmartSuggestionTile extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    AppIcons.info,
+                    Icons.info_outline,
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       suggestion.reasoning,
@@ -216,13 +214,13 @@ class SmartSuggestionTile extends ConsumerWidget {
   Color _getPriorityColor(BuildContext context, SuggestionPriority priority) {
     switch (priority) {
       case SuggestionPriority.critical:
-        return context.colors.error;
+        return Colors.red;
       case SuggestionPriority.high:
-        return context.colors.secondary;
+        return Colors.orange;
       case SuggestionPriority.medium:
-        return context.colors.primary;
+        return Colors.blue;
       case SuggestionPriority.low:
-        return context.colors.surfaceContainerHighest;
+        return Colors.grey;
     }
   }
 

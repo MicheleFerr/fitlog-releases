@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dashboard widget for displaying notification analytics
 class NotificationAnalyticsDashboard extends ConsumerWidget {
@@ -69,7 +67,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
         _buildMetricCard(
           title: 'Scheduled',
           value: metrics.totalScheduled.toString(),
-          icon: AppIcons.schedule,
+          icon: Icons.schedule,
           color: theme.colorScheme.primary,
           theme: theme,
         ),
@@ -77,24 +75,24 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
           title: 'Delivered',
           value: '${metrics.totalDelivered}',
           subtitle: '${(metrics.deliveryRate * 100).toStringAsFixed(1)}%',
-          icon: AppIcons.checkCircle,
-          color: context.colors.success,
+          icon: Icons.check_circle,
+          color: theme.colorScheme.tertiary,
           theme: theme,
         ),
         _buildMetricCard(
           title: 'Clicked',
           value: '${metrics.totalClicked}',
           subtitle: '${(metrics.clickRate * 100).toStringAsFixed(1)}% CTR',
-          icon: AppIcons.touchApp,
-          color: context.colors.primary,
+          icon: Icons.touch_app,
+          color: theme.colorScheme.primary,
           theme: theme,
         ),
         _buildMetricCard(
           title: 'Failed',
           value: '${metrics.totalFailed}',
           subtitle: '${(metrics.failureRate * 100).toStringAsFixed(1)}%',
-          icon: AppIcons.error,
-          color: context.colors.error,
+          icon: Icons.error,
+          color: theme.colorScheme.error,
           theme: theme,
         ),
       ],
@@ -408,7 +406,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.error,
+                  Icons.error_outline,
                   color: theme.colorScheme.onErrorContainer,
                 ),
                 const SizedBox(width: 8),

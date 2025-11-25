@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Template category with semantic gradient colors
 ///
@@ -26,13 +25,13 @@ enum TemplateCategory {
   String localizedName(BuildContext context) {
     switch (this) {
       case TemplateCategory.strength:
-        return "Template Category Strength";
+        return 'Template Category Strength';
       case TemplateCategory.cardio:
-        return "Template Category Cardio";
+        return 'Template Category Cardio';
       case TemplateCategory.flexibility:
-        return "Template Category Flexibility";
+        return 'Template Category Flexibility';
       case TemplateCategory.hybrid:
-        return "Template Category Hybrid";
+        return 'Template Category Hybrid';
     }
   }
 

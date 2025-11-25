@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/models/workout_fatigue.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FatigueRatingDialog extends StatefulWidget {
 
@@ -46,7 +49,7 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
             Row(
               children: [
                 Icon(
-                  Icons.psychology,
+                  AppIcons.ai,
                   color: theme.colorScheme.primary,
                   size: 32,
                 ),
@@ -83,7 +86,10 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                prefixIcon: const Icon(Icons.note_add),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.noteAdd,
+  semanticLabel: 'Note add',
+),
               ),
             ),
             
@@ -179,7 +185,7 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
               ),
               if (isSelected)
                 Icon(
-                  Icons.check_circle,
+                  AppIcons.complete,
                   color: theme.colorScheme.primary,
                 ),
             ],
@@ -196,10 +202,10 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
         .toDouble();
     
     final efficiencyColor = efficiencyScore >= 70
-        ? Colors.green
+        ? context.colors.success
         : efficiencyScore >= 40
-            ? Colors.orange
-            : Colors.red;
+            ? context.colors.secondary
+            : context.colors.error;
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -216,7 +222,7 @@ class _FatigueRatingDialogState extends State<FatigueRatingDialog> {
           Row(
             children: [
               Icon(
-                Icons.speed,
+                AppIcons.speed,
                 color: efficiencyColor,
                 size: 20,
               ),

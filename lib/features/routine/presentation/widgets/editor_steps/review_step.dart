@@ -44,7 +44,7 @@ class ReviewStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Review your routine before creating it',
             style: context.textTheme.bodyMedium?.copyWith(
@@ -52,7 +52,7 @@ class ReviewStep extends ConsumerWidget {
             ),
           ),
 
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
 
           // Routine details
           _buildDetailSection(
@@ -113,13 +113,13 @@ class ReviewStep extends ConsumerWidget {
             ],
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Pattern
           if (state.selectedPattern != null)
             _buildPatternSection(context, state),
 
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
 
           // Success message
           Container(
@@ -145,7 +145,7 @@ class ReviewStep extends ConsumerWidget {
                   color: context.colors.primary,
                   size: 32,
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class ReviewStep extends ConsumerWidget {
                           color: context.colors.onSurface,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         'Tap "Create Routine" to begin your fitness journey',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -200,7 +200,7 @@ class ReviewStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 24,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 title,
                 style: context.textTheme.titleMedium?.copyWith(
@@ -276,7 +276,7 @@ class ReviewStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 24,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Training Pattern',
@@ -288,7 +288,7 @@ class ReviewStep extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Pattern name
           Container(
@@ -304,7 +304,7 @@ class ReviewStep extends ConsumerWidget {
                   color: context.colors.primary,
                   size: 20,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     pattern.name,
@@ -318,7 +318,7 @@ class ReviewStep extends ConsumerWidget {
             ),
           ),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Pattern description
           Text(
@@ -328,7 +328,7 @@ class ReviewStep extends ConsumerWidget {
             ),
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Weekly sequence
           Text(
@@ -337,7 +337,7 @@ class ReviewStep extends ConsumerWidget {
               color: context.colors.onSurface.withValues(alpha: 0.7),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Wrap(
             spacing: 6,
             runSpacing: 6,
@@ -371,7 +371,7 @@ class ReviewStep extends ConsumerWidget {
                             : context.colors.primary,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Icon(
                       isRest ? AppIcons.bed : AppIcons.workout,
                       size: 14,
@@ -379,7 +379,7 @@ class ReviewStep extends ConsumerWidget {
                           ? context.colors.secondary
                           : context.colors.primary,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       _formatDayLabel(day),
                       style: context.textTheme.labelSmall?.copyWith(

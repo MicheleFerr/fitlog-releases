@@ -42,6 +42,12 @@ import 'package:gymbro_flutter_new/features/notifications/data/datasources/notif
 /// await syncManager.syncNow(settings);
 /// ```
 class NotificationSyncManager {
+
+  NotificationSyncManager({
+    required NotificationLocalDataSource localDataSource,
+    required NotificationRemoteDataSource remoteDataSource,
+  })  : _localDataSource = localDataSource,
+        _remoteDataSource = remoteDataSource;
   final NotificationLocalDataSource _localDataSource;
   final NotificationRemoteDataSource _remoteDataSource;
 
@@ -56,12 +62,6 @@ class NotificationSyncManager {
   // Exponential backoff
   int _syncFailedCount = 0;
   static const _maxRetryDelay = Duration(seconds: 30);
-
-  NotificationSyncManager({
-    required NotificationLocalDataSource localDataSource,
-    required NotificationRemoteDataSource remoteDataSource,
-  })  : _localDataSource = localDataSource,
-        _remoteDataSource = remoteDataSource;
 
   // === Sync Operations ===
 
@@ -258,7 +258,7 @@ class NotificationSyncManager {
     if (lastSync == null) return true;
 
     final now = DateTime.now();
-    final threshold = const Duration(hours: 24);
+    const threshold = Duration(hours: 24);
 
     return now.difference(lastSync) > threshold;
   }

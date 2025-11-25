@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/onboarding/data/models/legal_consent.dart';
-import 'package:gymbro_flutter_new/features/onboarding/data/repositories/consent_repository.dart';
+import 'package:gymbro_flutter_new/features/onboarding/data/repositories/legal_consent_repository.dart';
 
 /// State for onboarding flow tracking all user consents.
 ///
-/// GDPR Art. 7 compliance: All consent timestamps tracked in ConsentRepository.
+/// GDPR Art. 7 compliance: All consent timestamps tracked in LegalConsentRepository.
 class OnboardingState {
   const OnboardingState({
     this.disclaimerAccepted = false,
@@ -75,7 +75,7 @@ class OnboardingState {
       isOnboardingComplete.hashCode;
 }
 
-/// Manages onboarding flow state and integrates with ConsentRepository.
+/// Manages onboarding flow state and integrates with LegalConsentRepository.
 ///
 /// Usage in onboarding screens:
 /// ```dart
@@ -87,7 +87,7 @@ class OnboardingState {
 class OnboardingNotifier extends StateNotifier<OnboardingState> {
   OnboardingNotifier(this._repository) : super(const OnboardingState());
 
-  final ConsentRepository _repository;
+  final LegalConsentRepository _repository;
 
   /// Check onboarding status on app start.
   ///
@@ -209,11 +209,11 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
 /// Provider for onboarding flow state management.
 final onboardingProvider =
     StateNotifierProvider<OnboardingNotifier, OnboardingState>((ref) {
-  final repository = ref.watch(consentRepositoryProvider);
+  final repository = ref.watch(legalConsentRepositoryProvider);
   return OnboardingNotifier(repository);
 });
 
 /// Provider for consent repository (singleton).
-final consentRepositoryProvider = Provider<ConsentRepository>((ref) {
-  return ConsentRepository();
+final legalConsentRepositoryProvider = Provider<LegalConsentRepository>((ref) {
+  return LegalConsentRepository();
 });

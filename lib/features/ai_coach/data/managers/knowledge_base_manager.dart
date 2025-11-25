@@ -31,6 +31,24 @@ import 'package:collection/collection.dart';
 
 /// Manages the knowledge base for AI Coach with hybrid search
 class KnowledgeBaseManager {
+
+  KnowledgeBaseManager({
+    required this.workoutRepository,
+    required this.analyticsRepository,
+    required this.vectorStore,
+    required this.embeddingService,
+  }) {
+    _bm25Engine = BM25SearchEngine();
+    _hybridEngine = HybridSearchEngine(
+      bm25Engine: _bm25Engine,
+      embeddingService: embeddingService,
+      vectorStore: vectorStore,
+    );
+    _indexer = WorkoutKnowledgeIndexer(searchEngine: _bm25Engine);
+    _queryExpander = QueryExpander();
+    _responseGenerator = EnhancedResponseGenerator();
+    _conversationContext = ConversationContext();
+  }
   final WorkoutRepository workoutRepository;
   final AnalyticsRepository analyticsRepository;
   final InMemoryVectorStore vectorStore;
@@ -57,24 +75,6 @@ class KnowledgeBaseManager {
 
   // Performance tracking
   final Map<String, Duration> _performanceMetrics = {};
-
-  KnowledgeBaseManager({
-    required this.workoutRepository,
-    required this.analyticsRepository,
-    required this.vectorStore,
-    required this.embeddingService,
-  }) {
-    _bm25Engine = BM25SearchEngine();
-    _hybridEngine = HybridSearchEngine(
-      bm25Engine: _bm25Engine,
-      embeddingService: embeddingService,
-      vectorStore: vectorStore,
-    );
-    _indexer = WorkoutKnowledgeIndexer(searchEngine: _bm25Engine);
-    _queryExpander = QueryExpander();
-    _responseGenerator = EnhancedResponseGenerator();
-    _conversationContext = ConversationContext();
-  }
 
   /// Initialize the knowledge base for a user
   Future<void> initialize(String userId) async {
@@ -507,14 +507,6 @@ class KnowledgeBaseManager {
 
 /// Enhanced search response with metadata
 class EnhancedSearchResponse {
-  final String query;
-  final ExpandedQuery expandedQuery;
-  final List<SearchResult> searchResults;
-  final String response;
-  final Map<String, dynamic> metadata;
-  final UserIntent intent;
-  final double confidence;
-  final Duration processingTime;
 
   const EnhancedSearchResponse({
     required this.query,
@@ -526,6 +518,14 @@ class EnhancedSearchResponse {
     required this.confidence,
     required this.processingTime,
   });
+  final String query;
+  final ExpandedQuery expandedQuery;
+  final List<SearchResult> searchResults;
+  final String response;
+  final Map<String, dynamic> metadata;
+  final UserIntent intent;
+  final double confidence;
+  final Duration processingTime;
 
   /// Check if response is high quality
   // Lowered threshold for testing (was 0.7)
@@ -541,13 +541,13 @@ class EnhancedSearchResponse {
 
 /// Cached search result with expiry
 class CachedSearchResult {
-  final EnhancedSearchResponse response;
-  final DateTime timestamp;
 
   const CachedSearchResult({
     required this.response,
     required this.timestamp,
   });
+  final EnhancedSearchResponse response;
+  final DateTime timestamp;
 
   bool get isExpired {
     return DateTime.now().difference(timestamp).inMinutes > 5;

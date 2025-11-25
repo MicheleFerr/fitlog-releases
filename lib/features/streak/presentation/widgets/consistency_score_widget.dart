@@ -15,7 +15,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Main consistency score widget with provider integration
@@ -43,12 +42,12 @@ class ConsistencyScoreWidget extends ConsumerWidget {
 
 /// Compact score card for home screen
 class CompactScoreCard extends StatelessWidget {
-  final ConsistencyScore score;
 
   const CompactScoreCard({
     super.key,
     required this.score,
   });
+  final ConsistencyScore score;
 
   @override
   Widget build(BuildContext context) {
@@ -165,10 +164,6 @@ class CompactScoreCard extends StatelessWidget {
 
 /// Single indicator row
 class IndicatorRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final bool isOptimal;
 
   const IndicatorRow({
     super.key,
@@ -177,6 +172,10 @@ class IndicatorRow extends StatelessWidget {
     required this.value,
     required this.isOptimal,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final bool isOptimal;
 
   @override
   Widget build(BuildContext context) {

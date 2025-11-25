@@ -19,6 +19,7 @@
 /// - Only run in development/testing environments
 /// - Review data before running
 /// - Can be run multiple times (idempotent - uses same IDs)
+library;
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -228,10 +228,10 @@ class _IconShowcaseScreenState extends State<IconShowcaseScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search icons...',
-                    prefixIcon: const Icon(AppIcons.search, size: AppIconSize.medium),
+                    prefixIcon: Icon(AppIcons.search, size: AppIconSize.medium),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(AppIcons.clear, size: AppIconSize.medium),
+                            icon: Icon(AppIcons.clear, size: AppIconSize.medium),
                             onPressed: () {
                               _searchController.clear();
                               setState(() => _searchQuery = '');
@@ -281,14 +281,14 @@ class _IconShowcaseScreenState extends State<IconShowcaseScreen> {
                     size: AppIconSize.emptyState,
                     color: context.colors.outline,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     'No icons found',
                     style: context.textTheme.titleMedium?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Try a different search term',
                     style: context.textTheme.bodySmall?.copyWith(
@@ -352,7 +352,7 @@ class _IconCard extends StatelessWidget {
               size: AppIconSize.xlarge,
               color: context.colors.primary,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               iconName,
               style: context.textTheme.labelSmall?.copyWith(

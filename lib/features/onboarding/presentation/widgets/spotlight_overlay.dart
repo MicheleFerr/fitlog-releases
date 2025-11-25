@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Spotlight overlay that highlights a specific widget
 ///
@@ -105,11 +106,13 @@ class _SpotlightOverlayState extends State<SpotlightOverlay>
               painter: _SpotlightPainter(
                 targetRect: _targetRect,
                 overlayOpacity: _opacityAnimation.value,
+                overlayColor: context.colors.onSurface,
+                borderColor: context.colors.surface,
               ),
               child: child,
             );
           },
-          child: SizedBox.expand(), // Full-screen container for CustomPaint
+          child: const SizedBox.expand(), // Full-screen container for CustomPaint
         ),
 
         // Bottom sheet (child)
@@ -124,10 +127,14 @@ class _SpotlightPainter extends CustomPainter {
   _SpotlightPainter({
     required this.targetRect,
     required this.overlayOpacity,
+    required this.overlayColor,
+    required this.borderColor,
   });
 
   final Rect? targetRect;
   final double overlayOpacity;
+  final Color overlayColor;
+  final Color borderColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -135,7 +142,7 @@ class _SpotlightPainter extends CustomPainter {
       // No target yet - draw full overlay
       canvas.drawRect(
         Rect.fromLTWH(0, 0, size.width, size.height),
-        Paint()..color = Colors.black.withValues(alpha: overlayOpacity),
+        Paint()..color = overlayColor.withValues(alpha: overlayOpacity),
       );
       return;
     }
@@ -173,7 +180,7 @@ class _SpotlightPainter extends CustomPainter {
     // Draw the overlay
     canvas.drawPath(
       finalPath,
-      Paint()..color = Colors.black.withValues(alpha: overlayOpacity),
+      Paint()..color = overlayColor.withValues(alpha: overlayOpacity),
     );
 
     // Draw subtle border around spotlight
@@ -183,7 +190,7 @@ class _SpotlightPainter extends CustomPainter {
         const Radius.circular(spotlightRadius),
       ),
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.3)
+        ..color = borderColor.withValues(alpha: 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0,
     );

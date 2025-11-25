@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
@@ -8,6 +9,13 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/modal_service.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_chart_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_metric_chart.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/multi_metric_chart.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tab Sommario: mostra stats, grafico, record personali e livello di forza
 class ExerciseSummaryTab extends ConsumerStatefulWidget {
@@ -23,8 +31,11 @@ class ExerciseSummaryTab extends ConsumerStatefulWidget {
 }
 
 class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
-  // Chip selezionato per il grafico: Peso, Reps, RPE, TUT
+  // Chip selezionato per il grafico: Peso, Reps, RPE
   String _selectedChip = 'Peso';
+
+  // Metriche selezionate per il grafico multi-metrica (default: tutte)
+  final List<String> _selectedMultiMetrics = ['Peso', 'Reps', 'RPE'];
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +57,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
             const SizedBox(height: 24),
 
-            // Grafico ultimi 3 mesi con chips (placeholder)
+            // Grafico ultimi 3 mesi con chips (singola metrica)
             _buildChartSection(),
+
+            const SizedBox(height: 24),
+
+            // Grafico multi-metrica overlay
+            _buildMultiMetricChartSection(),
 
             const SizedBox(height: 24),
 
@@ -106,21 +122,19 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildMetricChip('Peso', Icons.fitness_center),
+              _buildMetricChip('Peso', AppIcons.fitnessCenter),
               const SizedBox(width: 8),
-              _buildMetricChip('Reps', Icons.repeat),
+              _buildMetricChip('Reps', AppIcons.repeat),
               const SizedBox(width: 8),
-              _buildMetricChip('RPE', Icons.trending_up),
-              const SizedBox(width: 8),
-              _buildMetricChip('TUT', Icons.timer),
+              _buildMetricChip('RPE', AppIcons.trendingUp),
             ],
           ),
         ),
 
         const SizedBox(height: 16),
 
-        // Grafico (placeholder)
-        _buildChartPlaceholder(),
+        // Grafico con dati reali
+        _buildChart(),
       ],
     );
   }
@@ -154,35 +168,169 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
     );
   }
 
-  Widget _buildChartPlaceholder() {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.colors.outline.withValues(alpha: 0.2),
+  /// Build sezione grafico multi-metrica con overlay
+  Widget _buildMultiMetricChartSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.multiMetricComparison,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.colors.onSurface,
+          ),
         ),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.show_chart,
-              size: 48,
-              color: context.colors.onSurface.withValues(alpha: 0.3),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Grafico $_selectedChip',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurface.withValues(alpha: 0.5),
+        const SizedBox(height: 12),
+
+        // Build multi-metric chart
+        _buildMultiMetricChart(),
+      ],
+    );
+  }
+
+  /// Build grafico multi-metrica con dati da tutti i metric provider
+  Widget _buildMultiMetricChart() {
+    // Fetch data for all selected metrics
+    final Map<String, AsyncValue<List<ChartDataPoint>>> metricDataMap = {};
+
+    for (final metric in _selectedMultiMetrics) {
+      final params = ChartDataParams(
+        exerciseName: widget.exerciseName,
+        metric: metric,
+        days: 90,
+      );
+      metricDataMap[metric] = ref.watch(exerciseChartCleanProvider(params));
+    }
+
+    // Check if all data is loaded
+    final allLoaded = metricDataMap.values.every((asyncValue) => asyncValue.hasValue);
+    final anyError = metricDataMap.values.any((asyncValue) => asyncValue.hasError);
+    final anyLoading = metricDataMap.values.any((asyncValue) => asyncValue.isLoading);
+
+    if (anyLoading) {
+      return Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(child: LoadingIndicator()),
+      );
+    }
+
+    if (anyError) {
+      return Container(
+        height: 250,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: context.colors.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SemanticIcon(
+  icon: AppIcons.errorOutline,
+  semanticLabel: 'Error outline',
+  size: AppIconSize.xxlarge,
+  color: context.colors.error.withValues(alpha: 0.5,
+),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                context.l10n.errorLoadingData,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.error,
+                ),
+              ),
+            ],
+          ),
         ),
+      );
+    }
+
+    if (allLoaded) {
+      // Extract data from AsyncValue
+      final Map<String, List<ChartDataPoint>> dataByMetric = {};
+      metricDataMap.forEach((metric, asyncValue) {
+        dataByMetric[metric] = asyncValue.value ?? [];
+      });
+
+      return MultiMetricChart(
+        dataByMetric: dataByMetric,
+        selectedMetrics: _selectedMultiMetrics,
+      );
+    }
+
+    // Fallback (should not reach here)
+    return const SizedBox.shrink();
+  }
+
+  /// Build grafico con dati reali dal provider
+  Widget _buildChart() {
+    // Crea parametri per chart data provider
+    final params = ChartDataParams(
+      exerciseName: widget.exerciseName,
+      metric: _selectedChip,
+      days: 90, // Ultimi 3 mesi
+    );
+
+    // Ottieni chart data dal provider
+    final chartDataAsync = ref.watch(exerciseChartCleanProvider(params));
+
+    return chartDataAsync.when(
+      data: (dataPoints) {
+        // Render chart widget con dati
+        return ExerciseMetricChart(
+          dataPoints: dataPoints,
+          metric: _selectedChip,
+        );
+      },
+      loading: () => Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(child: LoadingIndicator()),
       ),
+      error: (error, stack) {
+        // Show error state
+        return Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SemanticIcon(
+  icon: AppIcons.errorOutline,
+  semanticLabel: 'Error outline',
+  size: AppIconSize.xxlarge,
+  color: context.colors.error.withValues(alpha: 0.5,
+),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  context.l10n.errorLoadingData,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: context.colors.error,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -237,28 +385,28 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 _buildInteractiveRecordCard(
                   context.l10n.maxWeight,
                   '${records.maxWeight.value.toStringAsFixed(1)} kg',
-                  Icons.fitness_center,
+                  AppIcons.fitnessCenter,
                   context.colors.primary,
                   records.maxWeight,
                 ),
                 _buildInteractiveRecordCard(
                   context.l10n.best1RM,
                   '${records.best1RM.value.toStringAsFixed(1)} kg',
-                  Icons.star,
+                  AppIcons.star,
                   context.colors.secondary,
                   records.best1RM,
                 ),
                 _buildInteractiveRecordCard(
                   context.l10n.bestSetVolume,
                   '${records.bestSetVolume.value.toStringAsFixed(0)} kg',
-                  Icons.trending_up,
+                  AppIcons.trendingUp,
                   context.colors.tertiary,
                   records.bestSetVolume,
                 ),
                 _buildInteractiveRecordCard(
                   context.l10n.bestSessionVolume,
                   '${records.bestSessionVolume.value.toStringAsFixed(0)} kg',
-                  Icons.workspaces,
+                  AppIcons.workspaces,
                   Colors.orange,
                   records.bestSessionVolume,
                 ),
@@ -320,10 +468,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 4),
-              Icon(
-                Icons.info_outline,
-                size: 16,
-                color: context.colors.onSurface.withValues(alpha: 0.4),
+              SemanticIcon(
+  icon: AppIcons.infoOutline,
+  semanticLabel: 'Info outline',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurface.withValues(alpha: 0.4,
+),
               ),
             ],
           ),
@@ -352,7 +502,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           children: [
             Row(
               children: [
-                Icon(Icons.emoji_events, color: context.colors.primary),
+                Icon(AppIcons.emojiEvents, color: context.colors.primary),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.strengthLevel,
@@ -368,12 +518,20 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Calcola e mostra livello di forza
             mappingAsync.when(
               data: (mapping) {
+                if (kDebugMode) {
+                  debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 1 - Mapping received: $mapping');
+                  debugPrint('   Exercise: ${widget.exerciseName}');
+                  debugPrint('   Mapping standardId: ${mapping?.standardId}');
+                }
+
                 if (mapping == null) {
+                  if (kDebugMode) debugPrint('   ❌ Mapping is null');
                   return _buildStrengthLevelPlaceholder();
                 }
 
                 // Check if standardId is null (happens with fallback mappings)
                 if (mapping.standardId == null) {
+                  if (kDebugMode) debugPrint('   ❌ StandardId is null in mapping');
                   return _buildStrengthLevelPlaceholder();
                 }
 
@@ -382,7 +540,14 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
 
                 return standardAsync.when(
                   data: (standard) {
+                    if (kDebugMode) {
+                      debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 2 - Standard received: $standard');
+                      debugPrint('   StandardId: ${mapping.standardId}');
+                      debugPrint('   Standard name: ${standard?.name}');
+                    }
+
                     if (standard == null) {
+                      if (kDebugMode) debugPrint('   ❌ Standard is null');
                       return _buildStrengthLevelPlaceholder();
                     }
 
@@ -392,7 +557,13 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         final allSets = <ExerciseHistoryData>[];
                         historyMap.forEach((date, sets) => allSets.addAll(sets));
 
+                        if (kDebugMode) {
+                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Step 3 - History received');
+                          debugPrint('   Total sets: ${allSets.length}');
+                        }
+
                         if (allSets.isEmpty) {
+                          if (kDebugMode) debugPrint('   ❌ No sets in history');
                           return _buildStrengthLevelPlaceholder();
                         }
 
@@ -407,6 +578,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                           }
                         }
 
+                        if (kDebugMode) {
+                          debugPrint('🏋️ [STRENGTH LEVEL DEBUG] Calculated 1RM: ${best1RM.toStringAsFixed(1)} kg');
+                          debugPrint('   User bodyweight: ${standardBodyweight.toStringAsFixed(1)} kg');
+                        }
+
                         return _buildStrengthLevelContent(
                           standard: standard,
                           userBodyweight: standardBodyweight,
@@ -414,15 +590,24 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         );
                       },
                       loading: () => const LoadingIndicator(),
-                      error: (_, __) => _buildStrengthLevelPlaceholder(),
+                      error: (error, stack) {
+                        if (kDebugMode) debugPrint('   ❌ History error: $error');
+                        return _buildStrengthLevelPlaceholder();
+                      },
                     );
                   },
                   loading: () => const LoadingIndicator(),
-                  error: (_, __) => _buildStrengthLevelPlaceholder(),
+                  error: (error, stack) {
+                    if (kDebugMode) debugPrint('   ❌ Standard error: $error');
+                    return _buildStrengthLevelPlaceholder();
+                  },
                 );
               },
               loading: () => const LoadingIndicator(),
-              error: (_, __) => _buildStrengthLevelPlaceholder(),
+              error: (error, stack) {
+                if (kDebugMode) debugPrint('   ❌ Mapping error: $error');
+                return _buildStrengthLevelPlaceholder();
+              },
             ),
           ],
         ),
@@ -433,10 +618,12 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   Widget _buildStrengthLevelPlaceholder() {
     return Column(
       children: [
-        Icon(
-          Icons.info_outline,
-          size: 48,
-          color: context.colors.onSurface.withValues(alpha: 0.3),
+        SemanticIcon(
+  icon: AppIcons.infoOutline,
+  semanticLabel: 'Info outline',
+  size: AppIconSize.xxlarge,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
         ),
         const SizedBox(height: 12),
         Text(
@@ -515,7 +702,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: levelColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -552,7 +739,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                 currentLevel.getLabel(locale).toUpperCase(),
                 style: context.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.colors.surface,
                 ),
               ),
             ),
@@ -590,7 +777,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
             children: [
@@ -655,11 +842,11 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
   Color _getLevelColor(ExperienceLevel level) {
     switch (level) {
       case ExperienceLevel.untrained:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
       case ExperienceLevel.novice:
-        return Colors.blue;
+        return context.colors.primary;
       case ExperienceLevel.intermediate:
-        return Colors.green;
+        return context.colors.success;
       case ExperienceLevel.advanced:
         return Colors.orange;
       case ExperienceLevel.elite:
@@ -782,7 +969,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Header
             Row(
               children: [
-                Icon(Icons.emoji_events, color: context.colors.primary, size: 32),
+                Icon(AppIcons.emojiEvents, color: context.colors.primary, size: 32),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -830,7 +1017,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Data
             if (recordData.date != null) ...[
               _buildDetailRow(
-                Icons.calendar_today,
+                AppIcons.calendarToday,
                 'Data',
                 dateFormatter.format(recordData.date!),
               ),
@@ -840,7 +1027,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Workout
             if (recordData.workoutName != null) ...[
               _buildDetailRow(
-                Icons.fitness_center,
+                AppIcons.fitnessCenter,
                 'Allenamento',
                 recordData.workoutName!,
               ),
@@ -850,7 +1037,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
             // Dettagli set (se disponibili)
             if (recordData.weight != null && recordData.reps != null) ...[
               _buildDetailRow(
-                Icons.info,
+                AppIcons.info,
                 'Set',
                 '${recordData.weight!.toStringAsFixed(1)} kg × ${recordData.reps} reps',
               ),
@@ -893,7 +1080,7 @@ class _ExerciseSummaryTabState extends ConsumerState<ExerciseSummaryTab> {
                         height: 28,
                         decoration: BoxDecoration(
                           color: context.colors.secondary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: Text(

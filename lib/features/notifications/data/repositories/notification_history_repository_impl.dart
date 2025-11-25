@@ -11,7 +11,6 @@
 library;
 
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_history_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/datasources/notification_local_datasource.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/datasources/notification_remote_datasource.dart';
@@ -36,14 +35,14 @@ import 'package:gymbro_flutter_new/features/notifications/data/datasources/notif
 /// ```
 class NotificationHistoryRepositoryImpl
     implements NotificationHistoryRepository {
-  final NotificationLocalDataSource _localDataSource;
-  final NotificationRemoteDataSource _remoteDataSource;
 
   NotificationHistoryRepositoryImpl({
     required NotificationLocalDataSource localDataSource,
     required NotificationRemoteDataSource remoteDataSource,
   })  : _localDataSource = localDataSource,
         _remoteDataSource = remoteDataSource;
+  final NotificationLocalDataSource _localDataSource;
+  final NotificationRemoteDataSource _remoteDataSource;
 
   // === CRUD Operations ===
 

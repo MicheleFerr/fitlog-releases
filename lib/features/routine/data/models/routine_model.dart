@@ -28,6 +28,43 @@ part 'routine_model.g.dart';
 /// - Set of String to/from List of String
 @JsonSerializable(explicitToJson: true)
 class RoutineModel {
+
+  const RoutineModel({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.description,
+    required this.presetType,
+    required this.trainingDays,
+    required this.workoutSchedule,
+    required this.isActive,
+    required this.completedDays,
+    required this.totalWorkouts,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  /// JSON deserialization
+  factory RoutineModel.fromJson(Map<String, dynamic> json) =>
+      _$RoutineModelFromJson(json);
+
+  /// Create model from domain entity
+  factory RoutineModel.fromEntity(FlexibleRoutine entity) {
+    return RoutineModel(
+      id: entity.id,
+      userId: entity.userId,
+      name: entity.name,
+      description: entity.description,
+      presetType: entity.presetType,
+      trainingDays: entity.trainingDays.toList()..sort(), // Set → sorted List
+      workoutSchedule: _convertScheduleToStringKeys(entity.workoutSchedule), // Map<int, String> → Map<String, String>
+      isActive: entity.isActive,
+      completedDays: entity.completedDays.toList()..sort(), // Set → sorted List
+      totalWorkouts: entity.totalWorkouts,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    );
+  }
   /// Unique routine identifier (matches Firestore document ID)
   final String id;
 
@@ -68,43 +105,6 @@ class RoutineModel {
   /// Last update timestamp (Firestore Timestamp)
   @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)
   final DateTime updatedAt;
-
-  const RoutineModel({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.description,
-    required this.presetType,
-    required this.trainingDays,
-    required this.workoutSchedule,
-    required this.isActive,
-    required this.completedDays,
-    required this.totalWorkouts,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  /// JSON deserialization
-  factory RoutineModel.fromJson(Map<String, dynamic> json) =>
-      _$RoutineModelFromJson(json);
-
-  /// Create model from domain entity
-  factory RoutineModel.fromEntity(FlexibleRoutine entity) {
-    return RoutineModel(
-      id: entity.id,
-      userId: entity.userId,
-      name: entity.name,
-      description: entity.description,
-      presetType: entity.presetType,
-      trainingDays: entity.trainingDays.toList()..sort(), // Set → sorted List
-      workoutSchedule: _convertScheduleToStringKeys(entity.workoutSchedule), // Map<int, String> → Map<String, String>
-      isActive: entity.isActive,
-      completedDays: entity.completedDays.toList()..sort(), // Set → sorted List
-      totalWorkouts: entity.totalWorkouts,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    );
-  }
 
   /// JSON serialization
   Map<String, dynamic> toJson() => _$RoutineModelToJson(this);

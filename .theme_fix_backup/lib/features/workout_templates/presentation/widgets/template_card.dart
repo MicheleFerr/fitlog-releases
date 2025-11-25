@@ -1,12 +1,16 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation
 /// 🎯 Feature: workout_templates
 /// 🔧 Type: widget
 /// 🌍 Localization: ✅ AppLocalizations used
 /// 🎨 Theme: ✅ ColorScheme responsive
 /// 📱 Platform: Universal
-/// 
+///
+/// This is for COMMUNITY/PUBLIC templates (shareable with others).
+/// For internal workout template cards, see:
+/// `lib/features/workout/presentation/widgets/template_card.dart`
+///
 /// Dependencies:
 /// - Riverpod: None
 /// - Firebase: None
@@ -17,10 +21,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
-class TemplateCard extends StatelessWidget {
-  
-  const TemplateCard({
+/// @deprecated Use [CommunityTemplateCard] instead to avoid naming conflicts
+/// with workout internal TemplateCard widget.
+@Deprecated('Use CommunityTemplateCard instead - avoids naming conflict with workout TemplateCard')
+typedef TemplateCard = CommunityTemplateCard;
+
+class CommunityTemplateCard extends StatelessWidget {
+
+  const CommunityTemplateCard({
     super.key,
     required this.template,
     required this.onTap,
@@ -28,7 +39,7 @@ class TemplateCard extends StatelessWidget {
     this.onDelete,
     this.onShare,
   });
-  final WorkoutTemplate template;
+  final CommunityWorkoutTemplate template;
   final VoidCallback onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -57,8 +68,8 @@ class TemplateCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _getCategoryColor(template.category),
-                    _getCategoryColor(template.category).withValues(alpha: 0.7),
+                    _getCategoryColor(context, template.category),
+                    _getCategoryColor(context, template.category).withValues(alpha: 0.7),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -71,7 +82,7 @@ class TemplateCard extends StatelessWidget {
                 children: [
                   Icon(
                     _getCategoryIcon(template.category),
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
@@ -79,7 +90,7 @@ class TemplateCard extends StatelessWidget {
                     child: Text(
                       template.category.name.toUpperCase(),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -91,22 +102,22 @@ class TemplateCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: context.colors.surface.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.public,
+                          Icon(
+                            AppIcons.public,
                             size: 12,
-                            color: Colors.white,
+                            color: context.colors.surface,
                           ),
                           const SizedBox(width: 2),
                           Text(
                             'PUBLIC',
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
+                              color: context.colors.surface,
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                             ),
@@ -149,21 +160,21 @@ class TemplateCard extends StatelessWidget {
                     Row(
                       children: [
                         _buildStat(
-                          Icons.fitness_center,
+                          AppIcons.workout,
                           '${template.exercises.length}',
                           colorScheme,
                         ),
                         const SizedBox(width: 12),
                         if (template.estimatedDurationMinutes != null)
                           _buildStat(
-                            Icons.timer,
+                            AppIcons.timer,
                             '${template.estimatedDurationMinutes}m',
                             colorScheme,
                           ),
                         if (template.visibility == TemplateVisibility.public) ...[
                           const SizedBox(width: 12),
                           _buildStat(
-                            Icons.star,
+                            AppIcons.star,
                             template.averageRating.toStringAsFixed(1),
                             colorScheme,
                           ),
@@ -193,7 +204,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onEdit!();
                       },
-                      icon: const Icon(Icons.edit, size: 18),
+                      icon: Icon(AppIcons.edit, size: 18),
                       tooltip: 'Edit',
                     ),
                   if (onShare != null)
@@ -202,7 +213,7 @@ class TemplateCard extends StatelessWidget {
                         HapticFeedback.lightImpact();
                         onShare!();
                       },
-                      icon: const Icon(Icons.share, size: 18),
+                      icon: Icon(AppIcons.share, size: 18),
                       tooltip: 'Share',
                     ),
                   if (onDelete != null)
@@ -212,7 +223,7 @@ class TemplateCard extends StatelessWidget {
                         onDelete!();
                       },
                       icon: Icon(
-                        Icons.delete,
+                        AppIcons.delete,
                         size: 18,
                         color: colorScheme.error,
                       ),
@@ -249,18 +260,18 @@ class TemplateCard extends StatelessWidget {
     );
   }
   
-  Color _getCategoryColor(TemplateCategory category) {
+  Color _getCategoryColor(BuildContext context, TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
-        return Colors.red;
+        return context.colors.error;
       case TemplateCategory.hypertrophy:
-        return Colors.blue;
+        return context.colors.primary;
       case TemplateCategory.endurance:
-        return Colors.green;
+        return context.colors.success;
       case TemplateCategory.powerlifting:
-        return Colors.deepPurple;
+        return context.colors.tertiary;
       case TemplateCategory.bodybuilding:
-        return Colors.orange;
+        return context.colors.secondary;
       case TemplateCategory.crossfit:
         return Colors.teal;
       case TemplateCategory.calisthenics:
@@ -268,34 +279,34 @@ class TemplateCard extends StatelessWidget {
       case TemplateCategory.cardio:
         return Colors.pink;
       case TemplateCategory.mixed:
-        return Colors.grey;
+        return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:
-        return Colors.blueGrey;
+        return context.colors.onSurfaceVariant;
     }
   }
   
   IconData _getCategoryIcon(TemplateCategory category) {
     switch (category) {
       case TemplateCategory.strength:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case TemplateCategory.hypertrophy:
-        return Icons.expand;
+        return AppIcons.expand;
       case TemplateCategory.endurance:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case TemplateCategory.powerlifting:
-        return Icons.sports_martial_arts;
+        return AppIcons.sportsMartialArts;
       case TemplateCategory.bodybuilding:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case TemplateCategory.crossfit:
-        return Icons.sports;
+        return AppIcons.sports;
       case TemplateCategory.calisthenics:
-        return Icons.accessibility;
+        return AppIcons.accessibility;
       case TemplateCategory.cardio:
-        return Icons.favorite;
+        return AppIcons.favorite;
       case TemplateCategory.mixed:
-        return Icons.shuffle;
+        return AppIcons.shuffle;
       case TemplateCategory.custom:
-        return Icons.tune;
+        return AppIcons.tune;
     }
   }
 }

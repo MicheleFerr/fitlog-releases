@@ -4,6 +4,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_draft_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
+import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
 
 /// Provider for the draft repository
 final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
@@ -53,20 +55,32 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   }
   final WorkoutDraftRepository _repository;
   Timer? _autoSaveTimer;
-  Timer? _debounceTimer;
+  late final Debouncer _saveDebouncer;
   Workout? _lastSavedWorkout;
-  
+
   // CPU OPTIMIZATION: Increased intervals to reduce background activity
   static const Duration _autoSaveInterval = Duration(minutes: 10);  // Reduced from 5 to 10 minutes
   static const Duration _debounceDelay = Duration(seconds: 1);      // Optimized for responsive UX
 
   void _init() {
+    // 🔐 SECURITY: Initialize save debouncer with error handling
+    _saveDebouncer = Debouncer(
+      duration: _debounceDelay,
+      onError: (error, stackTrace) {
+        AppLogger.error('Debouncer error: $error', tag: 'WorkoutAutoSave', error: error, stackTrace: stackTrace);
+        state = state.copyWith(
+          isSaving: false,
+          lastError: error.toString(),
+        );
+      },
+    );
+
     // Add lifecycle observer to save on app pause
     WidgetsBinding.instance.addObserver(this);
-    
+
     // Initialize repository
     _repository.init();
-    
+
     // Clean old drafts on startup
     _repository.clearOldDrafts();
   }
@@ -92,10 +106,9 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   /// Save workout on specific events (set completion, exercise added, etc.)
   void triggerSave(Workout workout) {
     if (!state.isAutoSaveEnabled) return;
-    
-    // Debounce rapid saves
-    _debounceTimer?.cancel();
-    _debounceTimer = Timer(_debounceDelay, () {
+
+    // 🔐 SECURITY: Use Debouncer for throttling rapid saves (1s delay)
+    _saveDebouncer.run(() {
       if (_hasWorkoutChanged(workout)) {
         _saveWorkout(workout);
       }
@@ -106,8 +119,8 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   Future<void> emergencySave(Workout workout) async {
     // Cancel timers to prevent concurrent saves
     _autoSaveTimer?.cancel();
-    _debounceTimer?.cancel();
-    
+    _saveDebouncer.cancel();
+
     // Force save regardless of changes
     await _saveWorkout(workout, force: true);
   }
@@ -115,12 +128,12 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   /// Stop auto-saving (workout completed or cancelled)
   void stopAutoSave({bool clearDraft = true}) {
     _autoSaveTimer?.cancel();
-    _debounceTimer?.cancel();
-    
+    _saveDebouncer.cancel();
+
     if (clearDraft) {
       _repository.clearCurrentDraft();
     }
-    
+
     _lastSavedWorkout = null;
   }
 
@@ -148,15 +161,15 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
         isSaving: false,
         lastSaveTime: DateTime.now(),
       );
-      
-      debugPrint('✅ Auto-save completed at ${DateTime.now()}');
+
+      AppLogger.info('Auto-save completed at ${DateTime.now()}', tag: 'WorkoutAutoSave');
     } catch (e) {
       state = state.copyWith(
         isSaving: false,
         lastError: e.toString(),
       );
-      
-      debugPrint('❌ Auto-save failed: $e');
+
+      AppLogger.error('Auto-save failed: $e', tag: 'WorkoutAutoSave', error: e);
     }
   }
 
@@ -183,10 +196,10 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   /// Toggle auto-save on/off
   void toggleAutoSave() {
     state = state.copyWith(isAutoSaveEnabled: !state.isAutoSaveEnabled);
-    
+
     if (!state.isAutoSaveEnabled) {
       _autoSaveTimer?.cancel();
-      _debounceTimer?.cancel();
+      _saveDebouncer.cancel();
     }
   }
 
@@ -208,17 +221,16 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
       _autoSaveTimer!.cancel();
       _autoSaveTimer = null;
     }
-    if (_debounceTimer != null) {
-      _debounceTimer!.cancel();
-      _debounceTimer = null;
-    }
-    
+
+    // 🔐 SECURITY: Dispose debouncer properly
+    _saveDebouncer.dispose();
+
     // Remove lifecycle observer
     WidgetsBinding.instance.removeObserver(this);
-    
+
     // Clear references to prevent memory leaks
     _lastSavedWorkout = null;
-    
+
     super.dispose();
   }
 }

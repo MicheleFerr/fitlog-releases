@@ -34,6 +34,8 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Screen di riepilogo workout completato
 class WorkoutCompletionSummaryScreen extends ConsumerWidget {
@@ -100,12 +102,13 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 🎉 Success Icon
-              Icon(
-                AppIcons.complete,
-                size: 80,
-                color: context.colors.primary,
-              ),
-              SizedBox(height: 24),
+              SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.medium,
+  color: context.colors.primary,
+),
+              const SizedBox(height: 24),
 
               // 💪 Workout Name
               Text(
@@ -116,7 +119,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // ✅ Completion Timestamp
               Text(
@@ -126,7 +129,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
 
               // 📊 Statistics Cards
               Expanded(
@@ -140,7 +143,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                         value: durationText,
                         color: context.colors.primary,
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Grid: Esercizi + Serie
                       Row(
@@ -153,7 +156,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                               color: context.colors.secondary,
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: _StatCard(
                               icon: AppIcons.repeat,
@@ -164,7 +167,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Volume Totale
                       _StatCard(
@@ -173,7 +176,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                         value: '${totalVolume.toStringAsFixed(0)} kg',
                         color: const Color(0xFF4CAF50), // Verde
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // RPE Medio (se disponibile)
                       if (averageRpe > 0)
@@ -188,7 +191,7 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                 ),
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // 🔘 Action Buttons
               Column(
@@ -199,10 +202,13 @@ class WorkoutCompletionSummaryScreen extends ConsumerWidget {
                       // TODO: Navigate to workout history detail
                       context.pop();
                     },
-                    icon: Icon(AppIcons.analytics),
+                    icon: const SemanticIcon(
+  icon: AppIcons.analytics,
+  semanticLabel: 'Analytics',
+),
                     label: Text(context.l10n.viewDetails),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Done Button
                   OutlinedButton(
@@ -268,7 +274,7 @@ class _StatCard extends StatelessWidget {
               size: 32,
               color: color,
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               value,
               style: context.textTheme.headlineMedium?.copyWith(
@@ -276,7 +282,7 @@ class _StatCard extends StatelessWidget {
                 color: context.colors.onSurface,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               label,
               style: context.textTheme.bodySmall?.copyWith(

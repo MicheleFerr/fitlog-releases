@@ -25,10 +25,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 import 'package:intl/intl.dart';
 
 /// Message bubble widget
-class MessageBubble extends ConsumerWidget {
-  final AIMessage message;
-  final bool showTypingIndicator;
-  final Function(FollowUpChip)? onChipTap; // Callback for chip tap
+class MessageBubble extends ConsumerWidget { // Callback for chip tap
 
   const MessageBubble({
     super.key,
@@ -36,6 +33,9 @@ class MessageBubble extends ConsumerWidget {
     this.showTypingIndicator = false,
     this.onChipTap,
   });
+  final AIMessage message;
+  final bool showTypingIndicator;
+  final Function(FollowUpChip)? onChipTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/feedback_settin
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Feedback Settings Screen
 ///
@@ -29,12 +31,13 @@ class FeedbackSettingsScreen extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.error,
-                size: 64,
-                color: context.colors.error,
-              ),
-              SizedBox(height: 16),
+              SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+              const SizedBox(height: 16),
               Text(
                 context.l10n.errorLoadingSettings,
                 style: context.textTheme.titleMedium,
@@ -63,7 +66,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                     color: context.colors.onPrimaryContainer,
                     size: 28,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       context.l10n.hapticDescription,
@@ -76,7 +79,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
               ),
           ),
         ),
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
 
         // Enable/Disable Switch
         Card(
@@ -112,7 +115,7 @@ class FeedbackSettingsScreen extends ConsumerWidget {
             activeTrackColor: context.colors.primary,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Intensity Selection
         Card(
@@ -129,23 +132,35 @@ class FeedbackSettingsScreen extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 SegmentedButton<HapticIntensity>(
                   segments: [
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.light,
                       label: Text(context.l10n.intensityLight),
-                      icon: Icon(AppIcons.circle, size: 12),
+                      icon: const SemanticIcon(
+  icon: AppIcons.circle,
+  semanticLabel: 'Circle',
+  size: AppIconSize.medium,
+),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.medium,
                       label: Text(context.l10n.intensityMedium),
-                      icon: Icon(AppIcons.circle, size: 16),
+                      icon: const SemanticIcon(
+  icon: AppIcons.circle,
+  semanticLabel: 'Circle',
+  size: AppIconSize.tiny,
+),
                     ),
                     ButtonSegment<HapticIntensity>(
                       value: HapticIntensity.heavy,
                       label: Text(context.l10n.intensityHeavy),
-                      icon: const Icon(AppIcons.circle, size: 20),
+                      icon: const SemanticIcon(
+  icon: AppIcons.circle,
+  semanticLabel: 'Circle',
+  size: AppIconSize.small,
+),
                     ),
                   ],
                   selected: {settings.hapticIntensity},

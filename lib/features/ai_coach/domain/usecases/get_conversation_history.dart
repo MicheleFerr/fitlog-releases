@@ -38,9 +38,9 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_re
 /// );
 /// ```
 class GetConversationHistory {
-  final ChatRepository repository;
 
   GetConversationHistory({required this.repository});
+  final ChatRepository repository;
 
   /// Fetch conversation history with pagination
   ///
@@ -67,13 +67,13 @@ class GetConversationHistory {
   }) async {
     // Validate input
     if (userId.trim().isEmpty) {
-      return Left(
+      return const Left(
         ValidationFailure('User ID cannot be empty'),
       );
     }
 
     if (limit < 1 || limit > 200) {
-      return Left(
+      return const Left(
         ValidationFailure('Limit must be between 1 and 200'),
       );
     }

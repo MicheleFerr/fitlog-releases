@@ -4,7 +4,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_tem
 void main() {
   group('ExerciseTemplate', () {
     test('should create template with default sets and reps', () {
-      final template = ExerciseTemplate(
+      const template = ExerciseTemplate(
         exerciseName: 'Squat',
         defaultWeight: 80.0,
         defaultReps: 5,
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('should apply template to create exercise sets', () {
-      final template = ExerciseTemplate(
+      const template = ExerciseTemplate(
         exerciseName: 'Bench Press',
         defaultWeight: 60.0,
         defaultReps: 8,
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('should create sets with sequential set numbers', () {
-      final template = ExerciseTemplate(
+      const template = ExerciseTemplate(
         exerciseName: 'Deadlift',
         defaultWeight: 100.0,
         defaultReps: 5,

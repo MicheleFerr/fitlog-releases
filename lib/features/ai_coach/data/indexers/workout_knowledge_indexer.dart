@@ -21,16 +21,16 @@ import 'package:intl/intl.dart';
 
 /// Indexes workout data into searchable knowledge base
 class WorkoutKnowledgeIndexer {
+
+  WorkoutKnowledgeIndexer({
+    required this.searchEngine,
+  });
   final BM25SearchEngine searchEngine;
   final DateFormat _dateFormat = DateFormat('MMMM d, y');
   final DateFormat _dayFormat = DateFormat('EEEE');
 
   // Cache for performance
   final Map<String, BM25Document> _documentCache = {};
-
-  WorkoutKnowledgeIndexer({
-    required this.searchEngine,
-  });
 
   /// Index all workouts for a user
   Future<void> indexWorkouts(List<Workout> workouts) async {

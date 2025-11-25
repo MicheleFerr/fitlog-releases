@@ -15,6 +15,7 @@
 /// - Create routine flow (7 test cases - user logged in, name validation, entity creation, notifier call, state reset, success/error snackbars)
 /// - Back button (1 test case - pops screen)
 /// - Integration (2 test cases - complete flow, edge case)
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,12 +23,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_preset.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/repositories/routine_repository.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_providers.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_creation_step2_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Stub RoutineRepository for testing (all operations succeed)
 class StubRoutineRepository implements RoutineRepository {
@@ -151,7 +152,7 @@ void main() {
         expect(find.text('Create Routine'), findsOneWidget);
 
         // Back button (arrow_back)
-        expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+        expect(find.byIcon(AppIcons.back), findsOneWidget);
       });
 
       testWidgets('renders step indicator showing 2/2 at 100%',
@@ -318,7 +319,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Error icon
-        expect(find.byIcon(Icons.error_outline), findsOneWidget);
+        expect(find.byIcon(AppIcons.error), findsOneWidget);
 
         // Error message
         expect(find.text('No preset selected'), findsOneWidget);
@@ -347,15 +348,15 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [Locale('en'), Locale('it')],
-              home: const RoutineCreationStep2Screen(),
+              supportedLocales: [Locale('en'), Locale('it')],
+              home: RoutineCreationStep2Screen(),
             ),
           ),
         );
@@ -388,15 +389,15 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [Locale('en'), Locale('it')],
-              home: const RoutineCreationStep2Screen(),
+              supportedLocales: [Locale('en'), Locale('it')],
+              home: RoutineCreationStep2Screen(),
             ),
           ),
         );
@@ -428,15 +429,15 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [Locale('en'), Locale('it')],
-              home: const RoutineCreationStep2Screen(),
+              supportedLocales: [Locale('en'), Locale('it')],
+              home: RoutineCreationStep2Screen(),
             ),
           ),
         );
@@ -474,10 +475,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Outline icon (circle_outlined)
-        expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
+        expect(find.byIcon(AppIcons.circleOutlined), findsOneWidget);
 
         // No check icon
-        expect(find.byIcon(Icons.check_circle), findsNothing);
+        expect(find.byIcon(AppIcons.checkCircle), findsNothing);
       });
 
       testWidgets('card shows check icon when template assigned',
@@ -496,10 +497,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check icon
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
+        expect(find.byIcon(AppIcons.checkCircle), findsOneWidget);
 
         // No outline icon
-        expect(find.byIcon(Icons.circle_outlined), findsNothing);
+        expect(find.byIcon(AppIcons.circleOutlined), findsNothing);
       });
 
       testWidgets('tapping card shows snackbar (template picker TODO)',
@@ -703,15 +704,15 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [Locale('en'), Locale('it')],
-              home: const RoutineCreationStep2Screen(),
+              supportedLocales: [Locale('en'), Locale('it')],
+              home: RoutineCreationStep2Screen(),
             ),
           ),
         );
@@ -790,7 +791,7 @@ void main() {
         expect(find.text('Configure Routine'), findsOneWidget);
 
         // Tap back button
-        await tester.tap(find.byIcon(Icons.arrow_back));
+        await tester.tap(find.byIcon(AppIcons.back));
         await tester.pumpAndSettle();
 
         // Note: In test environment, pop may not actually navigate back
@@ -823,15 +824,15 @@ void main() {
         await tester.pumpWidget(
           UncontrolledProviderScope(
             container: container,
-            child: MaterialApp(
-              localizationsDelegates: const [
+            child: const MaterialApp(
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [Locale('en'), Locale('it')],
-              home: const RoutineCreationStep2Screen(),
+              supportedLocales: [Locale('en'), Locale('it')],
+              home: RoutineCreationStep2Screen(),
             ),
           ),
         );
@@ -879,7 +880,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Error screen rendered
-        expect(find.byIcon(Icons.error_outline), findsOneWidget);
+        expect(find.byIcon(AppIcons.error), findsOneWidget);
         expect(find.text('No preset selected'), findsOneWidget);
 
         // "Go Back" button exists

@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/smart_training/domain/entities/smart_workout_template.dart';
 import 'package:gymbro_flutter_new/features/smart_training/presentation/providers/smart_training_providers.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Grid widget that displays smart workout templates
 class SmartTemplatesGrid extends ConsumerWidget {
@@ -59,7 +56,7 @@ class SmartTemplatesGrid extends ConsumerWidget {
         onChanged: (value) => ref.read(templateSearchProvider.notifier).state = value,
         decoration: InputDecoration(
           hintText: 'Search templates...',
-          prefixIcon: Icon(AppIcons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -143,9 +140,9 @@ class SmartTemplatesGrid extends ConsumerWidget {
               '$label: $value',
               style: Theme.of(context).textTheme.labelMedium,
             ),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             Icon(
-              AppIcons.arrowDropDown,
+              Icons.arrow_drop_down,
               size: 16,
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
@@ -161,16 +158,16 @@ class SmartTemplatesGrid extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.searchOff,
+            Icons.search_off,
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             'No templates found',
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Try adjusting your filters',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -238,8 +235,8 @@ class SmartTemplateCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _getDifficultyColor(context, template.difficulty),
-                    _getDifficultyColor(context, template.difficulty).withValues(alpha: 0.7),
+                    _getDifficultyColor(template.difficulty),
+                    _getDifficultyColor(template.difficulty).withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: const BorderRadius.vertical(
@@ -261,31 +258,31 @@ class SmartTemplateCard extends ConsumerWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: context.colors.warning,
+                              color: Colors.amber,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'PRO',
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: context.colors.onSurface,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: context.colors.onSurface.withValues(alpha: 0.54),
+                            color: Colors.black54,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             '${template.estimatedDuration}min',
                             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: context.colors.surface,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -301,13 +298,13 @@ class SmartTemplateCard extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.onSurface.withValues(alpha: 0.54),
+                        color: Colors.black54,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         _getDifficultyText(l10n, template.difficulty),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: context.colors.surface,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -331,7 +328,7 @@ class SmartTemplateCard extends ConsumerWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       template.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -344,11 +341,11 @@ class SmartTemplateCard extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          AppIcons.workout,
+                          Icons.fitness_center,
                           size: 16,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           '${template.exercises.length} exercises',
                           style: Theme.of(context).textTheme.labelSmall,
@@ -356,12 +353,12 @@ class SmartTemplateCard extends ConsumerWidget {
                         const Spacer(),
                         Row(
                           children: [
-                            Icon(
-                              AppIcons.star,
+                            const Icon(
+                              Icons.star,
                               size: 16,
-                              color: context.colors.warning,
+                              color: Colors.amber,
                             ),
-                            SizedBox(width: 2),
+                            const SizedBox(width: 2),
                             Text(
                               template.averageRating.toStringAsFixed(1),
                               style: Theme.of(context).textTheme.labelSmall,
@@ -397,23 +394,23 @@ class SmartTemplateCard extends ConsumerWidget {
               Navigator.of(context).pop();
               // TODO: Start workout from template
             },
-            child: Text('Start Workout'),
+            child: const Text('Start Workout'),
           ),
         ],
       ),
     );
   }
 
-  Color _getDifficultyColor(BuildContext context, DifficultyLevel difficulty) {
+  Color _getDifficultyColor(DifficultyLevel difficulty) {
     switch (difficulty) {
       case DifficultyLevel.beginner:
-        return context.colors.success;
+        return Colors.green;
       case DifficultyLevel.intermediate:
-        return context.colors.primary;
+        return Colors.blue;
       case DifficultyLevel.advanced:
-        return context.colors.secondary;
+        return Colors.orange;
       case DifficultyLevel.expert:
-        return context.colors.error;
+        return Colors.red;
     }
   }
 
@@ -447,31 +444,30 @@ class _DifficultyFilterSheet extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
-          RadioGroup<DifficultyLevel?>(
-            groupValue: currentFilter.difficulty,
-            onChanged: (value) {
-              ref.read(templateFilterProvider.notifier).state =
-                  currentFilter.copyWith(difficulty: value);
-              Navigator.of(context).pop();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...DifficultyLevel.values.map((difficulty) =>
-                  ListTile(
-                    title: Text(difficulty.name.toUpperCase()),
-                    leading: Radio<DifficultyLevel?>(
-                      value: difficulty,
-                    ),
-                  ),
-                ),
-                const ListTile(
-                  title: Text('ALL'),
-                  leading: Radio<DifficultyLevel?>(
-                    value: null,
-                  ),
-                ),
-              ],
+          ...DifficultyLevel.values.map((difficulty) => 
+            ListTile(
+              title: Text(difficulty.name.toUpperCase()),
+              leading: Radio<DifficultyLevel?>(
+                value: difficulty,
+                groupValue: currentFilter.difficulty,
+                onChanged: (value) {
+                  ref.read(templateFilterProvider.notifier).state = 
+                      currentFilter.copyWith(difficulty: value);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('ALL'),
+            leading: Radio<DifficultyLevel?>(
+              value: null,
+              groupValue: currentFilter.difficulty,
+              onChanged: (value) {
+                ref.read(templateFilterProvider.notifier).state = 
+                    currentFilter.copyWith(difficulty: null);
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ],
@@ -495,31 +491,30 @@ class _CategoryFilterSheet extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
-          RadioGroup<WorkoutCategory?>(
-            groupValue: currentFilter.category,
-            onChanged: (value) {
-              ref.read(templateFilterProvider.notifier).state =
-                  currentFilter.copyWith(category: value);
-              Navigator.of(context).pop();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...WorkoutCategory.values.map((category) =>
-                  ListTile(
-                    title: Text(category.name.toUpperCase()),
-                    leading: Radio<WorkoutCategory?>(
-                      value: category,
-                    ),
-                  ),
-                ),
-                const ListTile(
-                  title: Text('ALL'),
-                  leading: Radio<WorkoutCategory?>(
-                    value: null,
-                  ),
-                ),
-              ],
+          ...WorkoutCategory.values.map((category) => 
+            ListTile(
+              title: Text(category.name.toUpperCase()),
+              leading: Radio<WorkoutCategory?>(
+                value: category,
+                groupValue: currentFilter.category,
+                onChanged: (value) {
+                  ref.read(templateFilterProvider.notifier).state = 
+                      currentFilter.copyWith(category: value);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('ALL'),
+            leading: Radio<WorkoutCategory?>(
+              value: null,
+              groupValue: currentFilter.category,
+              onChanged: (value) {
+                ref.read(templateFilterProvider.notifier).state = 
+                    currentFilter.copyWith(category: null);
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ],
@@ -532,7 +527,7 @@ class _StyleFilterSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFilter = ref.watch(templateFilterProvider);
-
+    
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -543,31 +538,30 @@ class _StyleFilterSheet extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
-          RadioGroup<TrainingStyle?>(
-            groupValue: currentFilter.style,
-            onChanged: (value) {
-              ref.read(templateFilterProvider.notifier).state =
-                  currentFilter.copyWith(style: value);
-              Navigator.of(context).pop();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...TrainingStyle.values.map((style) =>
-                  ListTile(
-                    title: Text(style.name.toUpperCase()),
-                    leading: Radio<TrainingStyle?>(
-                      value: style,
-                    ),
-                  ),
-                ),
-                const ListTile(
-                  title: Text('ALL'),
-                  leading: Radio<TrainingStyle?>(
-                    value: null,
-                  ),
-                ),
-              ],
+          ...TrainingStyle.values.map((style) => 
+            ListTile(
+              title: Text(style.name.toUpperCase()),
+              leading: Radio<TrainingStyle?>(
+                value: style,
+                groupValue: currentFilter.style,
+                onChanged: (value) {
+                  ref.read(templateFilterProvider.notifier).state = 
+                      currentFilter.copyWith(style: value);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('ALL'),
+            leading: Radio<TrainingStyle?>(
+              value: null,
+              groupValue: currentFilter.style,
+              onChanged: (value) {
+                ref.read(templateFilterProvider.notifier).state = 
+                    currentFilter.copyWith(style: null);
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ],
@@ -580,9 +574,9 @@ class _DurationFilterSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentFilter = ref.watch(templateFilterProvider);
-
+    
     final durations = [30, 45, 60, 75, 90];
-
+    
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -593,31 +587,30 @@ class _DurationFilterSheet extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
-          RadioGroup<int?>(
-            groupValue: currentFilter.maxDuration,
-            onChanged: (value) {
-              ref.read(templateFilterProvider.notifier).state =
-                  currentFilter.copyWith(maxDuration: value);
-              Navigator.of(context).pop();
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ...durations.map((duration) =>
-                  ListTile(
-                    title: Text('$duration minutes'),
-                    leading: Radio<int?>(
-                      value: duration,
-                    ),
-                  ),
-                ),
-                const ListTile(
-                  title: Text('ANY DURATION'),
-                  leading: Radio<int?>(
-                    value: null,
-                  ),
-                ),
-              ],
+          ...durations.map((duration) => 
+            ListTile(
+              title: Text('$duration minutes'),
+              leading: Radio<int?>(
+                value: duration,
+                groupValue: currentFilter.maxDuration,
+                onChanged: (value) {
+                  ref.read(templateFilterProvider.notifier).state = 
+                      currentFilter.copyWith(maxDuration: value);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('ANY DURATION'),
+            leading: Radio<int?>(
+              value: null,
+              groupValue: currentFilter.maxDuration,
+              onChanged: (value) {
+                ref.read(templateFilterProvider.notifier).state = 
+                    currentFilter.copyWith(maxDuration: null);
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ],

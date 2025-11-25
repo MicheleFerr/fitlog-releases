@@ -17,12 +17,9 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/skip_tracker.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Result returned when user confirms skip
 class SkipDayResult {
@@ -104,12 +101,12 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        AppIcons.eventBusy,
+                        Icons.event_busy,
                         color: context.colors.error,
                         size: 24,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,9 +118,9 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                               color: context.colors.onSurface,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
-                            _formatDate(context, widget.date),
+                            _formatDate(widget.date),
                             style: context.textTheme.bodyMedium?.copyWith(
                               color: context.colors.onSurface.withValues(alpha: 0.7),
                             ),
@@ -134,39 +131,39 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   ],
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Warning for consecutive skips
                 if (isConsecutiveSkip) ...[
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: context.colors.secondary.withValues(alpha: 0.1),
+                      color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: context.colors.secondary.withValues(alpha: 0.3),
+                        color: Colors.orange.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          AppIcons.warningAmberRounded,
-                          color: context.colors.secondary,
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.orange,
                           size: 24,
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             'You have ${widget.routine.skipTracker.currentSkipStreak} consecutive skip(s). Consider recovering them to maintain consistency.',
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: context.colors.secondary.withValues(red: context.colors.secondary.r * 0.6, green: context.colors.secondary.g * 0.6, blue: context.colors.secondary.b * 0.6),
+                              color: Colors.orange[800],
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
 
                 // Reason selection
@@ -177,7 +174,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
 
                 // Reason chips
                 Wrap(
@@ -186,7 +183,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   children: _buildReasonChips(),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Optional note
                 Text(
@@ -196,7 +193,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _noteController,
                   maxLines: 3,
@@ -217,7 +214,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                 // Impact preview
                 _buildImpactPreview(),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Actions
                 Row(
@@ -230,7 +227,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                         style: TextStyle(color: context.colors.onSurface),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     ElevatedButton(
                       onPressed: _selectedReason == null ? null : _confirmSkip,
                       style: ElevatedButton.styleFrom(
@@ -258,13 +255,13 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
 
   List<Widget> _buildReasonChips() {
     final reasons = [
-      (SkipReasons.sick, AppIcons.sick, 'Sick'),
-      (SkipReasons.injury, AppIcons.healing, 'Injury'),
-      (SkipReasons.busy, AppIcons.work, 'Busy'),
-      (SkipReasons.tired, AppIcons.bedtime, 'Tired'),
-      (SkipReasons.travel, AppIcons.flight, 'Travel'),
-      (SkipReasons.weather, AppIcons.cloud, 'Weather'),
-      (SkipReasons.other, AppIcons.moreHoriz, 'Other'),
+      (SkipReasons.sick, Icons.sick, 'Sick'),
+      (SkipReasons.injury, Icons.healing, 'Injury'),
+      (SkipReasons.busy, Icons.work, 'Busy'),
+      (SkipReasons.tired, Icons.bedtime, 'Tired'),
+      (SkipReasons.travel, Icons.flight, 'Travel'),
+      (SkipReasons.weather, Icons.cloud, 'Weather'),
+      (SkipReasons.other, Icons.more_horiz, 'Other'),
     ];
 
     return reasons.map((reason) {
@@ -281,7 +278,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
                   ? context.colors.onPrimary
                   : context.colors.onSurface.withValues(alpha: 0.7),
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Text(reason.$3),
           ],
         ),
@@ -328,11 +325,11 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           Row(
             children: [
               Icon(
-                AppIcons.info,
+                Icons.info_outline,
                 size: 20,
                 color: context.colors.primary,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Impact on your progress',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -344,7 +341,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
           const SizedBox(height: 12),
           _buildImpactRow(
-            icon: AppIcons.streak,
+            icon: Icons.local_fire_department,
             label: 'Current Streak',
             value: '$currentStreak days',
             change: currentStreak > 0 ? 'Will be lost' : null,
@@ -352,7 +349,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
           const SizedBox(height: 8),
           _buildImpactRow(
-            icon: AppIcons.trendUp,
+            icon: Icons.trending_up,
             label: 'Adherence Rate',
             value: '${currentAdherence.toInt()}%',
             change: '${adherenceChange >= 0 ? '+' : ''}${adherenceChange.toStringAsFixed(1)}%',
@@ -377,7 +374,7 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           size: 18,
           color: context.colors.onSurface.withValues(alpha: 0.7),
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
@@ -394,18 +391,18 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
           ),
         ),
         if (change != null) ...[
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Icon(
-            isNegative ? AppIcons.arrowDownward : AppIcons.arrowUpward,
+            isNegative ? Icons.arrow_downward : Icons.arrow_upward,
             size: 14,
-            color: isNegative ? context.colors.error : context.colors.success,
+            color: isNegative ? context.colors.error : Colors.green,
           ),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             change,
             style: context.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isNegative ? context.colors.error : context.colors.success,
+              color: isNegative ? context.colors.error : Colors.green,
             ),
           ),
         ],
@@ -426,9 +423,11 @@ class _SkipDayDialogState extends State<SkipDayDialog> {
     Navigator.of(context).pop(result);
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
-    final locale = Localizations.localeOf(context).toString();
-    final dateFormat = DateFormat('MMM d, y', locale);
-    return dateFormat.format(date);
+  String _formatDate(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/core/utils/persistent_logger.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class DebugLogsScreen extends StatefulWidget {
   const DebugLogsScreen({super.key});
@@ -68,15 +69,24 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(AppIcons.refresh),
+            icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
             onPressed: _loadLogs,
           ),
           IconButton(
-            icon: const Icon(AppIcons.share),
+            icon: const SemanticIcon(
+  icon: AppIcons.share,
+  semanticLabel: 'Share',
+),
             onPressed: _shareLogs,
           ),
           IconButton(
-            icon: Icon(AppIcons.delete),
+            icon: const SemanticIcon(
+  icon: AppIcons.delete,
+  semanticLabel: 'Delete',
+),
             onPressed: _clearLogs,
           ),
         ],
@@ -117,7 +127,10 @@ class _DebugLogsScreenState extends State<DebugLogsScreen> {
       //       SnackBar(content: Text(AppLocalizations.of(context)!.logsCopiedToClipboard)),
       //     );
       //   },
-      //   child: const Icon(AppIcons.iconCopy),
+      //   child: const SemanticIcon(
+      //     icon: AppIcons.iconCopy,
+      //     semanticLabel: 'Icon copy',
+      //   ),
       // ),
     );
   }

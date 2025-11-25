@@ -45,9 +45,9 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_re
 /// );
 /// ```
 class SendChatMessage {
-  final ChatRepository repository;
 
   SendChatMessage({required this.repository});
+  final ChatRepository repository;
 
   /// Send message and stream AI response
   ///
@@ -76,14 +76,14 @@ class SendChatMessage {
     final trimmedMessage = message.trim();
 
     if (trimmedMessage.isEmpty) {
-      yield Left(
+      yield const Left(
         ValidationFailure('Message cannot be empty'),
       );
       return;
     }
 
     if (trimmedMessage.length > 2000) {
-      yield Left(
+      yield const Left(
         ValidationFailure('Message too long (max 2000 characters)'),
       );
       return;

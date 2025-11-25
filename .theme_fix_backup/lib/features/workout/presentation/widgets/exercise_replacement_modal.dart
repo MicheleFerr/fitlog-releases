@@ -1,10 +1,19 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/services/fuzzy_search_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
+import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 class ExerciseReplacementModal extends ConsumerStatefulWidget {
   
@@ -40,59 +49,271 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   String _searchQuery = '';
   ExerciseCategory? _filterCategory;
   bool _showOnlyCompatible = false; // Mostra tutti di default
-  
+  bool _isSearching = false;
+  Timer? _searchDebounce;
+  List<exercise_db.Exercise> _dbExercises = [];
+  List<ExerciseSearchResult> _fuzzyResults = [];
+  Exercise? _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
+
+  // ✅ Cache statica per esercizi arricchiti (condivisa tra tutte le istanze del modal)
+  // Chiave: nome esercizio lowercase
+  // Valore: Exercise arricchito con category corretta dal DB
+  static final Map<String, Exercise> _enrichedExercisesCache = {};
+
+  /// Svuota la cache degli esercizi arricchiti
+  /// Utile quando il database JSON viene aggiornato o per testing
+  static void clearEnrichedCache() {
+    _enrichedExercisesCache.clear();
+    debugPrint('🗑️ [ExerciseReplacement] Cache cleared');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDatabaseExercises();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
+  }
+
+  /// Load exercises from JSON database for fuzzy search
+  Future<void> _loadDatabaseExercises() async {
+    try {
+      final locale = Localizations.localeOf(context);
+      final repository = JsonExerciseRepository(locale: locale);
+      final exercises = await repository.getAllExercises();
+      if (mounted) {
+        setState(() {
+          _dbExercises = exercises;
+        });
+        // Arricchisci currentExercise con dati dal DB dopo aver caricato il database
+        _enrichCurrentExerciseFromDB();
+      }
+    } catch (e) {
+      debugPrint('Error loading database exercises: $e');
+    }
+  }
+
+  /// Arricchisce currentExercise con dati dal database JSON (categoria, muscoli, ecc.)
+  /// Questo permette alle smart suggestions di funzionare correttamente
+  /// ✅ Usa cache statica per evitare lookup ripetuti
+  void _enrichCurrentExerciseFromDB() {
+    final exerciseNameLower = widget.currentExercise.name.toLowerCase();
+
+    // ✅ STEP 1: Controlla cache prima di fare lookup nel DB
+    if (_enrichedExercisesCache.containsKey(exerciseNameLower)) {
+      setState(() {
+        _enrichedCurrentExercise = _enrichedExercisesCache[exerciseNameLower];
+      });
+      debugPrint('⚡ [ExerciseReplacement] Loaded "${widget.currentExercise.name}" from cache (category: ${_enrichedCurrentExercise?.category.name})');
+      return;
+    }
+
+    // ✅ STEP 2: Cache miss → fai lookup nel database
+    if (_dbExercises.isEmpty) {
+      _enrichedCurrentExercise = widget.currentExercise;
+      return;
+    }
+
+    try {
+      // Cerca esercizio nel database per nome (case-insensitive)
+      final dbExercise = _dbExercises.firstWhere(
+        (ex) => ex.nome.toLowerCase() == exerciseNameLower,
+        orElse: () => throw Exception('Exercise not found'),
+      );
+
+      // Mappa categoria dai muscoli del database
+      final enrichedCategory = _mapCategoryFromMuscles(dbExercise.focus);
+
+      // Crea esercizio arricchito solo se categoria è diversa da quella attuale
+      // O se categoria attuale è "other" (default fallback)
+      if (widget.currentExercise.category == ExerciseCategory.other ||
+          widget.currentExercise.category != enrichedCategory) {
+        final enrichedExercise = widget.currentExercise.copyWith(
+          category: enrichedCategory,
+        );
+
+        setState(() {
+          _enrichedCurrentExercise = enrichedExercise;
+        });
+
+        // ✅ STEP 3: Salva in cache per riutilizzo futuro
+        _enrichedExercisesCache[exerciseNameLower] = enrichedExercise;
+
+        debugPrint('✅ [ExerciseReplacement] Enriched "${widget.currentExercise.name}" with category: ${enrichedCategory.name} (cached)');
+        debugPrint('📊 [ExerciseReplacement] Cache size: ${_enrichedExercisesCache.length} exercises');
+      } else {
+        // Categoria già corretta → usa esercizio originale
+        _enrichedCurrentExercise = widget.currentExercise;
+      }
+    } catch (e) {
+      debugPrint('⚠️ [ExerciseReplacement] Could not enrich exercise "${widget.currentExercise.name}": $e');
+      // Fallback: usa currentExercise originale
+      _enrichedCurrentExercise = widget.currentExercise;
+    }
+  }
+
+  /// Perform fuzzy search with debouncing
+  void _performFuzzySearch(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _fuzzyResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    // Cancel previous search
+    _searchDebounce?.cancel();
+
+    // Show loading
+    setState(() => _isSearching = true);
+
+    // Debounce search (300ms)
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+      if (_dbExercises.isEmpty) {
+        setState(() => _isSearching = false);
+        return;
+      }
+
+      final locale = Localizations.localeOf(context).languageCode;
+      final results = FuzzySearchService.searchExercises(
+        query: query,
+        allExercises: _dbExercises,
+        locale: locale,
+      );
+
+      if (mounted) {
+        setState(() {
+          _fuzzyResults = results;
+          _isSearching = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     final exercisesAsync = ref.watch(exerciseJsonProvider);
-    
+
     // Get exercises from provider
     final allExercises = exercisesAsync.maybeWhen(
       data: (exercises) => exercises,
       orElse: () => <Exercise>[],
     );
-    
-    // Get suggestions or all exercises based on toggle
+
+    // Usa esercizio arricchito con dati dal DB (se disponibile) per matching più accurato
+    final currentExerciseForMatching = _enrichedCurrentExercise ?? widget.currentExercise;
+
+    // Get suggestions or all exercises based on search/toggle
     List<ExerciseSuggestion> displayList;
-    
-    if (_showOnlyCompatible) {
-      // Show smart suggestions only
-      displayList = ExerciseCompatibilityService.getSuggestedReplacements(
-        widget.currentExercise,
-        allExercises,
-      );
+
+    if (_searchQuery.isNotEmpty && _fuzzyResults.isNotEmpty) {
+      // Use fuzzy search results with hybrid scoring (fuzzy + compatibility)
+      displayList = _fuzzyResults.map((fuzzyResult) {
+        // Try to find existing workout exercise with same name
+        Exercise? matchingWorkoutExercise;
+        try {
+          matchingWorkoutExercise = allExercises.firstWhere(
+            (ex) => ex.name.toLowerCase() == fuzzyResult.exercise.nome.toLowerCase(),
+          );
+        } catch (e) {
+          // Exercise not found in workout provider, create minimal Exercise from DB exercise
+          matchingWorkoutExercise = Exercise(
+            name: fuzzyResult.exercise.nome,
+            type: ExerciseType.single, // Default to single exercise
+            category: _mapCategoryFromMuscles(fuzzyResult.exercise.focus),
+          );
+        }
+
+        // Calculate compatibility between current exercise and candidate
+        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
+          currentExerciseForMatching,
+          matchingWorkoutExercise,
+        );
+
+        // Hybrid score: 50% fuzzy name similarity + 50% muscle/pattern compatibility
+        // Fuzzy score is 0-1, compatibility is 0-100
+        // Convert fuzzy to 0-100 scale and average
+        final fuzzyScore100 = fuzzyResult.score * 100; // 0-1 → 0-100
+        final hybridScore = (fuzzyScore100 * 0.5) + (compatibility * 0.5);
+
+        return ExerciseSuggestion(
+          exercise: matchingWorkoutExercise,
+          compatibilityScore: hybridScore,
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
+        );
+      }).toList()
+        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
+    } else if (_showOnlyCompatible) {
+      // Show smart suggestions from ENTIRE database (1550+ exercises)
+      // Use all DB exercises with compatibility scoring
+      displayList = _dbExercises.map((dbExercise) {
+        // Try to find existing workout exercise with same name
+        Exercise? matchingWorkoutExercise;
+        try {
+          matchingWorkoutExercise = allExercises.firstWhere(
+            (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
+          );
+        } catch (e) {
+          // Exercise not found in workout provider, create minimal Exercise from DB exercise
+          matchingWorkoutExercise = Exercise(
+            name: dbExercise.nome,
+            type: ExerciseType.single,
+            category: _mapCategoryFromMuscles(dbExercise.focus),
+          );
+        }
+
+        // Calculate compatibility
+        final compatibility = ExerciseCompatibilityService.calculateCompatibility(
+          currentExerciseForMatching,
+          matchingWorkoutExercise,
+        );
+
+        return ExerciseSuggestion(
+          exercise: matchingWorkoutExercise,
+          compatibilityScore: compatibility,
+          reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
+        );
+      }).toList()
+        // Filter: only show suggestions with compatibility >= 30%
+        ..removeWhere((s) => s.compatibilityScore < 30)
+        // Sort by compatibility descending
+        ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore))
+        // Limit to top 20 suggestions (avoid overwhelming UI)
+        ..take(20).toList();
     } else {
-      // Show all exercises with compatibility scores
+      // Show all exercises with compatibility scores (no search query)
       displayList = allExercises.map((exercise) {
         // Special handling for same exercise
-        if (exercise.name == widget.currentExercise.name) {
+        if (exercise.name == currentExerciseForMatching.name) {
           return ExerciseSuggestion(
             exercise: exercise,
             compatibilityScore: 100, // Show current exercise at top
-            reason: _getCompatibilityReason(100, exercise),
+            reason: _getCompatibilityReason(100, exercise, currentExerciseForMatching),
           );
         }
-        
+
         final compatibility = ExerciseCompatibilityService.calculateCompatibility(
-          widget.currentExercise,
+          currentExerciseForMatching,
           exercise,
         );
         return ExerciseSuggestion(
           exercise: exercise,
           compatibilityScore: compatibility,
-          reason: _getCompatibilityReason(compatibility, exercise),
+          reason: _getCompatibilityReason(compatibility, exercise, currentExerciseForMatching),
         );
       }).toList()
         ..sort((a, b) => b.compatibilityScore.compareTo(a.compatibilityScore));
     }
-    
-    // Filter based on search and category
+
+    // Filter based on category only (search filtering is done by fuzzy search)
     final filteredSuggestions = displayList.where((s) {
-      if (_searchQuery.isNotEmpty && 
-          !s.exercise.name.toLowerCase().contains(_searchQuery.toLowerCase())) {
-        return false;
-      }
       if (_filterCategory != null && s.exercise.category != _filterCategory) {
         return false;
       }
@@ -127,7 +348,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                 Row(
                   children: [
                     Icon(
-                      Icons.swap_horiz_rounded,
+                      AppIcons.swapHorizRounded,
                       color: theme.colorScheme.primary,
                       size: 28,
                     ),
@@ -153,7 +374,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     ),
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close),
+                      icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     ),
                   ],
                 ),
@@ -173,7 +397,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         color: theme.colorScheme.primary,
                         size: 20,
                       ),
@@ -181,8 +405,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       Expanded(
                         child: Text(
                           l10n.replacementKeepsSetsAndReps,
-                          style: TextStyle(
-                            fontSize: 13,
+                          style: context.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
@@ -195,16 +418,33 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                 
                 // Search bar
                 TextField(
-                  onChanged: (value) => setState(() => _searchQuery = value),
+                  onChanged: (value) {
+                    setState(() => _searchQuery = value);
+                    _performFuzzySearch(value);
+                  },
                   decoration: InputDecoration(
                     hintText: l10n.searchExercises,
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            onPressed: () => setState(() => _searchQuery = ''),
-                            icon: const Icon(Icons.clear),
+                    prefixIcon: const SemanticIcon(
+  icon: AppIcons.search,
+  semanticLabel: 'Search',
+),
+                    suffixIcon: _isSearching
+                        ? const Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: LoadingIndicator(size: 20),
                           )
-                        : null,
+                        : (_searchQuery.isNotEmpty
+                            ? IconButton(
+                                onPressed: () {
+                                  setState(() => _searchQuery = '');
+                                  _performFuzzySearch('');
+                                },
+                                icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
+                              )
+                            : null),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -225,13 +465,14 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                         label: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.auto_awesome,
-                              size: 16,
-                              color: _showOnlyCompatible 
+                            SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.tiny,
+  color: _showOnlyCompatible 
                                   ? theme.colorScheme.onPrimary
                                   : theme.colorScheme.onSurface,
-                            ),
+),
                             const SizedBox(width: 4),
                             Text(l10n.smartSuggestions),
                           ],
@@ -270,17 +511,18 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           Expanded(
             child: exercisesAsync.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: theme.colorScheme.error,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error,
+),
                     const SizedBox(height: 16),
                     Text(
                       l10n.errorLoadingExercises,
@@ -294,10 +536,12 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.search_off,
-                          size: 64,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                        SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -333,17 +577,17 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     IconData compatibilityIcon;
     
     if (suggestion.compatibilityScore >= 80) {
-      compatibilityColor = Colors.green;
-      compatibilityIcon = Icons.star;
+      compatibilityColor = context.colors.success;
+      compatibilityIcon = AppIcons.star;
     } else if (suggestion.compatibilityScore >= 60) {
-      compatibilityColor = Colors.orange;
-      compatibilityIcon = Icons.star_half;
+      compatibilityColor = context.colors.secondary;
+      compatibilityIcon = AppIcons.starHalf;
     } else if (suggestion.compatibilityScore >= 40) {
-      compatibilityColor = Colors.amber;
-      compatibilityIcon = Icons.star_outline;
+      compatibilityColor = context.colors.warning;
+      compatibilityIcon = AppIcons.star;
     } else {
       compatibilityColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
-      compatibilityIcon = Icons.star_border;
+      compatibilityIcon = AppIcons.starOutline;
     }
     
     return Padding(
@@ -417,8 +661,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                       const SizedBox(width: 4),
                       Text(
                         '${suggestion.compatibilityScore.toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: context.textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: compatibilityColor,
                         ),
@@ -464,17 +707,17 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.replacementKeepsSetsAndReps,
-                      style: TextStyle(
-                        fontSize: 12,
+                      style: context.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -500,7 +743,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
                   content: Row(
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.complete,
                         color: theme.colorScheme.onTertiary,
                       ),
                       const SizedBox(width: 8),
@@ -542,21 +785,21 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   IconData _getCategoryIcon(ExerciseCategory category) {
     switch (category) {
       case ExerciseCategory.chest:
-        return Icons.fitness_center;
+        return AppIcons.workout;
       case ExerciseCategory.back:
-        return Icons.rowing;
+        return AppIcons.rowing;
       case ExerciseCategory.shoulders:
-        return Icons.accessibility_new;
+        return AppIcons.accessibility;
       case ExerciseCategory.arms:
-        return Icons.sports_gymnastics;
+        return AppIcons.sportsGymnastics;
       case ExerciseCategory.legs:
-        return Icons.directions_run;
+        return AppIcons.cardio;
       case ExerciseCategory.abs:
-        return Icons.self_improvement;
+        return AppIcons.flexibility;
       case ExerciseCategory.cardio:
-        return Icons.favorite;
+        return AppIcons.favorite;
       case ExerciseCategory.other:
-        return Icons.sports;
+        return AppIcons.sports;
     }
   }
   
@@ -570,27 +813,27 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
       case ExerciseCategory.shoulders:
         return colors.tertiary;
       case ExerciseCategory.arms:
-        return Colors.orange;
+        return context.colors.secondary;
       case ExerciseCategory.legs:
-        return Colors.green;
+        return context.colors.success;
       case ExerciseCategory.abs:
-        return Colors.purple;
+        return context.colors.tertiary;
       case ExerciseCategory.cardio:
-        return Colors.red;
+        return context.colors.error;
       case ExerciseCategory.other:
         return colors.onSurface.withValues(alpha: 0.5);
     }
   }
   
-  String _getCompatibilityReason(double score, Exercise exercise) {
+  String _getCompatibilityReason(double score, Exercise exercise, Exercise currentExercise) {
     final l10n = AppLocalizations.of(context);
-    
-    if (exercise.name == widget.currentExercise.name) {
+
+    if (exercise.name == currentExercise.name) {
       return l10n.currentExercise;
     }
-    
+
     if (score >= 80) {
-      if (exercise.category == widget.currentExercise.category) {
+      if (exercise.category == currentExercise.category) {
         return l10n.excellentReplacement;
       }
       return l10n.highlyCompatible;
@@ -601,5 +844,30 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     } else {
       return l10n.differentMuscleGroup;
     }
+  }
+
+  /// Map database exercise muscles to workout category
+  ExerciseCategory _mapCategoryFromMuscles(List<String> muscles) {
+    // Convert to uppercase for case-insensitive matching
+    final musclesUpper = muscles.map((m) => m.toUpperCase()).toList();
+
+    // Check each muscle group
+    if (musclesUpper.any((m) => m.contains('PETT') || m.contains('CHEST') || m.contains('PECS'))) {
+      return ExerciseCategory.chest;
+    } else if (musclesUpper.any((m) => m.contains('DORS') || m.contains('LAT') || m.contains('BACK'))) {
+      return ExerciseCategory.back;
+    } else if (musclesUpper.any((m) => m.contains('SPALL') || m.contains('DELT') || m.contains('SHOULDER'))) {
+      return ExerciseCategory.shoulders;
+    } else if (musclesUpper.any((m) => m.contains('BRAC') || m.contains('BICIP') || m.contains('TRIC') || m.contains('ARM'))) {
+      return ExerciseCategory.arms;
+    } else if (musclesUpper.any((m) => m.contains('QUAD') || m.contains('GLUT') || m.contains('FEMO') || m.contains('POLP') || m.contains('LEG'))) {
+      return ExerciseCategory.legs;
+    } else if (musclesUpper.any((m) => m.contains('CORE') || m.contains('ABS') || m.contains('ADDOME'))) {
+      return ExerciseCategory.abs;
+    } else if (musclesUpper.any((m) => m.contains('CARDIO'))) {
+      return ExerciseCategory.cardio;
+    }
+
+    return ExerciseCategory.other;
   }
 }

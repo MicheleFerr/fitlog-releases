@@ -27,6 +27,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
@@ -44,13 +45,13 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 ///   // Initialize Health Connect
 /// }
 /// ```
-class HealthConnectConsentDialog extends ConsumerStatefulWidget {
-  final String consentVersion; // e.g., '1.0', '1.1'
+class HealthConnectConsentDialog extends ConsumerStatefulWidget { // e.g., '1.0', '1.1'
 
   const HealthConnectConsentDialog({
     super.key,
     this.consentVersion = '1.0',
   });
+  final String consentVersion;
 
   @override
   ConsumerState<HealthConnectConsentDialog> createState() =>
@@ -67,7 +68,7 @@ class _HealthConnectConsentDialogState
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.health_and_safety, color: context.colors.primary),
+          Icon(AppIcons.healthAndSafety, color: context.colors.primary),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -98,7 +99,7 @@ class _HealthConnectConsentDialogState
                   Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        AppIcons.info,
                         color: context.colors.primary,
                         size: 20,
                       ),
@@ -140,25 +141,25 @@ class _HealthConnectConsentDialogState
                   const SizedBox(height: 12),
                   _buildHealthDataItem(
                     context,
-                    Icons.directions_walk,
+                    AppIcons.directionsWalk,
                     'Step Count',
                     'Daily activity level assessment',
                   ),
                   _buildHealthDataItem(
                     context,
-                    Icons.favorite,
+                    AppIcons.favorite,
                     'Heart Rate',
                     'Recovery state and workout intensity',
                   ),
                   _buildHealthDataItem(
                     context,
-                    Icons.fitness_center,
+                    AppIcons.workout,
                     'Workout Data',
                     'Training frequency and volume tracking',
                   ),
                   _buildHealthDataItem(
                     context,
-                    Icons.local_fire_department,
+                    AppIcons.streak,
                     'Active Energy',
                     'Caloric expenditure monitoring',
                   ),
@@ -192,7 +193,7 @@ class _HealthConnectConsentDialogState
                   Row(
                     children: [
                       Icon(
-                        Icons.check_circle,
+                        AppIcons.checkCircle,
                         color: context.colors.primary,
                         size: 20,
                       ),
@@ -214,7 +215,7 @@ class _HealthConnectConsentDialogState
             const SizedBox(height: 16),
 
             // Consent checkboxes (GDPR: unchecked by default)
-            Container(
+            DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: _consentGiven
@@ -280,7 +281,7 @@ class _HealthConnectConsentDialogState
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.shield, color: context.colors.primary, size: 20),
+                      Icon(AppIcons.shield, color: context.colors.primary, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         'Your Rights (GDPR)',
@@ -330,7 +331,7 @@ class _HealthConnectConsentDialogState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.policy,
+                    AppIcons.policyOutlined,
                     color: context.colors.primary,
                     size: 16,
                   ),
@@ -433,7 +434,7 @@ class _HealthConnectConsentDialogState
       child: Row(
         children: [
           Icon(
-            Icons.check,
+            AppIcons.check,
             size: 16,
             color: context.colors.tertiary,
           ),
@@ -455,7 +456,7 @@ class _HealthConnectConsentDialogState
       child: Row(
         children: [
           Icon(
-            Icons.circle,
+            AppIcons.circle,
             size: 8,
             color: context.colors.primary,
           ),
@@ -501,7 +502,7 @@ class RevokeHealthConnectConsentDialog extends ConsumerWidget {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.warning, color: context.colors.error),
+          Icon(AppIcons.warning, color: context.colors.error),
           const SizedBox(width: 12),
           const Expanded(
             child: Text('Revoke Health Data Access'),
@@ -544,7 +545,7 @@ class RevokeHealthConnectConsentDialog extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.info, color: context.colors.error, size: 20),
+                Icon(AppIcons.info, color: context.colors.error, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -595,7 +596,7 @@ class RevokeHealthConnectConsentDialog extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.close,
+            AppIcons.close,
             size: 20,
             color: context.colors.error,
           ),

@@ -6,9 +6,9 @@ part of 'exercise_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseTemplateImpl _$$ExerciseTemplateImplFromJson(
+_$ExerciseDefinitionTemplateImpl _$$ExerciseDefinitionTemplateImplFromJson(
         Map<String, dynamic> json) =>
-    _$ExerciseTemplateImpl(
+    _$ExerciseDefinitionTemplateImpl(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -35,8 +35,8 @@ _$ExerciseTemplateImpl _$$ExerciseTemplateImplFromJson(
           : DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$$ExerciseTemplateImplToJson(
-        _$ExerciseTemplateImpl instance) =>
+Map<String, dynamic> _$$ExerciseDefinitionTemplateImplToJson(
+        _$ExerciseDefinitionTemplateImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

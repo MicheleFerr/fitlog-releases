@@ -7,10 +7,6 @@ class VolumeRange {
     required this.max,
     this.label = '',  // Optional label for display
   });
-  final double min;
-  final double optimal;  // Optimal/target volume
-  final double max;
-  final String label;
 
   /// Creates from JSON map
   factory VolumeRange.fromJson(Map<String, dynamic> json) {
@@ -21,6 +17,10 @@ class VolumeRange {
       label: json['label'] as String? ?? '',
     );
   }
+  final double min;
+  final double optimal;  // Optimal/target volume
+  final double max;
+  final String label;
 
   /// Converts to JSON map
   Map<String, dynamic> toJson() {

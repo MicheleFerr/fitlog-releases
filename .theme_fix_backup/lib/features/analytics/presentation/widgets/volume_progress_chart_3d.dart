@@ -4,6 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Grafico 3D interattivo per visualizzare il volume di allenamento
 /// con effetti di profondità e animazioni touch-responsive
@@ -100,17 +104,29 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
             ButtonSegment(
               value: VolumeChartType.daily,
               label: Text('Giorno'),
-              icon: Icon(Icons.calendar_view_day, size: 18),
+              icon: SemanticIcon(
+  icon: AppIcons.calendarViewDay,
+  semanticLabel: 'Calendar view day',
+  size: AppIconSize.small,
+),
             ),
             ButtonSegment(
               value: VolumeChartType.weekly,
               label: Text('Settimana'),
-              icon: Icon(Icons.calendar_view_week, size: 18),
+              icon: SemanticIcon(
+  icon: AppIcons.calendarViewWeek,
+  semanticLabel: 'Calendar view week',
+  size: AppIconSize.small,
+),
             ),
             ButtonSegment(
               value: VolumeChartType.monthly,
               label: Text('Mese'),
-              icon: Icon(Icons.calendar_view_month, size: 18),
+              icon: SemanticIcon(
+  icon: AppIcons.calendarViewMonth,
+  semanticLabel: 'Calendar view month',
+  size: AppIconSize.small,
+),
             ),
           ],
           selected: {_currentChartType},
@@ -303,11 +319,11 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
     double currentY = 0;
     
     final colors = [
-      Colors.blue,
-      Colors.red,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
+      context.colors.primary,
+      context.colors.error,
+      context.colors.success,
+      context.colors.secondary,
+      context.colors.tertiary,
       Colors.teal,
     ];
     
@@ -344,28 +360,28 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem(
-            icon: Icons.fitness_center,
+            icon: AppIcons.workout,
             label: 'Volume Totale',
             value: '${(totalVolume / 1000).toStringAsFixed(1)}k kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: Icons.analytics,
+            icon: AppIcons.analytics,
             label: 'Media',
             value: '${avgVolume.toStringAsFixed(0)} kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: Icons.rocket_launch,
+            icon: AppIcons.rocket,
             label: 'Record',
             value: '${maxVolume.toStringAsFixed(0)} kg',
             theme: theme,
           ),
           _buildStatItem(
-            icon: trend > 0 ? Icons.trending_up : Icons.trending_down,
+            icon: trend > 0 ? AppIcons.trendUp : AppIcons.trendDown,
             label: 'Trend',
             value: '${trend > 0 ? '+' : ''}${trend.toStringAsFixed(1)}%',
-            color: trend > 0 ? Colors.green : Colors.red,
+            color: trend > 0 ? context.colors.success : context.colors.error,
             theme: theme,
           ),
         ],
@@ -419,7 +435,7 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
         ),
         if (widget.showTrend)
           _buildLegendItem(
-            color: Colors.orange,
+            color: context.colors.secondary,
             label: 'Trend Line',
             isDashed: true,
             theme: theme,
@@ -459,10 +475,12 @@ class _VolumeProgressChart3DState extends ConsumerState<VolumeProgressChart3D>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.bar_chart,
-            size: 64,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.barChart,
+  semanticLabel: 'Chart',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 16),
           Text(

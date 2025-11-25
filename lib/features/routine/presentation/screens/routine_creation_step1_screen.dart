@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/enhanced_preset_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Routine Creation Step 1 Screen - Preset Selection
 class RoutineCreationStep1Screen extends ConsumerWidget {
@@ -38,7 +39,10 @@ class RoutineCreationStep1Screen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(context.l10n.createRoutine),
         leading: IconButton(
-          icon: Icon(AppIcons.close),
+          icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
           onPressed: () {
             // Reset wizard state on back
             ref.read(selectedPresetProvider.notifier).state = null;

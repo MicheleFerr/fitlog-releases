@@ -156,7 +156,7 @@ class PRNotificationService {
         valueDescription = '${newValue}kg';
         break;
       case 'reps':
-        valueDescription = '${newValue} reps';
+        valueDescription = '$newValue reps';
         break;
       case 'volume':
         valueDescription = '${newValue}kg total';

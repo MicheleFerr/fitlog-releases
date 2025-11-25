@@ -69,7 +69,6 @@ part 'exercise_history_model.freezed.dart';
 
 @freezed
 class ExerciseHistoryModel with _$ExerciseHistoryModel {
-  const ExerciseHistoryModel._();
 
   const factory ExerciseHistoryModel({
     /// Name of the exercise (also the document ID)
@@ -84,38 +83,6 @@ class ExerciseHistoryModel with _$ExerciseHistoryModel {
     /// When this document was last updated (for cache invalidation)
     required DateTime lastUpdated,
   }) = _ExerciseHistoryModel;
-
-  /// Create from Firestore JSON
-  factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
-    return ExerciseHistoryModel(
-      exerciseName: json['exerciseName'] as String,
-      muscleGroup: json['muscleGroup'] as String,
-      sessions: (json['sessions'] as List<dynamic>)
-          .map((sessionJson) => ExerciseSessionModel.fromJson(
-              sessionJson as Map<String, dynamic>))
-          .toList(),
-      lastUpdated: _timestampFromJson(json['lastUpdated']),
-    );
-  }
-
-  /// Convert to JSON for Firestore
-  Map<String, dynamic> toJson() {
-    return {
-      'exerciseName': exerciseName,
-      'muscleGroup': muscleGroup,
-      'sessions': sessions.map((session) => session.toJson()).toList(),
-      'lastUpdated': _timestampToJson(lastUpdated),
-    };
-  }
-
-  /// Convert to domain entity
-  ExerciseHistory toDomain() {
-    return ExerciseHistory(
-      exerciseName: exerciseName,
-      muscleGroup: muscleGroup,
-      sessions: sessions.map((sessionModel) => sessionModel.toDomain()).toList(),
-    );
-  }
 
   /// Create from domain entity
   factory ExerciseHistoryModel.fromDomain(ExerciseHistory entity) {
@@ -153,6 +120,39 @@ class ExerciseHistoryModel with _$ExerciseHistoryModel {
     }
 
     return ExerciseHistoryModel.fromJson(dataCopy);
+  }
+  const ExerciseHistoryModel._();
+
+  /// Create from Firestore JSON
+  factory ExerciseHistoryModel.fromJson(Map<String, dynamic> json) {
+    return ExerciseHistoryModel(
+      exerciseName: json['exerciseName'] as String,
+      muscleGroup: json['muscleGroup'] as String,
+      sessions: (json['sessions'] as List<dynamic>)
+          .map((sessionJson) => ExerciseSessionModel.fromJson(
+              sessionJson as Map<String, dynamic>))
+          .toList(),
+      lastUpdated: _timestampFromJson(json['lastUpdated']),
+    );
+  }
+
+  /// Convert to JSON for Firestore
+  Map<String, dynamic> toJson() {
+    return {
+      'exerciseName': exerciseName,
+      'muscleGroup': muscleGroup,
+      'sessions': sessions.map((session) => session.toJson()).toList(),
+      'lastUpdated': _timestampToJson(lastUpdated),
+    };
+  }
+
+  /// Convert to domain entity
+  ExerciseHistory toDomain() {
+    return ExerciseHistory(
+      exerciseName: exerciseName,
+      muscleGroup: muscleGroup,
+      sessions: sessions.map((sessionModel) => sessionModel.toDomain()).toList(),
+    );
   }
 
   /// Convert to Firestore map (convenience method)

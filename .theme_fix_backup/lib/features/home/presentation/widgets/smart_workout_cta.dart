@@ -1,313 +1,487 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/intelligent_workout_suggestion_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/workout_suggestion_analytics.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
-/// Smart workout CTA button that suggests workouts based on user's patterns
+/// Smart workout CTA button that pre-loads workouts from active routines
 class SmartWorkoutCTA extends ConsumerWidget {
   const SmartWorkoutCTA({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final templates = ref.watch(customWorkoutTemplatesProvider);
-    final intelligentSuggestion = ref.watch(intelligentWorkoutSuggestionProvider);
+    final routineAsync = ref.watch(safeActiveRoutineProvider);
+    final todayWorkoutAsync = ref.watch(todayCompletedWorkoutProvider);
 
-    // Get suggested workout info - use intelligent suggestion if available, otherwise fallback
-    final workoutInfo = intelligentSuggestion.when(
-      data: (suggestion) {
-        if (suggestion != null && suggestion.confidence > 0.5) {
-          // Use intelligent suggestion with localization
-          final localizedSuggestion = suggestion.localizeWith(l10n);
-          return WorkoutInfo(
-            title: '${l10n.startWorkout}: ${localizedSuggestion.templateName}',
-            reason: localizedSuggestion.reason,
-            pattern: localizedSuggestion.patternDescription,
-            confidence: localizedSuggestion.confidence,
-            recoveryEmoji: localizedSuggestion.recoveryStatus?.emoji,
-            recoveryDescription: localizedSuggestion.recoveryStatus?.description,
-          );
-        } else {
-          // Fallback to simple day-based logic
-          return _getSuggestedWorkout(templates, l10n);
+    // Priority 1: Check if already worked out today
+    return todayWorkoutAsync.when(
+      loading: () => _buildLoadingState(context, theme),
+      error: (_, __) => _buildLoadingState(context, theme), // Graceful fallback
+      data: (todayWorkout) {
+        if (todayWorkout != null) {
+          // ✅ Workout done today → REST MODE
+          return _buildRestModeState(context, ref, todayWorkout);
         }
+
+        // No workout today → check routine (existing logic)
+        return routineAsync.when(
+          loading: () => _buildLoadingState(context, theme),
+          error: (_, __) => _buildDisabledState(
+            context,
+            theme,
+            context.l10n.smartWorkoutCTAErrorLoading,
+          ),
+          data: (routine) {
+            // ⚠️ v2.0 STUB: Day-level tracking not implemented in v2.0
+            // Guard 1: Check if routine exists
+            if (routine == null) {
+              return _buildDisabledState(
+                context,
+                theme,
+                context.l10n.smartWorkoutCTARestDay,
+              );
+            }
+
+            // v2.0: No day-level tracking - show disabled state
+            // TODO: Reimplement when v2.0 adds day-level tracking
+            return _buildDisabledState(
+              context,
+              theme,
+              'v2.0: Day tracking coming soon', // Temporary message
+            );
+
+            // ⚠️ v2.0 STUB: Dead code commented out (unreachable after return above)
+            // TODO v3.0: Restore when day-level tracking implemented
+            /*
+            // ✅ Ready to show active CTA
+            return _buildActiveState(
+              context,
+              ref,
+              theme,
+              nextWorkout.templateId!,
+              routine, // Pass routine for cleanup if template deleted
+            );
+            */
+          },
+        );
       },
-      loading: () => _getSuggestedWorkout(templates, l10n),
-      error: (_, __) => _getSuggestedWorkout(templates, l10n),
     );
+  }
 
-    // Determine duration based on user's historical data
-    final suggestedDuration = _getEstimatedDuration(templates);
-
+  // Loading state - skeleton
+  Widget _buildLoadingState(BuildContext context, ThemeData theme) {
     return Container(
-      width: double.infinity,
+      height: 100,
       decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(24),
+      ),
+      child: const LoadingIndicator(),
+    );
+  }
+
+  // Disabled state - rest day or no routine
+  Widget _buildDisabledState(
+    BuildContext context,
+    ThemeData theme,
+    String label,
+  ) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.smartWorkoutCTARestDayHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Active state - ready to pre-load
+  Widget _buildActiveState(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeData theme,
+    String templateId,
+    FlexibleRoutine routine, // For cleanup if template deleted
+  ) {
+    // Watch templates to get the name
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+
+    return templatesAsync.when(
+      loading: () => _buildLoadingState(context, theme),
+      error: (_, __) => _buildDisabledState(
+        context,
+        theme,
+        context.l10n.smartWorkoutCTAErrorTemplate,
+      ),
+      data: (templates) {
+        // Find the template
+        final template = templates.where((t) => t.id == templateId).firstOrNull;
+        if (template == null) {
+          // ⚠️ v2.0 STUB: Auto-cleanup not implemented in v2.0 simplified schema
+          // TODO: Reimplement removeInvalidTemplateId when v2.0 adds routine management features
+          // ref.read(flexibleRoutineNotifierProvider.notifier).removeInvalidTemplateId(
+          //   routine: routine,
+          //   invalidTemplateId: templateId,
+          // );
+
+          return _buildDisabledState(
+            context,
+            theme,
+            context.l10n.smartWorkoutCTARoutineUpdated,
+          );
+        }
+
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.tertiary,
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                await HapticFeedback.lightImpact();
+                if (!context.mounted) return;
+                await _onSmartCTATap(context, ref, template.id, template.name);
+              },
+              borderRadius: BorderRadius.circular(24),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          AppIcons.rocket,
+                          color: theme.colorScheme.onPrimary,
+                          size: AppIconSize.small,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          context.l10n.smartWorkoutCTAStart,
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      template.name,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      context.l10n.smartWorkoutCTASuggestedToday(template.estimatedDuration),
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Rest mode state - Shows congratulatory message and workout statistics
+  Widget _buildRestModeState(BuildContext context, WidgetRef ref, Workout workout) {
+    final theme = Theme.of(context);
+    final stats = _calculateWorkoutStats(workout);
+
+    // 🎯 Track rest mode analytics (adherence insights, streak tracking)
+    final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
+    if (userId != null) {
+      // Track analytics event (async, fire-and-forget)
+      WorkoutAnalytics.trackEvent(
+        'rest_mode_shown',
+        properties: {
+          'workoutId': workout.id,
+          'workoutName': workout.name,
+          'volumeKg': stats.volume,
+          'duration': stats.duration,
+          'sets': stats.sets,
+          'timestamp': DateTime.now().toIso8601String(),
+        },
+      );
+    }
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [theme.colorScheme.primary, theme.colorScheme.tertiary],
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.tertiary,
+          ],
         ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () async {
-            // Track user action on suggestion
-            await WorkoutSuggestionAnalytics.trackSuggestionAction(
-              action: 'accepted',
-              templateName: workoutInfo.title,
-            );
-
-            // Navigate to workout
-            if (context.mounted) {
-              context.goNamed('workout');
-            }
-          },
-          borderRadius: BorderRadius.circular(24),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon + Title
+            Row(
               children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(28),
-                  ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: theme.colorScheme.onPrimary,
-                    size: 28,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.rocket_launch,
-                            size: 16,
-                            color: theme.colorScheme.onPrimary,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.startWorkoutQuick,
-                            style: TextStyle(
-                              color: theme.colorScheme.onPrimary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        workoutInfo.title,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: theme.colorScheme.onPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        workoutInfo.reason,
-                        style: TextStyle(
-                          color: theme.colorScheme.onPrimary.withValues(
-                            alpha: 0.9,
-                          ),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      if (workoutInfo.pattern != null && workoutInfo.pattern!.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onPrimary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            '🔄 ${workoutInfo.pattern}',
-                            style: TextStyle(
-                              color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                      if (workoutInfo.recoveryEmoji != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          '${workoutInfo.recoveryEmoji} ${workoutInfo.recoveryDescription}',
-                          style: TextStyle(
-                            color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                      Text(
-                        '~$suggestedDuration min',
-                        style: TextStyle(
-                          color: theme.colorScheme.onPrimary.withValues(
-                            alpha: 0.7,
-                          ),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Icon(
-                  Icons.arrow_forward_ios,
-                  color: theme.colorScheme.onPrimary,
-                  size: 20,
+                  AppIcons.achievement,
+                  size: AppIconSize.large,
+                  color: context.colors.surface,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.smartWorkoutCTARestModeTitle,
+                    style: context.textTheme.titleLarge?.copyWith(
+                      color: context.colors.surface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
+
+            const SizedBox(height: 8),
+
+            // Subtitle
+            Text(
+              context.l10n.smartWorkoutCTARestModeSubtitle,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.surface.withValues(alpha: 0.9),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Stats Container
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.colors.surface.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildStatRow(
+                    context,
+                    AppIcons.weight,
+                    context.l10n.smartWorkoutCTARestModeVolume(stats.volume),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStatRow(
+                    context,
+                    AppIcons.timer,
+                    context.l10n.smartWorkoutCTARestModeDuration(stats.duration),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStatRow(
+                    context,
+                    AppIcons.checkCircle,
+                    context.l10n.smartWorkoutCTARestModeSets(stats.sets),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// Gets suggested workout based on user's history and patterns
-  WorkoutInfo _getSuggestedWorkout(AsyncValue templates, AppLocalizations l10n) {
-    return templates.when(
-      data: (templateList) {
-        if (templateList.isEmpty) {
-          return WorkoutInfo(
-            title: l10n.startWorkout,
-            reason: l10n.suggestedForToday,
-          );
-        }
-
-        // Simple logic: suggest based on day of week or rotation
-        final today = DateTime.now().weekday;
-        
-        // Try to find a suitable template based on day
-        if (today == DateTime.monday || today == DateTime.thursday) {
-          final pushTemplates = templateList.where((t) => 
-            t.name.toLowerCase().contains('push') ||
-            t.name.toLowerCase().contains('spinta') ||
-            t.name.toLowerCase().contains('petto')
-          );
-          
-          if (pushTemplates.isNotEmpty) {
-            final pushTemplate = pushTemplates.first;
-            return WorkoutInfo(
-              title: '${l10n.startWorkout} ${pushTemplate.name}',
-              reason: l10n.suggestedForToday,
-            );
-          }
-        } else if (today == DateTime.tuesday || today == DateTime.friday) {
-          final pullTemplates = templateList.where((t) => 
-            t.name.toLowerCase().contains('pull') ||
-            t.name.toLowerCase().contains('tirata') ||
-            t.name.toLowerCase().contains('schiena')
-          );
-          
-          if (pullTemplates.isNotEmpty) {
-            final pullTemplate = pullTemplates.first;
-            return WorkoutInfo(
-              title: '${l10n.startWorkout} ${pullTemplate.name}',
-              reason: l10n.suggestedForToday,
-            );
-          }
-        } else if (today == DateTime.wednesday || today == DateTime.saturday) {
-          final legTemplates = templateList.where((t) => 
-            t.name.toLowerCase().contains('leg') ||
-            t.name.toLowerCase().contains('gambe')
-          );
-          
-          if (legTemplates.isNotEmpty) {
-            final legTemplate = legTemplates.first;
-            return WorkoutInfo(
-              title: '${l10n.startWorkout} ${legTemplate.name}',
-              reason: l10n.suggestedForToday,
-            );
-          }
-        }
-
-        // Fallback to first available template
-        if (templateList.isNotEmpty) {
-          return WorkoutInfo(
-            title: '${l10n.startWorkout} ${templateList.first.name}',
-            reason: l10n.suggestedForToday,
-          );
-        }
-
-        return WorkoutInfo(
-          title: l10n.startWorkout,
-          reason: l10n.suggestedForToday,
-        );
-      },
-      loading: () => WorkoutInfo(
-        title: l10n.startWorkout,
-        reason: l10n.suggestedForToday,
-      ),
-      error: (_, __) => WorkoutInfo(
-        title: l10n.startWorkout,
-        reason: l10n.suggestedForToday,
-      ),
+  /// Helper to build a single stat row
+  Widget _buildStatRow(BuildContext context, IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: AppIconSize.small,
+          color: context.colors.surface.withValues(alpha: 0.9),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.surface.withValues(alpha: 0.9),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  /// Estimates workout duration based on user's templates and exercises
-  int _getEstimatedDuration(AsyncValue templates) {
-    return templates.when(
-      data: (templateList) {
-        if (templateList.isEmpty) return 60;
+  /// Calculate workout statistics from completed workout
+  WorkoutStats _calculateWorkoutStats(dynamic workout) {
+    // Volume: sum of all (weight × reps) across all sets
+    double totalVolume = 0;
+    int totalSets = 0;
 
-        // Calculate average based on exercise count and complexity
-        double totalExercises = 0;
-        for (final template in templateList) {
-          totalExercises += template.exercises.length.toDouble();
-        }
-        final avgExerciseCount = totalExercises / templateList.length;
+    for (final exercise in workout.exercises) {
+      for (final set in exercise.sets) {
+        final weight = set.weight ?? 0;
+        final reps = set.reps ?? 0;
+        totalVolume += weight * reps;
+        totalSets++;
+      }
+    }
 
-        // Base calculation: ~8-10 minutes per exercise including rest
-        // More realistic estimation for strength training
-        final estimatedMinutes = (avgExerciseCount * 10).round();
-        
-        // Ensure reasonable bounds (45-90 minutes)
-        if (estimatedMinutes < 45) return 60;
-        if (estimatedMinutes > 90) return 80;
-        
-        return estimatedMinutes;
-      },
-      loading: () => 75, // Default to 75 min when loading
-      error: (_, __) => 75, // Default to 75 min on error
+    // Duration: endTime - startTime
+    final duration = workout.endTime != null
+        ? workout.endTime!.difference(workout.startTime)
+        : Duration.zero;
+
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+
+    return WorkoutStats(
+      volume: NumberFormat('#,##0', 'it_IT').format(totalVolume.round()),
+      duration: '${minutes}m ${seconds}s',
+      sets: totalSets,
     );
+  }
+
+  Future<void> _onSmartCTATap(
+    BuildContext context,
+    WidgetRef ref,
+    String templateId,
+    String templateName,
+  ) async {
+    // Generate session ID for analytics correlation
+    final sessionId = generateSessionId();
+
+    // Guard 1: Check AsyncValue state
+    final routineAsync = ref.read(safeActiveRoutineProvider);
+    if (routineAsync is! AsyncData) {
+      return;
+    }
+
+    final routine = routineAsync.value;
+
+    // ⚠️ v2.0 STUB: Day-level tracking not implemented
+    // Guard 2: Routine null check
+    if (routine == null) {
+      return;
+    }
+
+    // v2.0: No day-level tracking - early return
+    // TODO: Reimplement when v2.0 adds day-level tracking
+    return;
+
+    // Fetch template to get exercises
+    final templatesAsync = ref.read(customWorkoutTemplatesProvider);
+    if (templatesAsync is! AsyncData) {
+      return;
+    }
+
+    final templates = templatesAsync.value ?? [];
+    final template = templates.where((t) => t.id == templateId).firstOrNull;
+    if (template == null) {
+      return;
+    }
+
+    // ✅ Analytics tracking BEFORE starting workout
+    await WorkoutAnalytics.trackEvent(
+      'smart_cta_tapped',
+      properties: {
+        'sessionId': sessionId,
+        'templateName': templateName,
+        'templateId': templateId,
+        'exerciseCount': template.exercises.length,
+        'timestamp': DateTime.now().toIso8601String(),
+      },
+    );
+
+    // ✅ Start workout from template (same as DayDetailSheet)
+    // This creates an active workout, not a preloaded one
+    ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+
+    // ✅ Navigate directly to workout screen (no extra needed)
+    if (context.mounted) {
+      context.goNamed('workout');
+    }
   }
 }
 
-/// Simple data class for workout information
-class WorkoutInfo {
+String generateSessionId() => const Uuid().v4();
 
-  WorkoutInfo({
-    required this.title,
-    required this.reason,
-    this.pattern,
-    this.confidence,
-    this.recoveryEmoji,
-    this.recoveryDescription,
+/// Statistics calculated from completed workout
+class WorkoutStats {           // Total sets completed
+
+  const WorkoutStats({
+    required this.volume,
+    required this.duration,
+    required this.sets,
   });
-  final String title;
-  final String reason;
-  final String? pattern;
-  final double? confidence;
-  final String? recoveryEmoji;
-  final String? recoveryDescription;
+  final String volume;      // Formatted with thousand separator (e.g., "4.250")
+  final String duration;    // Human-readable format (e.g., "45m 32s")
+  final int sets;
 }

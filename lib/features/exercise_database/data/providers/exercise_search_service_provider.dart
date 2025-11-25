@@ -18,18 +18,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/services/i_exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/ml_exercise_search_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/providers/exercise_usage_repository_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/services/i_analytics_service.dart';
-
-/// Provider for IAnalyticsService (stub implementation)
-///
-/// TODO: This will be replaced with actual FirebaseAnalyticsService in Phase 4
-///
-/// For now, uses NoOpAnalyticsService to avoid breaking dependencies
-final analyticsServiceProvider = Provider<IAnalyticsService>((ref) {
-  // Use no-op implementation for now
-  // Will be replaced with FirebaseAnalyticsService in Phase 4
-  return const NoOpAnalyticsService();
-});
+// Analytics provider from SSOT - core/providers/analytics_provider.dart
+import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
 /// Provider for IExerciseSearchService
 ///

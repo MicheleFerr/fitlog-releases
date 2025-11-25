@@ -34,9 +34,9 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/repositories/chat_re
 /// );
 /// ```
 class ClearConversationHistory {
-  final ChatRepository repository;
 
   ClearConversationHistory({required this.repository});
+  final ChatRepository repository;
 
   /// Clear conversation history from cache and cloud
   ///
@@ -61,7 +61,7 @@ class ClearConversationHistory {
   }) async {
     // Validate input
     if (userId.trim().isEmpty) {
-      return Left(
+      return const Left(
         ValidationFailure('User ID cannot be empty'),
       );
     }

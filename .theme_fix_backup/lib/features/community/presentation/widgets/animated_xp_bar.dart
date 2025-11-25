@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'dart:async';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnimatedXPBar extends StatefulWidget {
   
@@ -193,10 +195,10 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
   
   Color _getParticleColor() {
     final colors = [
-      Colors.yellow,
-      Colors.orange,
-      Colors.amber,
-      Colors.yellowAccent,
+      context.colors.warning,
+      context.colors.secondary,
+      context.colors.warning,
+      context.colors.tertiary,
       const Color(0xFFFFD700), // Gold
     ];
     return colors[math.Random().nextInt(colors.length)];
@@ -249,14 +251,14 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.amber.withValues(alpha: 0.9),
-                        Colors.orange.withValues(alpha: 0.9),
+                        context.colors.warning.withValues(alpha: 0.9),
+                        context.colors.secondary.withValues(alpha: 0.9),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.amber.withValues(alpha: 0.5),
+                        color: context.colors.warning.withValues(alpha: 0.5),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -265,16 +267,16 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.add_circle,
-                        color: Colors.white,
+                      Icon(
+                        AppIcons.addCircle,
+                        color: context.colors.surface,
                         size: 24,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         '+${widget.xpGained} XP',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: context.colors.surface,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -331,7 +333,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           ],
                         ),
                         border: Border.all(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           width: 3,
                         ),
                       ),
@@ -341,15 +343,15 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           Text(
                             'LV',
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
+                              color: context.colors.surface.withValues(alpha: 0.9),
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             '$_displayLevel',
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: context.colors.surface,
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
                             ),
@@ -370,7 +372,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.bolt,
+                AppIcons.bolt,
                 color: theme.colorScheme.primary,
                 size: 28,
               ),
@@ -459,7 +461,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           color: theme.colorScheme.surfaceContainerHighest,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
+                              color: context.colors.onSurface.withValues(alpha: 0.1),
                               blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
@@ -502,7 +504,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                                           end: Alignment.centerRight,
                                           colors: [
                                             Colors.transparent,
-                                            Colors.white.withValues(alpha: 0.3),
+                                            context.colors.surface.withValues(alpha: 0.3),
                                             Colors.transparent,
                                           ],
                                           stops: [
@@ -540,15 +542,15 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                       margin: const EdgeInsets.only(top: 20),
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Colors.purple, Colors.deepPurple],
+                        gradient: LinearGradient(
+                          colors: [context.colors.tertiary, context.colors.tertiary],
                         ),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: const Text(
+                      child: Text(
                         '🎉 LEVEL UP! 🎉',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -564,11 +566,11 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
   }
   
   Color _getLevelColor(int level) {
-    if (level >= 20) return Colors.purple;
-    if (level >= 15) return Colors.deepOrange;
-    if (level >= 10) return Colors.orange;
-    if (level >= 5) return Colors.blue;
-    return Colors.green;
+    if (level >= 20) return context.colors.tertiary;
+    if (level >= 15) return context.colors.warning;
+    if (level >= 10) return context.colors.secondary;
+    if (level >= 5) return context.colors.primary;
+    return context.colors.success;
   }
 }
 

@@ -44,7 +44,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// AI Coach Screen - main recovery insights UI
@@ -578,7 +577,10 @@ class AICoachScreen extends ConsumerWidget {
               onPressed: () {
                 ref.invalidate(tierStatusesProvider);
               },
-              icon: Icon(AppIcons.refresh),
+              icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
               label: const Text('Retry'),
             ),
           ],

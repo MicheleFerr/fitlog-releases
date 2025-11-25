@@ -23,6 +23,11 @@ import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout
 import 'package:gymbro_flutter_new/shared/presentation/providers/history_view_settings_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:intl/intl.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -129,7 +134,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const SemanticIcon(
+  icon: AppIcons.arrowBackIos,
+  semanticLabel: 'Arrow back ios',
+),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -152,11 +160,14 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
               },
             ),
           IconButton(
-            icon: Icon(_isSearchActive ? Icons.close : Icons.search),
+            icon: Icon(_isSearchActive ? AppIcons.close : AppIcons.search),
             onPressed: _toggleSearch,
           ),
           PopupMenuButton<WorkoutSortOption>(
-            icon: const Icon(Icons.sort),
+            icon: const SemanticIcon(
+  icon: AppIcons.sort,
+  semanticLabel: 'Sort',
+),
             onSelected: (value) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               ref.read(workoutHistoryFilterProvider.notifier).state =
@@ -179,7 +190,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           ),
           IconButton(
             icon: Icon(
-              syncStatus == SyncStatus.syncing ? Icons.sync : Icons.refresh,
+              syncStatus == SyncStatus.syncing ? AppIcons.syncIcon : AppIcons.refresh,
               color: syncStatus == SyncStatus.syncing ? colorScheme.primary : null,
             ),
             onPressed: syncStatus == SyncStatus.syncing ? null : () {
@@ -258,6 +269,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 data: (workouts) => filteredWorkouts.isEmpty
                     ? _buildEmptyState(context, l10n, colorScheme)
                     : ListView.builder(
+                        key: const PageStorageKey('workout_history_list'),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: filteredWorkouts.length,
                         itemBuilder: (context, index) {
@@ -281,7 +293,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   }
 
   Widget _buildSearchBar(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
@@ -299,13 +311,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             decoration: InputDecoration(
               hintText: l10n.searchWorkouts,
               prefixIcon: Icon(
-                Icons.search,
+                AppIcons.search,
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
                       icon: Icon(
-                        Icons.clear,
+                        AppIcons.clear,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                       onPressed: () {
@@ -350,11 +362,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: colorScheme.error,
-            ),
+            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: colorScheme.error,
+),
             const SizedBox(height: 16),
             Text(
               l10n.errorLoadingWorkouts,
@@ -393,10 +406,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.history,
-              size: 64,
-              color: colorScheme.primary.withValues(alpha: 0.6),
+            SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.medium,
+  color: colorScheme.primary.withValues(alpha: 0.6,
+),
             ),
             const SizedBox(height: 16),
             Text(
@@ -459,7 +474,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -495,7 +510,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                     borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: Icon(
-                                    Icons.fitness_center,
+                                    AppIcons.workout,
                                     color: colorScheme.onPrimary,
                                     size: 24,
                                   ),
@@ -524,7 +539,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 ),
                                 PopupMenuButton<String>(
                                   icon: Icon(
-                                    Icons.more_vert,
+                                    AppIcons.moreVert,
                                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                                   ),
                                   onSelected: (action) {
@@ -542,7 +557,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'edit',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.edit, size: 20, color: colorScheme.primary),
+                                          SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                                           const SizedBox(width: 12),
                                           Text(l10n.editWorkout),
                                         ],
@@ -552,7 +572,12 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       value: 'delete',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.delete, size: 20, color: colorScheme.error),
+                                          SemanticIcon(
+  icon: AppIcons.delete,
+  semanticLabel: 'Delete',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                                           const SizedBox(width: 12),
                                           Text(l10n.deleteWorkout),
                                         ],
@@ -570,7 +595,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                               children: [
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.schedule,
+                                    icon: AppIcons.schedule,
                                     label: l10n.duration,
                                     value: _formatDuration(workout.duration),
                                     color: colorScheme.tertiary,
@@ -579,7 +604,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.fitness_center,
+                                    icon: AppIcons.workout,
                                     label: l10n.totalVolume,
                                     value: '${workout.totalVolume.toInt()}kg',
                                     color: colorScheme.secondary,
@@ -588,7 +613,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: _StatItem(
-                                    icon: Icons.list,
+                                    icon: AppIcons.list,
                                     label: 'Esercizi',
                                     value: '${workout.exercises.length}',
                                     color: colorScheme.primary,
@@ -719,13 +744,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
   IconData _getViewModeIcon(HistoryViewMode mode) {
     switch (mode) {
       case HistoryViewMode.list:
-        return Icons.view_list;
+        return AppIcons.viewList;
       case HistoryViewMode.compact:
-        return Icons.view_agenda;
+        return AppIcons.viewAgenda;
       case HistoryViewMode.calendar:
-        return Icons.calendar_month;
+        return AppIcons.calendarMonth;
       case HistoryViewMode.stats:
-        return Icons.bar_chart;
+        return AppIcons.barChart;
     }
   }
 
@@ -825,165 +850,3 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-
-class WorkoutDetailModal extends StatelessWidget {
-
-  const WorkoutDetailModal({
-    super.key,
-    required this.workout,
-  });
-  final WorkoutHistoryDetail workout;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        children: [
-          // Handle
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-
-          // Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        workout.name,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        DateFormat('dd MMMM yyyy - HH:mm').format(workout.completedAt),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-
-          // Exercise Details
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: workout.exercises.length,
-              itemBuilder: (context, index) {
-                final exercise = workout.exercises[index];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: colorScheme.outline.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        exercise.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ...exercise.sets.asMap().entries.map(
-                        (entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 24,
-                                height: 24,
-                                decoration: BoxDecoration(
-                                  color: colorScheme.primary.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '${entry.value.setNumber}',
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                '${entry.value.weight.toInt()}kg × ${entry.value.reps} reps',
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                              const Spacer(),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: _getRPEColor(entry.value.rpe, colorScheme),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  'RPE ${entry.value.rpe}',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getRPEColor(int rpe, ColorScheme colorScheme) {
-    if (rpe <= 6) {
-      return colorScheme.tertiary.withValues(alpha: 0.2);
-    } else if (rpe <= 8) {
-      return colorScheme.secondary.withValues(alpha: 0.2);
-    } else {
-      return colorScheme.error.withValues(alpha: 0.2);
-    }
-  }
-}
-

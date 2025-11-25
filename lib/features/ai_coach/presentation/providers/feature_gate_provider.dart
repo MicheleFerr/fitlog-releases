@@ -125,7 +125,7 @@ class FeatureGateNotifier extends StateNotifier<AsyncValue<FeatureGateState>> {
           userPreferences: userPreferences,
         ),
       );
-    } catch (error, stack) {
+    } catch (error) {
       // Log error but don't update state
       // (keeps showing last valid data)
       if (kDebugMode) {

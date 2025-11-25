@@ -14,7 +14,6 @@
 /// - Cache for repeated queries
 library;
 
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
 
@@ -293,9 +292,9 @@ class EmbeddingService {
 
 /// Seeded random for deterministic embeddings
 class _SeededRandom {
-  int _seed;
 
   _SeededRandom(this._seed);
+  int _seed;
 
   int _next(int bits) {
     _seed = (_seed * 0x5DEECE66D + 0xB) & ((1 << 48) - 1);
@@ -316,15 +315,15 @@ class _SeededRandom {
 
 /// Embedding search result
 class EmbeddingSearchResult {
-  final String documentId;
-  final double similarity;
-  final Float32List embedding;
 
   const EmbeddingSearchResult({
     required this.documentId,
     required this.similarity,
     required this.embedding,
   });
+  final String documentId;
+  final double similarity;
+  final Float32List embedding;
 
   /// Compare by similarity (descending)
   int compareTo(EmbeddingSearchResult other) {

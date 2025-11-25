@@ -106,3 +106,7 @@ firestore.rules.test
 # iOS build directory
 ios/build/
 
+# Firestore rules tests
+test_firestore_rules/node_modules/
+test_firestore_rules/package-lock.json
+

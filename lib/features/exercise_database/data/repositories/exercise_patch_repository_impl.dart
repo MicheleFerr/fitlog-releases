@@ -13,6 +13,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/features/exercise_database/domain/enums/patch_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/repositories/exercise_patch_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/input_validator.dart'; // 🔐 SECURITY: XSS/injection prevention
 
 class ExercisePatchRepositoryImpl implements ExercisePatchRepository {
   ExercisePatchRepositoryImpl({
@@ -20,6 +21,9 @@ class ExercisePatchRepositoryImpl implements ExercisePatchRepository {
   }) : _firestore = firestore;
 
   final FirebaseFirestore _firestore;
+
+  /// 🔐 SECURITY: Input validator for XSS/injection prevention
+  final InputValidator _validator = InputValidator();
 
   /// Firestore collection reference
   CollectionReference<Map<String, dynamic>> get _patchesCollection =>
@@ -40,14 +44,43 @@ class ExercisePatchRepositoryImpl implements ExercisePatchRepository {
       // Get current user ID from auth (implementation will use Firebase Auth)
       final userId = _firestore.app.options.projectId; // Placeholder - replace with actual auth
 
-      // 1. Validate reason length
-      if (reason.trim().length < 10) {
+      // 🔐 SECURITY: Sanitize user input to prevent XSS/injection attacks
+      final sanitizedReason = _validator.sanitize(reason);
+
+      // 1. Validate reason length (after sanitization)
+      if (sanitizedReason.trim().length < 10) {
         return const Left(
           ValidationFailure(
-            'Reason too short',
+            'Reason too short (minimum 10 characters)',
             code: 'REASON_TOO_SHORT',
           ),
         );
+      }
+
+      // 🔐 SECURITY: Check for dangerous patterns in reason
+      if (_validator.containsDangerousPatterns(reason)) {
+        return const Left(
+          ValidationFailure(
+            'Invalid characters detected in reason',
+            code: 'DANGEROUS_PATTERNS_DETECTED',
+          ),
+        );
+      }
+
+      // 🔐 SECURITY: Sanitize newValue if it's a string
+      dynamic sanitizedNewValue = newValue;
+      if (newValue is String) {
+        sanitizedNewValue = _validator.sanitize(newValue);
+
+        // Check for dangerous patterns in newValue
+        if (_validator.containsDangerousPatterns(newValue)) {
+          return const Left(
+            ValidationFailure(
+              'Invalid characters detected in new value',
+              code: 'DANGEROUS_PATTERNS_DETECTED',
+            ),
+          );
+        }
       }
 
       // 2. Check for duplicate pending patches
@@ -79,9 +112,9 @@ class ExercisePatchRepositoryImpl implements ExercisePatchRepository {
         userId: userId,
         fieldName: fieldName,
         oldValue: oldValue,
-        newValue: newValue,
+        newValue: sanitizedNewValue, // 🔐 SECURITY: Using sanitized value
         originalValue: originalValue,
-        reason: reason.trim(),
+        reason: sanitizedReason.trim(), // 🔐 SECURITY: Using sanitized reason
         status: PatchStatus.pending,
         language: language,
         createdAt: now,

@@ -299,7 +299,7 @@ class NotificationSettings with _$NotificationSettings {
       _$NotificationSettingsFromJson(json);
 
   /// Factory: Create default v2.0 settings
-  factory NotificationSettings.defaults() => NotificationSettings(
+  factory NotificationSettings.defaults() => const NotificationSettings(
         enableWorkoutReminders: true,
         enableRecoveryAlerts: true,
         enableStreakMotivation: false,
@@ -309,7 +309,7 @@ class NotificationSettings with _$NotificationSettings {
         enableSmartScheduling: true,
         doNotDisturbEnabled: false,
         reminderMinutesBefore: 60,
-        frequencyCapPreferences: const FrequencyCap(
+        frequencyCapPreferences: FrequencyCap(
           maxPerDay: 3,
           maxPerWeek: 5, // Research-backed optimal
           minIntervalHours: 2,

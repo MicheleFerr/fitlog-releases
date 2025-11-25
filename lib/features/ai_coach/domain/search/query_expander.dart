@@ -427,13 +427,6 @@ class QueryExpander {
 
 /// Expanded query with metadata
 class ExpandedQuery {
-  final String original;
-  final String expanded;
-  final List<String> tokens;
-  final List<String> expandedTokens;
-  final List<String> intents;
-  final TemporalContext? temporalContext;
-  final ExerciseContext? exerciseContext;
 
   const ExpandedQuery({
     required this.original,
@@ -444,6 +437,13 @@ class ExpandedQuery {
     this.temporalContext,
     this.exerciseContext,
   });
+  final String original;
+  final String expanded;
+  final List<String> tokens;
+  final List<String> expandedTokens;
+  final List<String> intents;
+  final TemporalContext? temporalContext;
+  final ExerciseContext? exerciseContext;
 
   /// Check if query is about personal records
   bool get isPRQuery => expandedTokens.any((t) =>
@@ -474,15 +474,15 @@ class ExpandedQuery {
 
 /// Temporal context for queries
 class TemporalContext {
-  final DateTime start;
-  final DateTime end;
-  final String label;
 
   const TemporalContext({
     required this.start,
     required this.end,
     required this.label,
   });
+  final DateTime start;
+  final DateTime end;
+  final String label;
 
   /// Check if a date falls within this context
   bool contains(DateTime date) {
@@ -492,15 +492,15 @@ class TemporalContext {
 
 /// Exercise context for queries
 class ExerciseContext {
-  final List<String> exercises;
-  final List<String> muscleGroups;
-  final String? equipment;
 
   const ExerciseContext({
     required this.exercises,
     required this.muscleGroups,
     this.equipment,
   });
+  final List<String> exercises;
+  final List<String> muscleGroups;
+  final String? equipment;
 
   /// Check if context matches an exercise
   bool matchesExercise(String exerciseName) {

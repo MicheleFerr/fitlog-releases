@@ -131,7 +131,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
           .get();
 
       if (querySnapshot.docs.isEmpty) {
-        return fpdart.Left(
+        return const fpdart.Left(
           ValidationFailure('PR celebration not found'),
         );
       }
@@ -154,7 +154,7 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
         },
       );
 
-      return fpdart.Right(null);
+      return const fpdart.Right(null);
     } on FirebaseException catch (e) {
       return fpdart.Left(ServerFailure('Firebase error: ${e.message}'));
     } catch (e) {
@@ -175,10 +175,10 @@ class PRCelebrationRepositoryImpl implements PRCelebrationRepository {
 
       // Check if within 5-minute notification window
       if (timeSinceWorkout.inMinutes < _notificationWindowMinutes) {
-        return fpdart.Right(true);
+        return const fpdart.Right(true);
       }
 
-      return fpdart.Right(false);
+      return const fpdart.Right(false);
     } catch (e) {
       return fpdart.Left(
         UnexpectedFailure('Failed to check notification eligibility: $e'),

@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnimatedSearchIcon extends StatefulWidget {
   
@@ -88,21 +91,21 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
     
     if (mounted) {
       // Start bounce
-      _bounceController.forward();
-      
+      await _bounceController.forward();
+
       // Glow effect during bounce
-      _glowController.forward();
+      await _glowController.forward();
       await Future.delayed(const Duration(milliseconds: 750));
-      _glowController.reverse();
-      
+      unawaited(_glowController.reverse());
+
       // Mark as shown
       _hasShownInitialAnimation = true;
-      
+
       // After initial animation, pulse 3 times to draw attention
       for (int i = 0; i < 3; i++) {
         if (!mounted) break;
         await Future.delayed(const Duration(milliseconds: 500));
-        HapticFeedback.lightImpact();
+        unawaited(HapticFeedback.lightImpact());
       }
     }
   }
@@ -204,7 +207,7 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      Icons.search,
+                      AppIcons.search,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -232,13 +235,13 @@ class _AnimatedSearchIconState extends State<AnimatedSearchIcon>
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: context.colors.error,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       'NEW',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                       ),
@@ -333,9 +336,9 @@ class _PulsingSearchIconState extends State<PulsingSearchIcon>
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.search,
-                color: Colors.white,
+              child: Icon(
+                AppIcons.search,
+                color: context.colors.surface,
                 size: 20,
               ),
             ),

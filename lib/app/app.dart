@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
@@ -469,6 +470,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/analytics',
         name: 'analytics',
         builder: (context, state) => const TabbedAnalyticsScreen(),
+      ),
+      GoRoute(
+        path: '/analytics/detailed',
+        name: 'analytics-detailed',
+        builder: (context, state) => const AnalyticsScreen(),
       ),
       // TEMP DISABLED: Analytics dashboard
       // GoRoute(

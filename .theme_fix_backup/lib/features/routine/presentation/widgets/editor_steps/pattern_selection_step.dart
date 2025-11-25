@@ -15,11 +15,15 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_pattern.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_editor_state.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/widgets/editor_steps/custom_pattern_builder.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Step 2: Pattern selection
 class PatternSelectionStep extends ConsumerWidget {
@@ -87,7 +91,7 @@ class PatternSelectionStep extends ConsumerWidget {
     WidgetRef ref,
     RoutineEditorState state,
   ) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
@@ -112,7 +116,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.grid_view,
+                      AppIcons.gridView,
                       color: state.usePresetPattern
                           ? context.colors.onPrimary
                           : context.colors.onSurface.withValues(alpha: 0.6),
@@ -152,7 +156,7 @@ class PatternSelectionStep extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.edit_calendar,
+                      AppIcons.editCalendar,
                       color: !state.usePresetPattern
                           ? context.colors.onTertiary
                           : context.colors.onSurface.withValues(alpha: 0.6),
@@ -233,7 +237,7 @@ class PatternSelectionStep extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
-                            Icons.calendar_month,
+                            AppIcons.calendarMonth,
                             color: isSelected
                                 ? context.colors.onPrimary
                                 : context.colors.primary,
@@ -266,13 +270,13 @@ class PatternSelectionStep extends ConsumerWidget {
                         ),
                         if (isSelected)
                           Icon(
-                            Icons.check_circle,
+                            AppIcons.complete,
                             color: context.colors.primary,
                             size: 28,
                           )
                         else if (shouldCollapse)
                           Icon(
-                            Icons.chevron_right,
+                            AppIcons.chevronRight,
                             color: context.colors.onSurface.withValues(alpha: 0.4),
                             size: 24,
                           ),
@@ -336,7 +340,7 @@ class PatternSelectionStep extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  isRest ? Icons.bed : Icons.fitness_center,
+                  isRest ? AppIcons.bed : AppIcons.workout,
                   size: 14,
                   color: isRest
                       ? context.colors.secondary
@@ -380,7 +384,7 @@ class PatternSelectionStep extends ConsumerWidget {
       child: Row(
         children: [
           Icon(
-            Icons.construction,
+            AppIcons.construction,
             color: context.colors.secondary,
             size: 32,
           ),
@@ -487,10 +491,10 @@ class PatternSelectionStep extends ConsumerWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: context.colors.primary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  Icons.calendar_view_week,
+                  AppIcons.calendarViewWeek,
                   color: context.colors.primary,
                   size: 24,
                 ),
@@ -560,21 +564,21 @@ class PatternSelectionStep extends ConsumerWidget {
                       children: [
                         _buildStat(
                           context,
-                          icon: Icons.fitness_center,
+                          icon: AppIcons.workout,
                           label: context.l10n.routineWorkoutDayLabel,
                           value: totalWorkoutDays.toString(),
                           color: context.colors.primary,
                         ),
                         _buildStat(
                           context,
-                          icon: Icons.bed,
+                          icon: AppIcons.bed,
                           label: context.l10n.routineRestDayLabel,
                           value: totalRestDays.toString(),
                           color: context.colors.secondary,
                         ),
                         _buildStat(
                           context,
-                          icon: Icons.calendar_today,
+                          icon: AppIcons.calendar,
                           label: context.l10n.routineTotalDaysLabel,
                           value: totalDays.toString(),
                           color: context.colors.tertiary,
@@ -643,10 +647,12 @@ class PatternSelectionStep extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.calendar_month,
-                  size: 16,
-                  color: context.colors.onSurface.withValues(alpha: 0.6),
+                SemanticIcon(
+  icon: AppIcons.calendarMonth,
+  semanticLabel: 'Calendar month',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurface.withValues(alpha: 0.6,
+),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -808,11 +814,9 @@ class PatternSelectionStep extends ConsumerWidget {
 
   /// Format month and year for header
   String _formatMonthYear(DateTime date, BuildContext context) {
-    final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
+    final locale = Localizations.localeOf(context).toString();
+    final dateFormat = DateFormat('MMMM y', locale);
+    return dateFormat.format(date);
   }
 
   /// Get short weekday name (Mon, Tue, etc.)
@@ -836,7 +840,7 @@ class PatternSelectionStep extends ConsumerWidget {
               color: day.isRest
                   ? context.colors.secondaryContainer
                   : context.colors.primaryContainer,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: day.isRest
                     ? context.colors.secondary.withValues(alpha: 0.3)
@@ -882,7 +886,7 @@ class PatternSelectionStep extends ConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    day.isRest ? Icons.bed : Icons.fitness_center,
+                    day.isRest ? AppIcons.bed : AppIcons.workout,
                     size: 20,
                     color: day.isRest
                         ? context.colors.secondary

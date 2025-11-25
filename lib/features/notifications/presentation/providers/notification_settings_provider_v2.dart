@@ -104,12 +104,12 @@ final notificationSettingsV2Provider = StateNotifierProvider<
 /// Notifier for NotificationSettings v2.0
 class NotificationSettingsNotifierV2
     extends StateNotifier<AsyncValue<NotificationSettings>> {
-  final NotificationSettingsRepository _repository;
 
   NotificationSettingsNotifierV2(this._repository)
       : super(const AsyncValue.loading()) {
     _loadSettings();
   }
+  final NotificationSettingsRepository _repository;
 
   /// Load settings (local first, Firestore fallback)
   Future<void> _loadSettings() async {

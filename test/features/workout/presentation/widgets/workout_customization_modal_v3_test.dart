@@ -115,21 +115,21 @@ void main() {
 
       testWidgets('supports Italian locale', (tester) async {
         await tester.pumpWidget(
-          ProviderScope(
+          const ProviderScope(
             child: MaterialApp(
-              locale: const Locale('it', 'IT'),
-              localizationsDelegates: const [
+              locale: Locale('it', 'IT'),
+              localizationsDelegates: [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
+              supportedLocales: [
                 Locale('en', 'US'),
                 Locale('it', 'IT'),
               ],
               home: Scaffold(
-                body: const WorkoutCustomizationModalV3(),
+                body: WorkoutCustomizationModalV3(),
               ),
             ),
           ),

@@ -32,7 +32,6 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 enum SnackBarType {
   success,
@@ -180,7 +179,7 @@ class SnackBarService {
         Expanded(
           child: Text(
             message,
-            style: context.textTheme.bodyMedium?.copyWith(color: fgColor),
+            style: TextStyle(color: fgColor),
           ),
         ),
       ],
@@ -218,7 +217,7 @@ class SnackBarService {
       case SnackBarType.success:
         return (
           background: const Color(0xFF4CAF50), // Verde
-          foreground: context.colors.surface,
+          foreground: Colors.white,
         );
 
       case SnackBarType.error:
@@ -230,7 +229,7 @@ class SnackBarService {
       case SnackBarType.warning:
         return (
           background: const Color(0xFFFF9800), // Arancione
-          foreground: context.colors.surface,
+          foreground: Colors.white,
         );
 
       case SnackBarType.info:
@@ -251,13 +250,13 @@ class SnackBarService {
   static IconData? _getIconForType(SnackBarType type) {
     switch (type) {
       case SnackBarType.success:
-        return AppIcons.complete;
+        return Icons.check_circle;
       case SnackBarType.error:
-        return AppIcons.error;
+        return Icons.error;
       case SnackBarType.warning:
-        return AppIcons.warning;
+        return Icons.warning;
       case SnackBarType.info:
-        return AppIcons.infoIcon;
+        return Icons.info;
       case SnackBarType.custom:
         return null;
     }

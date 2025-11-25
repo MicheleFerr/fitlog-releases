@@ -13,6 +13,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/request_throttler.dart';
+import 'package:gymbro_flutter_new/core/utils/app_logger.dart';
 
 /// State for exercise notes
 class ExerciseNotesState {
@@ -49,9 +51,25 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
   ExerciseNotesNotifier({
     required String initialNotes,
     this.onSave,
-  }) : super(ExerciseNotesState(notes: initialNotes));
-  Timer? _saveDebounceTimer;
+  }) : super(ExerciseNotesState(notes: initialNotes)) {
+    _initDebouncer();
+  }
+
+  late final Debouncer _saveDebouncer;
   final Function(Exercise)? onSave;
+
+  void _initDebouncer() {
+    // 🔐 SECURITY: Initialize save debouncer (750ms delay for note editing)
+    _saveDebouncer = Debouncer(
+      duration: const Duration(milliseconds: 750),
+      onError: (error, stackTrace) {
+        AppLogger.error('Debouncer error: $error', tag: 'ExerciseNotes', error: error, stackTrace: stackTrace);
+        if (mounted) {
+          state = state.copyWith(isSaving: false);
+        }
+      },
+    );
+  }
 
   /// Start editing notes
   void startEditing() {
@@ -62,8 +80,8 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
   void stopEditing() {
     state = state.copyWith(isEditing: false);
     // Trigger final save if there are unsaved changes
-    if (_saveDebounceTimer?.isActive ?? false) {
-      _saveDebounceTimer?.cancel();
+    if (_saveDebouncer.isActive) {
+      _saveDebouncer.cancel();
       _triggerSave();
     }
   }
@@ -72,11 +90,8 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
   void updateNotes(String newNotes) {
     state = state.copyWith(notes: newNotes);
 
-    // Cancel previous timer
-    _saveDebounceTimer?.cancel();
-
-    // Start new debounce timer (750ms)
-    _saveDebounceTimer = Timer(const Duration(milliseconds: 750), () {
+    // 🔐 SECURITY: Use Debouncer for throttling note saves (750ms delay)
+    _saveDebouncer.run(() {
       _triggerSave();
     });
   }
@@ -103,7 +118,7 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
 
   @override
   void dispose() {
-    _saveDebounceTimer?.cancel();
+    _saveDebouncer.dispose();
     super.dispose();
   }
 }

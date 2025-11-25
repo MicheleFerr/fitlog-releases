@@ -12,7 +12,7 @@ void main() {
   group('ExerciseHistory', () {
     group('personalRecord', () {
       test('returns 0 when no sessions', () {
-        final history = ExerciseHistory(
+        const history = ExerciseHistory(
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -83,7 +83,7 @@ void main() {
 
     group('weeklyVolumeProgression', () {
       test('returns 0 when no sessions', () {
-        final history = ExerciseHistory(
+        const history = ExerciseHistory(
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -202,7 +202,7 @@ void main() {
 
     group('sessionsSortedByDateAscending', () {
       test('returns empty list when no sessions', () {
-        final history = ExerciseHistory(
+        const history = ExerciseHistory(
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],
@@ -270,7 +270,7 @@ void main() {
 
     group('getSessionsByTimeframe', () {
       test('returns empty list when no sessions', () {
-        final history = ExerciseHistory(
+        const history = ExerciseHistory(
           exerciseName: 'Bench Press',
           muscleGroup: 'chest',
           sessions: [],

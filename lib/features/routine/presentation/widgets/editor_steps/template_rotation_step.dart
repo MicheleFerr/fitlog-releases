@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/features/routine/presentation/providers/routi
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Step 4: Arrange rotation order and preview distribution
 class TemplateRotationStep extends ConsumerWidget {
@@ -48,12 +50,14 @@ class TemplateRotationStep extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.info,
-                size: 64,
-                color: context.colors.primary.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.medium,
+  color: context.colors.primary.withValues(alpha: 0.5,
+),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 context.l10n.routineNoTemplatesSelected,
                 style: context.textTheme.titleLarge?.copyWith(
@@ -62,7 +66,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 context.l10n.routineNoTemplatesMessage,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -79,7 +83,7 @@ class TemplateRotationStep extends ConsumerWidget {
     final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
     return templatesAsync.when(
-      loading: () => Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Text(
           context.l10n.routineErrorLoading(error.toString()),
@@ -127,7 +131,7 @@ class TemplateRotationStep extends ConsumerWidget {
               color: context.colors.onSurface,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.routineRotationSubtitle,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -135,7 +139,7 @@ class TemplateRotationStep extends ConsumerWidget {
             ),
           ),
 
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Templates count info
           Row(
@@ -145,7 +149,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 20,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 context.l10n.routineTemplatesSelected(selectedTemplates.length),
                 style: context.textTheme.titleMedium?.copyWith(
@@ -209,7 +213,7 @@ class TemplateRotationStep extends ConsumerWidget {
               AppIcons.dragHandle,
               color: context.colors.onSurface.withValues(alpha: 0.5),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             CircleAvatar(
               backgroundColor: context.colors.primaryContainer,
               child: Text(
@@ -304,7 +308,7 @@ class TemplateRotationStep extends ConsumerWidget {
                 color: context.colors.primary,
                 size: 20,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 context.l10n.routineDistributionPreview,
                 style: context.textTheme.titleSmall?.copyWith(
@@ -314,14 +318,14 @@ class TemplateRotationStep extends ConsumerWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             context.l10n.routineFirstDaysPreview(distribution.length, totalDays),
             style: context.textTheme.bodySmall?.copyWith(
               color: context.colors.onSurface.withValues(alpha: 0.6),
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           ...distribution.map((day) {
             return Padding(
@@ -364,19 +368,20 @@ class TemplateRotationStep extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
 
                   // Template info
                   Expanded(
                     child: day.isRest
                         ? Row(
                             children: [
-                              Icon(
-                                AppIcons.bed,
-                                size: 16,
-                                color: context.colors.secondary,
-                              ),
-                              SizedBox(width: 6),
+                              SemanticIcon(
+  icon: AppIcons.bed,
+  semanticLabel: 'Bed',
+  size: AppIconSize.tiny,
+  color: context.colors.secondary,
+),
+                              const SizedBox(width: 6),
                               Text(
                                 context.l10n.routineRestDay,
                                 style: context.textTheme.bodyMedium?.copyWith(
@@ -388,12 +393,13 @@ class TemplateRotationStep extends ConsumerWidget {
                           )
                         : Row(
                             children: [
-                              Icon(
-                                AppIcons.workout,
-                                size: 16,
-                                color: context.colors.primary,
-                              ),
-                              SizedBox(width: 6),
+                              SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
+                              const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   day.template!.name,
@@ -413,7 +419,7 @@ class TemplateRotationStep extends ConsumerWidget {
           }),
 
           if (totalDays > 10) ...[
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Center(
               child: Text(
                 context.l10n.routineMoreDays(totalDays - 10),

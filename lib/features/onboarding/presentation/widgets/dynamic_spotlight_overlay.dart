@@ -18,6 +18,23 @@ import 'package:gymbro_flutter_new/features/onboarding/presentation/widgets/dyna
 ///   - Uses easeInOut curve for smooth transitions
 ///   - Restarts when bounds change (forward(from: 0))
 class DynamicSpotlightOverlay extends StatefulWidget {
+
+  const DynamicSpotlightOverlay({
+    required this.spotlightBounds,
+    required this.child,
+    this.offset,
+    this.animationController,
+    this.minOpacity = 0.2,
+    this.maxOpacity = 0.5,
+    this.animationDuration = const Duration(milliseconds: 800),
+    this.spotlightBorderRadius = 4.0,
+    this.spotlightPadding = 8.0,
+    this.overlayColor = const Color.fromARGB(128, 0, 0, 0),
+    this.spotlightBorderPaint,
+    super.key,
+  }) : assert(minOpacity >= 0 && minOpacity <= 1),
+       assert(maxOpacity >= 0 && maxOpacity <= 1),
+       assert(minOpacity <= maxOpacity);
   /// Global bounds of the widget to spotlight
   final Rect? spotlightBounds;
 
@@ -51,23 +68,6 @@ class DynamicSpotlightOverlay extends StatefulWidget {
 
   /// Optional border paint around spotlight
   final Paint? spotlightBorderPaint;
-
-  const DynamicSpotlightOverlay({
-    required this.spotlightBounds,
-    required this.child,
-    this.offset,
-    this.animationController,
-    this.minOpacity = 0.2,
-    this.maxOpacity = 0.5,
-    this.animationDuration = const Duration(milliseconds: 800),
-    this.spotlightBorderRadius = 4.0,
-    this.spotlightPadding = 8.0,
-    this.overlayColor = const Color.fromARGB(128, 0, 0, 0),
-    this.spotlightBorderPaint,
-    super.key,
-  }) : assert(minOpacity >= 0 && minOpacity <= 1),
-       assert(maxOpacity >= 0 && maxOpacity <= 1),
-       assert(minOpacity <= maxOpacity);
 
   @override
   State<DynamicSpotlightOverlay> createState() => _DynamicSpotlightOverlayState();

@@ -25,8 +25,9 @@ import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedba
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/unified_feedback_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Admin dashboard for unified feedback system
 ///
@@ -620,11 +621,12 @@ class _UnifiedFeedbackAdminDashboardState
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            Icon(
-              AppIcons.inbox,
-              size: 64,
-              color: context.colors.onSurfaceVariant,
-            ),
+            SemanticIcon(
+  icon: AppIcons.inbox,
+  semanticLabel: 'Inbox',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant,
+),
             const SizedBox(height: 16),
             Text(
               context.l10n.noFeedbackFound,

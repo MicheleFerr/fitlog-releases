@@ -32,7 +32,6 @@ part 'conversation_tree.g.dart';
 
 @freezed
 class ConversationTree with _$ConversationTree {
-  const ConversationTree._();
 
   const factory ConversationTree({
     /// User ID who owns this tree
@@ -50,6 +49,7 @@ class ConversationTree with _$ConversationTree {
     /// Last update timestamp
     required DateTime lastUpdated,
   }) = _ConversationTree;
+  const ConversationTree._();
 
   /// Create empty tree
   factory ConversationTree.empty({required String userId}) {

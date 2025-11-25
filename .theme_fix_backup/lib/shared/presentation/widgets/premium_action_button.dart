@@ -13,6 +13,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class PremiumActionButton extends StatefulWidget {
   
@@ -26,6 +27,7 @@ class PremiumActionButton extends StatefulWidget {
     this.isCompact = false,
     this.showShadow = true,
     this.width,
+    this.isHighlightedInTour = false,
   });
   final VoidCallback onPressed;
   final IconData icon;
@@ -35,20 +37,25 @@ class PremiumActionButton extends StatefulWidget {
   final bool isCompact;
   final bool showShadow;
   final double? width;
+  final bool isHighlightedInTour;
   
   @override
   State<PremiumActionButton> createState() => _PremiumActionButtonState();
 }
 
-class _PremiumActionButtonState extends State<PremiumActionButton> 
-    with SingleTickerProviderStateMixin {
+class _PremiumActionButtonState extends State<PremiumActionButton>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
+  late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _pulseAnimation;
   bool _isPressed = false;
-  
+
   @override
   void initState() {
     super.initState();
+
+    // Press animation controller
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -60,11 +67,43 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+
+    // Tour highlight pulse animation controller
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start pulse if highlighted in tour
+    if (widget.isHighlightedInTour) {
+      _pulseController.repeat(reverse: true);
+    }
   }
-  
+
+  @override
+  void didUpdateWidget(PremiumActionButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Start/stop pulse based on highlight state
+    if (widget.isHighlightedInTour && !_pulseController.isAnimating) {
+      _pulseController.repeat(reverse: true);
+    } else if (!widget.isHighlightedInTour && _pulseController.isAnimating) {
+      _pulseController.stop();
+      _pulseController.value = 0.0; // Reset to beginning
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
   
@@ -87,16 +126,20 @@ class _PremiumActionButtonState extends State<PremiumActionButton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     final backgroundColor = widget.backgroundColor ?? colorScheme.primary;
-    final foregroundColor = widget.foregroundColor ?? 
-        (backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white);
-    
+    final foregroundColor = widget.foregroundColor ??
+        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
+
+    // Combine press animation + pulse animation
     return AnimatedBuilder(
-      animation: _scaleAnimation,
+      animation: Listenable.merge([_scaleAnimation, _pulseAnimation]),
       builder: (context, child) {
+        // Combine both animations: press scale * pulse scale
+        final combinedScale = _scaleAnimation.value * _pulseAnimation.value;
+
         return Transform.scale(
-          scale: _scaleAnimation.value,
+          scale: combinedScale,
           child: Container(
             width: widget.width,
             decoration: BoxDecoration(
@@ -199,7 +242,7 @@ class CompactActionButton extends StatelessWidget {
     
     final backgroundColor = this.backgroundColor ?? colorScheme.primary;
     final foregroundColor = this.foregroundColor ?? 
-        (backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white);
+        (backgroundColor.computeLuminance() > 0.5 ? context.colors.onSurface : context.colors.surface);
     
     return Stack(
       children: [
@@ -252,7 +295,7 @@ class CompactActionButton extends StatelessWidget {
               child: Center(
                 child: Text(
                   badgeText!,
-                  style: TextStyle(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onError,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -288,7 +331,7 @@ class PremiumBottomActionBar extends StatelessWidget {
         color: backgroundColor ?? colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
