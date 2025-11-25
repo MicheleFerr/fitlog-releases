@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'FitLog Pro'**
   String get appTitle;
 
+  /// Home tab label in bottom navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
   /// Welcome message on the main screen
   ///
   /// In en, this message translates to:
@@ -1555,6 +1561,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check your notification center to verify it works'**
   String get testNotificationSentDescription;
+
+  /// Title for workout reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Reminder'**
+  String get notificationWorkoutReminderTitle;
+
+  /// Body for workout reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Time for your {workoutName} workout! 💪'**
+  String notificationWorkoutReminderBody(String workoutName);
+
+  /// Title for recovery alert notification
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Needed'**
+  String get notificationRecoveryAlertTitle;
+
+  /// Body for recovery alert notification
+  ///
+  /// In en, this message translates to:
+  /// **'You have {daysToRecover} skipped {dayWord} to recover! 🔄'**
+  String notificationRecoveryAlertBody(int daysToRecover, String dayWord);
+
+  /// Title for streak motivation notification
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Your Streak Going!'**
+  String get notificationStreakMotivationTitle;
+
+  /// Body for streak motivation notification
+  ///
+  /// In en, this message translates to:
+  /// **'{currentStreak} days streak! Don\'t break it now! 🔥'**
+  String notificationStreakMotivationBody(int currentStreak);
+
+  /// Title for rest day reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Day'**
+  String get notificationRestDayTitle;
+
+  /// Body for rest day reminder notification
+  ///
+  /// In en, this message translates to:
+  /// **'Today is your rest day. Recovery is just as important! 😴'**
+  String get notificationRestDayBody;
+
+  /// Title for test notification
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notification'**
+  String get notificationTestTitle;
+
+  /// Body for test notification
+  ///
+  /// In en, this message translates to:
+  /// **'GymBro notifications are working! 💪'**
+  String get notificationTestBody;
+
+  /// Singular form of day
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get daysSingular;
+
+  /// Plural form of day
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysPlural;
 
   /// Toggle for PR (Personal Record) achievement notifications
   ///
@@ -6083,7 +6161,7 @@ abstract class AppLocalizations {
   /// **'Insight'**
   String get insight;
 
-  /// Recommendation label
+  /// Label for recommendation section
   ///
   /// In en, this message translates to:
   /// **'Recommendation'**
@@ -17663,6 +17741,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Session History'**
   String get sessionHistory;
+
+  /// Hint text for drag and drop chart reordering
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder charts'**
+  String get dragToReorder;
 
   /// Positive trend indicator
   ///
@@ -35267,6 +35351,600 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong'**
   String get somethingWentWrong;
+
+  /// Title for correlations section in analytics
+  ///
+  /// In en, this message translates to:
+  /// **'Correlations'**
+  String get analyticsCorrelationsTitle;
+
+  /// Label for Weight vs RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Weight vs RPE'**
+  String get analyticsWeightVsRpe;
+
+  /// Label for Volume vs RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Volume vs RPE'**
+  String get analyticsVolumeVsRpe;
+
+  /// Strong correlation indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get analyticsCorrelationStrong;
+
+  /// Moderate correlation indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get analyticsCorrelationModerate;
+
+  /// Weak correlation indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get analyticsCorrelationWeak;
+
+  /// Not enough data for correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient Data'**
+  String get analyticsCorrelationInsufficient;
+
+  /// Message when more data is needed
+  ///
+  /// In en, this message translates to:
+  /// **'Need {count}+ sessions for correlation analysis'**
+  String analyticsNeedMoreData(int count);
+
+  /// R-squared value display
+  ///
+  /// In en, this message translates to:
+  /// **'r² = {value}'**
+  String analyticsRSquared(String value);
+
+  /// Percentage of variance explained
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% variance explained'**
+  String analyticsVarianceExplained(String percent);
+
+  /// Progressive overload section title
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive Overload'**
+  String get analyticsProgressiveOverload;
+
+  /// Optimal progressive overload status
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal'**
+  String get analyticsOverloadOptimal;
+
+  /// Below target progressive overload status
+  ///
+  /// In en, this message translates to:
+  /// **'Below Target'**
+  String get analyticsOverloadBelowTarget;
+
+  /// Above target progressive overload status
+  ///
+  /// In en, this message translates to:
+  /// **'Above Target'**
+  String get analyticsOverloadAboveTarget;
+
+  /// No baseline data for progressive overload
+  ///
+  /// In en, this message translates to:
+  /// **'No Baseline'**
+  String get analyticsOverloadNoBaseline;
+
+  /// Weekly progress percentage
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% weekly progress'**
+  String analyticsWeeklyProgress(String percent);
+
+  /// Target range for progressive overload
+  ///
+  /// In en, this message translates to:
+  /// **'Target: {min}-{max}%'**
+  String analyticsTargetRange(String min, String max);
+
+  /// Intensity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Intensity'**
+  String get analyticsIntensity;
+
+  /// Estimated 1 Rep Max label
+  ///
+  /// In en, this message translates to:
+  /// **'Est. 1RM'**
+  String get analyticsEstimated1RM;
+
+  /// Percentage of 1RM display
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% of 1RM'**
+  String analyticsPercentOf1RM(String percent);
+
+  /// Max strength intensity zone
+  ///
+  /// In en, this message translates to:
+  /// **'Max Strength'**
+  String get analyticsZoneMaxStrength;
+
+  /// Strength/Hypertrophy intensity zone
+  ///
+  /// In en, this message translates to:
+  /// **'Strength/Hypertrophy'**
+  String get analyticsZoneStrengthHypertrophy;
+
+  /// Hypertrophy intensity zone
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy'**
+  String get analyticsZoneHypertrophy;
+
+  /// Endurance intensity zone
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance'**
+  String get analyticsZoneEndurance;
+
+  /// Trend section title
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get analyticsTrend;
+
+  /// Improving trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Improving'**
+  String get analyticsTrendImproving;
+
+  /// Declining trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Declining'**
+  String get analyticsTrendDeclining;
+
+  /// Plateau trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Plateau'**
+  String get analyticsTrendPlateau;
+
+  /// Inconsistent trend indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Inconsistent'**
+  String get analyticsTrendInconsistent;
+
+  /// Button to navigate to full analytics screen
+  ///
+  /// In en, this message translates to:
+  /// **'View Full Analytics'**
+  String get analyticsViewFullAnalytics;
+
+  /// Number of sessions
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sessions'**
+  String analyticsSessions(int count);
+
+  /// Data time span in days
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days of data'**
+  String analyticsDataSpan(int days);
+
+  /// Description for weight vs RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'How your perceived effort changes with weight'**
+  String get analyticsWeightVsRpeDescription;
+
+  /// Description for volume vs RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'How your perceived effort changes with volume'**
+  String get analyticsVolumeVsRpeDescription;
+
+  /// Indicator that enough data exists for analysis
+  ///
+  /// In en, this message translates to:
+  /// **'Data Quality: Good'**
+  String get analyticsDataSufficient;
+
+  /// Indicator that more data is needed
+  ///
+  /// In en, this message translates to:
+  /// **'Need More Data'**
+  String get analyticsDataInsufficient;
+
+  /// Data points summary
+  ///
+  /// In en, this message translates to:
+  /// **'{sessions} sessions over {days} days'**
+  String analyticsDataPoints(int sessions, int days);
+
+  /// Pearson correlation coefficient label
+  ///
+  /// In en, this message translates to:
+  /// **'r'**
+  String get analyticsRValue;
+
+  /// R-squared coefficient label
+  ///
+  /// In en, this message translates to:
+  /// **'r²'**
+  String get analyticsRSquaredLabel;
+
+  /// Correlation strength label
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get analyticsCorrelationStrength;
+
+  /// Short label for correlation strength
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get analyticsStrength;
+
+  /// Tooltip explaining r value
+  ///
+  /// In en, this message translates to:
+  /// **'Correlation coefficient: -1 to 1. Positive = increase together, Negative = inverse relationship'**
+  String get analyticsRValueTooltip;
+
+  /// Tooltip explaining r-squared value
+  ///
+  /// In en, this message translates to:
+  /// **'% of variance explained. Higher = stronger predictive relationship'**
+  String get analyticsRSquaredTooltip;
+
+  /// Tooltip explaining correlation strength levels
+  ///
+  /// In en, this message translates to:
+  /// **'Based on r value: Strong (>0.7), Moderate (0.4-0.7), Weak (<0.4)'**
+  String get analyticsStrengthTooltip;
+
+  /// Indicates correlation is statistically significant
+  ///
+  /// In en, this message translates to:
+  /// **'Statistically Significant'**
+  String get analyticsStatisticallySignificant;
+
+  /// Indicates correlation is not statistically significant
+  ///
+  /// In en, this message translates to:
+  /// **'Not Statistically Significant'**
+  String get analyticsNotSignificant;
+
+  /// Insight for positive weight-RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Heavier weights correlate with higher perceived effort - this is expected for progressive overload'**
+  String get analyticsInsightWeightRpePositive;
+
+  /// Insight for negative weight-RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Heavier weights correlate with lower perceived effort - you may be getting stronger efficiently'**
+  String get analyticsInsightWeightRpeNegative;
+
+  /// Insight for positive volume-RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Higher training volume correlates with higher perceived effort - consider managing fatigue'**
+  String get analyticsInsightVolumeRpePositive;
+
+  /// Insight for negative volume-RPE correlation
+  ///
+  /// In en, this message translates to:
+  /// **'Higher volume with lower perceived effort - your work capacity is improving'**
+  String get analyticsInsightVolumeRpeNegative;
+
+  /// Section header for insights
+  ///
+  /// In en, this message translates to:
+  /// **'Key Insights'**
+  String get analyticsKeyInsights;
+
+  /// Section header for trend summary
+  ///
+  /// In en, this message translates to:
+  /// **'Trend Summary'**
+  String get analyticsTrendSummary;
+
+  /// Progressive overload label
+  ///
+  /// In en, this message translates to:
+  /// **'Overload'**
+  String get analyticsOverload;
+
+  /// Title when no analytics data exists
+  ///
+  /// In en, this message translates to:
+  /// **'No Analytics Available'**
+  String get analyticsNoDataTitle;
+
+  /// Description when no analytics data exists
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a few more workouts to see your correlation analysis and insights'**
+  String get analyticsNoDataDescription;
+
+  /// Error message when analytics fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Analytics'**
+  String get analyticsErrorLoading;
+
+  /// Trend badge for positive change
+  ///
+  /// In en, this message translates to:
+  /// **'+{percent}%'**
+  String analyticsTrendBadgeUp(String percent);
+
+  /// Trend badge for negative change
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String analyticsTrendBadgeDown(String percent);
+
+  /// Trend badge when no significant change
+  ///
+  /// In en, this message translates to:
+  /// **'Stable'**
+  String get analyticsTrendBadgeStable;
+
+  /// Insight for weight increase
+  ///
+  /// In en, this message translates to:
+  /// **'Weight up {percent}% - great progress!'**
+  String analyticsInsightWeightUp(String percent);
+
+  /// Insight for weight decrease
+  ///
+  /// In en, this message translates to:
+  /// **'Weight down {percent}% - check form and recovery'**
+  String analyticsInsightWeightDown(String percent);
+
+  /// Insight for volume increase
+  ///
+  /// In en, this message translates to:
+  /// **'Volume up {percent}% - muscles are adapting!'**
+  String analyticsInsightVolumeUp(String percent);
+
+  /// Insight for volume decrease
+  ///
+  /// In en, this message translates to:
+  /// **'Volume down {percent}% - consider adding a set'**
+  String analyticsInsightVolumeDown(String percent);
+
+  /// Insight for reps increase
+  ///
+  /// In en, this message translates to:
+  /// **'Reps up {percent}% - building endurance!'**
+  String analyticsInsightRepsUp(String percent);
+
+  /// Insight for reps decrease
+  ///
+  /// In en, this message translates to:
+  /// **'Reps down {percent}% - are weights too heavy?'**
+  String analyticsInsightRepsDown(String percent);
+
+  /// Insight when RPE is consistently high
+  ///
+  /// In en, this message translates to:
+  /// **'RPE trending high - consider a deload'**
+  String get analyticsInsightRpeHigh;
+
+  /// Insight when RPE is consistently low
+  ///
+  /// In en, this message translates to:
+  /// **'RPE low - you can push harder!'**
+  String get analyticsInsightRpeLow;
+
+  /// Insight when metric is stable
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent performance - stay the course!'**
+  String get analyticsInsightStable;
+
+  /// Message when not enough data for trend calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Add more sessions for insights'**
+  String get analyticsNotEnoughData;
+
+  /// Label for scientific explanation section
+  ///
+  /// In en, this message translates to:
+  /// **'Science'**
+  String get scienceExplanation;
+
+  /// Label for confidence indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get confidenceLabel;
+
+  /// Title for fatigue warning pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Fatigue Warning'**
+  String get patternFatigueWarningTitle;
+
+  /// Description for fatigue warning pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Your RPE is increasing while weight is decreasing. This suggests accumulated fatigue.'**
+  String get patternFatigueWarningDescription;
+
+  /// Recommendation for fatigue warning pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Consider taking a deload week or extra rest days. Focus on sleep and nutrition.'**
+  String get patternFatigueWarningRecommendation;
+
+  /// Scientific explanation for fatigue warning
+  ///
+  /// In en, this message translates to:
+  /// **'Research shows that RPE increasing at the same load indicates neuromuscular fatigue. Helms et al. (2016) recommend deloading when this pattern persists.'**
+  String get patternFatigueWarningScience;
+
+  /// Title for great progression pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Great Progression!'**
+  String get patternGreatProgressionTitle;
+
+  /// Description for great progression pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Weight is increasing while RPE stays stable. Your body is adapting perfectly!'**
+  String get patternGreatProgressionDescription;
+
+  /// Recommendation for great progression pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the great work! Continue with your current program and progressive overload.'**
+  String get patternGreatProgressionRecommendation;
+
+  /// Scientific explanation for great progression
+  ///
+  /// In en, this message translates to:
+  /// **'This is the ideal training adaptation: increasing load without increased perceived effort indicates improved work capacity and strength gains.'**
+  String get patternGreatProgressionScience;
+
+  /// Title for overreaching risk pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Overreaching Risk'**
+  String get patternOverreachingRiskTitle;
+
+  /// Description for overreaching risk pattern
+  ///
+  /// In en, this message translates to:
+  /// **'RPE is high, weight is stable, but volume is dropping. You may be pushing too hard.'**
+  String get patternOverreachingRiskDescription;
+
+  /// Recommendation for overreaching risk pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce training volume by 30-40% for 1-2 weeks. Prioritize recovery.'**
+  String get patternOverreachingRiskRecommendation;
+
+  /// Scientific explanation for overreaching risk
+  ///
+  /// In en, this message translates to:
+  /// **'Functional overreaching occurs when training stress exceeds recovery. Zourdos et al. (2016) found that a combination of high RPE with declining volume precedes overtraining.'**
+  String get patternOverreachingRiskScience;
+
+  /// Title for adaptation pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Body Adapting Well'**
+  String get patternAdaptationTitle;
+
+  /// Description for adaptation pattern
+  ///
+  /// In en, this message translates to:
+  /// **'RPE is decreasing at the same weight. Your body is getting stronger!'**
+  String get patternAdaptationDescription;
+
+  /// Recommendation for adaptation pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress! You may be ready to increase the weight slightly.'**
+  String get patternAdaptationRecommendation;
+
+  /// Scientific explanation for adaptation
+  ///
+  /// In en, this message translates to:
+  /// **'Decreasing RPE at a fixed load is a key indicator of neural and muscular adaptation - your muscles are becoming more efficient.'**
+  String get patternAdaptationScience;
+
+  /// Title for volume spike pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Volume Spike Detected'**
+  String get patternVolumeSpikeTitle;
+
+  /// Description for volume spike pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Training volume increased significantly compared to previous sessions.'**
+  String get patternVolumeSpikeDescription;
+
+  /// Recommendation for volume spike pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor recovery closely. Avoid large jumps in volume - aim for 5-10% weekly increases.'**
+  String get patternVolumeSpikeRecommendation;
+
+  /// Scientific explanation for volume spike
+  ///
+  /// In en, this message translates to:
+  /// **'Progressive overload research suggests volume increases should be gradual (5-10%/week) to allow adaptation without injury risk.'**
+  String get patternVolumeSpikeScience;
+
+  /// Title for optimal training pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal Training'**
+  String get patternOptimalTrainingTitle;
+
+  /// Description for optimal training pattern
+  ///
+  /// In en, this message translates to:
+  /// **'All metrics are progressing well within optimal ranges. Perfect balance!'**
+  String get patternOptimalTrainingDescription;
+
+  /// Recommendation for optimal training pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is dialed in! Maintain your current routine and keep progressing.'**
+  String get patternOptimalTrainingRecommendation;
+
+  /// Scientific explanation for optimal training
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal training occurs when volume, intensity, and recovery are balanced, allowing for consistent progressive overload.'**
+  String get patternOptimalTrainingScience;
+
+  /// Title for inconsistent pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Inconsistent Data'**
+  String get patternInconsistentTitle;
+
+  /// Description for inconsistent pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Training metrics show high variability. Focus on consistency.'**
+  String get patternInconsistentDescription;
+
+  /// Recommendation for inconsistent pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Try to train at similar times and conditions. Track your RPE consistently for better insights.'**
+  String get patternInconsistentRecommendation;
+
+  /// Scientific explanation for inconsistent data
+  ///
+  /// In en, this message translates to:
+  /// **'High training variability makes pattern detection difficult. Consistent data collection enables better performance analysis.'**
+  String get patternInconsistentScience;
 }
 
 class _AppLocalizationsDelegate

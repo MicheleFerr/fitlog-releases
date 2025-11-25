@@ -49,12 +49,13 @@ import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.d
 import 'package:gymbro_flutter_new/shared/data/services/snapshot_sync_service.dart';
 // 📢 Sync Status Toast for user feedback during save flow
 import 'package:gymbro_flutter_new/shared/presentation/widgets/sync_status_toast.dart';
-// 🔄 Routine Auto-Completion Service for automatic day completion
+// ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
+// 🔄 Routine Auto-Completion Service for automatic day completion (disabled)
 // 💾 Workout Repository for fetching workout data
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
-// ✅ NEW: Recovery detection for missed workouts
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
+// import 'package:gymbro_flutter_new/features/routine/application/services/routine_auto_completion_service.dart';
+// ✅ NEW: Recovery detection for missed workouts (disabled)
+// import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
 // 📊 Analytics Tracking for workout events & PR detection
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/workout_analytics_repository_impl.dart';
@@ -923,56 +924,57 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         // Non-critical
       }
 
-      // 7. Auto-complete routine day if applicable
-      try {
-        final didAutoComplete = await _autoCompleteRoutineDay(workout, context);
-        if (didAutoComplete) {
-          debugLog(LogCategory.workout, '✅ [Routine] Auto-completed routine day');
-        }
-      } catch (routineError) {
-        debugLog(LogCategory.workout, '⚠️ [Routine] Failed to auto-complete day: $routineError');
-        // Non-critical - workout is already saved
-      }
+      // ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
+      // 7. Auto-complete routine day if applicable (disabled)
+      // try {
+      //   final didAutoComplete = await _autoCompleteRoutineDay(workout, context);
+      //   if (didAutoComplete) {
+      //     debugLog(LogCategory.workout, '✅ [Routine] Auto-completed routine day');
+      //   }
+      // } catch (routineError) {
+      //   debugLog(LogCategory.workout, '⚠️ [Routine] Failed to auto-complete day: $routineError');
+      //   // Non-critical - workout is already saved
+      // }
 
-      // 7b. ✅ NEW: Check if this workout is a recovery for yesterday's skipped workout
-      try {
-        if (workout.templateId != null) {
-          final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
-          final activeRoutine = activeRoutineAsync.maybeWhen(
-            data: (routine) => routine,
-            orElse: () => null,
-          );
-
-          if (activeRoutine != null) {
-            // ⚠️ v2.0 STUB: Recovery detection not implemented in v2.0 simplified schema
-            // final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
-            // final isRecovery = await notifier.autoDetectAndMarkAsRecovery(
-            //   routineId: activeRoutine.id,
-            //   completedTemplateId: workout.templateId!,
-            //   completionDate: workout.endTime ?? DateTime.now(),
-            // );
-
-            const isRecovery = false; // v2.0: Always false (feature not implemented)
-
-            if (isRecovery) {
-              debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
-
-              // ✅ FIX: Force refresh from Firestore server (not cache)
-              // Wait 500ms to ensure Firestore write has propagated
-              await Future.delayed(const Duration(milliseconds: 500));
-
-              // Invalidate BOTH providers to force fresh fetch
-              ref.invalidate(activeFlexibleRoutineProvider);
-              ref.invalidate(userFlexibleRoutinesProvider);
-
-              debugLog(LogCategory.workout, '🔄 [Recovery] Providers invalidated, forcing server refresh');
-            }
-          }
-        }
-      } catch (recoveryError) {
-        debugLog(LogCategory.workout, '⚠️ [Recovery] Failed to detect recovery: $recoveryError');
-        // Non-critical - workout is already saved
-      }
+      // 7b. ✅ NEW: Check if this workout is a recovery for yesterday's skipped workout (disabled)
+      // try {
+      //   if (workout.templateId != null) {
+      //     final activeRoutineAsync = ref.read(activeFlexibleRoutineProvider);
+      //     final activeRoutine = activeRoutineAsync.maybeWhen(
+      //       data: (routine) => routine,
+      //       orElse: () => null,
+      //     );
+      //
+      //     if (activeRoutine != null) {
+      //       // ⚠️ v2.0 STUB: Recovery detection not implemented in v2.0 simplified schema
+      //       // final notifier = ref.read(flexibleRoutineNotifierProvider.notifier);
+      //       // final isRecovery = await notifier.autoDetectAndMarkAsRecovery(
+      //       //   routineId: activeRoutine.id,
+      //       //   completedTemplateId: workout.templateId!,
+      //       //   completionDate: workout.endTime ?? DateTime.now(),
+      //       // );
+      //
+      //       const isRecovery = false; // v2.0: Always false (feature not implemented)
+      //
+      //       if (isRecovery) {
+      //         debugLog(LogCategory.workout, '🔄 [Recovery] Detected and marked as recovery workout');
+      //
+      //         // ✅ FIX: Force refresh from Firestore server (not cache)
+      //         // Wait 500ms to ensure Firestore write has propagated
+      //         await Future.delayed(const Duration(milliseconds: 500));
+      //
+      //         // Invalidate BOTH providers to force fresh fetch
+      //         ref.invalidate(activeFlexibleRoutineProvider);
+      //         ref.invalidate(userFlexibleRoutinesProvider);
+      //
+      //         debugLog(LogCategory.workout, '🔄 [Recovery] Providers invalidated, forcing server refresh');
+      //       }
+      //     }
+      //   }
+      // } catch (recoveryError) {
+      //   debugLog(LogCategory.workout, '⚠️ [Recovery] Failed to detect recovery: $recoveryError');
+      //   // Non-critical - workout is already saved
+      // }
 
       // 8. Navigate to workout completion summary screen (if context available)
       if (context != null) {
@@ -993,30 +995,37 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     }
   }
 
+  /// ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
   /// Auto-complete routine day if workout matches scheduled template
   ///
+  /// This method is currently stubbed out and always returns false.
   /// Uses RoutineAutoCompletionService for robust auto-completion with multi-day support.
   /// Returns true if a routine day was auto-completed, false otherwise.
   Future<bool> _autoCompleteRoutineDay(Workout workout, BuildContext? context) async {
-    final autoCompletionService = ref.read(routineAutoCompletionServiceProvider);
+    // ⚠️ ROUTINE FEATURE DISABLED: Always return false
+    // TODO: Re-enable when v2.0 routine API is ready
+    return false;
 
-    final result = await autoCompletionService.tryAutoCompleteRoutineDay(
-      completedWorkout: workout,
-      context: context,
-    );
-
-    // If multiple candidate dates found, show UI for user selection
-    // (For now, we skip this case - will implement UI in next task)
-    if (result.candidateDates != null && result.candidateDates!.isNotEmpty) {
-      if (kDebugMode) {
-        debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
-        debugLog(LogCategory.workout, '   Candidates: ${result.candidateDates}');
-      }
-      // TODO: Show DaySelectionBottomSheet for user to pick date
-      return false;
-    }
-
-    return result.completed;
+    // Original implementation commented out:
+    // final autoCompletionService = ref.read(routineAutoCompletionServiceProvider);
+    //
+    // final result = await autoCompletionService.tryAutoCompleteRoutineDay(
+    //   completedWorkout: workout,
+    //   context: context,
+    // );
+    //
+    // // If multiple candidate dates found, show UI for user selection
+    // // (For now, we skip this case - will implement UI in next task)
+    // if (result.candidateDates != null && result.candidateDates!.isNotEmpty) {
+    //   if (kDebugMode) {
+    //     debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] Multiple candidate dates found, but UI selection not yet implemented');
+    //     debugLog(LogCategory.workout, '   Candidates: ${result.candidateDates}');
+    //   }
+    //   // TODO: Show DaySelectionBottomSheet for user to pick date
+    //   return false;
+    // }
+    //
+    // return result.completed;
   }
 
   /// 📁 Export workout data to JSON file and share

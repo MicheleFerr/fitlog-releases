@@ -99,7 +99,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
 
   Widget _buildInsightCard(BuildContext context, TrainingInsight insight) {
     final colorScheme = Theme.of(context).colorScheme;
-    final color = _getColorForInsight(insight, colorScheme);
+    final color = _getColorForInsight(insight, colorScheme, context);
     final icon = _getIconForInsight(insight);
 
     return Card(
@@ -224,7 +224,7 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
     );
   }
 
-  Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
+  Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme, BuildContext context) {
     switch (insight.type) {
       case InsightType.achievement:
         return context.colors.success;
@@ -232,6 +232,8 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
         return context.colors.secondary;
       case InsightType.suggestion:
         return colorScheme.tertiary;
+      case InsightType.improvement:
+        return context.colors.success;
       case InsightType.info:
         return colorScheme.outline;
       case InsightType.motivation:
@@ -247,6 +249,8 @@ class _InsightsCarouselState extends State<InsightsCarousel> {
         return Icons.warning;
       case InsightType.suggestion:
         return Icons.lightbulb;
+      case InsightType.improvement:
+        return Icons.trending_up;
       case InsightType.info:
         return Icons.info;
       case InsightType.motivation:
@@ -273,7 +277,7 @@ class _InsightDetailsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final color = _getColorForInsight(insight, colorScheme);
+    final color = _getColorForInsight(insight, colorScheme, context);
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -378,7 +382,7 @@ class _InsightDetailsSheet extends StatelessWidget {
     );
   }
 
-  Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme) {
+  Color _getColorForInsight(TrainingInsight insight, ColorScheme colorScheme, BuildContext context) {
     switch (insight.type) {
       case InsightType.achievement:
         return context.colors.success;
@@ -386,6 +390,8 @@ class _InsightDetailsSheet extends StatelessWidget {
         return context.colors.secondary;
       case InsightType.suggestion:
         return colorScheme.tertiary;
+      case InsightType.improvement:
+        return context.colors.success;
       case InsightType.info:
         return colorScheme.outline;
       case InsightType.motivation:

@@ -124,7 +124,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
               Expanded(
                 child: FutureBuilder<List<ExerciseActivity>>(
                   future: ref.read(exerciseActivityRepositoryProvider)
-                      .getUserActivities(userEmail: userEmail, limit: 20),
+                      .getUserActivities(userId: userEmail, limit: 20),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

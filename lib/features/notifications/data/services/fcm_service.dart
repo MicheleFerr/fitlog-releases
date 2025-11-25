@@ -26,25 +26,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 /// Firebase Cloud Messaging Service
+/// ✅ BEST PRACTICE 2024-2025: Uses callback pattern for navigation
 class FCMService {
-  
-  factory FCMService(FlutterLocalNotificationsPlugin localNotifications) {
-    _instance ??= FCMService._internal(localNotifications);
+
+  factory FCMService(
+    FlutterLocalNotificationsPlugin localNotifications, {
+    void Function(Map<String, dynamic> payload)? onNotificationTapped,
+  }) {
+    _instance ??= FCMService._internal(localNotifications, onNotificationTapped);
     return _instance!;
   }
-  
-  FCMService._internal(this._localNotifications) {
+
+  FCMService._internal(this._localNotifications, this._onNotificationTapped) {
     _messageStreamController = StreamController<UnifiedNotification>.broadcast();
   }
   static FCMService? _instance;
-  
+
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications;
-  
+  final void Function(Map<String, dynamic> payload)? _onNotificationTapped;
+
   StreamController<UnifiedNotification>? _messageStreamController;
   StreamSubscription<RemoteMessage>? _foregroundMessageSubscription;
   StreamSubscription<RemoteMessage>? _messageOpenedSubscription;
-  
+
   String? _fcmToken;
   bool _isInitialized = false;
   bool _isDisposed = false;
@@ -321,16 +326,31 @@ class FCMService {
   }
   
   /// Handle notification tap navigation
+  /// ✅ BEST PRACTICE 2024-2025: Uses callback pattern for navigation
+  /// Repository/Service layer should not have direct access to routing
   void _handleNotificationTap(UnifiedNotification notification) {
-    // TODO: Implement navigation based on notification type/data
-    // This would typically use GoRouter or Navigator
-    
-    final route = notification.payload?['route'] as String?;
-    if (route != null) {
-      // Navigate to route
+    if (_onNotificationTapped == null) {
       if (kDebugMode) {
-        debugPrint('[FCM] Navigate to: $route');
+        debugPrint('[FCM] ⚠️ No navigation callback set');
       }
+      return;
+    }
+
+    // Build payload for navigation callback
+    final payload = <String, dynamic>{
+      'type': notification.type.name,
+      '_notificationId': notification.id,
+      '_scheduledAt': notification.scheduledTime.toIso8601String(),
+      ...?notification.payload,
+    };
+
+    // Fire callback with delay to prevent race condition with screen lifecycle
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _onNotificationTapped(payload);
+    });
+
+    if (kDebugMode) {
+      debugPrint('[FCM] ✅ Notification tap handled: ${notification.type.name}');
     }
   }
   
@@ -438,20 +458,27 @@ class FCMService {
 }
 
 /// Provider for FCM service
+/// ✅ BEST PRACTICE 2024-2025: Moved to notification_providers.dart
+/// This provider is kept for backward compatibility but the main provider
+/// with navigation callback is defined in notification_providers.dart
 final fcmServiceProvider = Provider<FCMService>((ref) {
   // Get local notifications plugin from somewhere
   // This is a simplified version - you'd get it from another provider
   final localNotifications = FlutterLocalNotificationsPlugin();
-  
-  final service = FCMService(localNotifications);
-  
+
+  final service = FCMService(
+    localNotifications,
+    // Note: Navigation callback should be set via notification_providers.dart
+    // where GoRouter is accessible
+  );
+
   // Initialize on creation
   service.initialize();
-  
+
   // Dispose when provider is disposed
   ref.onDispose(() {
     service.dispose();
   });
-  
+
   return service;
 });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
 
 /// Screen di test per il sistema RPE Live Activities
@@ -36,15 +36,15 @@ class RPETestScreen extends ConsumerWidget {
             
             // Simulazione Live Activity RPE
             RPELiveActivityWidget(
-              rpeData: RPELiveActivityData(
-                exerciseName: 'Bench Press',
-                targetReps: 10,
-                weight: 80.0,
-                currentSet: 2,
-                totalSets: 4,
-                workoutName: 'Push Day',
-                timestamp: DateTime.now(),
-              ),
+              rpeData: {
+                'exerciseName': 'Bench Press',
+                'targetReps': 10,
+                'weight': 80.0,
+                'currentSet': 2,
+                'totalSets': 4,
+                'workoutName': 'Push Day',
+                'timestamp': DateTime.now().toIso8601String(),
+              },
               activityId: 'test_activity_id',
             ),
             
@@ -61,15 +61,15 @@ class RPETestScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             
             CompactRPELiveActivityWidget(
-              rpeData: RPELiveActivityData(
-                exerciseName: 'Bench Press',
-                targetReps: 10,
-                weight: 80.0,
-                currentSet: 2,
-                totalSets: 4,
-                workoutName: 'Push Day',
-                timestamp: DateTime.now(),
-              ),
+              rpeData: {
+                'exerciseName': 'Bench Press',
+                'targetReps': 10,
+                'weight': 80.0,
+                'currentSet': 2,
+                'totalSets': 4,
+                'workoutName': 'Push Day',
+                'timestamp': DateTime.now().toIso8601String(),
+              },
             ),
             
             const SizedBox(height: 32),

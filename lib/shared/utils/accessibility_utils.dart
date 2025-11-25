@@ -186,13 +186,13 @@ class AccessibilityUtils {
   /// Esempio:
   /// ```dart
   /// final textColor = AccessibilityUtils.suggestTextColor(context.colors.primary);
-  /// // Returns context.colors.surface o context.colors.onSurface
+  /// // Returns Colors.white o Colors.black
   /// ```
   static Color suggestTextColor(Color background) {
-    final whiteRatio = getContrastRatio(context.colors.surface, background);
-    final blackRatio = getContrastRatio(context.colors.onSurface, background);
+    final whiteRatio = getContrastRatio(Colors.white, background);
+    final blackRatio = getContrastRatio(Colors.black, background);
 
-    return whiteRatio > blackRatio ? context.colors.surface : context.colors.onSurface;
+    return whiteRatio > blackRatio ? Colors.white : Colors.black;
   }
 
   /// Verifica se un colore è "chiaro" (luminance > 0.5)

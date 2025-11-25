@@ -1398,7 +1398,7 @@ class PublicTemplateCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const SemanticIcon(
+                  SemanticIcon(
   icon: AppIcons.star,
   semanticLabel: 'Star',
   size: AppIconSize.tiny,

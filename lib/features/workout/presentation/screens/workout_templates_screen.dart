@@ -151,7 +151,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                             child: Container(
                               width: 8,
                               height: 8,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: context.colors.secondary,
                                 shape: BoxShape.circle,
                               ),
@@ -793,7 +793,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                 Text('Template totali: ${firebaseState.templates.length}'),
                 if (firebaseState.hasOfflineChanges) ...[
                   const SizedBox(height: 8),
-                  const Text(
+                  Text(
                     'Hai modifiche offline che verranno sincronizzate al prossimo accesso.',
                     style: TextStyle(color: context.colors.secondary),
                   ),

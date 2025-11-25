@@ -41,8 +41,8 @@ class _ExerciseHistoryDebugScreenState extends ConsumerState<ExerciseHistoryDebu
       await debugFunction();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Debug function completed. Check console for output.'),
+          SnackBar(
+            content: const Text('Debug function completed. Check console for output.'),
             backgroundColor: Colors.green,
           ),
         );

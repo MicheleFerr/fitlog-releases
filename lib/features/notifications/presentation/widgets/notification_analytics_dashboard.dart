@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/notification_analytics_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification_type.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 
 /// Dashboard widget for displaying notification analytics
 class NotificationAnalyticsDashboard extends ConsumerWidget {
@@ -14,8 +12,7 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final metricsAsync = ref.watch(notificationAnalyticsMetricsProvider);
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-    
+
     return metricsAsync.when(
       data: (metrics) => _buildDashboard(context, metrics, theme),
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -462,8 +459,6 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
         return 'Promotional';
       case NotificationType.emergency:
         return 'Emergency';
-      default:
-        return type.toString().split('.').last;
     }
   }
   
@@ -493,8 +488,6 @@ class NotificationAnalyticsDashboard extends ConsumerWidget {
         return 'Promo';
       case NotificationType.emergency:
         return 'Alert';
-      default:
-        return type.toString().split('.').last.substring(0, 6);
     }
   }
 }

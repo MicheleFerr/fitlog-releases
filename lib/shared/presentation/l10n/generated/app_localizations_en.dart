@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'FitLog Pro';
 
   @override
+  String get home => 'Home';
+
+  @override
   String get welcome => 'Ready to train?';
 
   @override
@@ -810,6 +813,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get testNotificationSentDescription =>
       'Check your notification center to verify it works';
+
+  @override
+  String get notificationWorkoutReminderTitle => 'Workout Reminder';
+
+  @override
+  String notificationWorkoutReminderBody(String workoutName) {
+    return 'Time for your $workoutName workout! 💪';
+  }
+
+  @override
+  String get notificationRecoveryAlertTitle => 'Recovery Needed';
+
+  @override
+  String notificationRecoveryAlertBody(int daysToRecover, String dayWord) {
+    return 'You have $daysToRecover skipped $dayWord to recover! 🔄';
+  }
+
+  @override
+  String get notificationStreakMotivationTitle => 'Keep Your Streak Going!';
+
+  @override
+  String notificationStreakMotivationBody(int currentStreak) {
+    return '$currentStreak days streak! Don\'t break it now! 🔥';
+  }
+
+  @override
+  String get notificationRestDayTitle => 'Rest Day';
+
+  @override
+  String get notificationRestDayBody =>
+      'Today is your rest day. Recovery is just as important! 😴';
+
+  @override
+  String get notificationTestTitle => 'Test Notification';
+
+  @override
+  String get notificationTestBody => 'GymBro notifications are working! 💪';
+
+  @override
+  String get daysSingular => 'day';
+
+  @override
+  String get daysPlural => 'days';
 
   @override
   String get prNotifications => 'New Personal Records';
@@ -9979,6 +10025,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sessionHistory => 'Session History';
+
+  @override
+  String get dragToReorder => 'Drag to reorder charts';
 
   @override
   String get improving => 'Improving';
@@ -19688,4 +19737,367 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get analyticsCorrelationsTitle => 'Correlations';
+
+  @override
+  String get analyticsWeightVsRpe => 'Weight vs RPE';
+
+  @override
+  String get analyticsVolumeVsRpe => 'Volume vs RPE';
+
+  @override
+  String get analyticsCorrelationStrong => 'Strong';
+
+  @override
+  String get analyticsCorrelationModerate => 'Moderate';
+
+  @override
+  String get analyticsCorrelationWeak => 'Weak';
+
+  @override
+  String get analyticsCorrelationInsufficient => 'Insufficient Data';
+
+  @override
+  String analyticsNeedMoreData(int count) {
+    return 'Need $count+ sessions for correlation analysis';
+  }
+
+  @override
+  String analyticsRSquared(String value) {
+    return 'r² = $value';
+  }
+
+  @override
+  String analyticsVarianceExplained(String percent) {
+    return '$percent% variance explained';
+  }
+
+  @override
+  String get analyticsProgressiveOverload => 'Progressive Overload';
+
+  @override
+  String get analyticsOverloadOptimal => 'Optimal';
+
+  @override
+  String get analyticsOverloadBelowTarget => 'Below Target';
+
+  @override
+  String get analyticsOverloadAboveTarget => 'Above Target';
+
+  @override
+  String get analyticsOverloadNoBaseline => 'No Baseline';
+
+  @override
+  String analyticsWeeklyProgress(String percent) {
+    return '$percent% weekly progress';
+  }
+
+  @override
+  String analyticsTargetRange(String min, String max) {
+    return 'Target: $min-$max%';
+  }
+
+  @override
+  String get analyticsIntensity => 'Intensity';
+
+  @override
+  String get analyticsEstimated1RM => 'Est. 1RM';
+
+  @override
+  String analyticsPercentOf1RM(String percent) {
+    return '$percent% of 1RM';
+  }
+
+  @override
+  String get analyticsZoneMaxStrength => 'Max Strength';
+
+  @override
+  String get analyticsZoneStrengthHypertrophy => 'Strength/Hypertrophy';
+
+  @override
+  String get analyticsZoneHypertrophy => 'Hypertrophy';
+
+  @override
+  String get analyticsZoneEndurance => 'Endurance';
+
+  @override
+  String get analyticsTrend => 'Trend';
+
+  @override
+  String get analyticsTrendImproving => 'Improving';
+
+  @override
+  String get analyticsTrendDeclining => 'Declining';
+
+  @override
+  String get analyticsTrendPlateau => 'Plateau';
+
+  @override
+  String get analyticsTrendInconsistent => 'Inconsistent';
+
+  @override
+  String get analyticsViewFullAnalytics => 'View Full Analytics';
+
+  @override
+  String analyticsSessions(int count) {
+    return '$count sessions';
+  }
+
+  @override
+  String analyticsDataSpan(int days) {
+    return '$days days of data';
+  }
+
+  @override
+  String get analyticsWeightVsRpeDescription =>
+      'How your perceived effort changes with weight';
+
+  @override
+  String get analyticsVolumeVsRpeDescription =>
+      'How your perceived effort changes with volume';
+
+  @override
+  String get analyticsDataSufficient => 'Data Quality: Good';
+
+  @override
+  String get analyticsDataInsufficient => 'Need More Data';
+
+  @override
+  String analyticsDataPoints(int sessions, int days) {
+    return '$sessions sessions over $days days';
+  }
+
+  @override
+  String get analyticsRValue => 'r';
+
+  @override
+  String get analyticsRSquaredLabel => 'r²';
+
+  @override
+  String get analyticsCorrelationStrength => 'Strength';
+
+  @override
+  String get analyticsStrength => 'Strength';
+
+  @override
+  String get analyticsRValueTooltip =>
+      'Correlation coefficient: -1 to 1. Positive = increase together, Negative = inverse relationship';
+
+  @override
+  String get analyticsRSquaredTooltip =>
+      '% of variance explained. Higher = stronger predictive relationship';
+
+  @override
+  String get analyticsStrengthTooltip =>
+      'Based on r value: Strong (>0.7), Moderate (0.4-0.7), Weak (<0.4)';
+
+  @override
+  String get analyticsStatisticallySignificant => 'Statistically Significant';
+
+  @override
+  String get analyticsNotSignificant => 'Not Statistically Significant';
+
+  @override
+  String get analyticsInsightWeightRpePositive =>
+      'Heavier weights correlate with higher perceived effort - this is expected for progressive overload';
+
+  @override
+  String get analyticsInsightWeightRpeNegative =>
+      'Heavier weights correlate with lower perceived effort - you may be getting stronger efficiently';
+
+  @override
+  String get analyticsInsightVolumeRpePositive =>
+      'Higher training volume correlates with higher perceived effort - consider managing fatigue';
+
+  @override
+  String get analyticsInsightVolumeRpeNegative =>
+      'Higher volume with lower perceived effort - your work capacity is improving';
+
+  @override
+  String get analyticsKeyInsights => 'Key Insights';
+
+  @override
+  String get analyticsTrendSummary => 'Trend Summary';
+
+  @override
+  String get analyticsOverload => 'Overload';
+
+  @override
+  String get analyticsNoDataTitle => 'No Analytics Available';
+
+  @override
+  String get analyticsNoDataDescription =>
+      'Complete a few more workouts to see your correlation analysis and insights';
+
+  @override
+  String get analyticsErrorLoading => 'Error Loading Analytics';
+
+  @override
+  String analyticsTrendBadgeUp(String percent) {
+    return '+$percent%';
+  }
+
+  @override
+  String analyticsTrendBadgeDown(String percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get analyticsTrendBadgeStable => 'Stable';
+
+  @override
+  String analyticsInsightWeightUp(String percent) {
+    return 'Weight up $percent% - great progress!';
+  }
+
+  @override
+  String analyticsInsightWeightDown(String percent) {
+    return 'Weight down $percent% - check form and recovery';
+  }
+
+  @override
+  String analyticsInsightVolumeUp(String percent) {
+    return 'Volume up $percent% - muscles are adapting!';
+  }
+
+  @override
+  String analyticsInsightVolumeDown(String percent) {
+    return 'Volume down $percent% - consider adding a set';
+  }
+
+  @override
+  String analyticsInsightRepsUp(String percent) {
+    return 'Reps up $percent% - building endurance!';
+  }
+
+  @override
+  String analyticsInsightRepsDown(String percent) {
+    return 'Reps down $percent% - are weights too heavy?';
+  }
+
+  @override
+  String get analyticsInsightRpeHigh => 'RPE trending high - consider a deload';
+
+  @override
+  String get analyticsInsightRpeLow => 'RPE low - you can push harder!';
+
+  @override
+  String get analyticsInsightStable =>
+      'Consistent performance - stay the course!';
+
+  @override
+  String get analyticsNotEnoughData => 'Add more sessions for insights';
+
+  @override
+  String get scienceExplanation => 'Science';
+
+  @override
+  String get confidenceLabel => 'Confidence';
+
+  @override
+  String get patternFatigueWarningTitle => 'Fatigue Warning';
+
+  @override
+  String get patternFatigueWarningDescription =>
+      'Your RPE is increasing while weight is decreasing. This suggests accumulated fatigue.';
+
+  @override
+  String get patternFatigueWarningRecommendation =>
+      'Consider taking a deload week or extra rest days. Focus on sleep and nutrition.';
+
+  @override
+  String get patternFatigueWarningScience =>
+      'Research shows that RPE increasing at the same load indicates neuromuscular fatigue. Helms et al. (2016) recommend deloading when this pattern persists.';
+
+  @override
+  String get patternGreatProgressionTitle => 'Great Progression!';
+
+  @override
+  String get patternGreatProgressionDescription =>
+      'Weight is increasing while RPE stays stable. Your body is adapting perfectly!';
+
+  @override
+  String get patternGreatProgressionRecommendation =>
+      'Keep up the great work! Continue with your current program and progressive overload.';
+
+  @override
+  String get patternGreatProgressionScience =>
+      'This is the ideal training adaptation: increasing load without increased perceived effort indicates improved work capacity and strength gains.';
+
+  @override
+  String get patternOverreachingRiskTitle => 'Overreaching Risk';
+
+  @override
+  String get patternOverreachingRiskDescription =>
+      'RPE is high, weight is stable, but volume is dropping. You may be pushing too hard.';
+
+  @override
+  String get patternOverreachingRiskRecommendation =>
+      'Reduce training volume by 30-40% for 1-2 weeks. Prioritize recovery.';
+
+  @override
+  String get patternOverreachingRiskScience =>
+      'Functional overreaching occurs when training stress exceeds recovery. Zourdos et al. (2016) found that a combination of high RPE with declining volume precedes overtraining.';
+
+  @override
+  String get patternAdaptationTitle => 'Body Adapting Well';
+
+  @override
+  String get patternAdaptationDescription =>
+      'RPE is decreasing at the same weight. Your body is getting stronger!';
+
+  @override
+  String get patternAdaptationRecommendation =>
+      'Great progress! You may be ready to increase the weight slightly.';
+
+  @override
+  String get patternAdaptationScience =>
+      'Decreasing RPE at a fixed load is a key indicator of neural and muscular adaptation - your muscles are becoming more efficient.';
+
+  @override
+  String get patternVolumeSpikeTitle => 'Volume Spike Detected';
+
+  @override
+  String get patternVolumeSpikeDescription =>
+      'Training volume increased significantly compared to previous sessions.';
+
+  @override
+  String get patternVolumeSpikeRecommendation =>
+      'Monitor recovery closely. Avoid large jumps in volume - aim for 5-10% weekly increases.';
+
+  @override
+  String get patternVolumeSpikeScience =>
+      'Progressive overload research suggests volume increases should be gradual (5-10%/week) to allow adaptation without injury risk.';
+
+  @override
+  String get patternOptimalTrainingTitle => 'Optimal Training';
+
+  @override
+  String get patternOptimalTrainingDescription =>
+      'All metrics are progressing well within optimal ranges. Perfect balance!';
+
+  @override
+  String get patternOptimalTrainingRecommendation =>
+      'Everything is dialed in! Maintain your current routine and keep progressing.';
+
+  @override
+  String get patternOptimalTrainingScience =>
+      'Optimal training occurs when volume, intensity, and recovery are balanced, allowing for consistent progressive overload.';
+
+  @override
+  String get patternInconsistentTitle => 'Inconsistent Data';
+
+  @override
+  String get patternInconsistentDescription =>
+      'Training metrics show high variability. Focus on consistency.';
+
+  @override
+  String get patternInconsistentRecommendation =>
+      'Try to train at similar times and conditions. Track your RPE consistently for better insights.';
+
+  @override
+  String get patternInconsistentScience =>
+      'High training variability makes pattern detection difficult. Consistent data collection enables better performance analysis.';
 }

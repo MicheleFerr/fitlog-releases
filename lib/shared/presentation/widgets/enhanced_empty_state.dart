@@ -172,7 +172,7 @@ class EnhancedEmptyState extends StatelessWidget {
       case EmptyStateType.motivational:
         return colorScheme.primary;
       case EmptyStateType.warning:
-        return context.colors.secondary;
+        return colorScheme.secondary;
       case EmptyStateType.success:
         return colorScheme.success;
       case EmptyStateType.error:
@@ -242,15 +242,16 @@ class EnhancedEmptyState extends StatelessWidget {
 
   /// Costruisce la card con il pro tip
   Widget _buildProTip(BuildContext context, AppLocalizations l10n) {
+    final warningColor = Theme.of(context).colorScheme.secondary;
     return Card(
-      color: context.colors.warning.withValues(alpha: 0.1),
+      color: warningColor.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               AppIcons.tip,
-              color: context.colors.warning,
+              color: warningColor,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -260,9 +261,9 @@ class EnhancedEmptyState extends StatelessWidget {
                 children: [
                   Text(
                     l10n.proTip,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: context.colors.warning,
+                      color: warningColor,
                     ),
                   ),
                   Text(

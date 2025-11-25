@@ -23,6 +23,7 @@ import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feed
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 
 /// Admin dashboard for managing user feedback
 /// Only accessible to ferrara-michele@hotmail.it
@@ -40,15 +41,19 @@ class AdminFeedbackDashboardScreen extends ConsumerStatefulWidget {
   /// Navigate to dashboard (with auth check)
   static Future<void> navigate(BuildContext context) async {
     if (!await isAdmin()) {
-      SnackBarService.showError(context, 'Unauthorized access');
+      if (context.mounted) {
+        SnackBarService.showError(context, 'Unauthorized access');
+      }
       return;
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const AdminFeedbackDashboardScreen(),
-      ),
-    );
+    if (context.mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const AdminFeedbackDashboardScreen(),
+        ),
+      );
+    }
   }
 
   @override
@@ -98,22 +103,41 @@ class _AdminFeedbackDashboardScreenState
 
   @override
   Widget build(BuildContext context) {
-    // Auth check
-    if (!AdminFeedbackDashboardScreen.isAdmin()) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Unauthorized')),
-        body: Center(
-          child: Text(
-            'You do not have permission to access this page',
-            style: context.textTheme.bodyLarge,
-          ),
-        ),
-      );
-    }
-
     final feedbackStream = ref.watch(allFeedbackProvider);
     final statisticsAsync = ref.watch(feedbackStatisticsProvider);
 
+    // Auth check (async)
+    return FutureBuilder<bool>(
+      future: AdminRoleHelper.isCurrentUserAdmin(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: LoadingIndicator()),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data != true) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Unauthorized')),
+            body: Center(
+              child: Text(
+                'You do not have permission to access this page',
+                style: context.textTheme.bodyLarge,
+              ),
+            ),
+          );
+        }
+
+        return _buildDashboard(context, feedbackStream, statisticsAsync);
+      },
+    );
+  }
+
+  Widget _buildDashboard(
+    BuildContext context,
+    AsyncValue<List<UserFeedback>> feedbackStream,
+    AsyncValue<FeedbackStatistics> statisticsAsync,
+  ) {
     return Scaffold(
       appBar: AppBar(
         title: Row(

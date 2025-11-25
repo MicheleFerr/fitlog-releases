@@ -36,6 +36,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/screens/landscape_graph_screen.dart';
 
 /// Timeframe options for filtering chart data
 enum Timeframe {
@@ -205,16 +206,18 @@ class _ExerciseCharts extends ConsumerWidget {
 
     return DefaultTabController(
       length: 5,
-      child: Column(
+      child: Stack(
         children: [
-          // Stats summary card
-          _StatsSummaryCard(history: filteredHistory),
+          Column(
+            children: [
+              // Stats summary card
+              _StatsSummaryCard(history: filteredHistory),
 
-          // Timeframe selector
-          _TimeframeSelector(),
+              // Timeframe selector
+              _TimeframeSelector(),
 
-          // Chart type tabs
-          TabBar(
+              // Chart type tabs
+              TabBar(
             isScrollable: true,
             tabs: [
               Tab(
@@ -260,23 +263,52 @@ class _ExerciseCharts extends ConsumerWidget {
             ],
           ),
 
-          // Chart views
-          Expanded(
-            child: TabBarView(
-              children: [
-                // Max weight chart
-                MaxWeightProgressionChart(history: filteredHistory),
-                // Volume chart
-                VolumeProgressionChartAnalytics(history: filteredHistory),
-                // 1RM chart
-                OneRMProgressionChartAnalytics(history: filteredHistory),
-                // Reps chart
-                RepsProgressionChart(history: filteredHistory),
-                // PR timeline chart
-                PRTimelineChart(history: filteredHistory),
-              ],
+            // Chart views
+            Expanded(
+              child: TabBarView(
+                children: [
+                  // Max weight chart
+                  MaxWeightProgressionChart(history: filteredHistory),
+                  // Volume chart
+                  VolumeProgressionChartAnalytics(history: filteredHistory),
+                  // 1RM chart
+                  OneRMProgressionChartAnalytics(history: filteredHistory),
+                  // Reps chart
+                  RepsProgressionChart(history: filteredHistory),
+                  // PR timeline chart
+                  PRTimelineChart(history: filteredHistory),
+                ],
+              ),
+            ),
+          ],
+        ),
+        // Fullscreen landscape button (FAB)
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+            heroTag: 'landscape_chart_fab',
+            mini: true,
+            backgroundColor: context.colors.primary,
+            foregroundColor: context.colors.onPrimary,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => LandscapeGraphScreen(
+                    exerciseName: history.exerciseName,
+                    history: history,
+                  ),
+                ),
+              );
+            },
+            tooltip: context.l10n.fullscreen,
+            child: SemanticIcon.button(
+              icon: AppIcons.fullscreen,
+              semanticLabel: context.l10n.fullscreen,
             ),
           ),
+        ),
         ],
       ),
     );

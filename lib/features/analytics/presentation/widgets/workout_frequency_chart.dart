@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WorkoutFrequencyChart extends StatelessWidget {
 
@@ -46,10 +45,10 @@ class WorkoutFrequencyChart extends StatelessWidget {
             SizedBox(
               height: 200,
               child: weeklyData.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         'No data available',
-                        style: TextStyle(color: context.colors.surfaceVariant),
+                        style: TextStyle(color: context.colors.surfaceContainerHighest),
                       ),
                     )
                   : _buildSimpleBarChart(context, weeklyData),

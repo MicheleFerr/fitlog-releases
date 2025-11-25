@@ -121,8 +121,9 @@ final healthBackgroundSyncControllerProvider =
 class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> {
   HealthBackgroundSyncController(this._ref)
       : super(const BackgroundSyncState()) {
-    // Auto-sync on app launch if enabled
-    _syncOnAppLaunchIfEnabled();
+    // Defer auto-sync to avoid modifying other providers during initialization
+    // Riverpod doesn't allow providers to modify other providers in constructor
+    Future.microtask(() => _syncOnAppLaunchIfEnabled());
   }
 
   final Ref _ref;

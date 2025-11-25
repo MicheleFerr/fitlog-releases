@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
@@ -119,13 +120,14 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
   }
   
   /// Check if we have internet connection
+  /// Uses Firestore network state instead of querying a protected document
   Future<bool> get hasConnection async {
     try {
-      // Simple connectivity check
+      // Use Firestore's built-in network connectivity check
+      // This doesn't require any permission and is more reliable
       await FirebaseFirestore.instance
-          .collection('_connectivity_check')
-          .doc('test')
-          .get(const GetOptions(source: Source.server));
+          .waitForPendingWrites()
+          .timeout(const Duration(seconds: 3));
       return true;
     } catch (_) {
       return false;
@@ -879,5 +881,241 @@ class HybridWorkoutRepositoryImpl implements WorkoutRepository {
       debugPrint('✅ HybridWorkoutRepositoryImpl disposed');
       debugPrint('   - Auth state subscription cancelled');
     }
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Workout>>> getWorkoutsPaginated({
+    int pageSize = 20,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        return left(const AuthenticationFailure('User not authenticated'));
+      }
+
+      final userId = currentUser.uid;
+
+      if (kDebugMode) {
+        debugPrint('📖 [HybridRepo] getWorkoutsPaginated - pageSize: $pageSize');
+        debugPrint('📖 [HybridRepo] Cursor: ${startAfter?.id ?? "null (first page)"}');
+      }
+
+      // For admin users, prioritize cloud data for consistency
+      if (await isAdminUser && await hasConnection) {
+        return await _getPaginatedFromCloud(
+          userId: userId,
+          pageSize: pageSize,
+          startAfter: startAfter,
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          status: status,
+        );
+      }
+
+      // For premium users with connection, merge local + cloud
+      if (isPremiumUser && await hasConnection) {
+        return await _getPaginatedMerged(
+          userId: userId,
+          pageSize: pageSize,
+          startAfter: startAfter,
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          status: status,
+        );
+      }
+
+      // Default: use local storage only (free users or offline)
+      return await _getPaginatedFromLocal(
+        userId: userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [HybridRepo] getWorkoutsPaginated error: $e');
+      }
+      return left(UnexpectedFailure('Failed to get paginated workouts: $e'));
+    }
+  }
+
+  /// Get paginated workouts from cloud (Firestore)
+  Future<Either<Failure, PaginatedResult<Workout>>> _getPaginatedFromCloud({
+    required String userId,
+    required int pageSize,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    try {
+      final result = await _remoteDataSource.getWorkoutsPaginated(
+        userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+
+      // Convert WorkoutModel to Workout domain entities
+      final workouts = result.items.map((model) => model.toDomain()).toList();
+
+      // Cache fetched workouts locally (background, non-blocking)
+      _cacheWorkoutsInBackground(result.items, userId);
+
+      return right(PaginatedResult<Workout>(
+        items: workouts,
+        hasMore: result.hasMore,
+        lastDocument: result.lastDocument,
+      ));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [HybridRepo] Cloud pagination failed, falling back to local: $e');
+      }
+      // Fallback to local on cloud failure
+      return await _getPaginatedFromLocal(
+        userId: userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+    }
+  }
+
+  /// Get paginated workouts from local storage (Hive)
+  Future<Either<Failure, PaginatedResult<Workout>>> _getPaginatedFromLocal({
+    required String userId,
+    required int pageSize,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    // For Hive, we use the last workout ID as cursor (not DocumentSnapshot)
+    // Extract lastWorkoutId from previous result if available
+    String? lastWorkoutId;
+
+    // If startAfter is provided but we're using local, we need to find the matching workout ID
+    // This happens when switching from cloud to local pagination mid-session
+    if (startAfter != null) {
+      // Try to get the workout ID from the document
+      try {
+        final data = startAfter.data() as Map<String, dynamic>?;
+        lastWorkoutId = data?['id'] as String?;
+      } catch (_) {
+        // If we can't extract ID, start from beginning
+        lastWorkoutId = null;
+      }
+    }
+
+    final result = await _localDataSource.getWorkoutsPaginated(
+      userId,
+      pageSize: pageSize,
+      lastWorkoutId: lastWorkoutId,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+      status: status,
+    );
+
+    // Convert WorkoutModel to Workout domain entities
+    final workouts = result.items.map((model) => model.toDomain()).toList();
+
+    return right(PaginatedResult<Workout>(
+      items: workouts,
+      hasMore: result.hasMore,
+      lastDocument: null, // Local doesn't use DocumentSnapshot cursor
+    ));
+  }
+
+  /// Get paginated workouts merged from local + cloud (premium users)
+  Future<Either<Failure, PaginatedResult<Workout>>> _getPaginatedMerged({
+    required String userId,
+    required int pageSize,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    try {
+      // Fetch from cloud (source of truth for premium)
+      final cloudResult = await _remoteDataSource.getWorkoutsPaginated(
+        userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+
+      // Also fetch local unsynced workouts (may have workouts not yet synced)
+      final localResult = await _localDataSource.getWorkoutsPaginated(
+        userId,
+        pageSize: pageSize,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+
+      // Merge results - cloud data takes precedence for synced items
+      final mergedModels = _mergeWorkouts(localResult.items, cloudResult.items);
+
+      // Sort merged results by date (newest first)
+      mergedModels.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      // Take only pageSize items
+      final trimmedModels = mergedModels.take(pageSize).toList();
+
+      // Convert to domain entities
+      final workouts = trimmedModels.map((model) => model.toDomain()).toList();
+
+      // Cache cloud workouts locally
+      _cacheWorkoutsInBackground(cloudResult.items, userId);
+
+      return right(PaginatedResult<Workout>(
+        items: workouts,
+        hasMore: cloudResult.hasMore || localResult.hasMore,
+        lastDocument: cloudResult.lastDocument,
+      ));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [HybridRepo] Merged pagination failed: $e');
+      }
+      // Fallback to local only
+      return await _getPaginatedFromLocal(
+        userId: userId,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+    }
+  }
+
+  /// Cache workouts locally in background (fire and forget)
+  void _cacheWorkoutsInBackground(List<WorkoutModel> workouts, String userId) {
+    Future(() async {
+      try {
+        for (final workout in workouts) {
+          await _localDataSource.saveWorkout(workout, userId);
+        }
+        if (kDebugMode) {
+          debugPrint('✅ [HybridRepo] Cached ${workouts.length} workouts locally');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [HybridRepo] Background cache failed: $e');
+        }
+      }
+    });
   }
 }

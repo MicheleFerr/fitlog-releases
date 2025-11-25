@@ -251,12 +251,12 @@ class WorkoutSyncService {
   }
   
   /// Check internet connection
+  /// Uses Firestore's built-in pending writes check instead of protected document
   Future<bool> _checkConnection() async {
     try {
       await FirebaseFirestore.instance
-          .collection('_connectivity_check')
-          .doc('test')
-          .get(const GetOptions(source: Source.server));
+          .waitForPendingWrites()
+          .timeout(const Duration(seconds: 3));
       return true;
     } catch (_) {
       return false;

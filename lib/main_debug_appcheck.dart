@@ -57,7 +57,7 @@ void main() async {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.security, size: 100, color: context.colors.success),
+              Icon(Icons.security, size: 100, color: Colors.green),
               SizedBox(height: 20),
               Text(
                 'Check Console for Debug Token',

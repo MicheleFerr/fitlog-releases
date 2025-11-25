@@ -11,15 +11,17 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // ✅ FIXED: Hide NotificationType from workout_notification to avoid ambiguity with unified_notification
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' hide NotificationType;
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/repositories/local_notification_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/smart_notification_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/data/services/fcm_service.dart';
 // 🔔 WARM-START: Import for GoRouter navigation
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/app/app.dart' show routerProvider;
+import 'package:gymbro_flutter_new/core/navigation/app_router.dart' show appRouterProvider;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,7 +30,7 @@ import 'package:flutter/foundation.dart';
 /// 🔔 WARM-START: Includes navigation callback for notification taps
 final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
   // 🔔 WARM-START: Get GoRouter for navigation
-  final router = ref.read(routerProvider);
+  final router = ref.read(appRouterProvider);
 
   return LocalNotificationRepository(
     ref: ref, // 🔔 FIX: Pass ref to read NotificationSettings v2.0
@@ -81,6 +83,56 @@ void _handleNotificationTap(GoRouter router, Map<String, dynamic> payload) {
     }
   }
 }
+
+/// ═══════════════════════════════════════════════════════════════════════════
+/// 📡 FCM SERVICE PROVIDER (Firebase Cloud Messaging)
+/// ✅ BEST PRACTICE 2024-2025: keepAlive + navigation callback
+/// ═══════════════════════════════════════════════════════════════════════════
+
+/// Provider for FlutterLocalNotificationsPlugin (shared instance)
+final localNotificationsPluginProvider = Provider<FlutterLocalNotificationsPlugin>((ref) {
+  return FlutterLocalNotificationsPlugin();
+});
+
+/// Provider for FCM Service with navigation callback
+/// ✅ T03 + T06: Uses keepAlive for singleton-like behavior + proper navigation
+final fcmServiceWithNavigationProvider = Provider<FCMService>((ref) {
+  // Get shared local notifications plugin
+  final localNotifications = ref.read(localNotificationsPluginProvider);
+
+  // Get GoRouter for navigation
+  final router = ref.read(appRouterProvider);
+
+  final service = FCMService(
+    localNotifications,
+    onNotificationTapped: (payload) {
+      // Use the same navigation handler as local notifications
+      _handleNotificationTap(router, payload);
+    },
+  );
+
+  // Initialize asynchronously
+  service.initialize();
+
+  // Dispose when provider is disposed
+  ref.onDispose(() {
+    service.dispose();
+  });
+
+  // ✅ T13: keepAlive prevents disposal when not watched
+  ref.keepAlive();
+
+  return service;
+});
+
+/// Provider for FCM initialization status
+/// ✅ BEST PRACTICE 2024-2025: FutureProvider for async initialization
+final fcmInitializationProvider = FutureProvider<bool>((ref) async {
+  final service = ref.watch(fcmServiceWithNavigationProvider);
+  // FCMService.initialize() is called in constructor, but we can check status
+  await Future.delayed(const Duration(milliseconds: 500)); // Give time for init
+  return service.fcmToken != null;
+});
 
 /// Provider for NotificationSettings (from SharedPreferences)
 final notificationSettingsProvider =

@@ -547,12 +547,12 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   Color _getPlateColor(double weight) {
     if (weight >= 25) return context.colors.error;
     if (weight >= 20) return context.colors.primary;
-    if (weight >= 15) return context.colors.warning[700]!;
+    if (weight >= 15) return context.colors.warning;
     if (weight >= 10) return context.colors.success;
-    if (weight >= 5) return context.colors.surfaceVariant[600]!;
+    if (weight >= 5) return context.colors.surfaceContainerHighest;
     if (weight >= 2.5) return context.colors.secondary;
     if (weight >= 1.25) return context.colors.tertiary;
-    return context.colors.surfaceVariant[400]!;
+    return context.colors.surfaceContainerHigh;
   }
   
   double _getPlateHeight(double weight) {

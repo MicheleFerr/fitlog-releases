@@ -17,6 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
@@ -617,6 +618,114 @@ class HiveWorkoutDataSource {
       }
       throw Exception('Failed to get last completed workout: $e');
     }
+  }
+
+  /// Get workouts with cursor-based pagination (Hive optimized)
+  ///
+  /// For Hive (local storage), we simulate cursor-based pagination using
+  /// the lastWorkoutId as cursor. Workouts are sorted by createdAt descending.
+  ///
+  /// **Local Storage Pattern**:
+  /// - Uses offset calculated from cursor position
+  /// - Fetches pageSize + 1 to detect hasMore
+  /// - Returns lastWorkoutId as cursor for next page
+  ///
+  /// [pageSize] - Number of items per page (default: 20)
+  /// [lastWorkoutId] - ID of last workout from previous page (null for first page)
+  /// [dateFrom] - Optional filter for workouts after this date
+  /// [dateTo] - Optional filter for workouts before this date
+  /// [status] - Optional filter by workout status
+  Future<PaginatedResult<WorkoutModel>> getWorkoutsPaginated(
+    String userId, {
+    int pageSize = 20,
+    String? lastWorkoutId,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    final box = await _getWorkoutsBox();
+
+    if (kDebugMode) {
+      debugPrint('📦 [HivePaginated] Getting paginated workouts for user: $userId');
+      debugPrint('📦 [HivePaginated] PageSize: $pageSize, LastId: $lastWorkoutId');
+    }
+
+    // Get all workouts for this user
+    var userWorkouts = box.keys
+        .where((key) => key.toString().startsWith('${userId}_'))
+        .map((key) {
+          final data = box.get(key);
+          if (data == null) return null;
+          try {
+            final Map<String, dynamic> jsonData;
+            if (data is Map<String, dynamic>) {
+              jsonData = data;
+            } else {
+              jsonData = Map<String, dynamic>.from(
+                data.map((key, value) => MapEntry(key.toString(), value)),
+              );
+            }
+            return WorkoutModel.fromJson(jsonData);
+          } catch (e) {
+            if (kDebugMode) {
+              debugPrint('❌ [HivePaginated] Error parsing workout with key $key: $e');
+            }
+            return null;
+          }
+        })
+        .where((workout) => workout != null)
+        .cast<WorkoutModel>()
+        .toList();
+
+    // Apply filters
+    if (status != null) {
+      userWorkouts = userWorkouts.where((w) => w.status == status).toList();
+    }
+
+    if (dateFrom != null) {
+      userWorkouts = userWorkouts.where((w) => w.createdAt.isAfter(dateFrom)).toList();
+    }
+
+    if (dateTo != null) {
+      userWorkouts = userWorkouts.where((w) => w.createdAt.isBefore(dateTo)).toList();
+    }
+
+    // Sort by date (newest first) - consistent with Firestore query
+    userWorkouts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    // Find cursor position
+    int startIndex = 0;
+    if (lastWorkoutId != null) {
+      final cursorIndex = userWorkouts.indexWhere((w) => w.id == lastWorkoutId);
+      if (cursorIndex != -1) {
+        startIndex = cursorIndex + 1; // Start after the cursor
+      }
+    }
+
+    // Slice the list from cursor position
+    final remainingWorkouts = userWorkouts.skip(startIndex).toList();
+
+    // Take pageSize + 1 to check if there are more
+    final fetchedWorkouts = remainingWorkouts.take(pageSize + 1).toList();
+
+    // Determine if there are more pages
+    final hasMore = fetchedWorkouts.length > pageSize;
+
+    // Take only pageSize items
+    final resultWorkouts = hasMore
+        ? fetchedWorkouts.sublist(0, pageSize)
+        : fetchedWorkouts;
+
+    if (kDebugMode) {
+      debugPrint('📦 [HivePaginated] Total filtered: ${userWorkouts.length}');
+      debugPrint('📦 [HivePaginated] Returning: ${resultWorkouts.length}, HasMore: $hasMore');
+    }
+
+    return PaginatedResult<WorkoutModel>(
+      items: resultWorkouts,
+      hasMore: hasMore,
+      lastDocument: null, // Hive doesn't use DocumentSnapshot
+    );
   }
 
   /// ✅ DISPOSAL: No longer needed

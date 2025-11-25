@@ -70,13 +70,13 @@ class _DebugLabel extends StatelessWidget {
   icon: AppIcons.code,
   semanticLabel: 'Code',
   size: AppIconSize.tiny,
-  color: context.colors.warning[300],
+  color: context.colors.warning,
 ),
           const SizedBox(width: 6),
           Text(
             screenName,
             style: context.textTheme.labelSmall?.copyWith(
-              color: context.colors.warning[300],
+              color: context.colors.warning,
               fontWeight: FontWeight.w600,
               fontFamily: 'monospace',
               letterSpacing: 0.5,

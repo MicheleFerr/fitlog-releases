@@ -36,6 +36,8 @@ import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
+// 🔔 NOTIFICATION SERVICES: Initializer widget for notification services
+import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_services_initializer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -329,8 +331,14 @@ void main() async {
         // Override sharedPreferencesProvider with initialized instance
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
+      // 🔔 NOTIFICATION SERVICES: Wrap app with NotificationServicesInitializer
+      // This initializes notification services after ProviderScope is ready:
+      // - Daily workout reminders (9:00 AM, 30 days)
+      // - Streak achievement auto-check
       child: const AppLifecycleManager(
-        child: FitLogApp(),
+        child: NotificationServicesInitializer(
+          child: FitLogApp(),
+        ),
       ),
     ),
   );

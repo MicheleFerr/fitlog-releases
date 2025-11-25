@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_impl.dart';
-import 'package:gymbro_flutter_new/features/body_measurements/data/services/audit_logger_provider.dart';
 
 /// Provider for ConsentRepository
 ///
-/// Provides singleton instance of ConsentRepositoryImpl with dependencies.
+/// Provides singleton instance of ConsentRepositoryImpl with Firebase Firestore.
 ///
 /// **GDPR CRITICAL**: Article 7 - Conditions for Consent
 ///
@@ -46,8 +46,12 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/services/audi
 ///   }
 /// }
 /// ```
+///
+/// **Note**: Constructor matches ConsentRepositoryImpl signature:
+/// `ConsentRepositoryImpl(FirebaseFirestore, {Uuid? uuid})`
 final consentRepositoryProvider = Provider<ConsentRepositoryImpl>((ref) {
   return ConsentRepositoryImpl(
-    auditLogger: ref.read(auditLoggerProvider),
+    FirebaseFirestore.instance,
+    // uuid parameter is optional, uses default Uuid() if not provided
   );
 });

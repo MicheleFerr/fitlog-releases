@@ -11,9 +11,11 @@
 library;
 
 import 'package:flutter/foundation.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine_extensions.dart';
+// ROUTINE FEATURE DISABLED - v2.0 API migration pending
+// import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+// import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine_extensions.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Smart notification service with intelligent scheduling
@@ -48,11 +50,20 @@ class SmartNotificationService {
   }
 
   // === SMART SCHEDULING FOR ROUTINES ===
+  // ⚠️ ROUTINE FEATURE DISABLED - v2.0 API migration pending
+  // This method is stubbed until routine feature is re-enabled
 
   /// Schedule notifications for an active routine
+  ///
+  /// ⚠️ DISABLED: Routine feature is temporarily disabled pending v2.0 API migration
   Future<void> scheduleNotificationsForRoutine(
-    FlexibleRoutine routine,
+    dynamic routine, // FlexibleRoutine - type disabled
   ) async {
+    debugPrint('⚠️ scheduleNotificationsForRoutine called but routine feature is disabled');
+    // STUB: Routine feature disabled - no-op
+    return;
+
+    /* ORIGINAL IMPLEMENTATION - Disabled until routine v2.0 ready
     if (!routine.isActive) return;
 
     // Cancel existing notifications for this routine
@@ -116,12 +127,46 @@ class SmartNotificationService {
     // Apply intelligent scheduling
     final optimizedNotifications = _applySmartScheduling(notifications);
 
-    // Schedule all notifications
-    // TODO: Fix type mismatch between WorkoutNotification and UnifiedNotification
-    // Temporarily disabled to resolve compilation errors
+    // Convert to UnifiedNotification and schedule
     if (optimizedNotifications.isNotEmpty) {
-      // await _repository.scheduleMultipleNotifications(optimizedNotifications);
-      debugPrint('Smart notifications: Would schedule ${optimizedNotifications.length} notifications');
+      final unifiedNotifications = optimizedNotifications
+          .map((wn) => UnifiedNotification.fromWorkoutNotification(wn))
+          .toList();
+      await _repository.scheduleMultipleNotifications(unifiedNotifications);
+      debugPrint('Smart notifications: Scheduled ${unifiedNotifications.length} notifications');
+    }
+    */
+  }
+
+  /// Schedule a single notification (utility method for manual scheduling)
+  Future<void> scheduleNotification(WorkoutNotification notification) async {
+    final unified = UnifiedNotification.fromWorkoutNotification(notification);
+    await _repository.scheduleNotification(unified);
+    if (kDebugMode) {
+      debugPrint('Smart notifications: Scheduled notification ${notification.id}');
+    }
+  }
+
+  /// Schedule multiple notifications with smart optimization
+  Future<void> scheduleMultipleNotifications(
+    List<WorkoutNotification> notifications,
+  ) async {
+    if (notifications.isEmpty) return;
+
+    // Apply smart scheduling rules
+    final optimized = _applySmartScheduling(notifications);
+
+    // Convert and schedule
+    final unifiedNotifications = optimized
+        .map((wn) => UnifiedNotification.fromWorkoutNotification(wn))
+        .toList();
+
+    await _repository.scheduleMultipleNotifications(unifiedNotifications);
+
+    if (kDebugMode) {
+      debugPrint(
+        'Smart notifications: Scheduled ${unifiedNotifications.length} of ${notifications.length} notifications (${notifications.length - unifiedNotifications.length} optimized out)',
+      );
     }
   }
 
@@ -146,17 +191,17 @@ class SmartNotificationService {
     return notificationTime;
   }
 
-  /// ⚠️ v2.0 STUB: Recovery notifications disabled - skipTracker not in v2.0
+  /// ⚠️ ROUTINE FEATURE DISABLED - v2.0 API migration pending
   ///
   /// Generate recovery notifications for skipped workouts
   ///
-  /// **v2.0 STATUS**: Stubbed out - skipTracker property removed from v2.0 schema
-  /// **TODO v3.0**: Reimplement when skip tracking added back
+  /// **STATUS**: Stubbed out - routine feature disabled
+  /// **TODO**: Reimplement when routine v2.0 ready
   List<WorkoutNotification> _generateRecoveryNotifications(
-    FlexibleRoutine routine,
+    dynamic routine, // FlexibleRoutine - type disabled
     DateTime referenceDate,
   ) {
-    // v2.0: Return empty - no skip tracking
+    // STUB: Routine feature disabled
     return [];
 
     // v1.0 implementation commented out
@@ -292,12 +337,18 @@ class SmartNotificationService {
 
   // === QUERIES ===
 
-  /// Get pending notifications
+  /// Get pending notifications (returns UnifiedNotification list)
+  /// Note: Returns UnifiedNotification since the system has been unified
+  Future<List<UnifiedNotification>> getPendingUnifiedNotifications() async {
+    return await _repository.getPendingNotifications();
+  }
+
+  /// Get pending notifications (legacy method - returns empty for backward compatibility)
+  /// @deprecated Use getPendingUnifiedNotifications instead
   Future<List<WorkoutNotification>> getPendingNotifications() async {
-    // TODO: Fix type mismatch - repository returns UnifiedNotification but method expects WorkoutNotification
-    // Temporarily return empty list to resolve compilation error
+    // Legacy method - returns empty list as we've moved to UnifiedNotification
+    // Use getPendingUnifiedNotifications() for actual data
     return [];
-    // return await _repository.getPendingNotifications();
   }
 
   /// Check if notifications are enabled

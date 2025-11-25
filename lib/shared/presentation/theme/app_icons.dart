@@ -189,6 +189,12 @@ class AppIcons {
   /// ▲ Expand less
   static const IconData expandLess = Icons.expand_less;
 
+  /// ⛶ Fullscreen
+  static const IconData fullscreen = Icons.fullscreen;
+
+  /// ⛶ Exit fullscreen
+  static const IconData fullscreenExit = Icons.fullscreen_exit;
+
   /// › Chevron right
   static const IconData chevronRight = Icons.chevron_right;
 

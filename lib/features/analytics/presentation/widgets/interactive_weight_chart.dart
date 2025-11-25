@@ -346,7 +346,7 @@ class _InteractiveWeightChartState extends ConsumerState<InteractiveWeightChart>
           fitInsideHorizontally: true,
           fitInsideVertically: true,
           tooltipPadding: const EdgeInsets.all(8),
-          tooltipRoundedRadius: 8,
+          tooltipBorderRadius: BorderRadius.circular(8),
           getTooltipItems: (spots) {
             return spots.map((spot) {
               final index = spot.spotIndex;

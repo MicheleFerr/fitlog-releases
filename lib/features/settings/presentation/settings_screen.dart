@@ -529,12 +529,12 @@ class SettingsScreen extends ConsumerWidget {
             // AI Coach Entry Point
             _buildSettingTile(
               context,
-              title: 'Recovery Insights',
-              subtitle: 'Track readiness, muscle recovery, and overtraining risk',
+              title: context.l10n.aiCoachRecoveryInsights,
+              subtitle: context.l10n.aiCoachRecoveryInsightsDesc,
               leading: const SemanticIcon(
-  icon: AppIcons.analytics,
-  semanticLabel: 'Analytics',
-),
+                icon: AppIcons.analytics,
+                semanticLabel: 'Analytics',
+              ),
               onTap: () => context.pushNamed('ai-coach'),
             ),
           ],

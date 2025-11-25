@@ -49,6 +49,7 @@ abstract class ChatRepository {
   /// **Parameters**:
   /// - `message`: User's input text
   /// - `userId`: Current user ID for context/history
+  /// - `userName`: User's display name for personalized responses
   /// - `systemPrompt`: Optional system prompt override (defaults to AI Coach persona)
   ///
   /// **Returns**: Stream of [AIMessage] chunks (isStreaming=true until final)
@@ -70,6 +71,7 @@ abstract class ChatRepository {
   Stream<Either<Failure, AIMessage>> sendMessage({
     required String message,
     required String userId,
+    String? userName,
     String? systemPrompt,
   });
 

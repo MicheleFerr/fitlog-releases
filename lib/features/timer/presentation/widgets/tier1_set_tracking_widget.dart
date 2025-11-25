@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
@@ -29,14 +29,16 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     final shouldStopSet = ref.watch(shouldStopSetProvider);
     final coachingTip = ref.watch(currentCoachingTipProvider);
     final fatigueIndex = ref.watch(setFatigueIndexProvider);
-    final velocityDrop = ref.watch(setVelocityDropProvider);
-    
+
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    
+
     if (!isTrackingSet || currentMetrics == null) {
       return _buildReadyState(context, theme, l10n);
     }
+
+    // Convert SetMetrics to LiveSetMetrics for display
+    final liveMetrics = _convertToLiveSetMetrics(currentMetrics);
     
     return Card(
       elevation: 4,
@@ -47,32 +49,32 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header with set info and status
-            _buildHeader(context, theme, l10n, currentMetrics),
-            
+            _buildHeader(context, theme, l10n, liveMetrics),
+
             const SizedBox(height: 16),
-            
+
             // Live metrics row
-            _buildLiveMetricsRow(context, theme, l10n, currentMetrics),
-            
+            _buildLiveMetricsRow(context, theme, l10n, liveMetrics),
+
             const SizedBox(height: 16),
-            
+
             // Velocity graph
             if (showAdvancedMetrics) ...[
-              _buildVelocityGraph(context, theme, l10n, currentMetrics),
+              _buildVelocityGraph(context, theme, l10n, liveMetrics),
               const SizedBox(height: 16),
             ],
-            
+
             // Fatigue and form indicators
-            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, currentMetrics.currentFormScore),
-            
+            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, liveMetrics.currentFormScore),
+
             const SizedBox(height: 16),
-            
+
             // Coaching feedback
             if (coachingTip != null) ...[
               _buildCoachingTip(context, theme, l10n, coachingTip, shouldStopSet),
               const SizedBox(height: 16),
             ],
-            
+
             // Action buttons
             _buildActionButtons(context, theme, l10n, ref, shouldStopSet),
           ],
@@ -479,15 +481,33 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     // Mock velocity data for demo - in real app, would use actual velocity history
     final spots = <FlSpot>[];
     final baseVelocity = metrics.averageVelocityMps;
-    
+
     for (int i = 0; i < 20; i++) {
       final x = i.toDouble();
       final noise = (math.sin(i * 0.5) * 0.1) + (math.Random().nextDouble() * 0.2 - 0.1);
-      final y = math.max(0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
+      final y = math.max(0.0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
       spots.add(FlSpot(x, y));
     }
-    
+
     return spots;
+  }
+
+  /// Converts SetMetrics (from timer_providers.dart) to LiveSetMetrics (from domain entities)
+  LiveSetMetrics _convertToLiveSetMetrics(SetMetrics metrics) {
+    return LiveSetMetrics(
+      setId: 'set_$setNumber',
+      phase: SetPhase.execution,
+      elapsedMs: metrics.elapsedMs,
+      currentRep: metrics.currentRep,
+      currentVelocityMps: metrics.velocity,
+      averageVelocityMps: metrics.velocity,
+      velocityDropPercent: 0.0,
+      currentFormScore: 85.0, // Mock form score
+      consistencyScore: 80.0, // Mock consistency score
+      fatigueIndex: metrics.fatigue,
+      shouldStopSet: false,
+      timestamp: DateTime.now(),
+    );
   }
 
   String _formatDuration(int milliseconds) {
@@ -521,19 +541,38 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
   }
 
   void _registerRep(WidgetRef ref) {
-    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    unifiedTimer.registerSetRep();
+    // TODO: Implement registerSetRep in UnifiedTimerProvider
+    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    // unifiedTimer.registerSetRep();
+
+    // Placeholder: Update current set metrics
+    final currentMetrics = ref.read(currentSetMetricsProvider);
+    if (currentMetrics != null) {
+      ref.read(currentSetMetricsProvider.notifier).state = SetMetrics(
+        repCount: currentMetrics.repCount + 1,
+        velocity: currentMetrics.velocity,
+        fatigue: currentMetrics.fatigue,
+        startTime: currentMetrics.startTime,
+      );
+    }
   }
 
   void _completeSet(WidgetRef ref) {
-    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
-    
-    unifiedTimer.completeSetTracking().then((completedSet) {
-      if (completedSet != null) {
-        trackingNotifier.completeSetTracking(completedSet);
-      }
-    });
+    // TODO: Implement completeSetTracking in UnifiedTimerProvider
+    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    // final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
+
+    // unifiedTimer.completeSetTracking().then((completedSet) {
+    //   if (completedSet != null) {
+    //     trackingNotifier.completeSetTracking(completedSet);
+    //   }
+    // });
+
+    // Placeholder: Reset tracking state
+    ref.read(isTrackingSetProvider.notifier).state = false;
+    ref.read(currentSetMetricsProvider.notifier).state = null;
+    ref.read(shouldStopSetProvider.notifier).state = false;
+    ref.read(currentCoachingTipProvider.notifier).state = null;
   }
 }
 

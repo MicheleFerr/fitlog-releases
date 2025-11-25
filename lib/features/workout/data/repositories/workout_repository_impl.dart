@@ -13,11 +13,13 @@
 /// - Repository interface
 library;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/firebase_workout_datasource.dart';
@@ -352,6 +354,49 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
       'getLastCompletedWorkout not implemented for Firebase-only repository. '
       'Use HybridWorkoutRepositoryImpl instead.'
     );
+  }
+
+  @override
+  Future<Either<Failure, PaginatedResult<Workout>>> getWorkoutsPaginated({
+    int pageSize = 20,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        return left(const AuthenticationFailure('User not authenticated'));
+      }
+
+      // Delegate to datasource for cursor-based pagination
+      final modelResult = await _dataSource.getWorkoutsPaginated(
+        currentUser.uid,
+        pageSize: pageSize,
+        startAfter: startAfter,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        status: status,
+      );
+
+      // Convert WorkoutModel list to Workout domain entities
+      final workouts = modelResult.items
+          .map((model) => model.toDomain())
+          .toList();
+
+      // Return domain result with converted items
+      return right(PaginatedResult<Workout>(
+        items: workouts,
+        hasMore: modelResult.hasMore,
+        lastDocument: modelResult.lastDocument,
+      ));
+
+    } on FirebaseException catch (e) {
+      return left(_mapFirebaseException(e));
+    } catch (e) {
+      return left(UnexpectedFailure('Failed to get paginated workouts: $e'));
+    }
   }
 
   /// Map Firebase exceptions to domain failures

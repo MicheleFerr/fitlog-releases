@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/enhanced_statistics_dashboard.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+
+/// Trend direction for stat cards
+/// (Moved here after enhanced_statistics_dashboard.dart was removed)
+enum StatTrend {
+  positive,
+  negative,
+  neutral,
+}
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
@@ -283,11 +290,10 @@ class EnhancedExerciseRankingCard extends StatelessWidget {
         child: Column(
           children: [
             SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.xxlarge,
-  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5,
-),
+              icon: AppIcons.workout,
+              semanticLabel: 'Workout',
+              size: AppIconSize.xxlarge,
+              color: context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -369,7 +375,7 @@ class EnhancedStreakCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   AppIcons.streak,
                   color: context.colors.secondary,
                   size: 24,

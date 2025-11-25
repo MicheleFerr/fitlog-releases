@@ -36,6 +36,11 @@ import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hybrid_exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/user_fitness_questionnaire.dart'
+    as fitness;
+import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/strength_standard.dart'
+    as standards;
+import 'package:gymbro_flutter_new/features/streak/data/repositories/streak_repository.dart';
 import 'package:uuid/uuid.dart';
 
 /// ChatBot datasource for pattern-based responses
@@ -70,6 +75,8 @@ class ChatBotDatasource {
     required this.aiCoachAnalytics,
     required this.toneAdapter,
     required this.toneProfile,
+    this.fitnessQuestionnaire,
+    required this.streakRepository,
   });
   final IntentDetector intentDetector;
   final ResponseRepository responseRepository;
@@ -81,6 +88,8 @@ class ChatBotDatasource {
   final AICoachAnalytics aiCoachAnalytics;
   final ToneAdapter toneAdapter;
   final ToneProfile toneProfile;
+  final fitness.UserFitnessQuestionnaire? fitnessQuestionnaire;
+  final StreakRepository streakRepository;
   final Uuid _uuid = const Uuid();
 
   /// Send message and stream bot response
@@ -273,13 +282,8 @@ class ChatBotDatasource {
     String locale, {
     String? prompt,
   }) async {
-    // Create mock UserContext (TODO: Get real user profile from auth/repository)
-    final userContext = UserContext(
-      userId: userId,
-      experienceLevel: ExperienceLevel.intermediate,
-      primaryGoal: TrainingGoal.hypertrophy,
-      weeklyAvailability: 4,
-    );
+    // Map fitness questionnaire data to AI Coach UserContext
+    final userContext = _createUserContextFromQuestionnaire(userId);
 
     // Fetch user workouts (last 30 days for analysis)
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
@@ -297,15 +301,15 @@ class ChatBotDatasource {
       case UserIntent.progression:
         return _getProgressionData(workouts, userContext, locale);
       case UserIntent.volume:
-        return _getVolumeData(userId); // TODO: Use VolumeBalanceAnalyzer
+        return _getVolumeData(workouts, userContext);
       case UserIntent.recovery:
         return _getRecoveryData(workouts, userContext);
       case UserIntent.balance:
-        return _getBalanceData(userId); // TODO: Use VolumeBalanceAnalyzer
+        return _getBalanceData(workouts, userContext);
       case UserIntent.form:
         return _getFormData(workouts, userContext);
       case UserIntent.motivation:
-        return _getMotivationData(userId); // No analyzer (achievement data)
+        return _getMotivationData(userId);
       case UserIntent.plan:
         return _getPlanData(workouts, userContext);
       case UserIntent.prQuery:
@@ -353,8 +357,40 @@ class ChatBotDatasource {
     };
   }
 
-  Future<Map<String, String>> _getVolumeData(String userId) async {
-    // TODO: Call VolumeAnalyzer
+  Future<Map<String, String>> _getVolumeData(
+    List<Workout> workouts,
+    UserContext context,
+  ) async {
+    try {
+      // Call VolumeBalanceAnalyzer (uses InsightType.muscleGroupBalance)
+      final analyzer = analyzerRegistry.getAnalyzer(InsightType.muscleGroupBalance);
+      final insight = await analyzer.analyze(workouts, context);
+
+      if (insight != null) {
+        // Extract data from analyzer insight
+        final muscleGroup = insight.dataPoints?['muscleGroup']?.toString() ?? 'all muscles';
+        final currentSets = insight.dataPoints?['currentSets']?.toString() ?? '0';
+
+        // Determine assessment emoji based on severity
+        final assessment = switch (insight.severity) {
+          InsightSeverity.low => '✅ Optimal',
+          InsightSeverity.medium => '⚠️ Below optimal',
+          InsightSeverity.high => '🔴 Needs attention',
+          InsightSeverity.critical => '🚨 Critical',
+        };
+
+        return {
+          'volume': '$currentSets sets/week ($muscleGroup)',
+          'assessment': assessment,
+          'sets_per_week': currentSets,
+          'recommendation': insight.recommendation,
+        };
+      }
+    } catch (e) {
+      // Analyzer not registered or error - fall through to mock data
+    }
+
+    // Fallback to mock data if no real data available
     return {
       'volume': '18 sets/muscle/week',
       'assessment': '✅ Optimal',
@@ -399,8 +435,51 @@ class ChatBotDatasource {
     };
   }
 
-  Future<Map<String, String>> _getBalanceData(String userId) async {
-    // TODO: Call BalanceAnalyzer
+  Future<Map<String, String>> _getBalanceData(
+    List<Workout> workouts,
+    UserContext context,
+  ) async {
+    try {
+      // Call VolumeBalanceAnalyzer (uses InsightType.muscleGroupBalance)
+      // This analyzer detects muscle group imbalances
+      final analyzer = analyzerRegistry.getAnalyzer(InsightType.muscleGroupBalance);
+      final insight = await analyzer.analyze(workouts, context);
+
+      if (insight != null) {
+        // Extract balance data from analyzer insight
+        final muscleGroup = insight.dataPoints?['muscleGroup']?.toString() ?? '';
+        final deficit = insight.dataPoints?['deficit']?.toString();
+        final excess = insight.dataPoints?['excess']?.toString();
+
+        // Determine balance score based on severity
+        final balanceScore = switch (insight.severity) {
+          InsightSeverity.low => '90', // Optimal
+          InsightSeverity.medium => '70', // Below optimal
+          InsightSeverity.high => '50', // Needs attention
+          InsightSeverity.critical => '30', // Critical
+        };
+
+        // Format lagging groups message
+        String laggingGroups;
+        if (deficit != null && int.tryParse(deficit) != null && int.parse(deficit) > 0) {
+          laggingGroups = '$muscleGroup is undertrained by $deficit sets/week.';
+        } else if (excess != null && int.tryParse(excess) != null && int.parse(excess) > 0) {
+          laggingGroups = '$muscleGroup is overtrained by $excess sets/week.';
+        } else {
+          laggingGroups = 'Your muscle groups are well balanced.';
+        }
+
+        return {
+          'balance_score': balanceScore,
+          'lagging_groups': laggingGroups,
+          'recommendation': insight.recommendation,
+        };
+      }
+    } catch (e) {
+      // Analyzer not registered or error - fall through to mock data
+    }
+
+    // Fallback to mock data if no real data available
     return {
       'balance_score': '82',
       'lagging_groups': 'Back is slightly behind chest.',
@@ -437,7 +516,57 @@ class ChatBotDatasource {
   }
 
   Future<Map<String, String>> _getMotivationData(String userId) async {
-    // TODO: Call AchievementRepository + StreakRepository
+    try {
+      // Get real streak data from StreakRepository
+      final streak = await streakRepository.getCurrentStreak();
+
+      // Build achievement message based on real data
+      String achievement;
+      if (streak.currentStreak > 0) {
+        achievement = "You're on a ${streak.currentStreak}-day workout streak!";
+      } else if (streak.totalWorkoutDays > 0) {
+        achievement = "You've logged ${streak.totalWorkoutDays} total workout days!";
+      } else {
+        achievement = "Start your fitness journey today!";
+      }
+
+      // Build recent progress message
+      String recentProgress;
+      if (streak.isActive && streak.lastWorkoutDate != null) {
+        final daysSinceLastWorkout = DateTime.now().difference(streak.lastWorkoutDate!).inDays;
+        if (daysSinceLastWorkout == 0) {
+          recentProgress = "Great job working out today!";
+        } else if (daysSinceLastWorkout == 1) {
+          recentProgress = "You worked out yesterday. Keep it up!";
+        } else {
+          recentProgress = "Your last workout was $daysSinceLastWorkout days ago.";
+        }
+      } else {
+        recentProgress = "Ready to start a new workout?";
+      }
+
+      // Build strategy based on streak status
+      String strategy;
+      if (streak.currentStreak >= 7) {
+        strategy = "Amazing consistency! Consider a deload week if feeling fatigued.";
+      } else if (streak.currentStreak >= 3) {
+        strategy = "Great momentum! Keep pushing to build your streak.";
+      } else if (streak.totalWorkoutDays > 0) {
+        strategy = "Get back to the gym to restart your streak!";
+      } else {
+        strategy = "Start with 3 workouts this week to build momentum.";
+      }
+
+      return {
+        'achievement': achievement,
+        'recent_progress': recentProgress,
+        'strategy': strategy,
+      };
+    } catch (e) {
+      // Fallback to mock data if streak data unavailable
+    }
+
+    // Fallback to mock data if no real data available
     return {
       'achievement': "You've logged 25 workouts this month!",
       'recent_progress': 'Last week you hit a PR on squats.',
@@ -1013,5 +1142,77 @@ class ChatBotDatasource {
             'Increase weight by 2.5kg when you can complete all sets with good form',
       },
     };
+  }
+
+  // ========================================================================
+  // User Context Mapping (Fitness Questionnaire → AI Coach UserContext)
+  // ========================================================================
+
+  /// Create UserContext from fitness questionnaire data stored in Hive
+  ///
+  /// **Mapping**:
+  /// - `fitness.ExperienceLevel` (5 levels) → `ExperienceLevel` (3 levels)
+  ///   - untrained, novice → beginner
+  ///   - intermediate → intermediate
+  ///   - advanced, elite → advanced
+  ///
+  /// - `fitness.TrainingGoal` → `TrainingGoal`
+  ///   - Direct mapping (hypertrophy, strength, endurance)
+  ///
+  /// **Fallback**: If no questionnaire data, returns default (intermediate, hypertrophy)
+  UserContext _createUserContextFromQuestionnaire(String userId) {
+    // If no fitness questionnaire data available, use sensible defaults
+    if (fitnessQuestionnaire == null) {
+      return UserContext(
+        userId: userId,
+        experienceLevel: ExperienceLevel.intermediate,
+        primaryGoal: TrainingGoal.hypertrophy,
+        weeklyAvailability: 4,
+      );
+    }
+
+    // Map fitness questionnaire experience level to AI Coach experience level
+    final mappedExperience = _mapExperienceLevel(
+      fitnessQuestionnaire!.experienceLevel,
+    );
+
+    // Map fitness questionnaire training goal to AI Coach training goal
+    final mappedGoal = _mapTrainingGoal(fitnessQuestionnaire!.trainingGoal);
+
+    return UserContext(
+      userId: userId,
+      experienceLevel: mappedExperience,
+      primaryGoal: mappedGoal,
+      weeklyAvailability: 4, // TODO: Get from user profile when available
+      injuryHistory: fitnessQuestionnaire!.hasInjuryHistory
+          ? [fitnessQuestionnaire!.injuryDetails?.injuryType ?? 'Unknown injury']
+          : null,
+    );
+  }
+
+  /// Map fitness questionnaire ExperienceLevel (5 levels) to AI Coach (3 levels)
+  ExperienceLevel _mapExperienceLevel(standards.ExperienceLevel fitnessLevel) {
+    switch (fitnessLevel) {
+      case standards.ExperienceLevel.untrained:
+      case standards.ExperienceLevel.novice:
+        return ExperienceLevel.beginner;
+      case standards.ExperienceLevel.intermediate:
+        return ExperienceLevel.intermediate;
+      case standards.ExperienceLevel.advanced:
+      case standards.ExperienceLevel.elite:
+        return ExperienceLevel.advanced;
+    }
+  }
+
+  /// Map fitness questionnaire TrainingGoal to AI Coach TrainingGoal
+  TrainingGoal _mapTrainingGoal(fitness.TrainingGoal fitnessGoal) {
+    switch (fitnessGoal) {
+      case fitness.TrainingGoal.strength:
+        return TrainingGoal.strength;
+      case fitness.TrainingGoal.hypertrophy:
+        return TrainingGoal.hypertrophy;
+      case fitness.TrainingGoal.endurance:
+        return TrainingGoal.endurance;
+    }
   }
 }

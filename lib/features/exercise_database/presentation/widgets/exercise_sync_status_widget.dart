@@ -10,9 +10,12 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_sync_service.dart';
+import 'package:gymbro_flutter_new/features/exercise_database/data/services/exercise_version_service.dart';
 
 class ExerciseSyncStatusWidget extends ConsumerWidget {
   const ExerciseSyncStatusWidget({super.key});
@@ -99,7 +102,7 @@ class ExerciseSyncStatusWidget extends ConsumerWidget {
         icon = Icons.check_circle;
         break;
       case SyncStatus.error:
-        text = AppLocalizations.of(context).syncError;
+        text = AppLocalizations.of(context).statusError;
         color = Theme.of(context).colorScheme.error;
         icon = Icons.error;
         break;

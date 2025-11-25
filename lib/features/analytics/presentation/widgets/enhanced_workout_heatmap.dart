@@ -1036,8 +1036,8 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                             if (set.effort != null)
                                               _buildEffortIndicator(set.effort!, theme),
                                             if (set.isDropSet)
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 4),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 4),
                                                 child: SemanticIcon(
   icon: AppIcons.arrowDownward,
   semanticLabel: 'Arrow downward',

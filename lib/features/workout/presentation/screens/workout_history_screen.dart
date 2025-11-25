@@ -1,23 +1,33 @@
 /// 🏋️‍♂️ GymBro TrackLog - Flutter Fitness App
-/// 
+///
 /// 📁 Layer: presentation/screens
 /// 🎯 Feature: workout
 /// 🔧 Type: screen
-/// 🌍 Localization: ✅ AppLocalizations used
-/// 🎨 Theme: ✅ ColorScheme responsive
+/// 🌍 Localization: ✅ context.l10n used
+/// 🎨 Theme: ✅ context.colors used
 /// 📱 Platform: Universal
-/// 
+///
+/// **Performance Optimization (2024)**:
+/// - Uses cursor-based pagination via workoutHistoryPaginatedProvider
+/// - Only loads 20 workouts per page (configurable)
+/// - Infinite scroll with hasMore detection
+/// - No memory leak from holding all workouts
+///
 /// Dependencies:
 /// - workout/domain/entities: Workout
-/// - workout/presentation/providers: WorkoutHistoryProvider
-/// - shared/presentation/l10n: AppLocalizations
+/// - workout/presentation/providers: WorkoutHistoryPaginatedProvider
+/// - shared/presentation/extensions: BuildContext extensions
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_paginated_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_history_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_history_editor.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
@@ -33,22 +43,25 @@ class WorkoutHistoryScreen extends ConsumerStatefulWidget {
 class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
-  String _searchQuery = '';
-  String _selectedFilter = 'all';
-  DateTimeRange? _dateFilter;
+
+  /// Debounce timer for search
+  DateTime? _lastSearchTime;
+  static const _searchDebounce = Duration(milliseconds: 300);
 
   @override
   void initState() {
     super.initState();
-    
-    // Load initial data
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(workoutHistoryProvider.notifier).loadWorkouts();
-    });
-    
-    // Setup pagination
+
+    // Setup infinite scroll listener
     _scrollController.addListener(_onScroll);
+
+    // Sync search controller with provider state
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final state = ref.read(workoutHistoryPaginatedProvider);
+      if (state.searchQuery.isNotEmpty) {
+        _searchController.text = state.searchQuery;
+      }
+    });
   }
 
   @override
@@ -58,43 +71,59 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     super.dispose();
   }
 
+  /// Infinite scroll trigger - loads more when near bottom
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      ref.read(workoutHistoryProvider.notifier).loadMoreWorkouts();
+    if (!_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+    final maxScroll = position.maxScrollExtent;
+    final currentScroll = position.pixels;
+
+    // Trigger load more when 200px from bottom
+    if (currentScroll >= maxScroll - 200) {
+      final canLoad = ref.read(canLoadMoreWorkoutsProvider);
+      if (canLoad) {
+        ref.read(workoutHistoryPaginatedProvider.notifier).loadMore();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-    final state = ref.watch(workoutHistoryProvider);
+    // Watch paginated state (auto-loads on first access via build())
+    final state = ref.watch(workoutHistoryPaginatedProvider);
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(AppIcons.arrowBack, color: context.colors.onSurface),
           onPressed: () {
-            // Navigate back to home using Go Router
+            HapticFeedback.lightImpact();
             context.go('/');
           },
         ),
-        title: Text(l10n.workoutHistory),
+        title: Text(context.l10n.workoutHistory),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
+          // Filter button with badge if filters active
+          Badge(
+            isLabelVisible: state.hasFilters,
+            backgroundColor: context.colors.primary,
+            child: IconButton(
+              icon: Icon(AppIcons.filter, color: context.colors.onSurface),
+              onPressed: _showFilterDialog,
+            ),
           ),
           PopupMenuButton<String>(
+            icon: Icon(AppIcons.moreVert, color: context.colors.onSurface),
             onSelected: _onMenuItemSelected,
-            itemBuilder: (context) => [
+            itemBuilder: (ctx) => [
               PopupMenuItem(
                 value: 'export',
                 child: Row(
                   children: [
-                    const Icon(Icons.download),
+                    Icon(AppIcons.download, color: context.colors.onSurface),
                     const SizedBox(width: 8),
-                    Text(l10n.exportData),
+                    Text(context.l10n.exportData),
                   ],
                 ),
               ),
@@ -102,9 +131,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
                 value: 'stats',
                 child: Row(
                   children: [
-                    const Icon(Icons.analytics),
+                    Icon(AppIcons.analytics, color: context.colors.onSurface),
                     const SizedBox(width: 8),
-                    Text(l10n.statistics),
+                    Text(context.l10n.statistics),
                   ],
                 ),
               ),
@@ -115,33 +144,51 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
       body: Column(
         children: [
           // Search and filter bar
-          _buildSearchBar(theme, l10n),
-          
+          _buildSearchBar(context),
+
           // Active filters chips
-          if (_searchQuery.isNotEmpty || _selectedFilter != 'all' || _dateFilter != null)
-            _buildActiveFilters(theme, l10n),
-          
-          // Workout list
+          if (state.hasFilters) _buildActiveFilters(context, state),
+
+          // Workout list with loading/error/empty states
           Expanded(
-            child: state.when(
-              data: (workouts) => _buildWorkoutList(workouts, theme, l10n),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => _buildErrorWidget(error, theme, l10n),
-            ),
+            child: _buildBody(context, state),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSearchBar(ThemeData theme, AppLocalizations l10n) {
+  /// Build body based on state
+  Widget _buildBody(BuildContext context, WorkoutHistoryPaginatedState state) {
+    // Initial loading state
+    if (state.isLoading && state.workouts.isEmpty) {
+      return const Center(child: LoadingIndicator());
+    }
+
+    // Error state
+    if (state.hasError && state.workouts.isEmpty) {
+      return _buildErrorWidget(context, state.error!);
+    }
+
+    // Empty state
+    if (state.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    // Workout list with infinite scroll
+    return _buildWorkoutList(context, state);
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
+    final state = ref.watch(workoutHistoryPaginatedProvider);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: context.colors.surface,
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+            color: context.colors.shadow.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -150,11 +197,11 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: l10n.searchWorkouts,
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _searchQuery.isNotEmpty
+          hintText: context.l10n.searchWorkouts,
+          prefixIcon: Icon(AppIcons.search, color: context.colors.onSurfaceVariant),
+          suffixIcon: state.searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear),
+                  icon: Icon(AppIcons.close, color: context.colors.onSurfaceVariant),
                   onPressed: () {
                     _searchController.clear();
                     _updateSearch('');
@@ -166,37 +213,41 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          fillColor: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
         ),
         onChanged: _updateSearch,
       ),
     );
   }
 
-  Widget _buildActiveFilters(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildActiveFilters(
+    BuildContext context,
+    WorkoutHistoryPaginatedState state,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            if (_searchQuery.isNotEmpty)
+            if (state.searchQuery.isNotEmpty)
               _buildFilterChip(
-                label: '${l10n.search}: $_searchQuery',
+                context: context,
+                label: '${context.l10n.search}: ${state.searchQuery}',
                 onDeleted: () => _updateSearch(''),
-                theme: theme,
               ),
-            if (_selectedFilter != 'all')
+            if (state.statusFilter != null)
               _buildFilterChip(
-                label: _getFilterDisplayName(_selectedFilter, l10n),
-                onDeleted: () => _updateFilter('all'),
-                theme: theme,
+                context: context,
+                label: _getFilterDisplayName(state.statusFilter!, context),
+                onDeleted: () => _updateFilter(null),
               ),
-            if (_dateFilter != null)
+            if (state.dateFrom != null || state.dateTo != null)
               _buildFilterChip(
-                label: '${l10n.dateRange}: ${DateFormat('dd/MM').format(_dateFilter!.start)} - ${DateFormat('dd/MM').format(_dateFilter!.end)}',
-                onDeleted: () => _updateDateFilter(null),
-                theme: theme,
+                context: context,
+                label:
+                    '${context.l10n.dateRange}: ${state.dateFrom != null ? DateFormat('dd/MM').format(state.dateFrom!) : '...'} - ${state.dateTo != null ? DateFormat('dd/MM').format(state.dateTo!) : '...'}',
+                onDeleted: () => _updateDateFilter(null, null),
               ),
           ],
         ),
@@ -205,45 +256,53 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   }
 
   Widget _buildFilterChip({
+    required BuildContext context,
     required String label,
     required VoidCallback onDeleted,
-    required ThemeData theme,
   }) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: Chip(
         label: Text(label),
-        deleteIcon: const Icon(Icons.close, size: 16),
-        onDeleted: onDeleted,
-        backgroundColor: theme.colorScheme.primaryContainer,
-        deleteIconColor: theme.colorScheme.onPrimaryContainer,
+        deleteIcon: Icon(AppIcons.close, size: 16, color: context.colors.onPrimaryContainer),
+        onDeleted: () {
+          HapticFeedback.lightImpact();
+          onDeleted();
+        },
+        backgroundColor: context.colors.primaryContainer,
+        deleteIconColor: context.colors.onPrimaryContainer,
         labelStyle: TextStyle(
-          color: theme.colorScheme.onPrimaryContainer,
+          color: context.colors.onPrimaryContainer,
           fontSize: 12,
         ),
       ),
     );
   }
 
-  Widget _buildWorkoutList(List<Workout> workouts, ThemeData theme, AppLocalizations l10n) {
-    if (workouts.isEmpty) {
-      return _buildEmptyState(theme, l10n);
-    }
+  Widget _buildWorkoutList(
+    BuildContext context,
+    WorkoutHistoryPaginatedState state,
+  ) {
+    final workouts = state.workouts;
 
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(workoutHistoryProvider.notifier).refreshWorkouts();
+        HapticFeedback.mediumImpact();
+        await ref.read(workoutHistoryPaginatedProvider.notifier).refresh();
       },
+      color: context.colors.primary,
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        itemCount: workouts.length + (ref.read(workoutHistoryProvider.notifier).hasMoreData ? 1 : 0),
-        itemBuilder: (context, index) {
+        // Add 1 for loading indicator when loading more
+        itemCount: workouts.length + (state.isLoadingMore ? 1 : 0),
+        itemBuilder: (ctx, index) {
+          // Loading indicator at bottom when loading more
           if (index == workouts.length) {
             return const Center(
               child: Padding(
                 padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(size: 32),
               ),
             );
           }
@@ -264,125 +323,149 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
     );
   }
 
-  Widget _buildEmptyState(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.fitness_center_outlined,
-            size: 64,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.noWorkoutsFound,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              AppIcons.workout,
+              size: 64,
+              color: context.colors.onSurfaceVariant,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.noWorkoutsFoundDescription,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.noWorkoutsFound,
+              style: context.textTheme.headlineSmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () => ref.read(workoutHistoryProvider.notifier).refreshWorkouts(),
-            child: Text(l10n.refresh),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.noWorkoutsFoundDescription,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                // Fire and forget - no need to await
+                ref.read(workoutHistoryPaginatedProvider.notifier).refresh();
+              },
+              icon: const Icon(AppIcons.refresh),
+              label: Text(context.l10n.refresh),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildErrorWidget(Object error, ThemeData theme, AppLocalizations l10n) {
+  Widget _buildErrorWidget(BuildContext context, String error) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: theme.colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.errorLoadingWorkouts,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.error,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              AppIcons.error,
+              size: 64,
+              color: context.colors.error,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            error.toString(),
-            style: theme.textTheme.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () => ref.read(workoutHistoryProvider.notifier).refreshWorkouts(),
-            child: Text(l10n.retry),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.errorLoadingWorkouts,
+              style: context.textTheme.headlineSmall?.copyWith(
+                color: context.colors.error,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: context.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                // Fire and forget - no need to await
+                ref.read(workoutHistoryPaginatedProvider.notifier).refresh();
+              },
+              icon: const Icon(AppIcons.refresh),
+              label: Text(context.l10n.retry),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  /// Update search with debounce
   void _updateSearch(String query) {
-    setState(() => _searchQuery = query);
-    ref.read(workoutHistoryProvider.notifier).updateFilters(
-      search: query,
-      filter: _selectedFilter,
-      dateRange: _dateFilter,
-    );
+    // Update provider immediately for UI
+    ref.read(workoutHistoryPaginatedProvider.notifier).updateSearchQuery(query);
+
+    // Debounce actual search reload
+    _lastSearchTime = DateTime.now();
+    Future.delayed(_searchDebounce, () {
+      if (DateTime.now().difference(_lastSearchTime ?? DateTime.now()) >=
+          _searchDebounce) {
+        ref.read(workoutHistoryPaginatedProvider.notifier).applyFilters(
+              searchQuery: query,
+            );
+      }
+    });
   }
 
-  void _updateFilter(String filter) {
-    setState(() => _selectedFilter = filter);
-    ref.read(workoutHistoryProvider.notifier).updateFilters(
-      search: _searchQuery,
-      filter: filter,
-      dateRange: _dateFilter,
-    );
+  /// Update status filter
+  void _updateFilter(String? filter) {
+    HapticFeedback.lightImpact();
+    ref.read(workoutHistoryPaginatedProvider.notifier).applyFilters(
+          statusFilter: filter,
+          clearStatusFilter: filter == null,
+        );
   }
 
-  void _updateDateFilter(DateTimeRange? dateRange) {
-    setState(() => _dateFilter = dateRange);
-    ref.read(workoutHistoryProvider.notifier).updateFilters(
-      search: _searchQuery,
-      filter: _selectedFilter,
-      dateRange: dateRange,
-    );
+  /// Update date range filter
+  void _updateDateFilter(DateTime? from, DateTime? to) {
+    HapticFeedback.lightImpact();
+    ref.read(workoutHistoryPaginatedProvider.notifier).applyFilters(
+          dateFrom: from,
+          dateTo: to,
+          clearDateFrom: from == null,
+          clearDateTo: to == null,
+        );
   }
 
   void _showFilterDialog() {
+    final state = ref.read(workoutHistoryPaginatedProvider);
     showDialog(
       context: context,
-      builder: (context) => _FilterDialog(
-        currentFilter: _selectedFilter,
-        currentDateRange: _dateFilter,
+      builder: (ctx) => _FilterDialog(
+        currentFilter: state.statusFilter,
+        currentDateFrom: state.dateFrom,
+        currentDateTo: state.dateTo,
         onFilterChanged: _updateFilter,
         onDateRangeChanged: _updateDateFilter,
       ),
     );
   }
 
-  String _getFilterDisplayName(String filter, AppLocalizations l10n) {
+  String _getFilterDisplayName(String filter, BuildContext context) {
     switch (filter) {
-      case 'week':
-        return l10n.thisWeek;
-      case 'month':
-        return l10n.thisMonth;
-      case 'strength':
-        return l10n.strength;
-      case 'hypertrophy':
-        return l10n.hypertrophy;
-      case 'cardio':
-        return l10n.cardio;
+      case 'completed':
+        return context.l10n.workoutStatusCompleted;
+      case 'inProgress':
+        return context.l10n.workoutStatusInProgress;
+      case 'planned':
+        return context.l10n.workoutStatusPlanned;
       default:
         return filter;
     }
@@ -391,7 +474,8 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   void _onMenuItemSelected(String value) {
     switch (value) {
       case 'export':
-        ref.read(workoutHistoryProvider.notifier).exportWorkouts();
+        // TODO: Implement export with new paginated provider
+        SnackBarService.showInfo(context, context.l10n.featureComingSoon);
         break;
       case 'stats':
         _showStatsDialog();
@@ -400,53 +484,62 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   }
 
   void _editWorkout(Workout workout) {
-    // Navigate to workout editor
+    HapticFeedback.lightImpact();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => WorkoutHistoryEditor(workout: workout),
-    );
+      builder: (ctx) => WorkoutHistoryEditor(workout: workout),
+    ).then((updatedWorkout) {
+      if (updatedWorkout != null && updatedWorkout is Workout) {
+        ref.read(workoutHistoryPaginatedProvider.notifier).updateWorkout(updatedWorkout);
+      }
+    });
   }
 
   void _duplicateWorkout(Workout workout) {
-    ref.read(workoutHistoryProvider.notifier).duplicateWorkout(workout);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context).workoutDuplicated),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+    HapticFeedback.mediumImpact();
+    // Create duplicated workout
+    final now = DateTime.now();
+    final duplicated = Workout(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: '${workout.name} (Copy)',
+      exercises: workout.exercises,
+      status: WorkoutStatus.planned,
+      notes: workout.notes,
+      createdAt: now,
+      updatedAt: now,
     );
+
+    // Add to provider state (for immediate UI update)
+    ref.read(workoutHistoryPaginatedProvider.notifier).addWorkout(duplicated);
+
+    SnackBarService.showSuccess(context, context.l10n.workoutDuplicated);
   }
 
   void _deleteWorkout(Workout workout) {
+    HapticFeedback.lightImpact();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).deleteWorkout),
-        content: Text(AppLocalizations.of(context).deleteWorkoutConfirmation(workout.name)),
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.deleteWorkout),
+        content: Text(context.l10n.deleteWorkoutConfirmation),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context).cancel),
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              ref.read(workoutHistoryProvider.notifier).deleteWorkout(workout);
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context).workoutDeleted),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ),
-              );
+              Navigator.of(ctx).pop();
+              HapticFeedback.mediumImpact();
+              ref.read(workoutHistoryPaginatedProvider.notifier).removeWorkout(workout.id);
+              SnackBarService.showError(context, context.l10n.workoutDeleted);
             },
             style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: context.colors.error,
             ),
-            child: Text(AppLocalizations.of(context).delete),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -454,138 +547,175 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen> {
   }
 
   void _viewWorkout(Workout workout) {
-    // Navigate to read-only workout view
-    // TODO: Implement workout detail view
+    HapticFeedback.lightImpact();
+    // Navigate to workout detail view
+    context.push('/workout/${workout.id}');
   }
 
   void _showStatsDialog() {
-    // TODO: Implement statistics dialog
+    HapticFeedback.lightImpact();
+    // Navigate to analytics screen
+    context.push('/analytics');
   }
 }
 
+/// Filter dialog for workout history
 class _FilterDialog extends StatefulWidget {
-
   const _FilterDialog({
     required this.currentFilter,
-    required this.currentDateRange,
+    required this.currentDateFrom,
+    required this.currentDateTo,
     required this.onFilterChanged,
     required this.onDateRangeChanged,
   });
-  final String currentFilter;
-  final DateTimeRange? currentDateRange;
-  final Function(String) onFilterChanged;
-  final Function(DateTimeRange?) onDateRangeChanged;
+
+  final String? currentFilter;
+  final DateTime? currentDateFrom;
+  final DateTime? currentDateTo;
+  final Function(String?) onFilterChanged;
+  final Function(DateTime?, DateTime?) onDateRangeChanged;
 
   @override
   State<_FilterDialog> createState() => _FilterDialogState();
 }
 
 class _FilterDialogState extends State<_FilterDialog> {
-  late String _selectedFilter;
-  late DateTimeRange? _selectedDateRange;
+  late String? _selectedFilter;
+  DateTime? _selectedDateFrom;
+  DateTime? _selectedDateTo;
 
   @override
   void initState() {
     super.initState();
     _selectedFilter = widget.currentFilter;
-    _selectedDateRange = widget.currentDateRange;
+    _selectedDateFrom = widget.currentDateFrom;
+    _selectedDateTo = widget.currentDateTo;
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-
     return AlertDialog(
-      title: Text(l10n.filterWorkouts),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.timeRange, style: theme.textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildFilterChip('all', l10n.allTime),
-              _buildFilterChip('week', l10n.thisWeek),
-              _buildFilterChip('month', l10n.thisMonth),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text(l10n.workoutType, style: theme.textTheme.titleSmall),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: [
-              _buildFilterChip('strength', l10n.strength),
-              _buildFilterChip('hypertrophy', l10n.hypertrophy),
-              _buildFilterChip('cardio', l10n.cardio),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Text(l10n.customDateRange, style: theme.textTheme.titleSmall),
-              const Spacer(),
-              TextButton(
-                onPressed: _selectDateRange,
-                child: Text(_selectedDateRange != null 
-                  ? '${DateFormat('dd/MM').format(_selectedDateRange!.start)} - ${DateFormat('dd/MM').format(_selectedDateRange!.end)}'
-                  : l10n.selectDates),
-              ),
-            ],
-          ),
-        ],
+      title: Text(context.l10n.filterWorkouts),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Status filter section
+            Text(context.l10n.status, style: context.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _buildFilterChip(null, context.l10n.allTime),
+                _buildFilterChip('completed', context.l10n.workoutStatusCompleted),
+                _buildFilterChip('inProgress', context.l10n.workoutStatusInProgress),
+                _buildFilterChip('planned', context.l10n.workoutStatusPlanned),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Date range section
+            Text(context.l10n.customDateRange, style: context.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _selectDate(true),
+                    icon: const Icon(AppIcons.calendar, size: 18),
+                    label: Text(
+                      _selectedDateFrom != null
+                          ? DateFormat('dd/MM/yy').format(_selectedDateFrom!)
+                          : context.l10n.dateFrom,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(AppIcons.forwardIos, size: 16, color: context.colors.onSurfaceVariant),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _selectDate(false),
+                    icon: const Icon(AppIcons.calendar, size: 18),
+                    label: Text(
+                      _selectedDateTo != null
+                          ? DateFormat('dd/MM/yy').format(_selectedDateTo!)
+                          : context.l10n.dateTo,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () {
-            _selectedFilter = 'all';
-            _selectedDateRange = null;
-            widget.onFilterChanged(_selectedFilter);
-            widget.onDateRangeChanged(_selectedDateRange);
+            HapticFeedback.lightImpact();
+            _selectedFilter = null;
+            _selectedDateFrom = null;
+            _selectedDateTo = null;
+            widget.onFilterChanged(null);
+            widget.onDateRangeChanged(null, null);
             Navigator.of(context).pop();
           },
-          child: Text(l10n.clearAll),
+          child: Text(context.l10n.clearAll),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.cancel),
+          child: Text(context.l10n.cancel),
         ),
         FilledButton(
           onPressed: () {
+            HapticFeedback.mediumImpact();
             widget.onFilterChanged(_selectedFilter);
-            widget.onDateRangeChanged(_selectedDateRange);
+            widget.onDateRangeChanged(_selectedDateFrom, _selectedDateTo);
             Navigator.of(context).pop();
           },
-          child: Text(l10n.apply),
+          child: Text(context.l10n.apply),
         ),
       ],
     );
   }
 
-  Widget _buildFilterChip(String value, String label) {
+  Widget _buildFilterChip(String? value, String label) {
     final isSelected = _selectedFilter == value;
     return FilterChip(
       selected: isSelected,
       label: Text(label),
+      selectedColor: context.colors.primaryContainer,
+      checkmarkColor: context.colors.onPrimaryContainer,
       onSelected: (selected) {
-        setState(() => _selectedFilter = value);
+        HapticFeedback.selectionClick();
+        setState(() => _selectedFilter = selected ? value : null);
       },
     );
   }
 
-  Future<void> _selectDateRange() async {
-    final picked = await showDateRangePicker(
+  Future<void> _selectDate(bool isFrom) async {
+    final initialDate = isFrom
+        ? (_selectedDateFrom ?? DateTime.now().subtract(const Duration(days: 30)))
+        : (_selectedDateTo ?? DateTime.now());
+
+    final picked = await showDatePicker(
       context: context,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      initialDate: initialDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 365 * 2)),
       lastDate: DateTime.now(),
-      initialDateRange: _selectedDateRange,
     );
-    
+
     if (picked != null) {
-      setState(() => _selectedDateRange = picked);
+      HapticFeedback.selectionClick();
+      setState(() {
+        if (isFrom) {
+          _selectedDateFrom = picked;
+        } else {
+          _selectedDateTo = picked;
+        }
+      });
     }
   }
 }

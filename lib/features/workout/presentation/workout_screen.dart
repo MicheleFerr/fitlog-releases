@@ -47,7 +47,8 @@ import 'package:gymbro_flutter_new/features/onboarding/domain/services/contextua
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 import 'package:uuid/uuid.dart';
 // 🏆 PR Celebration imports
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_modal.dart';
+// TODO: PRCelebrationModal was removed - use PRCelebrationOverlay instead
+// import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_modal.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -2144,43 +2145,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
 
     if (!context.mounted) return;
 
-    // Show the celebration modal
-    await showDialog(
-      context: context,
-      barrierDismissible: false, // Require user action
-      builder: (_) => PRCelebrationModal(
-        celebration: celebration,
-        onShare: () async {
-          // Track share engagement
-          await celebrationRepo.trackEngagement(
-            userId,
-            celebration.prId,
-            CelebrationEngagement.shared,
-          );
-
-          // TODO: Implement actual sharing (Task 3.6 or later)
-          if (context.mounted) {
-            SnackBarService.showSuccess(
-              context,
-              'PR shared! 🎉', // TODO: Localize
-            );
-            Navigator.of(context).pop();
-          }
-        },
-        onDismiss: () async {
-          // Track dismiss engagement
-          await celebrationRepo.trackEngagement(
-            userId,
-            celebration.prId,
-            CelebrationEngagement.dismissed,
-          );
-
-          if (context.mounted) {
-            Navigator.of(context).pop();
-          }
-        },
-      ),
-    );
+    // TODO: PRCelebrationModal was removed during analytics cleanup
+    // Migrate to use PRCelebrationOverlay with PersonalRecordAchieved instead
+    // For now, just show a simple snackbar
+    if (context.mounted) {
+      SnackBarService.showSuccess(
+        context,
+        '🏆 New PR: ${celebration.exerciseName}!',
+      );
+    }
   }
 
   void _showSettingsMenu(BuildContext context, WidgetRef ref) {

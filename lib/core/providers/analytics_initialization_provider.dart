@@ -18,6 +18,12 @@ import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 
+/// Tracks if app_open has been logged this session (avoid duplicate events)
+bool _appOpenLogged = false;
+
+/// Tracks if "initialization complete" has been logged (avoid log spam)
+bool _initCompleteLogged = false;
+
 /// Analytics initialization provider
 ///
 /// Automatically sets user properties when the app starts and when they change.
@@ -34,7 +40,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 ///
 /// Also:
 /// - Sets the user ID for analytics tracking
-/// - Logs the initial app_open event
+/// - Logs the initial app_open event (only once per session)
 final analyticsInitializationProvider = FutureProvider<void>((ref) async {
   // Watch all relevant providers
   final analytics = ref.watch(analyticsServiceProvider);
@@ -84,10 +90,15 @@ final analyticsInitializationProvider = FutureProvider<void>((ref) async {
     isPremium: isPremium,
   );
 
-  // Log app open event
-  await analytics.logAppOpen();
+  // Log app open event ONLY ONCE per session
+  if (!_appOpenLogged) {
+    _appOpenLogged = true;
+    await analytics.logAppOpen();
+  }
 
-  if (kDebugMode) {
+  // Log completion only once to avoid log spam
+  if (kDebugMode && !_initCompleteLogged) {
+    _initCompleteLogged = true;
     debugPrint('✅ Analytics initialization complete');
   }
 });

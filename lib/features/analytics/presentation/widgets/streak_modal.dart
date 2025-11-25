@@ -1099,10 +1099,10 @@ class _StreakModalState extends State<StreakModal> {
                         : null,
                   ),
                   child: isSelected
-                      ? const SemanticIcon(
+                      ? SemanticIcon(
                           icon: AppIcons.check,
                           semanticLabel: '',  // Decorative icon
-                          color: context.colors.surface,
+                          color: Theme.of(context).colorScheme.surface,
                           size: AppIconSize.large,
                         )
                       : null,

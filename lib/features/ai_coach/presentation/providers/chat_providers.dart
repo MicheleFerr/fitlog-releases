@@ -26,11 +26,14 @@ import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/recovery_pat
 import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/cns_fatigue_analyzer.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/periodization_analyzer.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/mobility_analyzer.dart';
+import 'package:gymbro_flutter_new/features/ai_coach/data/analyzers/volume_balance_analyzer.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/hybrid_exercise_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/tone_adapter.dart';
+import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
+import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 
 // ============================================================================
 // Datasource Providers (Singleton)
@@ -98,8 +101,9 @@ final analyzerRegistryProvider = Provider<AnalyzerRegistry>((ref) {
   registry.registerAnalyzer(PeriodizationAnalyzer());
   registry.registerAnalyzer(MobilityAnalyzer());
 
-  // TODO: Register VolumeBalanceAnalyzer (requires exerciseDatabase)
-  // registry.registerAnalyzer(VolumeBalanceAnalyzer(exerciseDatabase));
+  // Register VolumeBalanceAnalyzer with empty exercise database
+  // The analyzer will lookup exercises dynamically when needed
+  registry.registerAnalyzer(VolumeBalanceAnalyzer({}));
 
   return registry;
 });
@@ -116,6 +120,8 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
   final aiCoachAnalytics = ref.watch(aiCoachAnalyticsProvider);
   final toneAdapter = ref.watch(toneAdapterProvider);
   final toneProfile = ref.watch(toneProfileProvider);
+  final fitnessQuestionnaire = ref.watch(userFitnessQuestionnaireProvider);
+  final streakRepository = ref.watch(streakRepositoryProvider);
 
   return ChatBotDatasource(
     intentDetector: intentDetector,
@@ -128,6 +134,8 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
     aiCoachAnalytics: aiCoachAnalytics,
     toneAdapter: toneAdapter,
     toneProfile: toneProfile,
+    fitnessQuestionnaire: fitnessQuestionnaire,
+    streakRepository: streakRepository,
   );
 });
 
@@ -266,7 +274,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   /// Send message and stream response
-  Future<void> sendMessage(String message) async {
+  ///
+  /// **Parameters**:
+  /// - `message`: User's input text
+  /// - `userName`: User's display name for personalized responses (optional)
+  Future<void> sendMessage(String message, {String? userName}) async {
     if (message.trim().isEmpty) return;
 
     // Set streaming state
@@ -276,6 +288,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     await for (final result in sendChatMessageUseCase.call(
       message: message,
       userId: userId,
+      userName: userName,
     )) {
       result.fold(
         (failure) {

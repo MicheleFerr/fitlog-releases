@@ -174,8 +174,9 @@ class ResponseRepository {
       case UserIntent.greeting:
       case UserIntent.unknown:
       case UserIntent.prQuery:
-      case UserIntent.help:
         return []; // No follow-ups for these intents
+      case UserIntent.help:
+        return _getHelpFollowUps(locale);
     }
   }
 
@@ -239,6 +240,15 @@ class ResponseRepository {
       // Navigation actions (depth 2)
       'navigation.analytics': 'Voglio vedere le mie analytics dettagliate',
       'navigation.workout': 'Voglio iniziare un nuovo allenamento',
+
+      // Help category intents
+      'help.progression': 'Come sto progredendo negli allenamenti?',
+      'help.volume': 'Sto allenandomi troppo? Qual è il volume ottimale?',
+      'help.recovery': 'Devo riposare? Sono recuperato?',
+      'help.balance': 'I miei muscoli sono bilanciati?',
+      'help.form': 'Dammi consigli sulla tecnica',
+      'help.motivation': 'Ho bisogno di motivazione',
+      'help.plan': 'Serve un nuovo programma di allenamento?',
     };
 
     final questionsEN = {
@@ -290,6 +300,15 @@ class ResponseRepository {
       // Navigation actions (depth 2)
       'navigation.analytics': 'I want to see my detailed analytics',
       'navigation.workout': 'I want to start a new workout',
+
+      // Help category intents
+      'help.progression': 'How am I progressing in my workouts?',
+      'help.volume': 'Am I training too much? What is the optimal volume?',
+      'help.recovery': 'Should I rest? Am I recovered?',
+      'help.balance': 'Are my muscles balanced?',
+      'help.form': 'Give me form and technique tips',
+      'help.motivation': 'I need motivation',
+      'help.plan': 'Do I need a new training program?',
     };
 
     final questions = locale == 'it' ? questionsIT : questionsEN;
@@ -576,29 +595,15 @@ class ResponseRepository {
     if (locale == 'it') {
       return [
         const ResponseTemplate(
-          text: '🤖 Ecco cosa posso fare per te:\n\n'
-              '📈 **Progressione**: "Come sto progredendo?", "Mostrami i miei record"\n'
-              '💪 **Volume**: "Sto allenandomi troppo?", "Volume ottimale?"\n'
-              '😴 **Recupero**: "Devo riposare?", "Sono recuperato?"\n'
-              '⚖️ **Equilibrio**: "I miei muscoli sono bilanciati?"\n'
-              '🎯 **Tecnica**: "Consigli sulla tecnica", "Come fare squat?"\n'
-              '🔥 **Motivazione**: "Ho bisogno di motivazione"\n'
-              '📅 **Piano**: "Serve un nuovo programma?"\n\n'
-              '💡 **Tip**: Fai domande naturali, rispondo in base ai tuoi dati di allenamento!',
+          text: '🤖 Ecco cosa posso fare per te!\n\n'
+              'Clicca su un argomento per saperne di più, oppure fai domande naturali sui tuoi allenamenti.',
         ),
       ];
     }
     return [
       const ResponseTemplate(
-        text: "🤖 Here's what I can do for you:\n\n"
-            '📈 **Progression**: "How am I progressing?", "Show my PRs"\n'
-            '💪 **Volume**: "Am I training too much?", "Optimal volume?"\n'
-            '😴 **Recovery**: "Should I rest?", "Am I recovered?"\n'
-            '⚖️ **Balance**: "Are my muscles balanced?"\n'
-            '🎯 **Form**: "Form tips", "How to squat?"\n'
-            '🔥 **Motivation**: "Need motivation"\n'
-            '📅 **Plan**: "Need a new program?"\n\n'
-            "💡 **Tip**: Ask natural questions, I'll answer based on your workout data!",
+        text: "🤖 Here's what I can help you with!\n\n"
+            'Tap a topic to learn more, or ask natural questions about your workouts.',
       ),
     ];
   }
@@ -1111,5 +1116,88 @@ class ResponseRepository {
 
     // Depth 1+: End
     return [];
+  }
+
+  /// Help follow-up chips - main category shortcuts
+  ///
+  /// Returns chips for each main AI Coach capability category
+  /// so users can quickly navigate to what they need
+  List<FollowUpChip> _getHelpFollowUps(String locale) {
+    if (locale == 'it') {
+      return [
+        const FollowUpChip(
+          label: 'Progressione',
+          intent: 'help.progression',
+          emoji: '📈',
+        ),
+        const FollowUpChip(
+          label: 'Volume',
+          intent: 'help.volume',
+          emoji: '💪',
+        ),
+        const FollowUpChip(
+          label: 'Recupero',
+          intent: 'help.recovery',
+          emoji: '😴',
+        ),
+        const FollowUpChip(
+          label: 'Equilibrio',
+          intent: 'help.balance',
+          emoji: '⚖️',
+        ),
+        const FollowUpChip(
+          label: 'Tecnica',
+          intent: 'help.form',
+          emoji: '🎯',
+        ),
+        const FollowUpChip(
+          label: 'Motivazione',
+          intent: 'help.motivation',
+          emoji: '🔥',
+        ),
+        const FollowUpChip(
+          label: 'Piano',
+          intent: 'help.plan',
+          emoji: '📅',
+        ),
+      ];
+    }
+    return [
+      const FollowUpChip(
+        label: 'Progression',
+        intent: 'help.progression',
+        emoji: '📈',
+      ),
+      const FollowUpChip(
+        label: 'Volume',
+        intent: 'help.volume',
+        emoji: '💪',
+      ),
+      const FollowUpChip(
+        label: 'Recovery',
+        intent: 'help.recovery',
+        emoji: '😴',
+      ),
+      const FollowUpChip(
+        label: 'Balance',
+        intent: 'help.balance',
+        emoji: '⚖️',
+      ),
+      const FollowUpChip(
+        label: 'Form',
+        intent: 'help.form',
+        emoji: '🎯',
+      ),
+      const FollowUpChip(
+        label: 'Motivation',
+        intent: 'help.motivation',
+        emoji: '🔥',
+      ),
+      const FollowUpChip(
+        label: 'Plan',
+        intent: 'help.plan',
+        emoji: '📅',
+      ),
+    ];
   }
 }

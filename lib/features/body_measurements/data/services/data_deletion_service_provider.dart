@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/body_measurements/data/datasources/measurement_local_datasource_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/providers/measurement_local_datasource_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_provider.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/services/audit_logger_provider.dart';

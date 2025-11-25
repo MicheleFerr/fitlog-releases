@@ -3,7 +3,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Volume Chart with Material 3 styling
 class EnhancedVolumeChart extends StatelessWidget {
@@ -210,13 +209,18 @@ class EnhancedVolumeChart extends StatelessWidget {
   Widget _buildVolumeInsights(BuildContext context, List<FlSpot> volumeData) {
     final localizations = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     if (volumeData.isEmpty) return const SizedBox.shrink();
 
     final currentVolume = volumeData.last.y;
     final previousVolume = volumeData.length > 1 ? volumeData[volumeData.length - 2].y : 0;
     final volumeChange = currentVolume - previousVolume;
     final isImproving = volumeChange > 0;
+
+    // Calculate percentage change (avoid division by zero)
+    final percentChange = previousVolume > 0
+        ? ((volumeChange / previousVolume) * 100).round()
+        : 0;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -235,7 +239,7 @@ class EnhancedVolumeChart extends StatelessWidget {
           Expanded(
             child: Text(
               isImproving
-                  ? localizations.volumeIncreased(volumeChange.toStringAsFixed(0))
+                  ? localizations.volumeIncreased(percentChange)
                   : localizations.volumeDecreased(volumeChange.abs().toStringAsFixed(0)),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
@@ -289,13 +293,13 @@ class EnhancedVolumeChart extends StatelessWidget {
           Icon(
             Icons.bar_chart,
             size: 48,
-            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colors.surfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -522,13 +526,13 @@ class EnhancedFrequencyChart extends StatelessWidget {
           Icon(
             Icons.calendar_today,
             size: 48,
-            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colors.surfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -614,10 +618,9 @@ class EnhancedBodyPartChart extends StatelessWidget {
                               sectionsSpace: 2,
                               centerSpaceRadius: 60,
                               sections: bodyPartData.asMap().entries.map((entry) {
-                                final index = entry.key;
                                 final section = entry.value;
                                 return PieChartSectionData(
-                                  color: _getBodyPartColor(section.category, colorScheme),
+                                  color: _getBodyPartColor(section.category, colorScheme, context),
                                   value: section.percentage,
                                   title: '${section.percentage.toStringAsFixed(0)}%',
                                   radius: 50,
@@ -649,7 +652,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
                                       width: 16,
                                       height: 16,
                                       decoration: BoxDecoration(
-                                        color: _getBodyPartColor(section.category, colorScheme),
+                                        color: _getBodyPartColor(section.category, colorScheme, context),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -715,7 +718,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
     }
   }
 
-  Color _getBodyPartColor(String category, ColorScheme colorScheme) {
+  Color _getBodyPartColor(String category, ColorScheme colorScheme, BuildContext context) {
     switch (category) {
       case 'Chest':
         return colorScheme.primary;
@@ -728,7 +731,7 @@ class EnhancedBodyPartChart extends StatelessWidget {
       case 'Arms':
         return context.colors.secondary;
       default:
-        return context.colors.surfaceVariant;
+        return colorScheme.surfaceContainerHighest;
     }
   }
 
@@ -740,13 +743,13 @@ class EnhancedBodyPartChart extends StatelessWidget {
           Icon(
             Icons.donut_large,
             size: 48,
-            color: context.colors.surfaceVariant.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
             message,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colors.surfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

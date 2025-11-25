@@ -54,7 +54,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
   icon: AppIcons.restore,
   semanticLabel: 'Restore',
 ),
-            tooltip: context.l10n.resetToDefaults('Weight'),
+            tooltip: context.l10n.resetToDefaults,
             onPressed: () => _showResetConfirmation(),
           ),
         ],
@@ -596,7 +596,7 @@ class _WeightSettingsScreenState extends ConsumerState<WeightSettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(context.l10n.resetToDefaults('Weight')),
+        title: Text(context.l10n.resetToDefaults),
         content: Text(context.l10n.resetSettingsConfirmation),
         actions: [
           TextButton(

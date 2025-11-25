@@ -204,7 +204,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
             // Header with type and author
             Row(
               children: [
-                _getTypeIcon(contribution.type, theme),
+                _getTypeIcon(context, contribution.type, theme),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -301,16 +301,16 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
     );
   }
 
-  Widget _getTypeIcon(ContributionType type, ThemeData theme) {
+  Widget _getTypeIcon(BuildContext context, ContributionType type, ThemeData theme) {
     switch (type) {
       case ContributionType.tip:
-        return const Icon(
+        return Icon(
           Icons.lightbulb,
           size: 20,
           color: context.colors.warning,
         );
       case ContributionType.warning:
-        return const Icon(
+        return Icon(
           Icons.warning,
           size: 20,
           color: context.colors.secondary,
@@ -322,19 +322,19 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           color: theme.colorScheme.primary,
         );
       case ContributionType.variant:
-        return const Icon(
+        return Icon(
           Icons.alt_route,
           size: 20,
           color: context.colors.tertiary,
         );
       case ContributionType.translation:
-        return const Icon(
+        return Icon(
           Icons.translate,
           size: 20,
           color: context.colors.primary,
         );
       case ContributionType.technique:
-        return const Icon(
+        return Icon(
           Icons.fitness_center,
           size: 20,
           color: context.colors.success,

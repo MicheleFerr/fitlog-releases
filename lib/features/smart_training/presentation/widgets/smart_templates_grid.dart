@@ -237,8 +237,8 @@ class SmartTemplateCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _getDifficultyColor(template.difficulty),
-                    _getDifficultyColor(template.difficulty).withValues(alpha: 0.7),
+                    _getDifficultyColor(context, template.difficulty),
+                    _getDifficultyColor(context, template.difficulty).withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius: const BorderRadius.vertical(
@@ -278,7 +278,7 @@ class SmartTemplateCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: context.colors.onSurface54,
+                            color: context.colors.onSurface.withValues(alpha: 0.54),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -300,7 +300,7 @@ class SmartTemplateCard extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colors.onSurface54,
+                        color: context.colors.onSurface.withValues(alpha: 0.54),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -355,7 +355,7 @@ class SmartTemplateCard extends ConsumerWidget {
                         const Spacer(),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.star,
                               size: 16,
                               color: context.colors.warning,
@@ -403,7 +403,7 @@ class SmartTemplateCard extends ConsumerWidget {
     );
   }
 
-  Color _getDifficultyColor(DifficultyLevel difficulty) {
+  Color _getDifficultyColor(BuildContext context, DifficultyLevel difficulty) {
     switch (difficulty) {
       case DifficultyLevel.beginner:
         return context.colors.success;

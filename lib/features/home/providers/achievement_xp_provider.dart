@@ -106,13 +106,13 @@ Color _getColorFromType(AchievementType type) {
     case AchievementType.workout:
       return const Color(0xFF2196F3); // Material Blue (primary)
     case AchievementType.streak:
-      return context.colors.secondary;
+      return const Color(0xFFFF9800); // Material Orange (secondary)
     case AchievementType.volume:
       return const Color(0xFF4CAF50); // Material Green (success)
     case AchievementType.pr:
       return const Color(0xFFF44336); // Material Red (error)
     case AchievementType.community:
-      return context.colors.tertiary;
+      return const Color(0xFF9C27B0); // Material Purple (tertiary)
     case AchievementType.general:
       return const Color(0xFFBDBDBD); // Material Grey 400 (surfaceVariant)
   }
@@ -217,7 +217,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: '3 giorni consecutivi',
       emoji: '🔥',
       xpReward: 75,
-      color: context.colors.secondary,
+      color: const Color(0xFFFF9800), // Material Orange (secondary)
       isUnlocked: false,
       type: AchievementType.streak,
     ),
@@ -227,7 +227,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: '7 giorni consecutivi',
       emoji: '🌟',
       xpReward: 150,
-      color: context.colors.secondary,
+      color: const Color(0xFFFF9800), // Material Orange (secondary)
       isUnlocked: false,
       type: AchievementType.streak,
     ),
@@ -237,7 +237,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: '14 giorni consecutivi',
       emoji: '⭐',
       xpReward: 300,
-      color: context.colors.secondary,
+      color: const Color(0xFFFF9800), // Material Orange (secondary)
       isUnlocked: false,
       type: AchievementType.streak,
     ),
@@ -247,7 +247,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: '30 giorni consecutivi',
       emoji: '🏆',
       xpReward: 750,
-      color: context.colors.secondary,
+      color: const Color(0xFFFF9800), // Material Orange (secondary)
       isUnlocked: false,
       type: AchievementType.streak,
     ),
@@ -313,7 +313,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Prima contribuzione community',
       emoji: '🤝',
       xpReward: 50,
-      color: context.colors.tertiary,
+      color: const Color(0xFF9C27B0), // Material Purple (tertiary)
       isUnlocked: false,
       type: AchievementType.community,
     ),
@@ -323,7 +323,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Una tua correzione è stata approvata',
       emoji: '✅',
       xpReward: 100,
-      color: context.colors.tertiary,
+      color: const Color(0xFF9C27B0), // Material Purple (tertiary)
       isUnlocked: false,
       type: AchievementType.community,
     ),
@@ -333,7 +333,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
       description: 'Vota 10 contributi',
       emoji: '👍',
       xpReward: 75,
-      color: context.colors.tertiary,
+      color: const Color(0xFF9C27B0), // Material Purple (tertiary)
       isUnlocked: false,
       type: AchievementType.community,
     ),

@@ -90,7 +90,7 @@ class OnboardingModal extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                context.l10n.onboardingWelcomeTitle(userName),
+                                context.l10n.onboardingWelcomeTitle,
                                 style: context.textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -157,27 +157,28 @@ class OnboardingModal extends StatelessWidget {
 
                     const SizedBox(height: 24),
 
-                    // Pattern-based explanation
+                    // Disclaimer: NOT AI explanation
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: context.colors.primaryContainer,
+                        color: context.colors.tertiaryContainer,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SemanticIcon(
-                            icon: AppIcons.info,
-                            semanticLabel: context.l10n.info,
+                            icon: AppIcons.warning,
+                            semanticLabel: context.l10n.warning,
                             size: AppIconSize.medium,
-                            color: context.colors.onPrimaryContainer,
+                            color: context.colors.onTertiaryContainer,
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               context.l10n.onboardingPatternExplanation,
                               style: context.textTheme.bodySmall?.copyWith(
-                                color: context.colors.onPrimaryContainer,
+                                color: context.colors.onTertiaryContainer,
                               ),
                             ),
                           ),

@@ -18,10 +18,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/widgets/inline_chart.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/providers/chat_providers.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/utils/simple_markdown_parser.dart';
 import 'package:intl/intl.dart';
 
 /// Message bubble widget
@@ -36,6 +38,12 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
   final AIMessage message;
   final bool showTypingIndicator;
   final Function(FollowUpChip)? onChipTap;
+
+  /// Get user ID from profile provider (fallback to 'anonymous')
+  String _getUserId(WidgetRef ref) {
+    final userProfile = ref.read(userProfileProvider);
+    return userProfile.valueOrNull?.uid ?? 'anonymous';
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,10 +93,10 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Message text
-                      Text(
+                      // Message text (with markdown support for **bold**, *italic*)
+                      SimpleMarkdownParser.buildText(
                         message.content,
-                        style: context.textTheme.bodyMedium?.copyWith(
+                        baseStyle: context.textTheme.bodyMedium?.copyWith(
                           color: isUser
                               ? context.colors.onPrimary
                               : context.colors.onSurface,
@@ -108,9 +116,10 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                             final dataPoints = (chartData?['data'] as List<dynamic>?)?.length ?? 0;
 
                             // Track on first build (chart now visible)
+                            final userId = _getUserId(ref);
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               analytics.trackChartViewed(
-                                userId: 'test-user',
+                                userId: userId,
                                 chartType: chartType,
                                 dataPoints: dataPoints,
                               );
@@ -155,7 +164,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                       if (!showTypingIndicator) ...[
                         const SizedBox(height: 4),
                         Text(
-                          _formatTimestamp(message.timestamp),
+                          _formatTimestamp(context, message.timestamp),
                           style: context.textTheme.bodySmall?.copyWith(
                             color: isUser
                                 ? context.colors.onPrimary.withValues(alpha: 0.7)
@@ -195,7 +204,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
           : context.colors.tertiaryContainer,
       child: SemanticIcon(
         icon: isUser ? AppIcons.person : AppIcons.ai,
-        semanticLabel: isUser ? 'User' : 'AI Coach',
+        semanticLabel: isUser ? context.l10n.userLabel : context.l10n.aiCoachLabel,
         size: AppIconSize.small,
         color: isUser
             ? context.colors.onPrimaryContainer
@@ -245,19 +254,21 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
     );
   }
 
-  /// Format timestamp
-  String _formatTimestamp(DateTime timestamp) {
+  /// Format timestamp with localized strings
+  String _formatTimestamp(BuildContext context, DateTime timestamp) {
     final now = DateTime.now();
     final diff = now.difference(timestamp);
 
     if (diff.inMinutes < 1) {
-      return 'Just now';
+      return context.l10n.justNow;
     } else if (diff.inHours < 1) {
-      return '${diff.inMinutes}m ago';
+      return context.l10n.minutesAgo(diff.inMinutes);
     } else if (diff.inDays < 1) {
-      return '${diff.inHours}h ago';
+      return context.l10n.hoursAgo(diff.inHours);
     } else {
-      return DateFormat('MMM d, HH:mm').format(timestamp);
+      // Use locale-aware date format
+      final locale = Localizations.localeOf(context).languageCode;
+      return DateFormat('d MMM, HH:mm', locale).format(timestamp);
     }
   }
 
@@ -302,10 +313,11 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
 
     // Track system message shown
     final messageType = isWarning ? 'warning' : isTip ? 'tip' : 'info';
+    final userId = _getUserId(ref);
     final analytics = ref.read(aiCoachAnalyticsProvider);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       analytics.trackSystemMessageShown(
-        userId: 'test-user',
+        userId: userId,
         messageType: messageType,
       );
     });
@@ -349,10 +361,10 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
             SemanticIcon(
               icon: icon,
               semanticLabel: isWarning
-                  ? 'Warning'
+                  ? context.l10n.warning
                   : isTip
-                      ? 'Tip'
-                      : 'Info',
+                      ? context.l10n.tip
+                      : context.l10n.info,
               size: AppIconSize.medium,
               color: iconColor,
             ),
@@ -366,10 +378,10 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                   // Label (System / Tip / Warning)
                   Text(
                     isWarning
-                        ? (message.metadata?['label'] ?? 'Warning')
+                        ? (message.metadata?['label'] ?? context.l10n.warning)
                         : isTip
-                            ? (message.metadata?['label'] ?? 'Tip')
-                            : (message.metadata?['label'] ?? 'System'),
+                            ? (message.metadata?['label'] ?? context.l10n.tip)
+                            : (message.metadata?['label'] ?? context.l10n.systemMessageLabel),
                     style: context.textTheme.labelSmall?.copyWith(
                       color: iconColor,
                       fontWeight: FontWeight.w600,
@@ -378,10 +390,10 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                   ),
                   const SizedBox(height: 4),
 
-                  // Message text
-                  Text(
+                  // Message text (with markdown support)
+                  SimpleMarkdownParser.buildText(
                     message.content,
-                    style: context.textTheme.bodyMedium?.copyWith(
+                    baseStyle: context.textTheme.bodyMedium?.copyWith(
                       color: context.colors.onSurface,
                     ),
                   ),
@@ -389,7 +401,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                   // Timestamp
                   const SizedBox(height: 4),
                   Text(
-                    _formatTimestamp(message.timestamp),
+                    _formatTimestamp(context, message.timestamp),
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colors.onSurfaceVariant,
                     ),
@@ -427,7 +439,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
             ),
             const SizedBox(width: 8),
             Text(
-              'Why this answer?',
+              context.l10n.whyThisAnswer,
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.primary,
                 fontWeight: FontWeight.w600,
@@ -589,7 +601,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Image not available',
+                          context.l10n.imageNotAvailable,
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.error,
                           ),
@@ -606,7 +618,7 @@ class MessageBubble extends ConsumerWidget { // Callback for chip tap
           // Form cues
           if (formCues != null && formCues.isNotEmpty) ...[
             Text(
-              'Form Cues:',
+              '${context.l10n.formCues}:',
               style: context.textTheme.bodySmall?.copyWith(
                 color: context.colors.primary,
                 fontWeight: FontWeight.w600,

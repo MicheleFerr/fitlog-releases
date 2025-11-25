@@ -639,15 +639,23 @@ service cloud.firestore {
            exists(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)) &&
            get(/databases/$(database)/documents/coach_delegations/$(request.auth.token.email + '_' + get(/databases/$(database)/documents/settings/$(userId)).data.email)).data.permissions.canViewDashboard == true)
         );
-        
-        allow create: if request.auth != null && 
+
+        allow create: if request.auth != null &&
           request.auth.uid == userId;
-          
-        allow update: if request.auth != null && 
+
+        allow update: if request.auth != null &&
           request.auth.uid == userId;
-          
-        allow delete: if request.auth != null && 
+
+        allow delete: if request.auth != null &&
           request.auth.uid == userId;
+      }
+
+      // ============= USER SETTINGS SUBCOLLECTION (NOTIFICATION SETTINGS) =============
+      // Path: users/{userId}/settings/notifications
+      // Added: 2025-11-25 for notification system v2.0
+      match /settings/{settingType} {
+        // Users can read/write their own settings (notifications, preferences, etc.)
+        allow read, write: if request.auth != null && request.auth.uid == userId;
       }
     }
 

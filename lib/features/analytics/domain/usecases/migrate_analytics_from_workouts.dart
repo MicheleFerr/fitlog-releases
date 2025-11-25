@@ -4,6 +4,9 @@
 /// 🎯 Feature: analytics
 /// 🔧 Type: use case
 ///
+/// ⚠️ DEPRECATED: This migration use case is no longer maintained.
+/// The getAllWorkouts() method no longer exists in HiveWorkoutDataSource.
+///
 /// Migrate Analytics From Workouts Use Case
 ///
 /// **Purpose**: Populate analytics collection from existing workouts (one-time migration)
@@ -24,6 +27,7 @@
 ///   (stats) => print('Migrated ${stats.totalExercises} exercises from ${stats.totalWorkouts} workouts'),
 /// );
 /// ```
+@Deprecated('HiveWorkoutDataSource.getAllWorkouts() no longer exists. Use analytics_migration_service.dart instead.')
 library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -96,7 +100,9 @@ class MigrateAnalyticsFromWorkouts {
       }
 
       // 1. Read all workouts from local storage
-      final workouts = await _localDataSource.getAllWorkouts(userId);
+      // DEPRECATED: getAllWorkouts() no longer exists
+      // Use analytics_migration_service.dart for migrations instead
+      final workouts = <dynamic>[]; // await _localDataSource.getAllWorkouts(userId);
 
       if (workouts.isEmpty) {
         if (kDebugMode) {

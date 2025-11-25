@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:health/health.dart' as health_pkg;
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_data_type.dart';
 import 'package:gymbro_flutter_new/features/health_sync/domain/entities/health_permission_status.dart';
@@ -148,9 +149,34 @@ abstract class IHealthRemoteDatasource {
 /// Implementation of [IHealthRemoteDatasource] using the `health` package.
 class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   final health_pkg.Health _health;
+  bool _isConfigured = false;
 
   HealthRemoteDatasourceImpl({health_pkg.Health? health})
       : _health = health ?? health_pkg.Health();
+
+  /// Ensures the health package is configured before use.
+  ///
+  /// **CRITICAL**: Must be called before any HealthKit/Health Connect operations.
+  /// This enables the health package to communicate with the native platform.
+  Future<void> _ensureConfigured() async {
+    if (_isConfigured) {
+      debugPrint('🏥 [HealthKit] Already configured');
+      return;
+    }
+
+    debugPrint('🏥 [HealthKit] Configuring health package...');
+    try {
+      // Configure health package for HealthKit (iOS) / Health Connect (Android)
+      // useHealthConnectIfAvailable: true enables Health Connect on Android 14+
+      await _health.configure();
+      _isConfigured = true;
+      debugPrint('🏥 [HealthKit] ✅ Configuration successful');
+    } catch (e, stack) {
+      debugPrint('🏥 [HealthKit] ❌ Configuration failed: $e');
+      debugPrint('🏥 [HealthKit] Stack: $stack');
+      rethrow;
+    }
+  }
 
   /// Maps [HealthDataType] to `health` package's [HealthDataType].
   health_pkg.HealthDataType _mapToHealthPackageType(
@@ -182,10 +208,17 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
   Future<HealthPermissionStatus> requestPermissions({
     required List<HealthDataType> dataTypes,
   }) async {
+    debugPrint('🏥 [HealthKit] requestPermissions called for: $dataTypes');
+
+    // Ensure health package is configured before requesting permissions
+    await _ensureConfigured();
+
     // Map domain types to health package types
     final healthTypes = dataTypes
         .map((dt) => _mapToHealthPackageType(dt))
         .toList();
+
+    debugPrint('🏥 [HealthKit] Mapped to health package types: $healthTypes');
 
     // Request read permissions only (MVP - no write to health platform yet)
     // Workout: Read-only (import from HealthKit/Health Connect)
@@ -197,11 +230,22 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       return health_pkg.HealthDataAccess.READ; // Read-only for workouts
     }).toList();
 
+    debugPrint('🏥 [HealthKit] Requesting permissions: $permissions');
+    debugPrint('🏥 [HealthKit] Platform: ${Platform.isIOS ? "iOS" : "Android"}');
+
     // Request permissions via health package
-    await _health.requestAuthorization(
-      healthTypes,
-      permissions: permissions,
-    );
+    try {
+      debugPrint('🏥 [HealthKit] Calling _health.requestAuthorization...');
+      final result = await _health.requestAuthorization(
+        healthTypes,
+        permissions: permissions,
+      );
+      debugPrint('🏥 [HealthKit] requestAuthorization returned: $result');
+    } catch (e, stack) {
+      debugPrint('🏥 [HealthKit] ❌ requestAuthorization failed: $e');
+      debugPrint('🏥 [HealthKit] Stack: $stack');
+      rethrow;
+    }
 
     // Check individual permission states
     final permissionStates = <HealthDataType, PermissionState>{};
@@ -213,13 +257,23 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         permissions: [health_pkg.HealthDataAccess.READ],
       );
 
+      debugPrint('🏥 [HealthKit] hasPermissions for $dataType: $hasPermission');
+
       if (hasPermission == true) {
         permissionStates[dataType] = PermissionState.authorized;
       } else if (hasPermission == false) {
         permissionStates[dataType] = PermissionState.denied;
       } else {
-        // null = not determined (shouldn't happen after request, but handle it)
-        permissionStates[dataType] = PermissionState.notDetermined;
+        // iOS PRIVACY BEHAVIOR: hasPermissions returns null for READ access
+        // because Apple doesn't disclose if user denied READ permissions.
+        // After successful requestAuthorization, we assume authorized on iOS.
+        // The only reliable way to check is to try reading data.
+        if (Platform.isIOS) {
+          debugPrint('🏥 [HealthKit] iOS: hasPermissions=null, assuming authorized after request');
+          permissionStates[dataType] = PermissionState.authorized;
+        } else {
+          permissionStates[dataType] = PermissionState.notDetermined;
+        }
       }
     }
 
@@ -236,8 +290,14 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
 
   @override
   Future<HealthPermissionStatus> checkPermissionStatus() async {
+    debugPrint('🏥 [HealthKit] checkPermissionStatus called');
+
+    // Ensure health package is configured before checking permissions
+    await _ensureConfigured();
+
     // Check all possible data types (7 total)
     const allTypes = HealthDataType.values;
+    debugPrint('🏥 [HealthKit] Checking permissions for: $allTypes');
 
     final permissionStates = <HealthDataType, PermissionState>{};
 
@@ -248,12 +308,24 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
         permissions: [health_pkg.HealthDataAccess.READ],
       );
 
+      debugPrint('🏥 [HealthKit] checkPermissionStatus for $dataType: $hasPermission');
+
       if (hasPermission == true) {
         permissionStates[dataType] = PermissionState.authorized;
       } else if (hasPermission == false) {
         permissionStates[dataType] = PermissionState.denied;
       } else {
-        permissionStates[dataType] = PermissionState.notDetermined;
+        // iOS PRIVACY BEHAVIOR: hasPermissions returns null for READ access
+        // because Apple doesn't disclose if user denied READ permissions.
+        // On iOS, we assume authorized and let the actual data fetch determine
+        // if permissions were granted. This matches iOS privacy design where
+        // the only reliable way to check is to try reading data.
+        if (Platform.isIOS) {
+          debugPrint('🏥 [HealthKit] iOS: hasPermissions=null for $dataType, assuming authorized');
+          permissionStates[dataType] = PermissionState.authorized;
+        } else {
+          permissionStates[dataType] = PermissionState.notDetermined;
+        }
       }
     }
 
@@ -291,6 +363,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
+    // Ensure health package is configured before fetching data
+    await _ensureConfigured();
+
     // Fetch workout data from health platform
     const healthType = health_pkg.HealthDataType.WORKOUT;
 
@@ -331,6 +406,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
+    // Ensure health package is configured before fetching data
+    await _ensureConfigured();
+
     const healthType = health_pkg.HealthDataType.WEIGHT;
 
     final weightData = await _health.getHealthDataFromTypes(
@@ -357,6 +435,9 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
 
   @override
   Future<void> writeBodyWeight(BodyMeasurement measurement) async {
+    // Ensure health package is configured before writing data
+    await _ensureConfigured();
+
     // Convert to kilograms if needed (health package expects kg)
     final valueInKg = measurement.unit == MeasurementUnit.kilograms
         ? measurement.value

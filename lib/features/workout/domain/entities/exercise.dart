@@ -24,6 +24,74 @@ enum ExerciseCategory {
   other,
 }
 
+/// Tipo di movimento per calcolo recovery e CNS stress
+///
+/// Usato dal sistema Smart Workout Suggestion per determinare
+/// quanto tempo di recupero serve prima di allenare di nuovo
+/// un gruppo muscolare.
+///
+/// Reference: Bartolomei 2017, JMIR 2024, Fitbod algorithm
+enum MovementType {
+  /// Squat, Deadlift → 96h recovery, HIGH CNS stress
+  compoundHeavy,
+
+  /// Bench Press, Row, OHP → 72h recovery, MEDIUM CNS stress
+  compoundMedium,
+
+  /// Leg Press, Cable Row → 72h recovery, LOW CNS stress
+  isolationHeavy,
+
+  /// Curl, Leg Extension, Fly → 48h recovery, NO CNS stress
+  isolationLight,
+}
+
+/// Extension per MovementType con recovery e CNS data
+extension MovementTypeExtension on MovementType {
+  /// Ore di recupero ottimali per questo tipo di movimento
+  int get recoveryHours => switch (this) {
+    MovementType.compoundHeavy => 96,   // 4 giorni
+    MovementType.compoundMedium => 72,  // 3 giorni
+    MovementType.isolationHeavy => 72,  // 3 giorni
+    MovementType.isolationLight => 48,  // 2 giorni
+  };
+
+  /// Giorni di recupero ottimali
+  double get recoveryDays => recoveryHours / 24.0;
+
+  /// Fattore di stress CNS (moltiplicatore per readiness score)
+  /// Più basso = più stress CNS = più penalità
+  double get cnsStressFactor => switch (this) {
+    MovementType.compoundHeavy => 0.7,   // 30% penalty
+    MovementType.compoundMedium => 0.85, // 15% penalty
+    MovementType.isolationHeavy => 1.0,  // No penalty
+    MovementType.isolationLight => 1.0,  // No penalty
+  };
+
+  /// Moltiplicatore stress per template matching
+  double get stressMultiplier => switch (this) {
+    MovementType.compoundHeavy => 1.5,
+    MovementType.compoundMedium => 1.2,
+    MovementType.isolationHeavy => 1.0,
+    MovementType.isolationLight => 0.8,
+  };
+
+  /// Nome human-readable
+  String get displayName => switch (this) {
+    MovementType.compoundHeavy => 'Compound Heavy',
+    MovementType.compoundMedium => 'Compound Medium',
+    MovementType.isolationHeavy => 'Isolation Heavy',
+    MovementType.isolationLight => 'Isolation Light',
+  };
+
+  /// Esempi di esercizi per questo tipo
+  List<String> get examples => switch (this) {
+    MovementType.compoundHeavy => ['Squat', 'Deadlift', 'Front Squat'],
+    MovementType.compoundMedium => ['Bench Press', 'Barbell Row', 'Overhead Press', 'Pull-up'],
+    MovementType.isolationHeavy => ['Leg Press', 'Cable Row', 'Hack Squat'],
+    MovementType.isolationLight => ['Bicep Curl', 'Leg Extension', 'Fly', 'Lateral Raise'],
+  };
+}
+
 class Exercise {         // Target RIR if using RIR-based
 
   Exercise({
@@ -50,7 +118,8 @@ class Exercise {         // Target RIR if using RIR-based
     this.targetRPEMin,
     this.targetRPEMax,
     this.targetRIR,
-    this.countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
+    this.countingMode = ExerciseCountingMode.weighted,
+    this.movementType, // ✅ Smart Workout Suggestion - nullable per backward compat
   }) :
     id = id ?? const Uuid().v4(),
     sets = sets ?? [],
@@ -101,7 +170,13 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMin: json['targetRPEMin']?.toDouble(),
       targetRPEMax: json['targetRPEMax']?.toDouble(),
       targetRIR: json['targetRIR'],
-      countingMode: ExerciseCountingMode.fromString(json['countingMode']), // ✅ NUOVO
+      countingMode: ExerciseCountingMode.fromString(json['countingMode']),
+      movementType: json['movementType'] != null
+          ? MovementType.values.firstWhere(
+              (e) => e.name == json['movementType'],
+              orElse: () => MovementType.isolationLight, // Safe default
+            )
+          : null, // ✅ Smart Workout Suggestion
     );
   }
   final String id;
@@ -139,6 +214,9 @@ class Exercise {         // Target RIR if using RIR-based
   // ✅ Exercise Counting Mode
   final ExerciseCountingMode countingMode; // How this exercise is counted (weighted/reps/time)
 
+  // ✅ Smart Workout Suggestion - Movement Type for recovery calculation
+  final MovementType? movementType; // null = not classified yet (backward compat)
+
   Exercise copyWith({
     String? name,
     ExerciseType? type,
@@ -161,7 +239,8 @@ class Exercise {         // Target RIR if using RIR-based
     double? targetRPEMin,
     double? targetRPEMax,
     int? targetRIR,
-    ExerciseCountingMode? countingMode, // ✅ NUOVO
+    ExerciseCountingMode? countingMode,
+    MovementType? movementType, // ✅ Smart Workout Suggestion
   }) {
     return Exercise(
       id: id,
@@ -187,7 +266,8 @@ class Exercise {         // Target RIR if using RIR-based
       targetRPEMin: targetRPEMin ?? this.targetRPEMin,
       targetRPEMax: targetRPEMax ?? this.targetRPEMax,
       targetRIR: targetRIR ?? this.targetRIR,
-      countingMode: countingMode ?? this.countingMode, // ✅ NUOVO
+      countingMode: countingMode ?? this.countingMode,
+      movementType: movementType ?? this.movementType, // ✅ Smart Workout Suggestion
     );
   }
 
@@ -217,6 +297,7 @@ class Exercise {         // Target RIR if using RIR-based
       'targetRPEMax': targetRPEMax,
       'targetRIR': targetRIR,
       'countingMode': countingMode.name, // ✅ NUOVO
+      'movementType': movementType?.name, // ✅ Smart Workout Suggestion
     };
   }
 
@@ -690,6 +771,7 @@ class SupersetExercise extends Exercise { // I set del superset
     double? targetRPEMax,
     int? targetRIR,
     ExerciseCountingMode? countingMode, // ✅ Added to match Exercise.copyWith
+    MovementType? movementType, // ✅ Smart Workout Suggestion
     List<Exercise>? exercises,
     List<SupersetSet>? supersetSets,
   }) {

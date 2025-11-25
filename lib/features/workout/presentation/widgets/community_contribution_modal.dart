@@ -221,7 +221,7 @@ class _CommunityContributionModalState
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.people_outline,
                     color: context.colors.surface,
                     size: 24,
@@ -480,7 +480,7 @@ class _CommunityContributionModalState
                     ),
                   ),
                   child: _isSubmitting
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(

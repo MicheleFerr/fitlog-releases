@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
@@ -49,6 +49,25 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       case TimePeriod.all:
         return widget.workouts;
     }
+  }
+
+  /// Compute period statistics from workouts
+  ({int totalWorkouts, double totalVolume}) _computePeriodStats(List<Workout> workouts) {
+    var totalVolume = 0.0;
+
+    for (final workout in workouts) {
+      for (final exercise in workout.exercises) {
+        for (final set in exercise.sets) {
+          if (set.isCompleted) {
+            final weight = set.weight ?? 0;
+            final reps = set.reps ?? 0;
+            totalVolume += weight * reps;
+          }
+        }
+      }
+    }
+
+    return (totalWorkouts: workouts.length, totalVolume: totalVolume);
   }
 
   /// Show dialog to set weekly workout goal
@@ -133,8 +152,8 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
-    // Watch memoized stats provider - this is cached!
-    final stats = ref.watch(periodAnalyticsStatsProvider(_selectedPeriod));
+    // Compute stats locally from filtered workouts
+    final stats = _computePeriodStats(filteredWorkouts);
     final weeklyGoal = ref.watch(weeklyWorkoutGoalProvider);
 
     return RefreshIndicator(

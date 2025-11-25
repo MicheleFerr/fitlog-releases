@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/tier1_set_tracking_widget.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 

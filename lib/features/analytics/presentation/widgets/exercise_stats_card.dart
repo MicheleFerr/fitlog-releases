@@ -50,9 +50,9 @@ class ExerciseStatsCard extends StatelessWidget {
             const SizedBox(height: 12),
             
             if (exerciseStats.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(32.0),
                   child: Text(
                     'No exercise data available',
                     style: TextStyle(color: context.colors.surfaceVariant),
@@ -170,7 +170,7 @@ class ExerciseStatsCard extends StatelessWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceVariant[300],
+                  color: const Color(0xFFE0E0E0),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),

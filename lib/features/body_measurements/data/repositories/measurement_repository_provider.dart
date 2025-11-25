@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/measurement_repository_impl.dart';
-import 'package:gymbro_flutter_new/features/body_measurements/data/datasources/measurement_local_datasource_provider.dart';
-import 'package:gymbro_flutter_new/features/body_measurements/data/services/encryption_service_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/providers/measurement_local_datasource_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/providers/encryption_key_manager_provider.dart';
 
 /// Provider for MeasurementRepository
 ///
@@ -44,9 +46,16 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/services/encr
 ///   }
 /// }
 /// ```
+///
+/// **Note**: Constructor matches MeasurementRepositoryImpl signature:
+/// `MeasurementRepositoryImpl({required FirebaseFirestore, required ConsentRepository,
+///   required MeasurementLocalDatasource, required EncryptionKeyManager, Uuid? uuid})`
 final measurementRepositoryProvider = Provider<MeasurementRepositoryImpl>((ref) {
   return MeasurementRepositoryImpl(
-    localDataSource: ref.read(measurementLocalDatasourceProvider),
-    encryptionService: ref.read(encryptionServiceProvider),
+    firestore: FirebaseFirestore.instance,
+    consentRepo: ref.read(consentRepositoryProvider),
+    localDatasource: ref.read(measurementLocalDatasourceProvider),
+    keyManager: ref.read(encryptionKeyManagerProvider),
+    // uuid parameter is optional, uses default Uuid() if not provided
   );
 });

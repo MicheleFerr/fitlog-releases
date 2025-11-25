@@ -13,10 +13,12 @@
 /// - Either type
 library;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/shared/domain/either/either.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
 
 /// Abstract repository interface for workout data operations
 /// This defines the contract that data layer must implement
@@ -86,6 +88,41 @@ abstract class WorkoutRepository {
   /// Returns the most recent workout with endTime != null (completed).
   /// Returns null if no completed workouts found.
   Future<Workout?> getLastCompletedWorkout(String userId);
+
+  /// Get workouts with cursor-based pagination (infinite scroll optimized)
+  ///
+  /// Uses Firestore's startAfterDocument for efficient cursor-based pagination.
+  /// This is the recommended method for infinite scroll UI patterns.
+  ///
+  /// [pageSize] - Number of items per page (default: 20)
+  /// [startAfter] - Document snapshot cursor from previous page (null for first page)
+  /// [dateFrom] - Optional filter for workouts after this date
+  /// [dateTo] - Optional filter for workouts before this date
+  /// [status] - Optional filter by workout status (e.g., 'completed', 'inProgress')
+  ///
+  /// Returns [PaginatedResult<Workout>] containing:
+  /// - items: List of workouts for this page
+  /// - hasMore: Whether more pages are available
+  /// - lastDocument: Cursor for the next page
+  ///
+  /// Example usage:
+  /// ```dart
+  /// // First page
+  /// final firstPage = await repo.getWorkoutsPaginated(pageSize: 20);
+  ///
+  /// // Next page (use cursor from previous result)
+  /// final nextPage = await repo.getWorkoutsPaginated(
+  ///   pageSize: 20,
+  ///   startAfter: firstPage.lastDocument,
+  /// );
+  /// ```
+  Future<Either<Failure, PaginatedResult<Workout>>> getWorkoutsPaginated({
+    int pageSize = 20,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  });
 }
 
 /// Value objects for repository operations

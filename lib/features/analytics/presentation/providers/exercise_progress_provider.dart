@@ -15,9 +15,27 @@ final exerciseProgressMetricsProvider = Provider<Map<String, ExerciseProgressMet
 });
 
 /// Provider for a specific exercise's metrics
+///
+/// Tries multiple sources:
+/// 1. First: from aggregated workout data (exerciseProgressMetricsProvider)
+/// 2. Fallback: from Firebase analytics collection (exerciseHistoryByNameProvider)
 final exerciseMetricsProvider = Provider.family<ExerciseProgressMetrics?, String>((ref, exerciseName) {
   final allMetrics = ref.watch(exerciseProgressMetricsProvider);
-  return allMetrics[exerciseName];
+
+  // Try exact match first
+  if (allMetrics.containsKey(exerciseName)) {
+    return allMetrics[exerciseName];
+  }
+
+  // Try case-insensitive match
+  final normalizedName = exerciseName.toLowerCase().trim();
+  for (final entry in allMetrics.entries) {
+    if (entry.key.toLowerCase().trim() == normalizedName) {
+      return entry.value;
+    }
+  }
+
+  return null;
 });
 
 /// Aggregate exercise data from all workouts
@@ -138,4 +156,75 @@ Map<String, ExerciseProgressMetrics> _aggregateExerciseData(
 /// Helper to get date without time
 DateTime _dateOnly(DateTime dateTime) {
   return DateTime(dateTime.year, dateTime.month, dateTime.day);
+}
+
+/// Convert ExerciseHistory (from Firebase analytics) to ExerciseProgressMetrics
+///
+/// This allows ExerciseDetailScreen to use Firebase analytics data
+/// when workout data is not available (e.g., name mismatch)
+ExerciseProgressMetrics? convertHistoryToMetrics(
+  dynamic history, // ExerciseHistory from analytics_providers.dart
+) {
+  if (history == null) return null;
+
+  try {
+    // Extract exerciseName from history object
+    final String exerciseName = history.exerciseName;
+    final sessions = history.sessions as List;
+
+    if (sessions.isEmpty) return null;
+
+    // Convert sessions to ExerciseSetData
+    final List<ExerciseSetData> allSets = [];
+
+    for (final session in sessions) {
+      final sessionDate = session.date as DateTime;
+      final sets = session.sets as List;
+
+      for (final set in sets) {
+        allSets.add(ExerciseSetData(
+          date: set.date ?? sessionDate,
+          weight: (set.weight as num).toDouble(),
+          reps: set.reps as int,
+          rpe: null, // AnalyticsSet doesn't have RPE
+          volume: (set.weight as num).toDouble() * (set.reps as int),
+          workoutName: session.exerciseName ?? exerciseName,
+        ));
+      }
+    }
+
+    if (allSets.isEmpty) return null;
+
+    // Sort by date
+    allSets.sort((a, b) => a.date.compareTo(b.date));
+
+    // Calculate statistics
+    final maxWeight =
+        allSets.fold<double>(0, (max, set) => set.weight > max ? set.weight : max);
+    final averageWeight =
+        allSets.fold<double>(0, (sum, set) => sum + set.weight) / allSets.length;
+    final averageReps =
+        allSets.fold<double>(0, (sum, set) => sum + set.reps) / allSets.length;
+    final totalVolume =
+        allSets.fold<double>(0, (sum, set) => sum + set.volume);
+    final uniqueDates = allSets.map((s) => _dateOnly(s.date)).toSet();
+    final totalSessions = uniqueDates.length;
+    final lastWorkoutDate = allSets.last.date;
+
+    return ExerciseProgressMetrics(
+      exerciseName: exerciseName,
+      totalSessions: totalSessions,
+      maxWeight: maxWeight,
+      averageWeight: averageWeight,
+      averageReps: averageReps,
+      averageRPE: 0.0,
+      totalVolume: totalVolume,
+      lastWorkoutDate: lastWorkoutDate,
+      weightTrend: allSets.calculateWeightTrend(),
+      volumeTrend: allSets.calculateVolumeTrend(),
+      allSets: allSets,
+    );
+  } catch (e) {
+    return null;
+  }
 }

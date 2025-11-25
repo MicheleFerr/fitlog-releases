@@ -78,9 +78,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     super.dispose();
   }
 
+  /// Get user ID from profile (fallback to 'anonymous')
+  String _getUserId() {
+    final userProfile = ref.read(userProfileProvider);
+    return userProfile.valueOrNull?.uid ?? 'anonymous';
+  }
+
   /// Track session started
   void _trackSessionStarted() {
-    const userId = 'test-user';
+    final userId = _getUserId();
     final analytics = ref.read(aiCoachAnalyticsProvider);
     analytics.trackSessionStarted(userId: userId);
   }
@@ -89,7 +95,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _trackSessionEnded() {
     if (_sessionStartTime == null) return;
 
-    const userId = 'test-user';
+    final userId = _getUserId();
     final analytics = ref.read(aiCoachAnalyticsProvider);
     final chatState = ref.read(chatNotifierProvider(userId));
 
@@ -107,8 +113,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _checkAndShowOnboarding() async {
     if (!mounted) return;
 
-    // Get user ID
-    const userId = 'test-user';
+    // Get user ID from profile
+    final userId = _getUserId();
 
     // Get user profile for display name
     final userProfile = ref.read(userProfileProvider);
@@ -148,8 +154,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get user ID from auth provider
-    const userId = 'test-user';
+    // Get user ID from profile provider
+    final userId = _getUserId();
     final chatState = ref.watch(chatNotifierProvider(userId));
 
     return Scaffold(
@@ -338,6 +344,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
+  /// Get user display name from profile (fallback to 'GymBro')
+  String _getUserName() {
+    final userProfile = ref.read(userProfileProvider);
+    return userProfile.valueOrNull?.displayName ?? 'GymBro';
+  }
+
   /// Send message
   Future<void> _sendMessage(BuildContext context, String userId, String message) async {
     if (message.trim().isEmpty) return;
@@ -345,8 +357,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     // Clear input
     _textController.clear();
 
-    // Send via notifier
-    await ref.read(chatNotifierProvider(userId).notifier).sendMessage(message);
+    // Get user name for personalized responses
+    final userName = _getUserName();
+
+    // Send via notifier with userName
+    await ref.read(chatNotifierProvider(userId).notifier).sendMessage(
+      message,
+      userName: userName,
+    );
   }
 
   /// Handle follow-up chip tap

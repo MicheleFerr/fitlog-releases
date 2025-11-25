@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
+// ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
+// import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 
 /// Prediction engine with 2-level fallback hierarchy
 ///
@@ -37,8 +38,10 @@ class RoutinePredictionEngine {
 
   /// Predict next workout using 2-level fallback hierarchy
   ///
+  /// ⚠️ ROUTINE FEATURE DISABLED: Routine-based prediction temporarily unavailable
+  ///
   /// [workoutHistory]: Recent workouts (newest first, 30-50 workouts recommended)
-  /// [activeRoutine]: Optional active FlexibleRoutine for Level 1
+  /// [activeRoutine]: Optional active routine (currently ignored - feature disabled)
   /// [availableTemplateNames]: Optional list of existing template names for validation
   /// [availableTemplates]: Optional list of full templates for ID->Name mapping
   /// [useCache]: Whether to use cached suggestion (default: true)
@@ -49,7 +52,7 @@ class RoutinePredictionEngine {
   /// against existing templates and fallback to generic "Workout" if template not found.
   Future<WorkoutSuggestion> predictNextWorkout({
     required List<Workout> workoutHistory,
-    FlexibleRoutine? activeRoutine,
+    dynamic activeRoutine, // FlexibleRoutine? - type removed due to feature disabled
     List<String>? availableTemplateNames,
     List<dynamic>? availableTemplates, // WorkoutTemplate objects
     bool useCache = true,
@@ -59,16 +62,17 @@ class RoutinePredictionEngine {
       return _cachedSuggestion!;
     }
 
-    // Try Level 1: Routine-Based
-    if (activeRoutine != null) {
-      final routineSuggestion = await _tryRoutineBased(
-        activeRoutine: activeRoutine,
-        availableTemplates: availableTemplates,
-      );
-      if (routineSuggestion != null) {
-        return _cacheAndReturn(routineSuggestion);
-      }
-    }
+    // ⚠️ ROUTINE FEATURE DISABLED: Skip routine-based prediction
+    // Try Level 1: Routine-Based (temporarily disabled)
+    // if (activeRoutine != null) {
+    //   final routineSuggestion = await _tryRoutineBased(
+    //     activeRoutine: activeRoutine,
+    //     availableTemplates: availableTemplates,
+    //   );
+    //   if (routineSuggestion != null) {
+    //     return _cacheAndReturn(routineSuggestion);
+    //   }
+    // }
 
     // Fallback Level 2: Frequency-Based (always succeeds)
     final frequencySuggestion = await _tryFrequencyBased(workoutHistory);
@@ -99,10 +103,12 @@ class RoutinePredictionEngine {
     _cacheTimestamp = null;
   }
 
-  // ========== LEVEL 1: ROUTINE-BASED ==========
+  // ========== LEVEL 1: ROUTINE-BASED (DISABLED) ==========
 
+  /// ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
   /// Try routine-based suggestion using FlexibleRoutine.getNextWorkoutName()
   ///
+  /// This method is currently stubbed out and always returns null.
   /// Delegates rotation logic to FlexibleRoutine entity (single source of truth).
   ///
   /// Requirements:
@@ -110,42 +116,47 @@ class RoutinePredictionEngine {
   /// - Routine has repeating pattern
   /// - Available templates provided for name mapping
   Future<WorkoutSuggestion?> _tryRoutineBased({
-    required FlexibleRoutine activeRoutine,
+    required dynamic activeRoutine, // FlexibleRoutine - type removed
     required List<dynamic>? availableTemplates,
   }) async {
-    // Validate templates available
-    if (availableTemplates == null || availableTemplates.isEmpty) {
-      return null; // Cannot map template ID→Name without templates
-    }
+    // ⚠️ ROUTINE FEATURE DISABLED: Always return null (skip routine-based prediction)
+    // TODO: Re-enable when v2.0 routine API is ready
+    return null;
 
-    // ✅ SIMPLIFIED: Delegate to FlexibleRoutine.getNextWorkoutName()
-    // This is the single source of truth for workout rotation logic
-    try {
-      final workoutName = activeRoutine.getNextWorkoutName(
-        availableTemplates: availableTemplates,
-      );
-
-      if (workoutName == null) {
-        return null; // Non-repeating pattern, fallback to frequency-based
-      }
-
-      // Get next uncompleted workout for scheduled date (optional)
-      final nextUncompletedWorkout = activeRoutine.getNextUncompletedWorkout();
-
-      return WorkoutSuggestion(
-        level: SuggestionLevel.routine,
-        workoutName: workoutName,
-        confidence: 0.95, // High confidence (routine-based + rotation logic)
-        reason: 'Da routine ${activeRoutine.name}',
-        scheduledDate: nextUncompletedWorkout?.date,
-        generatedAt: DateTime.now(),
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ [ROUTINE_PREDICTION] Error: $e');
-      }
-      return null; // Fallback to frequency-based
-    }
+    // Original implementation commented out:
+    // // Validate templates available
+    // if (availableTemplates == null || availableTemplates.isEmpty) {
+    //   return null; // Cannot map template ID→Name without templates
+    // }
+    //
+    // // ✅ SIMPLIFIED: Delegate to FlexibleRoutine.getNextWorkoutName()
+    // // This is the single source of truth for workout rotation logic
+    // try {
+    //   final workoutName = activeRoutine.getNextWorkoutName(
+    //     availableTemplates: availableTemplates,
+    //   );
+    //
+    //   if (workoutName == null) {
+    //     return null; // Non-repeating pattern, fallback to frequency-based
+    //   }
+    //
+    //   // Get next uncompleted workout for scheduled date (optional)
+    //   final nextUncompletedWorkout = activeRoutine.getNextUncompletedWorkout();
+    //
+    //   return WorkoutSuggestion(
+    //     level: SuggestionLevel.routine,
+    //     workoutName: workoutName,
+    //     confidence: 0.95, // High confidence (routine-based + rotation logic)
+    //     reason: 'Da routine ${activeRoutine.name}',
+    //     scheduledDate: nextUncompletedWorkout?.date,
+    //     generatedAt: DateTime.now(),
+    //   );
+    // } catch (e) {
+    //   if (kDebugMode) {
+    //     debugPrint('❌ [ROUTINE_PREDICTION] Error: $e');
+    //   }
+    //   return null; // Fallback to frequency-based
+    // }
   }
 
   // ========== LEVEL 2: FREQUENCY-BASED ==========

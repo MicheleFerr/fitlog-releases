@@ -159,7 +159,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   AppIcons.achievement,
                   color: context.colors.warning,
                   size: 24,
@@ -235,11 +235,11 @@ class AnalyticsProgressTab extends ConsumerWidget {
             if (isRecent)
               Container(
                 padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: context.colors.warning,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   AppIcons.whatshot,
                   size: 16,
                   color: context.colors.surface,

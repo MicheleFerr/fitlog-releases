@@ -504,10 +504,10 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
                     color: context.colors.error,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text(
+                  child: Text(
                     'PR!',
                     style: TextStyle(
-                      color: context.colors.surface,
+                      color: Theme.of(context).colorScheme.surface,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -561,9 +561,9 @@ class _WeeklyDashboardWidgetState extends State<WeeklyDashboardWidget>
             HapticFeedback.lightImpact();
             widget.onDataSync?.call(_currentWeekData!);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Data synced to cloud'),
-                backgroundColor: context.colors.success,
+              SnackBar(
+                content: const Text('Data synced to cloud'),
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
             );
           }

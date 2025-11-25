@@ -90,7 +90,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Card Riscaldamento',
                         subtitle: 'Nasconde i suggerimenti di warmup',
-                        icon: AppIcons.trendingOutlined,
+                        icon: AppIcons.trendingUp,
                         value: zenState.config.hideWarmupCards,
                         onChanged: (value) => zenNotifier.updateConfigField('hideWarmupCards', value),
                       ),

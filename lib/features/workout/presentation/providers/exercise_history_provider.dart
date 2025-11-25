@@ -58,7 +58,7 @@ final recentWeightsProvider = FutureProvider.autoDispose.family<List<double>, St
     final service = ref.read(exerciseHistoryServiceProvider);
     final userState = ref.read(currentUserStateProvider);
 
-    final uid = userState.profileOrNull?.uid;
+    final uid = userState.valueOrNull?.uid;
     if (uid == null) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseHistory] recentWeights: No user ID');
@@ -102,7 +102,7 @@ final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<
   if (uid == null) {
     // Fallback to provider
     final userState = ref.read(currentUserStateProvider);
-    final providerUid = userState.profileOrNull?.uid;
+    final providerUid = userState.valueOrNull?.uid;
     if (providerUid == null) {
       if (kDebugMode) {
         debugPrint('[ExerciseHistory] recentWeightsWithDetails: No user ID from Firebase or provider');
@@ -111,7 +111,7 @@ final recentWeightsWithDetailsProvider = FutureProvider.family.autoDispose<List<
     }
   }
   
-  final finalUid = uid ?? ref.read(currentUserStateProvider).profileOrNull?.uid;
+  final finalUid = uid ?? ref.read(currentUserStateProvider).valueOrNull?.uid;
   if (finalUid == null) {
     if (kDebugMode) {
       debugPrint('[ExerciseHistory] recentWeightsWithDetails: No user ID available');
@@ -240,7 +240,7 @@ final lastExerciseDataProvider = FutureProvider.autoDispose.family<({double? wei
     final service = ref.read(exerciseHistoryServiceProvider);
     final userState = ref.read(currentUserStateProvider);
 
-    final uid = userState.profileOrNull?.uid;
+    final uid = userState.valueOrNull?.uid;
     if (uid == null) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseHistory] lastExerciseData: No user ID');
@@ -625,7 +625,7 @@ final exerciseStatsProvider = FutureProvider.autoDispose.family<({
     final service = ref.read(exerciseHistoryServiceProvider);
     final userState = ref.read(currentUserStateProvider);
 
-    final uid = userState.profileOrNull?.uid;
+    final uid = userState.valueOrNull?.uid;
     if (uid == null) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseHistory] exerciseStats: No user ID');
@@ -937,7 +937,7 @@ final lastExerciseDataFromWorkoutsProvider = FutureProvider.autoDispose.family<(
     final service = ref.read(workoutHistoryServiceProvider);
     final userState = ref.read(currentUserStateProvider);
 
-    final uid = userState.profileOrNull?.uid;
+    final uid = userState.valueOrNull?.uid;
     if (uid == null) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseHistory] lastExerciseDataFromWorkouts: No user ID');
@@ -1037,7 +1037,7 @@ final recentWeightsWithDetailsFromWorkoutsProvider = FutureProvider.family.autoD
     if (uid == null) {
       // Fallback to provider
       final userState = ref.read(currentUserStateProvider);
-      final providerUid = userState.profileOrNull?.uid;
+      final providerUid = userState.valueOrNull?.uid;
       if (providerUid == null) {
         if (kDebugMode) {
           debugPrint('⚠️ [ExerciseHistory] recentWeightsFromWorkouts: No user ID from Firebase or provider');
@@ -1046,7 +1046,7 @@ final recentWeightsWithDetailsFromWorkoutsProvider = FutureProvider.family.autoD
       }
     }
 
-    final finalUid = uid ?? ref.read(currentUserStateProvider).profileOrNull?.uid;
+    final finalUid = uid ?? ref.read(currentUserStateProvider).valueOrNull?.uid;
     if (finalUid == null) {
       if (kDebugMode) {
         debugPrint('⚠️ [ExerciseHistory] recentWeightsFromWorkouts: No final user ID');

@@ -54,6 +54,7 @@ class SendChatMessage {
   /// **Parameters**:
   /// - `message`: User's input text (1-2000 characters)
   /// - `userId`: Current user ID for conversation context
+  /// - `userName`: User's display name for personalized responses
   /// - `systemPrompt`: Optional custom system prompt (defaults to AI Coach persona)
   ///
   /// **Returns**: Stream of Either<Failure, AIMessage> chunks
@@ -70,6 +71,7 @@ class SendChatMessage {
   Stream<Either<Failure, AIMessage>> call({
     required String message,
     required String userId,
+    String? userName,
     String? systemPrompt,
   }) async* {
     // Validate input
@@ -93,6 +95,7 @@ class SendChatMessage {
     yield* repository.sendMessage(
       message: trimmedMessage,
       userId: userId,
+      userName: userName,
       systemPrompt: systemPrompt,
     );
   }

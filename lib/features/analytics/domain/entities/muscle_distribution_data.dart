@@ -277,8 +277,6 @@ class PeriodStatistics with _$PeriodStatistics {
   }
 }
 
-const _PeriodStatistics = PeriodStatistics;
-
 /// Dati completi per la schermata muscle distribution
 ///
 /// Include:

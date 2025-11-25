@@ -88,7 +88,10 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
     String? userId,
   })  : _dataSource = dataSource,
         _userId = userId,
-        super(const AsyncValue.loading());
+        super(const AsyncValue.loading()) {
+    // Auto-load workouts on creation for Smart Workout Suggestion
+    loadWorkouts();
+  }
   final HiveWorkoutDataSource _dataSource;
   final String? _userId;
   
@@ -486,32 +489,35 @@ final workoutHistoryStatsProvider = Provider<Map<String, dynamic>>((ref) {
   return notifier.calculateStatistics();
 });
 
+/// Tracks last logged userId to avoid log spam
+String? _lastLoggedTodayWorkoutUserId;
+
 /// Provider to check if user has completed a workout today (after user's day cutoff)
 ///
 /// Returns the completed workout if found, null otherwise.
 /// Uses configurable cutoff (default 04:00): workout after cutoff counts as "today".
 /// Cutoff can be customized in user preferences (useful for shift workers).
-final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref) async {
+///
+/// Note: Not using autoDispose to cache result and avoid repeated Hive reads.
+/// The provider will refresh when user ID changes.
+final todayCompletedWorkoutProvider = FutureProvider<Workout?>((ref) async {
   final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
 
-  if (kDebugMode) {
+  // Only log once per user to reduce log spam
+  if (kDebugMode && userId != _lastLoggedTodayWorkoutUserId) {
+    _lastLoggedTodayWorkoutUserId = userId;
     debugPrint('🔍 [todayCompletedWorkoutProvider] START - userId: $userId');
   }
 
   if (userId == null) {
-    if (kDebugMode) {
-      debugPrint('⚠️ [todayCompletedWorkoutProvider] No userId, returning null');
-    }
     return null;
   }
 
   // Get user's day cutoff preference (default: 4 = 04:00)
-  final userProfile = ref.watch(userProfileProvider).valueOrNull;
-  final cutoffHour = userProfile?.dayCutoffHour ?? 4;
-
-  if (kDebugMode) {
-    debugPrint('⚙️ [todayCompletedWorkoutProvider] Using cutoff hour: $cutoffHour:00');
-  }
+  // Use select to only rebuild when cutoffHour changes, not entire profile
+  final cutoffHour = ref.watch(
+    userProfileProvider.select((p) => p.valueOrNull?.dayCutoffHour ?? 4),
+  );
 
   final dataSource = ref.watch(hiveWorkoutDataSourceProvider);
 
@@ -521,18 +527,10 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
         .getLastCompletedWorkout(userId)
         .timeout(
           const Duration(seconds: 5),
-          onTimeout: () {
-            if (kDebugMode) {
-              debugPrint('⏱️ [todayCompletedWorkoutProvider] Timeout after 5s');
-            }
-            return null;
-          },
+          onTimeout: () => null,
         );
 
     if (lastWorkoutModel == null) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [todayCompletedWorkoutProvider] No last workout found');
-      }
       return null;
     }
 
@@ -554,9 +552,6 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
 
     // Check if startTime is null
     if (lastWorkout.startTime == null) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [todayCompletedWorkoutProvider] Workout has no startTime');
-      }
       return null;
     }
 
@@ -566,21 +561,16 @@ final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref)
 
     // Check if workout was at or after cutoff (inclusive)
     if (lastWorkout.startTime!.compareTo(todayCutoff) >= 0) {
-      if (kDebugMode) {
-        debugPrint('✅ [todayCompletedWorkoutProvider] Workout done today: ${lastWorkout.id}');
-      }
       return lastWorkout;
     }
 
-    if (kDebugMode) {
-      debugPrint('⚠️ [todayCompletedWorkoutProvider] Last workout was before cutoff');
-    }
     return null;
 
   } catch (e) {
+    // Graceful fallback - only log actual errors
     if (kDebugMode) {
       debugPrint('❌ [todayCompletedWorkoutProvider] Error: $e');
     }
-    return null; // Graceful fallback
+    return null;
   }
 });

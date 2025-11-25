@@ -17,11 +17,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_celebration_widget.dart';
+// TODO: Removed dead pr_celebration_widget.dart - use pr_celebration_overlay.dart if needed
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_comparison_widget.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Real-time analytics bar showing key workout metrics during workout
 class WorkoutAnalyticsBar extends ConsumerWidget {
@@ -103,18 +101,21 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildCompactMetric(
+                context,
                 l10n.volume,
                 '${volume.toStringAsFixed(0)} kg',
                 AppIcons.workout,
                 colorScheme.primary,
               ),
               _buildCompactMetric(
-                l10n.completion,
+                context,
+                l10n.progress,
                 '${(completion * 100).toStringAsFixed(0)}%',
                 AppIcons.completeOutline,
                 _getCompletionColor(completion, colorScheme),
               ),
               _buildCompactMetric(
+                context,
                 l10n.quality,
                 _getQualityGrade(quality),
                 AppIcons.stars,
@@ -257,8 +258,8 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
                 '${volume.toStringAsFixed(0)} kg',
                 AppIcons.workout,
                 colorScheme.primary,
-                metrics?.workingSetsVolume != null 
-                    ? '${l10n.working}: ${metrics!.workingSetsVolume.toStringAsFixed(0)} kg'
+                metrics?.workingSetsVolume != null
+                    ? '${l10n.workingWeight}: ${metrics!.workingSetsVolume.toStringAsFixed(0)} kg'
                     : null,
               ),
             ),
@@ -292,9 +293,10 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
         ),
 
         // PR celebrations if any
+        // TODO: PRCelebrationWidget removed - use PRCelebrationOverlay instead
         if (hasNewPRs) ...[
           const SizedBox(height: 12),
-          const PRCelebrationWidget(),
+          // const PRCelebrationWidget(), // Removed during analytics cleanup
         ],
 
         // Workout comparison if available
@@ -305,6 +307,7 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
   }
 
   Widget _buildCompactMetric(
+    BuildContext context,
     String label,
     String value,
     IconData icon,
@@ -325,9 +328,9 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10,
-            color: context.colors.surfaceVariant,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -482,7 +485,7 @@ class WorkoutAnalyticsSummary extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        l10n.newPersonalRecords(analytics.totalPRs),
+                        '${analytics.totalPRs} ${l10n.personalRecord}',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.secondary,
                           fontWeight: FontWeight.w500,

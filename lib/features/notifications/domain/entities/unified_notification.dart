@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart' as workout;
 
 /// Core notification entity that consolidates all notification types
 /// This replaces the fragmented notification system with a single, unified model
@@ -238,6 +239,59 @@ class UnifiedNotification {
   String toString() {
     return 'UnifiedNotification(id: $id, type: $type, title: $title, status: $status, scheduled: $scheduledTime)';
   }
+
+  /// Factory to create UnifiedNotification from legacy WorkoutNotification
+  /// This enables backward compatibility during the migration phase
+  factory UnifiedNotification.fromWorkoutNotification(workout.WorkoutNotification wn) {
+    return UnifiedNotification(
+      id: wn.id.toString(),
+      type: _convertWorkoutNotificationType(wn.type),
+      title: wn.title,
+      body: wn.body,
+      scheduledTime: wn.scheduledTime,
+      priority: _convertWorkoutPriority(wn.priority),
+      deliveryMethod: NotificationDeliveryMethod.local,
+      payload: {
+        ...?wn.payload,
+        if (wn.routineId != null) 'routineId': wn.routineId,
+        if (wn.workoutName != null) 'workoutName': wn.workoutName,
+        if (wn.daysToRecover != null) 'daysToRecover': wn.daysToRecover,
+      },
+      status: wn.isDelivered == true
+          ? NotificationDeliveryStatus.delivered
+          : NotificationDeliveryStatus.pending,
+      deliveredAt: wn.deliveredAt,
+      workoutId: wn.routineId,
+    );
+  }
+
+  /// Convert WorkoutNotification.NotificationType to UnifiedNotification.NotificationType
+  static NotificationType _convertWorkoutNotificationType(workout.NotificationType type) {
+    switch (type) {
+      case workout.NotificationType.workoutReminder:
+        return NotificationType.workoutReminder;
+      case workout.NotificationType.recoveryAlert:
+        return NotificationType.restReminder;
+      case workout.NotificationType.streakMotivation:
+        return NotificationType.streakReminder;
+      case workout.NotificationType.restDayReminder:
+        return NotificationType.restReminder;
+      case workout.NotificationType.supplementReminder:
+        return NotificationType.systemUpdate;
+    }
+  }
+
+  /// Convert WorkoutNotification.NotificationPriority to UnifiedNotification.NotificationPriority
+  static NotificationPriority _convertWorkoutPriority(workout.NotificationPriority priority) {
+    switch (priority) {
+      case workout.NotificationPriority.low:
+        return NotificationPriority.low;
+      case workout.NotificationPriority.medium:
+        return NotificationPriority.normal;
+      case workout.NotificationPriority.high:
+        return NotificationPriority.high;
+    }
+  }
 }
 
 // Enums and supporting classes
@@ -272,6 +326,7 @@ enum NotificationDeliveryMethod {
 enum NotificationDeliveryStatus {
   pending,
   delivered,
+  read, // User has seen/interacted with the notification
   failed,
   cancelled,
   expired,

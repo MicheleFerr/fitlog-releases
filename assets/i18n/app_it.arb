@@ -1,6 +1,7 @@
 {
   "@locale": "it",
   "appTitle": "FitLog Pro",
+  "home": "Home",
   "welcome": "Pronto per allenarti?",
   "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
   "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
@@ -373,6 +374,18 @@
   "testNotificationDescription": "Invia una notifica di test per verificare che il sistema funzioni correttamente",
   "testNotificationSent": "Notifica di Test Inviata!",
   "testNotificationSentDescription": "Controlla il centro notifiche per verificare che funzioni",
+  "notificationWorkoutReminderTitle": "Promemoria Allenamento",
+  "notificationWorkoutReminderBody": "È ora del tuo allenamento {workoutName}! 💪",
+  "notificationRecoveryAlertTitle": "Recupero Necessario",
+  "notificationRecoveryAlertBody": "Hai {daysToRecover} {dayWord} saltati da recuperare! 🔄",
+  "notificationStreakMotivationTitle": "Mantieni la tua Serie!",
+  "notificationStreakMotivationBody": "{currentStreak} giorni di fila! Non interrompere ora! 🔥",
+  "notificationRestDayTitle": "Giorno di Riposo",
+  "notificationRestDayBody": "Oggi è il tuo giorno di riposo. Il recupero è altrettanto importante! 😴",
+  "notificationTestTitle": "Notifica di Test",
+  "notificationTestBody": "Le notifiche di GymBro funzionano! 💪",
+  "daysSingular": "giorno",
+  "daysPlural": "giorni",
   "prNotifications": "Nuovi Record Personali",
   "prNotificationsDescription": "Ricevi notifiche quando stabilisci un nuovo record personale",
   "streakAchievements": "Serie di Allenamenti",
@@ -4152,6 +4165,10 @@
   "sessionHistory": "Storico Sessioni",
   "@sessionHistory": {
     "description": "Session history section title"
+  },
+  "dragToReorder": "Trascina per riordinare i grafici",
+  "@dragToReorder": {
+    "description": "Hint text for drag and drop chart reordering"
   },
   "@trend": {
     "description": "Trend label"
@@ -13998,5 +14015,513 @@
   "somethingWentWrong": "Qualcosa è andato storto",
   "@somethingWentWrong": {
     "description": "Sottotitolo stato errore generico"
+  },
+
+  "analyticsCorrelationsTitle": "Correlazioni",
+  "@analyticsCorrelationsTitle": {
+    "description": "Titolo sezione correlazioni in analytics"
+  },
+  "analyticsWeightVsRpe": "Peso vs RPE",
+  "@analyticsWeightVsRpe": {
+    "description": "Etichetta correlazione Peso vs RPE"
+  },
+  "analyticsVolumeVsRpe": "Volume vs RPE",
+  "@analyticsVolumeVsRpe": {
+    "description": "Etichetta correlazione Volume vs RPE"
+  },
+  "analyticsCorrelationStrong": "Forte",
+  "@analyticsCorrelationStrong": {
+    "description": "Indicatore correlazione forte"
+  },
+  "analyticsCorrelationModerate": "Moderata",
+  "@analyticsCorrelationModerate": {
+    "description": "Indicatore correlazione moderata"
+  },
+  "analyticsCorrelationWeak": "Debole",
+  "@analyticsCorrelationWeak": {
+    "description": "Indicatore correlazione debole"
+  },
+  "analyticsCorrelationInsufficient": "Dati Insufficienti",
+  "@analyticsCorrelationInsufficient": {
+    "description": "Dati non sufficienti per correlazione"
+  },
+  "analyticsNeedMoreData": "Servono {count}+ sessioni per l'analisi correlazioni",
+  "@analyticsNeedMoreData": {
+    "description": "Messaggio quando servono più dati",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsRSquared": "r² = {value}",
+  "@analyticsRSquared": {
+    "description": "Visualizzazione valore R-quadro",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "analyticsVarianceExplained": "{percent}% varianza spiegata",
+  "@analyticsVarianceExplained": {
+    "description": "Percentuale di varianza spiegata",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "analyticsProgressiveOverload": "Sovraccarico Progressivo",
+  "@analyticsProgressiveOverload": {
+    "description": "Titolo sezione sovraccarico progressivo"
+  },
+  "analyticsOverloadOptimal": "Ottimale",
+  "@analyticsOverloadOptimal": {
+    "description": "Stato sovraccarico progressivo ottimale"
+  },
+  "analyticsOverloadBelowTarget": "Sotto Target",
+  "@analyticsOverloadBelowTarget": {
+    "description": "Stato sovraccarico sotto target"
+  },
+  "analyticsOverloadAboveTarget": "Sopra Target",
+  "@analyticsOverloadAboveTarget": {
+    "description": "Stato sovraccarico sopra target"
+  },
+  "analyticsOverloadNoBaseline": "Nessuna Base",
+  "@analyticsOverloadNoBaseline": {
+    "description": "Nessun dato base per sovraccarico progressivo"
+  },
+  "analyticsWeeklyProgress": "{percent}% progresso settimanale",
+  "@analyticsWeeklyProgress": {
+    "description": "Percentuale progresso settimanale",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "analyticsTargetRange": "Target: {min}-{max}%",
+  "@analyticsTargetRange": {
+    "description": "Range target per sovraccarico progressivo",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "analyticsIntensity": "Intensità",
+  "@analyticsIntensity": {
+    "description": "Titolo sezione intensità"
+  },
+  "analyticsEstimated1RM": "1RM Stimato",
+  "@analyticsEstimated1RM": {
+    "description": "Etichetta 1 Rep Max stimato"
+  },
+  "analyticsPercentOf1RM": "{percent}% del 1RM",
+  "@analyticsPercentOf1RM": {
+    "description": "Visualizzazione percentuale del 1RM",
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "analyticsZoneMaxStrength": "Forza Max",
+  "@analyticsZoneMaxStrength": {
+    "description": "Zona intensità forza massima"
+  },
+  "analyticsZoneStrengthHypertrophy": "Forza/Ipertrofia",
+  "@analyticsZoneStrengthHypertrophy": {
+    "description": "Zona intensità forza/ipertrofia"
+  },
+  "analyticsZoneHypertrophy": "Ipertrofia",
+  "@analyticsZoneHypertrophy": {
+    "description": "Zona intensità ipertrofia"
+  },
+  "analyticsZoneEndurance": "Resistenza",
+  "@analyticsZoneEndurance": {
+    "description": "Zona intensità resistenza"
+  },
+  "analyticsTrend": "Trend",
+  "@analyticsTrend": {
+    "description": "Titolo sezione trend"
+  },
+  "analyticsTrendImproving": "In Miglioramento",
+  "@analyticsTrendImproving": {
+    "description": "Indicatore trend in miglioramento"
+  },
+  "analyticsTrendDeclining": "In Calo",
+  "@analyticsTrendDeclining": {
+    "description": "Indicatore trend in calo"
+  },
+  "analyticsTrendPlateau": "Plateau",
+  "@analyticsTrendPlateau": {
+    "description": "Indicatore trend plateau"
+  },
+  "analyticsTrendInconsistent": "Incostante",
+  "@analyticsTrendInconsistent": {
+    "description": "Indicatore trend incostante"
+  },
+  "analyticsViewFullAnalytics": "Vedi Analytics Completo",
+  "@analyticsViewFullAnalytics": {
+    "description": "Pulsante per navigare alla schermata analytics completa"
+  },
+  "analyticsSessions": "{count} sessioni",
+  "@analyticsSessions": {
+    "description": "Numero di sessioni",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsDataSpan": "{days} giorni di dati",
+  "@analyticsDataSpan": {
+    "description": "Intervallo dati in giorni",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsWeightVsRpeDescription": "Come lo sforzo percepito cambia con il peso",
+  "@analyticsWeightVsRpeDescription": {
+    "description": "Descrizione correlazione peso vs RPE"
+  },
+  "analyticsVolumeVsRpeDescription": "Come lo sforzo percepito cambia con il volume",
+  "@analyticsVolumeVsRpeDescription": {
+    "description": "Descrizione correlazione volume vs RPE"
+  },
+  "analyticsDataSufficient": "Qualità Dati: Buona",
+  "@analyticsDataSufficient": {
+    "description": "Indicatore che ci sono abbastanza dati per l'analisi"
+  },
+  "analyticsDataInsufficient": "Servono Altri Dati",
+  "@analyticsDataInsufficient": {
+    "description": "Indicatore che servono più dati"
+  },
+  "analyticsDataPoints": "{sessions} sessioni in {days} giorni",
+  "@analyticsDataPoints": {
+    "description": "Riepilogo punti dati",
+    "placeholders": {
+      "sessions": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsRValue": "r",
+  "@analyticsRValue": {
+    "description": "Etichetta coefficiente correlazione Pearson"
+  },
+  "analyticsRSquaredLabel": "r²",
+  "@analyticsRSquaredLabel": {
+    "description": "Etichetta coefficiente R-quadrato"
+  },
+  "analyticsCorrelationStrength": "Forza",
+  "@analyticsCorrelationStrength": {
+    "description": "Etichetta forza correlazione"
+  },
+  "analyticsStrength": "Forza",
+  "@analyticsStrength": {
+    "description": "Etichetta breve forza correlazione"
+  },
+  "analyticsRValueTooltip": "Coefficiente correlazione: da -1 a 1. Positivo = aumentano insieme, Negativo = relazione inversa",
+  "@analyticsRValueTooltip": {
+    "description": "Tooltip che spiega il valore r"
+  },
+  "analyticsRSquaredTooltip": "% di varianza spiegata. Più alto = relazione predittiva più forte",
+  "@analyticsRSquaredTooltip": {
+    "description": "Tooltip che spiega il valore r-quadrato"
+  },
+  "analyticsStrengthTooltip": "Basato su r: Forte (>0.7), Moderata (0.4-0.7), Debole (<0.4)",
+  "@analyticsStrengthTooltip": {
+    "description": "Tooltip che spiega i livelli di forza correlazione"
+  },
+  "analyticsStatisticallySignificant": "Statisticamente Significativo",
+  "@analyticsStatisticallySignificant": {
+    "description": "Indica che la correlazione è statisticamente significativa"
+  },
+  "analyticsNotSignificant": "Non Statisticamente Significativo",
+  "@analyticsNotSignificant": {
+    "description": "Indica che la correlazione non è statisticamente significativa"
+  },
+  "analyticsInsightWeightRpePositive": "Pesi più alti correlano con maggiore sforzo percepito - normale con sovraccarico progressivo",
+  "@analyticsInsightWeightRpePositive": {
+    "description": "Insight per correlazione positiva peso-RPE"
+  },
+  "analyticsInsightWeightRpeNegative": "Pesi più alti correlano con minore sforzo percepito - stai diventando più forte efficacemente",
+  "@analyticsInsightWeightRpeNegative": {
+    "description": "Insight per correlazione negativa peso-RPE"
+  },
+  "analyticsInsightVolumeRpePositive": "Volume più alto correla con maggiore sforzo percepito - considera di gestire la fatica",
+  "@analyticsInsightVolumeRpePositive": {
+    "description": "Insight per correlazione positiva volume-RPE"
+  },
+  "analyticsInsightVolumeRpeNegative": "Volume più alto con meno sforzo percepito - la tua capacità di lavoro sta migliorando",
+  "@analyticsInsightVolumeRpeNegative": {
+    "description": "Insight per correlazione negativa volume-RPE"
+  },
+  "analyticsKeyInsights": "Insight Chiave",
+  "@analyticsKeyInsights": {
+    "description": "Intestazione sezione insight"
+  },
+  "analyticsTrendSummary": "Riepilogo Trend",
+  "@analyticsTrendSummary": {
+    "description": "Intestazione sezione riepilogo trend"
+  },
+  "analyticsOverload": "Sovraccarico",
+  "@analyticsOverload": {
+    "description": "Etichetta sovraccarico progressivo"
+  },
+  "analyticsNoDataTitle": "Nessun Analytics Disponibile",
+  "@analyticsNoDataTitle": {
+    "description": "Titolo quando non ci sono dati analytics"
+  },
+  "analyticsNoDataDescription": "Completa altri allenamenti per vedere l'analisi delle correlazioni e gli insight",
+  "@analyticsNoDataDescription": {
+    "description": "Descrizione quando non ci sono dati analytics"
+  },
+  "analyticsErrorLoading": "Errore Caricamento Analytics",
+  "@analyticsErrorLoading": {
+    "description": "Messaggio errore quando gli analytics non si caricano"
+  },
+  "analyticsTrendBadgeUp": "+{percent}%",
+  "@analyticsTrendBadgeUp": {
+    "description": "Badge trend per variazione positiva",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "5.2"
+      }
+    }
+  },
+  "analyticsTrendBadgeDown": "{percent}%",
+  "@analyticsTrendBadgeDown": {
+    "description": "Badge trend per variazione negativa",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "-3.1"
+      }
+    }
+  },
+  "analyticsTrendBadgeStable": "Stabile",
+  "@analyticsTrendBadgeStable": {
+    "description": "Badge trend quando non ci sono cambiamenti significativi"
+  },
+  "analyticsInsightWeightUp": "Peso +{percent}% - ottimi progressi!",
+  "@analyticsInsightWeightUp": {
+    "description": "Insight per aumento peso",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "5"
+      }
+    }
+  },
+  "analyticsInsightWeightDown": "Peso -{percent}% - controlla forma e recupero",
+  "@analyticsInsightWeightDown": {
+    "description": "Insight per diminuzione peso",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "3"
+      }
+    }
+  },
+  "analyticsInsightVolumeUp": "Volume +{percent}% - i muscoli si adattano!",
+  "@analyticsInsightVolumeUp": {
+    "description": "Insight per aumento volume",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "8"
+      }
+    }
+  },
+  "analyticsInsightVolumeDown": "Volume -{percent}% - aggiungi una serie",
+  "@analyticsInsightVolumeDown": {
+    "description": "Insight per diminuzione volume",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "5"
+      }
+    }
+  },
+  "analyticsInsightRepsUp": "Rep +{percent}% - resistenza in crescita!",
+  "@analyticsInsightRepsUp": {
+    "description": "Insight per aumento ripetizioni",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "10"
+      }
+    }
+  },
+  "analyticsInsightRepsDown": "Rep -{percent}% - pesi troppo alti?",
+  "@analyticsInsightRepsDown": {
+    "description": "Insight per diminuzione ripetizioni",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "8"
+      }
+    }
+  },
+  "analyticsInsightRpeHigh": "RPE alto - considera un deload",
+  "@analyticsInsightRpeHigh": {
+    "description": "Insight quando RPE è costantemente alto"
+  },
+  "analyticsInsightRpeLow": "RPE basso - puoi spingere di più!",
+  "@analyticsInsightRpeLow": {
+    "description": "Insight quando RPE è costantemente basso"
+  },
+  "analyticsInsightStable": "Performance costante - continua così!",
+  "@analyticsInsightStable": {
+    "description": "Insight quando la metrica è stabile"
+  },
+  "analyticsNotEnoughData": "Aggiungi sessioni per gli insights",
+  "@analyticsNotEnoughData": {
+    "description": "Messaggio quando non ci sono dati sufficienti per calcolare il trend"
+  },
+
+  "recommendation": "Consiglio",
+  "@recommendation": {
+    "description": "Etichetta per sezione raccomandazione"
+  },
+  "scienceExplanation": "Scienza",
+  "@scienceExplanation": {
+    "description": "Etichetta per spiegazione scientifica"
+  },
+  "confidenceLabel": "Affidabilità",
+  "@confidenceLabel": {
+    "description": "Etichetta per indicatore di confidenza"
+  },
+
+  "patternFatigueWarningTitle": "Avviso Fatica",
+  "@patternFatigueWarningTitle": {
+    "description": "Titolo per pattern di avviso fatica"
+  },
+  "patternFatigueWarningDescription": "Il tuo RPE sta aumentando mentre il peso sta diminuendo. Questo suggerisce fatica accumulata.",
+  "@patternFatigueWarningDescription": {
+    "description": "Descrizione per pattern di avviso fatica"
+  },
+  "patternFatigueWarningRecommendation": "Considera una settimana di deload o giorni di riposo extra. Concentrati su sonno e nutrizione.",
+  "@patternFatigueWarningRecommendation": {
+    "description": "Raccomandazione per pattern di avviso fatica"
+  },
+  "patternFatigueWarningScience": "La ricerca mostra che un RPE in aumento allo stesso carico indica affaticamento neuromuscolare. Helms et al. (2016) raccomandano il deload quando questo pattern persiste.",
+  "@patternFatigueWarningScience": {
+    "description": "Spiegazione scientifica per avviso fatica"
+  },
+
+  "patternGreatProgressionTitle": "Ottima Progressione!",
+  "@patternGreatProgressionTitle": {
+    "description": "Titolo per pattern di ottima progressione"
+  },
+  "patternGreatProgressionDescription": "Il peso sta aumentando mentre l'RPE resta stabile. Il tuo corpo si sta adattando perfettamente!",
+  "@patternGreatProgressionDescription": {
+    "description": "Descrizione per pattern di ottima progressione"
+  },
+  "patternGreatProgressionRecommendation": "Continua così! Prosegui con il tuo programma attuale e il sovraccarico progressivo.",
+  "@patternGreatProgressionRecommendation": {
+    "description": "Raccomandazione per pattern di ottima progressione"
+  },
+  "patternGreatProgressionScience": "Questo è l'adattamento ideale: aumentare il carico senza aumento dello sforzo percepito indica migliorata capacità di lavoro e guadagni di forza.",
+  "@patternGreatProgressionScience": {
+    "description": "Spiegazione scientifica per ottima progressione"
+  },
+
+  "patternOverreachingRiskTitle": "Rischio Overreaching",
+  "@patternOverreachingRiskTitle": {
+    "description": "Titolo per pattern di rischio overreaching"
+  },
+  "patternOverreachingRiskDescription": "L'RPE è alto, il peso è stabile, ma il volume sta calando. Potresti star spingendo troppo.",
+  "@patternOverreachingRiskDescription": {
+    "description": "Descrizione per pattern di rischio overreaching"
+  },
+  "patternOverreachingRiskRecommendation": "Riduci il volume di allenamento del 30-40% per 1-2 settimane. Dai priorità al recupero.",
+  "@patternOverreachingRiskRecommendation": {
+    "description": "Raccomandazione per pattern di rischio overreaching"
+  },
+  "patternOverreachingRiskScience": "L'overreaching funzionale si verifica quando lo stress allenante supera il recupero. Zourdos et al. (2016) hanno trovato che la combinazione di alto RPE con volume in calo precede l'overtraining.",
+  "@patternOverreachingRiskScience": {
+    "description": "Spiegazione scientifica per rischio overreaching"
+  },
+
+  "patternAdaptationTitle": "Corpo in Adattamento",
+  "@patternAdaptationTitle": {
+    "description": "Titolo per pattern di adattamento"
+  },
+  "patternAdaptationDescription": "L'RPE sta diminuendo allo stesso peso. Il tuo corpo sta diventando più forte!",
+  "@patternAdaptationDescription": {
+    "description": "Descrizione per pattern di adattamento"
+  },
+  "patternAdaptationRecommendation": "Ottimi progressi! Potresti essere pronto ad aumentare leggermente il peso.",
+  "@patternAdaptationRecommendation": {
+    "description": "Raccomandazione per pattern di adattamento"
+  },
+  "patternAdaptationScience": "Un RPE in diminuzione a carico fisso è un indicatore chiave di adattamento neurale e muscolare - i tuoi muscoli stanno diventando più efficienti.",
+  "@patternAdaptationScience": {
+    "description": "Spiegazione scientifica per adattamento"
+  },
+
+  "patternVolumeSpikeTitle": "Picco di Volume",
+  "@patternVolumeSpikeTitle": {
+    "description": "Titolo per pattern di picco volume"
+  },
+  "patternVolumeSpikeDescription": "Il volume di allenamento è aumentato significativamente rispetto alle sessioni precedenti.",
+  "@patternVolumeSpikeDescription": {
+    "description": "Descrizione per pattern di picco volume"
+  },
+  "patternVolumeSpikeRecommendation": "Monitora attentamente il recupero. Evita salti grandi nel volume - punta a incrementi del 5-10% settimanale.",
+  "@patternVolumeSpikeRecommendation": {
+    "description": "Raccomandazione per pattern di picco volume"
+  },
+  "patternVolumeSpikeScience": "La ricerca sul sovraccarico progressivo suggerisce che gli aumenti di volume dovrebbero essere graduali (5-10%/settimana) per permettere l'adattamento senza rischio di infortuni.",
+  "@patternVolumeSpikeScience": {
+    "description": "Spiegazione scientifica per picco volume"
+  },
+
+  "patternOptimalTrainingTitle": "Allenamento Ottimale",
+  "@patternOptimalTrainingTitle": {
+    "description": "Titolo per pattern di allenamento ottimale"
+  },
+  "patternOptimalTrainingDescription": "Tutte le metriche stanno progredendo bene nei range ottimali. Equilibrio perfetto!",
+  "@patternOptimalTrainingDescription": {
+    "description": "Descrizione per pattern di allenamento ottimale"
+  },
+  "patternOptimalTrainingRecommendation": "Tutto è calibrato alla perfezione! Mantieni la tua routine attuale e continua a progredire.",
+  "@patternOptimalTrainingRecommendation": {
+    "description": "Raccomandazione per pattern di allenamento ottimale"
+  },
+  "patternOptimalTrainingScience": "L'allenamento ottimale si verifica quando volume, intensità e recupero sono bilanciati, permettendo un sovraccarico progressivo costante.",
+  "@patternOptimalTrainingScience": {
+    "description": "Spiegazione scientifica per allenamento ottimale"
+  },
+
+  "patternInconsistentTitle": "Dati Inconsistenti",
+  "@patternInconsistentTitle": {
+    "description": "Titolo per pattern inconsistente"
+  },
+  "patternInconsistentDescription": "Le metriche di allenamento mostrano alta variabilità. Concentrati sulla costanza.",
+  "@patternInconsistentDescription": {
+    "description": "Descrizione per pattern inconsistente"
+  },
+  "patternInconsistentRecommendation": "Prova ad allenarti a orari e condizioni simili. Traccia l'RPE costantemente per insights migliori.",
+  "@patternInconsistentRecommendation": {
+    "description": "Raccomandazione per pattern inconsistente"
+  },
+  "patternInconsistentScience": "L'alta variabilità nell'allenamento rende difficile il rilevamento di pattern. Una raccolta dati consistente permette una migliore analisi delle performance.",
+  "@patternInconsistentScience": {
+    "description": "Spiegazione scientifica per dati inconsistenti"
   }
 }

@@ -281,14 +281,27 @@ class ExerciseVersionInfo {
     } else {
       // Fallback if format is unexpected
       version = '1.0.0';
-      debugPrint('⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})');
+      if (kDebugMode && versionField != null) {
+        debugPrint('⚠️ Unexpected version format in Firestore: $versionField (type: ${versionField.runtimeType})');
+      }
+    }
+
+    // Parse changelog safely (may contain String or Map entries)
+    List<String> changelog = [];
+    final changelogRaw = data['changelog'];
+    if (changelogRaw is List) {
+      changelog = changelogRaw.map((item) {
+        if (item is String) return item;
+        if (item is Map) return item.toString();
+        return item?.toString() ?? '';
+      }).where((s) => s.isNotEmpty).toList();
     }
 
     return ExerciseVersionInfo(
       version: version,
       lastUpdated: (data['last_updated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       totalExercises: data['total_exercises'] as int? ?? 0,
-      changelog: List<String>.from(data['changelog'] as List? ?? []),
+      changelog: changelog,
     );
   }
   final String version;

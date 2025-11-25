@@ -15,6 +15,7 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/repositories/workout_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 
@@ -392,7 +393,7 @@ class FirebaseWorkoutDataSource {
         .collection('workouts')
         .count()
         .get();
-    
+
     final totalCount = totalQuery.count ?? 0;
 
     // Get paginated results
@@ -413,7 +414,7 @@ class FirebaseWorkoutDataSource {
           .orderBy('createdAt', descending: true)
           .limit(skipCount)
           .get();
-      
+
       if (offsetSnapshot.docs.isNotEmpty) {
         query = query.startAfterDocument(offsetSnapshot.docs.last);
       }
@@ -432,6 +433,84 @@ class FirebaseWorkoutDataSource {
       totalCount: totalCount,
       hasMore: hasMore,
       currentPage: page,
+    );
+  }
+
+  /// Get workouts with cursor-based pagination (Firestore optimized)
+  ///
+  /// Uses startAfterDocument for efficient pagination.
+  /// This method fetches pageSize + 1 to determine hasMore without extra count query.
+  ///
+  /// **Firestore Best Practice 2024**:
+  /// - Uses startAfterDocument (cursor-based) instead of offset
+  /// - Fetches N+1 to detect hasMore without count query (cost-efficient)
+  /// - Returns DocumentSnapshot for next page cursor
+  ///
+  /// **Required Composite Index**:
+  /// Collection: users/{userId}/workouts
+  /// Fields: status ASC, createdAt DESC (if status filter used)
+  /// Or: createdAt DESC (if no status filter)
+  Future<PaginatedResult<WorkoutModel>> getWorkoutsPaginated(
+    String userId, {
+    int pageSize = 20,
+    DocumentSnapshot? startAfter,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String? status,
+  }) async {
+    // Build base query - order by createdAt descending (newest first)
+    Query<Map<String, dynamic>> query = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('workouts')
+        .orderBy('createdAt', descending: true);
+
+    // Apply status filter if provided
+    if (status != null) {
+      query = query.where('status', isEqualTo: status);
+    }
+
+    // Apply date range filters
+    // NOTE: Firestore allows only one inequality filter per query
+    // Using createdAt >= dateFrom OR createdAt <= dateTo
+    if (dateFrom != null) {
+      query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(dateFrom));
+    }
+
+    if (dateTo != null) {
+      query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(dateTo));
+    }
+
+    // Apply cursor if continuing from previous page
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    // Fetch pageSize + 1 to determine if more pages exist
+    // This is more efficient than a separate count query
+    query = query.limit(pageSize + 1);
+
+    final querySnapshot = await query.get();
+    final docs = querySnapshot.docs;
+
+    // Determine if there are more pages
+    final hasMore = docs.length > pageSize;
+
+    // Take only pageSize items (exclude the extra one used for hasMore check)
+    final resultDocs = hasMore ? docs.sublist(0, pageSize) : docs;
+
+    // Get the last document for cursor (before trimming)
+    final lastDoc = resultDocs.isNotEmpty ? resultDocs.last : null;
+
+    // Convert to domain models
+    final workouts = resultDocs
+        .map((doc) => WorkoutModel.fromJson(doc.data()))
+        .toList();
+
+    return PaginatedResult<WorkoutModel>(
+      items: workouts,
+      hasMore: hasMore,
+      lastDocument: lastDoc,
     );
   }
 }

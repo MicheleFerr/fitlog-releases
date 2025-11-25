@@ -4,86 +4,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/suggestion_feedback.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/antagonist_conflict.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_suggestion.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_suggestion_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
-/// Smart workout CTA button that pre-loads workouts from active routines
+/// Smart workout CTA button with 4 states:
+/// - REST_MODE: User already worked out today
+/// - INSUFFICIENT_DATA: <3 workouts in history
+/// - READY: Smart suggestion available
+/// - WARNING: Suggestion with antagonist conflict warning
 class SmartWorkoutCTA extends ConsumerWidget {
   const SmartWorkoutCTA({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final routineAsync = ref.watch(safeActiveRoutineProvider);
-    final todayWorkoutAsync = ref.watch(todayCompletedWorkoutProvider);
+    final suggestionAsync = ref.watch(workoutSuggestionProvider);
 
-    // Priority 1: Check if already worked out today
-    return todayWorkoutAsync.when(
-      loading: () => _buildLoadingState(context, theme),
-      error: (_, __) => _buildLoadingState(context, theme), // Graceful fallback
-      data: (todayWorkout) {
-        if (todayWorkout != null) {
-          // ✅ Workout done today → REST MODE
-          return _buildRestModeState(context, ref, todayWorkout);
-        }
-
-        // No workout today → check routine (existing logic)
-        return routineAsync.when(
-          loading: () => _buildLoadingState(context, theme),
-          error: (_, __) => _buildDisabledState(
-            context,
-            theme,
-            context.l10n.smartWorkoutCTAErrorLoading,
-          ),
-          data: (routine) {
-            // ⚠️ v2.0 STUB: Day-level tracking not implemented in v2.0
-            // Guard 1: Check if routine exists
-            if (routine == null) {
-              return _buildDisabledState(
-                context,
-                theme,
-                context.l10n.smartWorkoutCTARestDay,
-              );
-            }
-
-            // v2.0: No day-level tracking - show disabled state
-            // TODO: Reimplement when v2.0 adds day-level tracking
-            return _buildDisabledState(
-              context,
-              theme,
-              'v2.0: Day tracking coming soon', // Temporary message
-            );
-
-            // ⚠️ v2.0 STUB: Dead code commented out (unreachable after return above)
-            // TODO v3.0: Restore when day-level tracking implemented
-            /*
-            // ✅ Ready to show active CTA
-            return _buildActiveState(
-              context,
-              ref,
-              theme,
-              nextWorkout.templateId!,
-              routine, // Pass routine for cleanup if template deleted
-            );
-            */
-          },
-        );
-      },
+    return suggestionAsync.when(
+      loading: () => _buildLoadingState(context),
+      error: (error, _) => _buildErrorState(context, error.toString()),
+      data: (state) => state.when(
+        loading: () => _buildLoadingState(context),
+        restMode: (workout) => _buildRestModeState(context, ref, workout),
+        insufficientData: (count, required) =>
+            _buildInsufficientDataState(context, count, required),
+        ready: (suggestion) => _buildReadyState(context, ref, suggestion),
+        warning: (suggestion, conflict) =>
+            _buildWarningState(context, ref, suggestion, conflict),
+        error: (message, _) => _buildErrorState(context, message),
+      ),
     );
   }
 
-  // Loading state - skeleton
-  Widget _buildLoadingState(BuildContext context, ThemeData theme) {
+  // ========== LOADING STATE ==========
+  Widget _buildLoadingState(BuildContext context) {
     return Container(
       height: 100,
       decoration: BoxDecoration(
@@ -94,15 +56,11 @@ class SmartWorkoutCTA extends ConsumerWidget {
     );
   }
 
-  // Disabled state - rest day or no routine
-  Widget _buildDisabledState(
-    BuildContext context,
-    ThemeData theme,
-    String label,
-  ) {
+  // ========== ERROR STATE ==========
+  Widget _buildErrorState(BuildContext context, String message) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+        color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Padding(
@@ -110,17 +68,29 @@ class SmartWorkoutCTA extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+            Row(
+              children: [
+                Icon(
+                  AppIcons.error,
+                  size: AppIconSize.medium,
+                  color: context.colors.error,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.smartWorkoutCTAErrorTitle,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(
-              context.l10n.smartWorkoutCTARestDayHint,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              message,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -129,129 +99,375 @@ class SmartWorkoutCTA extends ConsumerWidget {
     );
   }
 
-  // Active state - ready to pre-load
-  Widget _buildActiveState(
+  // ========== INSUFFICIENT DATA STATE ==========
+  Widget _buildInsufficientDataState(
     BuildContext context,
-    WidgetRef ref,
-    ThemeData theme,
-    String templateId,
-    FlexibleRoutine routine, // For cleanup if template deleted
+    int workoutCount,
+    int requiredCount,
   ) {
-    // Watch templates to get the name
-    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
+    final remaining = requiredCount - workoutCount;
+    final progress = workoutCount / requiredCount;
 
-    return templatesAsync.when(
-      loading: () => _buildLoadingState(context, theme),
-      error: (_, __) => _buildDisabledState(
-        context,
-        theme,
-        context.l10n.smartWorkoutCTAErrorTemplate,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: context.colors.outline.withValues(alpha: 0.2),
+        ),
       ),
-      data: (templates) {
-        // Find the template
-        final template = templates.where((t) => t.id == templateId).firstOrNull;
-        if (template == null) {
-          // ⚠️ v2.0 STUB: Auto-cleanup not implemented in v2.0 simplified schema
-          // TODO: Reimplement removeInvalidTemplateId when v2.0 adds routine management features
-          // ref.read(flexibleRoutineNotifierProvider.notifier).removeInvalidTemplateId(
-          //   routine: routine,
-          //   invalidTemplateId: templateId,
-          // );
-
-          return _buildDisabledState(
-            context,
-            theme,
-            context.l10n.smartWorkoutCTARoutineUpdated,
-          );
-        }
-
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.tertiary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon + Title
+            Row(
+              children: [
+                Icon(
+                  AppIcons.barChart,
+                  size: AppIconSize.large,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    context.l10n.smartWorkoutCTAInsufficientDataTitle,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: context.colors.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+
+            const SizedBox(height: 12),
+
+            // Subtitle with remaining count
+            Text(
+              context.l10n.smartWorkoutCTAInsufficientDataSubtitle(remaining),
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
               ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Progress bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 8,
+                backgroundColor: context.colors.surfaceContainerHigh,
+                valueColor: AlwaysStoppedAnimation(context.colors.primary),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Progress text
+            Text(
+              context.l10n.smartWorkoutCTAInsufficientDataProgress(
+                workoutCount,
+                requiredCount,
+              ),
+              style: context.textTheme.labelSmall?.copyWith(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ========== READY STATE (Main CTA) ==========
+  Widget _buildReadyState(
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutSuggestion suggestion,
+  ) {
+    return GestureDetector(
+      onTap: () => _onSuggestionAccepted(context, ref, suggestion),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              context.colors.primary,
+              context.colors.secondary,
             ],
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () async {
-                await HapticFeedback.lightImpact();
-                if (!context.mounted) return;
-                await _onSmartCTATap(context, ref, template.id, template.name);
-              },
-              borderRadius: BorderRadius.circular(24),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: context.colors.primary.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Icon + Title
+              Row(
+                children: [
+                  Icon(
+                    AppIcons.workout,
+                    size: AppIconSize.large,
+                    color: context.colors.surface,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          AppIcons.rocket,
-                          color: theme.colorScheme.onPrimary,
-                          size: AppIconSize.small,
-                        ),
-                        const SizedBox(width: 8),
                         Text(
-                          context.l10n.smartWorkoutCTAStart,
-                          style: TextStyle(
-                            color: theme.colorScheme.onPrimary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
+                          context.l10n.smartWorkoutCTAReadyTitle,
+                          style: context.textTheme.labelMedium?.copyWith(
+                            color: context.colors.surface.withValues(alpha: 0.8),
+                          ),
+                        ),
+                        Text(
+                          suggestion.workoutName,
+                          style: context.textTheme.titleLarge?.copyWith(
+                            color: context.colors.surface,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      template.name,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: theme.colorScheme.onPrimary,
+                  ),
+                  // Confidence indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.colors.surface.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      suggestion.displayConfidence,
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.surface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      context.l10n.smartWorkoutCTASuggestedToday(template.estimatedDuration),
-                      style: TextStyle(
-                        color: theme.colorScheme.onPrimary.withValues(alpha: 0.85),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
+
+              const SizedBox(height: 12),
+
+              // Reason
+              if (suggestion.reason != null)
+                Text(
+                  suggestion.reason!,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.surface.withValues(alpha: 0.9),
+                  ),
+                ),
+
+              const SizedBox(height: 16),
+
+              // Action buttons row
+              Row(
+                children: [
+                  // Start button
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _onSuggestionAccepted(context, ref, suggestion),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colors.surface,
+                        foregroundColor: context.colors.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: Icon(AppIcons.play, size: AppIconSize.small),
+                      label: Text(context.l10n.smartWorkoutCTAStartButton),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  // Reject button
+                  IconButton(
+                    onPressed: () => _showReasonPicker(context, ref, suggestion),
+                    style: IconButton.styleFrom(
+                      backgroundColor: context.colors.surface.withValues(alpha: 0.2),
+                    ),
+                    icon: Icon(
+                      AppIcons.close,
+                      color: context.colors.surface,
+                      size: AppIconSize.small,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  /// Rest mode state - Shows congratulatory message and workout statistics
+  // ========== WARNING STATE (Antagonist Conflict) ==========
+  Widget _buildWarningState(
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutSuggestion suggestion,
+    AntagonistConflict conflict,
+  ) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: context.colors.warning.withValues(alpha: 0.5),
+          width: 2,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Warning banner
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: context.colors.warning.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.warning,
+                    size: AppIconSize.small,
+                    color: context.colors.warning,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      context.l10n.smartWorkoutCTAWarningBanner(
+                        conflict.pair.antagonistMuscleEN,
+                      ),
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: context.colors.warning,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Suggestion info
+            Row(
+              children: [
+                Icon(
+                  AppIcons.workout,
+                  size: AppIconSize.large,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.l10n.smartWorkoutCTAReadyTitle,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(
+                        suggestion.workoutName,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colors.onSurface,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Action buttons
+            Row(
+              children: [
+                // Proceed anyway button
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _onSuggestionAccepted(context, ref, suggestion),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: context.colors.warning,
+                      side: BorderSide(color: context.colors.warning),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: Icon(AppIcons.play, size: AppIconSize.small),
+                    label: Text(context.l10n.smartWorkoutCTAProceedAnyway),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // Alternative suggestion button (if available)
+                if (conflict.suggestedAlternative != null)
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        // TODO: Navigate to alternative template
+                        HapticFeedback.mediumImpact();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.onPrimary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: Icon(AppIcons.swapHoriz, size: AppIconSize.small),
+                      label: Text(
+                        conflict.suggestedAlternative!,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ========== REST MODE STATE ==========
   Widget _buildRestModeState(BuildContext context, WidgetRef ref, Workout workout) {
-    final theme = Theme.of(context);
     final stats = _calculateWorkoutStats(workout);
 
-    // 🎯 Track rest mode analytics (adherence insights, streak tracking)
+    // Track analytics
     final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
     if (userId != null) {
-      // Track analytics event (async, fire-and-forget)
       WorkoutAnalytics.trackEvent(
         'rest_mode_shown',
         properties: {
@@ -271,14 +487,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.tertiary,
+            context.colors.primary,
+            context.colors.tertiary,
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            color: context.colors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -289,7 +505,6 @@ class SmartWorkoutCTA extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon + Title
             Row(
               children: [
                 Icon(
@@ -309,20 +524,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
-
-            // Subtitle
             Text(
               context.l10n.smartWorkoutCTARestModeSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.surface.withValues(alpha: 0.9),
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // Stats Container
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -357,7 +566,8 @@ class SmartWorkoutCTA extends ConsumerWidget {
     );
   }
 
-  /// Helper to build a single stat row
+  // ========== HELPERS ==========
+
   Widget _buildStatRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
@@ -379,9 +589,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
     );
   }
 
-  /// Calculate workout statistics from completed workout
-  WorkoutStats _calculateWorkoutStats(dynamic workout) {
-    // Volume: sum of all (weight × reps) across all sets
+  WorkoutStats _calculateWorkoutStats(Workout workout) {
     double totalVolume = 0;
     int totalSets = 0;
 
@@ -394,9 +602,8 @@ class SmartWorkoutCTA extends ConsumerWidget {
       }
     }
 
-    // Duration: endTime - startTime
     final duration = workout.endTime != null
-        ? workout.endTime!.difference(workout.startTime)
+        ? workout.endTime!.difference(workout.startTime ?? DateTime.now())
         : Duration.zero;
 
     final minutes = duration.inMinutes;
@@ -405,83 +612,268 @@ class SmartWorkoutCTA extends ConsumerWidget {
     return WorkoutStats(
       volume: NumberFormat('#,##0', 'it_IT').format(totalVolume.round()),
       duration: '${minutes}m ${seconds}s',
-      sets: totalSets,
+      sets: totalSets.toString(),
     );
   }
 
-  Future<void> _onSmartCTATap(
+  // ========== ACTIONS ==========
+
+  void _onSuggestionAccepted(
     BuildContext context,
     WidgetRef ref,
-    String templateId,
-    String templateName,
-  ) async {
-    // Generate session ID for analytics correlation
-    final sessionId = generateSessionId();
+    WorkoutSuggestion suggestion,
+  ) {
+    HapticFeedback.mediumImpact();
 
-    // Guard 1: Check AsyncValue state
-    final routineAsync = ref.read(safeActiveRoutineProvider);
-    if (routineAsync is! AsyncData) {
-      return;
-    }
-
-    final routine = routineAsync.value;
-
-    // ⚠️ v2.0 STUB: Day-level tracking not implemented
-    // Guard 2: Routine null check
-    if (routine == null) {
-      return;
-    }
-
-    // v2.0: No day-level tracking - early return
-    // TODO: Reimplement when v2.0 adds day-level tracking
-    return;
-
-    // Fetch template to get exercises
-    final templatesAsync = ref.read(customWorkoutTemplatesProvider);
-    if (templatesAsync is! AsyncData) {
-      return;
-    }
-
-    final templates = templatesAsync.value ?? [];
-    final template = templates.where((t) => t.id == templateId).firstOrNull;
-    if (template == null) {
-      return;
-    }
-
-    // ✅ Analytics tracking BEFORE starting workout
-    await WorkoutAnalytics.trackEvent(
-      'smart_cta_tapped',
-      properties: {
-        'sessionId': sessionId,
-        'templateName': templateName,
-        'templateId': templateId,
-        'exerciseCount': template.exercises.length,
-        'timestamp': DateTime.now().toIso8601String(),
-      },
+    // Record acceptance
+    ref.read(suggestionFeedbackNotifierProvider.notifier).recordAcceptance(
+      templateSuggested: suggestion.workoutName,
+      confidenceAtSuggestion: suggestion.confidence,
     );
 
-    // ✅ Start workout from template (same as DayDetailSheet)
-    // This creates an active workout, not a preloaded one
-    ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+    // Navigate to workout with template
+    context.push('/workout?template=${Uri.encodeComponent(suggestion.workoutName)}');
+  }
 
-    // ✅ Navigate directly to workout screen (no extra needed)
-    if (context.mounted) {
-      context.goNamed('workout');
-    }
+  void _showReasonPicker(
+    BuildContext context,
+    WidgetRef ref,
+    WorkoutSuggestion suggestion,
+  ) {
+    HapticFeedback.lightImpact();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => ReasonPickerSheet(
+        suggestion: suggestion,
+        onReasonSelected: (reason, customReason) {
+          ref.read(suggestionFeedbackNotifierProvider.notifier).recordRejection(
+            templateSuggested: suggestion.workoutName,
+            reason: reason,
+            customReason: customReason,
+            confidenceAtSuggestion: suggestion.confidence,
+          );
+          Navigator.pop(context);
+        },
+      ),
+    );
   }
 }
 
 String generateSessionId() => const Uuid().v4();
 
 /// Statistics calculated from completed workout
-class WorkoutStats {           // Total sets completed
-
+class WorkoutStats {
   const WorkoutStats({
     required this.volume,
     required this.duration,
     required this.sets,
   });
-  final String volume;      // Formatted with thousand separator (e.g., "4.250")
-  final String duration;    // Human-readable format (e.g., "45m 32s")
-  final int sets;
+
+  final String volume;
+  final String duration;
+  final String sets;
+}
+
+/// Bottom sheet for selecting rejection reason
+class ReasonPickerSheet extends StatefulWidget {
+  const ReasonPickerSheet({
+    super.key,
+    required this.suggestion,
+    required this.onReasonSelected,
+  });
+
+  final WorkoutSuggestion suggestion;
+  final void Function(RejectionReason reason, String? customReason) onReasonSelected;
+
+  @override
+  State<ReasonPickerSheet> createState() => _ReasonPickerSheetState();
+}
+
+class _ReasonPickerSheetState extends State<ReasonPickerSheet> {
+  RejectionReason? _selectedReason;
+  final _customReasonController = TextEditingController();
+
+  @override
+  void dispose() {
+    _customReasonController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: context.colors.outline.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Title
+              Text(
+                context.l10n.smartWorkoutCTAReasonPickerTitle,
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              Text(
+                context.l10n.smartWorkoutCTAReasonPickerSubtitle(
+                  widget.suggestion.workoutName,
+                ),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Reason options
+              ...RejectionReason.values.map((reason) => _buildReasonTile(reason)),
+
+              // Custom reason input (if "other" selected)
+              if (_selectedReason == RejectionReason.other) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _customReasonController,
+                  decoration: InputDecoration(
+                    hintText: context.l10n.smartWorkoutCTAReasonPickerCustomHint,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  maxLines: 2,
+                ),
+              ],
+
+              const SizedBox(height: 20),
+
+              // Confirm button
+              ElevatedButton(
+                onPressed: _selectedReason != null
+                    ? () {
+                        widget.onReasonSelected(
+                          _selectedReason!,
+                          _selectedReason == RejectionReason.other
+                              ? _customReasonController.text
+                              : null,
+                        );
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.colors.primary,
+                  foregroundColor: context.colors.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(context.l10n.smartWorkoutCTAReasonPickerConfirm),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReasonTile(RejectionReason reason) {
+    final isSelected = _selectedReason == reason;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() => _selectedReason = reason);
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? context.colors.primaryContainer
+                : context.colors.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            border: isSelected
+                ? Border.all(color: context.colors.primary, width: 2)
+                : null,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                _getReasonIcon(reason),
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  _getReasonLabel(context, reason),
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    color: isSelected
+                        ? context.colors.onPrimaryContainer
+                        : context.colors.onSurfaceVariant,
+                    fontWeight: isSelected ? FontWeight.w600 : null,
+                  ),
+                ),
+              ),
+              if (isSelected)
+                Icon(
+                  AppIcons.checkCircle,
+                  color: context.colors.primary,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getReasonIcon(RejectionReason reason) {
+    return switch (reason) {
+      RejectionReason.tooTired => AppIcons.batteryAlert,
+      RejectionReason.noTime => AppIcons.clock,
+      RejectionReason.injury => AppIcons.healing,
+      RejectionReason.notInMood => AppIcons.bedtime,
+      RejectionReason.other => AppIcons.moreHoriz,
+    };
+  }
+
+  String _getReasonLabel(BuildContext context, RejectionReason reason) {
+    return switch (reason) {
+      RejectionReason.tooTired => context.l10n.smartWorkoutCTAReasonTooTired,
+      RejectionReason.noTime => context.l10n.smartWorkoutCTAReasonNoTime,
+      RejectionReason.injury => context.l10n.smartWorkoutCTAReasonInjury,
+      RejectionReason.notInMood => context.l10n.smartWorkoutCTAReasonNotInMood,
+      RejectionReason.other => context.l10n.smartWorkoutCTAReasonOther,
+    };
+  }
 }

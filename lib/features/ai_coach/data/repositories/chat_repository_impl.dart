@@ -64,6 +64,7 @@ class ChatRepositoryImpl implements ChatRepository {
   Stream<Either<Failure, AIMessage>> sendMessage({
     required String message,
     required String userId,
+    String? userName,
     String? systemPrompt,
   }) async* {
     try {
@@ -128,10 +129,11 @@ class ChatRepositoryImpl implements ChatRepository {
         debugPrint('💬 [ChatBot] Using locale: $localeCode (from platform: ${platformLocale.toString()})');
       }
 
-      // TODO: Fetch username from user profile provider
+      // Use provided userName or fallback to generic name
+      final displayName = userName ?? 'GymBro';
       final userContext = {
-        'username': 'User', // TODO: Get real name from auth/profile
-        'locale': localeCode, // ✅ FIXED: Now uses real locale!
+        'username': displayName,
+        'locale': localeCode,
       };
 
       // 3. Stream bot response (use sanitized message for bot prompt)

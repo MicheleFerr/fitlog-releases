@@ -29,6 +29,26 @@ class LiveActivityService {
   }) async {
     // TODO: Implement live activity RPE confirmation
   }
+
+  Future<String?> showRPEInterface({
+    required String exerciseName,
+    required int targetReps,
+    required double weight,
+    required int currentSet,
+    required int totalSets,
+    required String workoutName,
+  }) async {
+    // TODO: Implement live activity RPE interface
+    return 'test_activity_id';
+  }
+
+  void setupRPECallbacks({
+    required Function(int actualReps, int rpe, String? notes) onRPEConfirmed,
+    required Function() onRPECancelled,
+    required Function(int newReps) onRepsModified,
+  }) {
+    // TODO: Implement RPE callbacks
+  }
 }
 
 // ============================================================================

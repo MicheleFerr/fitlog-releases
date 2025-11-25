@@ -36,7 +36,7 @@ class PRTimelineWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.emoji_events,
                   color: context.colors.warning,
                   size: 24,
@@ -128,7 +128,7 @@ class PRTimelineWidget extends StatelessWidget {
                     color: context.colors.warning,
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: const Text(
+                  child: Text(
                     'NEW',
                     style: TextStyle(
                       fontSize: 8,
@@ -167,14 +167,14 @@ class PRTimelineWidget extends StatelessWidget {
               ),
               if (pr.isSignificant) ...[
                 const SizedBox(width: 4),
-                const Icon(
+                Icon(
                   Icons.trending_up,
                   size: 12,
                   color: context.colors.success,
                 ),
                 Text(
                   '+${pr.improvementPercentage.toStringAsFixed(1)}%',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     color: context.colors.success,
                     fontWeight: FontWeight.bold,

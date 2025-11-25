@@ -311,7 +311,7 @@ class WorkoutComparisonWidget extends ConsumerWidget {
   String _formatComparisonDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return l10n.today;
     } else if (difference == 1) {
@@ -320,10 +320,10 @@ class WorkoutComparisonWidget extends ConsumerWidget {
       return l10n.daysAgo(difference);
     } else if (difference < 30) {
       final weeks = (difference / 7).floor();
-      return l10n.weeksAgo(weeks.toString());
+      return l10n.weeksAgo(weeks);
     } else {
       final months = (difference / 30).floor();
-      return l10n.monthsAgo(months.toString());
+      return l10n.monthsAgo(months);
     }
   }
 }
@@ -666,7 +666,7 @@ class DetailedWorkoutComparison extends ConsumerWidget {
   String _formatComparisonDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return l10n.today;
     } else if (difference == 1) {
@@ -675,10 +675,10 @@ class DetailedWorkoutComparison extends ConsumerWidget {
       return l10n.daysAgo(difference);
     } else if (difference < 30) {
       final weeks = (difference / 7).floor();
-      return l10n.weeksAgo(weeks.toString());
+      return l10n.weeksAgo(weeks);
     } else {
       final months = (difference / 30).floor();
-      return l10n.monthsAgo(months.toString());
+      return l10n.monthsAgo(months);
     }
   }
 }

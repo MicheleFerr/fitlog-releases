@@ -466,7 +466,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   Color _getRpeColor(int rpe) {
     if (rpe <= 4) return context.colors.success;
     if (rpe <= 6) return context.colors.success;
-    if (rpe <= 7) return context.colors.warning[700]!;
+    if (rpe <= 7) return context.colors.warning;
     if (rpe <= 8) return context.colors.secondary;
     if (rpe <= 9) return context.colors.warning;
     return context.colors.error;

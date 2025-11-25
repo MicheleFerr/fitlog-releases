@@ -21,20 +21,28 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_analytics.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_analytics_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+// ROUTINE FEATURE DISABLED - v2.0 API migration pending
+// import 'package:gymbro_flutter_new/features/routine/domain/entities/routine_analytics.dart';
+// import 'package:gymbro_flutter_new/features/routine/presentation/providers/routine_analytics_provider.dart';
+// import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart'; // Unused - routine disabled
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+// import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'; // Unused - routine disabled
+// import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart'; // Unused - routine disabled
+// import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart'; // Unused - routine disabled
 
 /// Tab displaying routine-specific analytics
+///
+/// ⚠️ ROUTINE FEATURE DISABLED - v2.0 API migration pending
+/// This tab shows a placeholder until routine v2.0 is ready
 class AnalyticsRoutineTab extends ConsumerWidget {
   const AnalyticsRoutineTab({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // STUB: Show coming soon screen instead of routine analytics
+    return _buildComingSoonView(context);
+
+    /* ORIGINAL IMPLEMENTATION - Disabled until routine v2.0 ready
     final analyticsAsync = ref.watch(activeRoutineAnalyticsProvider);
 
     return analyticsAsync.when(
@@ -50,8 +58,70 @@ class AnalyticsRoutineTab extends ConsumerWidget {
       ),
       error: (error, stack) => _buildErrorView(context, error.toString()),
     );
+    */
   }
 
+  /// Coming Soon placeholder for routine analytics
+  Widget _buildComingSoonView(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: context.colors.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                AppIcons.calendarMonth,
+                size: 64,
+                color: context.colors.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'Routine Analytics',
+              style: context.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Coming Soon',
+              style: context.textTheme.titleLarge?.copyWith(
+                color: context.colors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'The routine feature is being upgraded to v2.0 with improved functionality and better analytics.',
+              style: context.textTheme.bodyLarge?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Stay tuned for updates!',
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* DISABLED - Routine feature temporarily disabled
   Widget _buildNoActiveRoutineView(BuildContext context) {
     return Center(
       child: Padding(
@@ -96,7 +166,9 @@ class AnalyticsRoutineTab extends ConsumerWidget {
       ),
     );
   }
+  */
 
+  /* DISABLED - Routine feature temporarily disabled
   Widget _buildErrorView(BuildContext context, String error) {
     return Center(
       child: Padding(
@@ -131,7 +203,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildRoutineAnalytics(
     BuildContext context,
-    RoutineAnalyticsState analytics,
+    dynamic analytics, // RoutineAnalyticsState - type disabled
   ) {
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -179,7 +251,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildRoutineHeader(
     BuildContext context,
-    RoutineAnalyticsState analytics,
+    dynamic analytics, // RoutineAnalyticsState - type disabled
   ) {
     return Card(
       child: Padding(
@@ -227,7 +299,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildKPICards(
     BuildContext context,
-    RoutineAdherenceMetrics metrics,
+    dynamic metrics, // RoutineAdherenceMetrics - type disabled
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,7 +415,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildStreakCards(
     BuildContext context,
-    RoutineAdherenceMetrics metrics,
+    dynamic metrics, // RoutineAdherenceMetrics - type disabled
   ) {
     return Row(
       children: [
@@ -416,7 +488,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildInsightsSection(
     BuildContext context,
-    List<RoutineInsight> insights,
+    List<dynamic> insights, // List<RoutineInsight> - type disabled
   ) {
     // Show top 3 insights only
     final topInsights = insights.take(3).toList();
@@ -436,7 +508,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildInsightCard(BuildContext context, RoutineInsight insight) {
+  Widget _buildInsightCard(BuildContext context, dynamic insight) { // RoutineInsight - type disabled
     final bgColor = insight.isPositive
         ? context.colors.primaryContainer
         : context.colors.errorContainer;
@@ -567,7 +639,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildDayOfWeekPatterns(
     BuildContext context,
-    List<DayOfWeekPattern> patterns,
+    List<dynamic> patterns, // List<DayOfWeekPattern> - type disabled
   ) {
     return Card(
       child: Padding(
@@ -599,7 +671,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildDayOfWeekBar(BuildContext context, DayOfWeekPattern pattern) {
+  Widget _buildDayOfWeekBar(BuildContext context, dynamic pattern) { // DayOfWeekPattern - type disabled
     final dayName = _getDayName(pattern.dayOfWeek);
 
     return Padding(
@@ -636,7 +708,7 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Widget _buildWeeklyTrend(
     BuildContext context,
-    List<WeeklyAdherenceSummary> summaries,
+    List<dynamic> summaries, // List<WeeklyAdherenceSummary> - type disabled
   ) {
     return Card(
       child: Padding(
@@ -713,4 +785,5 @@ class AnalyticsRoutineTab extends ConsumerWidget {
         return '';
     }
   }
+  */ // End of disabled routine analytics methods
 }

@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget to display sync status for premium users
 class SyncStatusCard extends ConsumerWidget {
@@ -172,17 +171,21 @@ class SyncStatusCard extends ConsumerWidget {
                     onPressed: () async {
                       // Export data
                       try {
-                        final data = await ref
+                        await ref
                             .read(syncStatusProvider.notifier)
                             .exportData();
                         // TODO: Save to file and share
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.dataExported)),
-                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(l10n.dataExported)),
+                          );
+                        }
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.exportFailedError(error: e.toString()))),
-                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(l10n.exportFailedError(e.toString()))),
+                          );
+                        }
                       }
                     },
                     icon: const Icon(Icons.file_download),
