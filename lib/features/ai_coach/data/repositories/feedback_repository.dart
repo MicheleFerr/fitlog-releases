@@ -7,6 +7,7 @@
 /// Feedback Repository - Manages user feedback on AI insights
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/feedback_data.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_feedback.dart';
@@ -85,12 +86,14 @@ class FeedbackRepository {
         );
 
         // Submit to unified repository (fire and forget, don't block)
-        _unifiedRepository!.submitFeedback(unifiedFeedback).then(
+        // ignore: unawaited_futures
+        _unifiedRepository.submitFeedback(unifiedFeedback).then(
           (result) => result.fold(
             (failure) {
               // Log error but don't throw (backward compatibility)
-              // ignore: avoid_print
-              print('⚠️ AI feedback to unified system failed: ${failure.message}');
+              if (kDebugMode) {
+                debugPrint('⚠️ AI feedback to unified system failed: ${failure.message}');
+              }
             },
             (_) {
               // Success - no action needed

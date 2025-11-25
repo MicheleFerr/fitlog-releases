@@ -368,6 +368,15 @@ Prima di ogni modifica, verifica:
 - [ ] ✅ Autenticazione controllata se usa Firebase
 - [ ] ✅ Platform-specific: `Platform.isIOS` check prima di iOS-only code
 
+### 🎯 Single Source of Truth (CRITICO - Vedi REGOLA #15)
+- [ ] ✅ **Cercato file simili** prima di creare nuovo (`grep -r "{nome}" lib/`)
+- [ ] ✅ **Nome classe UNICO** in tutto il codebase
+- [ ] ✅ **Repository estende BaseHybridRepository** (se nuovo repo)
+- [ ] ✅ **Provider THIN** (logica nel Service, non nel Provider)
+- [ ] ✅ **DataSource pattern** (repository NON tocca Firestore diretto)
+- [ ] ✅ **Utility in shared/** se usata da 2+ feature
+- [ ] ✅ **Import canonico** per entità condivise (versione in `shared/`)
+
 ### 🏗️ iOS Build Compliance (CRITICO - Bloccato da pre-commit hook)
 - [ ] ❌ **NEVER `const` with `context.l10n`** (CRITICAL - blocks commit)
 - [ ] ❌ **NO `context.l10n` in providers** (use hardcoded strings)
@@ -1559,6 +1568,248 @@ Version changes auto-update CONTEXT.md milestone table:
 |-----------|---------|--------|--------------|--------------|
 | M1 | Analytics | ✅ Complete | v1.2 | 2025-01-15 |
 | M2 | Dashboard | 🔄 In Progress | v1.1 | 2025-01-15 |
+```
+
+---
+
+## 🎯 REGOLA #15: SINGLE SOURCE OF TRUTH - MANTRA ANTI-DUPLICAZIONE (OBBLIGATORIO)
+
+> **⚠️ CRITICO**: Questa regola è il risultato dell'analisi del codebase che ha rivelato **125+ file duplicati** e **~20,000+ LOC** con violazioni del principio Single Source of Truth. Ogni modifica DEVE rispettare questi mantra.
+
+### 🧘 I 10 MANTRA ANTI-DUPLICAZIONE
+
+**Prima di scrivere QUALSIASI codice, recita questi mantra:**
+
+#### MANTRA 1: CERCA PRIMA DI CREARE
+```
+🔍 "Prima di creare un nuovo file, CERCO se esiste già qualcosa di simile"
+```
+**Azione OBBLIGATORIA prima di creare:**
+- Repository: `grep -r "Repository" lib/features/*/data/repositories/`
+- Provider: `grep -r "Provider\|Notifier" lib/features/*/presentation/providers/`
+- Service: `grep -r "Service" lib/features/*/domain/services/ lib/core/services/`
+- Entity: `grep -r "class.*{" lib/features/*/domain/entities/`
+
+#### MANTRA 2: UN'ENTITÀ = UN FILE
+```
+📦 "Ogni entità ha UNA SOLA definizione in UN SOLO file"
+```
+**Violazioni comuni da evitare:**
+- ❌ `Exercise` in `workout/entities/` E `exercise_database/entities/`
+- ❌ `Template` in 3 feature diverse
+- ✅ Entità condivise vanno in `lib/shared/domain/entities/`
+
+#### MANTRA 3: UN REPOSITORY PER ENTITÀ
+```
+🏛️ "Ogni entità ha UN SOLO repository che la gestisce"
+```
+**Pattern corretto:**
+```
+lib/features/{feature}/data/repositories/
+└── {entity}_repository_impl.dart  ← UNO SOLO!
+```
+**Se serve accesso da altra feature:** Usa dependency injection, NON duplicare repository
+
+#### MANTRA 4: PROVIDER THIN, SERVICE FAT
+```
+⚖️ "I Provider sono THIN (sottili), i Service contengono la logica"
+```
+**Pattern corretto:**
+```dart
+// ✅ Provider sottile - solo stato e coordinamento
+final workoutProvider = StateNotifierProvider<WorkoutNotifier, WorkoutState>(...);
+
+// ✅ Logica nel service
+class WorkoutService {
+  Future<void> calculateMetrics() { /* logica qui */ }
+}
+```
+**Evita:** Provider con 500+ righe di business logic
+
+#### MANTRA 5: ESTENDI BASEHIBRIDREPOSITORY
+```
+🔗 "Ogni repository DEVE estendere BaseHybridRepository per sync automatico"
+```
+**File base:** `lib/core/data/repositories/base_hybrid_repository.dart`
+```dart
+// ✅ CORRETTO
+class WorkoutRepositoryImpl extends BaseHybridRepository<Workout>
+    implements WorkoutRepository { ... }
+
+// ❌ SBAGLIATO
+class WorkoutRepositoryImpl implements WorkoutRepository { ... }
+```
+
+#### MANTRA 6: NOMI UNIVOCI, MAI COLLISIONI
+```
+🏷️ "Ogni classe ha un nome UNICO in tutto il codebase"
+```
+**Naming convention:**
+| Tipo | Pattern | Esempio |
+|------|---------|---------|
+| Entity | `{Nome}` | `Workout`, `Exercise` |
+| Repository | `{Feature}{Nome}Repository` | `WorkoutExerciseRepository` |
+| Provider | `{feature}{nome}Provider` | `workoutAnalyticsProvider` |
+| Service | `{Feature}{Azione}Service` | `WorkoutExportService` |
+
+**Evita:** 3 classi `TemplateRepository` in 3 folder diversi!
+
+#### MANTRA 7: DATASOURCE PATTERN
+```
+📂 "Repository NON tocca Firestore/Hive direttamente"
+```
+**Layering corretto:**
+```
+Repository → DataSource → Firestore/Hive
+```
+```dart
+// ✅ CORRETTO
+class WorkoutRepositoryImpl {
+  final WorkoutDataSource _dataSource;
+  Future<void> save(Workout w) => _dataSource.save(w);
+}
+
+// ❌ SBAGLIATO
+class WorkoutRepositoryImpl {
+  final FirebaseFirestore _firestore;
+  Future<void> save(Workout w) => _firestore.collection('...').set(...);
+}
+```
+
+#### MANTRA 8: UTILITY IN SHARED
+```
+🛠️ "Utility/Helper usati da 2+ feature vanno in lib/shared/"
+```
+**Struttura:**
+```
+lib/shared/
+├── domain/services/      ← Business logic condivisa
+├── utils/                ← Utility pure (parsing, formatting)
+├── presentation/
+│   ├── extensions/       ← BuildContext extensions (UNO SOLO!)
+│   └── widgets/          ← Widget condivisi
+└── data/mappers/         ← Mapper entità
+```
+
+#### MANTRA 9: VERIFICA IMPORTS
+```
+🔎 "Prima di usare una classe, verifico di importare la versione CANONICA"
+```
+**Problema comune:**
+```dart
+// ❌ 3 import diversi per "stessa" classe
+import '.../workout/entities/exercise.dart';        // v1
+import '.../exercise_database/entities/exercise.dart'; // v2
+import '.../shared/entities/exercise.dart';         // v3
+```
+**Soluzione:** Usa SEMPRE la versione in `shared/` se esiste
+
+#### MANTRA 10: CONSOLIDA, NON DUPLICARE
+```
+🔄 "Se devo modificare logica esistente, CONSOLIDO invece di creare parallelo"
+```
+**Scenario tipico:**
+```
+Richiesta: "Aggiungi feature X al workout provider"
+         ↓
+❌ SBAGLIATO: Creo nuovo "EnhancedWorkoutProvider"
+✅ CORRETTO: Modifico WorkoutProvider esistente
+```
+
+---
+
+### 📋 CHECKLIST PRE-CREAZIONE FILE (OBBLIGATORIA)
+
+**Prima di creare QUALSIASI nuovo file .dart:**
+
+```
+STOP! Rispondi a queste domande:
+
+□ 1. Ho cercato file simili nel codebase?
+     → grep -r "{nome}" lib/
+
+□ 2. Esiste già un repository/provider/service per questa entità?
+     → Se sì: ESTENDI o MODIFICA, non duplicare
+
+□ 3. Il nome della classe è UNICO in tutto il progetto?
+     → grep -r "class {NomeClasse}" lib/
+
+□ 4. Se è un repository, estende BaseHybridRepository?
+     → Se no: DEVE estenderlo
+
+□ 5. Se è utility/helper, è usato da 2+ feature?
+     → Se sì: Va in lib/shared/
+
+□ 6. Se è un provider, la logica è nel Service associato?
+     → Provider THIN, Service FAT
+
+□ 7. C'è già un DataSource per questo storage?
+     → Repository NON tocca Firestore diretto
+```
+
+---
+
+### 🚨 FONTI DI VERITÀ CANONICHE (Single Source of Truth)
+
+| Dominio | File Canonico | NON DUPLICARE |
+|---------|---------------|---------------|
+| **Exercise entity** | `lib/shared/domain/entities/exercise.dart` | Mai creare altra classe Exercise |
+| **Workout entity** | `lib/features/workout/domain/entities/workout.dart` | Una sola definizione |
+| **User profile** | `unifiedUserProfileProvider` | Mai creare altri user provider |
+| **Analytics** | `UnifiedAnalyticsProvider` (da creare) | Consolidare 8 provider esistenti |
+| **Achievement** | `lib/features/achievements/` (da creare) | Consolidare 3 repo esistenti |
+| **Feedback** | `UnifiedFeedbackRepository` | Completare migrazione |
+| **Logger** | `UnifiedLogger` (da creare) | Consolidare 5 logger |
+| **Input validation** | `UnifiedInputValidator` (da creare) | Consolidare 2 validator |
+| **BuildContext ext** | `lib/shared/presentation/extensions/build_context_extensions.dart` | UNO SOLO! |
+
+---
+
+### 🔴 VIOLAZIONI CHE BLOCCANO REVIEW
+
+Claude DEVE rifiutare/segnalare codice che:
+
+1. **Crea nuovo repository** per entità che ne ha già uno
+2. **Crea nuovo provider** con nome simile a esistente
+3. **Definisce classe** con nome già usato altrove
+4. **Non estende BaseHybridRepository** (per nuovi repository)
+5. **Importa versione non-canonica** di entità condivisa
+6. **Duplica utility** già presente in `shared/`
+7. **Accede Firestore/Hive direttamente** da repository (senza DataSource)
+
+---
+
+### 📊 COMANDI UTILI PER VERIFICA DUPLICAZIONI
+
+```bash
+# Trova tutti i repository
+find lib -name "*_repository*.dart" | sort
+
+# Trova tutti i provider
+find lib -name "*_provider*.dart" | sort
+
+# Trova classi con stesso nome
+grep -rh "^class " lib/ | sort | uniq -d
+
+# Trova import duplicati per stessa entità
+grep -r "import.*exercise.dart" lib/ | grep -v "test"
+
+# Trova repository che non estendono Base
+grep -rL "extends.*BaseHybrid\|extends.*OptimizedBase" lib/features/*/data/repositories/*_impl.dart
+```
+
+---
+
+### 🎯 REGOLA D'ORO
+
+```
+╔════════════════════════════════════════════════════════════════╗
+║  "PRIMA DI CREARE, CERCA. PRIMA DI DUPLICARE, CONSOLIDA."     ║
+║                                                                 ║
+║  Se esiste già qualcosa di simile → ESTENDI o MODIFICA        ║
+║  Se serve in 2+ feature → SPOSTA in shared/                   ║
+║  Se è nuovo → VERIFICA naming univoco + pattern corretto      ║
+╚════════════════════════════════════════════════════════════════╝
 ```
 
 ---

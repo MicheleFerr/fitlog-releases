@@ -41,6 +41,7 @@
 /// ```
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/models/exercise_history_model.dart';
@@ -52,17 +53,17 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 /// Analytics repository implementation with Firestore + Hive cache
 class AnalyticsRepositoryImpl implements AnalyticsRepository {
-  final FirebaseFirestore _firestore;
-  final Box<Map<dynamic, dynamic>> _cacheBox;
-
-  /// Cache TTL: 5 minutes
-  static const _cacheTTL = Duration(minutes: 5);
 
   AnalyticsRepositoryImpl({
     required FirebaseFirestore firestore,
     required Box<Map<dynamic, dynamic>> cacheBox,
   })  : _firestore = firestore,
         _cacheBox = cacheBox;
+  final FirebaseFirestore _firestore;
+  final Box<Map<dynamic, dynamic>> _cacheBox;
+
+  /// Cache TTL: 5 minutes
+  static const _cacheTTL = Duration(minutes: 5);
 
   /// Get all exercise history for a user with real-time sync
   ///
@@ -84,7 +85,9 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     String userId,
   ) {
     try {
-      print('📊 [ANALYTICS] Subscribing to analytics stream for user: $userId');
+      if (kDebugMode) {
+        debugPrint('📊 [ANALYTICS] Subscribing to analytics stream for user: $userId');
+      }
 
       return _firestore
           .collection('users')
@@ -93,12 +96,13 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           .snapshots()
           .map((snapshot) {
         try {
-          print('📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents');
-
-          if (snapshot.docs.isEmpty) {
-            print('⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.');
-          } else {
-            print('📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}');
+          if (kDebugMode) {
+            debugPrint('📊 [ANALYTICS] Received snapshot: ${snapshot.docs.length} documents');
+            if (snapshot.docs.isEmpty) {
+              debugPrint('⚠️ [ANALYTICS] Empty analytics collection! Run migration to populate.');
+            } else {
+              debugPrint('📊 [ANALYTICS] Exercises found: ${snapshot.docs.map((d) => d.id).join(", ")}');
+            }
           }
 
           final histories = snapshot.docs
@@ -108,16 +112,22 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
           // Sort by exercise name alphabetically
           histories.sort((a, b) => a.exerciseName.compareTo(b.exerciseName));
 
-          print('✅ [ANALYTICS] Returning ${histories.length} exercise histories');
+          if (kDebugMode) {
+            debugPrint('✅ [ANALYTICS] Returning ${histories.length} exercise histories');
+          }
 
           return Right(histories);
         } catch (e) {
-          print('❌ [ANALYTICS] Parse error: $e');
+          if (kDebugMode) {
+            debugPrint('❌ [ANALYTICS] Parse error: $e');
+          }
           return Left(CacheFailure( 'Failed to parse analytics: $e'));
         }
       });
     } catch (e) {
-      print('❌ [ANALYTICS] Stream error: $e');
+      if (kDebugMode) {
+        debugPrint('❌ [ANALYTICS] Stream error: $e');
+      }
       return Stream.value(
         Left(ServerFailure( 'Failed to fetch analytics: $e')),
       );
@@ -309,6 +319,7 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   ///   ),
   /// );
   /// ```
+  @override
   Future<Either<Failure, void>> updateExerciseHistory({
     required String userId,
     required String exerciseName,

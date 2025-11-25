@@ -14,6 +14,7 @@
 library;
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,12 +90,13 @@ class AnalyticsFeedbackRepository {
           );
 
           // Submit to unified repository (fire and forget, don't block)
-          _unifiedRepository!.submitFeedback(unifiedFeedback).then(
+          _unifiedRepository.submitFeedback(unifiedFeedback).then(
             (result) => result.fold(
               (failure) {
                 // Log error but don't throw (backward compatibility)
-                // ignore: avoid_print
-                print('⚠️ Analytics feedback to unified system failed: ${failure.message}');
+                if (kDebugMode) {
+                  debugPrint('⚠️ Analytics feedback to unified system failed: ${failure.message}');
+                }
               },
               (_) {
                 // Success - no action needed
