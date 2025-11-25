@@ -4,9 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WeeklyGoalsWidget extends ConsumerWidget {
   
@@ -80,14 +77,14 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          AppIcons.flag,
+                          Icons.flag,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        context.l10n.goal,
+                        'Obiettivo',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -126,9 +123,9 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    count >= goal ? context.l10n.goalAchieved :
-                    count == 0 ? context.l10n.startFirstWorkout :
-                    context.l10n.moreWorkoutsRemaining(goal - count),
+                    count >= goal ? 'Obiettivo raggiunto! 🎉' :
+                    count == 0 ? 'Inizia il tuo primo workout' :
+                    'Ancora ${goal - count} workout',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: count >= goal ? theme.colorScheme.primary :
                              theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -197,7 +194,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
-                          AppIcons.flag,
+                          Icons.flag,
                           color: theme.colorScheme.onPrimary,
                           size: 24,
                         ),
@@ -208,13 +205,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              context.l10n.weeklyGoal,
+                              'Obiettivo Settimanale',
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              context.l10n.workoutsCount(count, goal),
+                              '$count / $goal workout',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
@@ -230,7 +227,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            context.l10n.completedCheckmark,
+                            '✓ Completato',
                             style: TextStyle(
                               color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold,
@@ -268,7 +265,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                             child: Center(
                               child: hasWorkout
                                   ? Icon(
-                                      AppIcons.check,
+                                      Icons.check,
                                       color: theme.colorScheme.onPrimary,
                                       size: 18,
                                     )
@@ -311,7 +308,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              context.l10n.progress,
+                              'Progresso',
                               style: theme.textTheme.bodyMedium,
                             ),
                             Text(
@@ -363,7 +360,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: DecoratedBox(
+      child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -397,7 +394,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       ],
                     ),
                     child: Icon(
-                      AppIcons.trackChanges,
+                      Icons.track_changes,
                       color: theme.colorScheme.onPrimary,
                       size: 28,
                     ),
@@ -408,13 +405,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          context.l10n.goalsAndTips,
+                          'Obiettivi & Suggerimenti',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          context.l10n.personalizedWeeklyPlan,
+                          'Piano settimanale personalizzato',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -441,30 +438,30 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: AppIcons.workout,
-                              label: context.l10n.completedLabel,
+                              icon: Icons.fitness_center,
+                              label: 'Completati',
                               value: '$count',
-                              color: context.colors.primary,
+                              color: Colors.blue,
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: AppIcons.flag,
-                              label: context.l10n.goalLabel,
+                              icon: Icons.flag,
+                              label: 'Obiettivo',
                               value: '$goal',
-                              color: context.colors.success,
+                              color: Colors.green,
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: _buildGoalCard(
                               context,
-                              icon: AppIcons.calendar,
-                              label: context.l10n.daysRemaining,
+                              icon: Icons.calendar_today,
+                              label: 'Giorni rimasti',
                               value: '${7 - DateTime.now().weekday}',
-                              color: context.colors.secondary,
+                              color: Colors.orange,
                             ),
                           ),
                         ],
@@ -487,13 +484,13 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                               Row(
                                 children: [
                                   Icon(
-                                    AppIcons.tip,
+                                    Icons.lightbulb_outline,
                                     color: theme.colorScheme.primary,
                                     size: 20,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    context.l10n.suggestionLabel,
+                                    'Suggerimento',
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       color: theme.colorScheme.primary,
                                       fontWeight: FontWeight.bold,
@@ -501,9 +498,9 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
-                                _getSuggestion(context, count, goal - count),
+                                _getSuggestion(count, goal - count),
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -515,36 +512,36 @@ class WeeklyGoalsWidget extends ConsumerWidget {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                context.colors.success.withValues(alpha: 0.1),
-                                context.colors.success.withValues(alpha: 0.05),
+                                Colors.green.withValues(alpha: 0.1),
+                                Colors.green.withValues(alpha: 0.05),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: context.colors.success.withValues(alpha: 0.3),
+                              color: Colors.green.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
                             children: [
-                              Icon(
-                                AppIcons.emojiEvents,
-                                color: context.colors.success,
+                              const Icon(
+                                Icons.emoji_events,
+                                color: Colors.green,
                                 size: 32,
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      context.l10n.goalReached,
+                                      'Obiettivo Raggiunto!',
                                       style: theme.textTheme.titleMedium?.copyWith(
-                                        color: context.colors.success,
+                                        color: Colors.green,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Text(
-                                      context.l10n.greatWorkThisWeek,
+                                      'Ottimo lavoro questa settimana!',
                                       style: theme.textTheme.bodySmall?.copyWith(
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                       ),
@@ -624,7 +621,7 @@ class WeeklyGoalsWidget extends ConsumerWidget {
         ),
         child: Center(
           child: Text(
-            context.l10n.loginToSeeGoals,
+            'Accedi per vedere i tuoi obiettivi',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -710,15 +707,15 @@ class WeeklyGoalsWidget extends ConsumerWidget {
     return workoutDays;
   }
 
-  String _getSuggestion(BuildContext context, int completed, int remaining) {
+  String _getSuggestion(int completed, int remaining) {
     if (completed == 0) {
-      return context.l10n.suggestionStartToday;
+      return 'Inizia oggi il tuo primo workout della settimana! Un buon inizio è metà dell\'opera.';
     } else if (remaining == 1) {
-      return context.l10n.suggestionOneMore;
+      return 'Ancora un workout per raggiungere il tuo obiettivo! Puoi farcela!';
     } else if (remaining == 2) {
-      return context.l10n.suggestionTwoMore(remaining);
+      return 'Ottimo progresso! Programma i prossimi $remaining workout nei giorni rimanenti.';
     } else {
-      return context.l10n.suggestionKeepGoing(remaining);
+      return 'Continua con costanza! Ti mancano $remaining workout per completare l\'obiettivo settimanale.';
     }
   }
 }

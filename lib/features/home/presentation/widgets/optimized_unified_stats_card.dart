@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/optimized_progress_provider.dart';
 import 'package:gymbro_flutter_new/features/home/providers/achievement_xp_provider.dart';
 import 'package:gymbro_flutter_new/features/home/utils/xp_calculator.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// OPTIMIZED VERSION - Fixed animation loops and excessive rebuilds
@@ -573,7 +571,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
           ),
         ),
         
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         
         // Stats Grid
         Row(
@@ -587,7 +585,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 color: context.colors.primary,
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,
@@ -597,7 +595,7 @@ class _OptimizedUnifiedStatsCardState extends ConsumerState<OptimizedUnifiedStat
                 color: context.colors.secondary,
               ),
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Expanded(
               child: _buildStatItem(
                 context,

@@ -183,7 +183,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
   @override
   Widget build(BuildContext context) {
-    final currentWorkout = ref.watch(currentWorkoutProvider);
+    // OPTIMIZED: Only watch if workout exists, not the entire workout object
+    final hasActiveWorkout = ref.watch(currentWorkoutProvider.select((w) => w != null));
+    final currentWorkout = hasActiveWorkout ? ref.watch(currentWorkoutProvider) : null;
     final l10n = AppLocalizations.of(context);
 
     // Note: FAB step removed from tour (was obscured by bottom sheet)
@@ -263,83 +265,6 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
 
                 // Primary CTA - Smart workout starter
                 SmartWorkoutCTA(key: smartWorkoutCardKey),
-                const SizedBox(height: 24),
-
-                // Routine Center Card (Flexible Multi-Period Routines)
-                Material(
-                  key: routineCenterCardKey,
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      context.goNamed('routine');
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Ink(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              AppIcons.eventNote,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  l10n.routineCenter,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  l10n.routineCenterDescription,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SemanticIcon(
-  icon: AppIcons.forwardIos,
-  semanticLabel: 'Forward ios',
-  size: AppIconSize.tiny,
-  color: Theme.of(context,
-).colorScheme.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 24),
 
                 // Community card - Coming Soon dialog
@@ -506,7 +431,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                               ),
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
 
                           // Reset Onboarding Button
                           FilledButton.tonal(
@@ -557,9 +482,9 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                       );
                     }
                   },
-                  child: const Icon(AppIcons.refresh, size: AppIconSize.small),
+                  child: Icon(AppIcons.refresh, size: AppIconSize.small),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 // Regular Quick Start
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),

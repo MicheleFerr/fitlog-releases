@@ -7,6 +7,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 // Use cached provider for better performance and correct workout counting
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/cached_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Debug logger for widget
 class _WidgetLogger {
@@ -73,11 +77,11 @@ class ProgressDashboard extends ConsumerWidget {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.red.withValues(alpha: 0.1),
-          border: Border.all(color: Colors.red),
+          color: context.colors.error.withValues(alpha: 0.1),
+          border: Border.all(color: context.colors.error),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text('ProgressDashboard Error: $e', style: const TextStyle(color: Colors.red)),
+        child: Text('ProgressDashboard Error: $e', style: TextStyle(color: context.colors.error)),
       );
     }
   }
@@ -191,10 +195,12 @@ class ProgressDashboard extends ConsumerWidget {
                   ],
                 ),
               ),
-              Icon(
-                AppIcons.forwardIos,
-                size: 16,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.5,
+),
               ),
             ],
           ),
@@ -253,7 +259,7 @@ class ProgressDashboard extends ConsumerWidget {
             height: 20,
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
           const SizedBox(height: 4),
@@ -331,7 +337,7 @@ class ProgressDashboard extends ConsumerWidget {
                 label: l10n.streak,
                 value: '${stats.currentStreak}',
                 subtitle: stats.currentStreak == 1 ? l10n.day : l10n.days,
-                color: _getStreakColor(stats.currentStreak, theme),
+                color: _getStreakColor(context, stats.currentStreak, theme),
                 onTap: () => _showStreakInfo(context),
               ),
             ),
@@ -495,10 +501,10 @@ class ProgressDashboard extends ConsumerWidget {
     );
   }
   
-  Color _getStreakColor(int streak, ThemeData theme) {
+  Color _getStreakColor(BuildContext context, int streak, ThemeData theme) {
     if (streak >= 7) return Colors.orange;
     if (streak >= 3) return theme.colorScheme.primary;
-    if (streak >= 1) return Colors.green;
+    if (streak >= 1) return context.colors.success;
     return theme.colorScheme.outline;
   }
   

@@ -14,6 +14,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exe
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Admin-only modal tester widget with collapsible sections
 class AdminModalTesterWidget extends ConsumerWidget {
@@ -53,10 +54,10 @@ class AdminModalTesterWidget extends ConsumerWidget {
                       isMainCollapsed ? AppIcons.expandMore : AppIcons.expandLess,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Icon(AppIcons.bugReport,
                       color: Theme.of(context).colorScheme.primary),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +100,7 @@ class AdminModalTesterWidget extends ConsumerWidget {
 
             // Collapsible content
             if (!isMainCollapsed) ...[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Test all workout modals to identify duplicates and determine which ones to keep',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -189,7 +190,10 @@ class AdminModalTesterWidget extends ConsumerWidget {
                   onPressed: () {
                     ref.read(debugSectionStatesProvider.notifier).collapseAll();
                   },
-                  icon: const Icon(AppIcons.unfoldLess),
+                  icon: const SemanticIcon(
+  icon: AppIcons.unfoldLess,
+  semanticLabel: 'Collapse',
+),
                   label: const Text('Collapse All Sections'),
                 ),
               ),
@@ -324,12 +328,12 @@ class _CollapsibleSection extends ConsumerWidget {
           onTap: () {
             ref.read(debugSectionStatesProvider.notifier).toggle(sectionId);
           },
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -339,7 +343,7 @@ class _CollapsibleSection extends ConsumerWidget {
                   size: 16,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -347,12 +351,12 @@ class _CollapsibleSection extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${children.length}',

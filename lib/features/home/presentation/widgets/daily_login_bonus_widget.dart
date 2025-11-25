@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/home/providers/daily_login_provider.
 import 'package:gymbro_flutter_new/features/home/domain/models/level_system.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class DailyLoginBonusWidget extends ConsumerWidget {
   const DailyLoginBonusWidget({super.key});
@@ -12,7 +11,9 @@ class DailyLoginBonusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final loginState = ref.watch(dailyLoginProvider);
+    // ⚡ OPTIMIZATION: Watch only specific properties instead of entire DailyLoginState
+    final bonusClaimedToday = ref.watch(dailyLoginProvider.select((s) => s.bonusClaimedToday));
+    final consecutiveDays = ref.watch(dailyLoginProvider.select((s) => s.consecutiveDays));
     final bonusInfo = ref.read(dailyLoginProvider.notifier).getBonusInfo();
     
     return Card(
@@ -25,7 +26,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
         ),
       ),
       child: InkWell(
-        onTap: loginState.bonusClaimedToday 
+        onTap: bonusClaimedToday 
           ? null 
           : () => _claimBonus(context, ref),
         borderRadius: BorderRadius.circular(16),
@@ -36,7 +37,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: loginState.bonusClaimedToday
+              colors: bonusClaimedToday
                 ? [
                     theme.colorScheme.surface,
                     theme.colorScheme.surface,
@@ -56,14 +57,14 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: loginState.bonusClaimedToday
+                    colors: bonusClaimedToday
                       ? [
                           theme.colorScheme.outline.withValues(alpha: 0.3),
                           theme.colorScheme.outline.withValues(alpha: 0.2),
                         ]
                       : [Colors.amber, Colors.orange],
                   ),
-                  boxShadow: loginState.bonusClaimedToday 
+                  boxShadow: bonusClaimedToday 
                     ? []
                     : [
                         BoxShadow(
@@ -74,7 +75,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       ],
                 ),
                 child: Icon(
-                  loginState.bonusClaimedToday 
+                  bonusClaimedToday 
                     ? AppIcons.complete
                     : AppIcons.gift,
                   color: context.colors.surface,
@@ -96,7 +97,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        if (loginState.consecutiveDays > 0)
+                        if (consecutiveDays > 0)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -107,7 +108,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              context.l10n.daysStreak(loginState.consecutiveDays),
+                              context.l10n.daysStreak(consecutiveDays),
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
@@ -118,7 +119,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    if (loginState.bonusClaimedToday) ...[
+                    if (bonusClaimedToday) ...[
                       Text(
                         context.l10n.todayBonusClaimed(bonusInfo.currentDayBonus),
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -152,7 +153,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                 ),
               ),
               // Visualizzazione progressione
-              if (!loginState.bonusClaimedToday)
+              if (!bonusClaimedToday)
                 Column(
                   children: [
                     const Icon(
@@ -209,12 +210,14 @@ class DailyLoginBonusWidget extends ConsumerWidget {
 // Widget per mostrare la progressione dei prossimi giorni
 class DailyLoginProgressionWidget extends ConsumerWidget {
   const DailyLoginProgressionWidget({super.key});
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final loginState = ref.watch(dailyLoginProvider);
-    final currentDay = loginState.consecutiveDays;
+    // ⚡ OPTIMIZATION: Watch only specific properties instead of entire DailyLoginState
+    final consecutiveDays = ref.watch(dailyLoginProvider.select((s) => s.consecutiveDays));
+    final bonusClaimedToday = ref.watch(dailyLoginProvider.select((s) => s.bonusClaimedToday));
+    final currentDay = consecutiveDays;
     
     // Mostra progressione dei prossimi 7 giorni
     final days = List.generate(7, (i) => i + 1);
@@ -243,7 +246,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
             children: days.map((day) {
               final xp = LevelSystem.calculateDailyLoginBonus(day);
               final isCompleted = day <= currentDay;
-              final isToday = day == currentDay && !loginState.bonusClaimedToday;
+              final isToday = day == currentDay && !bonusClaimedToday;
               final isFuture = day > currentDay;
               
               return Column(

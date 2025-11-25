@@ -11,7 +11,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rpe_sel
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/enhanced_add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_options_modal.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 
 /// Widget per testare tutti i modal identificati nell'analisi
@@ -31,9 +30,9 @@ class ModalTesterWidget extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(AppIcons.bugReport, 
+                Icon(Icons.bug_report, 
                   color: Theme.of(context).colorScheme.primary),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   '🧪 MODAL TESTER - Debug Mode',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -43,7 +42,7 @@ class ModalTesterWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Test all workout modals to identify duplicates and determine which ones to keep',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -405,7 +404,7 @@ class ModalTesterWidget extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🚧 $modalName - Need to implement test'),
-        backgroundColor: context.colors.secondary,
+        backgroundColor: Colors.orange,
       ),
     );
   }

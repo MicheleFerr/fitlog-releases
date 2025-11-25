@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class LevelInfoModal extends ConsumerWidget {
   
@@ -52,15 +49,15 @@ class LevelInfoModal extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        _getLevelColor(context,currentLevel),
-                        _getLevelColor(context,currentLevel).withValues(alpha: 0.7),
+                        _getLevelColor(currentLevel),
+                        _getLevelColor(currentLevel).withValues(alpha: 0.7),
                       ],
                     ),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     _getLevelIcon(currentLevel),
-                    color: context.colors.surface,
+                    color: Colors.white,
                     size: 28,
                   ),
                 ),
@@ -78,7 +75,7 @@ class LevelInfoModal extends ConsumerWidget {
                       Text(
                         '${l10n.currentLevel}: ${_getLevelName(currentLevel, l10n)}',
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: _getLevelColor(context,currentLevel),
+                          color: _getLevelColor(currentLevel),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -86,7 +83,7 @@ class LevelInfoModal extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -141,7 +138,7 @@ class LevelInfoModal extends ConsumerWidget {
                       value: currentXp / xpForNextLevel,
                       minHeight: 12,
                       backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-                      valueColor: AlwaysStoppedAnimation<Color>(_getLevelColor(context,currentLevel)),
+                      valueColor: AlwaysStoppedAnimation<Color>(_getLevelColor(currentLevel)),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -171,14 +168,14 @@ class LevelInfoModal extends ConsumerWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
                     color: isCurrentLevel
-                      ? _getLevelColor(context,level).withValues(alpha: 0.1)
+                      ? _getLevelColor(level).withValues(alpha: 0.1)
                       : isUnlocked
                         ? theme.colorScheme.surface
                         : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isCurrentLevel
-                        ? _getLevelColor(context,level)
+                        ? _getLevelColor(level)
                         : isUnlocked
                           ? theme.colorScheme.outline.withValues(alpha: 0.2)
                           : theme.colorScheme.outline.withValues(alpha: 0.1),
@@ -191,7 +188,7 @@ class LevelInfoModal extends ConsumerWidget {
                       height: 48,
                       decoration: BoxDecoration(
                         color: isUnlocked
-                          ? _getLevelColor(context,level).withValues(alpha: 0.2)
+                          ? _getLevelColor(level).withValues(alpha: 0.2)
                           : theme.colorScheme.onSurface.withValues(alpha: 0.05),
                         shape: BoxShape.circle,
                       ),
@@ -199,11 +196,11 @@ class LevelInfoModal extends ConsumerWidget {
                         child: isUnlocked
                           ? Icon(
                               _getLevelIcon(level),
-                              color: _getLevelColor(context,level),
+                              color: _getLevelColor(level),
                               size: 24,
                             )
                           : Icon(
-                              AppIcons.lockOutline,
+                              Icons.lock_outline,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                               size: 20,
                             ),
@@ -230,17 +227,17 @@ class LevelInfoModal extends ConsumerWidget {
                               : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         ..._getLevelBenefits(level, l10n).map((benefit) => 
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: Row(
                               children: [
                                 Icon(
-                                  isUnlocked ? AppIcons.complete : Icons.circle_outlined,
+                                  isUnlocked ? Icons.check_circle : Icons.circle_outlined,
                                   size: 16,
                                   color: isUnlocked
-                                    ? context.colors.success
+                                    ? Colors.green
                                     : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                                 ),
                                 const SizedBox(width: 8),
@@ -264,13 +261,13 @@ class LevelInfoModal extends ConsumerWidget {
                       ? Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: _getLevelColor(context,level),
+                            color: _getLevelColor(level),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             l10n.current,
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: context.colors.surface,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -286,20 +283,20 @@ class LevelInfoModal extends ConsumerWidget {
     );
   }
   
-  Color _getLevelColor(BuildContext context, int level) {
-    if (level <= 2) return context.colors.surfaceContainerHighest;
-    if (level <= 4) return context.colors.success;
-    if (level <= 6) return context.colors.primary;
-    if (level <= 8) return context.colors.tertiary;
-    return context.colors.secondary;
+  Color _getLevelColor(int level) {
+    if (level <= 2) return Colors.grey;
+    if (level <= 4) return Colors.green;
+    if (level <= 6) return Colors.blue;
+    if (level <= 8) return Colors.purple;
+    return Colors.orange;
   }
   
   IconData _getLevelIcon(int level) {
-    if (level <= 2) return AppIcons.workout;
-    if (level <= 4) return AppIcons.trendUp;
-    if (level <= 6) return AppIcons.star;
-    if (level <= 8) return AppIcons.achievement;
-    return AppIcons.diamond;
+    if (level <= 2) return Icons.fitness_center;
+    if (level <= 4) return Icons.trending_up;
+    if (level <= 6) return Icons.star;
+    if (level <= 8) return Icons.emoji_events;
+    return Icons.diamond;
   }
   
   String _getLevelName(int level, AppLocalizations l10n) {

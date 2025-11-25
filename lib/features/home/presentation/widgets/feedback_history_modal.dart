@@ -4,12 +4,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/home/presentation/providers/insight_feedback_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/entities/insight_feedback.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 /// Modal showing user's feedback history on AI Coach insights
 class FeedbackHistoryModal extends ConsumerWidget {
@@ -47,7 +41,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  AppIcons.history,
+                  Icons.history,
                   color: colorScheme.primary,
                   size: 28,
                 ),
@@ -71,23 +65,21 @@ class FeedbackHistoryModal extends ConsumerWidget {
                 }
                 return _buildFeedbackList(context, feedbackList, l10n, theme, colorScheme);
               },
-              loading: () => const Center(child: LoadingIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: colorScheme.error.withValues(alpha: 0.6,
-),
+                      Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: colorScheme.error.withValues(alpha: 0.6),
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        l10n.feedbackErrorLoading,
+                        'Error loading feedback: $error',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: colorScheme.error,
                         ),
@@ -115,12 +107,10 @@ class FeedbackHistoryModal extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SemanticIcon(
-  icon: AppIcons.feedbackOutlined,
-  semanticLabel: 'Feedback outlined',
-  size: AppIconSize.medium,
-  color: colorScheme.outline.withValues(alpha: 0.6,
-),
+          Icon(
+            Icons.feedback_outlined,
+            size: 80,
+            color: colorScheme.outline.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 24),
           Text(
@@ -139,7 +129,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 32),
+          const SizedBox(height: 32),
           // Illustrative icons showing how feedback works
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -147,25 +137,25 @@ class FeedbackHistoryModal extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: context.colors.success.withValues(alpha: 0.1),
+                  color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
-                  AppIcons.thumbUpOutlined,
-                  color: context.colors.success,
+                child: const Icon(
+                  Icons.thumb_up_outlined,
+                  color: Colors.green,
                   size: 32,
                 ),
               ),
-              SizedBox(width: 24),
+              const SizedBox(width: 24),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: context.colors.error.withValues(alpha: 0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
-                  AppIcons.thumbDownOutlined,
-                  color: context.colors.error,
+                child: const Icon(
+                  Icons.thumb_down_outlined,
+                  color: Colors.red,
                   size: 32,
                 ),
               ),
@@ -201,7 +191,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
     ColorScheme colorScheme,
   ) {
     final isHelpful = feedback.isHelpful;
-    final cardColor = isHelpful ? context.colors.success : context.colors.error;
+    final cardColor = isHelpful ? Colors.green : Colors.red;
     final formattedDate = DateFormat.yMd(Localizations.localeOf(context).toString())
         .add_Hm()
         .format(feedback.timestamp);
@@ -242,7 +232,7 @@ class FeedbackHistoryModal extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  isHelpful ? AppIcons.thumbUp : AppIcons.thumbDown,
+                  isHelpful ? Icons.thumb_up : Icons.thumb_down,
                   color: cardColor,
                   size: 20,
                 ),
@@ -283,12 +273,11 @@ class FeedbackHistoryModal extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SemanticIcon(
-  icon: AppIcons.ai,
-  semanticLabel: 'Ai',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary,
-),
+                Icon(
+                  Icons.psychology,
+                  size: 14,
+                  color: colorScheme.primary,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   '${l10n.feedbackOn}: $insightTypeDisplay',

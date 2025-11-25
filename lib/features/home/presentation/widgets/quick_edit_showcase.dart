@@ -4,6 +4,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_edit_overlay_v2.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class QuickEditShowcase extends ConsumerStatefulWidget {
   const QuickEditShowcase({super.key});
@@ -102,7 +105,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -155,7 +158,10 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
                     _lastEditedVersion = '';
                   });
                 },
-                icon: const Icon(AppIcons.refresh),
+                icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
                 tooltip: 'Reset demo data',
               ),
             ],
@@ -172,7 +178,12 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             ),
             child: Row(
               children: [
-                Icon(AppIcons.workout, size: 16, color: theme.colorScheme.primary),
+                SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                 const SizedBox(width: 8),
                 Text(
                   'Demo Set: ',
@@ -191,7 +202,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       'RPE ${_demoSet.rpe}',
@@ -220,7 +231,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             ),
             child: Row(
               children: [
-                const Icon(AppIcons.layers, color: Colors.purple, size: 24),
+                Icon(AppIcons.layers, color: Colors.purple, size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -253,7 +264,10 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: () => _showQuickEditVersion('v2'),
-              icon: const Icon(AppIcons.play),
+              icon: const SemanticIcon(
+  icon: AppIcons.play,
+  semanticLabel: 'Play',
+),
               label: const Text('Test QuickEdit V2'),
               style: FilledButton.styleFrom(
                 backgroundColor: Colors.purple,
@@ -268,21 +282,26 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
+                color: context.colors.success.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.green.withValues(alpha: 0.3),
+                  color: context.colors.success.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(AppIcons.complete, size: 16, color: Colors.green),
+                  SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.tiny,
+  color: context.colors.success,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Last saved with $_lastEditedVersion: ${_lastSavedSet!.weight}kg × ${_lastSavedSet!.reps} reps',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.green.shade700,
+                        color: context.colors.success,
                       ),
                     ),
                   ),

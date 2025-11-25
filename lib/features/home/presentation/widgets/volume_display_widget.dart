@@ -4,8 +4,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_details_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class VolumeDisplayWidget extends ConsumerWidget {
   
@@ -127,7 +127,10 @@ class VolumeDisplayWidget extends ConsumerWidget {
               ),
               if (showSettings)
                 IconButton(
-                  icon: const Icon(AppIcons.settings),
+                  icon: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                   onPressed: () => _showVolumeSettings(context, ref),
                   color: theme.colorScheme.primary,
                 ),
@@ -227,7 +230,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
               ],
             ),
             if (showSettings) ...[
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Icon(
                 AppIcons.arrowDropDown,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
@@ -255,7 +258,7 @@ class VolumeDisplayWidget extends ConsumerWidget {
           color: isPositiveTrend ? context.colors.success : context.colors.error,
           size: 16,
         ),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           '${isPositiveTrend ? '+' : ''}${trendPercentage.toStringAsFixed(1)}%',
           style: theme.textTheme.bodySmall?.copyWith(

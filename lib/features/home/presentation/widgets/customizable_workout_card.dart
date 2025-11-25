@@ -9,6 +9,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CustomizableWorkoutCard extends ConsumerStatefulWidget {
   const CustomizableWorkoutCard({super.key});
@@ -177,7 +178,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             color: Theme.of(context).colorScheme.primary,
                             size: 32,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             AppLocalizations.of(context).newWorkout,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -185,7 +186,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           templatesAsync.when(
                             data: (templates) {
                               if (preferredTemplateId != null) {
@@ -205,7 +206,7 @@ class _CustomizableWorkoutCardState extends ConsumerState<CustomizableWorkoutCar
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    SizedBox(height: 2),
+                                    const SizedBox(height: 2),
                                     Text(
                                       AppLocalizations.of(context).tapToStart,
                                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -300,7 +301,7 @@ class _CustomizationMenu extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Container(
             width: 40,
             height: 4,
@@ -309,7 +310,7 @@ class _CustomizationMenu extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -323,7 +324,10 @@ class _CustomizationMenu extends ConsumerWidget {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
@@ -331,12 +335,15 @@ class _CustomizationMenu extends ConsumerWidget {
           const Divider(),
           if (currentPreferredId != null)
             ListTile(
-              leading: const Icon(AppIcons.clear),
+              leading: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
               title: Text(AppLocalizations.of(context).removePreferredTemplate),
               subtitle: Text(AppLocalizations.of(context).startWithEmptyWorkout),
               onTap: () => onTemplateSelected(null),
             ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Flexible(
             child: templatesAsync.when(
               data: (templates) => ListView.builder(

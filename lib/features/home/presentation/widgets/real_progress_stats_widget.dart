@@ -4,8 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
   
@@ -68,7 +66,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      AppIcons.trendUp,
+                      Icons.trending_up,
                       color: theme.colorScheme.primary,
                       size: 20,
                     ),
@@ -100,19 +98,19 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       context,
                       label: 'Allenamenti',
                       value: '${frequencyStats['daysInLast30'] ?? 0}',
-                      icon: AppIcons.calendar,
+                      icon: Icons.calendar_today,
                     ),
                     _buildMiniStat(
                       context,
                       label: 'Media/settimana',
                       value: '${frequencyStats['avgPerWeek'] ?? 0}',
-                      icon: AppIcons.schedule,
+                      icon: Icons.schedule,
                     ),
                     _buildMiniStat(
                       context,
                       label: 'Streak',
                       value: '${frequencyStats['currentStreak'] ?? 0}',
-                      icon: AppIcons.streak,
+                      icon: Icons.local_fire_department,
                     ),
                   ],
                 ),
@@ -169,9 +167,9 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      AppIcons.analytics,
-                      color: context.colors.surface,
+                    child: const Icon(
+                      Icons.analytics,
+                      color: Colors.white,
                       size: 24,
                     ),
                   ),
@@ -198,7 +196,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: analyticsState.isLoading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : volumeData.isEmpty
                         ? _buildEmptyState(context)
                         : _buildWeeklyVolumeChart(context, volumeData),
@@ -225,7 +223,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: DecoratedBox(
+      child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -262,9 +260,9 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      AppIcons.insights,
-                      color: context.colors.surface,
+                    child: const Icon(
+                      Icons.insights,
+                      color: Colors.white,
                       size: 28,
                     ),
                   ),
@@ -293,7 +291,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               const SizedBox(height: 24),
               
               if (analyticsState.isLoading)
-                Center(child: CircularProgressIndicator())
+                const Center(child: CircularProgressIndicator())
               else if (analyticsState.activities.isEmpty)
                 _buildEmptyState(context)
               else ...[
@@ -303,32 +301,32 @@ class RealProgressStatsWidget extends ConsumerWidget {
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: AppIcons.workout,
+                        icon: Icons.fitness_center,
                         label: 'Allenamenti Totali',
                         value: '${analyticsState.activities.length}',
-                        color: context.colors.primary,
+                        color: Colors.blue,
                         subtitle: 'Dalla registrazione',
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: AppIcons.calendar,
+                        icon: Icons.calendar_today,
                         label: 'Questo Mese',
                         value: '${frequencyStats['daysInLast30'] ?? 0}',
-                        color: context.colors.secondary,
+                        color: Colors.orange,
                         subtitle: 'Giorni attivi',
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: _buildStatCard(
                         context,
-                        icon: AppIcons.streak,
+                        icon: Icons.local_fire_department,
                         label: 'Streak Attuale',
                         value: '${frequencyStats['currentStreak'] ?? 0}',
-                        color: context.colors.error,
+                        color: Colors.red,
                         subtitle: 'Giorni consecutivi',
                       ),
                     ),
@@ -485,7 +483,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
                   radius: spot.y > 0 ? 4 : 2,
-                  color: context.colors.surface,
+                  color: Colors.white,
                   strokeWidth: 2,
                   strokeColor: spot.y > 0 
                     ? theme.colorScheme.primary 
@@ -545,8 +543,8 @@ class RealProgressStatsWidget extends ConsumerWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toStringAsFixed(0)} kg',
-                TextStyle(
-                  color: context.colors.surface,
+                const TextStyle(
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -742,7 +740,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.workout,
+            Icons.fitness_center,
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
           ),

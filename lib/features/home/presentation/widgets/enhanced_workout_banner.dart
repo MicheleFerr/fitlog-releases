@@ -7,6 +7,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_template_cache_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Enhanced workout banner that shows active workout status
 class EnhancedWorkoutBanner extends ConsumerWidget {
@@ -121,7 +124,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16), // Apple HIG spacing
+            const SizedBox(height: 16), // Apple HIG spacing
             Row(
               children: [
                 Expanded(
@@ -275,7 +278,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 SnackBar(
                   content: Row(
                     children: [
-                      const Icon(AppIcons.deleteOutline, color: Colors.white),
+                      Icon(AppIcons.deleteOutline, color: context.colors.surface),
                       const SizedBox(width: 8),
                       Text(l10n.workoutDiscarded),
                     ],
@@ -283,12 +286,16 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                   backgroundColor: theme.colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               );
             },
-            icon: const Icon(AppIcons.deleteOutline, size: 20),
+            icon: const SemanticIcon(
+  icon: AppIcons.deleteOutline,
+  semanticLabel: 'Delete outline',
+  size: AppIconSize.small,
+),
             label: Text(l10n.discard),
             style: TextButton.styleFrom(
               foregroundColor: theme.colorScheme.error,
@@ -304,7 +311,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 SnackBar(
                   content: Row(
                     children: [
-                      const Icon(AppIcons.complete, color: Colors.white),
+                      Icon(AppIcons.complete, color: context.colors.surface),
                       const SizedBox(width: 8),
                       Text(l10n.workoutSavedSuccessfully),
                     ],
@@ -312,7 +319,7 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                   backgroundColor: theme.colorScheme.primary,
                   behavior: SnackBarBehavior.floating,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               );
@@ -321,7 +328,11 @@ class EnhancedWorkoutBanner extends ConsumerWidget {
                 ref.read(currentWorkoutProvider.notifier).clearWorkout();
               });
             },
-            icon: const Icon(AppIcons.save, size: 20),
+            icon: const SemanticIcon(
+  icon: AppIcons.save,
+  semanticLabel: 'Save',
+  size: AppIconSize.small,
+),
             label: Text(l10n.saveAndEnd),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
@@ -368,7 +379,7 @@ class _WorkoutStat extends StatelessWidget {
           height: 24,
           decoration: BoxDecoration(
             color: theme.colorScheme.onPrimary.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(6), // Apple HIG corner radius
+            borderRadius: BorderRadius.circular(8), // Apple HIG corner radius
           ),
           child: Icon(
             icon,

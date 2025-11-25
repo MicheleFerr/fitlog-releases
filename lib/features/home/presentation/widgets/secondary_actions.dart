@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_swap.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/gradient_action_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/pressable_card.dart';
 
 /// Secondary Actions widget for the optimized homepage - Minimal Flat Redesign
@@ -196,7 +195,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 size: AppAnimations.iconSizeMedium,
               ),
 
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Title
               Text(
@@ -210,7 +209,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
 
               // Subtitle
               Text(

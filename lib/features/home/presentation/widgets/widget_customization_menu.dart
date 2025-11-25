@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/home/providers/home_customization_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WidgetCustomizationMenu extends ConsumerWidget {
   const WidgetCustomizationMenu({super.key});
@@ -67,7 +69,10 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(AppIcons.close),
+                    icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -110,7 +115,10 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                         onPressed: () {
                           _showResetConfirmation(context, ref);
                         },
-                        icon: const Icon(AppIcons.restore),
+                        icon: const SemanticIcon(
+  icon: AppIcons.restore,
+  semanticLabel: 'Restore',
+),
                         label: Text(AppLocalizations.of(context).resetLayout),
                       ),
                     ),
@@ -118,7 +126,10 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(AppIcons.check),
+                        icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                         label: Text(AppLocalizations.of(context).fatto),
                       ),
                     ),
@@ -139,17 +150,19 @@ class WidgetCustomizationMenu extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.completeOutline,
-            size: 64,
-            color: theme.colorScheme.primary.withValues(alpha: 0.5),
+          SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary.withValues(alpha: 0.5,
+),
           ),
           const SizedBox(height: 16),
           Text(
             'Tutti i widget sono visibili',
             style: theme.textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Nascondi widget dalla modalità modifica',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -230,7 +243,7 @@ class WidgetCustomizationMenu extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.tertiary,
                       size: 16,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
                       'Aggiungi',
                       style: TextStyle(

@@ -15,6 +15,8 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/volume_det
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class EnhancedProgressStatsWidget extends ConsumerStatefulWidget {
   
@@ -274,14 +276,18 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.moreVert, size: 20),
+                  icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+  size: AppIconSize.small,
+),
                   onPressed: () => _showOptionsMenu(context),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Metrics Grid
             if (analyticsState.isLoading)
               const CircularProgressIndicator()
@@ -354,7 +360,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.settings),
+                  icon: const SemanticIcon(
+  icon: AppIcons.settings,
+  semanticLabel: 'Settings',
+),
                   onPressed: () => _showOptionsMenu(context),
                 ),
               ],
@@ -380,7 +389,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               
               // Weekly distribution
               if (preferences.visibleMetrics.contains('weekdayDistribution')) ...[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildWeekdayDistribution(
                   context, 
                   frequencyStats['dayDistribution'] as Map<int, int>? ?? {}
@@ -569,7 +578,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       children: [
         for (int i = 0; i < stats.length; i++) ...[
           stats[i],
-          if (i < stats.length - 1) SizedBox(width: 12),
+          if (i < stats.length - 1) const SizedBox(width: 12),
         ],
       ],
     );
@@ -668,7 +677,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Expanded(
             child: _buildChart(context, volumeData),
           ),
@@ -873,10 +882,12 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.workout,
-            size: 48,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 12),
           Text(
@@ -912,7 +923,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Container(
                 width: 40,
                 height: 4,
@@ -923,7 +934,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(AppIcons.dashboardCustomize),
+                leading: const SemanticIcon(
+  icon: AppIcons.dashboardCustomize,
+  semanticLabel: 'Dashboard customize',
+),
                 title: Text(l10n.changeLayout),
                 onTap: () {
                   Navigator.pop(context);
@@ -931,7 +945,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(AppIcons.checklist),
+                leading: const SemanticIcon(
+  icon: AppIcons.checklist,
+  semanticLabel: 'Checklist',
+),
                 title: Text(l10n.selectMetrics),
                 onTap: () {
                   Navigator.pop(context);
@@ -939,7 +956,10 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
                 },
               ),
               ListTile(
-                leading: const Icon(AppIcons.restore),
+                leading: const SemanticIcon(
+  icon: AppIcons.restore,
+  semanticLabel: 'Restore',
+),
                 title: Text(l10n.resetDefaults),
                 onTap: () {
                   Navigator.pop(context);
@@ -970,7 +990,7 @@ class _EnhancedProgressStatsWidgetState extends ConsumerState<EnhancedProgressSt
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Container(
                 width: 40,
                 height: 4,

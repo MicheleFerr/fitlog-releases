@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RecentWorkoutsWidget extends ConsumerWidget {
   
@@ -30,8 +28,8 @@ class RecentWorkoutsWidget extends ConsumerWidget {
 
   Widget _buildCompactView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final authService = ref.watch(authServiceProvider);
-    final currentUser = authService.currentUser;
+    // OPTIMIZED: Use select() to only watch currentUser, not entire auth service
+    final currentUser = ref.watch(authServiceProvider.select((s) => s.currentUser));
 
     if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
@@ -94,7 +92,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            AppIcons.history,
+                            Icons.history,
                             color: theme.colorScheme.tertiary,
                             size: 20,
                           ),
@@ -121,7 +119,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          AppIcons.calendar,
+                          Icons.calendar_today,
                           size: 14,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                         ),
@@ -135,7 +133,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                         const SizedBox(width: 12),
                         if (data['exercises'] != null) ...[
                           Icon(
-                            AppIcons.workout,
+                            Icons.fitness_center,
                             size: 14,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
@@ -161,8 +159,8 @@ class RecentWorkoutsWidget extends ConsumerWidget {
 
   Widget _buildStandardView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final authService = ref.watch(authServiceProvider);
-    final currentUser = authService.currentUser;
+    // OPTIMIZED: Use select() to only watch currentUser, not entire auth service
+    final currentUser = ref.watch(authServiceProvider.select((s) => s.currentUser));
 
     if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
@@ -207,9 +205,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      AppIcons.history,
-                      color: context.colors.surface,
+                    child: const Icon(
+                      Icons.history,
+                      color: Colors.white,
                       size: 24,
                     ),
                   ),
@@ -236,7 +234,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   IconButton(
                     onPressed: () => context.push('/history'),
                     icon: Icon(
-                      AppIcons.forward,
+                      Icons.arrow_forward,
                       color: theme.colorScheme.tertiary,
                     ),
                   ),
@@ -269,7 +267,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                 },
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -278,8 +276,8 @@ class RecentWorkoutsWidget extends ConsumerWidget {
 
   Widget _buildExpandedView(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final authService = ref.watch(authServiceProvider);
-    final currentUser = authService.currentUser;
+    // OPTIMIZED: Use select() to only watch currentUser, not entire auth service
+    final currentUser = ref.watch(authServiceProvider.select((s) => s.currentUser));
 
     if (currentUser == null) {
       return _buildEmptyState(context, 'Accedi per vedere i workout');
@@ -294,7 +292,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: DecoratedBox(
+      child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
@@ -330,9 +328,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      AppIcons.history,
-                      color: context.colors.surface,
+                    child: const Icon(
+                      Icons.history,
+                      color: Colors.white,
                       size: 28,
                     ),
                   ),
@@ -358,7 +356,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   ),
                   FilledButton.icon(
                     onPressed: () => context.push('/history'),
-                    icon: const Icon(AppIcons.openInNew, size: 18),
+                    icon: const Icon(Icons.open_in_new, size: 18),
                     label: Text(AppLocalizations.of(context).seeAll),
                   ),
                 ],
@@ -428,7 +426,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                 );
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -480,7 +478,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
             ),
             child: Center(
               child: Icon(
-                AppIcons.workout,
+                Icons.fitness_center,
                 color: theme.colorScheme.primary,
                 size: compact ? 20 : 24,
               ),
@@ -504,21 +502,21 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                   Row(
                     children: [
                       _buildWorkoutStat(
-                        icon: AppIcons.repeat,
+                        icon: Icons.repeat,
                         value: '$totalSets',
                         label: 'serie',
                         theme: theme,
                       ),
                       const SizedBox(width: 16),
                       _buildWorkoutStat(
-                        icon: AppIcons.workout,
+                        icon: Icons.fitness_center,
                         value: '${totalVolume.toStringAsFixed(0)} kg',
                         label: 'volume',
                         theme: theme,
                       ),
                       const SizedBox(width: 16),
                       _buildWorkoutStat(
-                        icon: AppIcons.clock,
+                        icon: Icons.access_time,
                         value: _formatTime(date),
                         label: '',
                         theme: theme,
@@ -531,7 +529,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           ),
           if (compact)
             Icon(
-              AppIcons.chevronRight,
+              Icons.chevron_right,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
         ],
@@ -561,7 +559,7 @@ class RecentWorkoutsWidget extends ConsumerWidget {
           ),
         ),
         if (label.isNotEmpty) ...[
-          SizedBox(width: 2),
+          const SizedBox(width: 2),
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -580,11 +578,11 @@ class RecentWorkoutsWidget extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            AppIcons.workout,
+            Icons.fitness_center,
             size: 48,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Text(
             message,
             style: theme.textTheme.bodyMedium?.copyWith(

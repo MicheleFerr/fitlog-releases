@@ -6,9 +6,6 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 class HomeStateNotifier extends StateNotifier<HomeState> {
-  final Ref _ref;
-  final PerformanceLogger _logger;
-  Timer? _refreshTimer;
 
   HomeStateNotifier({
     required Ref ref,
@@ -21,6 +18,9 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
           aiCoachSection: AICoachSection.empty(),
           streakSection: StreakSection.empty(),
         ));
+  final Ref _ref;
+  final PerformanceLogger _logger;
+  Timer? _refreshTimer;
 
   Future<void> loadInitialData() async {
     state = state.copyWith(loadingPhase: LoadingPhase.loadingCritical);
@@ -116,7 +116,7 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
       greeting = 'Good evening';
     }
 
-    if (user != null && user.displayName != null && user.displayName!.isNotEmpty) {
+    if (user != null && user.displayName.isNotEmpty) {
       return '$greeting, ${user.displayName}';
     }
     return greeting;

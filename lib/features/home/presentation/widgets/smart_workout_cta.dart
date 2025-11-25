@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_provider.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/providers/flexible_routine_notifier.dart';
 import 'package:gymbro_flutter_new/features/routine/domain/entities/flexible_routine.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
@@ -101,7 +100,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
     ThemeData theme,
     String label,
   ) {
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(24),
@@ -166,7 +165,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
           );
         }
 
-        return Container(
+        return DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             gradient: LinearGradient(
@@ -266,7 +265,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
       );
     }
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -296,14 +295,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
                 Icon(
                   AppIcons.achievement,
                   size: AppIconSize.large,
-                  color: Colors.white,
+                  color: context.colors.surface,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     context.l10n.smartWorkoutCTARestModeTitle,
                     style: context.textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -317,7 +316,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
             Text(
               context.l10n.smartWorkoutCTARestModeSubtitle,
               style: context.textTheme.bodyMedium?.copyWith(
-                color: Colors.white.withValues(alpha: 0.9),
+                color: context.colors.surface.withValues(alpha: 0.9),
               ),
             ),
 
@@ -327,7 +326,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: context.colors.surface.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -365,14 +364,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
         Icon(
           icon,
           size: AppIconSize.small,
-          color: Colors.white.withValues(alpha: 0.9),
+          color: context.colors.surface.withValues(alpha: 0.9),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
             style: context.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
+              color: context.colors.surface.withValues(alpha: 0.9),
             ),
           ),
         ),
@@ -475,14 +474,14 @@ class SmartWorkoutCTA extends ConsumerWidget {
 String generateSessionId() => const Uuid().v4();
 
 /// Statistics calculated from completed workout
-class WorkoutStats {
-  final String volume;      // Formatted with thousand separator (e.g., "4.250")
-  final String duration;    // Human-readable format (e.g., "45m 32s")
-  final int sets;           // Total sets completed
+class WorkoutStats {           // Total sets completed
 
   const WorkoutStats({
     required this.volume,
     required this.duration,
     required this.sets,
   });
+  final String volume;      // Formatted with thousand separator (e.g., "4.250")
+  final String duration;    // Human-readable format (e.g., "45m 32s")
+  final int sets;
 }

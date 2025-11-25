@@ -158,7 +158,7 @@ class _MinimalAICoachCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: RadialGradient(
@@ -182,7 +182,7 @@ class _MinimalAICoachCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
@@ -445,7 +445,7 @@ class _AIInsightsModalState extends ConsumerState<AIInsightsModal> {
           Row(
             children: [
               Icon(
-                AppIcons.psychology,
+                AppIcons.ai,
                 color: colorScheme.primary,
                 size: 28,
               ),

@@ -303,7 +303,7 @@ class HomeWidgetFactory {
                     onTap: () => context.push('/workout'),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: _buildActionButton(
                     context,
@@ -313,7 +313,7 @@ class HomeWidgetFactory {
                     onTap: () => _showCompleteDialog(context, ref, workout),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 _buildActionButton(
                   context,
                   icon: AppIcons.deleteOutline,
@@ -483,7 +483,7 @@ class HomeWidgetFactory {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('${AppLocalizations.of(context).saveAndEndWorkout} ${workout.name}'),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               '${AppLocalizations.of(context).exercisesCompleted} ${workout.exercises.length}',
               style: Theme.of(context).textTheme.bodySmall,
@@ -1176,7 +1176,7 @@ class HomeWidgetFactory {
                           ),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
                         item['status'],
                         style: theme.textTheme.bodySmall?.copyWith(
@@ -1837,7 +1837,7 @@ class HomeWidgetFactory {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               context.l10n.thisWeekProgress(3, 4),
               style: theme.textTheme.bodyMedium,
@@ -1918,7 +1918,7 @@ class HomeWidgetFactory {
                   size: AppIconSize.medium,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2235,7 +2235,7 @@ class _AICoachDialog extends ConsumerWidget {
                     size: AppIconSize.small,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2322,7 +2322,7 @@ class _AICoachDialog extends ConsumerWidget {
                 }).toList(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             // Suggerimento
             Wrap(
               children: [
@@ -2341,7 +2341,7 @@ class _AICoachDialog extends ConsumerWidget {
   size: AppIconSize.tiny,
   color: context.successColor,
 ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           _generateProgressionAdvice(history, context),
