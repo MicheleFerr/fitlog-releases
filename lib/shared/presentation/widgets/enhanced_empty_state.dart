@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tipi di empty state disponibili
 enum EmptyStateType {
@@ -171,7 +172,7 @@ class EnhancedEmptyState extends StatelessWidget {
       case EmptyStateType.motivational:
         return colorScheme.primary;
       case EmptyStateType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case EmptyStateType.success:
         return colorScheme.success;
       case EmptyStateType.error:
@@ -242,14 +243,14 @@ class EnhancedEmptyState extends StatelessWidget {
   /// Costruisce la card con il pro tip
   Widget _buildProTip(BuildContext context, AppLocalizations l10n) {
     return Card(
-      color: Colors.amber.withValues(alpha: 0.1),
+      color: context.colors.warning.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
             const Icon(
               AppIcons.tip,
-              color: Colors.amber,
+              color: context.colors.warning,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -261,7 +262,7 @@ class EnhancedEmptyState extends StatelessWidget {
                     l10n.proTip,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.amber,
+                      color: context.colors.warning,
                     ),
                   ),
                   Text(

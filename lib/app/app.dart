@@ -39,6 +39,7 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -122,8 +123,8 @@ class FitLogApp extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 16 * config.fontSize,
                     color: themeMode == ThemeMode.dark
-                      ? Colors.white70
-                      : Colors.black87,
+                      ? context.colors.surface70
+                      : context.colors.onSurface87,
                   ),
                 ),
               ],
@@ -180,8 +181,8 @@ class FitLogApp extends ConsumerWidget {
                     Icons.error_outline,
                     size: 64,
                     color: themeMode == ThemeMode.dark
-                      ? Colors.red[300]
-                      : Colors.red[700],
+                      ? context.colors.error[300]
+                      : context.colors.error[700],
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -190,8 +191,8 @@ class FitLogApp extends ConsumerWidget {
                       fontSize: 20 * config.fontSize,
                       fontWeight: FontWeight.bold,
                       color: themeMode == ThemeMode.dark
-                        ? Colors.white
-                        : Colors.black87,
+                        ? context.colors.surface
+                        : context.colors.onSurface87,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -203,8 +204,8 @@ class FitLogApp extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 14 * config.fontSize,
                       color: themeMode == ThemeMode.dark
-                        ? Colors.white70
-                        : Colors.black54,
+                        ? context.colors.surface70
+                        : context.colors.onSurface54,
                     ),
                     textAlign: TextAlign.center,
                   ),

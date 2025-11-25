@@ -5,6 +5,8 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/worko
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/lazy_chart_wrapper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AnalyticsProgressTab extends ConsumerWidget {
   
@@ -159,7 +161,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
               children: [
                 const Icon(
                   AppIcons.achievement,
-                  color: Colors.amber,
+                  color: context.colors.warning,
                   size: 24,
                 ),
                 const SizedBox(width: 8),
@@ -219,12 +221,12 @@ class AnalyticsProgressTab extends ConsumerWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isRecent 
-              ? Colors.amber.withValues(alpha: 0.1)
+              ? context.colors.warning.withValues(alpha: 0.1)
               : theme.colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isRecent
-                ? Colors.amber.withValues(alpha: 0.3)
+                ? context.colors.warning.withValues(alpha: 0.3)
                 : theme.colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
@@ -234,13 +236,13 @@ class AnalyticsProgressTab extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
-                  color: Colors.amber,
+                  color: context.colors.warning,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   AppIcons.whatshot,
                   size: 16,
-                  color: Colors.white,
+                  color: context.colors.surface,
                 ),
               )
             else
@@ -285,14 +287,14 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   '${weight.toStringAsFixed(1)} kg',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isRecent ? Colors.amber : theme.colorScheme.primary,
+                    color: isRecent ? context.colors.warning : theme.colorScheme.primary,
                   ),
                 ),
                 if (isRecent)
                   Text(
                     'NEW PR!',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.amber,
+                      color: context.colors.warning,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -462,7 +464,7 @@ class AnalyticsProgressTab extends ConsumerWidget {
                   'Avg Duration',
                   '$avgDuration min',
                   AppIcons.timer,
-                  Colors.orange,
+                  context.colors.secondary,
                 ),
               ],
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/lazy_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -21,42 +21,39 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
   final ScrollController _scrollController = ScrollController();
   static const int _initialDisplayCount = 5;
   int _displayedWorkouts = _initialDisplayCount;
-  
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
   }
-  
+
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
-  
+
   void _onScroll() {
     if (!_scrollController.hasClients) return;
-    
+
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
     final scrollPercentage = currentScroll / maxScroll;
-    
-    // Load more when scrolled 80% down
-    if (scrollPercentage > 0.8) {
-      final notifier = ref.read(lazyAnalyticsProvider.notifier);
-      if (notifier.shouldLoadMore(scrollPercentage)) {
-        notifier.loadMoreData();
-      }
+
+    // Load more displayed workouts (not data) when scrolled 80% down
+    if (scrollPercentage > 0.8 && _displayedWorkouts < 20) {
+      setState(() {
+        _displayedWorkouts = (_displayedWorkouts + 5).clamp(0, 20);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final analyticsState = ref.watch(lazyAnalyticsProvider);
-    final isLoadingMore = ref.watch(isLoadingMoreAnalyticsProvider);
-    final currentPhase = ref.watch(currentLoadingPhaseProvider);
-    final canLoadMore = ref.watch(canLoadMoreAnalyticsProvider);
+    final analyticsState = ref.watch(analyticsProvider);
+    final isLoading = analyticsState.isLoading;
     
     // Group activities by workout
     final Map<String, List<ExerciseActivity>> workouts = {};
@@ -97,8 +94,6 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                         ),
                       ],
                     ),
-                    // Phase indicator
-                    _buildPhaseIndicator(context, currentPhase),
                   ],
                 ),
                 if (allWorkouts.isNotEmpty)
@@ -114,11 +109,11 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
               ],
             ),
           ),
-          
+
           const Divider(height: 1),
-          
+
           // Content
-          if (analyticsState.activities.isEmpty && analyticsState.isLoadingMore)
+          if (isLoading)
             // Initial loading skeleton
             const Padding(
               padding: EdgeInsets.all(16),

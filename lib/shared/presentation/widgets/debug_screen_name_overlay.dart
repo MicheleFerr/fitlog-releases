@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Overlay widget che mostra il nome della schermata in alto a sinistra
 /// Solo visibile quando Beta Mode è abilitato nelle impostazioni
@@ -58,7 +59,7 @@ class _DebugLabel extends StatelessWidget {
         color: context.colors.onSurface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Colors.amber.withValues(alpha: 0.8),
+          color: context.colors.warning.withValues(alpha: 0.8),
           width: 1.5,
         ),
       ),
@@ -69,13 +70,13 @@ class _DebugLabel extends StatelessWidget {
   icon: AppIcons.code,
   semanticLabel: 'Code',
   size: AppIconSize.tiny,
-  color: Colors.amber[300],
+  color: context.colors.warning[300],
 ),
           const SizedBox(width: 6),
           Text(
             screenName,
             style: context.textTheme.labelSmall?.copyWith(
-              color: Colors.amber[300],
+              color: context.colors.warning[300],
               fontWeight: FontWeight.w600,
               fontFamily: 'monospace',
               letterSpacing: 0.5,

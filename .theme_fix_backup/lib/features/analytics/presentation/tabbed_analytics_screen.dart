@@ -5,11 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_overview_tab.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_progress_tab.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_insights_tab.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_routine_tab.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_premium_tab.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/animated_search_icon.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/sync_progress_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -19,44 +14,11 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
-class TabbedAnalyticsScreen extends ConsumerStatefulWidget {
+class TabbedAnalyticsScreen extends ConsumerWidget {
   const TabbedAnalyticsScreen({super.key});
 
   @override
-  ConsumerState<TabbedAnalyticsScreen> createState() => _TabbedAnalyticsScreenState();
-}
-
-class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen> 
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _currentIndex = 0;
-  
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 5, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        setState(() {
-          _currentIndex = _tabController.index;
-        });
-        HapticFeedback.lightImpact();
-      }
-    });
-    
-    // Cache-first strategy: Don't invalidate on every screen load
-    // Data will be fetched from Hive cache first, then Firebase if cache is empty
-    // Real-time updates are handled by Firestore listeners
-  }
-  
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -69,9 +31,9 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
         elevation: 0,
         leading: IconButton(
           icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+            icon: AppIcons.back,
+            semanticLabel: 'Back',
+          ),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -98,92 +60,45 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           ],
         ),
         actions: [
+          // Button to access detailed exercise analysis
+          IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.barChart,
+              semanticLabel: 'Detailed Analysis',
+            ),
+            tooltip: l10n.detailedAnalysis,
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              context.push('/analytics/detailed');
+            },
+          ),
           if (authState == AuthState.authenticated)
             AnimatedSearchIcon(
               onPressed: () async {
                 // TODO: Re-implement search with the new data model
-                // final workouts = ref.read(historicalWorkoutsProvider).valueOrNull ?? [];
-                // await ExerciseHistorySearchModal.show(context, workouts);
               },
               showInitialAnimation: true,
             ),
           IconButton(
             icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+              icon: AppIcons.refresh,
+              semanticLabel: 'Refresh',
+            ),
             onPressed: () {
               HapticFeedback.lightImpact();
               ref.invalidate(historicalWorkoutsProvider);
             },
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: ColoredBox(
-            color: theme.colorScheme.surface,
-            child: TabBar(
-              controller: _tabController,
-              indicatorSize: TabBarIndicatorSize.label,
-              indicatorWeight: 3,
-              indicatorColor: theme.colorScheme.primary,
-              labelColor: theme.colorScheme.primary,
-              unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
-              tabs: const [
-                Tab(
-                  height: 52,
-                  icon: SemanticIcon(
-  icon: AppIcons.dashboardOutlined,
-  semanticLabel: 'Dashboard outlined',
-  size: AppIconSize.medium,
-),
-                ),
-                Tab(
-                  height: 52,
-                  icon: SemanticIcon(
-  icon: AppIcons.trendUp,
-  semanticLabel: 'Trend up',
-  size: AppIconSize.medium,
-),
-                ),
-                Tab(
-                  height: 52,
-                  icon: SemanticIcon(
-  icon: AppIcons.insights,
-  semanticLabel: 'Insights',
-  size: AppIconSize.medium,
-),
-                ),
-                Tab(
-                  height: 52,
-                  icon: SemanticIcon(
-  icon: AppIcons.calendarMonthOutlined,
-  semanticLabel: 'Calendar month outlined',
-  size: AppIconSize.medium,
-),
-                ),
-                Tab(
-                  height: 52,
-                  icon: SemanticIcon(
-  icon: AppIcons.autoAwesomeOutlined,
-  semanticLabel: 'Auto awesome outlined',
-  size: AppIconSize.medium,
-),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
       body: authState != AuthState.authenticated
-          ? _buildNotAuthenticatedView()
-          : _buildTabContent(),
+          ? _buildNotAuthenticatedView(context)
+          : _buildContent(context, ref),
     );
   }
   
-  Widget _buildTabContent() {
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
     final workoutsAsync = ref.watch(historicalWorkoutsProvider);
-    final isPremium = ref.watch(isPremiumUserProvider);
     final syncStatus = ref.watch(workoutSyncStatusProvider);
 
     // Show sync overlay if syncing
@@ -194,26 +109,17 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
     return workoutsAsync.when(
       data: (workouts) {
         if (workouts.isEmpty) {
-          return _buildEmptyState();
+          return _buildEmptyState(context);
         }
 
-        return TabBarView(
-          controller: _tabController,
-          children: [
-            AnalyticsOverviewTab(workouts: workouts),
-            AnalyticsProgressTab(workouts: workouts, isPremium: isPremium),
-            AnalyticsInsightsTab(workouts: workouts, isPremium: isPremium),
-            const AnalyticsRoutineTab(),
-            AnalyticsPremiumTab(workouts: workouts, isPremium: isPremium),
-          ],
-        );
+        return AnalyticsOverviewTab(workouts: workouts);
       },
       loading: () => _buildLoadingSkeleton(),
-      error: (error, _) => _buildErrorView(error.toString()),
+      error: (error, _) => _buildErrorView(context, ref, error.toString()),
     );
   }
   
-  Widget _buildNotAuthenticatedView() {
+  Widget _buildNotAuthenticatedView(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
@@ -224,11 +130,10 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.lockOutline,
-  semanticLabel: 'Lock outline',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
-),
+              icon: AppIcons.lockOutline,
+              semanticLabel: 'Lock outline',
+              size: AppIconSize.medium,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 24),
             Text(
@@ -254,8 +159,8 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
       ),
     );
   }
-  
-  Widget _buildNoEmailView() {
+
+  Widget _buildErrorView(BuildContext context, WidgetRef ref, String error) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
@@ -266,46 +171,11 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.error,
-),
-            const SizedBox(height: 24),
-            Text(
-              l10n.accountError,
-              style: theme.textTheme.headlineSmall,
+              icon: AppIcons.error,
+              semanticLabel: 'Error',
+              size: AppIconSize.medium,
+              color: theme.colorScheme.error,
             ),
-            const SizedBox(height: 16),
-            Text(
-              l10n.unableToLoadUserData,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  
-  Widget _buildErrorView(String error) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: theme.colorScheme.error,
-),
             const SizedBox(height: 24),
             Text(
               l10n.errorLoadingAnalytics,
@@ -323,9 +193,9 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
             OutlinedButton.icon(
               onPressed: () => ref.invalidate(historicalWorkoutsProvider),
               icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+                icon: AppIcons.refresh,
+                semanticLabel: 'Refresh',
+              ),
               label: Text(l10n.retry),
             ),
           ],
@@ -356,7 +226,7 @@ class _TabbedAnalyticsScreenState extends ConsumerState<TabbedAnalyticsScreen>
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
     return EnhancedEmptyState(

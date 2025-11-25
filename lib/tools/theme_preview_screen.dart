@@ -30,6 +30,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Theme Preview Screen - Developer Tool
 class ThemePreviewScreen extends StatefulWidget {
@@ -235,7 +236,7 @@ class _ColorPreview extends StatelessWidget {
 
   Color _getContrastColor(Color color) {
     final luminance = color.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
+    return luminance > 0.5 ? context.colors.onSurface : context.colors.surface;
   }
 }
 

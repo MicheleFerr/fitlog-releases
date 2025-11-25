@@ -16,8 +16,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_provider_v2.dart';
-import 'package:gymbro_flutter_new/features/auth/domain/entities/user_state.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'firebase_test_helper.dart';
@@ -55,9 +55,7 @@ class TestAppWrapper extends StatelessWidget {
           );
           return notifier;
         }),
-        userStateProvider.overrideWith((ref) => Stream.value(
-          const UserUnauthenticated()
-        )),
+        userProfileProvider.overrideWith((ref) => Stream.value(null)),
         ...overrides,
       ],
       child: MaterialApp(
@@ -105,7 +103,7 @@ Future<void> pumpTestWidget(
 Future<void> pumpAuthenticatedWidget(
   WidgetTester tester,
   Widget child, {
-  required UserState userState,
+  required UserProfile? userProfile,
   ThemeMode themeMode = ThemeMode.light,
   Locale locale = const Locale('en'),
   List<Override> additionalOverrides = const [],
@@ -116,7 +114,7 @@ Future<void> pumpAuthenticatedWidget(
     themeMode: themeMode,
     locale: locale,
     overrides: [
-      userStateProvider.overrideWith((ref) => Stream.value(userState)),
+      userProfileProvider.overrideWith((ref) => Stream.value(userProfile)),
       ...additionalOverrides,
     ],
   );

@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced Stat Card with Material 3 styling
 class EnhancedStatCard extends StatelessWidget {
@@ -370,7 +371,7 @@ class EnhancedStreakCard extends StatelessWidget {
               children: [
                 const Icon(
                   AppIcons.streak,
-                  color: Colors.orange,
+                  color: context.colors.secondary,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
@@ -402,7 +403,7 @@ class EnhancedStreakCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.withValues(alpha: 0.2),
+            context.colors.secondary.withValues(alpha: 0.2),
             context.colors.error.withValues(alpha: 0.1),
           ],
           begin: Alignment.topLeft,
@@ -420,14 +421,14 @@ class EnhancedStreakCard extends StatelessWidget {
                 '${streakData.currentStreak}',
                 'Current Streak',
                 AppIcons.streak,
-                Colors.orange,
+                context.colors.secondary,
               ),
               _buildStreakStat(
                 context,
                 '${streakData.longestStreak}',
                 'Best Streak',
                 AppIcons.achievement,
-                Colors.amber,
+                context.colors.warning,
               ),
               _buildStreakStat(
                 context,

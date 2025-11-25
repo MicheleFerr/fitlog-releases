@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/ex
 import 'package:gymbro_flutter_new/shared/domain/converters/exercise_converter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Provider per filtrare esercizi alternativi basati sulla categoria
 final alternativeExercisesProvider = FutureProvider.autoDispose.family<List<Exercise>, String>((ref, currentExerciseName) async {
@@ -271,7 +272,7 @@ class ExerciseInstructionsTab extends ConsumerWidget {
       case 'principiante':
         return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
         return context.colors.error;
       default:

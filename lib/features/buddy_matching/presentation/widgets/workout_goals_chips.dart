@@ -15,6 +15,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WorkoutGoalsChips extends StatelessWidget {
 
@@ -114,17 +116,17 @@ class WorkoutGoalsChips extends StatelessWidget {
   Color _getGoalColor(WorkoutGoal goal) {
     switch (goal) {
       case WorkoutGoal.weightLoss:
-        return Colors.red;
+        return context.colors.error;
       case WorkoutGoal.muscleGain:
-        return Colors.blue;
+        return context.colors.primary;
       case WorkoutGoal.strength:
-        return Colors.deepOrange;
+        return context.colors.warning;
       case WorkoutGoal.endurance:
-        return Colors.green;
+        return context.colors.success;
       case WorkoutGoal.flexibility:
-        return Colors.purple;
+        return context.colors.tertiary;
       case WorkoutGoal.general:
-        return Colors.grey;
+        return context.colors.surfaceVariant;
     }
   }
 

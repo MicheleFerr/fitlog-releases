@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
@@ -15,13 +16,15 @@ import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
-import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_center_screen.dart';
+// TODO: Routine feature temporarily disabled - needs v2.0 API migration
+// import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/equipment_profiles_screen.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
@@ -355,6 +358,10 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
   }
 }
 
+/// Provider for initial deep link (set during cold-start from notifications)
+/// This is overridden in main.dart ProviderScope.overrides
+final initialDeepLinkProvider = Provider<String?>((ref) => null);
+
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
@@ -464,6 +471,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'analytics',
         builder: (context, state) => const TabbedAnalyticsScreen(),
       ),
+      GoRoute(
+        path: '/analytics/detailed',
+        name: 'analytics-detailed',
+        builder: (context, state) => const AnalyticsScreen(),
+      ),
       // TEMP DISABLED: Analytics dashboard
       // GoRoute(
       //   path: '/analytics-dashboard',
@@ -506,7 +518,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/routine',
         name: 'routine',
-        builder: (context, state) => const RoutineCenterScreen(),
+        builder: (context, state) => const _RoutineComingSoonPlaceholder(),
       ),
       GoRoute(
         path: '/community',
@@ -538,3 +550,46 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Placeholder widget for disabled routine feature
+class _RoutineComingSoonPlaceholder extends StatelessWidget {
+  const _RoutineComingSoonPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.l10n.routine),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                AppIcons.construction,
+                size: 64,
+                color: context.colors.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                context.l10n.comingSoon,
+                style: context.textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Routine feature is being rebuilt',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

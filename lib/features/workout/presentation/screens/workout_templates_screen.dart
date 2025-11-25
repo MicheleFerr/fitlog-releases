@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WorkoutTemplatesScreen extends ConsumerStatefulWidget {
   const WorkoutTemplatesScreen({super.key});
@@ -151,7 +152,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                               width: 8,
                               height: 8,
                               decoration: const BoxDecoration(
-                                color: Colors.orange,
+                                color: context.colors.secondary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -794,7 +795,7 @@ class _WorkoutTemplatesScreenState extends ConsumerState<WorkoutTemplatesScreen>
                   const SizedBox(height: 8),
                   const Text(
                     'Hai modifiche offline che verranno sincronizzate al prossimo accesso.',
-                    style: TextStyle(color: Colors.orange),
+                    style: TextStyle(color: context.colors.secondary),
                   ),
                 ],
               ],

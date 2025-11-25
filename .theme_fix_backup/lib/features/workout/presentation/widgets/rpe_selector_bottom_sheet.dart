@@ -275,11 +275,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
       case 6:
         return context.colors.success;
       case 7:
-        return Colors.lightGreen;
+        return context.colors.success;
       case 8:
-        return Colors.yellow;
+        return context.colors.warning;
       case 9:
-        return Colors.orange;
+        return context.colors.warning;
       case 10:
         return context.colors.error;
       default:
@@ -1018,7 +1018,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             suggestion.shouldIncrease
                 ? context.colors.success.withValues(alpha: 0.2)
                 : suggestion.shouldDecrease
-                    ? Colors.orange.withValues(alpha: 0.2)
+                    ? context.colors.warning.withValues(alpha: 0.2)
                     : colorScheme.primaryContainer.withValues(alpha: 0.5),
             colorScheme.primaryContainer.withValues(alpha: 0.3),
           ],
@@ -1030,7 +1030,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           color: suggestion.shouldIncrease
               ? context.colors.success.withValues(alpha: 0.3)
               : suggestion.shouldDecrease
-                  ? Colors.orange.withValues(alpha: 0.3)
+                  ? context.colors.warning.withValues(alpha: 0.3)
                   : colorScheme.primary.withValues(alpha: 0.3),
           width: 1.5,
         ),
@@ -1047,7 +1047,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   color: suggestion.shouldIncrease
                     ? context.colors.success
                     : suggestion.shouldDecrease
-                        ? Colors.orange
+                        ? context.colors.warning
                         : colorScheme.primary,
 ),
               const SizedBox(width: 8),
@@ -1111,7 +1111,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         color: suggestion.shouldIncrease
                             ? context.colors.success
                             : suggestion.shouldDecrease
-                                ? Colors.orange
+                                ? context.colors.warning
                                 : colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -1248,7 +1248,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         color: suggestion.set4AdjustmentKg > 0
                             ? context.colors.success
                             : suggestion.set4AdjustmentKg < 0
-                                ? Colors.orange
+                                ? context.colors.warning
                                 : colorScheme.onSurfaceVariant,
                       ),
                     ),

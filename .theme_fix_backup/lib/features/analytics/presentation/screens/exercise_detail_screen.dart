@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_progress_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_progress_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/enhanced_empty_state.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
@@ -89,7 +90,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             _buildChartCard(
               context.l10n.weightProgression,
               Icons.fitness_center,
-              Colors.blue,
+              context.colors.primary,
               _buildWeightChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -98,7 +99,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             _buildChartCard(
               context.l10n.volumeProgression,
               Icons.analytics,
-              Colors.orange,
+              context.colors.warning,
               _buildVolumeChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -107,7 +108,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
             _buildChartCard(
               context.l10n.repsProgression,
               Icons.repeat,
-              Colors.green,
+              context.colors.success,
               _buildRepsChart(filteredSets),
             ),
             const SizedBox(height: 16),
@@ -117,7 +118,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
               _buildChartCard(
                 context.l10n.effortProgression,
                 Icons.speed,
-                Colors.red,
+                context.colors.error,
                 _buildRPEChart(filteredSets),
               ),
               const SizedBox(height: 16),
@@ -273,38 +274,38 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
 
     final lineBarsData = <LineChartBarData>[];
 
-    // Weight line (blue)
+    // Weight line (primary)
     if (_visibleMetrics['weight']!) {
       lineBarsData.add(_createLineBarData(
         weightData,
-        Colors.blue,
+        context.colors.primary,
         'Weight',
       ));
     }
 
-    // Volume line (orange)
+    // Volume line (warning)
     if (_visibleMetrics['volume']!) {
       lineBarsData.add(_createLineBarData(
         volumeData,
-        Colors.orange,
+        context.colors.warning,
         'Volume',
       ));
     }
 
-    // Reps line (green)
+    // Reps line (success)
     if (_visibleMetrics['reps']!) {
       lineBarsData.add(_createLineBarData(
         repsData,
-        Colors.green,
+        context.colors.success,
         'Reps',
       ));
     }
 
-    // RPE line (purple gradient)
+    // RPE line (tertiary gradient)
     if (rpeData != null && _visibleMetrics['rpe']!) {
       lineBarsData.add(_createLineBarData(
         rpeData,
-        Colors.purple,
+        context.colors.tertiary,
         'RPE',
         useGradient: true,
       ));

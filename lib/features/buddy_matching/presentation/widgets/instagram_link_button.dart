@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class InstagramLinkButton extends StatelessWidget {
 
@@ -69,14 +71,14 @@ class InstagramLinkButton extends StatelessWidget {
             Icon(
               Icons.camera_alt,
               size: compact ? 16 : 20,
-              color: Colors.white,
+              color: context.colors.surface,
             ),
             const SizedBox(width: 6),
             if (compact) ...[
               Text(
                 '@$cleanHandle',
                 style: theme.textTheme.labelMedium?.copyWith(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   fontWeight: FontWeight.w600,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -88,14 +90,14 @@ class InstagramLinkButton extends StatelessWidget {
                   Text(
                     l10n.openInstagram,
                     style: theme.textTheme.labelMedium?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     '@$cleanHandle',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: context.colors.surface.withValues(alpha: 0.9),
                     ),
                   ),
                 ],

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gymbro_flutter_new/shared/utils/secure_logger.dart';
+import 'package:gymbro_flutter_new/shared/domain/services/secure_logger.dart';
 
 void main() {
   group('SecureLogger', () {

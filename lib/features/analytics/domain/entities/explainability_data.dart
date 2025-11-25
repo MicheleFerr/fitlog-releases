@@ -9,6 +9,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🔍 Spiegazione di come l'AI è arrivata a un insight
 class InsightExplanation {
@@ -141,15 +143,15 @@ class TimelineEvent {
     switch (type) {
       case TimelineEventType.weightIncrease:
       case TimelineEventType.achievement:
-        return Colors.green;
+        return context.colors.success;
       case TimelineEventType.volumeSpike:
-        return Colors.blue;
+        return context.colors.primary;
       case TimelineEventType.plateau:
-        return Colors.orange;
+        return context.colors.secondary;
       case TimelineEventType.injury:
-        return Colors.red;
+        return context.colors.error;
       case TimelineEventType.deload:
-        return Colors.purple;
+        return context.colors.tertiary;
     }
   }
 }

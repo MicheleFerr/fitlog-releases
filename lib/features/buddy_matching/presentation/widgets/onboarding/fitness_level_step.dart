@@ -16,6 +16,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_preferences.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class FitnessLevelStep extends StatelessWidget {
 
@@ -190,13 +192,13 @@ class FitnessLevelStep extends StatelessWidget {
   Color _getLevelColor(FitnessLevel level) {
     switch (level) {
       case FitnessLevel.beginner:
-        return Colors.green;
+        return context.colors.success;
       case FitnessLevel.intermediate:
-        return Colors.orange;
+        return context.colors.secondary;
       case FitnessLevel.advanced:
-        return Colors.red;
+        return context.colors.error;
       case FitnessLevel.expert:
-        return Colors.purple;
+        return context.colors.tertiary;
     }
   }
 

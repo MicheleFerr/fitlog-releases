@@ -273,11 +273,11 @@ class CommunityTemplateCard extends StatelessWidget {
       case TemplateCategory.bodybuilding:
         return context.colors.secondary;
       case TemplateCategory.crossfit:
-        return Colors.teal;
+        return context.colors.tertiary;
       case TemplateCategory.calisthenics:
-        return Colors.indigo;
+        return context.colors.primary;
       case TemplateCategory.cardio:
-        return Colors.pink;
+        return context.colors.secondary;
       case TemplateCategory.mixed:
         return context.colors.surfaceContainerHighest;
       case TemplateCategory.custom:

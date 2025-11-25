@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Enhanced analytics screen with advanced features
 class EnhancedAnalyticsScreen extends ConsumerStatefulWidget {
@@ -381,7 +382,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 localizations.currentStreak,
                 '${frequencyStats['currentStreak'] ?? 0}',
                 AppIcons.streak,
-                color: Colors.orange,
+                color: context.colors.secondary,
               ),
               _buildStatItem(
                 context,
@@ -400,7 +401,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                 localizations.totalPRs,
                 personalRecords.length.toString(),
                 AppIcons.emojiEvents,
-                color: Colors.amber,
+                color: context.colors.warning,
               ),
               _buildStatItem(
                 context,
@@ -653,7 +654,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
   Widget _buildRecommendationCard(BuildContext context, String recommendation) {
     return Card(
       child: ListTile(
-        leading: Icon(AppIcons.tip, color: Colors.amber),
+        leading: Icon(AppIcons.tip, color: context.colors.warning),
         title: Text(recommendation),
       ),
     );
@@ -685,7 +686,7 @@ class _EnhancedAnalyticsScreenState extends ConsumerState<EnhancedAnalyticsScree
                   ? context.colors.success
                   : trend.type == TrendType.declining
                       ? context.colors.error
-                      : Colors.orange,
+                      : context.colors.secondary,
             ),
           ),
         );

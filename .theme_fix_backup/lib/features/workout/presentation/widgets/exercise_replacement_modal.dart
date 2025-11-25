@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/exercise_compatibility_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/providers/exercise_json_provider.dart';
-import 'package:gymbro_flutter_new/features/exercise_database/domain/services/fuzzy_search_service.dart';
+// Removed: FuzzySearchService (overengineered - simple token matching is sufficient)
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart' as exercise_db;
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/json_exercise_repository.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -52,7 +52,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   bool _isSearching = false;
   Timer? _searchDebounce;
   List<exercise_db.Exercise> _dbExercises = [];
-  List<ExerciseSearchResult> _fuzzyResults = [];
+  List<exercise_db.Exercise> _searchResults = []; // Simplified from FuzzySearchService
   Exercise? _enrichedCurrentExercise; // Esercizio corrente arricchito con dati dal DB
 
   // ✅ Cache statica per esercizi arricchiti (condivisa tra tutte le istanze del modal)
@@ -160,7 +160,7 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
   void _performFuzzySearch(String query) {
     if (query.isEmpty) {
       setState(() {
-        _fuzzyResults = [];
+        _searchResults = [];
         _isSearching = false;
       });
       return;
@@ -179,16 +179,21 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
         return;
       }
 
-      final locale = Localizations.localeOf(context).languageCode;
-      final results = FuzzySearchService.searchExercises(
-        query: query,
-        allExercises: _dbExercises,
-        locale: locale,
-      );
+      // Simple order-agnostic token matching (replaces overengineered FuzzySearchService)
+      final queryLower = query.toLowerCase().trim();
+      final queryTokens = queryLower.split(RegExp(r'\s+'));
+
+      final results = _dbExercises.where((exercise) {
+        final nameTokens = exercise.nome.toLowerCase().split(RegExp(r'\s+'));
+        // All query tokens must match some name token (order-agnostic)
+        return queryTokens.every((qt) =>
+          nameTokens.any((nt) => nt.contains(qt) || qt.contains(nt))
+        );
+      }).take(50).toList(); // Limit results
 
       if (mounted) {
         setState(() {
-          _fuzzyResults = results;
+          _searchResults = results;
           _isSearching = false;
         });
       }
@@ -213,21 +218,21 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
     // Get suggestions or all exercises based on search/toggle
     List<ExerciseSuggestion> displayList;
 
-    if (_searchQuery.isNotEmpty && _fuzzyResults.isNotEmpty) {
-      // Use fuzzy search results with hybrid scoring (fuzzy + compatibility)
-      displayList = _fuzzyResults.map((fuzzyResult) {
+    if (_searchQuery.isNotEmpty && _searchResults.isNotEmpty) {
+      // Use simple token search results with compatibility scoring
+      displayList = _searchResults.map((dbExercise) {
         // Try to find existing workout exercise with same name
         Exercise? matchingWorkoutExercise;
         try {
           matchingWorkoutExercise = allExercises.firstWhere(
-            (ex) => ex.name.toLowerCase() == fuzzyResult.exercise.nome.toLowerCase(),
+            (ex) => ex.name.toLowerCase() == dbExercise.nome.toLowerCase(),
           );
         } catch (e) {
           // Exercise not found in workout provider, create minimal Exercise from DB exercise
           matchingWorkoutExercise = Exercise(
-            name: fuzzyResult.exercise.nome,
+            name: dbExercise.nome,
             type: ExerciseType.single, // Default to single exercise
-            category: _mapCategoryFromMuscles(fuzzyResult.exercise.focus),
+            category: _mapCategoryFromMuscles(dbExercise.focus),
           );
         }
 
@@ -237,15 +242,10 @@ class _ExerciseReplacementModalState extends ConsumerState<ExerciseReplacementMo
           matchingWorkoutExercise,
         );
 
-        // Hybrid score: 50% fuzzy name similarity + 50% muscle/pattern compatibility
-        // Fuzzy score is 0-1, compatibility is 0-100
-        // Convert fuzzy to 0-100 scale and average
-        final fuzzyScore100 = fuzzyResult.score * 100; // 0-1 → 0-100
-        final hybridScore = (fuzzyScore100 * 0.5) + (compatibility * 0.5);
-
+        // Use compatibility score directly (name already matched by search)
         return ExerciseSuggestion(
           exercise: matchingWorkoutExercise,
-          compatibilityScore: hybridScore,
+          compatibilityScore: compatibility,
           reason: _getCompatibilityReason(compatibility, matchingWorkoutExercise, currentExerciseForMatching),
         );
       }).toList()

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Animated icon widget that smoothly transitions between outlined and filled
 /// variants based on press state.
@@ -12,7 +14,7 @@ import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.
 ///   outlinedIcon: AppIcons.analyticsOutlined,
 ///   filledIcon: AppIcons.analytics,
 ///   isPressed: _isPressed,
-///   color: Colors.purple,
+///   color: context.colors.tertiary,
 ///   size: 28,
 /// )
 /// ```

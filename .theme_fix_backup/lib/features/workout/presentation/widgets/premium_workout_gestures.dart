@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_optimization_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 🎯 TIER-1 PREMIUM GESTURES & ANIMATIONS
 /// Advanced interaction patterns for professional fitness app
@@ -631,7 +633,7 @@ class _QuickActionButton extends StatelessWidget {
             alignment: Alignment.center,
             child: Icon(
               icon,
-              color: Colors.white,
+              color: context.colors.surface,
               size: 20,
             ),
           ),

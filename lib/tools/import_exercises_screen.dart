@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});
@@ -26,7 +27,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.importExercises),
-        backgroundColor: Colors.blue,
+        backgroundColor: context.colors.primary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -36,7 +37,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
             const Icon(
               AppIcons.cloudUpload,
               size: 80,
-              color: Colors.blue,
+              color: context.colors.primary,
             ),
             const SizedBox(height: 20),
             Text(
@@ -50,7 +51,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: context.colors.surfaceVariant[100],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -64,11 +65,11 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
               onPressed: _isImporting ? null : _testSingleExercise,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                backgroundColor: Colors.orange,
+                backgroundColor: context.colors.secondary,
               ),
               child: Text(
                 context.l10n.testSingleExercise,
-                style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                style: context.textTheme.bodyMedium?.copyWith(color: context.colors.surface),
               ),
             ),
             const SizedBox(height: 15),
@@ -76,7 +77,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
               onPressed: _isImporting ? null : _importAllExercises,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                backgroundColor: Colors.green,
+                backgroundColor: context.colors.success,
               ),
               child: _isImporting
                   ? Row(
@@ -87,19 +88,19 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(context.colors.surface),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Text(
                           context.l10n.importing,
-                          style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                          style: context.textTheme.bodyMedium?.copyWith(color: context.colors.surface),
                         ),
                       ],
                     )
                   : Text(
                       context.l10n.importAllExercises,
-                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                      style: context.textTheme.bodyMedium?.copyWith(color: context.colors.surface),
                     ),
             ),
             const SizedBox(height: 30),

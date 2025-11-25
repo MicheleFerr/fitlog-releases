@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-// MIGRATION: Using bridge provider for backward compatibility while migrating to unified system
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider_bridge.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/notification.dart';
+// ✅ MIGRATION COMPLETE: Now uses unified notification provider directly
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/unified_notification_provider.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart' as unified;
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -17,7 +17,8 @@ class NotificationHub extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final unreadCount = ref.watch(unreadCountProvider);
+    // ✅ MIGRATION: Now uses unified notification provider
+    final unreadCount = ref.watch(unreadNotificationCountProvider);
     
     return Stack(
       children: [
@@ -94,8 +95,9 @@ class NotificationPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notifications = ref.watch(notificationProvider);
-    final recentNotifications = ref.watch(recentNotificationsProvider);
+    // ✅ MIGRATION: Now uses unified notification provider
+    final notificationsState = ref.watch(unifiedNotificationProvider);
+    final notifications = notificationsState.notifications;
     
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
@@ -137,7 +139,8 @@ class NotificationPanel extends ConsumerWidget {
                 if (notifications.any((n) => !n.isRead))
                   TextButton(
                     onPressed: () {
-                      ref.read(notificationProvider.notifier).markAllAsRead();
+                      // ✅ MIGRATION: Now uses unified notification provider
+                      ref.read(unifiedNotificationProvider.notifier).markAllAsRead();
                     },
                     child: Text(
                       AppLocalizations.of(context).markAllAsRead ?? 'Segna tutte lette',
@@ -171,8 +174,8 @@ class NotificationPanel extends ConsumerWidget {
                       return NotificationTile(
                         notification: notification,
                         onTap: () => _handleNotificationTap(context, ref, notification),
-                        onDismiss: () => ref.read(notificationProvider.notifier)
-                            .removeNotification(notification.id),
+                        onDismiss: () => ref.read(unifiedNotificationProvider.notifier)
+                            .cancelNotification(notification.id),
                       );
                     },
                   ),
@@ -369,16 +372,20 @@ class NotificationPanel extends ConsumerWidget {
     );
   }
 
-  void _handleNotificationTap(BuildContext context, WidgetRef ref, AppNotification notification) {
-    // Segna come letta
-    ref.read(notificationProvider.notifier).markAsRead(notification.id);
+  void _handleNotificationTap(BuildContext context, WidgetRef ref, unified.UnifiedNotification notification) {
+    // ✅ MIGRATION: Now uses unified notification provider
+    ref.read(unifiedNotificationProvider.notifier).markAsRead(notification.id);
     
     // Chiudi il panel
     Navigator.pop(context);
     
     // Naviga se ha un'azione
-    if (notification.action != null) {
-      context.push(notification.action!.route);
+    if (notification.actions != null && notification.actions!.isNotEmpty) {
+      final action = notification.actions!.first;
+      final route = action.payload?['route'] as String?;
+      if (route != null) {
+        context.push(route);
+      }
     }
   }
 }
@@ -391,7 +398,7 @@ class NotificationTile extends StatelessWidget {
     required this.onTap,
     required this.onDismiss,
   });
-  final AppNotification notification;
+  final unified.UnifiedNotification notification;
   final VoidCallback onTap;
   final VoidCallback onDismiss;
 
@@ -442,7 +449,7 @@ class NotificationTile extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        notification.emoji,
+                        _getEmojiForType(notification.type),
                         style: const TextStyle(fontSize: 20),
                       ),
                     ),
@@ -466,7 +473,7 @@ class NotificationTile extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              notification.timeAgo,
+                              _getTimeAgo(notification.createdAt),
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
@@ -475,14 +482,14 @@ class NotificationTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          notification.message,
+                          notification.body,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (notification.action != null) ...[
+                        if (notification.actions != null && notification.actions!.isNotEmpty) ...[
                           const SizedBox(height: 8),
                           Row(
                             children: [
@@ -495,7 +502,7 @@ class NotificationTile extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                notification.action!.label,
+                                notification.actions!.first.title,
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.primary,
                                   fontSize: 12,
@@ -528,22 +535,70 @@ class NotificationTile extends StatelessWidget {
     );
   }
 
-  Color _getTypeColor(BuildContext context, NotificationType type) {
+  Color _getTypeColor(BuildContext context, unified.NotificationType type) {
     switch (type) {
-      case NotificationType.aiTip:
+      case unified.NotificationType.coachMessage:
         return context.colors.tertiary;
-      case NotificationType.achievement:
+      case unified.NotificationType.achievementUnlocked:
         return context.colors.warning;
-      case NotificationType.milestone:
+      case unified.NotificationType.progressMilestone:
         return context.colors.success;
-      case NotificationType.progress:
+      case unified.NotificationType.workoutSummary:
         return context.colors.primary;
-      case NotificationType.reminder:
+      case unified.NotificationType.workoutReminder:
+      case unified.NotificationType.restReminder:
+      case unified.NotificationType.streakReminder:
         return context.colors.secondary;
-      case NotificationType.social:
+      case unified.NotificationType.friendActivity:
         return Colors.pink;
-      case NotificationType.system:
+      case unified.NotificationType.systemUpdate:
+      case unified.NotificationType.emergency:
+      case unified.NotificationType.timerComplete:
+      case unified.NotificationType.promotional:
+      default:
         return context.colors.surfaceContainerHighest;
+    }
+  }
+
+  String _getEmojiForType(unified.NotificationType type) {
+    switch (type) {
+      case unified.NotificationType.achievementUnlocked:
+        return '🏆';
+      case unified.NotificationType.progressMilestone:
+        return '🎯';
+      case unified.NotificationType.workoutReminder:
+        return '💪';
+      case unified.NotificationType.restReminder:
+        return '😴';
+      case unified.NotificationType.streakReminder:
+        return '🔥';
+      case unified.NotificationType.workoutSummary:
+        return '📊';
+      case unified.NotificationType.coachMessage:
+        return '🧠';
+      case unified.NotificationType.friendActivity:
+        return '👥';
+      case unified.NotificationType.timerComplete:
+        return '⏰';
+      default:
+        return '🔔';
+    }
+  }
+
+  String _getTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays > 7) {
+      return '${dateTime.day}/${dateTime.month}';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays}d fa';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h fa';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m fa';
+    } else {
+      return 'Ora';
     }
   }
 }

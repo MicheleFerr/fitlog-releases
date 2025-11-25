@@ -32,6 +32,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 enum SnackBarType {
   success,
@@ -217,7 +218,7 @@ class SnackBarService {
       case SnackBarType.success:
         return (
           background: const Color(0xFF4CAF50), // Verde
-          foreground: Colors.white,
+          foreground: context.colors.surface,
         );
 
       case SnackBarType.error:
@@ -229,7 +230,7 @@ class SnackBarService {
       case SnackBarType.warning:
         return (
           background: const Color(0xFFFF9800), // Arancione
-          foreground: Colors.white,
+          foreground: context.colors.surface,
         );
 
       case SnackBarType.info:

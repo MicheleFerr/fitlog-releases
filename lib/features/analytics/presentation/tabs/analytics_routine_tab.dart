@@ -27,6 +27,7 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tab displaying routine-specific analytics
 class AnalyticsRoutineTab extends ConsumerWidget {
@@ -676,19 +677,19 @@ class AnalyticsRoutineTab extends ConsumerWidget {
 
   Color _getAdherenceColor(BuildContext context, double rate) {
     if (rate >= 0.8) return context.colors.primary;
-    if (rate >= 0.6) return Colors.orange;
+    if (rate >= 0.6) return context.colors.secondary;
     return context.colors.error;
   }
 
   Color _getSkipRateColor(BuildContext context, double rate) {
     if (rate <= 0.2) return context.colors.primary;
-    if (rate <= 0.4) return Colors.orange;
+    if (rate <= 0.4) return context.colors.secondary;
     return context.colors.error;
   }
 
   Color _getRecoveryColor(BuildContext context, double rate) {
     if (rate >= 0.7) return context.colors.primary;
-    if (rate >= 0.4) return Colors.orange;
+    if (rate >= 0.4) return context.colors.secondary;
     return context.colors.error;
   }
 

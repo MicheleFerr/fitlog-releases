@@ -18,6 +18,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/buddy_profile.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/domain/entities/matching_purpose.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class VerificationBadges extends ConsumerWidget {
 
@@ -120,7 +122,7 @@ class VerificationBadges extends ConsumerWidget {
       child: Icon(
         icon,
         size: size * 0.6,
-        color: Colors.white,
+        color: context.colors.surface,
       ),
     );
   }

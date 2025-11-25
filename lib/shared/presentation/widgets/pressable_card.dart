@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Reusable wrapper widget that provides minimal flat card styling with
 /// standardized press animations and haptic feedback.
@@ -17,7 +18,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 /// Usage:
 /// ```dart
 /// PressableCard(
-///   accentColor: Colors.purple,
+///   accentColor: context.colors.tertiary,
 ///   onTap: () => context.goNamed('analytics'),
 ///   child: Column(
 ///     children: [

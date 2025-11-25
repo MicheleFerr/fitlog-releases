@@ -150,9 +150,9 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
       case ContributionType.variant:
         return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.teal;
+        return context.colors.success;
       case ContributionType.technique:
-        return Colors.indigo;
+        return context.colors.primary;
     }
   }
   

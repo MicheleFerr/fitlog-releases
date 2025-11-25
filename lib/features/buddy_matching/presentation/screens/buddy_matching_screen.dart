@@ -25,6 +25,7 @@ import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/empty_matches_view.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/widgets/location_permission_widget.dart';
 import 'package:gymbro_flutter_new/features/buddy_matching/presentation/screens/edit_buddy_profile_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class BuddyMatchingScreen extends ConsumerStatefulWidget {
   const BuddyMatchingScreen({super.key});
@@ -255,7 +256,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
             return Positioned.fill(
               child: IgnorePointer(
                 child: Container(
-                  color: Colors.black.withValues(alpha: 0.3 * _celebrationAnimation.value),
+                  color: context.colors.onSurface.withValues(alpha: 0.3 * _celebrationAnimation.value),
                   child: Center(
                     child: Transform.scale(
                       scale: _celebrationAnimation.value,
@@ -268,16 +269,16 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.favorite,
                               size: 48,
-                              color: Colors.white,
+                              color: context.colors.surface,
                             ),
                             const SizedBox(height: 12),
                             Text(
                               l10n.itsAMatch,
                               style: theme.textTheme.headlineSmall?.copyWith(
-                                color: Colors.white,
+                                color: context.colors.surface,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -436,7 +437,7 @@ class _BuddyMatchingScreenState extends ConsumerState<BuddyMatchingScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colors.surface.withValues(alpha: 0.0),
       builder: (context) => const BuddyFilterSheet(),
     );
   }

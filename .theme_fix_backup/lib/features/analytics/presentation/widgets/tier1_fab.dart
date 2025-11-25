@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class Tier1FAB extends StatefulWidget {
   
@@ -121,12 +123,12 @@ class _Tier1FABState extends State<Tier1FAB> with SingleTickerProviderStateMixin
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: context.colors.surface.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             widget.icon,
-                            color: Colors.white,
+                            color: context.colors.surface,
                             size: 20,
                           ),
                         ),
@@ -134,7 +136,7 @@ class _Tier1FABState extends State<Tier1FAB> with SingleTickerProviderStateMixin
                         Text(
                           widget.label,
                           style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
+                            color: context.colors.surface,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                           ),

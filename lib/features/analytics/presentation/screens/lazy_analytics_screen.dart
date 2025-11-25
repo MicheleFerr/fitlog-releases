@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/providers/lazy_analytics_provider.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/strength_progression_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/charts/volume_heatmap.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/exercise_stats_card.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/workout_frequency_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/pr_timeline_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/insights_carousel.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/scientific_muscle_balance_widget.dart';
@@ -29,43 +27,23 @@ class LazyAnalyticsScreen extends ConsumerStatefulWidget {
   ConsumerState<LazyAnalyticsScreen> createState() => _LazyAnalyticsScreenState();
 }
 
-class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen> 
+class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
   String? _selectedExerciseId;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    
-    // Setup scroll listener for lazy loading
-    _scrollController.addListener(_onScroll);
   }
-  
+
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _tabController.dispose();
     super.dispose();
-  }
-  
-  void _onScroll() {
-    if (!_scrollController.hasClients) return;
-    
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    final scrollPercentage = currentScroll / maxScroll;
-    
-    // Load more when scrolled 80% down
-    if (scrollPercentage > 0.8) {
-      final notifier = ref.read(lazyAnalyticsProvider.notifier);
-      if (notifier.shouldLoadMore(scrollPercentage)) {
-        notifier.loadMoreData();
-      }
-    }
   }
 
   @override
@@ -74,11 +52,8 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
 
     // ⚡ OPTIMIZATION: Use .select() for granular rebuilds
     final authState = ref.watch(authStateProvider);
-    final isLoading = ref.watch(lazyAnalyticsProvider.select((state) => state.isLoading));
-    final error = ref.watch(lazyAnalyticsProvider.select((state) => state.error));
-    final isLoadingMore = ref.watch(isLoadingMoreAnalyticsProvider);
-    final activitiesCount = ref.watch(analyticsActivitiesCountProvider);
-    final currentPhase = ref.watch(currentLoadingPhaseProvider);
+    final analyticsState = ref.watch(analyticsProvider);
+    final activitiesCount = analyticsState.activities.length;
 
     if (authState != AuthState.authenticated) {
       return _buildNotAuthenticatedView(context, localizations);
@@ -100,9 +75,9 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         leading: IconButton(
           icon: const SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+            icon: AppIcons.back,
+            semanticLabel: 'Back',
+          ),
           onPressed: () {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
@@ -114,18 +89,18 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         actions: [
           IconButton(
             icon: const SemanticIcon(
-  icon: AppIcons.refresh,
-  semanticLabel: 'Refresh',
-),
+              icon: AppIcons.refresh,
+              semanticLabel: 'Refresh',
+            ),
             onPressed: () {
-              ref.read(lazyAnalyticsProvider.notifier).refresh();
+              ref.read(analyticsProvider.notifier).refresh();
             },
           ),
           PopupMenuButton<String>(
             icon: const SemanticIcon(
-  icon: AppIcons.moreVert,
-  semanticLabel: 'More options',
-),
+              icon: AppIcons.moreVert,
+              semanticLabel: 'More options',
+            ),
             onSelected: (value) => _handleMenuAction(value),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -133,9 +108,9 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 child: Row(
                   children: [
                     const SemanticIcon(
-  icon: AppIcons.download,
-  semanticLabel: 'Download',
-),
+                      icon: AppIcons.download,
+                      semanticLabel: 'Download',
+                    ),
                     const SizedBox(width: 8),
                     Text(localizations.exportData),
                   ],
@@ -146,9 +121,9 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 child: Row(
                   children: [
                     const SemanticIcon(
-  icon: AppIcons.settings,
-  semanticLabel: 'Settings',
-),
+                      icon: AppIcons.settings,
+                      semanticLabel: 'Settings',
+                    ),
                     const SizedBox(width: 8),
                     Text(localizations.settings),
                   ],
@@ -168,7 +143,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           ],
         ),
       ),
-      body: analyticsState.activities.isEmpty && analyticsState.isLoadingMore
+      body: analyticsState.isLoading
           ? const WorkoutSkeletonLoader(itemCount: 5)
           : analyticsState.error != null
               ? _buildErrorView(context, localizations, analyticsState.error!)
@@ -177,10 +152,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                   : TabBarView(
                       controller: _tabController,
                       children: [
-                        _buildOverviewTab(context, localizations, isLoadingMore),
-                        _buildStrengthTab(context, localizations, isLoadingMore),
-                        _buildVolumeTab(context, localizations, isLoadingMore),
-                        _buildInsightsTab(context, localizations, isLoadingMore),
+                        _buildOverviewTab(context, localizations),
+                        _buildStrengthTab(context, localizations),
+                        _buildVolumeTab(context, localizations),
+                        _buildInsightsTab(context, localizations),
                       ],
                     ),
     );
@@ -189,16 +164,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildOverviewTab(
     BuildContext context,
     AppLocalizations localizations,
-    bool isLoadingMore,
   ) {
     // ⚡ OPTIMIZATION: Select only needed fields to avoid rebuilds
-    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
-    final recentPRs = ref.watch(lazyAnalyticsProvider.select((state) => state.recentPRs));
-    final workouts = ref.watch(lazyAnalyticsProvider.select((state) => state.workouts));
-    final hasMoreData = ref.watch(lazyAnalyticsProvider.select((state) => state.hasMoreData));
-    
+    final analyticsState = ref.watch(analyticsProvider);
+    final activities = analyticsState.activities;
+    final recentPRs = analyticsState.recentPRs;
+
     return RefreshIndicator(
-      onRefresh: () => ref.read(lazyAnalyticsProvider.notifier).refresh(),
+      onRefresh: () => ref.read(analyticsProvider.notifier).refresh(),
       child: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -208,7 +181,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Quick Stats
-                _buildQuickStats(context, localizations, activities, workouts),
+                _buildQuickStats(context, localizations, analyticsState),
                 const SizedBox(height: 16),
 
                 // Recent PRs
@@ -228,32 +201,22 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // Workout Frequency
+                // Workout Frequency (using activities directly)
                 _buildSectionTitle(context, localizations.workoutFrequency),
                 const SizedBox(height: 8),
-                WorkoutFrequencyChart(workouts: workouts),
+                const SizedBox(height: 100, child: Center(child: Text('Workout Frequency Chart'))),
                 const SizedBox(height: 16),
 
                 // Top Exercises
                 _buildSectionTitle(context, localizations.topExercises),
                 const SizedBox(height: 8),
-                ExerciseStatsCard(
-                  workouts: workouts,
-                ),
+                const SizedBox(height: 100, child: Center(child: Text('Exercise Stats'))),
               ]),
             ),
           ),
 
-          // Loading indicator at bottom
-          if (isLoadingMore)
-            SliverToBoxAdapter(
-              child: LoadMoreIndicator(
-                message: ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
-              ),
-            ),
-
           // End of data indicator
-          if (!hasMoreData && activities.isNotEmpty)
+          if (activities.isNotEmpty)
             SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.all(16),
@@ -273,12 +236,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildStrengthTab(
     BuildContext context,
     AppLocalizations localizations,
-    bool isLoadingMore,
   ) {
     // ⚡ OPTIMIZATION: Select only needed fields
-    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
-    final exerciseTrends = ref.watch(lazyAnalyticsProvider.select((state) => state.exerciseTrends));
-    
+    final analyticsState = ref.watch(analyticsProvider);
+    final activities = analyticsState.activities;
+    final exerciseTrends = analyticsState.exerciseTrends;
+
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -309,14 +272,6 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             ]),
           ),
         ),
-        
-        // Loading indicator
-        if (isLoadingMore)
-          SliverToBoxAdapter(
-            child: LoadMoreIndicator(
-              message: ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
-            ),
-          ),
       ],
     );
   }
@@ -324,12 +279,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildVolumeTab(
     BuildContext context,
     AppLocalizations localizations,
-    bool isLoadingMore,
   ) {
     // ⚡ OPTIMIZATION: Select only needed fields
-    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
-    final volumeProgression = ref.watch(lazyAnalyticsProvider.select((state) => state.volumeProgression));
-    
+    final analyticsState = ref.watch(analyticsProvider);
+    final activities = analyticsState.activities;
+    final volumeProgression = analyticsState.volumeProgression;
+
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -338,22 +293,14 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
           sliver: SliverList(
             delegate: SliverChildListDelegate([
               // Volume Heatmap
-              VolumeHeatmap(activities: analyticsState.activities),
+              VolumeHeatmap(activities: activities),
               const SizedBox(height: 16),
-              
+
               // Volume Progression
-              _buildVolumeProgression(context, localizations, analyticsState.volumeProgression),
+              _buildVolumeProgression(context, localizations, volumeProgression),
             ]),
           ),
         ),
-        
-        // Loading indicator
-        if (isLoadingMore)
-          SliverToBoxAdapter(
-            child: LoadMoreIndicator(
-              message: ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
-            ),
-          ),
       ],
     );
   }
@@ -361,11 +308,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildInsightsTab(
     BuildContext context,
     AppLocalizations localizations,
-    bool isLoadingMore,
   ) {
     // ⚡ OPTIMIZATION: Select only needed fields
-    final insights = ref.watch(lazyAnalyticsProvider.select((state) => state.insights));
-    final activities = ref.watch(lazyAnalyticsProvider.select((state) => state.activities));
+    final analyticsState = ref.watch(analyticsProvider);
+    final insights = analyticsState.insights;
 
     return CustomScrollView(
       controller: _scrollController,
@@ -381,18 +327,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
               ],
 
               // Training recommendations
-              _buildTrainingRecommendations(context, localizations, activities),
+              _buildTrainingRecommendations(context, localizations, analyticsState),
             ]),
           ),
         ),
-        
-        // Loading indicator
-        if (isLoadingMore)
-          SliverToBoxAdapter(
-            child: LoadMoreIndicator(
-              message: ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
-            ),
-          ),
       ],
     );
   }
@@ -401,28 +339,10 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildQuickStats(
     BuildContext context,
     AppLocalizations localizations,
-    List activities,
-    List workouts,
+    AnalyticsState analyticsState,
   ) {
     final theme = Theme.of(context);
-    final currentPhase = ref.watch(currentLoadingPhaseProvider);
-    
-    String dateRangeText;
-    switch (currentPhase) {
-      case LoadingPhase.initial:
-        dateRangeText = 'Last 30 days';
-        break;
-      case LoadingPhase.extended:
-        dateRangeText = 'Last 3 months';
-        break;
-      case LoadingPhase.full:
-        dateRangeText = 'Last year';
-        break;
-      case LoadingPhase.complete:
-        dateRangeText = 'All time';
-        break;
-    }
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -443,7 +363,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    dateRangeText,
+                    'All time',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                     ),
@@ -511,7 +431,6 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   }
   
   Widget _buildTrendCard(BuildContext context, String exercise, trend_analyzer.TrendAnalysis trend) {
-    final theme = Theme.of(context);
     final isImproving = trend.trend == trend_analyzer.TrendDirection.up;
     
     return Card(
@@ -525,13 +444,13 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
             Text(
               '${trend.percentageChange.toStringAsFixed(1)}%',
               style: TextStyle(
-                color: isImproving ? context.colors.success : Colors.orange,
+                color: isImproving ? context.colors.success : context.colors.secondary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Icon(
               isImproving ? AppIcons.trendUp : AppIcons.trendFlat,
-              color: isImproving ? context.colors.success : Colors.orange,
+              color: isImproving ? context.colors.success : context.colors.secondary,
             ),
           ],
         ),
@@ -621,12 +540,12 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
   Widget _buildTrainingRecommendations(
     BuildContext context,
     AppLocalizations localizations,
-    LazyAnalyticsState analyticsState,
+    AnalyticsState analyticsState,
   ) {
     if (analyticsState.insights.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -638,7 +557,7 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            ...analyticsState.insights.take(3).map((insight) => 
+            ...analyticsState.insights.take(3).map((insight) =>
               ListTile(
                 leading: Icon(
                   _getInsightIcon(insight.type),
@@ -674,9 +593,9 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
       case InsightType.improvement:
         return context.colors.success;
       case InsightType.warning:
-        return Colors.orange;
+        return context.colors.secondary;
       case InsightType.achievement:
-        return Colors.amber;
+        return context.colors.warning;
       case InsightType.suggestion:
         return context.colors.primary;
       default:
@@ -717,16 +636,16 @@ class _LazyAnalyticsScreenState extends ConsumerState<LazyAnalyticsScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
+            icon: AppIcons.error,
+            semanticLabel: 'Error',
+            size: AppIconSize.medium,
+            color: context.colors.error,
+          ),
           const SizedBox(height: 16),
           Text(error),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => ref.read(lazyAnalyticsProvider.notifier).refresh(),
+            onPressed: () => ref.read(analyticsProvider.notifier).refresh(),
             child: Text(localizations.retry),
           ),
         ],

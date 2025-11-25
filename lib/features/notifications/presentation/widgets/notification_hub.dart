@@ -550,7 +550,7 @@ class NotificationTile extends StatelessWidget {
       case unified.NotificationType.streakReminder:
         return context.colors.secondary;
       case unified.NotificationType.friendActivity:
-        return Colors.pink;
+        return context.colors.secondary;
       case unified.NotificationType.systemUpdate:
       case unified.NotificationType.emergency:
       case unified.NotificationType.timerComplete:

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
+import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/weekly_dashboard_widget.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/memoized_analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:flutter/foundation.dart';
@@ -165,6 +167,43 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
                     onTap: () {
                       // Navigate to detailed view
                     },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Weekly Dashboard with e1RM Tracker
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                AppIcons.dashboard,
+                                color: theme.colorScheme.primary,
+                                size: AppIconSize.medium,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                l10n.weeklyDashboard,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          WeeklyDashboardWidget(
+                            activities: _convertWorkoutsToActivities(widget.workouts),
+                            isPremium: true, // Show full dashboard
+                            onDataSync: (data) {
+                              HapticFeedback.mediumImpact();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -816,6 +855,28 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
       return l10n.minutesAgo(diff.inMinutes);
     }
     return l10n.justNow;
+  }
+
+  /// Converts workouts to exercise activities for WeeklyDashboardWidget
+  List<ExerciseActivity> _convertWorkoutsToActivities(List<Workout> workouts) {
+    final activities = <ExerciseActivity>[];
+
+    for (final workout in workouts) {
+      for (final exercise in workout.exercises) {
+        // Only convert exercises with completed sets
+        if (exercise.sets.any((set) => set.isCompleted)) {
+          final activity = ExerciseActivity.fromExercise(
+            exercise: exercise,
+            userEmail: '', // Not needed for analytics
+            workoutName: workout.name,
+            workoutDate: workout.createdAt,
+          );
+          activities.add(activity);
+        }
+      }
+    }
+
+    return activities;
   }
 }
 

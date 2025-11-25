@@ -16,6 +16,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Widget base che mostra una lista di esercizi filtrabili
 /// Usato come componente riutilizzabile da vari picker
@@ -265,7 +266,7 @@ class _ExerciseListWidgetState extends ConsumerState<ExerciseListWidget> {
       case 'principiante':
         return context.colors.success;
       case 'intermedio':
-        return Colors.orange;
+        return context.colors.secondary;
       case 'avanzato':
         return context.colors.error;
       default:

@@ -160,7 +160,9 @@ class _ExerciseSelectorModalState extends ConsumerState<ExerciseSelectorModal>
   }
 
   Widget _buildSearchTab(BuildContext context) {
-    final searchResults = ref.watch(exerciseSearchResultsProvider);
+    // Use improved search provider with order-agnostic token matching
+    // "leg curl" will now find "Curl Leg Sdraiato" etc.
+    final searchResults = ref.watch(improvedExerciseSearchProvider);
     
     return searchResults.when(
       data: (exercises) {

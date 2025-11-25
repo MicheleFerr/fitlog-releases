@@ -116,7 +116,7 @@ class AnimatedIconPatterns {
   /// ```dart
   /// AnimatedIconPatterns.bouncing(
   ///   icon: AppIcons.trophy,
-  ///   color: Colors.gold,
+  ///   color: context.colors.tertiary,
   /// )
   /// ```
   static Widget bouncing({

@@ -628,7 +628,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
       case ExerciseCategory.abs:
         return context.colors.warning;
       case ExerciseCategory.cardio:
-        return Colors.pink;
+        return context.colors.error;
       case ExerciseCategory.other:
         return context.colors.surfaceContainerHighest;
     }

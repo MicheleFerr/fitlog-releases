@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class AnalyticsInsightsTab extends ConsumerStatefulWidget {
 
@@ -542,7 +543,7 @@ class _AnalyticsInsightsTabState extends ConsumerState<AnalyticsInsightsTab> {
                 : type == 'success' ? AppIcons.completeOutline
                 : AppIcons.infoOutline;
 
-    final color = type == 'warning' ? Colors.orange
+    final color = type == 'warning' ? context.colors.secondary
                  : type == 'success' ? context.colors.success
                  : theme.colorScheme.primary;
 
