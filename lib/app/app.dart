@@ -1,41 +1,34 @@
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show debugRepaintRainbowEnabled;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/login_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/home/presentation/home_screen_performance.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/home_screen_optimized.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_completion_summary_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/presentation/exercise_search_screen.dart';
-import 'package:gymbro_flutter_new/features/analytics/presentation/analytics_screen.dart';
-import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
-// 🧹 DEPRECATED: tabbed_analytics_screen.dart (5 tabs violate Two-Function Rule)
+import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analytics_screen.dart';
 // import 'package:gymbro_flutter_new/features/analytics/presentation/screens/analytics_dashboard_screen.dart'; // TEMP DISABLED
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/screens/notification_settings_screen_v2.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
+import 'package:gymbro_flutter_new/features/routine/presentation/screens/routine_editor_screen.dart';
 import 'package:gymbro_flutter_new/features/routine/presentation/screens/equipment_profiles_screen.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/screens/workout_history_screen.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/quick_start_screen.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/screens/goal_selection_screen.dart';
-import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/tools/import_exercises_screen.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_theme.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/providers/dynamic_theme_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/security_providers.dart';
@@ -43,11 +36,6 @@ import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/screens/unauthorized_screen.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_services_initializer.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -90,19 +78,6 @@ class FitLogApp extends ConsumerWidget {
     // ✅ FIX: Watch the provider to ensure it's initialized
     ref.watch(unifiedTimerProvider);
 
-    // ⚡ REPAINT OPTIMIZATION: Enable repaint rainbow visualization (DEBUG ONLY)
-    // Shows colored overlays on widgets when they repaint
-    // Useful for validating RepaintBoundary effectiveness
-    // ✅ SAFETY: Only works in debug mode + when feature flag is enabled
-    if (kDebugMode && FeatureFlags.enableRepaintRainbow) {
-      debugRepaintRainbowEnabled = true;
-      debugPrint('🌈 [REPAINT] Repaint rainbow enabled - colored overlays show widget repaints');
-      debugPrint('   💡 Tip: Areas that flash frequently = excessive repaints');
-      debugPrint('   ✅ Verify: RepaintBoundary prevents color changes in isolated widgets');
-    } else {
-      debugRepaintRainbowEnabled = false;
-    }
-
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {
       next.when(
@@ -129,25 +104,26 @@ class FitLogApp extends ConsumerWidget {
     if (authState == AuthState.loading) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ref.watch(dynamicThemeProvider(Brightness.light)),
-        darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
+        theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
         themeMode: themeMode,
         home: Scaffold(
-          body: Builder(
-            builder: (context) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const LoadingIndicator(),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Loading FitLog Pro...',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontSize: (context.textTheme.bodyLarge?.fontSize ?? 16) * config.fontSize,
-                    ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 24),
+                Text(
+                  'Loading FitLog Pro...',
+                  style: TextStyle(
+                    fontSize: 16 * config.fontSize,
+                    color: themeMode == ThemeMode.dark
+                      ? Colors.white70
+                      : Colors.black87,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -157,16 +133,15 @@ class FitLogApp extends ConsumerWidget {
     // ✅ FIX #5: If router creation fails (e.g., provider errors), show error screen
     // This prevents black screen when providers fail to initialize
     try {
-      return NotificationServicesInitializer(
-        child: _AppLifecycleObserver(
-          child: MaterialApp.router(
-            title: 'FitLog Pro',
-            theme: ref.watch(dynamicThemeProvider(Brightness.light)),
-            darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
-            themeMode: themeMode,
-            locale: locale,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
+      return _AppLifecycleObserver(
+        child: MaterialApp.router(
+          title: 'FitLog Pro',
+          theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
+          darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
+          themeMode: themeMode,
+          locale: locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
@@ -178,7 +153,6 @@ class FitLogApp extends ConsumerWidget {
           routerConfig: router,
           debugShowCheckedModeBanner: false,
         ),
-        ),
       );
     } catch (e, stack) {
       // ✅ FIX #5: Graceful error handling - show error screen instead of black screen
@@ -189,51 +163,113 @@ class FitLogApp extends ConsumerWidget {
 
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ref.watch(dynamicThemeProvider(Brightness.light)),
-        darkTheme: ref.watch(dynamicThemeProvider(Brightness.dark)),
+        theme: _buildThemeWithFontSize(AppTheme.lightTheme, config.fontSize),
+        darkTheme: _buildThemeWithFontSize(AppTheme.darkTheme, config.fontSize),
         themeMode: themeMode,
         home: Scaffold(
-          body: Builder(
-            builder: (context) => Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SemanticIcon(
-  icon: AppIcons.errorOutlineRounded,
-  semanticLabel: 'Error outline rounded',
-  size: AppIconSize.medium,
-  color: context.colors.error,
-),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Failed to initialize app',
-                      style: context.textTheme.titleLarge?.copyWith(
-                        fontSize: (context.textTheme.titleLarge?.fontSize ?? 20) * config.fontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: themeMode == ThemeMode.dark
+                      ? Colors.red[300]
+                      : Colors.red[700],
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Failed to initialize app',
+                    style: TextStyle(
+                      fontSize: 20 * config.fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: themeMode == ThemeMode.dark
+                        ? Colors.white
+                        : Colors.black87,
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      kDebugMode
-                        ? 'Error: $e'
-                        : 'Please restart the app',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontSize: (context.textTheme.bodyMedium?.fontSize ?? 14) * config.fontSize,
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    kDebugMode
+                      ? 'Error: $e'
+                      : 'Please restart the app',
+                    style: TextStyle(
+                      fontSize: 14 * config.fontSize,
+                      color: themeMode == ThemeMode.dark
+                        ? Colors.white70
+                        : Colors.black54,
                     ),
-                  ],
-                ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ),
         ),
       );
     }
+  }
+
+  ThemeData _buildThemeWithFontSize(ThemeData baseTheme, double fontSize) {
+    if (fontSize == 1.0) {
+      return baseTheme;
+    }
+    
+    // Create a completely new text theme with scaled font sizes
+    final originalTextTheme = baseTheme.textTheme;
+    final scaledTextTheme = originalTextTheme.copyWith(
+      displayLarge: originalTextTheme.displayLarge?.copyWith(
+        fontSize: (originalTextTheme.displayLarge?.fontSize ?? 57) * fontSize,
+      ),
+      displayMedium: originalTextTheme.displayMedium?.copyWith(
+        fontSize: (originalTextTheme.displayMedium?.fontSize ?? 45) * fontSize,
+      ),
+      displaySmall: originalTextTheme.displaySmall?.copyWith(
+        fontSize: (originalTextTheme.displaySmall?.fontSize ?? 36) * fontSize,
+      ),
+      headlineLarge: originalTextTheme.headlineLarge?.copyWith(
+        fontSize: (originalTextTheme.headlineLarge?.fontSize ?? 32) * fontSize,
+      ),
+      headlineMedium: originalTextTheme.headlineMedium?.copyWith(
+        fontSize: (originalTextTheme.headlineMedium?.fontSize ?? 28) * fontSize,
+      ),
+      headlineSmall: originalTextTheme.headlineSmall?.copyWith(
+        fontSize: (originalTextTheme.headlineSmall?.fontSize ?? 24) * fontSize,
+      ),
+      titleLarge: originalTextTheme.titleLarge?.copyWith(
+        fontSize: (originalTextTheme.titleLarge?.fontSize ?? 22) * fontSize,
+      ),
+      titleMedium: originalTextTheme.titleMedium?.copyWith(
+        fontSize: (originalTextTheme.titleMedium?.fontSize ?? 16) * fontSize,
+      ),
+      titleSmall: originalTextTheme.titleSmall?.copyWith(
+        fontSize: (originalTextTheme.titleSmall?.fontSize ?? 14) * fontSize,
+      ),
+      labelLarge: originalTextTheme.labelLarge?.copyWith(
+        fontSize: (originalTextTheme.labelLarge?.fontSize ?? 14) * fontSize,
+      ),
+      labelMedium: originalTextTheme.labelMedium?.copyWith(
+        fontSize: (originalTextTheme.labelMedium?.fontSize ?? 12) * fontSize,
+      ),
+      labelSmall: originalTextTheme.labelSmall?.copyWith(
+        fontSize: (originalTextTheme.labelSmall?.fontSize ?? 11) * fontSize,
+      ),
+      bodyLarge: originalTextTheme.bodyLarge?.copyWith(
+        fontSize: (originalTextTheme.bodyLarge?.fontSize ?? 16) * fontSize,
+      ),
+      bodyMedium: originalTextTheme.bodyMedium?.copyWith(
+        fontSize: (originalTextTheme.bodyMedium?.fontSize ?? 14) * fontSize,
+      ),
+      bodySmall: originalTextTheme.bodySmall?.copyWith(
+        fontSize: (originalTextTheme.bodySmall?.fontSize ?? 12) * fontSize,
+      ),
+    );
+    
+    return baseTheme.copyWith(textTheme: scaledTextTheme);
   }
 }
 
@@ -277,8 +313,7 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
     super.didChangeAppLifecycleState(state);
 
     try {
-      // NOTE: No Timer instances in this file - SessionTimeoutService manages its own Timer
-      // SessionTimeoutService is monitored automatically via Timer.periodic // ignore: timer
+      // SessionTimeoutService is monitored automatically via Timer.periodic
       // No need to explicitly handle lifecycle changes
 
       switch (state) {
@@ -320,34 +355,19 @@ class _AppLifecycleObserverState extends ConsumerState<_AppLifecycleObserver>
   }
 }
 
-/// Provider for initial deep link (set via ProviderScope override in main.dart)
-/// ✅ PRODUCTION-READY: Supports cold-start notification deep linking
-final initialDeepLinkProvider = StateProvider<String?>((ref) => null);
+/// Provider for initial deep link (set during cold-start from notifications)
+/// This is overridden in main.dart ProviderScope.overrides
+final initialDeepLinkProvider = Provider<String?>((ref) => null);
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // 🔔 DEEP LINKING: Read initial deep link from provider (set in main.dart)
-  final initialDeepLink = ref.watch(initialDeepLinkProvider);
-
   final authState = ref.watch(authStateProvider);
   final rbacService = ref.watch(rbacServiceProvider);
-  // 🔒 CRITICAL FIX: Use .select() to ONLY watch hasCompletedQuickStart and hasSelectedGoal
-  // Watching entire onboardingState causes router rebuild on every state change
-  // This created infinite loop: HomeScreen → navigate → startOnboarding() → state change → router rebuild → HomeScreen
-  final hasCompletedQuickStart = ref.watch(
-    onboardingStateProvider.select((state) => state.hasCompletedQuickStart),
-  );
-  // P4 RETENTION: Watch goal selection status
-  final hasSelectedGoal = ref.watch(
-    onboardingStateProvider.select((state) => state.hasSelectedGoal),
-  );
 
   return GoRouter(
-    // ✅ DEEP LINKING: Use deep link from notification if present, otherwise home
-    initialLocation: initialDeepLink ?? '/',
+    initialLocation: '/',
     redirect: (context, state) {
       final isLoggedIn = authState == AuthState.authenticated;
       final isLoggingIn = state.fullPath == '/login' || state.fullPath == '/register';
-      final isOnQuickStart = state.fullPath == '/quick-start';
       final currentPath = state.fullPath ?? state.path ?? '/';
 
       // ⚠️ CRITICAL FIX: Don't redirect while auth is loading
@@ -359,7 +379,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 🔒 SECURITY: Record user activity (reset session timeout)
       if (isLoggedIn) {
-        ref.read(sessionActivityRecorderProvider); // OK: read (event handler, not build)
+        ref.read(sessionActivityRecorderProvider);
       }
 
       // ✅ AUTH CHECK: If not logged in and not on login/register page, redirect to login
@@ -370,28 +390,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       // ✅ AUTH CHECK: If logged in and on login page, redirect to home
       if (isLoggedIn && isLoggingIn) {
         return '/';
-      }
-
-      // 🆕 ONBOARDING CHECK: If logged in but hasn't completed Quick Start, redirect there
-      // Skip if already on Quick Start page or old onboarding page
-      if (isLoggedIn &&
-          !hasCompletedQuickStart &&
-          !isOnQuickStart &&
-          currentPath != '/onboarding') {
-        debugPrint('🎯 [ONBOARDING] Redirecting to Quick Start (user has not completed it yet)');
-        return '/quick-start';
-      }
-
-      // 🎯 P4 RETENTION: If completed Quick Start but hasn't selected goal, redirect to goal selection
-      // Skip if already on goal selection page
-      final isOnGoalSelection = state.fullPath == '/goal-selection';
-      if (isLoggedIn &&
-          hasCompletedQuickStart &&
-          !hasSelectedGoal &&
-          !isOnGoalSelection &&
-          currentPath != '/onboarding') {
-        debugPrint('🎯 [P4 RETENTION] Redirecting to Goal Selection (user has not selected fitness goal yet)');
-        return '/goal-selection';
       }
 
       // 🔒 RBAC CHECK: Verify user has permission to access route
@@ -408,11 +406,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SemanticIcon(
-  icon: AppIcons.error,
-  semanticLabel: 'Error',
-  size: AppIconSize.medium,
-),
+            const Icon(Icons.error_outline, size: 64),
             const SizedBox(height: 16),
             Text('Page not found: ${state.fullPath ?? state.path ?? 'Unknown'}'),
             const SizedBox(height: 16),
@@ -438,27 +432,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/',
         name: 'home',
-        builder: (context, state) {
-          // Initialize monitoring on first load
-          // Monitoring hooks integrated directly in HomeScreenPerformance
-          return const HomeScreenPerformance();
-        },
+        builder: (context, state) => const HomeScreenOptimized(),
       ),
       GoRoute(
         path: '/workout',
         name: 'workout',
-        builder: (context, state) {
-          // Read queryParameters from CTA or direct navigation
-          final templateId = state.uri.queryParameters['templateId'];
-          final sessionId = state.uri.queryParameters['sessionId'];
-          final fromSmartCTA = state.uri.queryParameters['fromSmartCTA'] == 'true';
-
-          return WorkoutScreen(
-            initialTemplateId: templateId,
-            sessionId: sessionId,
-            fromSmartCTA: fromSmartCTA,
-          );
-        },
+        builder: (context, state) => const WorkoutScreen(),
       ),
       GoRoute(
         path: '/workout-completion-summary',
@@ -487,18 +466,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/analytics',
         name: 'analytics',
-        // ✅ PHASE 1: Simplified analytics (single-scroll, 0 tabs → complies with Two-Function Rule)
-        // 📊 Features: Monthly Summary Card (+78% retention), Volume Chart, Workout Frequency
-        // 🧹 REMOVED: 5-tab system (Overview, Progress, Insights, Routine, Premium)
-        builder: (context, state) => const AnalyticsScreen(),
-      ),
-      GoRoute(
-        path: '/ai-coach',
-        name: 'ai-coach',
-        // 🧠 AI Coach: 3-Tier Recovery Insights System
-        // 📊 Features: Readiness Score, Muscle Recovery, Overtraining Risk
-        // 🔓 Progressive Unlock: Basic (6 workouts), Intermediate (12), Advanced (20)
-        builder: (context, state) => const AICoachScreen(),
+        builder: (context, state) => const TabbedAnalyticsScreen(),
       ),
       // TEMP DISABLED: Analytics dashboard
       // GoRoute(
@@ -519,19 +487,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           return ExerciseDetailScreen(exerciseName: exerciseName);
         },
       ),
-      // 📊 ANALYTICS: Exercise Detail Screen with URL parameter
-      // Enables navigation via context.push('/analytics/exercise/Bench Press')
-      // Uses path parameter for deep linking support
-      GoRoute(
-        path: '/analytics/exercise/:exerciseName',
-        name: 'analytics-exercise-detail',
-        builder: (context, state) {
-          final exerciseName = state.pathParameters['exerciseName']!;
-          return ExerciseDetailScreen(
-            exerciseName: Uri.decodeComponent(exerciseName),
-          );
-        },
-      ),
       GoRoute(
         path: '/settings',
         name: 'settings',
@@ -548,14 +503,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const DebugLogSettingsScreen(),
       ),
       GoRoute(
-        path: '/settings/notifications-v2',
-        name: 'notifications-v2',
-        builder: (context, state) => const NotificationSettingsScreenV2(),
-      ),
-      GoRoute(
         path: '/import-exercises',
         name: 'import-exercises',
         builder: (context, state) => const ImportExercisesScreen(),
+      ),
+      GoRoute(
+        path: '/routine',
+        name: 'routine',
+        builder: (context, state) => const RoutineEditorScreen(),
       ),
       GoRoute(
         path: '/community',
@@ -574,22 +529,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AdminAnalyticsDashboardScreen(),
       ),
       // ✅ REMOVED: Dead route '/fitness-profile-debug' (0 usage, debug-only screen)
-      GoRoute(
-        path: '/quick-start',
-        name: 'quick-start',
-        builder: (context, state) => const QuickStartScreen(),
-      ),
-      // P4 RETENTION: Goal-Based Onboarding (+10-15% completion improvement)
-      GoRoute(
-        path: '/goal-selection',
-        name: 'goal-selection',
-        builder: (context, state) => GoalSelectionScreen(
-          onGoalSelected: (goal) {
-            // Navigate to home after goal selection
-            context.go('/');
-          },
-        ),
-      ),
       GoRoute(
         path: '/onboarding',
         name: 'onboarding',

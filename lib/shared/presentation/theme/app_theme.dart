@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/utils/contrast_checker.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class AppTheme {
   // Gym-inspired color palette
@@ -220,7 +221,7 @@ class AppTheme {
   
   // Custom colors for specific use cases
   static const Color timerActiveColor = successGreen;
-  static const Color timerInactiveColor = Colors.grey;
+  static const Color timerInactiveColor = Color(0xFFE7E0EC); // surfaceVariant equivalent
   static const Color workoutInProgressColor = secondaryOrange;
   static const Color completedWorkoutColor = successGreen;
 }

@@ -13,14 +13,10 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/admin_moderation_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal per visualizzare dettagli completi di un contributo
 class ContributionDetailModal extends ConsumerStatefulWidget {
@@ -58,7 +54,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
-        return DecoratedBox(
+        return Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -83,7 +79,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   children: [
                     Expanded(
                       child: Text(
-                        context.l10n.contributionDetails,
+                        'Dettagli Contributo',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -91,10 +87,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const SemanticIcon(
-  icon: AppIcons.close,
-  semanticLabel: 'Close',
-),
+                      icon: const Icon(Icons.close),
                     ),
                   ],
                 ),
@@ -162,13 +155,13 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
           Row(
             children: [
               Icon(
-                AppIcons.admin,
+                Icons.admin_panel_settings,
                 color: theme.colorScheme.error,
                 size: 20,
               ),
               const SizedBox(width: 8),
               Text(
-                context.l10n.adminActions,
+                'Azioni Admin',
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.error,
@@ -176,34 +169,28 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: FilledButton.icon(
                   onPressed: () => _handleApprove(),
-                  icon: SemanticIcon(
-  icon: AppIcons.complete,
-  semanticLabel: 'Complete',
-),
-                  label: Text(context.l10n.approve),
+                  icon: const Icon(Icons.check_circle),
+                  label: const Text('Approva'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: context.colors.success,
+                    backgroundColor: Colors.green,
                   ),
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: FilledButton.tonalIcon(
                   onPressed: () => _handleReject(),
-                  icon: SemanticIcon(
-  icon: AppIcons.cancel,
-  semanticLabel: 'Cancel',
-),
-                  label: Text(context.l10n.reject),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: context.colors.error.withValues(alpha: 0.2),
-                    foregroundColor: context.colors.error,
+                    backgroundColor: Colors.red.withValues(alpha: 0.2),
+                    foregroundColor: Colors.red,
                   ),
                 ),
               ),
@@ -222,15 +209,14 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
         children: [
           Row(
             children: [
-              SemanticIcon(
-  icon: AppIcons.commentOutlined,
-  semanticLabel: 'Comment outlined',
-  size: AppIconSize.small,
-  color: theme.colorScheme.primary,
-),
+              Icon(
+                Icons.comment_outlined,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Text(
-                context.l10n.commentsCount(widget.contribution.comments.length),
+                'Commenti (${widget.contribution.comments.length})',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -245,23 +231,21 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 padding: const EdgeInsets.all(32),
                 child: Column(
                   children: [
-                    SemanticIcon(
-  icon: AppIcons.commentsDisabledOutlined,
-  semanticLabel: 'Comments disabled outlined',
-  size: AppIconSize.xxlarge,
-  color: theme.colorScheme.outline.withValues(alpha: 0.5,
-),
+                    Icon(
+                      Icons.comments_disabled_outlined,
+                      size: 48,
+                      color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      context.l10n.noCommentsYet,
+                      'Nessun commento ancora',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.outline,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      context.l10n.beFirstToComment,
+                      'Sii il primo a commentare!',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.outline,
                       ),
@@ -298,7 +282,8 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                 backgroundColor: theme.colorScheme.primaryContainer,
                 child: Text(
                   comment.userName[0].toUpperCase(),
-                  style: context.textTheme.labelSmall?.copyWith(
+                  style: TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
                   ),
@@ -359,7 +344,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
             child: TextField(
               controller: _commentController,
               decoration: InputDecoration(
-                hintText: context.l10n.addCommentHint,
+                hintText: 'Aggiungi un commento...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
@@ -381,10 +366,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                     height: 20,
                     child: LoadingIndicator(size: 20),
                   )
-                : const SemanticIcon(
-  icon: AppIcons.send,
-  semanticLabel: 'Send',
-),
+                : const Icon(Icons.send),
           ),
         ],
       ),
@@ -396,11 +378,8 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       margin: const EdgeInsets.all(16),
       child: OutlinedButton.icon(
         onPressed: () => _showReportDialog(),
-        icon: const SemanticIcon(
-  icon: AppIcons.flagOutlined,
-  semanticLabel: 'Flag outlined',
-),
-        label: Text(context.l10n.reportContribution),
+        icon: const Icon(Icons.flag_outlined),
+        label: const Text('Segnala contributo'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.error,
           side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
@@ -420,7 +399,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showSuccess(
         context,
-        isUpvote ? context.l10n.upvoteSuccess : context.l10n.downvoteSuccess,
+        isUpvote ? '👍 Voto positivo!' : '👎 Voto negativo',
         duration: const Duration(seconds: 1),
       );
     } catch (e) {
@@ -428,7 +407,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showError(
         context,
-        context.l10n.errorWithMessage(e.toString()),
+        'Errore: $e',
       );
     }
   }
@@ -452,7 +431,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showSuccess(
         context,
-        context.l10n.commentAddedSuccess,
+        '💬 Commento aggiunto!',
         duration: const Duration(seconds: 2),
       );
     } catch (e) {
@@ -460,7 +439,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showError(
         context,
-        context.l10n.errorWithMessage(e.toString()),
+        'Errore: $e',
       );
     } finally {
       if (mounted) {
@@ -481,14 +460,14 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showSuccess(
         context,
-        context.l10n.contributionApprovedSuccess,
+        '✅ Contributo approvato!',
       );
     } catch (e) {
       if (!mounted) return;
 
       SnackBarService.showError(
         context,
-        context.l10n.errorWithMessage(e.toString()),
+        'Errore: $e',
       );
     }
   }
@@ -513,15 +492,15 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showCustom(
         context,
-        message: context.l10n.contributionRejectedSuccess,
-        backgroundColor: context.colors.error,
+        message: '🚫 Contributo rifiutato',
+        backgroundColor: Colors.red,
       );
     } catch (e) {
       if (!mounted) return;
 
       SnackBarService.showError(
         context,
-        context.l10n.errorWithMessage(e.toString()),
+        'Errore: $e',
       );
     }
   }
@@ -545,7 +524,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showSuccess(
         context,
-        context.l10n.reportSubmittedSuccess,
+        '🚨 Segnalazione inviata',
         duration: const Duration(seconds: 2),
       );
     } catch (e) {
@@ -553,7 +532,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
 
       SnackBarService.showError(
         context,
-        context.l10n.errorWithMessage(e.toString()),
+        'Errore: $e',
       );
     }
   }
@@ -563,15 +542,15 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
     final difference = now.difference(dateTime);
 
     if (difference.inDays > 7) {
-      return context.l10n.weeksAgo((difference.inDays / 7).floor());
+      return '${(difference.inDays / 7).floor()} sett. fa';
     } else if (difference.inDays > 0) {
-      return context.l10n.daysAgo(difference.inDays);
+      return '${difference.inDays}g fa';
     } else if (difference.inHours > 0) {
-      return context.l10n.hoursAgo(difference.inHours);
+      return '${difference.inHours}h fa';
     } else if (difference.inMinutes > 0) {
-      return context.l10n.minutesAgo(difference.inMinutes);
+      return '${difference.inMinutes}m fa';
     } else {
-      return context.l10n.justNow;
+      return 'ora';
     }
   }
 }
@@ -596,21 +575,21 @@ class _RejectDialogState extends State<_RejectDialog> {
     final theme = Theme.of(context);
 
     return AlertDialog(
-      title: Text(context.l10n.rejectContributionTitle),
+      title: const Text('Rifiuta Contributo'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.l10n.rejectReasonLabel,
+            'Specifica il motivo del rifiuto:',
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _controller,
-            decoration: InputDecoration(
-              hintText: context.l10n.rejectReasonHint,
-              border: const OutlineInputBorder(),
+            decoration: const InputDecoration(
+              hintText: 'Es: Informazioni non accurate',
+              border: OutlineInputBorder(),
             ),
             maxLines: 3,
             autofocus: true,
@@ -620,16 +599,16 @@ class _RejectDialogState extends State<_RejectDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(context.l10n.cancel),
+          child: const Text('Annulla'),
         ),
         FilledButton(
           onPressed: () {
             Navigator.pop(context, _controller.text);
           },
           style: FilledButton.styleFrom(
-            backgroundColor: context.colors.error,
+            backgroundColor: Colors.red,
           ),
-          child: Text(context.l10n.reject),
+          child: const Text('Rifiuta'),
         ),
       ],
     );
@@ -646,12 +625,12 @@ class _ReportDialogState extends State<_ReportDialog> {
   final _controller = TextEditingController();
   String? _selectedReason;
 
-  List<String> get _reportReasons => [
-    context.l10n.reportReasonSpam,
-    context.l10n.reportReasonOffensive,
-    context.l10n.reportReasonWrongInfo,
-    context.l10n.reportReasonDuplicate,
-    context.l10n.reportReasonOther,
+  final _reportReasons = [
+    'Spam o pubblicità',
+    'Contenuto offensivo',
+    'Informazioni errate',
+    'Duplicato',
+    'Altro',
   ];
 
   @override
@@ -665,42 +644,35 @@ class _ReportDialogState extends State<_ReportDialog> {
     final theme = Theme.of(context);
 
     return AlertDialog(
-      title: Text(context.l10n.reportContributionTitle),
+      title: const Text('Segnala Contributo'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.l10n.reportReasonLabel,
+            'Motivo della segnalazione:',
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          RadioGroup<String>(
-            groupValue: _selectedReason,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() => _selectedReason = value);
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: _reportReasons.map((reason) => RadioListTile<String>(
-                    title: Text(reason),
-                    value: reason,
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                  )).toList(),
-            ),
-          ),
-          if (_selectedReason == context.l10n.reportReasonOther) ...[
+          ..._reportReasons.map((reason) => RadioListTile<String>(
+                title: Text(reason),
+                value: reason,
+                groupValue: _selectedReason,
+                onChanged: (value) {
+                  setState(() => _selectedReason = value);
+                },
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              )),
+          if (_selectedReason == 'Altro') ...[
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
-              decoration: InputDecoration(
-                hintText: context.l10n.reportReasonOtherHint,
-                border: const OutlineInputBorder(),
+              decoration: const InputDecoration(
+                hintText: 'Specifica il motivo',
+                border: OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -710,13 +682,13 @@ class _ReportDialogState extends State<_ReportDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(context.l10n.cancel),
+          child: const Text('Annulla'),
         ),
         FilledButton(
           onPressed: _selectedReason == null
               ? null
               : () {
-                  final reason = _selectedReason == context.l10n.reportReasonOther
+                  final reason = _selectedReason == 'Altro'
                       ? _controller.text
                       : _selectedReason!;
                   Navigator.pop(context, reason);
@@ -724,7 +696,7 @@ class _ReportDialogState extends State<_ReportDialog> {
           style: FilledButton.styleFrom(
             backgroundColor: theme.colorScheme.error,
           ),
-          child: Text(context.l10n.reportAction),
+          child: const Text('Segnala'),
         ),
       ],
     );
