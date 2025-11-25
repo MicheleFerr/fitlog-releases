@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
@@ -28,13 +27,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start_card.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_quick_start_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/swipeable_template_card.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/template_bridge.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/tier1_minimal_timer_overlay.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/data/services/interstitial_ad_service.dart';
@@ -57,6 +53,13 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebra
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutScreen extends ConsumerStatefulWidget {
+
+  const WorkoutScreen({
+    super.key,
+    this.initialTemplateId,
+    this.sessionId,
+    this.fromSmartCTA = false,
+  });
   /// Optional template ID to pre-load when opening the screen
   final String? initialTemplateId;
 
@@ -65,13 +68,6 @@ class WorkoutScreen extends ConsumerStatefulWidget {
 
   /// Whether this screen was opened from the Smart CTA
   final bool fromSmartCTA;
-
-  const WorkoutScreen({
-    super.key,
-    this.initialTemplateId,
-    this.sessionId,
-    this.fromSmartCTA = false,
-  });
 
   @override
   ConsumerState<WorkoutScreen> createState() => _WorkoutScreenState();
@@ -383,7 +379,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         debugPrint('🏗️ [WorkoutScreen] Building workout view with ${exercises.length} exercises (ID: $workoutId)');
                       }
 
-                      if (workoutId == null || exercises.isEmpty) {
+                      // 🔧 FIX: Solo mostra loading se workoutId è null (workout non esiste ancora)
+                      // NON mostrare loading se exercises è vuoto - quello è gestito da _buildWorkoutView
+                      // che mostra _buildEmptyExerciseList appropriatamente
+                      if (workoutId == null) {
                         return const Center(child: LoadingIndicator());
                       }
 
@@ -1352,7 +1351,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
               onPressed: () => _onStartWorkout(context, ref, workout, sessionId),
-              icon: SemanticIcon(
+              icon: const SemanticIcon(
   icon: AppIcons.playArrowRounded,
   semanticLabel: 'Play arrow rounded',
 ),
@@ -1470,7 +1469,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                         ),
                         title: Text(template.name),
                         subtitle: Text('${template.exercises.length} esercizi • ~${template.estimatedDuration} min'),
-                        trailing: SemanticIcon(
+                        trailing: const SemanticIcon(
                           icon: AppIcons.arrowForwardRounded,
                           semanticLabel: 'Select template',
                           size: AppIconSize.small,
@@ -2203,9 +2202,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             ),
           ),
           const SizedBox(height: 16),
-          if (ref.watch(currentWorkoutProvider) != null) ...[
+          // ⚡ OPTIMIZATION: Use .select() to only rebuild when existence changes
+          if (ref.watch(currentWorkoutProvider.select((w) => w != null))) ...[
             ListTile(
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
   icon: AppIcons.saveAlt,
   semanticLabel: 'Save alt',
 ),
@@ -2218,7 +2218,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             ),
             const Divider(),
             ListTile(
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
   icon: AppIcons.pause,
   semanticLabel: 'Pause',
 ),
@@ -2244,7 +2244,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             const Divider(),
           ],
           ListTile(
-            leading: SemanticIcon(
+            leading: const SemanticIcon(
   icon: AppIcons.tune,
   semanticLabel: 'Tune',
 ),
@@ -2256,7 +2256,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
             },
           ),
           ListTile(
-            leading: SemanticIcon(
+            leading: const SemanticIcon(
   icon: AppIcons.logout,
   semanticLabel: 'Logout',
 ),
@@ -2476,14 +2476,11 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         updatedAt: DateTime.now(),
       );
 
-      // Save to unified repository
-      final unifiedRepo = ref.read(unifiedTemplateRepositoryProvider);
-      final unifiedTemplate = TemplateBridge.fromLegacy(duplicatedTemplate);
-      await unifiedRepo.createTemplate(unifiedTemplate);
+      // Save to legacy repository
+      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(duplicatedTemplate);
 
       // Invalidate providers to refresh list
       ref.invalidate(customWorkoutTemplatesProvider);
-      ref.invalidate(userTemplatesProvider);
 
       if (mounted) {
         SnackBarService.showSuccess(
