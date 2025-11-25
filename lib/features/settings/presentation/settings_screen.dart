@@ -8,15 +8,15 @@ import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_prov
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/shared/config/feature_flags.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/user_profile_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
 import 'package:gymbro_flutter_new/debug/achievement_debug_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -35,7 +35,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(l10n.settingsTitle),
         backgroundColor: context.colors.surfaceContainerHighest,
         leading: IconButton(
-          icon: SemanticIcon(
+          icon: const SemanticIcon(
   icon: AppIcons.back,
   semanticLabel: 'Back',
 ),
@@ -83,6 +83,10 @@ class SettingsScreen extends ConsumerWidget {
 
             // Notifications (v2.0)
             _buildNotificationsSection(context),
+            const SizedBox(height: 24),
+
+            // Health Sync (Apple Health / Health Connect)
+            _buildHealthSyncSection(context),
             const SizedBox(height: 24),
 
             // Units & Language
@@ -159,7 +163,7 @@ class SettingsScreen extends ConsumerWidget {
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.account,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -181,13 +185,13 @@ class SettingsScreen extends ConsumerWidget {
                                   ? NetworkImage(user.photoURL!)
                                   : null,
                               child: user.photoURL == null
-                                  ? SemanticIcon(
+                                  ? const SemanticIcon(
   icon: AppIcons.person,
   semanticLabel: 'Profile',
 )
                                   : null,
                             ),
-                            SizedBox(width: 12),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,13 +213,13 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         // Admin Dashboard Button
                         SizedBox(
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: () => context.pushNamed('admin'),
-                            icon: SemanticIcon(
+                            icon: const SemanticIcon(
   icon: AppIcons.admin,
   semanticLabel: 'Admin',
 ),
@@ -225,7 +229,7 @@ class SettingsScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         // Database Manager Button (Direct Access)
                         SizedBox(
                           width: double.infinity,
@@ -237,7 +241,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                               );
                             },
-                            icon: SemanticIcon(
+                            icon: const SemanticIcon(
   icon: AppIcons.storage,
   semanticLabel: 'Storage',
 ),
@@ -274,7 +278,7 @@ class SettingsScreen extends ConsumerWidget {
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.appearance,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -283,7 +287,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Theme Mode Selection (with visual icon preview)
             ListTile(
@@ -359,7 +363,7 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    SemanticIcon(
+                    const SemanticIcon(
   icon: AppIcons.formatSize,
   semanticLabel: 'Format size',
 ),
@@ -527,7 +531,7 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: 'Recovery Insights',
               subtitle: 'Track readiness, muscle recovery, and overtraining risk',
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
   icon: AppIcons.analytics,
   semanticLabel: 'Analytics',
 ),
@@ -571,11 +575,55 @@ class SettingsScreen extends ConsumerWidget {
               context,
               title: context.l10n.notificationSettings,
               subtitle: context.l10n.notificationSettingsDesc,
-              leading: SemanticIcon(
+              leading: const SemanticIcon(
   icon: AppIcons.notifications,
   semanticLabel: 'Notifications',
 ),
               onTap: () => context.pushNamed('notifications-v2'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHealthSyncSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.sync,
+                  semanticLabel: 'Health Sync',
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.healthSyncSettings,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Health Sync Settings Link
+            _buildSettingTile(
+              context,
+              title: context.l10n.healthSyncSettings,
+              subtitle: context.l10n.healthSyncSettingsDesc,
+              leading: const SemanticIcon(
+                icon: AppIcons.favorite,
+                semanticLabel: 'Health',
+              ),
+              onTap: () => context.pushNamed('health-sync'),
             ),
           ],
         ),
@@ -598,7 +646,7 @@ class SettingsScreen extends ConsumerWidget {
                   size: AppIconSize.medium,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.settingsUnitsLanguage,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -656,7 +704,7 @@ class SettingsScreen extends ConsumerWidget {
                   size: AppIconSize.medium,
                   color: context.colors.error,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.settingsAccountActions,
                   style: context.textTheme.titleMedium?.copyWith(
@@ -1102,11 +1150,11 @@ class SettingsScreen extends ConsumerWidget {
       case 'green':
         return context.colors.success;
       case 'purple':
-        return Colors.purple;
+        return context.colors.tertiary;
       case 'orange':
-        return Colors.orange;
+        return context.colors.warning;
       case 'teal':
-        return Colors.teal;
+        return context.colors.secondary;
       case 'blue':
       default:
         return context.colors.primary;

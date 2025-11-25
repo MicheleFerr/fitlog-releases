@@ -15,7 +15,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/unified_user_provider.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/hybrid_exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
@@ -24,7 +24,6 @@ import 'package:gymbro_flutter_new/features/auth/domain/entities/user_profile.da
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// State for sync operation
 class SyncState {
@@ -134,17 +133,8 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
       
       // Perform sync with progress updates
       int processed = 0;
-      // TODO: Implement ExerciseActivityRepository.syncAllPendingWorkouts()
-      // final result = await repository.syncAllPendingWorkouts();
-
-      // Simulated result for now
-      final result = SyncResult(
-        success: true,
-        message: 'Synced $processed workouts',
-        syncedCount: processed,
-        failedCount: 0,
-      );
-
+      final result = await repository.syncAllPendingWorkouts();
+      
       // Update progress periodically (simulated)
       for (int i = 0; i < unsyncedWorkouts.length; i++) {
         processed++;
@@ -153,11 +143,11 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
           progress: processed / unsyncedWorkouts.length,
           currentOperation: 'Syncing workout $processed/${unsyncedWorkouts.length}',
         );
-
+        
         // Small delay for UI updates
         await Future.delayed(const Duration(milliseconds: 100));
       }
-
+      
       // Update final state
       state = state.copyWith(
         isSyncing: false,
@@ -277,7 +267,7 @@ class PremiumSyncCard extends ConsumerWidget {
             child: Column(
               children: [
                 Icon(
-                  AppIcons.cloudOff,
+                  Icons.cloud_off,
                   size: 48,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -325,7 +315,7 @@ class PremiumSyncCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    AppIcons.cloudSync,
+                    Icons.cloud_sync,
                     color: theme.colorScheme.onPrimaryContainer,
                   ),
                 ),
@@ -358,10 +348,10 @@ class PremiumSyncCard extends ConsumerWidget {
                 else if (syncState.lastResult != null)
                   Icon(
                     syncState.lastResult!.success 
-                        ? AppIcons.complete 
-                        : AppIcons.error,
-                    color: syncState.lastResult!.success 
-                        ? context.colors.success 
+                        ? Icons.check_circle 
+                        : Icons.error,
+                    color: syncState.lastResult!.success
+                        ? context.colors.success
                         : theme.colorScheme.error,
                   ),
               ],
@@ -393,7 +383,7 @@ class PremiumSyncCard extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      AppIcons.clock,
+                      Icons.access_time,
                       size: 16,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -407,12 +397,12 @@ class PremiumSyncCard extends ConsumerWidget {
                   ],
                 ),
                 if (syncState.lastResult != null) ...[
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     syncState.lastResult!.message,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: syncState.lastResult!.success 
-                          ? context.colors.success 
+                      color: syncState.lastResult!.success
+                          ? context.colors.success
                           : theme.colorScheme.error,
                     ),
                   ),
@@ -472,7 +462,7 @@ class PremiumSyncCard extends ConsumerWidget {
                                 .performRetroactiveSync();
                           }
                         },
-                  icon: const Icon(AppIcons.cloudUpload),
+                  icon: const Icon(Icons.cloud_upload),
                   label: Text(AppLocalizations.of(context).syncAllWorkouts),
                 ),
               ),
@@ -493,7 +483,7 @@ class PremiumSyncCard extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(
-                      AppIcons.info,
+                      Icons.info_outline,
                       size: 20,
                       color: theme.colorScheme.primary,
                     ),
@@ -569,17 +559,17 @@ class PremiumSyncCard extends ConsumerWidget {
           children: [
             Text('Premium features include:'),
             SizedBox(height: 12),
-            _FeatureItem(icon: AppIcons.cloudSync, text: 'Cloud sync across devices'),
-            _FeatureItem(icon: AppIcons.backup, text: 'Automatic backups'),
-            _FeatureItem(icon: AppIcons.insights, text: 'Advanced analytics'),
-            _FeatureItem(icon: AppIcons.timer, text: 'Unlimited workout history'),
-            _FeatureItem(icon: AppIcons.support, text: 'Priority support'),
+            _FeatureItem(icon: Icons.cloud_sync, text: 'Cloud sync across devices'),
+            _FeatureItem(icon: Icons.backup, text: 'Automatic backups'),
+            _FeatureItem(icon: Icons.insights, text: 'Advanced analytics'),
+            _FeatureItem(icon: Icons.timer, text: 'Unlimited workout history'),
+            _FeatureItem(icon: Icons.support, text: 'Priority support'),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Maybe Later'),
+            child: const Text('Maybe Later'),
           ),
           FilledButton(
             onPressed: () {
@@ -630,7 +620,7 @@ class _FeatureItem extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(child: Text(text, style: Theme.of(context).textTheme.bodySmall)),
         ],
       ),

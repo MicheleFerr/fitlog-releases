@@ -165,7 +165,6 @@ class _HighlightOverlayState extends State<HighlightOverlay>
                       overlayColor: widget.overlayColor,
                       shape: widget.shape,
                       pulseAnimation: _pulseAnimation,
-                      highlightColor: context.colors.surface,
                     ),
                   )
                 : Container(color: widget.overlayColor),
@@ -183,16 +182,18 @@ class _HighlightOverlayState extends State<HighlightOverlay>
             right: 16,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              child: TextButton(
-                onPressed: widget.onSkip,
-                style: TextButton.styleFrom(
-                  foregroundColor: context.colors.surface,
-                  backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+              child: Builder(
+                builder: (context) => TextButton(
+                  onPressed: widget.onSkip,
+                  style: TextButton.styleFrom(
+                    foregroundColor: context.colors.surface,
+                    backgroundColor: context.colors.onSurface.withValues(alpha: 0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
+                  child: const Text('Skip'),
                 ),
-                child: const Text('Skip'),
               ),
             ),
           ),
@@ -281,13 +282,11 @@ class HighlightPainter extends CustomPainter {
     required this.overlayColor,
     required this.shape,
     required this.pulseAnimation,
-    required this.highlightColor,
   }) : super(repaint: pulseAnimation);
   final Rect targetRect;
   final Color overlayColor;
   final HighlightShape shape;
   final Animation<double> pulseAnimation;
-  final Color highlightColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -295,8 +294,9 @@ class HighlightPainter extends CustomPainter {
       ..color = overlayColor
       ..style = PaintingStyle.fill;
 
+    // Note: Cannot access context in CustomPainter, using white as universal highlight color
     final highlightPaint = Paint()
-      ..color = highlightColor
+      ..color = const Color(0xFFFFFFFF)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0 * pulseAnimation.value;
 

@@ -5,9 +5,7 @@ import 'dart:io';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -46,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         error: (error, _) {
           // Show error message
           if (mounted) {
-            SnackBarService.showError(context, context.l10n.error);
+            SnackBarService.showError(context, error.toString());
           }
         },
       );
@@ -73,14 +71,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   color: context.colors.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: SemanticIcon(
-  icon: AppIcons.workout,
-  semanticLabel: 'Workout',
-  size: AppIconSize.medium,
-  color: context.colors.primary,
-),
+                child: Icon(
+                  Icons.fitness_center,
+                  size: 60,
+                  color: context.colors.primary,
+                ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // App Title
               Text(
@@ -91,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
 
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 context.l10n.appSubtitle,
                 style: context.textTheme.bodyLarge?.copyWith(
@@ -99,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               
               // Welcome Card
               Card(
@@ -107,19 +104,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      SemanticIcon(
-  icon: AppIcons.wavingHand,
-  semanticLabel: 'Waving hand',
-  size: AppIconSize.xlarge,
-  color: context.colors.primary,
-),
-                      SizedBox(height: 16),
+                      Icon(
+                        Icons.waving_hand,
+                        size: 32,
+                        color: context.colors.primary,
+                      ),
+                      const SizedBox(height: 16),
                       Text(
                         context.l10n.welcomeToGymBro,
                         textAlign: TextAlign.center,
                         style: context.textTheme.titleMedium,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         context.l10n.welcomeDescription,
                         textAlign: TextAlign.center,
@@ -132,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               
               // Email/Password Login Form (conditionally shown)
               if (_showLoginForm) ...[
@@ -146,10 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.emailLabel,
                           hintText: context.l10n.emailHint,
-                          prefixIcon: SemanticIcon(
-  icon: AppIcons.email,
-  semanticLabel: 'Email',
-),
+                          prefixIcon: const Icon(Icons.email),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -163,7 +156,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       
                       // Password Field
                       TextFormField(
@@ -171,12 +164,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: context.l10n.passwordLabel,
                           hintText: context.l10n.passwordHint,
-                          prefixIcon: SemanticIcon(
-  icon: AppIcons.lock,
-  semanticLabel: 'Lock',
-),
+                          prefixIcon: const Icon(Icons.lock),
                           suffixIcon: IconButton(
-                            icon: Icon(_obscurePassword ? AppIcons.visibility : AppIcons.visibilityOff),
+                            icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                           ),
                         ),
@@ -189,7 +179,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
                       
                       // Sign In Button
                       SizedBox(
@@ -197,7 +187,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: FilledButton(
                           onPressed: authController.isLoading ? null : _handleEmailSignIn,
                           child: authController.isLoading
-                              ? SizedBox(
+                              ? const SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
@@ -205,22 +195,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               : Text(context.l10n.signInButton),
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Forgot Password
                       TextButton(
                         onPressed: _handleForgotPassword,
                         child: Text(context.l10n.forgotPassword),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
                       // Back to options
                       TextButton.icon(
                         onPressed: () => setState(() => _showLoginForm = false),
-                        icon: SemanticIcon(
-  icon: AppIcons.back,
-  semanticLabel: 'Back',
-),
+                        icon: const Icon(Icons.arrow_back),
                         label: Text(context.l10n.backToOptions),
                       ),
                     ],
@@ -233,16 +220,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: FilledButton.icon(
                     onPressed: authController.isLoading ? null : _signInWithGoogle,
                     icon: authController.isLoading
-                        ? SizedBox(
+                        ? const SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : SemanticIcon(
-  icon: AppIcons.gMobiledata,
-  semanticLabel: 'G mobiledata',
-  size: AppIconSize.medium,
-),
+                        : const Icon(Icons.g_mobiledata, size: 24),
                     label: Text(context.l10n.signInWithGoogle),
                   ),
                 ),
@@ -260,19 +243,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         foregroundColor: context.colors.surface,
                       ),
                       icon: authController.isLoading
-                          ? SizedBox(
+                          ? const SizedBox(
                               height: 20,
                               width: 20,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : SemanticIcon(
-  icon: AppIcons.apple,
-  semanticLabel: 'Apple',
-),
+                          : const Icon(Icons.apple),
                       label: Text(context.l10n.signInWithApple),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
 
                 // Email Sign In Button
@@ -280,25 +260,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => setState(() => _showLoginForm = true),
-                    icon: SemanticIcon(
-  icon: AppIcons.email,
-  semanticLabel: 'Email',
-),
+                    icon: const Icon(Icons.email),
                     label: Text(context.l10n.signInWithEmail),
                   ),
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Register Button
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => context.pushNamed('register'),
-                    icon: SemanticIcon(
-  icon: AppIcons.personAdd,
-  semanticLabel: 'Person add',
-),
+                    icon: const Icon(Icons.person_add),
                     label: Text(context.l10n.signUpButton),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: context.colors.primary,
@@ -308,24 +282,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ],
               
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               
               // Features Preview
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _FeatureIcon(
-                    icon: AppIcons.timer,
+                    icon: Icons.timer,
                     label: context.l10n.featureSmartTimer,
                     color: context.colors.primary,
                   ),
                   _FeatureIcon(
-                    icon: AppIcons.phoneIphone,
+                    icon: Icons.phone_iphone,
                     label: context.l10n.featureLiveActivities,
                     color: context.colors.secondary,
                   ),
                   _FeatureIcon(
-                    icon: AppIcons.favorite,
+                    icon: Icons.favorite,
                     label: context.l10n.featureAppleHealth,
                     color: context.colors.tertiary,
                   ),
@@ -372,7 +346,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } catch (e) {
       if (mounted) {
-        SnackBarService.showError(context, context.l10n.error);
+        SnackBarService.showError(context, e.toString());
       }
     }
   }
@@ -408,7 +382,7 @@ class _FeatureIcon extends StatelessWidget {
             size: 24,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           label,
           style: context.textTheme.labelSmall?.copyWith(

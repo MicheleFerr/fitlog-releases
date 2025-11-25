@@ -20,7 +20,6 @@ import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/user_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/presentation/providers/feedback_providers.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog for submitting feedback
 class FeedbackDialog extends ConsumerStatefulWidget {
@@ -74,12 +73,12 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
-                        AppIcons.feedback,
+                        Icons.feedback,
                         color: context.colors.primary,
                         size: 24,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Send Feedback',
@@ -92,7 +91,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   ],
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Category selection
                 Text(
@@ -102,7 +101,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -130,7 +129,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   }).toList(),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Rating
                 Text(
@@ -153,8 +152,8 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                       },
                       icon: Icon(
                         _rating != null && starValue <= _rating!
-                            ? AppIcons.star
-                            : AppIcons.starBorder,
+                            ? Icons.star
+                            : Icons.star_border,
                         color: context.colors.warning,
                         size: 32,
                       ),
@@ -162,7 +161,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   }),
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Message
                 Text(
@@ -172,7 +171,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                     color: context.colors.onSurface,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: _messageController,
                   maxLines: 5,
@@ -197,7 +196,7 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                   },
                 ),
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Actions
                 Row(
@@ -210,11 +209,11 @@ class _FeedbackDialogState extends ConsumerState<FeedbackDialog> {
                         style: TextStyle(color: context.colors.onSurface),
                       ),
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     ElevatedButton.icon(
                       onPressed: _submitFeedback,
-                      icon: Icon(AppIcons.send),
-                      label: Text('Submit'),
+                      icon: const Icon(Icons.send),
+                      label: const Text('Submit'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.primary,
                         foregroundColor: context.colors.onPrimary,

@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Dialog to test timer sounds directly on iOS
 class TimerSoundTestDialog extends ConsumerStatefulWidget {
@@ -92,7 +91,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
     final currentSound = TimerSound.fromFileName(config.timerSound);
 
     return AlertDialog(
-      title: Text('Test Timer Sounds'),
+      title: const Text('Test Timer Sounds'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -102,24 +101,26 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
               'Current Sound: ${currentSound.getLocalizedName()}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Individual sound test buttons
-            Text(
+            const Text(
               'Test Individual Sounds:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             
             for (final sound in TimerSound.values) ...[
-              ListTile(
-                leading: Icon(
-                  sound == currentSound ? AppIcons.checkCircle : AppIcons.circleOutlined,
-                  color: sound == currentSound ? context.colors.success : null,
+              Builder(
+                builder: (context) => ListTile(
+                  leading: Icon(
+                    sound == currentSound ? Icons.check_circle : Icons.circle_outlined,
+                    color: sound == currentSound ? context.colors.success : null,
+                  ),
+                  title: Text(sound.getLocalizedName()),
+                  subtitle: const Text('Tap to test with 3-second timer'),
+                  onTap: () => _testSpecificSound(sound),
                 ),
-                title: Text(sound.getLocalizedName()),
-                subtitle: const Text('Tap to test with 3-second timer'),
-                onTap: () => _testSpecificSound(sound),
               ),
             ],
             
@@ -140,11 +141,11 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Icon(AppIcons.play),
-              label: Text('Run Full Sound Test'),
+                  : const Icon(Icons.play_arrow),
+              label: const Text('Run Full Sound Test'),
             ),
             
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             
             if (_testStatus.isNotEmpty) ...[
               Container(
@@ -160,7 +161,7 @@ class _TimerSoundTestDialogState extends ConsumerState<TimerSoundTestDialog> {
               ),
             ],
             
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Instructions
             Container(

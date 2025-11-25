@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class TogglePanoramaStep extends ConsumerStatefulWidget {
 
@@ -28,7 +32,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       title: l10n.onboardingToggleAdvancedTrackingTitle,
       description: l10n.onboardingToggleAdvancedTrackingDescription,
       icon: AppIcons.analytics,
-      color: Colors.blue,
+      color: context.colors.primary,
       toggles: [
         ToggleInfo(
           name: 'Tracciamento RPE',
@@ -50,7 +54,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       title: l10n.onboardingToggleTimerAutomationTitle,
       description: l10n.onboardingToggleTimerAutomationDescription,
       icon: AppIcons.timer,
-      color: Colors.green,
+      color: context.colors.success,
       toggles: [
         ToggleInfo(
           name: 'Timer Automatico',
@@ -86,7 +90,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       title: l10n.onboardingToggleInterfaceTitle,
       description: l10n.onboardingToggleInterfaceDescription,
       icon: AppIcons.tune,
-      color: Colors.purple,
+      color: context.colors.tertiary,
       toggles: [
         ToggleInfo(
           name: 'Informazioni TUT',
@@ -129,7 +133,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
       title: l10n.onboardingToggleSupportTitle,
       description: l10n.onboardingToggleSupportDescription,
       icon: AppIcons.supportAgent,
-      color: Colors.orange,
+      color: context.colors.warning,
       toggles: [
         ToggleInfo(
           name: 'Warmup Suggestions',
@@ -328,16 +332,17 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                             decoration: BoxDecoration(
                               color: colorScheme.primary.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  AppIcons.moreVert,
-                                  size: 14,
-                                  color: colorScheme.primary,
-                                ),
+                                SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                                 const SizedBox(width: 4),
                                 Text(
                                   l10n.onboardingToggleSettingsChangePart2,
@@ -377,7 +382,7 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.onSurface.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -498,8 +503,8 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                     ? (isEnabled ? AppIcons.toggleOn : AppIcons.toggleOff)
                     : AppIcons.lock,
                 color: isAvailable
-                    ? (isEnabled ? colorScheme.primary : Colors.grey)
-                    : Colors.grey,
+                    ? (isEnabled ? colorScheme.primary : context.colors.surfaceContainerHighest)
+                    : context.colors.surfaceContainerHighest,
                 size: 20,
               ),
               const SizedBox(width: 12),
@@ -518,13 +523,15 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [Colors.amber, Colors.orange]),
+                    gradient: LinearGradient(
+                      colors: [context.colors.warning.withValues(alpha: 0.8), context.colors.warning],
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'PRO',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white,
+                      color: context.colors.surface,
                       fontWeight: FontWeight.bold,
                       fontSize: 10,
                     ),
@@ -551,10 +558,12 @@ class _TogglePanoramaStepState extends ConsumerState<TogglePanoramaStep>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.tip,
-                    size: 16,
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                  SemanticIcon(
+  icon: AppIcons.tip,
+  semanticLabel: 'Tip',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurface.withValues(alpha: 0.6,
+),
                   ),
                   const SizedBox(width: 8),
                   Expanded(

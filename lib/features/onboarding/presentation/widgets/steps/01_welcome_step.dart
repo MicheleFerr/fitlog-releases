@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class WelcomeStep extends StatefulWidget {
 
@@ -89,13 +87,13 @@ class _WelcomeStepState extends State<WelcomeStep>
 
   void _startAnimations() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    unawaited(_heroController.forward());
+    _heroController.forward();
 
     await Future.delayed(const Duration(milliseconds: 600));
-    unawaited(_textController.forward());
+    _textController.forward();
 
     await Future.delayed(const Duration(milliseconds: 400));
-    unawaited(_featureController.forward());
+    _featureController.forward();
   }
 
   @override
@@ -147,7 +145,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                     ],
                   ),
                   child: Icon(
-                    AppIcons.workout,
+                    Icons.fitness_center,
                     size: 80,
                     color: colorScheme.onPrimary,
                   ),
@@ -169,7 +167,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                   child: Column(
                     children: [
                       Text(
-                        l10n.onboardingWelcomeTitle(''),
+                        l10n.onboardingWelcomeTitle,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
@@ -233,7 +231,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                     Row(
                       children: [
                         Icon(
-                          AppIcons.favorite,
+                          Icons.favorite,
                           color: colorScheme.primary,
                           size: 28,
                         ),
@@ -262,7 +260,7 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 32),
               _buildAnimatedFeature(
                 0,
-                AppIcons.ai,
+                Icons.psychology,
                 l10n.onboardingWelcomeFeature1Title,
                 l10n.onboardingWelcomeFeature1Description,
                 colorScheme.primary,
@@ -270,26 +268,26 @@ class _WelcomeStepState extends State<WelcomeStep>
               const SizedBox(height: 16),
               _buildAnimatedFeature(
                 1,
-                AppIcons.tune,
+                Icons.tune,
                 l10n.onboardingWelcomeFeature2Title,
                 l10n.onboardingWelcomeFeature2Description,
                 colorScheme.secondary,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildAnimatedFeature(
                 2,
-                AppIcons.workout,
+                Icons.fitness_center,
                 l10n.onboardingWelcomeFeature3Title,
                 l10n.onboardingWelcomeFeature3Description,
                 colorScheme.tertiary,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildAnimatedFeature(
                 3,
-                AppIcons.rocket,
+                Icons.rocket_launch,
                 l10n.onboardingWelcomeFeature4Title,
                 l10n.onboardingWelcomeFeature4Description,
-                context.colors.secondary,
+                context.colors.warning,
               ),
             ],
           ),
@@ -321,7 +319,7 @@ class _WelcomeStepState extends State<WelcomeStep>
                   child: Row(
                     children: [
                       Icon(
-                        AppIcons.lightbulb,
+                        Icons.lightbulb,
                         color: colorScheme.primary,
                         size: 28,
                       ),
@@ -342,7 +340,7 @@ class _WelcomeStepState extends State<WelcomeStep>
             },
           ),
 
-          SizedBox(height: 60), // Bottom padding per scrolling completo
+          const SizedBox(height: 60), // Bottom padding per scrolling completo
         ],
       ),
     );

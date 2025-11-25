@@ -19,7 +19,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Widget to display sync status for premium users
 class SyncStatusCard extends ConsumerWidget {
@@ -36,7 +35,7 @@ class SyncStatusCard extends ConsumerWidget {
       return Card(
         child: ListTile(
           leading: Icon(
-            AppIcons.cloudOff,
+            Icons.cloud_off,
             color: theme.colorScheme.onSurfaceVariant,
           ),
           title: Text(l10n.localStorageOnly),
@@ -60,7 +59,7 @@ class SyncStatusCard extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.cloudSync,
+                  Icons.cloud_sync,
                   color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: 8),
@@ -77,7 +76,7 @@ class SyncStatusCard extends ConsumerWidget {
                   )
                 else
                   IconButton(
-                    icon: const Icon(AppIcons.refresh),
+                    icon: const Icon(Icons.refresh),
                     onPressed: () {
                       ref.read(syncStatusProvider.notifier).syncNow();
                     },
@@ -102,8 +101,8 @@ class SyncStatusCard extends ConsumerWidget {
                     children: [
                       Icon(
                         syncStatus.lastSyncResult!.success
-                            ? AppIcons.complete
-                            : AppIcons.error,
+                            ? Icons.check_circle
+                            : Icons.error,
                         size: 16,
                         color: syncStatus.lastSyncResult!.success
                             ? context.colors.success
@@ -141,20 +140,20 @@ class SyncStatusCard extends ConsumerWidget {
                   children: [
                     _buildSyncStat(
                       context,
-                      AppIcons.export,
+                      Icons.upload,
                       l10n.uploaded,
                       syncStatus.lastSyncResult!.syncedItems,
                     ),
                     _buildSyncStat(
                       context,
-                      AppIcons.download,
+                      Icons.download,
                       l10n.downloaded,
                       syncStatus.lastSyncResult!.pulledItems,
                     ),
                     if (syncStatus.lastSyncResult!.failedItems > 0)
                       _buildSyncStat(
                         context,
-                        AppIcons.error,
+                        Icons.error_outline,
                         l10n.failed,
                         syncStatus.lastSyncResult!.failedItems,
                         isError: true,
@@ -182,11 +181,11 @@ class SyncStatusCard extends ConsumerWidget {
                         );
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.exportFailedError(e.toString()))),
+                          SnackBar(content: Text(l10n.exportFailedError(error: e.toString()))),
                         );
                       }
                     },
-                    icon: const Icon(AppIcons.fileDownload),
+                    icon: const Icon(Icons.file_download),
                     label: Text(l10n.export),
                   ),
                 ),
@@ -196,7 +195,7 @@ class SyncStatusCard extends ConsumerWidget {
                     onPressed: () {
                       // TODO: Import data from file
                     },
-                    icon: const Icon(AppIcons.fileUpload),
+                    icon: const Icon(Icons.file_upload),
                     label: Text(l10n.import),
                   ),
                 ),
