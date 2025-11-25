@@ -22,6 +22,9 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/apre_service
 import 'package:gymbro_flutter_new/features/workout/domain/services/rpe_autoregulation_service.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class SupersetExerciseCompleteData {
 
@@ -270,15 +273,15 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
   Color _getRpeColor(int rpe, ColorScheme colorScheme) {
     switch (rpe) {
       case 6:
-        return Colors.green;
+        return context.colors.success;
       case 7:
-        return Colors.lightGreen;
+        return context.colors.success;
       case 8:
-        return Colors.yellow;
+        return context.colors.warning;
       case 9:
-        return Colors.orange;
+        return context.colors.warning;
       case 10:
-        return Colors.red;
+        return context.colors.error;
       default:
         return colorScheme.primary;
     }
@@ -418,7 +421,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isSelected
-                            ? Colors.white
+                            ? context.colors.surface
                             : colorScheme.onSurface,
                       ),
                     ),
@@ -429,7 +432,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         fontSize: 9,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                         color: isSelected
-                            ? Colors.white.withValues(alpha: 0.95)
+                            ? context.colors.surface.withValues(alpha: 0.95)
                             : colorScheme.onSurfaceVariant,
                       ),
                       textAlign: TextAlign.center,
@@ -515,10 +518,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.swipe,
-                size: 16,
-                color: colorScheme.primary.withValues(alpha: 0.7),
+              SemanticIcon(
+  icon: AppIcons.swipe,
+  semanticLabel: 'Swipe',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary.withValues(alpha: 0.7,
+),
               ),
               const SizedBox(width: 4),
               Text(
@@ -692,11 +697,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                         ),
                       );
                     },
-                    child: Icon(
-                      AppIcons.info,
-                      size: 18,
-                      color: colorScheme.primary,
-                    ),
+                    child: SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                   ),
                 ],
               ),
@@ -747,11 +753,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                                 color: colorScheme.primary.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
-                                AppIcons.trendUp,
-                                size: 18,
-                                color: colorScheme.primary,
-                              ),
+                              child: SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                             ),
                             const SizedBox(width: 12),
                             Column(
@@ -895,7 +902,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
+                      foregroundColor: context.colors.surface,
                       disabledBackgroundColor: colorScheme.surfaceContainerHighest,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -906,7 +913,11 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (_selectedRpe != null) ...[
-                          const Icon(AppIcons.complete, size: 20),
+                          const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.small,
+),
                           const SizedBox(width: 8),
                         ],
                         Text(
@@ -1005,9 +1016,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         gradient: LinearGradient(
           colors: [
             suggestion.shouldIncrease
-                ? Colors.green.withValues(alpha: 0.2)
+                ? context.colors.success.withValues(alpha: 0.2)
                 : suggestion.shouldDecrease
-                    ? Colors.orange.withValues(alpha: 0.2)
+                    ? context.colors.warning.withValues(alpha: 0.2)
                     : colorScheme.primaryContainer.withValues(alpha: 0.5),
             colorScheme.primaryContainer.withValues(alpha: 0.3),
           ],
@@ -1017,9 +1028,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: suggestion.shouldIncrease
-              ? Colors.green.withValues(alpha: 0.3)
+              ? context.colors.success.withValues(alpha: 0.3)
               : suggestion.shouldDecrease
-                  ? Colors.orange.withValues(alpha: 0.3)
+                  ? context.colors.warning.withValues(alpha: 0.3)
                   : colorScheme.primary.withValues(alpha: 0.3),
           width: 1.5,
         ),
@@ -1029,15 +1040,16 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.trendUp,
-                size: 20,
-                color: suggestion.shouldIncrease
-                    ? Colors.green
+              SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.small,
+  color: suggestion.shouldIncrease
+                    ? context.colors.success
                     : suggestion.shouldDecrease
-                        ? Colors.orange
+                        ? context.colors.warning
                         : colorScheme.primary,
-              ),
+),
               const SizedBox(width: 8),
               Text(
                 l10n.rpeAutoregulation,
@@ -1097,9 +1109,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           : '${suggestion.adjustmentPercent.toStringAsFixed(1)}%',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: suggestion.shouldIncrease
-                            ? Colors.green
+                            ? context.colors.success
                             : suggestion.shouldDecrease
-                                ? Colors.orange
+                                ? context.colors.warning
                                 : colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -1181,11 +1193,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.autoAwesome,
-                size: 20,
-                color: colorScheme.primary,
-              ),
+              SemanticIcon(
+  icon: AppIcons.autoAwesome,
+  semanticLabel: 'Auto awesome',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
               const SizedBox(width: 8),
               Text(
                 'APRE ${widget.exercise!.apreProtocol} Protocol',
@@ -1233,9 +1246,9 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           : '${suggestion.set4AdjustmentKg.toStringAsFixed(1)} kg',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: suggestion.set4AdjustmentKg > 0
-                            ? Colors.green
+                            ? context.colors.success
                             : suggestion.set4AdjustmentKg < 0
-                                ? Colors.orange
+                                ? context.colors.warning
                                 : colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -1309,7 +1322,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcons.workout, size: 16, color: colorScheme.primary),
+                    SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       l10n.weight,
@@ -1338,7 +1356,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
+                        child: SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                       ),
                     ),
                     // Weight display
@@ -1387,7 +1410,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
+                        child: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                       ),
                     ),
                   ],
@@ -1411,7 +1439,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcons.repeat, size: 16, color: colorScheme.primary),
+                    SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       l10n.reps,
@@ -1440,7 +1473,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
+                        child: SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                       ),
                     ),
                     // Reps display
@@ -1489,7 +1527,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
+                        child: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                       ),
                     ),
                   ],
@@ -1528,7 +1571,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(AppIcons.repeat, size: 18, color: colorScheme.primary),
+              SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
               const SizedBox(width: 8),
               Text(
                 l10n.reps,
@@ -1557,7 +1605,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     color: colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(AppIcons.remove, size: 24, color: colorScheme.error),
+                  child: SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.medium,
+  color: colorScheme.error,
+),
                 ),
               ),
               // Reps display
@@ -1599,7 +1652,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                     color: colorScheme.primaryContainer.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(AppIcons.add, size: 24, color: colorScheme.primary),
+                  child: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.medium,
+  color: colorScheme.primary,
+),
                 ),
               ),
             ],
@@ -1639,7 +1697,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcons.schedule, size: 16, color: colorScheme.primary),
+                    SemanticIcon(
+  icon: AppIcons.schedule,
+  semanticLabel: 'Schedule',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       'Minuti', // TODO: Add localization
@@ -1668,7 +1731,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
+                        child: SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                       ),
                     ),
                     // Minutes display
@@ -1717,7 +1785,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
+                        child: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                       ),
                     ),
                   ],
@@ -1741,7 +1814,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(AppIcons.timer, size: 16, color: colorScheme.primary),
+                    SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                     const SizedBox(width: 4),
                     Text(
                       'Secondi', // TODO: Add localization
@@ -1770,7 +1848,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.errorContainer.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.remove, size: 18, color: colorScheme.error),
+                        child: SemanticIcon(
+  icon: AppIcons.remove,
+  semanticLabel: 'Remove',
+  size: AppIconSize.small,
+  color: colorScheme.error,
+),
                       ),
                     ),
                     // Seconds display
@@ -1819,7 +1902,12 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(AppIcons.add, size: 18, color: colorScheme.primary),
+                        child: SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                       ),
                     ),
                   ],

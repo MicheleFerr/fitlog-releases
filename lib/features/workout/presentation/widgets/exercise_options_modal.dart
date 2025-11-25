@@ -60,7 +60,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 onTap: () {
                   showDialog(
                     context: context,
-                    barrierColor: Colors.black87,
+                    barrierColor: context.colors.onSurface.withValues(alpha: 0.87),
                     barrierDismissible: true,
                     builder: (context) => ExerciseGifFullscreen(
                       gifUrl: imageUrl!,
@@ -112,7 +112,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
+                            color: context.colors.onSurface.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -121,13 +121,13 @@ class ExerciseOptionsModal extends StatelessWidget {
                               Icon(
                                 AppIcons.zoomOutMap,
                                 size: 16,
-                                color: Colors.white.withValues(alpha: 0.9),
+                                color: context.colors.surface.withValues(alpha: 0.9),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 context.l10n.exerciseOptionsTapToEnlarge,
                                 style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.9),
+                                  color: context.colors.surface.withValues(alpha: 0.9),
                                   fontSize: 11,
                                 ),
                               ),
@@ -195,7 +195,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Info Riscaldamento
                   ListTile(
-                    leading: Icon(AppIcons.whatshot, color: Colors.orange),
+                    leading: Icon(AppIcons.whatshot, color: context.colors.warning),
                     title: Text(context.l10n.exerciseOptionsWarmupInfo),
                     subtitle: Text(context.l10n.exerciseOptionsWarmupInfoSubtitle),
                     onTap: () async {
@@ -218,7 +218,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // Prevenzione infortuni
                   ListTile(
-                    leading: Icon(AppIcons.shieldOutlined, color: Colors.green),
+                    leading: Icon(AppIcons.shieldOutlined, color: context.colors.success),
                     title: Text(context.l10n.exerciseOptionsInjuryPrevention),
                     subtitle: Text(context.l10n.exerciseOptionsInjuryPreventionSubtitle),
                     onTap: () async {
@@ -243,7 +243,7 @@ class ExerciseOptionsModal extends StatelessWidget {
 
                   // 🆕 Segnala problema
                   ListTile(
-                    leading: const Icon(AppIcons.flagOutlined, color: Colors.orange),
+                    leading: Icon(AppIcons.flagOutlined, color: context.colors.warning),
                     title: Text(context.l10n.exerciseOptionsReportIssue),
                     subtitle: Text(context.l10n.exerciseOptionsReportIssueSubtitle),
                     onTap: () {
@@ -517,7 +517,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(AppIcons.whatshot, color: Colors.orange),
+                    Icon(AppIcons.whatshot, color: context.colors.warning),
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -610,7 +610,7 @@ class ExerciseOptionsModal extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Icon(AppIcons.shieldOutlined, color: Colors.green),
+                    Icon(AppIcons.shieldOutlined, color: context.colors.success),
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(

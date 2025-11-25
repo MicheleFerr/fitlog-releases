@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class WarmupSet {
 
@@ -153,9 +151,9 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
       widget.onComplete?.call();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Warmup completed! Ready for working sets 💪'),
+          content: const Text('Warmup completed! Ready for working sets 💪'),
           backgroundColor: context.colors.success,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -200,12 +198,12 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: context.colors.secondary.withValues(alpha: 0.1),
+                    color: context.colors.warning.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
-                    AppIcons.whatshot,
-                    color: context.colors.secondary,
+                    Icons.whatshot,
+                    color: context.colors.warning,
                     size: 24,
                   ),
                 ),
@@ -230,7 +228,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(AppIcons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -244,9 +242,9 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
               value: completedCount / warmupSets.length,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
               valueColor: AlwaysStoppedAnimation<Color>(
-                completedCount == warmupSets.length 
-                  ? context.colors.success 
-                  : context.colors.secondary,
+                completedCount == warmupSets.length
+                  ? context.colors.success
+                  : context.colors.warning,
               ),
             ),
           ),
@@ -274,14 +272,14 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: set.completed 
+                            color: set.completed
                               ? context.colors.success.withValues(alpha: 0.1)
-                              : context.colors.secondary.withValues(alpha: 0.1),
+                              : context.colors.warning.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: set.completed 
+                              color: set.completed
                                 ? context.colors.success.withValues(alpha: 0.3)
-                                : context.colors.secondary.withValues(alpha: 0.3),
+                                : context.colors.warning.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -293,7 +291,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: set.completed ? context.colors.success : context.colors.secondary,
+                                  color: set.completed ? context.colors.success : context.colors.warning,
                                 ),
                               ),
                               Text(
@@ -301,7 +299,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                 style: TextStyle(
                                   fontSize: 8,
                                   fontWeight: FontWeight.w600,
-                                  color: set.completed ? context.colors.success : context.colors.secondary,
+                                  color: set.completed ? context.colors.success : context.colors.warning,
                                 ),
                               ),
                             ],
@@ -347,7 +345,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                                           if (!set.completed) ...[
                                             const SizedBox(width: 4),
                                             Icon(
-                                              AppIcons.edit,
+                                              Icons.edit,
                                               size: 14,
                                               color: theme.colorScheme.onPrimaryContainer
                                                 .withValues(alpha: 0.5),
@@ -388,7 +386,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
                         // Action button
                         if (set.completed)
                           Icon(
-                            AppIcons.checkCircle,
+                            Icons.check_circle,
                             color: context.colors.success,
                             size: 32,
                           )
@@ -419,7 +417,7 @@ class _WarmupProgressionV2State extends State<WarmupProgressionV2> {
             child: Row(
               children: [
                 Icon(
-                  AppIcons.info,
+                  Icons.info_outline,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
