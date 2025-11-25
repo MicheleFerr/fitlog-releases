@@ -5,6 +5,8 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// TIER-1 Performance Heatmap Widget
 /// Visualizes performance data as an interactive heatmap with drill-down capabilities
@@ -294,7 +296,7 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         height: 24,
         decoration: BoxDecoration(
           color: _getCellColor(cellData, theme),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           border: isSelected
             ? Border.all(color: theme.colorScheme.primary, width: 2)
             : null,
@@ -452,10 +454,12 @@ class _PerformanceHeatmapWidgetState extends ConsumerState<PerformanceHeatmapWid
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            Icon(
-              AppIcons.gridView,
-              size: 64,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.gridView,
+  semanticLabel: 'Grid view',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 16),
             Text(

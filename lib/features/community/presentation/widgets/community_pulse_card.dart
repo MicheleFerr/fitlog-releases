@@ -6,8 +6,9 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_initializer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CommunityPulseCard extends ConsumerStatefulWidget {
   
@@ -304,7 +305,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                 _isExpanded = true;
               });
             },
-            icon: const Icon(AppIcons.howToVote),
+            icon: const SemanticIcon(
+  icon: AppIcons.howToVote,
+  semanticLabel: 'How to vote',
+),
             label: Text('Review $count contributi'),
             style: FilledButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
@@ -318,7 +322,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
         const SizedBox(width: 12),
         IconButton.filled(
           onPressed: widget.onViewAll,
-          icon: const Icon(AppIcons.forward),
+          icon: const SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+),
           style: IconButton.styleFrom(
             backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
             foregroundColor: theme.colorScheme.primary,
@@ -333,7 +340,10 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: widget.onViewAll,
-        icon: const Icon(AppIcons.explore),
+        icon: const SemanticIcon(
+  icon: AppIcons.explore,
+  semanticLabel: 'Explore',
+),
         label: const Text('Esplora Community'),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimaryContainer,
@@ -403,7 +413,7 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
                 color: index == _currentIndex
                     ? theme.colorScheme.primary
                     : theme.colorScheme.onPrimaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
@@ -421,11 +431,12 @@ class _CommunityPulseCardState extends ConsumerState<CommunityPulseCard>
       ),
       child: Column(
         children: [
-          Icon(
-            AppIcons.celebration,
-            size: 48,
-            color: theme.colorScheme.onPrimaryContainer,
-          ),
+          SemanticIcon(
+  icon: AppIcons.celebration,
+  semanticLabel: 'Celebration',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onPrimaryContainer,
+),
           const SizedBox(height: 12),
           Text(
             'Tutto reviewato!',
@@ -616,7 +627,10 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(false);
                 },
-                icon: Icon(AppIcons.close),
+                icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 style: IconButton.styleFrom(
                   backgroundColor: context.colors.error.withValues(alpha: 0.1),
                   foregroundColor: context.colors.error,
@@ -627,7 +641,10 @@ class _MiniContributionCard extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   onVote(true);
                 },
-                icon: Icon(AppIcons.check),
+                icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                 style: IconButton.styleFrom(
                   backgroundColor: context.colors.success.withValues(alpha: 0.1),
                   foregroundColor: context.colors.success,

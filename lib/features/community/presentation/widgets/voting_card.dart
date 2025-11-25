@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class VotingCard extends StatefulWidget {
 
@@ -72,17 +70,17 @@ class _VotingCardState extends State<VotingCard>
   IconData _getTypeIcon() {
     switch (widget.contribution.type) {
       case ContributionType.tip:
-        return AppIcons.lightbulb;
+        return Icons.lightbulb;
       case ContributionType.warning:
-        return AppIcons.warningAmberRounded;
+        return Icons.warning_amber_rounded;
       case ContributionType.correction:
-        return AppIcons.editNote;
+        return Icons.edit_note;
       case ContributionType.technique:
-        return AppIcons.workout;
+        return Icons.fitness_center;
       case ContributionType.variant:
-        return AppIcons.altRoute;
+        return Icons.alt_route;
       case ContributionType.translation:
-        return AppIcons.translate;
+        return Icons.translate;
     }
   }
   
@@ -90,17 +88,17 @@ class _VotingCardState extends State<VotingCard>
     final theme = Theme.of(context);
     switch (widget.contribution.type) {
       case ContributionType.tip:
-        return context.colors.warning;
+        return theme.colorScheme.warning;
       case ContributionType.warning:
-        return context.colors.secondary;
+        return theme.colorScheme.warning;
       case ContributionType.correction:
         return theme.colorScheme.primary;
       case ContributionType.technique:
-        return context.colors.primary;
+        return theme.colorScheme.primary;
       case ContributionType.variant:
-        return context.colors.tertiary;
+        return theme.colorScheme.tertiary;
       case ContributionType.translation:
-        return context.colors.success;
+        return theme.colorScheme.success;
     }
   }
   
@@ -158,7 +156,7 @@ class _VotingCardState extends State<VotingCard>
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: context.colors.onSurface.withValues(alpha: 0.05),
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -234,7 +232,7 @@ class _VotingCardState extends State<VotingCard>
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 if (widget.contribution.isFeatured)
                                   Container(
                                     padding: const EdgeInsets.symmetric(
@@ -244,8 +242,8 @@ class _VotingCardState extends State<VotingCard>
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          context.colors.warning,
-                                          context.colors.secondary,
+                                          theme.colorScheme.warning,
+                                          theme.colorScheme.tertiary,
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(12),
@@ -254,15 +252,15 @@ class _VotingCardState extends State<VotingCard>
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          AppIcons.star,
+                                          Icons.star,
                                           size: 10,
-                                          color: context.colors.surface,
+                                          color: theme.colorScheme.onTertiary,
                                         ),
-                                        SizedBox(width: 2),
+                                        const SizedBox(width: 2),
                                         Text(
                                           'Featured',
                                           style: TextStyle(
-                                            color: context.colors.surface,
+                                            color: theme.colorScheme.onTertiary,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -381,24 +379,24 @@ class _VotingCardState extends State<VotingCard>
                       children: [
                         // Upvote button
                         _VoteButton(
-                          icon: AppIcons.thumbUpOutlined,
-                          activeIcon: AppIcons.thumbUp,
+                          icon: Icons.thumb_up_outlined,
+                          activeIcon: Icons.thumb_up,
                           count: widget.contribution.upvotes,
-                          color: context.colors.success,
+                          color: theme.colorScheme.success,
                           isActive: hasUpvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
                             widget.onUpvote();
                           },
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
 
                         // Downvote button
                         _VoteButton(
-                          icon: AppIcons.thumbDownOutlined,
-                          activeIcon: AppIcons.thumbDown,
+                          icon: Icons.thumb_down_outlined,
+                          activeIcon: Icons.thumb_down,
                           count: widget.contribution.downvotes,
-                          color: context.colors.error,
+                          color: theme.colorScheme.error,
                           isActive: hasDownvoted,
                           onTap: () {
                             HapticFeedback.lightImpact();
@@ -417,7 +415,7 @@ class _VotingCardState extends State<VotingCard>
                                 widget.contribution.comments.length.toString(),
                               ),
                               isLabelVisible: widget.contribution.comments.isNotEmpty,
-                              child: const Icon(AppIcons.commentOutlined),
+                              child: const Icon(Icons.comment_outlined),
                             ),
                           ),
                         
@@ -427,7 +425,7 @@ class _VotingCardState extends State<VotingCard>
                             HapticFeedback.selectionClick();
                             // TODO: Implement share
                           },
-                          icon: const Icon(AppIcons.shareOutlined),
+                          icon: const Icon(Icons.share_outlined),
                         ),
                       ],
                     ),
@@ -603,7 +601,7 @@ class _DiffDisplay extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: context.colors.error,
+                  color: theme.colorScheme.error,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -624,14 +622,14 @@ class _DiffDisplay extends StatelessWidget {
               color: theme.colorScheme.error.withValues(alpha: 0.7),
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Row(
             children: [
               Container(
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: context.colors.success,
+                  color: theme.colorScheme.success,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -667,7 +665,7 @@ class _TrustScoreIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final color = _getScoreColor(context);
-    
+
     return Container(
       width: 48,
       height: 48,
@@ -702,11 +700,12 @@ class _TrustScoreIndicator extends StatelessWidget {
       ),
     );
   }
-  
+
   Color _getScoreColor(BuildContext context) {
-    if (score >= 80) return context.colors.success;
-    if (score >= 60) return context.colors.primary;
-    if (score >= 40) return context.colors.secondary;
-    return context.colors.error;
+    final theme = Theme.of(context);
+    if (score >= 80) return theme.colorScheme.success;
+    if (score >= 60) return theme.colorScheme.primary;
+    if (score >= 40) return theme.colorScheme.warning;
+    return theme.colorScheme.error;
   }
 }

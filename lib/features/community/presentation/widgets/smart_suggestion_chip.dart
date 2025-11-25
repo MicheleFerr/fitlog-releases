@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SmartSuggestionChip extends StatefulWidget {
   
@@ -193,24 +189,23 @@ class _SmartSuggestionChipState extends State<SmartSuggestionChip>
                       Flexible(
                         child: Text(
                           widget.suggestion,
-                          style: theme.textTheme.labelLarge?.copyWith(
+                          style: TextStyle(
                             color: widget.isMinimal
                               ? theme.colorScheme.onSurfaceVariant
                               : theme.colorScheme.onPrimary,
                             fontWeight: FontWeight.w500,
+                            fontSize: 13,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.tiny,
-  color: widget.isMinimal
-                          ? theme.colorScheme.primary.withValues(alpha: 0.7,
-)
+                      Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: widget.isMinimal
+                          ? theme.colorScheme.primary.withValues(alpha: 0.7)
                           : theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                       ),
                     ],
@@ -267,12 +262,13 @@ class _PulsingIconState extends State<_PulsingIcon>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
+        final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
         return Container(
           width: 28,
           height: 28,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: context.colors.surface.withValues(alpha: 0.2),
+            color: onPrimaryColor.withValues(alpha: 0.2),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -286,7 +282,7 @@ class _PulsingIconState extends State<_PulsingIcon>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: context.colors.surface.withValues(alpha: 1 - _animation.value),
+                      color: onPrimaryColor.withValues(alpha: 1 - _animation.value),
                       width: 2,
                     ),
                   ),
@@ -296,7 +292,7 @@ class _PulsingIconState extends State<_PulsingIcon>
               Icon(
                 widget.icon,
                 size: 16,
-                color: context.colors.surface,
+                color: onPrimaryColor,
               ),
             ],
           ),

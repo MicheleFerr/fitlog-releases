@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class RadialContributionMenu extends StatefulWidget {

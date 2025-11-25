@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Test screen for lockscreen audio functionality
 class LockscreenAudioTestScreen extends StatelessWidget {
@@ -19,9 +18,12 @@ class LockscreenAudioTestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final warningColor = theme.colorScheme.warning;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lockscreen Audio Test'),
+        title: const Text('Lockscreen Audio Test'),
       ),
       body: Center(
         child: Padding(
@@ -30,9 +32,9 @@ class LockscreenAudioTestScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                AppIcons.lockOutline,
+                Icons.lock_outline,
                 size: 80,
-                color: context.colors.primary,
+                color: theme.colorScheme.primary,
               ),
               const SizedBox(height: 32),
               const Text(
@@ -55,8 +57,8 @@ class LockscreenAudioTestScreen extends StatelessWidget {
               const SizedBox(height: 32),
               ElevatedButton.icon(
                 onPressed: _runLockscreenTest,
-                icon: Icon(AppIcons.play),
-                label: Text('Run Test'),
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Run Test'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
@@ -65,19 +67,19 @@ class LockscreenAudioTestScreen extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 18),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Card(
-                color: context.colors.secondary,
+                color: warningColor,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      Icon(AppIcons.warning, color: context.colors.surface),
-                      SizedBox(width: 8),
+                      Icon(Icons.warning, color: theme.colorScheme.onTertiary),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Make sure notifications are enabled in Settings!',
-                          style: TextStyle(color: context.colors.surface),
+                          style: TextStyle(color: theme.colorScheme.onTertiary),
                         ),
                       ),
                     ],

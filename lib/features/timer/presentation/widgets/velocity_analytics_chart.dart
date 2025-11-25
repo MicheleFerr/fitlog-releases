@@ -6,8 +6,9 @@ import 'dart:math' as math;
 import 'package:gymbro_flutter_new/features/timer/domain/services/set_analytics_engine.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// TIER-1 Velocity Analytics Chart Widget
 /// Advanced velocity-based training visualization with load-velocity profiling
@@ -213,11 +214,12 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
-              color: theme.colorScheme.error,
-            ),
+            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error,
+),
             const SizedBox(height: 16),
             Text(
               l10n.velocityAnalysisError,
@@ -586,10 +588,12 @@ class _VelocityAnalyticsChartState extends ConsumerState<VelocityAnalyticsChart>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.barChartOutlined,
-            size: 48,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+          SemanticIcon(
+  icon: AppIcons.barChartOutlined,
+  semanticLabel: 'Bar chart outlined',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onSurface.withValues(alpha: 0.3,
+),
           ),
           const SizedBox(height: 16),
           Text(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'dart:async';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class AnimatedXPBar extends StatefulWidget {
@@ -273,7 +272,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                         color: context.colors.surface,
                         size: 24,
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text(
                         '+${widget.xpGained} XP',
                         style: TextStyle(
@@ -454,7 +453,7 @@ class _AnimatedXPBarState extends State<AnimatedXPBar>
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Container(
                         height: 20,
                         decoration: BoxDecoration(

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class XPDisplayWidget extends ConsumerStatefulWidget {
   
@@ -123,14 +121,14 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                AppIcons.star,
-                                color: context.colors.surface,
+                                Icons.star,
+                                color: theme.colorScheme.onPrimary,
                                 size: 28,
                               ),
                               Text(
                                 'Lv.$level',
                                 style: TextStyle(
-                                  color: context.colors.surface,
+                                  color: theme.colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -150,7 +148,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      AppIcons.bolt,
+                      Icons.bolt,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -206,31 +204,31 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                 ),
                 
                 if (widget.showDetails) ...[
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   const Divider(),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   
                   // Stats Grid
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _StatItem(
-                        icon: AppIcons.edit,
+                        icon: Icons.edit,
                         label: 'Contributi',
                         value: stats.totalContributions.toString(),
-                        color: context.colors.primary,
+                        color: theme.colorScheme.primary,
                       ),
                       _StatItem(
-                        icon: AppIcons.complete,
+                        icon: Icons.check_circle,
                         label: 'Approvati',
                         value: stats.approvedContributions.toString(),
-                        color: context.colors.success,
+                        color: theme.colorScheme.success,
                       ),
                       _StatItem(
-                        icon: AppIcons.thumbUp,
+                        icon: Icons.thumb_up,
                         label: 'Voti',
                         value: stats.totalVotes.toString(),
-                        color: context.colors.secondary,
+                        color: theme.colorScheme.warning,
                       ),
                     ],
                   ),
@@ -270,7 +268,7 @@ class _XPDisplayWidgetState extends ConsumerState<XPDisplayWidget>
                   child: Row(
                     children: [
                       Icon(
-                        AppIcons.info,
+                        Icons.info_outline,
                         size: 20,
                         color: theme.colorScheme.primary,
                       ),
@@ -378,27 +376,27 @@ class _BadgeChip extends StatelessWidget {
     
     switch (badge) {
       case 'first_contribution':
-        icon = AppIcons.celebration;
-        color = context.colors.tertiary;
+        icon = Icons.celebration;
+        color = theme.colorScheme.tertiary;
         label = 'Prima Contribuzione';
         break;
       case 'verified_contributor':
-        icon = AppIcons.verified;
-        color = context.colors.primary;
+        icon = Icons.verified;
+        color = theme.colorScheme.primary;
         label = 'Contributore Verificato';
         break;
       case 'top_contributor':
-        icon = AppIcons.militaryTech;
-        color = context.colors.secondary;
+        icon = Icons.military_tech;
+        color = theme.colorScheme.warning;
         label = 'Top Contributor';
         break;
       case 'expert':
-        icon = AppIcons.school;
-        color = context.colors.success;
+        icon = Icons.school;
+        color = theme.colorScheme.success;
         label = 'Esperto';
         break;
       default:
-        icon = AppIcons.badge;
+        icon = Icons.badge;
         color = theme.colorScheme.primary;
         label = badge;
     }

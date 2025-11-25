@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/contributi
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class FiltersModal extends ConsumerStatefulWidget {
   const FiltersModal({super.key});
@@ -142,7 +144,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           children: [
@@ -228,7 +230,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Wrap(
           spacing: 8,
           children: [
@@ -275,7 +277,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -296,7 +298,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
                 onClear: () => setState(() => _dateFrom = null),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: _buildDateButton(
                 label: context.l10n.dateTo,
@@ -363,7 +365,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   date != null
                       ? '${date.day}/${date.month}/${date.year}'
@@ -375,11 +377,12 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
           ),
           if (date != null)
             IconButton(
-              icon: Icon(
-                AppIcons.clear,
-                size: 18,
-                color: context.colors.onSurfaceVariant,
-              ),
+              icon: SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+  size: AppIconSize.small,
+  color: context.colors.onSurfaceVariant,
+),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: onClear,
@@ -414,7 +417,7 @@ class _FiltersModalState extends ConsumerState<FiltersModal> {
               child: Text(context.l10n.cancel),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: FilledButton(
               onPressed: _applyFilters,

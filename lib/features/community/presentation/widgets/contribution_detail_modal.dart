@@ -17,6 +17,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_pr
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Modal per visualizzare dettagli completi di un contributo
 class ContributionDetailModal extends ConsumerStatefulWidget {
@@ -178,7 +179,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(Icons.check_circle),
                   label: const Text('Approva'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Theme.of(context).colorScheme.success,
                   ),
                 ),
               ),
@@ -189,8 +190,8 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
                   icon: const Icon(Icons.cancel),
                   label: const Text('Rifiuta'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.red.withValues(alpha: 0.2),
-                    foregroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).colorScheme.error.withValues(alpha: 0.2),
+                    foregroundColor: Theme.of(context).colorScheme.error,
                   ),
                 ),
               ),
@@ -493,7 +494,7 @@ class _ContributionDetailModalState extends ConsumerState<ContributionDetailModa
       SnackBarService.showCustom(
         context,
         message: '🚫 Contributo rifiutato',
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.error,
       );
     } catch (e) {
       if (!mounted) return;
@@ -606,7 +607,7 @@ class _RejectDialogState extends State<_RejectDialog> {
             Navigator.pop(context, _controller.text);
           },
           style: FilledButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
           child: const Text('Rifiuta'),
         ),

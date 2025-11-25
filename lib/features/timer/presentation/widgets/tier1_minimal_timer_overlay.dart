@@ -8,8 +8,6 @@ import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_ui_state_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tier-1 Minimal Timer Overlay - Refactored for Consolidated Provider System
 /// 
@@ -167,7 +165,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                     onPanStart: _handlePanStart,
                     onPanUpdate: _handlePanUpdate,
                     onPanEnd: _handlePanEnd,
-                    child: DecoratedBox(
+                    child: Container(
                       decoration: _buildDecoration(timerState, progress),
                       child: _buildContent(timerState, remainingSeconds, progress),
                     ),
@@ -246,14 +244,14 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       ),
       boxShadow: [
         BoxShadow(
-          color: context.colors.onSurface.withValues(alpha: _isDragging ? 0.25 : 0.12),
+          color: Theme.of(context).colorScheme.shadow.withValues(alpha: _isDragging ? 0.25 : 0.12),
           blurRadius: _isDragging ? 10 : 6,
           offset: const Offset(0, 3),
           spreadRadius: _isDragging ? 1 : 0,
         ),
       ],
-      border: _isDragging 
-        ? Border.all(color: context.colors.surface.withValues(alpha: 0.35), width: 1)
+      border: _isDragging
+        ? Border.all(color: Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.35), width: 1)
         : null,
     );
   }
@@ -270,12 +268,13 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   
   Widget _buildCollapsedContent(int remainingSeconds) {
     final timeText = _formatTime(remainingSeconds);
-    
+    final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
+
     return Center(
       child: Text(
         timeText,
         style: TextStyle(
-          color: context.colors.surface,
+          color: onPrimaryColor,
           fontSize: 15,
           fontWeight: FontWeight.w600,
           fontFeatures: const [FontFeature.tabularFigures()],
@@ -288,15 +287,17 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   }
   
   Widget _buildExpandedContent(UnifiedTimerState timerState, int remainingSeconds, double progress) {
+    final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       child: Row(
         children: [
           // Progress indicator - more compact
           _buildProgressIndicator(progress),
-          
-          SizedBox(width: 10),
-          
+
+          const SizedBox(width: 10),
+
           // Timer info - more compact layout
           Expanded(
             child: Column(
@@ -306,7 +307,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                 Text(
                   _formatTime(remainingSeconds),
                   style: TextStyle(
-                    color: context.colors.surface,
+                    color: onPrimaryColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     fontFeatures: const [FontFeature.tabularFigures()],
@@ -314,11 +315,11 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
                   ),
                 ),
                 if (timerState.exerciseName != null) ...[
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
                     timerState.exerciseName!,
                     style: TextStyle(
-                      color: context.colors.surface.withValues(alpha: 0.85),
+                      color: onPrimaryColor.withValues(alpha: 0.85),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                       height: 1.0,
@@ -330,9 +331,9 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
               ],
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Quick controls - more compact
           _buildQuickControls(timerState),
         ],
@@ -341,6 +342,8 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
   }
   
   Widget _buildProgressIndicator(double progress) {
+    final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
+
     return SizedBox(
       width: 28,
       height: 28,
@@ -351,7 +354,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             size: const Size(28, 28),
             painter: _ProgressRingPainter(
               progress: 1.0,
-              color: context.colors.surface.withValues(alpha: 0.25),
+              color: onPrimaryColor.withValues(alpha: 0.25),
               strokeWidth: 2.5,
             ),
           ),
@@ -360,15 +363,15 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             size: const Size(28, 28),
             painter: _ProgressRingPainter(
               progress: progress,
-              color: context.colors.surface,
+              color: onPrimaryColor,
               strokeWidth: 2.5,
             ),
           ),
           // Center icon
           Center(
             child: Icon(
-              AppIcons.timer,
-              color: context.colors.surface,
+              Icons.timer_outlined,
+              color: onPrimaryColor,
               size: 14,
             ),
           ),
@@ -382,7 +385,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildControlButton(
-          icon: timerState.isPaused ? AppIcons.playArrowRounded : AppIcons.pauseRounded,
+          icon: timerState.isPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
           onPressed: () => _handlePauseResume(timerState),
           semanticLabel: timerState.isPaused 
             ? AppLocalizations.of(context).resume 
@@ -390,7 +393,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
         ),
         const SizedBox(width: 6),
         _buildControlButton(
-          icon: AppIcons.skipNextRounded,
+          icon: Icons.skip_next_rounded,
           onPressed: _handleSkip,
           semanticLabel: 'Skip',
         ),
@@ -403,11 +406,13 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
     required VoidCallback onPressed,
     required String semanticLabel,
   }) {
+    final onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
+
     return Semantics(
       label: semanticLabel,
       button: true,
       child: Material(
-        color: context.colors.surface.withValues(alpha: 0.18),
+        color: onPrimaryColor.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(14),
         child: InkWell(
           onTap: () {
@@ -421,7 +426,7 @@ class _Tier1MinimalTimerOverlayState extends ConsumerState<Tier1MinimalTimerOver
             alignment: Alignment.center,
             child: Icon(
               icon,
-              color: context.colors.surface,
+              color: onPrimaryColor,
               size: 16,
             ),
           ),

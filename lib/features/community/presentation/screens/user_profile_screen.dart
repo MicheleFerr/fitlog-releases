@@ -14,6 +14,9 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/voting_card.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Schermata profilo utente community
 class UserProfileScreen extends ConsumerStatefulWidget { // Null = current user
@@ -93,11 +96,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      AppIcons.error,
-                      size: 64,
-                      color: theme.colorScheme.error,
-                    ),
+                    SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error,
+),
                     const SizedBox(height: 16),
                     Text(
                       'Errore nel caricare i contributi',
@@ -149,7 +153,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         width: 3,
                       ),
                     ),
@@ -157,7 +161,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                   // Avatar
                   CircleAvatar(
                     radius: 40,
-                    backgroundColor: Colors.white,
+                    backgroundColor: context.colors.surface,
                     child: Text(
                       stats.userId[0].toUpperCase(),
                       style: TextStyle(
@@ -176,14 +180,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.amber,
+                        color: context.colors.warning,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white, width: 2),
+                        border: Border.all(color: context.colors.surface, width: 2),
                       ),
                       child: Text(
                         stats.level,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: context.colors.surface,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -199,7 +203,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
               Text(
                 stats.userId,
                 style: theme.textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -212,16 +216,16 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         AppIcons.stars,
-                        color: Colors.amber,
+                        color: context.colors.warning,
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         '${stats.totalPoints} XP',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
+                          color: context.colors.surface,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -230,8 +234,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: _calculateLevelProgress(stats.totalPoints),
-                    backgroundColor: Colors.white.withValues(alpha: 0.3),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
+                    backgroundColor: context.colors.surface.withValues(alpha: 0.3),
+                    valueColor: AlwaysStoppedAnimation<Color>(context.colors.warning),
                   ),
                 ],
               ),
@@ -283,19 +287,19 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
   }) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white, size: 20),
+        Icon(icon, color: context.colors.surface, size: 20),
         const SizedBox(height: 4),
         Text(
           value,
           style: theme.textTheme.titleMedium?.copyWith(
-            color: Colors.white,
+            color: context.colors.surface,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: context.colors.surface.withValues(alpha: 0.8),
             fontSize: 10,
           ),
         ),
@@ -315,8 +319,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
           ],
         ),
       ),
-      child: const Center(
-        child: CircularProgressIndicator(color: Colors.white),
+      child: Center(
+        child: CircularProgressIndicator(color: context.colors.surface),
       ),
     );
   }
@@ -337,12 +341,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(AppIcons.error, color: Colors.white, size: 48),
+            Icon(AppIcons.error, color: context.colors.surface, size: 48),
             const SizedBox(height: 16),
             Text(
               'Errore nel caricare il profilo',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.white,
+                color: context.colors.surface,
               ),
             ),
           ],
@@ -375,12 +379,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.articleOutlined,
-                size: 64,
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+              SemanticIcon(
+  icon: AppIcons.articleOutlined,
+  semanticLabel: 'Article outlined',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.outline.withValues(alpha: 0.5),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Nessun contributo',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

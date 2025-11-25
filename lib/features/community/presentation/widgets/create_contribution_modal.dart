@@ -13,7 +13,6 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/exercise_picker/quick_exercise_picker.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -584,7 +583,7 @@ class _CreateContributionModalState extends ConsumerState<CreateContributionModa
       case ContributionType.variant:
         return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.teal;
+        return context.colors.tertiary;
     }
   }
 

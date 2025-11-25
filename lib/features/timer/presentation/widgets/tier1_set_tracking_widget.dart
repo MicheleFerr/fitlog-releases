@@ -3,16 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 
-// TODO: File non esiste - commentato temporaneamente
-// import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
-// TODO: Unused until registerSetRep() and completeSetTracking() are implemented
-// import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/tier1_set_timing_extension.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/entities/set_execution_timing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// TIER-1 Set Tracking Widget with real-time visualization
 /// Shows live metrics, form feedback, and velocity graphs during set execution
@@ -35,8 +29,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     final shouldStopSet = ref.watch(shouldStopSetProvider);
     final coachingTip = ref.watch(currentCoachingTipProvider);
     final fatigueIndex = ref.watch(setFatigueIndexProvider);
-    // TODO: Use velocityDrop for additional feedback when needed
-    // final velocityDrop = ref.watch(setVelocityDropProvider);
+    final velocityDrop = ref.watch(setVelocityDropProvider);
     
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
@@ -70,8 +63,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             ],
             
             // Fatigue and form indicators
-            // TODO: SetMetrics doesn't have currentFormScore property yet
-            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, 0.0),
+            _buildFatigueFormIndicators(context, theme, l10n, fatigueIndex, currentMetrics.currentFormScore),
             
             const SizedBox(height: 16),
             
@@ -98,7 +90,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(
-              AppIcons.timer,
+              Icons.timer,
               size: 48,
               color: theme.colorScheme.primary,
             ),
@@ -122,21 +114,17 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
-    // TODO: SetMetrics.phase returns String, need SetPhase enum
-    // Temporary conversion until SetMetrics is updated
-    final phaseEnum = _parsePhaseString(metrics.phase);
-
+  Widget _buildHeader(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: _getPhaseColor(phaseEnum, theme),
+            color: _getPhaseColor(metrics.phase, theme),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            _getPhaseText(phaseEnum, l10n),
+            _getPhaseText(metrics.phase, l10n),
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
@@ -168,11 +156,11 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           width: 12,
           height: 12,
           decoration: BoxDecoration(
-            color: context.colors.error,
+            color: theme.colorScheme.error,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: context.colors.error.withValues(alpha: 0.5),
+                color: theme.colorScheme.error.withValues(alpha: 0.5),
                 blurRadius: 8,
                 spreadRadius: 2,
               ),
@@ -183,7 +171,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildLiveMetricsRow(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
+  Widget _buildLiveMetricsRow(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
     return Row(
       children: [
         Expanded(
@@ -192,8 +180,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.velocity,
             '${metrics.currentVelocityMps.toStringAsFixed(2)} m/s',
-            AppIcons.speed,
-            _getVelocityColor(context, metrics.currentVelocityMps, theme),
+            Icons.speed,
+            _getVelocityColor(metrics.currentVelocityMps, theme),
           ),
         ),
         const SizedBox(width: 8),
@@ -203,7 +191,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.average,
             '${metrics.averageVelocityMps.toStringAsFixed(2)} m/s',
-            AppIcons.trendUp,
+            Icons.trending_up,
             theme.colorScheme.primary,
           ),
         ),
@@ -214,8 +202,8 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.drop,
             '${metrics.velocityDropPercent.toStringAsFixed(1)}%',
-            AppIcons.trendingDown,
-            _getDropColor(context, metrics.velocityDropPercent, theme),
+            Icons.trending_down,
+            _getDropColor(metrics.velocityDropPercent, theme),
           ),
         ),
       ],
@@ -252,7 +240,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildVelocityGraph(BuildContext context, ThemeData theme, AppLocalizations l10n, SetMetrics metrics) {
+  Widget _buildVelocityGraph(BuildContext context, ThemeData theme, AppLocalizations l10n, LiveSetMetrics metrics) {
     return Container(
       height: 150,
       padding: const EdgeInsets.all(16),
@@ -309,7 +297,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.fatigue,
             fatigueIndex,
-            _getFatigueColor(context, fatigueIndex, theme),
+            _getFatigueColor(fatigueIndex, theme),
             '%',
           ),
         ),
@@ -320,7 +308,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
             theme,
             l10n.form,
             formScore,
-            _getFormColor(context, formScore, theme),
+            _getFormColor(formScore, theme),
             '%',
           ),
         ),
@@ -407,7 +395,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: FilledButton.icon(
               onPressed: () => _completeSet(ref),
-              icon: const Icon(AppIcons.stop),
+              icon: const Icon(Icons.stop),
               label: Text(l10n.stopSet),
               style: FilledButton.styleFrom(
                 backgroundColor: theme.colorScheme.error,
@@ -418,7 +406,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: OutlinedButton.icon(
               onPressed: () => _registerRep(ref),
-              icon: const Icon(AppIcons.add),
+              icon: const Icon(Icons.add),
               label: Text(l10n.addRep),
             ),
           ),
@@ -426,7 +414,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
           Expanded(
             child: FilledButton.icon(
               onPressed: () => _completeSet(ref),
-              icon: const Icon(AppIcons.check),
+              icon: const Icon(Icons.check),
               label: Text(l10n.completeSet),
             ),
           ),
@@ -463,31 +451,31 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     }
   }
 
-  Color _getVelocityColor(BuildContext context, double velocity, ThemeData theme) {
-    if (velocity > 1.0) return context.colors.success;
+  Color _getVelocityColor(double velocity, ThemeData theme) {
+    if (velocity > 1.0) return theme.colorScheme.success;
     if (velocity > 0.5) return theme.colorScheme.primary;
-    return context.colors.secondary;
+    return theme.colorScheme.warning;
   }
 
-  Color _getDropColor(BuildContext context, double drop, ThemeData theme) {
+  Color _getDropColor(double drop, ThemeData theme) {
     if (drop > 25) return theme.colorScheme.error;
-    if (drop > 15) return context.colors.secondary;
-    return context.colors.success;
+    if (drop > 15) return theme.colorScheme.warning;
+    return theme.colorScheme.success;
   }
 
-  Color _getFatigueColor(BuildContext context, double fatigue, ThemeData theme) {
+  Color _getFatigueColor(double fatigue, ThemeData theme) {
     if (fatigue > 80) return theme.colorScheme.error;
-    if (fatigue > 60) return context.colors.secondary;
-    return context.colors.success;
+    if (fatigue > 60) return theme.colorScheme.warning;
+    return theme.colorScheme.success;
   }
 
-  Color _getFormColor(BuildContext context, double form, ThemeData theme) {
-    if (form > 80) return context.colors.success;
-    if (form > 60) return context.colors.secondary;
+  Color _getFormColor(double form, ThemeData theme) {
+    if (form > 80) return theme.colorScheme.success;
+    if (form > 60) return theme.colorScheme.warning;
     return theme.colorScheme.error;
   }
 
-  List<FlSpot> _generateVelocitySpots(SetMetrics metrics) {
+  List<FlSpot> _generateVelocitySpots(LiveSetMetrics metrics) {
     // Mock velocity data for demo - in real app, would use actual velocity history
     final spots = <FlSpot>[];
     final baseVelocity = metrics.averageVelocityMps;
@@ -495,7 +483,7 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
     for (int i = 0; i < 20; i++) {
       final x = i.toDouble();
       final noise = (math.sin(i * 0.5) * 0.1) + (math.Random().nextDouble() * 0.2 - 0.1);
-      final y = math.max(0.0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
+      final y = math.max(0, baseVelocity + noise - (i * 0.02)); // Gradual decline with noise
       spots.add(FlSpot(x, y));
     }
     
@@ -526,50 +514,26 @@ class Tier1SetTrackingWidget extends ConsumerWidget {
   IconData _getSeverityIcon(_CoachingSeverity severity) {
     switch (severity) {
       case _CoachingSeverity.info:
-        return AppIcons.info;
+        return Icons.info_outline;
       case _CoachingSeverity.warning:
-        return AppIcons.warning;
-    }
-  }
-
-  /// Helper to parse String phase from SetMetrics to SetPhase enum
-  /// TODO: Remove this when SetMetrics.phase returns SetPhase enum directly
-  SetPhase _parsePhaseString(String phase) {
-    switch (phase.toLowerCase()) {
-      case 'preparation':
-        return SetPhase.preparation;
-      case 'execution':
-      case 'active':
-        return SetPhase.execution;
-      case 'completion':
-      case 'completed':
-        return SetPhase.completion;
-      case 'rest':
-      case 'resting':
-        return SetPhase.rest;
-      default:
-        return SetPhase.execution; // Default fallback
+        return Icons.warning_outlined;
     }
   }
 
   void _registerRep(WidgetRef ref) {
-    // TODO: UnifiedTimerProvider doesn't have registerSetRep() method yet
-    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    // unifiedTimer.registerSetRep();
+    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    unifiedTimer.registerSetRep();
   }
 
   void _completeSet(WidgetRef ref) {
-    // TODO: Implement Tier1SetTrackingNotifier.completeSetTracking()
-    // final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
-    // final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
-
-    /*
+    final unifiedTimer = ref.read(unifiedTimerProvider.notifier);
+    final trackingNotifier = ref.read(tier1SetTrackingProvider.notifier);
+    
     unifiedTimer.completeSetTracking().then((completedSet) {
       if (completedSet != null) {
         trackingNotifier.completeSetTracking(completedSet);
       }
     });
-    */
   }
 }
 

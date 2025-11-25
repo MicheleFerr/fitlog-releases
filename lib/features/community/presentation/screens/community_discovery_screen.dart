@@ -28,6 +28,7 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class CommunityDiscoveryScreen extends ConsumerStatefulWidget {
   const CommunityDiscoveryScreen({super.key});
@@ -100,7 +101,7 @@ class _CommunityDiscoveryScreenState
                           size: AppIconSize.small,
                           color: context.colors.tertiary,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           'Admin',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -168,14 +169,14 @@ class _CommunityDiscoveryScreenState
                 size: AppIconSize.xxlarge * 2,
                 color: context.colors.onSurface.withValues(alpha: 0.3),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               Text(
                 'Admin Only',
                 style: context.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Text(
                 'This feature is currently restricted to administrators only.',
                 textAlign: TextAlign.center,
@@ -183,7 +184,7 @@ class _CommunityDiscoveryScreenState
                   color: context.colors.onSurface.withValues(alpha: 0.7),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Community discovery and contributions will be available to all users soon.',
                 textAlign: TextAlign.center,
@@ -194,7 +195,7 @@ class _CommunityDiscoveryScreenState
 
               // 🐛 DEBUG INFO (only in debug mode)
               if (kDebugMode) ...[
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -215,7 +216,7 @@ class _CommunityDiscoveryScreenState
                           color: context.colors.error,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'UserProfile: ${userProfile == null ? "NULL ❌" : "✅ Loaded"}',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -240,7 +241,7 @@ class _CommunityDiscoveryScreenState
                           ),
                         ),
                       ],
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'To fix: Set isAdmin=true in Firestore',
                         style: context.textTheme.bodySmall?.copyWith(
@@ -333,11 +334,12 @@ class _CommunityDiscoveryScreenState
           // Filters Button
           OutlinedButton.icon(
             onPressed: () => FiltersModal.show(context),
-            icon: Icon(
-              AppIcons.filter,
-              size: 20,
-              color: context.colors.primary,
-            ),
+            icon: SemanticIcon(
+  icon: AppIcons.filter,
+  semanticLabel: 'Filter',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
             label: Text(
               context.l10n.filters,
               style: context.textTheme.labelLarge?.copyWith(
@@ -355,16 +357,17 @@ class _CommunityDiscoveryScreenState
               ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
 
           // Sort Button
           OutlinedButton.icon(
             onPressed: () => SortModal.show(context),
-            icon: Icon(
-              AppIcons.sort,
-              size: 20,
-              color: context.colors.primary,
-            ),
+            icon: SemanticIcon(
+  icon: AppIcons.sort,
+  semanticLabel: 'Sort',
+  size: AppIconSize.small,
+  color: context.colors.primary,
+),
             label: Text(
               context.l10n.sort,
               style: context.textTheme.labelLarge?.copyWith(
@@ -429,12 +432,14 @@ class _CommunityDiscoveryScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.searchOff,
-              size: 64,
-              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            SemanticIcon(
+  icon: AppIcons.searchOff,
+  semanticLabel: 'Search off',
+  size: AppIconSize.medium,
+  color: context.colors.onSurfaceVariant.withValues(alpha: 0.5,
+),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               context.l10n.noContributionsFound,
               style: context.textTheme.titleMedium?.copyWith(
@@ -443,7 +448,7 @@ class _CommunityDiscoveryScreenState
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.tryDifferentSearch,
               style: context.textTheme.bodyMedium?.copyWith(
@@ -464,12 +469,13 @@ class _CommunityDiscoveryScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.error,
-              size: 64,
-              color: context.colors.error,
-            ),
-            SizedBox(height: 16),
+            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.medium,
+  color: context.colors.error,
+),
+            const SizedBox(height: 16),
             Text(
               context.l10n.errorLoadingContributions,
               style: context.textTheme.titleMedium?.copyWith(
@@ -478,7 +484,7 @@ class _CommunityDiscoveryScreenState
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               error.toString(),
               style: context.textTheme.bodySmall?.copyWith(

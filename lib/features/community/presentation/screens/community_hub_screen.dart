@@ -12,6 +12,9 @@ import 'package:gymbro_flutter_new/features/community/presentation/widgets/creat
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart';
 
 class CommunityHubScreen extends ConsumerStatefulWidget {
   const CommunityHubScreen({super.key});
@@ -55,8 +58,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final userStats = ref.watch(userContributionStatsProvider);
-    final isAdminAsync = ref.watch(isAdminProvider);
-    final isAdmin = isAdminAsync.asData?.value ?? false;
+    final isAdmin = ref.watch(isAdminProvider); // isAdminProvider returns bool directly
 
     // Update tab controller based on admin status
     final newTabCount = isAdmin ? 4 : 3;
@@ -84,7 +86,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
               title: Text(
                 '🌟 Community',
                 style: theme.textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
+                  color: context.colors.surface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -126,14 +128,26 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                 unselectedLabelColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 isScrollable: isAdmin, // Make scrollable if admin tab present
                 tabs: [
-                  const Tab(icon: Icon(AppIcons.streak), text: 'Popolari'),
-                  const Tab(icon: Icon(AppIcons.person), text: 'I Miei'),
+                  const Tab(icon: SemanticIcon(
+  icon: AppIcons.streak,
+  semanticLabel: 'Streak',
+), text: 'Popolari'),
+                  const Tab(icon: SemanticIcon(
+  icon: AppIcons.person,
+  semanticLabel: 'Profile',
+), text: 'I Miei'),
                   if (isAdmin)
                     const Tab(
-                      icon: Icon(AppIcons.admin),
+                      icon: SemanticIcon(
+  icon: AppIcons.admin,
+  semanticLabel: 'Admin',
+),
                       text: 'Admin',
                     ),
-                  const Tab(icon: Icon(AppIcons.info), text: 'Info'),
+                  const Tab(icon: SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+), text: 'Info'),
                 ],
               ),
               theme: theme,
@@ -156,10 +170,13 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateContributionModal(),
-        icon: const Icon(AppIcons.add),
+        icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
         label: const Text('Contribuisci'),
         backgroundColor: theme.colorScheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: context.colors.surface,
       ),
     );
   }
@@ -169,7 +186,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       return Text(
         '👋 Benvenuto!',
         style: theme.textTheme.titleMedium?.copyWith(
-          color: Colors.white,
+          color: context.colors.surface,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -180,7 +197,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
         Text(
           '⭐ ${stats.totalPoints} XP',
           style: theme.textTheme.titleMedium?.copyWith(
-            color: Colors.white,
+            color: context.colors.surface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -188,13 +205,13 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
+            color: context.colors.surface.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             'Livello ${stats.level}',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white,
+              color: context.colors.surface,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -260,7 +277,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                 actionText: 'Come Contribuire',
                 onActionTap: () {
                   // Navigate to Info tab (index depends on admin status)
-                  final isAdmin = ref.read(isAdminProvider).asData?.value ?? false;
+                  final isAdmin = ref.read(isAdminProvider); // Returns bool directly
                   final infoTabIndex = isAdmin ? 3 : 2;
                   _tabController.animateTo(infoTabIndex);
                 },
@@ -342,17 +359,19 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            AppIcons.completeOutline,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.primary,
+                          SemanticIcon(
+  icon: AppIcons.completeOutline,
+  semanticLabel: 'Complete outline',
+  size: AppIconSize.medium,
+  color: Theme.of(context,
+).colorScheme.primary,
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
                             'Nessun Contributo Pending',
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Tutti i contributi sono stati revisionati!',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -401,7 +420,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -437,7 +456,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     color: _getTypeColor(contribution.type),
                     size: 20,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       contribution.title,
@@ -451,7 +470,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   _buildStatusBadge(contribution.status),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 contribution.exerciseName,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -459,14 +478,14 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                       fontWeight: FontWeight.w600,
                     ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 contribution.description,
                 style: Theme.of(context).textTheme.bodyMedium,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Row(
                 children: [
                   Text(
@@ -478,16 +497,24 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   const Spacer(),
                   TextButton.icon(
                     onPressed: () => _handleApprove(contribution.id),
-                    icon: Icon(AppIcons.complete, size: 18),
-                    label: Text('Approva'),
+                    icon: const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.small,
+),
+                    label: const Text('Approva'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.successColor,
                     ),
                   ),
                   TextButton.icon(
                     onPressed: () => _handleReject(contribution.id),
-                    icon: Icon(AppIcons.cancel, size: 18),
-                    label: Text('Rifiuta'),
+                    icon: const SemanticIcon(
+  icon: AppIcons.cancel,
+  semanticLabel: 'Cancel',
+  size: AppIconSize.small,
+),
+                    label: const Text('Rifiuta'),
                     style: TextButton.styleFrom(
                       foregroundColor: context.errorColor,
                     ),
@@ -544,7 +571,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Annulla'),
+            child: const Text('Annulla'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, 'No reason provided'),
@@ -668,11 +695,12 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                Icon(
-                  AppIcons.construction,
-                  size: 48,
-                  color: theme.colorScheme.onPrimaryContainer,
-                ),
+                SemanticIcon(
+  icon: AppIcons.construction,
+  semanticLabel: 'Construction',
+  size: AppIconSize.xxlarge,
+  color: theme.colorScheme.onPrimaryContainer,
+),
                 const SizedBox(height: 12),
                 Text(
                   'Sistema in Beta',
@@ -886,25 +914,25 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                   height: 20,
                   decoration: BoxDecoration(
                     color: context.colors.outline.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   height: 16,
                   decoration: BoxDecoration(
                     color: context.colors.outline.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Container(
                   width: 150,
                   height: 16,
                   decoration: BoxDecoration(
                     color: context.colors.outline.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -966,7 +994,10 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                 ref.invalidate(userContributionsProvider);
                 ref.invalidate(userContributionStatsProvider);
               },
-              icon: const Icon(AppIcons.refresh),
+              icon: const SemanticIcon(
+  icon: AppIcons.refresh,
+  semanticLabel: 'Refresh',
+),
               label: const Text('Riprova'),
             ),
           ],
@@ -1020,7 +1051,10 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onActionTap,
-              icon: const Icon(AppIcons.help),
+              icon: const SemanticIcon(
+  icon: AppIcons.help,
+  semanticLabel: 'Help',
+),
               label: Text(actionText),
             ),
           ],
@@ -1080,7 +1114,10 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
                     'Modalità demo non ancora disponibile',
                   );
                 },
-                icon: const Icon(AppIcons.preview),
+                icon: const SemanticIcon(
+  icon: AppIcons.preview,
+  semanticLabel: 'Preview',
+),
                 label: const Text('Visualizza Demo'),
               ),
             ],
@@ -1118,9 +1155,9 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       case ContributionType.technique:
         return context.successColor;
       case ContributionType.variant:
-        return Colors.teal;
+        return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.indigo;
+        return context.colors.primary;
     }
   }
 

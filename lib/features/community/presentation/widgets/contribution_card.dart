@@ -6,7 +6,6 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -47,14 +46,14 @@ class ContributionCard extends ConsumerWidget {
               Row(
                 children: [
                   _buildTypeBadge(context),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   _buildDifficultyBadge(context),
                   const Spacer(),
                   _buildAuthorInfo(context),
                 ],
               ),
 
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Title
               Text(
@@ -66,7 +65,7 @@ class ContributionCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Description preview
               Text(
@@ -78,7 +77,7 @@ class ContributionCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Footer: Stats + Save button
               Row(
@@ -90,13 +89,13 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     contribution.upvotes.toString(),
                     style: context.textTheme.bodySmall,
                   ),
 
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
 
                   // Comments
                   SemanticIcon(
@@ -105,13 +104,13 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     contribution.comments.length.toString(),
                     style: context.textTheme.bodySmall,
                   ),
 
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
 
                   // Saves
                   SemanticIcon(
@@ -120,7 +119,7 @@ class ContributionCard extends ConsumerWidget {
                     size: AppIconSize.small,
                     color: context.colors.onSurface.withValues(alpha: 0.6),
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     contribution.saves.toString(),
                     style: context.textTheme.bodySmall,
@@ -136,7 +135,7 @@ class ContributionCard extends ConsumerWidget {
                     ),
                   ),
 
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
 
                   // Save button
                   IconButton(
@@ -226,7 +225,7 @@ class ContributionCard extends ConsumerWidget {
               ),
             ),
           ),
-        SizedBox(width: 6),
+        const SizedBox(width: 6),
         Text(
           contribution.userName,
           style: context.textTheme.bodySmall?.copyWith(

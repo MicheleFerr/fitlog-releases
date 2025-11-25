@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// TODO: File non esiste - commentato temporaneamente
-// import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/timer_providers.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/live_activity_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/rpe_live_activity_widget.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Screen di test per il sistema RPE Live Activities
 class RPETestScreen extends ConsumerWidget {
@@ -16,9 +11,9 @@ class RPETestScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('🧪 Test RPE Live Activity'),
+        title: const Text('🧪 Test RPE Live Activity'),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: context.colors.surface,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -38,9 +33,8 @@ class RPETestScreen extends ConsumerWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 32),
-
-            // TODO: RPELiveActivityData class not defined
-            /* // Simulazione Live Activity RPE
+            
+            // Simulazione Live Activity RPE
             RPELiveActivityWidget(
               rpeData: RPELiveActivityData(
                 exerciseName: 'Bench Press',
@@ -52,7 +46,7 @@ class RPETestScreen extends ConsumerWidget {
                 timestamp: DateTime.now(),
               ),
               activityId: 'test_activity_id',
-            ), */
+            ),
             
             const SizedBox(height: 32),
             
@@ -65,9 +59,8 @@ class RPETestScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-
-            // TODO: RPELiveActivityData class not defined
-            /* CompactRPELiveActivityWidget(
+            
+            CompactRPELiveActivityWidget(
               rpeData: RPELiveActivityData(
                 exerciseName: 'Bench Press',
                 targetReps: 10,
@@ -77,23 +70,23 @@ class RPETestScreen extends ConsumerWidget {
                 workoutName: 'Push Day',
                 timestamp: DateTime.now(),
               ),
-            ), */
+            ),
             
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             
             // Test button
             ElevatedButton.icon(
               onPressed: () => _testRPESystem(context, ref),
-              icon: Icon(AppIcons.play),
-              label: Text('🧪 Testa Sistema RPE'),
+              icon: const Icon(Icons.play_arrow),
+              label: const Text('🧪 Testa Sistema RPE'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: context.colors.surface,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Spiegazione
             Container(
@@ -131,12 +124,8 @@ class RPETestScreen extends ConsumerWidget {
   }
 
   Future<void> _testRPESystem(BuildContext context, WidgetRef ref) async {
-    // TODO: showRPEInterface and setupRPECallbacks methods not defined in LiveActivityService
-    _showTestResult(context, 'Test Non Disponibile',
-        'RPE methods not yet implemented');
-
-    /* final liveActivityService = ref.read(liveActivityProvider);
-
+    final liveActivityService = ref.read(liveActivityProvider);
+    
     try {
       // Simula avvio RPE interface
       final activityId = await liveActivityService.showRPEInterface(
@@ -147,35 +136,35 @@ class RPETestScreen extends ConsumerWidget {
         totalSets: 3,
         workoutName: 'Test Workout',
       );
-
+      
       if (activityId != null) {
         // Setup callbacks
         liveActivityService.setupRPECallbacks(
           onRPEConfirmed: (actualReps, rpe, notes) {
-            _showTestResult(context, 'RPE Confermato',
+            _showTestResult(context, 'RPE Confermato', 
                 'Reps: $actualReps, RPE: $rpe, Note: $notes');
           },
           onRPECancelled: () {
-            _showTestResult(context, 'RPE Cancellato',
+            _showTestResult(context, 'RPE Cancellato', 
                 'L\'utente ha cancellato l\'input RPE');
           },
           onRepsModified: (newReps) {
-            _showTestResult(context, 'Reps Modificate',
+            _showTestResult(context, 'Reps Modificate', 
                 'Nuove reps: $newReps');
           },
         );
-
-        _showTestResult(context, 'Test Avviato',
+        
+        _showTestResult(context, 'Test Avviato', 
             'RPE Interface creata con ID: $activityId');
       } else {
-        _showTestResult(context, 'Test Fallito',
+        _showTestResult(context, 'Test Fallito', 
             'Impossibile creare RPE Interface');
       }
-
+      
     } catch (e) {
-      _showTestResult(context, 'Errore Test',
+      _showTestResult(context, 'Errore Test', 
           'Errore durante test: $e');
-    } */
+    }
   }
 
   void _showTestResult(BuildContext context, String title, String message) {

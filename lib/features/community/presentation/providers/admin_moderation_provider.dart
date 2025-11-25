@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/auth/admin_role_helper.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/community/data/repositories/community_repository.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
@@ -25,8 +26,13 @@ class AdminModerationNotifier extends StateNotifier<AsyncValue<void>> {
       final user = await _ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
-      // Verifica che l'utente sia admin
-      if (user.email != 'ferrara-michele@hotmail.it') {
+      // ========================================
+      // 🔐 SECURITY: Check admin via custom claims (secure)
+      // ========================================
+      // REPLACED: user.email != 'ferrara-michele@hotmail.it' (insecure)
+      // NEW: Uses Firebase Custom Claims (server-validated)
+      final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+      if (!isAdmin) {
         throw Exception('Unauthorized: Admin only');
       }
 
@@ -47,8 +53,13 @@ class AdminModerationNotifier extends StateNotifier<AsyncValue<void>> {
       final user = await _ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
-      // Verifica che l'utente sia admin
-      if (user.email != 'ferrara-michele@hotmail.it') {
+      // ========================================
+      // 🔐 SECURITY: Check admin via custom claims (secure)
+      // ========================================
+      // REPLACED: user.email != 'ferrara-michele@hotmail.it' (insecure)
+      // NEW: Uses Firebase Custom Claims (server-validated)
+      final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+      if (!isAdmin) {
         throw Exception('Unauthorized: Admin only');
       }
 
@@ -69,7 +80,13 @@ class AdminModerationNotifier extends StateNotifier<AsyncValue<void>> {
       final user = await _ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
-      if (user.email != 'ferrara-michele@hotmail.it') {
+      // ========================================
+      // 🔐 SECURITY: Check admin via custom claims (secure)
+      // ========================================
+      // REPLACED: user.email != 'ferrara-michele@hotmail.it' (insecure)
+      // NEW: Uses Firebase Custom Claims (server-validated)
+      final isAdmin = await AdminRoleHelper.isCurrentUserAdmin();
+      if (!isAdmin) {
         throw Exception('Unauthorized: Admin only');
       }
 
@@ -91,13 +108,13 @@ final adminModerationProvider = StateNotifierProvider<AdminModerationNotifier, A
   return AdminModerationNotifier(ref);
 });
 
-// Provider per verificare se l'utente corrente è admin
-/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
-/// Automatically disposes provider instances when widget is disposed
-final isAdminProvider = FutureProvider.autoDispose<bool>((ref) async {
-  final user = await ref.watch(currentUserProvider.future);
-  return user?.email == 'ferrara-michele@hotmail.it';
-});
+// ========================================
+// 🔐 SECURITY: isAdminProvider moved to global location
+// ========================================
+// REMOVED: Local isAdminProvider with insecure email check
+// USE INSTEAD: Import from 'package:gymbro_flutter_new/core/auth/admin_status_provider.dart'
+// The global provider uses Firebase Custom Claims (server-validated)
+// See: lib/core/auth/admin_status_provider.dart
 
 // Provider per statistiche moderazione (quanti pending, reviewed, etc.)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
