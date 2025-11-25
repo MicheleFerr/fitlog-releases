@@ -17,8 +17,9 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class TemplateSaveHelper {
   static void showSaveAsTemplateDialog(BuildContext context, WidgetRef ref) async {
@@ -71,10 +72,12 @@ class TemplateSaveHelper {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              AppIcons.package,
-              size: 48,
-              color: Theme.of(context).colorScheme.error,
+            SemanticIcon(
+  icon: AppIcons.package,
+  semanticLabel: 'Package',
+  size: AppIconSize.xxlarge,
+  color: Theme.of(context,
+).colorScheme.error,
             ),
             const SizedBox(height: 16),
             Text(AppLocalizations.of(context).templateLimitMessage(quotaInfo.maxTemplates)),
@@ -147,7 +150,10 @@ class TemplateSaveHelper {
               descriptionController.text.trim(),
               currentWorkout,
             ),
-            icon: Icon(AppIcons.cloudUpload),
+            icon: const SemanticIcon(
+  icon: AppIcons.cloudUpload,
+  semanticLabel: 'Cloud upload',
+),
             label: Text(AppLocalizations.of(context).saveToFirebase),
           ),
         ],
@@ -195,7 +201,7 @@ class TemplateSaveHelper {
             color: Theme.of(context).colorScheme.secondary,
             size: 20,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               AppLocalizations.of(context).templatesRemaining(quotaInfo.remaining),
@@ -217,7 +223,10 @@ class TemplateSaveHelper {
         labelText: AppLocalizations.of(context).templateName,
         hintText: AppLocalizations.of(context).templateNameHint,
         border: const OutlineInputBorder(),
-        prefixIcon: const Icon(AppIcons.workout),
+        prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
       ),
       textCapitalization: TextCapitalization.words,
     );
@@ -230,7 +239,10 @@ class TemplateSaveHelper {
         labelText: AppLocalizations.of(context).description,
         hintText: AppLocalizations.of(context).descriptionHint,
         border: const OutlineInputBorder(),
-        prefixIcon: Icon(AppIcons.template),
+        prefixIcon: const SemanticIcon(
+  icon: AppIcons.template,
+  semanticLabel: 'Template',
+),
       ),
       maxLines: 3,
       textCapitalization: TextCapitalization.sentences,
@@ -253,7 +265,7 @@ class TemplateSaveHelper {
             AppIcons.cloudUpload,
             color: Theme.of(context).colorScheme.primary,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               AppLocalizations.of(context).templateSyncDescription,
@@ -325,10 +337,12 @@ class TemplateSaveHelper {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.package,
-                size: 48,
-                color: Theme.of(context).colorScheme.secondary,
+              SemanticIcon(
+  icon: AppIcons.package,
+  semanticLabel: 'Package',
+  size: AppIconSize.xxlarge,
+  color: Theme.of(context,
+).colorScheme.secondary,
               ),
               const SizedBox(height: 16),
               Text(errorMessage.replaceAll('Exception: ', '')),

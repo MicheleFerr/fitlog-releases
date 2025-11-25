@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/scree
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🎯 TIER-1 WORKOUT ACTION BAR
 /// Undo/Redo system with batch operations
@@ -300,11 +302,12 @@ class _OfflineIndicatorState extends State<_OfflineIndicator>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                AppIcons.cloudOff,
-                size: 16,
-                color: theme.colorScheme.onErrorContainer,
-              ),
+              SemanticIcon(
+  icon: AppIcons.cloudOff,
+  semanticLabel: 'Cloud off',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onErrorContainer,
+),
               const SizedBox(width: 4),
               Text(
                 '${widget.pendingCount}',
@@ -344,7 +347,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.completeAll,
           child: Row(
             children: [
-              const Icon(AppIcons.doneAll, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.doneAll,
+  semanticLabel: 'Done all',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.completeAllSets),
             ],
@@ -354,7 +361,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.clearAll,
           child: Row(
             children: [
-              const Icon(AppIcons.clearAll, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.clearAll,
+  semanticLabel: 'Clear all',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.clearAllSets),
             ],
@@ -364,7 +375,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.copyFromLast,
           child: Row(
             children: [
-              const Icon(AppIcons.copy, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.copy,
+  semanticLabel: 'Copy',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.copyFromLastWorkout),
             ],
@@ -374,7 +389,11 @@ class _BatchOperationsMenu extends ConsumerWidget {
           value: BatchOperation.progressiveOverload,
           child: Row(
             children: [
-              const Icon(AppIcons.trendUp, size: 20),
+              const SemanticIcon(
+  icon: AppIcons.trendUp,
+  semanticLabel: 'Trend up',
+  size: AppIconSize.small,
+),
               const SizedBox(width: 12),
               Text(l10n.applyProgressiveOverload),
             ],
@@ -443,11 +462,12 @@ class _ActionHistory extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 2),
             child: Row(
               children: [
-                Icon(
-                  AppIcons.history,
-                  size: 14,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.onSurfaceVariant,
+),
                 const SizedBox(width: 8),
                 Text(
                   action.description,

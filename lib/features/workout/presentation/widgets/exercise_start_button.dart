@@ -21,7 +21,6 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_d
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ExerciseStartButton extends ConsumerStatefulWidget {
   
@@ -171,7 +170,7 @@ class _ExerciseStartButtonState extends ConsumerState<ExerciseStartButton> {
                 ),
                 child: Center(
                   child: Icon(
-                    AppIcons.play,
+                    Icons.play_arrow,
                     size: 14,
                     color: colorScheme.primary,
                   ),

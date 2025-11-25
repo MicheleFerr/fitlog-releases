@@ -18,7 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_cards/template_quick_start_card.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/quick_start_card.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/workout_category_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -33,7 +33,7 @@ class QuickStartList extends ConsumerWidget {
     return ListView(
       children: [
         _buildQuickWorkoutCard(context, ref),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         _buildCustomTemplatesSection(context, ref),
         _buildPopularTemplatesSection(context, ref),
       ],
@@ -155,7 +155,7 @@ class QuickStartList extends ConsumerWidget {
             color: Theme.of(context).colorScheme.primary,
             semanticLabel: title,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
         ],
         Text(
           title,
@@ -172,7 +172,7 @@ class QuickStartList extends ConsumerWidget {
               children: [
                 Text(AppLocalizations.of(context).seeAll),
                 const SizedBox(width: 4),
-                SemanticIcon(
+                const SemanticIcon(
                   icon: AppIcons.forwardIos,
                   size: AppIconSize.tiny,
                   semanticLabel: '',
@@ -194,7 +194,7 @@ class QuickStartList extends ConsumerWidget {
           color: Theme.of(context).colorScheme.secondary,
           onTap: () => _startTemplateWorkout(context, ref, 'Upper Body'),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.cardio,
           title: AppLocalizations.of(context).lowerBody,
@@ -202,7 +202,7 @@ class QuickStartList extends ConsumerWidget {
           color: Theme.of(context).colorScheme.tertiary,
           onTap: () => _startTemplateWorkout(context, ref, 'Lower Body'),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         QuickStartCard(
           icon: AppIcons.timer,
           title: AppLocalizations.of(context).hiitTraining,

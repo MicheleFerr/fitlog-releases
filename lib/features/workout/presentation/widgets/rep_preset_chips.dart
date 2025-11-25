@@ -14,7 +14,7 @@ import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/data/providers/preset_service_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Rep preset chips widget for quick selection
 ///
@@ -65,11 +65,11 @@ class RepPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.speed,
+                  Icons.speed,
                   size: 18,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.quickRepPresets,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -217,11 +217,11 @@ class SetCountPresetChips extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  AppIcons.repeat,
+                  Icons.repeat,
                   size: 18,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   context.l10n.quickSetCount,
                   style: context.textTheme.titleSmall?.copyWith(
@@ -230,7 +230,7 @@ class SetCountPresetChips extends ConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,

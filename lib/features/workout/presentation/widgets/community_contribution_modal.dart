@@ -22,7 +22,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/contribution_success_dialog.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class CommunityContributionModal extends ConsumerStatefulWidget {
 
@@ -221,8 +221,8 @@ class _CommunityContributionModalState
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    AppIcons.peopleOutline,
+                  child: const Icon(
+                    Icons.people_outline,
                     color: context.colors.surface,
                     size: 24,
                   ),
@@ -349,7 +349,7 @@ class _CommunityContributionModalState
                               Row(
                                 children: [
                                   Icon(
-                                    AppIcons.info,
+                                    Icons.info_outline,
                                     size: 16,
                                     color: theme.colorScheme.error,
                                   ),
@@ -436,7 +436,7 @@ class _CommunityContributionModalState
                     child: Row(
                       children: [
                         Icon(
-                          AppIcons.info,
+                          Icons.info_outline,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
@@ -480,7 +480,7 @@ class _CommunityContributionModalState
                     ),
                   ),
                   child: _isSubmitting
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(

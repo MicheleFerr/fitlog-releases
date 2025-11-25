@@ -15,7 +15,6 @@ import 'package:gymbro_flutter_new/features/community/domain/entities/community_
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/animated_xp_bar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class ContributionSuccessDialog extends ConsumerStatefulWidget {
@@ -151,9 +150,9 @@ class _ContributionSuccessDialogState extends ConsumerState<ContributionSuccessD
       case ContributionType.variant:
         return context.colors.tertiary;
       case ContributionType.translation:
-        return Colors.teal;
+        return context.colors.success;
       case ContributionType.technique:
-        return Colors.indigo;
+        return context.colors.primary;
     }
   }
   

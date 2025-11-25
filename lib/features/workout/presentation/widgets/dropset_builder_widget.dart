@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Builder widget for creating dropset exercises
 /// Reuses UI patterns from SupersetBuilderWidget
@@ -203,7 +204,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(AppIcons.workout, color: Theme.of(context).colorScheme.error),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -350,7 +351,7 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -890,7 +891,10 @@ class _DropsetBuilderWidgetState extends ConsumerState<DropsetBuilderWidget>
           backgroundColor: theme.colorScheme.error,
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        icon: const Icon(AppIcons.addCircle),
+        icon: const SemanticIcon(
+  icon: AppIcons.addCircle,
+  semanticLabel: 'Add circle',
+),
         label: Text(l10n.createDropset),
       ),
     );

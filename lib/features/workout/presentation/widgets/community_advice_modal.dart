@@ -16,7 +16,6 @@ import 'package:gymbro_flutter_new/features/community/presentation/providers/com
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class CommunityAdviceModal extends ConsumerStatefulWidget {
 
@@ -46,7 +45,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
       initialChildSize: 0.7,
       minChildSize: 0.5,
       maxChildSize: 0.9,
-      builder: (context, scrollController) => DecoratedBox(
+      builder: (context, scrollController) => Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -70,7 +69,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
               child: Row(
                 children: [
                   Icon(
-                    AppIcons.tip,
+                    Icons.lightbulb_outline,
                     color: theme.colorScheme.primary,
                   ),
                   const SizedBox(width: 12),
@@ -133,7 +132,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        AppIcons.error,
+                        Icons.error_outline,
                         size: 48,
                         color: theme.colorScheme.error,
                       ),
@@ -161,7 +160,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              AppIcons.tip,
+              Icons.lightbulb_outline,
               size: 64,
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
@@ -235,7 +234,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                   child: Row(
                     children: [
                       Icon(
-                        AppIcons.personOutline,
+                        Icons.person_outline,
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -267,7 +266,7 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          AppIcons.thumbUpOutlined,
+                          Icons.thumb_up_outlined,
                           size: 16,
                           color: theme.colorScheme.primary,
                         ),
@@ -305,38 +304,38 @@ class _CommunityAdviceModalState extends ConsumerState<CommunityAdviceModal> {
   Widget _getTypeIcon(ContributionType type, ThemeData theme) {
     switch (type) {
       case ContributionType.tip:
-        return Icon(
-          AppIcons.lightbulb,
+        return const Icon(
+          Icons.lightbulb,
           size: 20,
           color: context.colors.warning,
         );
       case ContributionType.warning:
-        return Icon(
-          AppIcons.warning,
+        return const Icon(
+          Icons.warning,
           size: 20,
           color: context.colors.secondary,
         );
       case ContributionType.correction:
         return Icon(
-          AppIcons.edit,
+          Icons.edit,
           size: 20,
           color: theme.colorScheme.primary,
         );
       case ContributionType.variant:
-        return Icon(
-          AppIcons.altRoute,
+        return const Icon(
+          Icons.alt_route,
           size: 20,
           color: context.colors.tertiary,
         );
       case ContributionType.translation:
-        return Icon(
-          AppIcons.translate,
+        return const Icon(
+          Icons.translate,
           size: 20,
           color: context.colors.primary,
         );
       case ContributionType.technique:
-        return Icon(
-          AppIcons.fitnessCenter,
+        return const Icon(
+          Icons.fitness_center,
           size: 20,
           color: context.colors.success,
         );

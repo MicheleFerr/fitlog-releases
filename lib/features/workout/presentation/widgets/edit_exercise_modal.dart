@@ -4,6 +4,8 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dar
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class EditExerciseModal extends ConsumerStatefulWidget {
 
@@ -108,12 +110,12 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.3),
+                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Header
             Row(
@@ -122,7 +124,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   AppIcons.edit,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     l10n.editExercise,
@@ -133,7 +135,10 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
@@ -145,7 +150,10 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
                 labelText: l10n.exerciseName,
-                prefixIcon: const Icon(AppIcons.workout),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -160,13 +168,16 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               decoration: InputDecoration(
                 labelText: l10n.notes,
                 hintText: l10n.notesHint,
-                prefixIcon: Icon(AppIcons.note),
+                prefixIcon: const SemanticIcon(
+  icon: AppIcons.note,
+  semanticLabel: 'Note',
+),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             // Rest time section
             Text(
@@ -175,7 +186,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               l10n.exerciseRestTimeDesc,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -226,7 +237,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       },
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Predefined rest times
                   Text(
@@ -254,7 +265,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                       );
                     }).toList(),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Custom rest time
                   Card(
@@ -366,11 +377,11 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(AppIcons.error, color: Colors.red, size: 48),
-              SizedBox(height: 16),
+              Icon(AppIcons.error, color: context.colors.error, size: 48),
+              const SizedBox(height: 16),
               Text(context.l10n.errorLoadingEditor),
               Text('Error: $e', style: const TextStyle(fontSize: 12)),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(context.l10n.close),
@@ -399,7 +410,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   AppIcons.trendUp,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,9 +446,9 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
 
             // APRE Configuration (shown when enabled)
             if (_useAPRE) ...[
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               const Divider(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Protocol Selection
               Text(
@@ -452,17 +463,26 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   ButtonSegment<int>(
                     value: 3,
                     label: Text('APRE 3'),
-                    icon: Icon(AppIcons.looks3),
+                    icon: SemanticIcon(
+  icon: AppIcons.looks3,
+  semanticLabel: 'Looks3',
+),
                   ),
                   ButtonSegment<int>(
                     value: 6,
                     label: Text('APRE 6'),
-                    icon: Icon(AppIcons.looks6),
+                    icon: SemanticIcon(
+  icon: AppIcons.looks6,
+  semanticLabel: 'Looks6',
+),
                   ),
                   ButtonSegment<int>(
                     value: 10,
                     label: Text('APRE 10'),
-                    icon: Icon(AppIcons.looks),
+                    icon: SemanticIcon(
+  icon: AppIcons.looks,
+  semanticLabel: 'Looks',
+),
                   ),
                 ],
                 selected: {_apreProtocol},
@@ -472,7 +492,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                   });
                 },
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Protocol Description
               Container(
@@ -483,12 +503,14 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      AppIcons.info,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.onTertiaryContainer,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _getProtocolDescription(l10n),
@@ -508,7 +530,10 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
                 decoration: InputDecoration(
                   labelText: l10n.apreBaseWeight,
                   hintText: l10n.apreBaseWeightHint,
-                  prefixIcon: const Icon(AppIcons.workout),
+                  prefixIcon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
                   suffixText: 'kg',
                   helperText: _getBaseWeightHelper(l10n),
                   border: OutlineInputBorder(
@@ -651,7 +676,7 @@ class _EditExerciseModalState extends ConsumerState<EditExerciseModal> {
               action: restTime != null
                   ? SnackBarAction(
                       label: '${l10n.timerLabel}: ${restTime}s',
-                      textColor: Colors.white,
+                      textColor: context.colors.surface,
                       onPressed: () {},
                     )
                   : null,
@@ -695,9 +720,9 @@ extension EditExerciseModalExtension on BuildContext {
     if (exercise == null) {
       debugPrint('Error: Cannot show EditExerciseModal with null exercise');
       ScaffoldMessenger.of(this).showSnackBar(
-        const SnackBar(
-          content: Text('Error: Unable to edit this exercise'),
-          backgroundColor: Colors.red,
+        SnackBar(
+          content: const Text('Error: Unable to edit this exercise'),
+          backgroundColor: colors.error,
         ),
       );
       return;
@@ -754,9 +779,9 @@ extension EditExerciseModalExtension on BuildContext {
       // Show error message to user
       if (mounted) {
         ScaffoldMessenger.of(this).showSnackBar(
-          const SnackBar(
-            content: Text('Error opening exercise editor. Please try again.'),
-            backgroundColor: Colors.red,
+          SnackBar(
+            content: const Text('Error opening exercise editor. Please try again.'),
+            backgroundColor: colors.error,
           ),
         );
       }

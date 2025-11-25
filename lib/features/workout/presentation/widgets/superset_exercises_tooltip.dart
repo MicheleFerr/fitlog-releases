@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Tooltip overlay showing exercises in a superset with detailed info
@@ -33,7 +32,7 @@ class SupersetExercisesTooltip extends ConsumerStatefulWidget {
   }) {
     return showDialog(
       context: context,
-      barrierColor: context.colors.onSurface.withValues(alpha: 0.26),
+      barrierColor: context.colors.onSurface26,
       builder: (context) => SupersetExercisesTooltip(
         supersetExercise: supersetExercise,
         onExerciseInfo: onExerciseInfo,
@@ -133,12 +132,12 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 size: 18,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Exercise Info'),
+                    const Text('Exercise Info'),
                     Text(
                       'Detailed exercise information',
                       style: TextStyle(
@@ -161,12 +160,12 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 size: 18,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Warmup & Prevention'),
+                    const Text('Warmup & Prevention'),
                     Text(
                       'Injury prevention tips',
                       style: TextStyle(
@@ -185,16 +184,16 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
           child: Row(
             children: [
               Icon(
-                AppIcons.education,
+                AppIcons.school,
                 size: 18,
                 color: Theme.of(context).colorScheme.tertiary,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Technique Tips'),
+                    const Text('Technique Tips'),
                     Text(
                       'Form and execution guidance',
                       style: TextStyle(
@@ -309,7 +308,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                                 ),
                                 IconButton(
                                   onPressed: () => Navigator.of(context).pop(),
-                                  icon: const Icon(AppIcons.close),
+                                  icon: Icon(AppIcons.close),
                                   style: IconButton.styleFrom(
                                     backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                                   ),
@@ -524,7 +523,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
                 // Info button
                 IconButton(
                   onPressed: () => widget.onExerciseInfo?.call(exercise),
-                  icon: const Icon(AppIcons.info),
+                  icon: Icon(AppIcons.info),
                   style: IconButton.styleFrom(
                     backgroundColor: colorScheme.primaryContainer.withValues(alpha: 0.3),
                   ),
@@ -629,7 +628,7 @@ class _SupersetExercisesTooltipState extends ConsumerState<SupersetExercisesTool
       case ExerciseCategory.abs:
         return context.colors.warning;
       case ExerciseCategory.cardio:
-        return Colors.pink;
+        return context.colors.error;
       case ExerciseCategory.other:
         return context.colors.surfaceContainerHighest;
     }

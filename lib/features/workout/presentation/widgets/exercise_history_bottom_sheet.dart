@@ -21,6 +21,8 @@ import 'package:gymbro_flutter_new/features/workout/data/services/exercise_histo
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ExerciseHistoryBottomSheet extends ConsumerStatefulWidget {
 
@@ -259,12 +261,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () => Navigator.pop(context),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                           child: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surface.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: theme.colorScheme.outline.withValues(alpha: 0.1),
                                 width: 1,
@@ -388,7 +390,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   AppIcons.analyticsRounded,
@@ -596,7 +598,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.secondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     AppIcons.historyRounded,
@@ -786,11 +788,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                           color: theme.colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
-                          AppIcons.fitnessCenterRounded,
-                          size: 16,
-                          color: theme.colorScheme.primary,
-                        ),
+                        child: SemanticIcon(
+  icon: AppIcons.fitnessCenterRounded,
+  semanticLabel: 'Fitness center rounded',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -810,11 +813,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                           color: theme.colorScheme.secondary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
-                          AppIcons.repeatRounded,
-                          size: 16,
-                          color: theme.colorScheme.secondary,
-                        ),
+                        child: SemanticIcon(
+  icon: AppIcons.repeatRounded,
+  semanticLabel: 'Repeat rounded',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.secondary,
+),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -969,10 +973,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                AppIcons.historyRounded,
-                size: 64,
-                color: theme.colorScheme.primary.withValues(alpha: 0.7),
+              child: SemanticIcon(
+  icon: AppIcons.historyRounded,
+  semanticLabel: 'History rounded',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary.withValues(alpha: 0.7,
+),
               ),
             ),
             const SizedBox(height: 24),
@@ -1037,7 +1043,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                     height: 24,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -1046,7 +1052,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                     height: 16,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ],
@@ -1077,7 +1083,7 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
                 height: 20,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               const SizedBox(height: 12),
@@ -1114,10 +1120,12 @@ class _ExerciseHistoryBottomSheetState extends ConsumerState<ExerciseHistoryBott
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            AppIcons.errorOutlineRounded,
-            size: 64,
-            color: theme.colorScheme.error.withValues(alpha: 0.7),
+          SemanticIcon(
+  icon: AppIcons.errorOutlineRounded,
+  semanticLabel: 'Error outline rounded',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.error.withValues(alpha: 0.7,
+),
           ),
           const SizedBox(height: 16),
           Text(

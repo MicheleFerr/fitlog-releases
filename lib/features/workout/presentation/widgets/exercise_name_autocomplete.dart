@@ -18,7 +18,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/domain/services/ex
 import 'package:gymbro_flutter_new/features/exercise_database/data/providers/exercise_search_service_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 /// Autocomplete widget for exercise name with ML-enhanced fuzzy search
 ///
@@ -206,7 +205,7 @@ class _ExerciseNameAutocompleteState
                     } else if (fuzzyResult.score >= 0.70) {
                       matchColor = context.colors.secondary;
                     } else {
-                      matchColor = context.colors.surfaceContainerHighest;
+                      matchColor = context.colors.surfaceVariant;
                     }
 
                     return ListTile(
@@ -252,9 +251,9 @@ class _ExerciseNameAutocompleteState
                           ),
                           // Auto-correct icon
                           if (fuzzyResult.wasAutoCorrected) ...[
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Icon(
-                              AppIcons.autoFixHigh,
+                              Icons.auto_fix_high,
                               size: 14,
                               color: context.colors.secondary,
                             ),
@@ -290,10 +289,10 @@ class _ExerciseNameAutocompleteState
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       )
-                    : const Icon(AppIcons.workout),
+                    : const Icon(Icons.fitness_center),
                 suffixIcon: widget.controller.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(AppIcons.clear, size: 20),
+                        icon: const Icon(Icons.clear, size: 20),
                         onPressed: () {
                           widget.controller.clear();
                           setState(() {
@@ -317,7 +316,7 @@ class _ExerciseNameAutocompleteState
                         ),
                       )
                     : widget.decoration?.prefixIcon ??
-                        const Icon(AppIcons.workout),
+                        const Icon(Icons.fitness_center),
               ),
           textCapitalization: TextCapitalization.words,
           onChanged: (value) {

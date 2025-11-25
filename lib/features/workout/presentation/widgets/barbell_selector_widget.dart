@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 
 class BarbellType {
@@ -55,16 +54,16 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       name: 'Olympic Men\'s',
       category: 'Olympic',
       weight: 20,
-      icon: AppIcons.fitnessCenter,
+      icon: AppIcons.workout,
       color: context.colors.primary,
       description: 'Standard Olympic bar (220cm)',
     ),
-    const BarbellType(
+    BarbellType(
       name: 'Olympic Women\'s',
       category: 'Olympic',
       weight: 15,
       icon: AppIcons.workout,
-      color: Colors.pink,
+      color: context.colors.tertiary,
       description: 'Women\'s Olympic bar (201cm)',
     ),
     
@@ -111,20 +110,20 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: context.colors.tertiary,
       description: 'Standard EZ curl bar (1" sleeves)',
     ),
-    const BarbellType(
+    BarbellType(
       name: 'Super EZ Bar',
       category: 'EZ Curl',
       weight: 11,
       icon: AppIcons.waves,
-      color: Colors.indigo,
+      color: context.colors.primary,
       description: 'Super EZ with more curve',
     ),
-    const BarbellType(
+    BarbellType(
       name: 'Mini EZ Bar',
       category: 'EZ Curl',
       weight: 5,
       icon: AppIcons.waves,
-      color: Colors.lightBlue,
+      color: context.colors.secondary,
       description: 'Small EZ curl bar',
     ),
     
@@ -145,27 +144,27 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
       color: context.colors.warning,
       description: 'SSB with shoulder pads',
     ),
-    const BarbellType(
+    BarbellType(
       name: 'Swiss/Football Bar',
       category: 'Specialty',
       weight: 18,
       icon: AppIcons.sportsFootball,
-      color: Colors.teal,
+      color: context.colors.success,
       description: 'Multi-grip neutral bar',
     ),
-    const BarbellType(
+    BarbellType(
       name: 'Cambered Bar',
       category: 'Specialty',
       weight: 25,
       icon: AppIcons.architecture,
-      color: Colors.brown,
+      color: context.colors.surfaceContainerHighest,
       description: 'Cambered squat/bench bar',
     ),
     BarbellType(
       name: 'Buffalo Bar',
       category: 'Specialty',
       weight: 20,
-      icon: AppIcons.trendingDown,
+      icon: AppIcons.trendDown,
       color: context.colors.tertiary,
       description: 'Slightly curved bar',
     ),
@@ -302,14 +301,14 @@ class _BarbellSelectorWidgetState extends State<BarbellSelectorWidget> {
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
                   _buildQuickButton('None', 0, AppIcons.block, context.colors.surfaceContainerHighest),
-                  _buildQuickButton('Olympic', 20, AppIcons.fitnessCenter, context.colors.primary),
-                  _buildQuickButton('Women\'s', 15, AppIcons.fitnessCenter, Colors.pink),
+                  _buildQuickButton('Olympic', 20, AppIcons.workout, context.colors.primary),
+                  _buildQuickButton('Women\'s', 15, AppIcons.workout, context.colors.tertiary),
                   _buildQuickButton('EZ Bar', 7.5, AppIcons.waves, context.colors.tertiary),
                   _buildQuickButton('Trap Bar', 25, AppIcons.hexagonOutlined, context.colors.error),
                 ],

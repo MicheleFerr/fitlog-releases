@@ -7,6 +7,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_e
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget per esecuzione SEQUENZIALE superset secondo metodologia scientifica
 ///
@@ -301,7 +303,7 @@ class _SupersetSequentialExecutionSheetState
                   color: context.colors.secondary,
                   size: 28,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,12 +325,15 @@ class _SupersetSequentialExecutionSheetState
                 ),
                 IconButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
               ],
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // ✅ FIX PROBLEMA 3: Lista esercizi con double-tap editing
             ...widget.superset.exercises.map((exercise) {
@@ -355,12 +360,12 @@ class _SupersetSequentialExecutionSheetState
                   child: Row(
                     children: [
                       Icon(
-                        isCompleted ? Icons.check_circle : AppIcons.radioButtonUnchecked,
+                        isCompleted ? AppIcons.checkCircle : AppIcons.radioButtonUnchecked,
                         color: isCompleted
                             ? context.colors.secondary
                             : context.colors.outline,
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,10 +381,12 @@ class _SupersetSequentialExecutionSheetState
                                   ),
                                 ),
                                 // ✅ Visual hint for double-tap
-                                Icon(
-                                  AppIcons.edit,
-                                  size: 14,
-                                  color: context.colors.outline.withValues(alpha: 0.5),
+                                SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+  color: context.colors.outline.withValues(alpha: 0.5,
+),
                                 ),
                               ],
                             ),
@@ -399,7 +406,7 @@ class _SupersetSequentialExecutionSheetState
               );
             }),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Info box metodologia
             Container(
@@ -410,12 +417,13 @@ class _SupersetSequentialExecutionSheetState
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    size: 20,
-                    color: context.colors.onPrimaryContainer,
-                  ),
-                  SizedBox(width: 8),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: context.colors.onPrimaryContainer,
+),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'Esegui tutti gli esercizi in sequenza senza riposo',
@@ -428,12 +436,15 @@ class _SupersetSequentialExecutionSheetState
               ),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Pulsante per eseguire il round
             FilledButton.icon(
               onPressed: completedExercises > 0 ? null : _executeRound,
-              icon: Icon(AppIcons.workout),
+              icon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
               label: Text(
                 completedExercises > 0
                     ? context.l10n.completed

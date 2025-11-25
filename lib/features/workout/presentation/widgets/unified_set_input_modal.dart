@@ -10,8 +10,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/workout/domain/services/rest_time_suggestion_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 // Extension for easy modal showing
 extension UnifiedSetInputModalExtension on BuildContext {
@@ -706,11 +707,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               if (isCompleted) ...[
-                                                Icon(
-                                                  AppIcons.complete,
-                                                  size: 16,
-                                                  color: colorScheme.tertiary,
-                                                ),
+                                                SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+  size: AppIconSize.tiny,
+  color: colorScheme.tertiary,
+),
                                                 const SizedBox(width: 4),
                                               ],
                                               Flexible(
@@ -752,11 +754,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      AppIcons.copy,
-                                      size: 16,
-                                      color: colorScheme.secondary,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.copy,
+  semanticLabel: 'Copy',
+  size: AppIconSize.tiny,
+  color: colorScheme.secondary,
+),
                                     const SizedBox(width: 8),
                                     Text(
                                       'Copy from Set ${widget.previousSet!.setNumber}: '
@@ -784,11 +787,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(
-                                          AppIcons.history,
-                                          size: 14,
-                                          color: colorScheme.onSurfaceVariant,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           l10n.recentWeights,
@@ -873,11 +877,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          AppIcons.workout,
-                                          size: 18,
-                                          color: colorScheme.primary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Weight',
@@ -1020,11 +1025,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          AppIcons.repeat,
-                                          size: 18,
-                                          color: colorScheme.secondary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.small,
+  color: colorScheme.secondary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Reps',
@@ -1160,11 +1166,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          AppIcons.timer,
-                                          size: 18,
-                                          color: colorScheme.tertiary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.small,
+  color: colorScheme.tertiary,
+),
                                         const SizedBox(width: 6),
                                         Text(
                                           'Duration',
@@ -1316,11 +1323,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                               children: [
                                 Row(
                                   children: [
-                                    Icon(
-                                      AppIcons.speed,
-                                      size: 18,
-                                      color: colorScheme.tertiary,
-                                    ),
+                                    SemanticIcon(
+  icon: AppIcons.speed,
+  semanticLabel: 'Speed',
+  size: AppIconSize.small,
+  color: colorScheme.tertiary,
+),
                                     const SizedBox(width: 8),
                                     Text(
                                       'RPE - Rate of Perceived Exertion',
@@ -1330,7 +1338,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 12),
+                                const SizedBox(height: 12),
                                 
                                 // RPE chips with color coding
                                 Wrap(
@@ -1417,11 +1425,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          AppIcons.info,
-                                          size: 16,
-                                          color: colorScheme.primary,
-                                        ),
+                                        SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: colorScheme.primary,
+),
                                         const SizedBox(width: 8),
                                         Expanded(
                                           child: Text(
@@ -1515,7 +1524,7 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         : context.colors.success,
                                       size: 24,
                                     ),
-                                    SizedBox(width: 12),
+                                    const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1550,7 +1559,12 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         style: theme.textTheme.bodySmall,
                                       ),
                                     ),
-                                    Icon(AppIcons.forward, size: 16, color: colorScheme.onSurfaceVariant),
+                                    SemanticIcon(
+  icon: AppIcons.forward,
+  semanticLabel: 'Forward',
+  size: AppIconSize.tiny,
+  color: colorScheme.onSurfaceVariant,
+),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
@@ -1591,7 +1605,11 @@ class _UnifiedSetInputModalState extends ConsumerState<UnifiedSetInputModal>
                                         HapticFeedback.mediumImpact();
                                         Navigator.of(context).pop();
                                       },
-                                      icon: Icon(AppIcons.check, size: 18),
+                                      icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.small,
+),
                                       label: Text(l10n.accept),
                                       style: FilledButton.styleFrom(
                                         backgroundColor: _restTimeSuggestion!.type == RestTimeSuggestionType.increase

@@ -18,6 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget per visualizzare grafico metrica esercizio
 ///
@@ -208,12 +210,14 @@ class ExerciseMetricChart extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.showChart,
-              size: 48,
-              color: context.colors.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.showChart,
+  semanticLabel: 'Show chart',
+  size: AppIconSize.xxlarge,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               context.l10n.noDataForChart,
               style: context.textTheme.bodyMedium?.copyWith(

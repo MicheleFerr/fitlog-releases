@@ -192,7 +192,7 @@ class TutInfoBottomSheet extends StatelessWidget {
                     color: theme.colorScheme.primary,
                   ),
 
-                  SizedBox(height: 80), // Extra space for button
+                  const SizedBox(height: 80), // Extra space for button
                 ],
               ),
             ),

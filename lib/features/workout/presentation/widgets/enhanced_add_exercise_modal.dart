@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_selection_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_onboarding_overlay.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// 🚀 TIER-1: Enhanced Add Exercise Modal with database selection
 class EnhancedAddExerciseModal extends ConsumerStatefulWidget {
@@ -383,7 +384,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
               children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(AppIcons.close),
+                  icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -469,12 +473,18 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
           Card(
             key: _selectExerciseButtonKey,
             child: ListTile(
-              leading: const Icon(AppIcons.workout),
+              leading: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
               title: Text(_selectedSingleExercise?.nome ?? l10n.selectExercise),
               subtitle: _selectedSingleExercise != null
                   ? Text('${_selectedSingleExercise!.focus} • ${_selectedSingleExercise!.attrezzatura}')
                   : Text(l10n.tapToSelectFromDatabase),
-              trailing: const Icon(AppIcons.forwardIos),
+              trailing: const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+),
               onTap: () => _openExerciseSelection(ExerciseType.single),
             ),
           ),
@@ -529,7 +539,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                     ],
                   ),
                   trailing: IconButton(
-                    icon: const Icon(AppIcons.deleteOutline),
+                    icon: const SemanticIcon(
+  icon: AppIcons.deleteOutline,
+  semanticLabel: 'Delete outline',
+),
                     onPressed: () {
                       setState(() {
                         _sets.removeAt(index);
@@ -549,7 +562,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                   ));
                 });
               },
-              icon: Icon(AppIcons.add),
+              icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               label: Text(l10n.addSet),
             ),
           ],
@@ -615,14 +631,20 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                     children: [
                       if (exercise != null)
                         IconButton(
-                          icon: const Icon(AppIcons.clear),
+                          icon: const SemanticIcon(
+  icon: AppIcons.clear,
+  semanticLabel: 'Clear',
+),
                           onPressed: () {
                             setState(() {
                               _supersetExercises[index] = null;
                             });
                           },
                         ),
-                      const Icon(AppIcons.forwardIos),
+                      const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+),
                     ],
                   ),
                   onTap: () => _openExerciseSelection(
@@ -644,7 +666,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                   ];
                 });
               },
-              icon: const Icon(AppIcons.add),
+              icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
               label: Text(l10n.addExercise),
             ),
           
@@ -714,12 +739,18 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
           // Exercise selection
           Card(
             child: ListTile(
-              leading: const Icon(AppIcons.workout),
+              leading: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
               title: Text(_dropsetExercise?.nome ?? l10n.selectExercise),
               subtitle: _dropsetExercise != null
                   ? Text('${_dropsetExercise!.focus} • ${_dropsetExercise!.attrezzatura}')
                   : Text(l10n.tapToSelectFromDatabase),
-              trailing: const Icon(AppIcons.forwardIos),
+              trailing: const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+),
               onTap: () => _openExerciseSelection(ExerciseType.dropset),
             ),
           ),
@@ -784,7 +815,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                   ),
                   trailing: _dropsetStages.length > 2
                       ? IconButton(
-                          icon: const Icon(AppIcons.deleteOutline),
+                          icon: const SemanticIcon(
+  icon: AppIcons.deleteOutline,
+  semanticLabel: 'Delete outline',
+),
                           onPressed: () {
                             setState(() {
                               _dropsetStages.removeAt(index);
@@ -806,7 +840,10 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
                     ));
                   });
                 },
-                icon: Icon(AppIcons.add),
+                icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+),
                 label: Text(l10n.addStage),
               ),
           ],
@@ -854,12 +891,18 @@ class _EnhancedAddExerciseModalState extends ConsumerState<EnhancedAddExerciseMo
           // Exercise selection
           Card(
             child: ListTile(
-              leading: const Icon(AppIcons.workout),
+              leading: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
               title: Text(_restPauseExercise?.nome ?? l10n.selectExercise),
               subtitle: _restPauseExercise != null
                   ? Text('${_restPauseExercise!.focus} • ${_restPauseExercise!.attrezzatura}')
                   : Text(l10n.tapToSelectFromDatabase),
-              trailing: const Icon(AppIcons.forwardIos),
+              trailing: const SemanticIcon(
+  icon: AppIcons.forwardIos,
+  semanticLabel: 'Forward ios',
+),
               onTap: () => _openExerciseSelection(ExerciseType.restPause),
             ),
           ),

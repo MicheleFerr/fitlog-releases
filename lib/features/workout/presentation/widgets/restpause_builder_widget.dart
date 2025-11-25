@@ -8,6 +8,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Builder widget for creating rest-pause exercises
 /// Reuses UI patterns from SupersetBuilderWidget and DropsetBuilderWidget
@@ -187,7 +189,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(AppIcons.workout, color: Theme.of(context).colorScheme.tertiary),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
                         '${WeightHelper.formatPickerWeight(selectedWeight, unit)} $unit',
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -334,7 +336,7 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -715,11 +717,12 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    size: 16,
-                    color: theme.colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: theme.colorScheme.primary,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -797,7 +800,10 @@ class _RestPauseBuilderWidgetState extends ConsumerState<RestPauseBuilderWidget>
           backgroundColor: theme.colorScheme.tertiary,
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        icon: const Icon(AppIcons.addCircle),
+        icon: const SemanticIcon(
+  icon: AppIcons.addCircle,
+  semanticLabel: 'Add circle',
+),
         label: Text(l10n.createRestPause),
       ),
     );

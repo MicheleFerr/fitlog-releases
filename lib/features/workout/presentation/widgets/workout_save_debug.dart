@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Widget di debug per mostrare gli allenamenti salvati in Firestore
 class WorkoutSaveDebug extends ConsumerWidget {
@@ -52,7 +54,10 @@ class WorkoutSaveDebug extends ConsumerWidget {
                 const SizedBox(height: 8),
                 ElevatedButton.icon(
                   onPressed: () => _showSavedActivities(context, ref, user.email!),
-                  icon: const Icon(AppIcons.history),
+                  icon: const SemanticIcon(
+  icon: AppIcons.history,
+  semanticLabel: 'History',
+),
                   label: const Text('Vedi Attività Salvate'),
                 ),
               ],
@@ -103,7 +108,7 @@ class WorkoutSaveDebug extends ConsumerWidget {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: context.colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -130,7 +135,12 @@ class WorkoutSaveDebug extends ConsumerWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(AppIcons.error, size: 48, color: Colors.red),
+                            SemanticIcon(
+  icon: AppIcons.error,
+  semanticLabel: 'Error',
+  size: AppIconSize.xxlarge,
+  color: context.colors.error,
+),
                             const SizedBox(height: 16),
                             Text('Errore: ${snapshot.error}'),
                           ],
@@ -141,17 +151,22 @@ class WorkoutSaveDebug extends ConsumerWidget {
                     final activities = snapshot.data ?? [];
                     
                     if (activities.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(AppIcons.workout, size: 48, color: Colors.grey),
-                            SizedBox(height: 16),
-                            Text('Nessuna attività salvata ancora'),
-                            SizedBox(height: 8),
+                            SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.xxlarge,
+  color: context.colors.surfaceContainerHighest,
+),
+                            const SizedBox(height: 16),
+                            const Text('Nessuna attività salvata ancora'),
+                            const SizedBox(height: 8),
                             Text(
                               'Completa un allenamento per vedere qui i dati!',
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: context.colors.surfaceContainerHighest),
                             ),
                           ],
                         ),
@@ -171,7 +186,10 @@ class WorkoutSaveDebug extends ConsumerWidget {
                                   ? NetworkImage(activity.exerciseImage!)
                                   : null,
                               child: activity.exerciseImage == null
-                                  ? const Icon(AppIcons.workout)
+                                  ? const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+)
                                   : null,
                             ),
                             title: Text(activity.exerciseName),
@@ -184,7 +202,10 @@ class WorkoutSaveDebug extends ConsumerWidget {
                               ],
                             ),
                             trailing: IconButton(
-                              icon: const Icon(AppIcons.info),
+                              icon: const SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+),
                               onPressed: () => _showActivityDetails(context, activity),
                             ),
                           ),

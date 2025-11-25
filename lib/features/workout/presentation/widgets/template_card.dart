@@ -6,12 +6,10 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_temp
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/difficulty_level.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/template_category.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Apple HIG compliant template card
 ///
@@ -118,7 +116,7 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
               borderRadius: BorderRadius.circular(12), // Apple HIG standard
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.1),
+                  color: context.colors.onSurface.withValues(alpha: isDark ? 0.15 : 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),

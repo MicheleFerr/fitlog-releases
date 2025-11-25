@@ -234,7 +234,7 @@ class _WorkoutCategoryBottomSheetState
 
   Widget _buildCustomInput(BuildContext context) {
     return FocusTraversalOrder(
-      order: NumericFocusOrder(8.0),
+      order: const NumericFocusOrder(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

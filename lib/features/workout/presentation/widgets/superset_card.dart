@@ -9,6 +9,9 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercis
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_sequential_execution_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Tier-1 SupersetCard che mostra tutti gli esercizi del superset in una singola card
 class SupersetCard extends ConsumerStatefulWidget {
@@ -77,7 +80,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               context,
               icon: AppIcons.swapHoriz,
               label: l10n.replace,
-              color: Colors.green,
+              color: context.colors.success,
               onTap: () {
                 HapticFeedback.mediumImpact();
                 if (widget.onReplace != null) widget.onReplace!();
@@ -88,13 +91,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               context,
               icon: AppIcons.edit,
               label: l10n.edit,
-              color: Colors.blue,
+              color: context.colors.primary,
               onTap: () {
                 HapticFeedback.mediumImpact();
                 if (widget.onEdit != null) widget.onEdit!();
               },
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             _buildSwipeAction(
               context,
               icon: AppIcons.delete,
@@ -162,12 +165,12 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 20),
+            Icon(icon, color: context.colors.surface, size: 20),
             const SizedBox(height: 2),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.colors.surface,
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
               ),
@@ -219,13 +222,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             ),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             AppIcons.link,
-            color: Colors.white,
+            color: context.colors.surface,
             size: 20,
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         
         // Titolo e badge
         Expanded(
@@ -239,7 +242,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: context.colors.secondary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: context.colors.secondary.withValues(alpha: 0.3),
                         width: 1,
@@ -255,7 +258,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   
                   // Nome del superset
                   Expanded(
@@ -270,7 +273,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   ),
                 ],
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               
               // Info sui set
               Text(
@@ -286,7 +289,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         // Menu button
         IconButton(
           onPressed: () => _showSupersetOptions(context),
-          icon: Icon(AppIcons.moreVert),
+          icon: const SemanticIcon(
+  icon: AppIcons.moreVert,
+  semanticLabel: 'More options',
+),
           tooltip: 'Options',
         ),
       ],
@@ -308,12 +314,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.workout,
-                size: 16,
-                color: context.colors.primary,
-              ),
-              SizedBox(width: 6),
+              SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
+              const SizedBox(width: 6),
               Text(
                 'Exercises',
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -342,7 +349,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Icon(
                         _isExpanded ? AppIcons.keyboardArrowUp : AppIcons.keyboardArrowDown,
                         size: 16,
@@ -386,12 +393,12 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   Widget _buildExerciseRow(BuildContext context, Exercise exercise, int number) {
     return InkWell(
       onTap: () => _showExerciseOptions(context, exercise),
-      borderRadius: BorderRadius.circular(6),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: context.colors.surface,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: context.colors.outline.withValues(alpha: 0.1),
           ),
@@ -417,8 +424,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
               ),
             ),
-            SizedBox(width: 8),
-            
+            const SizedBox(width: 8),
+
             // Nome esercizio
             Expanded(
               child: Text(
@@ -430,19 +437,21 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             ),
             
             // Icona per indicare che è cliccabile
-            Icon(
-              AppIcons.info,
-              size: 16,
-              color: context.colors.primary.withValues(alpha: 0.7),
+            SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.tiny,
+  color: context.colors.primary.withValues(alpha: 0.7,
+),
             ),
-            SizedBox(width: 4),
-            
+            const SizedBox(width: 4),
+
             // Categoria
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: context.colors.primaryContainer,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 exercise.category.name.toUpperCase(),
@@ -483,7 +492,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   color: context.colors.primary,
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 exercise.name,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -503,12 +512,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
       children: [
         Row(
           children: [
-            Icon(
-              AppIcons.repeat,
-              size: 16,
-              color: context.colors.primary,
-            ),
-            SizedBox(width: 6),
+            SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: context.colors.primary,
+),
+            const SizedBox(width: 6),
             Text(
               'Sets (${widget.superset.supersetSets.where((s) => s.isFullyCompleted).length}/${widget.superset.supersetSets.length})',
               style: context.textTheme.bodyMedium?.copyWith(
@@ -546,12 +556,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
         children: [
           Row(
             children: [
-              Icon(
-                AppIcons.note,
-                size: 16,
-                color: context.colors.onSurface,
-              ),
-              SizedBox(width: 6),
+              SemanticIcon(
+  icon: AppIcons.note,
+  semanticLabel: 'Note',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurface,
+),
+              const SizedBox(width: 6),
               Text(
                 l10n.notes,
                 style: context.textTheme.bodySmall?.copyWith(
@@ -561,7 +572,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               ),
             ],
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
           Text(
             widget.superset.notes!,
             style: context.textTheme.bodySmall,
@@ -581,7 +592,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(AppIcons.edit),
+              leading: const SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+),
               title: const Text('Edit Superset'),
               onTap: () {
                 Navigator.pop(context);
@@ -589,8 +603,11 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               },
             ),
             ListTile(
-              leading: Icon(AppIcons.iconCopy),
-              title: Text('Duplicate'),
+              leading: const SemanticIcon(
+  icon: AppIcons.iconCopy,
+  semanticLabel: 'Icon copy',
+),
+              title: const Text('Duplicate'),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Implement duplicate functionality
@@ -648,7 +665,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                 ),
                 child: Center(
                   child: isFullyCompleted
-                      ? Icon(AppIcons.check, color: Colors.white, size: 16)
+                      ? Icon(AppIcons.check, color: context.colors.surface, size: 16)
                       : Text(
                           '$setNumber',
                           style: TextStyle(
@@ -659,7 +676,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                         ),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 'Set $setNumber',
                 style: context.textTheme.titleSmall?.copyWith(
@@ -759,7 +776,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     '${exerciseData.actualReps ?? exerciseData.targetReps ?? 0}',
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -787,7 +804,7 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: _getRPEColor(exerciseData.rpe!).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     'RPE ${exerciseData.rpe}',
@@ -802,8 +819,8 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
               )
             else
               const Expanded(flex: 1, child: SizedBox()),
-            
-            SizedBox(width: 12),
+
+            const SizedBox(width: 12),
             
             // Completion toggle on the right (like single cards)
             Container(
@@ -821,8 +838,13 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
                     ? context.colors.tertiary
                     : Colors.transparent,
               ),
-              child: exerciseData.isCompleted 
-                  ? const Icon(AppIcons.check, size: 14, color: Colors.white)
+              child: exerciseData.isCompleted
+                  ? SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.tiny,
+  color: context.colors.surface,
+)
                   : null,
             ),
           ],
@@ -832,11 +854,11 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
   }
 
   Color _getRPEColor(int rpe) {
-    if (rpe <= 6) return Colors.green;
-    if (rpe <= 7) return Colors.lightGreen;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
-    return Colors.red;
+    if (rpe <= 6) return context.colors.success;
+    if (rpe <= 7) return context.colors.success;
+    if (rpe <= 8) return context.colors.secondary;
+    if (rpe <= 9) return context.colors.warning;
+    return context.colors.error;
   }
 
   void _handleExerciseToggle(

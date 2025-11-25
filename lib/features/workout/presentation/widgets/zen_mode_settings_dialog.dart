@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/zen_mode_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class ZenModeSettingsDialog extends ConsumerWidget {
   const ZenModeSettingsDialog({super.key});
@@ -88,7 +90,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         context: context,
                         title: 'Card Riscaldamento',
                         subtitle: 'Nasconde i suggerimenti di warmup',
-                        icon: AppIcons.whatshotOutlined,
+                        icon: AppIcons.trendingOutlined,
                         value: zenState.config.hideWarmupCards,
                         onChanged: (value) => zenNotifier.updateConfigField('hideWarmupCards', value),
                       ),
@@ -167,10 +169,12 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                         padding: const EdgeInsets.all(24),
                         child: Column(
                           children: [
-                            Icon(
-                              AppIcons.flexibility,
-                              size: 64,
-                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            SemanticIcon(
+  icon: AppIcons.flexibility,
+  semanticLabel: 'Flexibility',
+  size: AppIconSize.medium,
+  color: theme.colorScheme.primary.withValues(alpha: 0.3,
+),
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -212,7 +216,7 @@ class ZenModeSettingsDialog extends ConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Chiudi'),
+                    child: const Text('Chiudi'),
                   ),
                 ],
               ),

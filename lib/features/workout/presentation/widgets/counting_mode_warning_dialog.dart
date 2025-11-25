@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
@@ -67,7 +66,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
             size: AppIconSize.large,
             color: context.iconWarning,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               context.l10n.countingModeWarningTitle,
@@ -94,7 +93,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
               color: context.colors.onSurface.withValues(alpha: 0.8),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Info box
           Container(
@@ -114,7 +113,7 @@ class _CountingModeWarningDialogContent extends StatelessWidget {
                   size: AppIconSize.small,
                   color: context.iconWarning,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.countingModeWarningInfo,

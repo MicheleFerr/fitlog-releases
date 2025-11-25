@@ -6,7 +6,7 @@ import 'package:gymbro_flutter_new/features/workout/data/providers/preset_servic
 import 'package:gymbro_flutter_new/features/workout/domain/models/workout_preset.dart';
 import 'package:gymbro_flutter_new/core/analytics/trackers/preset_selection_tracker.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class RestTimePickerModal extends ConsumerStatefulWidget {
   const RestTimePickerModal({
@@ -91,18 +91,18 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                      color: context.colors.surfaceVariant.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Title
                 Row(
                   children: [
-                    Icon(AppIcons.timer, size: 24),
-                    SizedBox(width: 8),
+                    const Icon(Icons.timer, size: 24),
+                    const SizedBox(width: 8),
                     Text(
                       context.l10n.restTime,
                       style: context.textTheme.headlineSmall?.copyWith(
@@ -111,14 +111,14 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   context.l10n.restTimeDescription,
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: context.colors.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Switch to enable/disable timer
                 SwitchListTile(
@@ -135,7 +135,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                   contentPadding: EdgeInsets.zero,
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 if (_hasRestTime) ...[
                   // Quick presets
@@ -187,7 +187,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                       }).toList(),
                     ),
 
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // Custom picker
                   Text(
@@ -196,7 +196,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   Container(
                     height: 150,
@@ -285,7 +285,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                     ),
                   ),
 
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Preview of selected time
                   Container(
@@ -299,11 +299,11 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          AppIcons.timer,
+                          Icons.timer,
                           size: 20,
                           color: context.colors.primary,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
                           context.l10n.timerSet,
                           style: context.textTheme.bodyMedium,
@@ -320,7 +320,7 @@ class _RestTimePickerModalState extends ConsumerState<RestTimePickerModal> {
                   ),
                 ],
 
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Action buttons
                 SafeArea(

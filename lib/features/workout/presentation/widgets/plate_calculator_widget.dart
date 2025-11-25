@@ -8,6 +8,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class PlateCalculatorWidget extends ConsumerStatefulWidget {
   
@@ -546,12 +547,12 @@ class _PlateCalculatorWidgetState extends ConsumerState<PlateCalculatorWidget> {
   Color _getPlateColor(double weight) {
     if (weight >= 25) return context.colors.error;
     if (weight >= 20) return context.colors.primary;
-    if (weight >= 15) return Colors.yellow[700]!;
+    if (weight >= 15) return context.colors.warning[700]!;
     if (weight >= 10) return context.colors.success;
-    if (weight >= 5) return Colors.grey[600]!;
-    if (weight >= 2.5) return Colors.orange;
-    if (weight >= 1.25) return Colors.purple;
-    return Colors.grey[400]!;
+    if (weight >= 5) return context.colors.surfaceVariant[600]!;
+    if (weight >= 2.5) return context.colors.secondary;
+    if (weight >= 1.25) return context.colors.tertiary;
+    return context.colors.surfaceVariant[400]!;
   }
   
   double _getPlateHeight(double weight) {

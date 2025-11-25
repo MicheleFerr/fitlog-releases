@@ -18,6 +18,8 @@ import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/chart_data_point.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Widget per visualizzare grafico multi-metrica con overlay
 ///
@@ -90,10 +92,12 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  AppIcons.infoOutline,
-                  size: 14,
-                  color: context.colors.onSurface.withValues(alpha: 0.5),
+                SemanticIcon(
+  icon: AppIcons.infoOutline,
+  semanticLabel: 'Info outline',
+  size: AppIconSize.tiny,
+  color: context.colors.onSurface.withValues(alpha: 0.5,
+),
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -220,7 +224,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Text(
                   metric,
                   style: context.textTheme.labelMedium?.copyWith(
@@ -482,7 +486,7 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
     if (pesoDiff > 0 && repsDiff < 0 && repsChangePercent >= -30) {
       return _InsightData(
         icon: AppIcons.trendUp,
-        color: Colors.green,
+        color: context.colors.success,
         title: 'Progressive Overload',
         message:
             'Peso +${pesoDiff.toStringAsFixed(1)}kg, Reps ${repsDiff.toStringAsFixed(0)}. Ottimo! Prossimo step: mantieni questo peso e recupera le reps.',
@@ -599,10 +603,12 @@ class _MultiMetricChartState extends State<MultiMetricChart> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppIcons.showChart,
-              size: 48,
-              color: context.colors.onSurface.withValues(alpha: 0.3),
+            SemanticIcon(
+  icon: AppIcons.showChart,
+  semanticLabel: 'Show chart',
+  size: AppIconSize.xxlarge,
+  color: context.colors.onSurface.withValues(alpha: 0.3,
+),
             ),
             const SizedBox(height: 8),
             Text(

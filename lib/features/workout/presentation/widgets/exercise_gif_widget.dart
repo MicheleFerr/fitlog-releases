@@ -16,7 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_gif_fullscreen.dart';
 import 'package:gymbro_flutter_new/shared/data/services/gif_cache_manager.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ExerciseGifWidget extends StatefulWidget {
   ExerciseGifWidget({
@@ -87,9 +87,9 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
             // ✅ OPTIMIZATION: Stable cache key prevents re-downloading same GIF
             // Uses only URL-based key since size shouldn't vary for same exercise
             cacheKey: 'exercise_gif_${widget.exerciseName.replaceAll(' ', '_')}',
-            // ⚡ FIX: Removed maxHeightDiskCache/maxWidthDiskCache - incompatible with GifCacheManager
-            // These caused assertion error: "cacheManager is ImageCacheManager || (maxWidth == null && maxHeight == null)"
-            // GifCacheManager handles cache limits globally, no per-image resize needed
+            // ✅ OPTIMIZATION: Disk cache limits (3x size for storing high-res versions)
+            maxHeightDiskCache: (widget.size * 3).toInt(),
+            maxWidthDiskCache: (widget.size * 3).toInt(),
             // Loading placeholder
             placeholder: (context, url) {
               if (kDebugMode) {
@@ -131,8 +131,8 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
                     children: [
                       Icon(
                         is404
-                            ? AppIcons.imageNotSupported
-                            : AppIcons.fitnessCenter,
+                            ? Icons.image_not_supported
+                            : Icons.fitness_center,
                         color: icColor,
                         size: widget.size * 0.4,
                       ),
@@ -141,7 +141,8 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             is404 ? 'No GIF' : 'Error',
-                            style: context.textTheme.labelSmall?.copyWith(
+                            style: TextStyle(
+                              fontSize: 8,
                               color: icColor.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
@@ -163,14 +164,14 @@ class _ExerciseGifWidgetState extends State<ExerciseGifWidget> with AutomaticKee
       width: widget.size,
       height: widget.size,
       decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
-      child: Icon(AppIcons.fitnessCenter, color: iconColor, size: widget.size * 0.5),
+      child: Icon(Icons.fitness_center, color: iconColor, size: widget.size * 0.5),
     );
   }
 
   void _showFullscreen(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: context.colors.onSurface.withValues(alpha: 0.87),
+      barrierColor: context.colors.onSurface87,
       barrierDismissible: true,
       builder: (context) =>
           ExerciseGifFullscreen(gifUrl: widget.gifUrl!, exerciseName: widget.exerciseName),

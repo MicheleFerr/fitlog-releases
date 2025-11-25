@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Vista di benvenuto quando non c'è un workout attivo
 /// Differenziata per beginner (guidata) vs expert (minimal)
@@ -84,7 +84,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
 
             // Encouraging title
             Text(
@@ -97,7 +97,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Supportive description
             Text(
@@ -110,7 +110,7 @@ class _BeginnerEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: 48),
+            const SizedBox(height: 48),
 
             // Large, prominent CTA button (with GlobalKey for overlay)
             SizedBox(
@@ -166,7 +166,7 @@ class _BeginnerEmptyState extends StatelessWidget {
                     color: colors.primary,
                     size: AppIconSize.large,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       'Tip: Start with 3-4 exercises, 3 sets each. I\'ll guide you!',
@@ -206,13 +206,15 @@ class _ExpertEmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Simple icon
-            Icon(
-              AppIcons.workout,
-              size: 64,
-              color: colors.onSurface.withValues(alpha: 0.4),
+            SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.medium,
+  color: colors.onSurface.withValues(alpha: 0.4,
+),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Minimal title
             Text(
@@ -224,7 +226,7 @@ class _ExpertEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Brief description
             Text(
@@ -258,7 +260,7 @@ class _ExpertEmptyState extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(AppIcons.playCircle, size: AppIconSize.medium),
+                          Icon(AppIcons.playCircle, size: AppIconSize.medium),
                           const SizedBox(width: 8),
                           Text(l10n.homeEmptyExpertCTA),
                         ],
@@ -288,7 +290,7 @@ class _ExpertEmptyState extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(AppIcons.template, size: AppIconSize.medium),
+                          Icon(AppIcons.template, size: AppIconSize.medium),
                           const SizedBox(width: 8),
                           Text(l10n.useTemplate),
                         ],

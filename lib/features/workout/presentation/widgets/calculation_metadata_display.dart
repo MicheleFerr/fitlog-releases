@@ -17,17 +17,17 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 ///
 /// Design follows Material 3 principles with theme-aware colors
 class CalculationMetadataDisplay extends StatelessWidget {
-  /// The calculation results map from APREAutoRegulationService
-  final Map<String, dynamic> calculations;
-
-  /// Optional last calculation date (from exercise entity)
-  final DateTime? lastCalculationDate;
 
   const CalculationMetadataDisplay({
     super.key,
     required this.calculations,
     this.lastCalculationDate,
   });
+  /// The calculation results map from APREAutoRegulationService
+  final Map<String, dynamic> calculations;
+
+  /// Optional last calculation date (from exercise entity)
+  final DateTime? lastCalculationDate;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
                   size: AppIconSize.small,
                   color: context.colors.primary,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     context.l10n.apreCalculationMetadata,
@@ -66,7 +66,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Formula row
             _buildMetadataRow(
@@ -75,7 +75,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
               label: context.l10n.apreFormula,
               value: formula,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Data points row
             _buildMetadataRow(
@@ -85,7 +85,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
               value: '$dataPoints / 10',
               valueColor: _getDataPointsColor(context, dataPoints),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Data age row
             _buildMetadataRow(
@@ -95,7 +95,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
               value: context.l10n.apreDaysAgo(dataAge.inDays),
               valueColor: _getDataAgeColor(context, dataAge.inDays),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Standard deviation row
             _buildMetadataRow(
@@ -127,7 +127,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
                     size: AppIconSize.small,
                     color: _getConfidenceColor(context, confidence),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       context.l10n.apreConfidence,
@@ -155,7 +155,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
                           confidence?.emoji ?? '❓',
                           style: const TextStyle(fontSize: 14),
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
                           _getConfidenceName(confidence),
                           style: context.textTheme.labelLarge?.copyWith(
@@ -172,7 +172,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
 
             // Last calculation date (if available)
             if (lastCalculationDate != null) ...[
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               _buildMetadataRow(
                 context: context,
                 icon: AppIcons.calendar,
@@ -207,7 +207,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
               ? context.colors.onSurfaceVariant
               : context.colors.onSurface,
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +219,7 @@ class CalculationMetadataDisplay extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 value,
                 style: context.textTheme.bodyMedium?.copyWith(

@@ -52,6 +52,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart'
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/calculation_metadata_display.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/apre_auto_regulation_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/rpe_indicator.dart';
 
 class ExerciseListItem extends ConsumerStatefulWidget {
   const ExerciseListItem({
@@ -2184,32 +2185,10 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
                     // Determine counting mode to show appropriate fields
                     ..._buildSetDetailsForMode(set, config),
 
-                    // RPE indicator if completed
+                    // RPE indicator if completed - using atomic RpeIndicator widget
                     if (set.isCompleted && set.rpe != null) ...[
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getRpeIndicatorColor( set.rpe!,
-                          ).withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8), // Standard border radius (design system)
-                          border: Border.all(
-                            color: _getRpeIndicatorColor( set.rpe!,
-                            ).withValues(alpha: 0.5),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          'RPE ${set.rpe}',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: _getRpeIndicatorColor(set.rpe!),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      RpeIndicator(rpe: set.rpe!, compact: true),
                     ],
 
                     // Quick edit hint
@@ -3862,13 +3841,7 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
     );
   }
 
-  Color _getRpeIndicatorColor(int rpe) {
-    if (rpe <= 6) return context.successColor;
-    if (rpe <= 7) return context.successColor;
-    if (rpe <= 8) return context.warningColor;
-    if (rpe <= 9) return context.warningColor;
-    return context.errorColor;
-  }
+  // _getRpeIndicatorColor removed - now using atomic RpeIndicator widget from shared/
 
   void _startRestTimerWithSetInfo(
     BuildContext context,

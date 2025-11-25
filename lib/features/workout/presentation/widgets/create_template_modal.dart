@@ -1,21 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gymbro_flutter_new/shared/data/repositories/unified_template_repository.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/unified_workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/template_onboarding_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/rest_time_picker_modal.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_onboarding_overlay.dart';
 import 'package:uuid/uuid.dart';
-// Input Validation
 import 'package:gymbro_flutter_new/shared/domain/validation/template_validator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+
+/// Template type for quick selection (replaces 15 confusing tags)
+enum TemplateType {
+  upper,
+  lower,
+  fullBody;
+
+  String getDisplayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    switch (this) {
+      case TemplateType.upper:
+        return l10n.templateTypeUpper;
+      case TemplateType.lower:
+        return l10n.templateTypeLower;
+      case TemplateType.fullBody:
+        return l10n.templateTypeFullBody;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TemplateType.upper:
+        return AppIcons.arrowUpward;
+      case TemplateType.lower:
+        return AppIcons.arrowDownward;
+      case TemplateType.fullBody:
+        return AppIcons.workout;
+    }
+  }
+
+  /// Convert to tag for backward compatibility
+  String get tag {
+    switch (this) {
+      case TemplateType.upper:
+        return 'upper';
+      case TemplateType.lower:
+        return 'lower';
+      case TemplateType.fullBody:
+        return 'full-body';
+    }
+  }
+}
 
 class CreateTemplateModal extends ConsumerStatefulWidget {
   const CreateTemplateModal({super.key});
@@ -28,69 +65,84 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  // final _imageUrlController = TextEditingController(); // Commentato - feature futura
 
-  // GlobalKeys per onboarding spotlight
-  final _nameFieldKey = GlobalKey();
-  final _descriptionFieldKey = GlobalKey();
-  final _tagsKey = GlobalKey();
-  final _timerKey = GlobalKey();
+  // Quick Create state
+  TemplateType? _selectedType;
+  bool _showAdvancedOptions = false;
 
-  final List<String> _selectedTags = [];
-  int? _defaultRestTime;
-  final List<String> _availableTags = [
-    'upper',
-    'lower',
-    'full-body',
-    'strength',
-    'hypertrophy',
-    'cardio',
-    'hiit',
-    'beginner',
-    'intermediate',
-    'advanced',
-    'push',
-    'pull',
-    'legs',
-    'core',
-    'abs',
-  ];
+  // Advanced options
+  int _defaultRestTime = 90; // Smart default: 90 seconds
 
+  // From current workout
   bool _createFromCurrentWorkout = false;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // Avvia l'onboarding DOPO che i widget sono renderizzati
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Aspetta un frame aggiuntivo per assicurarsi che i GlobalKey siano pronti
-      Future.delayed(const Duration(milliseconds: 300), () {
-        if (mounted) {
-          ref.read(templateOnboardingProvider.notifier).startOnboarding();
-        }
-      });
-    });
+    // Auto-detect type from name as user types
+    _nameController.addListener(_autoDetectType);
   }
 
   @override
   void dispose() {
+    _nameController.removeListener(_autoDetectType);
     _nameController.dispose();
     _descriptionController.dispose();
-    // _imageUrlController.dispose(); // Commentato
     super.dispose();
+  }
+
+  /// Smart type detection based on template name
+  void _autoDetectType() {
+    final name = _nameController.text.toLowerCase();
+
+    // Only auto-detect if user hasn't manually selected
+    if (_selectedType != null) return;
+
+    TemplateType? detected;
+
+    // Upper body keywords
+    if (name.contains('push') ||
+        name.contains('upper') ||
+        name.contains('chest') ||
+        name.contains('shoulder') ||
+        name.contains('back') ||
+        name.contains('pull') ||
+        name.contains('arm')) {
+      detected = TemplateType.upper;
+    }
+    // Lower body keywords
+    else if (name.contains('leg') ||
+             name.contains('lower') ||
+             name.contains('squat') ||
+             name.contains('glute')) {
+      detected = TemplateType.lower;
+    }
+    // Full body keywords
+    else if (name.contains('full') ||
+             name.contains('total') ||
+             name.contains('whole')) {
+      detected = TemplateType.fullBody;
+    }
+
+    // Don't setState during build - schedule for next frame
+    if (detected != null && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _selectedType == null) {
+          setState(() => _selectedType = detected);
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final currentWorkout = ref.watch(currentWorkoutProvider);
     final hasActiveWorkout = currentWorkout != null && currentWorkout.exercises.isNotEmpty;
-    final localizations = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
 
-    return Stack(
-      children: [
-        Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.7, // Ridotto da 0.85
       padding: EdgeInsets.only(
         left: 16,
         right: 16,
@@ -111,81 +163,24 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
               ),
             ),
           ),
-          SizedBox(height: 16),
-          
-          // Titolo
+          const SizedBox(height: 16),
+
+          // Titolo semplificato
           Row(
             children: [
-              Icon(AppIcons.addCircleOutline, size: 24),
-              SizedBox(width: 8),
+              Icon(AppIcons.flashOn, size: AppIconSize.medium, color: context.colors.primary),
+              const SizedBox(width: 8),
               Text(
-                localizations.createTemplate ?? 'Crea Template',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                l10n.createTemplate,
+                style: context.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 20),
 
-          // Opzione per creare da workout attuale
-          if (hasActiveWorkout) ...[
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        AppIcons.workout,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'Workout Attuale Rilevato',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '${currentWorkout.exercises.length} esercizi trovati: "${currentWorkout.name}"',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 8),
-                  SwitchListTile(
-                    value: _createFromCurrentWorkout,
-                    onChanged: (value) {
-                      setState(() {
-                        _createFromCurrentWorkout = value;
-                        if (value && _nameController.text.isEmpty) {
-                          _nameController.text = '${currentWorkout.name} Template';
-                        }
-                      });
-                    },
-                    title: const Text('Crea da workout attuale'),
-                    subtitle: const Text('Include tutti gli esercizi e set'),
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-
-          // Form
+          // Form semplificato
           Expanded(
             child: Form(
               key: _formKey,
@@ -193,20 +188,25 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Nome template
+                    // Opzione per creare da workout attuale (compatta)
+                    if (hasActiveWorkout) ...[
+                      _buildCreateFromWorkoutOption(currentWorkout),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Nome template - Semplificato
                     TextFormField(
-                      key: _nameFieldKey,
                       controller: _nameController,
+                      autofocus: true,
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        labelText: localizations.templateNameLabel ?? 'Nome Template *',
-                        hintText: 'es. Upper Body Strength',
+                        labelText: l10n.templateNameLabel,
+                        hintText: 'es. Push Day, Leg Day...',
                         border: const OutlineInputBorder(),
-                        helperText: 'Max ${TemplateValidator.maxNameLength} characters',
+                        prefixIcon: const Icon(AppIcons.edit, size: AppIconSize.small),
                       ),
-                      maxLength: TemplateValidator.maxNameLength,
                       validator: (value) => TemplateValidator.validateTemplateName(value),
                       onChanged: (value) {
-                        // Auto-sanitize as user types
                         final sanitized = TemplateValidator.sanitizeTemplateName(value);
                         if (sanitized != value) {
                           _nameController.value = TextEditingValue(
@@ -216,300 +216,287 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
                         }
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
 
-                    // Descrizione (opzionale)
-                    TextFormField(
-                      key: _descriptionFieldKey,
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        labelText: localizations.templateDescriptionOptional,
-                        hintText: localizations.templateDescriptionHint ?? 'Breve descrizione del workout...',
-                        border: const OutlineInputBorder(),
-                        helperText: 'Optional, max ${TemplateValidator.maxDescriptionLength} characters',
-                      ),
-                      maxLines: 3,
-                      maxLength: TemplateValidator.maxDescriptionLength,
-                      validator: (value) => TemplateValidator.validateTemplateDescription(value),
-                      onChanged: (value) {
-                        // Auto-sanitize as user types
-                        if (value.isNotEmpty) {
-                          final sanitized = TemplateValidator.sanitizeTemplateDescription(value);
-                          if (sanitized != value) {
-                            _descriptionController.value = TextEditingValue(
-                              text: sanitized,
-                              selection: TextSelection.collapsed(offset: sanitized.length),
-                            );
-                          }
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // URL Immagine - COMMENTATO per feature futura
-                    // TextFormField(
-                    //   controller: _imageUrlController,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'URL Immagine (opzionale)',
-                    //     hintText: 'https://...',
-                    //     border: OutlineInputBorder(),
-                    //     prefixIcon: Icon(AppIcons.image),
-                    //   ),
-                    //   validator: (value) {
-                    //     if (value != null && value.isNotEmpty) {
-                    //       final uri = Uri.tryParse(value);
-                    //       if (uri == null || !uri.hasScheme) {
-                    //         return 'URL non valido';
-                    //       }
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
-                    // SizedBox(height: 20),
-
-                    // Tag selection
-                    Container(
-                      key: _tagsKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localizations.tags ?? 'Tag',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            localizations.selectTagsDescription ?? 'Seleziona i tag che descrivono il tuo template',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
+                    // Tipo Template - 3 opzioni chiare
+                    Text(
+                      l10n.templateType,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 12),
-
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: _availableTags.map((tag) {
-                        final isSelected = _selectedTags.contains(tag);
-                        return FilterChip(
-                          label: Text(tag),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            setState(() {
-                              if (selected) {
-                                _selectedTags.add(tag);
-                              } else {
-                                _selectedTags.remove(tag);
-                              }
-                            });
-                          },
-                          selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                          checkmarkColor: Theme.of(context).colorScheme.primary,
-                        );
-                      }).toList(),
-                    ),
-                    
-                    SizedBox(height: 20),
-
-                    // Timer di default
-                    Container(
-                      key: _timerKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localizations.defaultRestTimer ?? 'Timer di Recupero Default',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            localizations.defaultRestTimerDescription ??
-                              'Imposta un timer di default che verrà applicato a tutti gli esercizi del template',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12),
-
-                    InkWell(
-                      onTap: _showDefaultRestTimePicker,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              AppIcons.timer,
-                              color: _defaultRestTime != null 
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                _defaultRestTime != null 
-                                    ? 'Timer: ${_formatRestTime(_defaultRestTime!)}'
-                                    : 'Nessun timer di default',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: _defaultRestTime != null 
-                                      ? Theme.of(context).colorScheme.onSurface
-                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              AppIcons.forwardIos,
-                              size: 16,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
+                    _buildTypeSelector(),
                     const SizedBox(height: 20),
 
-                    // DISABLED: Fitness Profile / Weight Suggestions
-                    // Reason: GDPR compliance concerns - medical questionnaire data
-                    // Date: 2025-01-21
-                    /*
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                AppIcons.workout,
-                                size: 20,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Weight Suggestions',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Consumer(
-                            builder: (context, ref, _) {
-                              final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
+                    // Opzioni Avanzate (collapsabile)
+                    _buildAdvancedOptionsSection(l10n),
 
-                              if (questionnaire != null && questionnaire.isValid) {
-                                return Text(
-                                  'Profile configured (${questionnaire.experienceLevel.name}) - weight suggestions available',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
-                                  ),
-                                );
-                              }
-
-                              return Text(
-                                'Configure your fitness profile to get personalized weight suggestions',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 12),
-                          Consumer(
-                            builder: (context, ref, _) {
-                              final questionnaire = ref.watch(userFitnessQuestionnaireProvider);
-
-                              return OutlinedButton.icon(
-                                onPressed: () async {
-                                  final result = await showModalBottomSheet<bool>(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    useSafeArea: true,
-                                    builder: (_) => const FitnessQuestionnaireScreen(),
-                                  );
-                                  if (result == true && context.mounted) {
-                                    ref.invalidate(userFitnessQuestionnaireProvider);
-                                  }
-                                },
-                                icon: Icon(
-                                  questionnaire != null ? AppIcons.edit : AppIcons.addCircleOutline,
-                                ),
-                                label: Text(
-                                  questionnaire != null
-                                      ? 'Update Profile'
-                                      : 'Calculate Your Level',
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Theme.of(context).colorScheme.primary,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    */
-
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
           ),
 
-          // Pulsanti azione
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Annulla'),
-                ),
+          // Pulsante CTA prominente
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: FilledButton.icon(
+              onPressed: _isLoading ? null : _createTemplate,
+              icon: _isLoading
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: context.colors.onPrimary,
+                      ),
+                    )
+                  : const Icon(AppIcons.check),
+              label: Text(
+                l10n.createTemplateButton,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: FilledButton(
-                  onPressed: _isLoading ? null : _createTemplate,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Crea Template'),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
-        ),
+    );
+  }
 
-        // Onboarding overlay
-        TemplateOnboardingOverlay(
-          nameFieldKey: _nameFieldKey,
-          descriptionFieldKey: _descriptionFieldKey,
-          tagsKey: _tagsKey,
-          timerKey: _timerKey,
+  Widget _buildCreateFromWorkoutOption(dynamic currentWorkout) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: _createFromCurrentWorkout
+            ? context.colors.primaryContainer.withValues(alpha: 0.3)
+            : context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _createFromCurrentWorkout
+              ? context.colors.primary.withValues(alpha: 0.5)
+              : context.colors.outline.withValues(alpha: 0.2),
         ),
-      ],
+      ),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _createFromCurrentWorkout = !_createFromCurrentWorkout;
+            if (_createFromCurrentWorkout && _nameController.text.isEmpty) {
+              _nameController.text = '${currentWorkout.name}';
+            }
+          });
+          HapticFeedback.selectionClick();
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Row(
+          children: [
+            Icon(
+              _createFromCurrentWorkout ? AppIcons.checkCircle : AppIcons.workout,
+              color: _createFromCurrentWorkout
+                  ? context.colors.primary
+                  : context.colors.onSurfaceVariant,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Usa workout attuale',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '${currentWorkout.exercises.length} esercizi',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Switch(
+              value: _createFromCurrentWorkout,
+              onChanged: (value) {
+                setState(() {
+                  _createFromCurrentWorkout = value;
+                  if (value && _nameController.text.isEmpty) {
+                    _nameController.text = '${currentWorkout.name}';
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeSelector() {
+    return Row(
+      children: TemplateType.values.map((type) {
+        final isSelected = _selectedType == type;
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: type != TemplateType.values.last ? 8 : 0,
+            ),
+            child: _buildTypeCard(type, isSelected),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildTypeCard(TemplateType type, bool isSelected) {
+    return InkWell(
+      onTap: () {
+        setState(() => _selectedType = type);
+        HapticFeedback.selectionClick();
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.colors.primaryContainer
+              : context.colors.surfaceContainerHighest.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? context.colors.primary
+                : context.colors.outline.withValues(alpha: 0.2),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              type.icon,
+              size: AppIconSize.large,
+              color: isSelected
+                  ? context.colors.primary
+                  : context.colors.onSurfaceVariant,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              type.getDisplayName(context),
+              style: context.textTheme.bodySmall?.copyWith(
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected
+                    ? context.colors.primary
+                    : context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdvancedOptionsSection(AppLocalizations l10n) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        dividerColor: Colors.transparent,
+      ),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(top: 8),
+        initiallyExpanded: _showAdvancedOptions,
+        onExpansionChanged: (expanded) {
+          setState(() => _showAdvancedOptions = expanded);
+        },
+        leading: Icon(
+          AppIcons.settings,
+          size: AppIconSize.small,
+          color: context.colors.onSurfaceVariant,
+        ),
+        title: Text(
+          l10n.advancedOptions,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: context.colors.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          _showAdvancedOptions ? AppIcons.expandLess : AppIcons.expandMore,
+          size: AppIconSize.small,
+          color: context.colors.onSurfaceVariant,
+        ),
+        children: [
+          // Descrizione
+          TextField(
+            controller: _descriptionController,
+            decoration: InputDecoration(
+              labelText: l10n.templateDescriptionOptional,
+              hintText: l10n.templateDescriptionHint,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(AppIcons.note, size: AppIconSize.small),
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: 16),
+
+          // Timer di default
+          InkWell(
+            onTap: _showDefaultRestTimePicker,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: context.colors.outline.withValues(alpha: 0.3),
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.timer,
+                    size: AppIconSize.medium,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.defaultRestTimer,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          _formatRestTime(_defaultRestTime),
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    AppIcons.arrowForwardIos,
+                    size: AppIconSize.tiny,
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -519,61 +506,69 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
     setState(() => _isLoading = true);
 
     try {
-      final unifiedRepository = ref.read(unifiedTemplateRepositoryProvider);
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-
       final templateId = const Uuid().v4();
-      List<Map<String, dynamic>> exercisesRaw = [];
+      List<ExerciseTemplate> exerciseTemplates = [];
       String templateName = _nameController.text.trim();
 
       if (_createFromCurrentWorkout) {
         final currentWorkout = ref.read(currentWorkoutProvider)!;
-        templateName = _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : currentWorkout.name;
-        
-        var exercisesToAdd = currentWorkout.exercises;
-        if (_defaultRestTime != null) {
-          exercisesToAdd = currentWorkout.exercises.map((exercise) {
-            if (exercise.restTime == null) {
-              return exercise.copyWith(restTime: _defaultRestTime);
-            }
-            return exercise;
-          }).toList();
-        }
-        exercisesRaw = exercisesToAdd.map((e) => e.toJson()).toList();
+        templateName = _nameController.text.trim().isNotEmpty
+            ? _nameController.text.trim()
+            : currentWorkout.name;
+
+        exerciseTemplates = currentWorkout.exercises.map((exercise) {
+          final restTime = _defaultRestTime;
+
+          return ExerciseTemplate(
+            exerciseId: exercise.id,
+            exerciseName: exercise.name,
+            category: exercise.category,
+            type: exercise.type,
+            sets: exercise.sets.map((set) {
+              return SetTemplate(
+                setNumber: set.setNumber,
+                targetWeight: set.weight,
+                targetReps: set.reps,
+                targetRpe: set.rpe,
+                notes: set.notes,
+              );
+            }).toList(),
+            notes: exercise.notes,
+            restTime: restTime,
+          );
+        }).toList();
       }
 
-      final newTemplate = UnifiedWorkoutTemplate(
+      // Convert selected type to tag for backward compatibility
+      final tags = _selectedType != null ? [_selectedType!.tag] : <String>[];
+
+      final newTemplate = WorkoutTemplate(
         id: templateId,
         name: templateName,
         description: _descriptionController.text.trim(),
-        exercisesRaw: exercisesRaw,
+        exercises: exerciseTemplates,
         isCustom: true,
-        userId: userId,
-        authorName: FirebaseAuth.instance.currentUser?.displayName ?? 'User',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        tags: _selectedTags,
-        imageUrl: null, // _imageUrlController.text.trim().isEmpty ? null : _imageUrlController.text.trim(),
-        source: TemplateSource.modern,
-        exerciseFormat: ExerciseFormat.legacy,
-        version: 1,
+        tags: tags,
+        imageUrl: null,
+        usageCount: 0,
       );
 
-      await unifiedRepository.createTemplate(newTemplate);
+      await ref.read(workoutTemplateNotifierProvider.notifier).saveTemplate(newTemplate);
 
       // Invalidate providers to refresh UI
-      ref.invalidate(userTemplatesProvider);
       ref.invalidate(customWorkoutTemplatesProvider);
 
       // Feedback di successo
       HapticFeedback.lightImpact();
-      
+
       if (mounted) {
         Navigator.of(context).pop();
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Template "$templateName" creato con successo!'),
+            content: Text('Template "$templateName" creato!'),
             backgroundColor: context.colors.success,
             behavior: SnackBarBehavior.floating,
           ),
@@ -581,11 +576,11 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore nella creazione: $e'),
+            content: Text('Errore: $e'),
             backgroundColor: context.colors.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -605,7 +600,7 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
         initialRestTime: _defaultRestTime,
         onRestTimeSelected: (restTime) {
           setState(() {
-            _defaultRestTime = restTime;
+            _defaultRestTime = restTime ?? 90;
           });
         },
       ),
@@ -614,10 +609,10 @@ class _CreateTemplateModalState extends ConsumerState<CreateTemplateModal> {
 
   String _formatRestTime(int seconds) {
     if (seconds == 0) return '0s';
-    
+
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
-    
+
     if (minutes == 0) {
       return '${seconds}s';
     } else if (remainingSeconds == 0) {

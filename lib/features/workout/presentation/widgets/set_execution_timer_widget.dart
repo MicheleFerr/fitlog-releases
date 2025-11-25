@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_d
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Real-time set execution timer widget with TIER-1 visualization
 class SetExecutionTimerWidget extends ConsumerStatefulWidget {
@@ -133,9 +134,9 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
   
   Color _getTimerColor() {
     if (_hasExceededPB) {
-      return Colors.red.shade400;
+      return context.colors.error;
     } else if (_isApproachingPB) {
-      return Colors.orange.shade400;
+      return context.colors.warning;
     } else if (widget.isTracking) {
       return Theme.of(context).colorScheme.primary;
     } else {
@@ -214,31 +215,31 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                         // Personal best indicator
                         if (_personalBest != null) ...[
                           if (_hasExceededPB) ...[
-                            const Icon(
+                            Icon(
                               AppIcons.trendUp,
-                              color: Colors.red,
+                              color: context.colors.error,
                               size: 16,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'Over PB',
                               style: TextStyle(
-                                color: Colors.red.shade600,
+                                color: context.colors.error,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                           ] else if (_isApproachingPB) ...[
-                            const Icon(
+                            Icon(
                               AppIcons.bolt,
-                              color: Colors.orange,
+                              color: context.colors.warning,
                               size: 16,
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               'Near PB!',
                               style: TextStyle(
-                                color: Colors.orange.shade600,
+                                color: context.colors.warning,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -249,7 +250,7 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                               color: Theme.of(context).colorScheme.outline,
                               size: 14,
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               'PB: ${_formatDuration(_personalBest!)}',
                               style: TextStyle(
@@ -262,10 +263,10 @@ class _SetExecutionTimerWidgetState extends ConsumerState<SetExecutionTimerWidge
                       ],
                     ),
                   ],
-                  
+
                   // Instruction text when not tracking
                   if (!widget.isTracking) ...[
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       'Tap to start tracking',
                       style: TextStyle(
@@ -300,13 +301,13 @@ class VelocityIndicatorWidget extends StatelessWidget {
   Color _getVelocityColor(BuildContext context) {
     final ratio = currentVelocity / targetVelocity;
     if (ratio >= 1.1) {
-      return Colors.green.shade600; // Exceeding target
+      return context.colors.success; // Exceeding target
     } else if (ratio >= 0.9) {
       return Theme.of(context).colorScheme.primary; // On target
     } else if (ratio >= 0.7) {
-      return Colors.orange.shade600; // Below target
+      return context.colors.warning; // Below target
     } else {
-      return Colors.red.shade600; // Far below target
+      return context.colors.error; // Far below target
     }
   }
   
@@ -342,11 +343,11 @@ class VelocityIndicatorWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
-          
+          const SizedBox(height: 8),
+
           // Progress bar
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: percentage / 100,
               minHeight: 8,
@@ -354,8 +355,8 @@ class VelocityIndicatorWidget extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(_getVelocityColor(context)),
             ),
           ),
-          SizedBox(height: 4),
-          
+          const SizedBox(height: 4),
+
           // Target and PB indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -437,7 +438,7 @@ class SetTimesChartWidget extends StatelessWidget {
                       fontWeight: isCurrentSet ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     height: height,

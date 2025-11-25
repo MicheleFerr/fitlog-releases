@@ -6,8 +6,9 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class DropSetExecutionSheet extends ConsumerStatefulWidget {
 
@@ -331,7 +332,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                                   ),
@@ -346,7 +347,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
                                 'Set ${widget.setIndex + 1}',
                                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -355,7 +356,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             widget.dropset.name,
                             style: Theme.of(context).textTheme.titleMedium,
@@ -364,13 +365,16 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(AppIcons.close),
+                        icon: const SemanticIcon(
+  icon: AppIcons.close,
+  semanticLabel: 'Close',
+),
                       ),
                     ],
                   ),
                   
                   // Progress bar
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -389,7 +393,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       LinearProgressIndicator(
                         value: _completionProgress,
                         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -447,7 +451,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -475,7 +479,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             ],
                           ),
                           
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           
                           // Weight and reps picker buttons
                           Row(
@@ -497,12 +501,14 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          AppIcons.workout,
-                                          size: 20,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
                                         ),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Expanded(
                                           child: Text(
                                             (_weights[index] ?? 0) > 0
@@ -521,7 +527,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: InkWell(
                                   onTap: isCompleted ? null : () => _showRepsPicker(context, index),
@@ -539,12 +545,14 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Icon(
-                                          AppIcons.repeat,
-                                          size: 20,
-                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.small,
+  color: Theme.of(context,
+).colorScheme.onSurfaceVariant,
                                         ),
-                                        SizedBox(width: 8),
+                                        const SizedBox(width: 8),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -576,7 +584,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                             ],
                           ),
                           
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           
                           // RPE selector
                           Column(
@@ -630,7 +638,7 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                           
                           // Important note for dropsets
                           if (index < widget.dropset.stages.length - 1) ...[
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -639,12 +647,14 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(
-                                    AppIcons.warningAmberRounded,
-                                    size: 16,
-                                    color: Theme.of(context).colorScheme.error,
+                                  SemanticIcon(
+  icon: AppIcons.warningAmberRounded,
+  semanticLabel: 'Warning amber rounded',
+  size: AppIconSize.tiny,
+  color: Theme.of(context,
+).colorScheme.error,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       'Nessun riposo! Riduci il peso e continua subito',
@@ -674,8 +684,11 @@ class _DropSetExecutionSheetState extends ConsumerState<DropSetExecutionSheet> {
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _canComplete ? _completeDropSet : null,
-                  icon: Icon(AppIcons.check),
-                  label: Text('Completa Dropset'),
+                  icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
+                  label: const Text('Completa Dropset'),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error,
                     padding: const EdgeInsets.symmetric(vertical: 16),

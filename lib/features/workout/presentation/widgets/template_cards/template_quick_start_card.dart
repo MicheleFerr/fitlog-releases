@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class TemplateQuickStartCard extends StatelessWidget {
 
@@ -63,7 +63,7 @@ class TemplateQuickStartCard extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        template.isCustom ? AppIcons.person : AppIcons.star,
+        template.isCustom ? Icons.person : Icons.star,
         color: template.isCustom 
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.secondary,
@@ -82,7 +82,7 @@ class TemplateQuickStartCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           template.description,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -102,20 +102,20 @@ class TemplateQuickStartCard extends StatelessWidget {
       children: [
         _buildStatItem(
           context,
-          AppIcons.workout,
+          Icons.fitness_center,
           '${template.exercises.length}',
         ),
         const SizedBox(width: 12),
         _buildStatItem(
           context,
-          AppIcons.schedule,
+          Icons.schedule,
           '${template.estimatedDuration}min',
         ),
         if (template.usageCount > 0) ...[
           const SizedBox(width: 12),
           _buildStatItem(
             context,
-            AppIcons.trendUp,
+            Icons.trending_up,
             '${template.usageCount}',
           ),
         ],
@@ -132,7 +132,7 @@ class TemplateQuickStartCard extends StatelessWidget {
           size: 12,
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
         ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         Text(
           value,
           style: TextStyle(
@@ -146,7 +146,7 @@ class TemplateQuickStartCard extends StatelessWidget {
 
   Widget _buildArrowIcon(BuildContext context) {
     return Icon(
-      AppIcons.forwardIos,
+      Icons.arrow_forward_ios,
       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
       size: 16,
     );
@@ -171,13 +171,13 @@ class TemplateQuickStartCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildHandleBar(context),
-          SizedBox(height: 16),
+          _buildHandleBar(),
+          const SizedBox(height: 16),
           _buildSheetHeader(context),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           _buildMenuOption(
             context,
-            icon: AppIcons.play,
+            icon: Icons.play_arrow,
             title: AppLocalizations.of(context).startWorkout,
             subtitle: AppLocalizations.of(context).startWorkoutNow,
             color: Theme.of(context).colorScheme.primary,
@@ -189,7 +189,7 @@ class TemplateQuickStartCard extends StatelessWidget {
           if (onEdit != null)
             _buildMenuOption(
               context,
-              icon: AppIcons.edit,
+              icon: Icons.edit,
               title: AppLocalizations.of(context).editTemplate,
               subtitle: AppLocalizations.of(context).editTemplateDescription,
               color: Theme.of(context).colorScheme.secondary,
@@ -201,7 +201,7 @@ class TemplateQuickStartCard extends StatelessWidget {
           if (onDelete != null)
             _buildMenuOption(
               context,
-              icon: AppIcons.delete,
+              icon: Icons.delete,
               title: AppLocalizations.of(context).deleteTemplate,
               subtitle: AppLocalizations.of(context).deleteTemplatePermanently,
               color: Theme.of(context).colorScheme.error,
@@ -210,18 +210,18 @@ class TemplateQuickStartCard extends StatelessWidget {
                 onDelete!();
               },
             ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  Widget _buildHandleBar(BuildContext context) {
+  Widget _buildHandleBar() {
     return Container(
       width: 40,
       height: 4,
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+        color: context.colors.surfaceVariant.withValues(alpha: 0.3),
         borderRadius: const BorderRadius.all(Radius.circular(2)),
       ),
     );
@@ -231,10 +231,10 @@ class TemplateQuickStartCard extends StatelessWidget {
     return Row(
       children: [
         Icon(
-          template.isCustom ? AppIcons.person : AppIcons.star,
+          template.isCustom ? Icons.person : Icons.star,
           color: Theme.of(context).colorScheme.primary,
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             template.name,

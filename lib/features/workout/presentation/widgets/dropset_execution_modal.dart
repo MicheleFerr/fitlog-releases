@@ -6,6 +6,8 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Modal for executing DropSet exercises during workouts
 ///
@@ -266,7 +268,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                   size: 28,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
 
               // Exercise name and stage count
               Expanded(
@@ -279,7 +281,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       context.l10n.dropsetStages(_stages.length),
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -300,12 +302,13 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      AppIcons.timer,
-                      size: 16,
-                      color: context.colors.onSecondaryContainer,
-                    ),
-                    SizedBox(width: 4),
+                    SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.tiny,
+  color: context.colors.onSecondaryContainer,
+),
+                    const SizedBox(width: 4),
                     StreamBuilder(
                       stream: Stream.periodic(const Duration(seconds: 1)),
                       builder: (context, snapshot) {
@@ -357,9 +360,9 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
@@ -390,7 +393,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
             color: context.colors.onTertiaryContainer,
             size: 20,
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               _motivationalMessage,
@@ -464,7 +467,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
 
               // Stage details
               Expanded(
@@ -482,17 +485,18 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                         fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
-                          AppIcons.workout,
-                          size: 16,
-                          color: isCurrent
+                        SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+  size: AppIconSize.tiny,
+  color: isCurrent
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
-                        ),
-                        SizedBox(width: 4),
+),
+                        const SizedBox(width: 4),
                         Text(
                           '${stage.weight.toStringAsFixed(1)} kg',
                           style: context.textTheme.titleMedium?.copyWith(
@@ -504,15 +508,16 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 12),
-                        Icon(
-                          AppIcons.repeat,
-                          size: 16,
-                          color: isCurrent
+                        const SizedBox(width: 12),
+                        SemanticIcon(
+  icon: AppIcons.repeat,
+  semanticLabel: 'Repeat',
+  size: AppIconSize.tiny,
+  color: isCurrent
                               ? context.colors.tertiary
                               : context.colors.onSurfaceVariant,
-                        ),
-                        SizedBox(width: 4),
+),
+                        const SizedBox(width: 4),
                         Text(
                           context.l10n.targetReps(stage.reps),
                           style: context.textTheme.bodyMedium?.copyWith(
@@ -609,7 +614,10 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                           color: context.colors.surface,
                         ),
                       )
-                    : Icon(AppIcons.complete),
+                    : const SemanticIcon(
+  icon: AppIcons.complete,
+  semanticLabel: 'Complete',
+),
                 label: Text(
                   context.l10n.completeDropset,
                   style: const TextStyle(
@@ -632,7 +640,10 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                icon: Icon(AppIcons.check),
+                icon: const SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+),
                 label: Text(
                   context.l10n.completeStage(_currentStageIndex + 1),
                   style: const TextStyle(
@@ -643,7 +654,7 @@ class _DropSetExecutionModalState extends ConsumerState<DropSetExecutionModal>
               ),
             ),
 
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
           // Cancel button
           TextButton(

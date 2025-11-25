@@ -86,7 +86,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                     size: AppIconSize.large,
                     color: context.iconPrimary,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       context.l10n.changeCountingFormat,
@@ -99,7 +99,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               ),
             ),
 
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Current mode indicator
             Padding(
@@ -121,7 +121,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       size: AppIconSize.small,
                       color: context.iconMediumEmphasis,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         '${context.l10n.currentFormat}: ${widget.currentMode.getDisplayName(context.l10n)}',
@@ -135,9 +135,9 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             const Divider(),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Mode options
             Expanded(
@@ -153,7 +153,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                     example: context.l10n.countingModeWeightedExample,
                     icon: AppIcons.workout,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   _buildModeOption(
                     context,
                     mode: ExerciseCountingMode.reps,
@@ -162,7 +162,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                     example: context.l10n.countingModeRepsExample,
                     icon: AppIcons.repeat,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   _buildModeOption(
                     context,
                     mode: ExerciseCountingMode.time,
@@ -197,7 +197,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     flex: 2,
                     child: FilledButton(
@@ -283,14 +283,15 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                     : Colors.transparent,
               ),
               child: isSelected
-                  ? Icon(
-                      AppIcons.check,
-                      size: 14,
-                      color: context.colors.onPrimary,
-                    )
+                  ? SemanticIcon(
+  icon: AppIcons.check,
+  semanticLabel: 'Check',
+  size: AppIconSize.tiny,
+  color: context.colors.onPrimary,
+)
                   : null,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
 
             // Icon
             SemanticIcon(
@@ -299,7 +300,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
               size: AppIconSize.medium,
               color: isSelected ? context.iconPrimary : context.iconMediumEmphasis,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
 
             // Content
             Expanded(
@@ -320,7 +321,7 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                         ),
                       ),
                       if (isCurrentMode) ...[
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
@@ -341,14 +342,14 @@ class _CountingModePickerModalState extends State<CountingModePickerModal> {
                       ],
                     ],
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colors.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     example,
                     style: context.textTheme.bodySmall?.copyWith(

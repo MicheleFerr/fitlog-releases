@@ -19,6 +19,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/zen_mod
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_actions/template_save_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class WorkoutSettingsMenu extends ConsumerWidget {
 
@@ -69,7 +70,7 @@ class WorkoutSettingsMenu extends ConsumerWidget {
             ..._buildZenModeSection(context, ref),
             const Divider(),
             ..._buildGeneralActions(context),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -90,7 +91,10 @@ class WorkoutSettingsMenu extends ConsumerWidget {
   List<Widget> _buildWorkoutActions(BuildContext context, WidgetRef ref) {
     return [
       ListTile(
-        leading: const Icon(AppIcons.saveAlt),
+        leading: const SemanticIcon(
+  icon: AppIcons.saveAlt,
+  semanticLabel: 'Save alt',
+),
         title: Text(AppLocalizations.of(context).saveAsTemplate),
         subtitle: Text(AppLocalizations.of(context).saveToFirebaseForReuse),
         onTap: () {
@@ -99,7 +103,10 @@ class WorkoutSettingsMenu extends ConsumerWidget {
         },
       ),
       ListTile(
-        leading: Icon(AppIcons.pause),
+        leading: const SemanticIcon(
+  icon: AppIcons.pause,
+  semanticLabel: 'Pause',
+),
         title: Text(AppLocalizations.of(context).pauseWorkout),
         onTap: () {
           ref.read(currentWorkoutProvider.notifier).pauseWorkout();
@@ -187,7 +194,10 @@ class WorkoutSettingsMenu extends ConsumerWidget {
   List<Widget> _buildGeneralActions(BuildContext context) {
     return [
       ListTile(
-        leading: Icon(AppIcons.tune),
+        leading: const SemanticIcon(
+  icon: AppIcons.tune,
+  semanticLabel: 'Tune',
+),
         title: Text(AppLocalizations.of(context).customizeWorkout),
         subtitle: Text(AppLocalizations.of(context).rpeTimerAndMore),
         onTap: () {
@@ -196,7 +206,10 @@ class WorkoutSettingsMenu extends ConsumerWidget {
         },
       ),
       ListTile(
-        leading: Icon(AppIcons.logout),
+        leading: const SemanticIcon(
+  icon: AppIcons.logout,
+  semanticLabel: 'Logout',
+),
         title: Text(AppLocalizations.of(context).signOut),
         onTap: () {
           Navigator.pop(context);

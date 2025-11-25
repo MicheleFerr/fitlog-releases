@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 class SetDurationOnboardingDialog extends ConsumerWidget {
   const SetDurationOnboardingDialog({super.key});
@@ -52,11 +54,12 @@ class SetDurationOnboardingDialog extends ConsumerWidget {
                 color: colorScheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                AppIcons.timer,
-                size: 40,
-                color: colorScheme.onPrimaryContainer,
-              ),
+              child: SemanticIcon(
+  icon: AppIcons.timer,
+  semanticLabel: 'Timer',
+  size: AppIconSize.medium,
+  color: colorScheme.onPrimaryContainer,
+),
             ),
             const SizedBox(height: 20),
             
@@ -129,11 +132,12 @@ class SetDurationOnboardingDialog extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    AppIcons.info,
-                    size: 20,
-                    color: colorScheme.primary,
-                  ),
+                  SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: colorScheme.primary,
+),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

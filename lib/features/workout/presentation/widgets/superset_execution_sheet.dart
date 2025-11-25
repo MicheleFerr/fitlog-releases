@@ -6,6 +6,7 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// ⚠️ DEPRECATED: Use SupersetSequentialExecutionSheet instead
 ///
@@ -178,7 +179,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                     AppIcons.repeat,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -266,7 +267,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                       ),
                                 ),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +317,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                   },
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               
                               // Reps input
                               Expanded(
@@ -340,7 +341,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                                   },
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               
                               // RPE selector
                               Expanded(
@@ -427,7 +428,7 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
                           'Progresso',
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         LinearProgressIndicator(
                           value: _exerciseCompleted.values.where((c) => c).length / 
                                  _exerciseCompleted.length,
@@ -464,10 +465,10 @@ class _SupersetExecutionSheetState extends ConsumerState<SupersetExecutionSheet>
   
   Color _getRpeColor(int rpe) {
     if (rpe <= 4) return context.colors.success;
-    if (rpe <= 6) return Colors.lightGreen;
-    if (rpe <= 7) return Colors.yellow[700]!;
-    if (rpe <= 8) return Colors.orange;
-    if (rpe <= 9) return Colors.deepOrange;
+    if (rpe <= 6) return context.colors.success;
+    if (rpe <= 7) return context.colors.warning[700]!;
+    if (rpe <= 8) return context.colors.secondary;
+    if (rpe <= 9) return context.colors.warning;
     return context.colors.error;
   }
 }

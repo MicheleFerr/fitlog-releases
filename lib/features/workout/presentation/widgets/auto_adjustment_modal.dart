@@ -5,10 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
 class AutoAdjustmentModal extends ConsumerStatefulWidget {
 
@@ -29,7 +26,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
   // APRE settings
   int _apreProtocol = 6;
-  int? _previousProtocol; // Track protocol changes for preview
   final _apreBaseWeightController = TextEditingController();
   double? _calculated1RM;
   double? _calculated3RM;
@@ -37,7 +33,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
   double? _calculated10RM;
   String? _calculationInfo;
   bool _isCalculating1RM = false;
-  bool _showProtocolPreview = false;
 
   // RPE settings
   final _targetRPEMinController = TextEditingController();
@@ -54,7 +49,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
     // APRE settings
     _apreProtocol = widget.exercise.apreProtocol ?? 6;
-    _previousProtocol = _apreProtocol; // Initialize previous protocol
     _apreBaseWeightController.text = widget.exercise.apreBaseWeight?.toString() ?? '';
 
     // Initialize cached calculations if available
@@ -123,22 +117,22 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: context.colors.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: context.colors.surfaceVariant.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Header
             Row(
               children: [
                 Icon(
-                  AppIcons.autoAwesome,
+                  Icons.auto_awesome,
                   color: context.colors.primary,
                   size: 28,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +154,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Type Selection
             Text(
@@ -169,11 +163,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
 
             // Type selector cards
             _buildTypeSelector(l10n),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Configuration based on selected type
             if (_selectedType != null) ...[
@@ -197,7 +191,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     child: Text(l10n.clear ?? 'Clear'),
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: FilledButton(
                     onPressed: _selectedType != null ? _saveSettings : null,
@@ -216,38 +210,30 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
   }
 
   Widget _buildTypeSelector(AppLocalizations l10n) {
-    return RadioGroup<AutoAdjustmentType>(
-      groupValue: _selectedType,
-      onChanged: (value) {
-        if (value != null) {
-          setState(() => _selectedType = value);
-          if (value == AutoAdjustmentType.apre) {
-            _calculate1RMAndBaseWeight();
-          }
-        }
-      },
-      child: Column(
-        children: [
-          // APRE Card
-          Card(
-            elevation: _selectedType == AutoAdjustmentType.apre ? 3 : 0,
-            color: _selectedType == AutoAdjustmentType.apre
-                ? context.colors.primaryContainer
-                : context.colors.surfaceContainerHighest,
-            child: InkWell(
-              onTap: () {
-                setState(() => _selectedType = AutoAdjustmentType.apre);
-                _calculate1RMAndBaseWeight();
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    const Radio<AutoAdjustmentType>(
-                      value: AutoAdjustmentType.apre,
-                    ),
-                  SizedBox(width: 12),
+    return Column(
+      children: [
+        // APRE Card
+        Card(
+          elevation: _selectedType == AutoAdjustmentType.apre ? 3 : 0,
+          color: _selectedType == AutoAdjustmentType.apre
+              ? context.colors.primaryContainer
+              : context.colors.surfaceContainerHighest,
+          child: InkWell(
+            onTap: () {
+              setState(() => _selectedType = AutoAdjustmentType.apre);
+              _calculate1RMAndBaseWeight();
+            },
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Radio<AutoAdjustmentType>(
+                    value: AutoAdjustmentType.apre,
+                    groupValue: _selectedType,
+                    onChanged: (value) => setState(() => _selectedType = value),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +244,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           l10n.apreAutoregulationDescription,
                           style: context.textTheme.bodySmall,
@@ -267,7 +253,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     ),
                   ),
                   Icon(
-                    AppIcons.workout,
+                    Icons.fitness_center,
                     color: _selectedType == AutoAdjustmentType.apre
                         ? context.colors.primary
                         : context.colors.onSurfaceVariant,
@@ -277,7 +263,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         // RPE Card
         Card(
@@ -292,10 +278,12 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Radio<AutoAdjustmentType>(
+                  Radio<AutoAdjustmentType>(
                     value: AutoAdjustmentType.rpe,
+                    groupValue: _selectedType,
+                    onChanged: (value) => setState(() => _selectedType = value),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +294,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           l10n.rpeBasedDescription,
                           style: context.textTheme.bodySmall,
@@ -315,7 +303,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                     ),
                   ),
                   Icon(
-                    AppIcons.ai,
+                    Icons.psychology,
                     color: _selectedType == AutoAdjustmentType.rpe
                         ? context.colors.secondary
                         : context.colors.onSurfaceVariant,
@@ -326,8 +314,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           ),
         ),
       ],
-    ),
-  );
+    );
   }
 
   Widget _buildAPREConfiguration(AppLocalizations l10n) {
@@ -340,7 +327,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Protocol Selection
         Text(
@@ -353,63 +340,38 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ButtonSegment<int>(
               value: 3,
               label: Text('APRE 3'),
-              icon: Icon(AppIcons.looks3),
+              icon: Icon(Icons.looks_3),
             ),
             ButtonSegment<int>(
               value: 6,
               label: Text('APRE 6'),
-              icon: Icon(AppIcons.looks6),
+              icon: Icon(Icons.looks_6),
             ),
             ButtonSegment<int>(
               value: 10,
               label: Text('APRE 10'),
-              icon: Icon(AppIcons.looks),
+              icon: Icon(Icons.looks),
             ),
           ],
           selected: {_apreProtocol},
-          onSelectionChanged: (Set<int> newSelection) async {
-            final newProtocol = newSelection.first;
-
-            // 🚨 T2.4: Check if workout is active
-            final workoutState = ref.read(currentWorkoutProvider);
-            final hasActiveWorkout = workoutState != null;
-
-            if (hasActiveWorkout) {
-              // Show warning dialog - cannot change protocol during active workout
-              await _showWorkoutInProgressWarning(context);
-              return; // Don't change protocol
-            }
-
-            // Show preview if protocol is changing and we have calculated values
-            if (newProtocol != _previousProtocol &&
-                _calculated1RM != null &&
-                _calculated3RM != null &&
-                _calculated6RM != null &&
-                _calculated10RM != null) {
-              setState(() {
-                _apreProtocol = newProtocol;
-                _showProtocolPreview = true;
-              });
-            } else {
-              setState(() {
-                _apreProtocol = newProtocol;
-                _showProtocolPreview = false;
-                // Auto-set base weight for new protocol if we have cached values
-                final baseWeight = _apreProtocol == 3 ? _calculated3RM :
-                                  _apreProtocol == 6 ? _calculated6RM :
-                                  _calculated10RM;
-                if (baseWeight != null) {
-                  _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
-                }
-              });
-              // Only calculate if we don't have cached values
-              if (_calculated1RM == null) {
-                _calculate1RMAndBaseWeight();
+          onSelectionChanged: (Set<int> newSelection) {
+            setState(() {
+              _apreProtocol = newSelection.first;
+              // Auto-set base weight for new protocol if we have cached values
+              final baseWeight = _apreProtocol == 3 ? _calculated3RM :
+                                _apreProtocol == 6 ? _calculated6RM :
+                                _calculated10RM;
+              if (baseWeight != null) {
+                _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
               }
+            });
+            // Only calculate if we don't have cached values
+            if (_calculated1RM == null) {
+              _calculate1RMAndBaseWeight();
             }
           },
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
 
         // Protocol Description
         Container(
@@ -421,11 +383,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           child: Row(
             children: [
               Icon(
-                AppIcons.info,
+                Icons.info_outline,
                 size: 16,
                 color: context.colors.onPrimaryContainer,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   _getProtocolDescription(l10n),
@@ -435,7 +397,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ],
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // 1RM Calculation Info
         if (_isCalculating1RM)
@@ -447,12 +409,12 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
             child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   'Calculating from your history...',
                   style: context.textTheme.bodySmall,
@@ -474,11 +436,11 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                 Row(
                   children: [
                     Icon(
-                      AppIcons.completeOutline,
+                      Icons.check_circle_outline,
                       size: 16,
                       color: context.colors.primary,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       '1RM Stimato: ${_calculated1RM!.toStringAsFixed(1)} kg',
                       style: context.textTheme.bodyMedium?.copyWith(
@@ -488,15 +450,15 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   ],
                 ),
                 if (_calculationInfo != null) ...[
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     _calculationInfo!,
                     style: context.textTheme.bodySmall,
                   ),
                 ],
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 const Divider(height: 1),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 // Rep Maxes Grid
                 Text(
                   'Massimali per Range di Ripetizioni:',
@@ -544,19 +506,13 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
           const SizedBox(height: 12),
         ],
 
-        // Protocol Preview (when protocol changes)
-        if (_showProtocolPreview) ...[
-          _buildProtocolPreview(l10n),
-          const SizedBox(height: 16),
-        ],
-
         // Base Weight Input
         TextField(
           controller: _apreBaseWeightController,
           decoration: InputDecoration(
             labelText: l10n.apreBaseWeight,
             hintText: l10n.apreBaseWeightHint,
-            prefixIcon: const Icon(AppIcons.workout),
+            prefixIcon: const Icon(Icons.fitness_center),
             suffixText: 'kg',
             helperText: _getBaseWeightHelper(l10n),
             border: OutlineInputBorder(
@@ -567,286 +523,6 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         ),
       ],
     );
-  }
-
-  Widget _buildProtocolPreview(AppLocalizations l10n) {
-    if (_previousProtocol == null) return const SizedBox.shrink();
-
-    // Calculate set weights for both protocols
-    final previousBaseWeight = _previousProtocol == 3 ? _calculated3RM :
-                               _previousProtocol == 6 ? _calculated6RM :
-                               _calculated10RM;
-    final newBaseWeight = _apreProtocol == 3 ? _calculated3RM :
-                         _apreProtocol == 6 ? _calculated6RM :
-                         _calculated10RM;
-
-    if (previousBaseWeight == null || newBaseWeight == null) {
-      return const SizedBox.shrink();
-    }
-
-    // APRE structure: Set 1 (50%), Set 2 (75%), Set 3 (100% of RM), Set 4 (adjusted)
-    final prevSet1 = previousBaseWeight * 0.5;
-    final prevSet2 = previousBaseWeight * 0.75;
-    final prevSet3 = previousBaseWeight;
-
-    final newSet1 = newBaseWeight * 0.5;
-    final newSet2 = newBaseWeight * 0.75;
-    final newSet3 = newBaseWeight;
-
-    return Card(
-      elevation: 2,
-      color: context.colors.secondaryContainer.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Icon(
-                  AppIcons.preview,
-                  size: 20,
-                  color: context.colors.secondary,
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    l10n.apreProtocolPreview,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.secondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Text(
-              l10n.aprePreviewDescription,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-            SizedBox(height: 16),
-
-            // Comparison table
-            Container(
-              decoration: BoxDecoration(
-                color: context.colors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: context.colors.outlineVariant,
-                ),
-              ),
-              child: Column(
-                children: [
-                  // Header row
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: context.colors.surfaceContainerHighest,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            'Set',
-                            style: context.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            l10n.apreCurrentProtocol(_previousProtocol!),
-                            style: context.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Icon(
-                          AppIcons.arrowForwardRounded,
-                          size: 16,
-                          color: context.colors.primary,
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            l10n.apreNewProtocol(_apreProtocol),
-                            style: context.textTheme.labelMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.primary,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(height: 1, color: context.colors.outlineVariant),
-
-                  // Set 1 row
-                  _buildPreviewRow(l10n, l10n.apreSet1Preview, prevSet1, newSet1),
-                  Divider(height: 1, color: context.colors.outlineVariant),
-
-                  // Set 2 row
-                  _buildPreviewRow(l10n, l10n.apreSet2Preview, prevSet2, newSet2),
-                  Divider(height: 1, color: context.colors.outlineVariant),
-
-                  // Set 3 row
-                  _buildPreviewRow(l10n, l10n.apreSet3Preview, prevSet3, newSet3),
-                  Divider(height: 1, color: context.colors.outlineVariant),
-
-                  // Set 4 row (adjusted)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            l10n.apreSet4Preview,
-                            style: context.textTheme.bodyMedium,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Text(
-                            l10n.apreAdjustedBasedOnPerformance,
-                            style: context.textTheme.bodySmall?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _apreProtocol = _previousProtocol!;
-                        _showProtocolPreview = false;
-                      });
-                    },
-                    icon: Icon(AppIcons.cancel, size: AppIconSize.small),
-                    label: Text(l10n.cancel),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: _applyProtocolChange,
-                    icon: Icon(AppIcons.completeOutline, size: AppIconSize.small),
-                    label: Text(l10n.apreApplyChanges),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPreviewRow(AppLocalizations l10n, String setLabel, double prevWeight, double newWeight) {
-    final weightDiff = newWeight - prevWeight;
-    final isIncrease = weightDiff > 0;
-    final diffColor = isIncrease ? context.colors.success : context.colors.error;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              setLabel,
-              style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              '${prevWeight.toStringAsFixed(1)} kg',
-              style: context.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(width: 8),
-          Icon(
-            AppIcons.arrowForwardRounded,
-            size: 16,
-            color: context.colors.primary,
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '${newWeight.toStringAsFixed(1)} kg',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: context.colors.primary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (weightDiff.abs() > 0.1) ...[
-                  SizedBox(height: 2),
-                  Text(
-                    '${isIncrease ? '+' : ''}${weightDiff.toStringAsFixed(1)} kg',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: diffColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _applyProtocolChange() {
-    setState(() {
-      _showProtocolPreview = false;
-      _previousProtocol = _apreProtocol;
-
-      // Update base weight for new protocol
-      final baseWeight = _apreProtocol == 3 ? _calculated3RM :
-                        _apreProtocol == 6 ? _calculated6RM :
-                        _calculated10RM;
-      if (baseWeight != null) {
-        _apreBaseWeightController.text = baseWeight.toStringAsFixed(1);
-      }
-    });
   }
 
   Widget _buildRPEConfiguration(AppLocalizations l10n) {
@@ -893,7 +569,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Min RPE',
                     hintText: '7',
-                    prefixIcon: const Icon(AppIcons.arrowDownward),
+                    prefixIcon: const Icon(Icons.arrow_downward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -908,7 +584,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
                   decoration: InputDecoration(
                     labelText: 'Max RPE',
                     hintText: '9',
-                    prefixIcon: const Icon(AppIcons.arrowUpward),
+                    prefixIcon: const Icon(Icons.arrow_upward),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -918,7 +594,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           // RPE explanation
           Container(
             padding: const EdgeInsets.all(12),
@@ -938,7 +614,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             decoration: InputDecoration(
               labelText: 'Target RIR',
               hintText: '2',
-              prefixIcon: Icon(AppIcons.repeat),
+              prefixIcon: const Icon(Icons.repeat),
               helperText: 'Repetitions in Reserve',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -946,7 +622,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
             ),
             keyboardType: TextInputType.number,
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           // RIR explanation
           Container(
             padding: const EdgeInsets.all(12),
@@ -1215,7 +891,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
       if (baseWeight == null || baseWeight <= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please enter a valid base weight'),
+            content: const Text('Please enter a valid base weight'),
             backgroundColor: context.colors.error,
           ),
         );
@@ -1240,7 +916,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         if (minRPE == null || maxRPE == null || minRPE < 1 || maxRPE > 10 || minRPE >= maxRPE) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please enter valid RPE range (1-10)'),
+              content: const Text('Please enter valid RPE range (1-10)'),
               backgroundColor: context.colors.error,
             ),
           );
@@ -1262,7 +938,7 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
         if (targetRIR == null || targetRIR < 0 || targetRIR > 10) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please enter valid RIR (0-10)'),
+              content: const Text('Please enter valid RIR (0-10)'),
               backgroundColor: context.colors.error,
             ),
           );
@@ -1289,46 +965,9 @@ class _AutoAdjustmentModalState extends ConsumerState<AutoAdjustmentModal> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Auto adjustment configured'),
+        content: const Text('Auto adjustment configured'),
         backgroundColor: context.colors.primary,
       ),
-    );
-  }
-
-  /// 🚨 T2.4: Shows warning dialog when attempting to change protocol during active workout
-  Future<void> _showWorkoutInProgressWarning(BuildContext context) async {
-    final l10n = context.l10n;
-
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // User must tap button to dismiss
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          icon: Icon(
-            AppIcons.warning,
-            color: context.colors.warning,
-            size: AppIconSize.xlarge,
-          ),
-          title: Text(
-            l10n.apreProtocolChangeWarningTitle,
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Text(
-            l10n.apreProtocolChangeWarningMessage,
-            style: context.textTheme.bodyMedium,
-          ),
-          actions: <Widget>[
-            FilledButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: Text(l10n.apreGotIt),
-            ),
-          ],
-        );
-      },
     );
   }
 

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/mixins/toggle_dependency_validation.dart';
 
@@ -181,11 +180,234 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
 
                   const SizedBox(height: 24),
 
-                  // ✅ V4: Advanced Section (collapsible with 3 subcategories)
-                  _buildAdvancedSection(theme, l10n),
+                  // Auto-Regulation Section
+                  _buildSectionHeader(
+                    theme,
+                    l10n,
+                    icon: AppIcons.autoAwesome,
+                    title: l10n.intelligentAutoRegulation,
+                    color: context.colors.tertiary,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // APRE Subsection
+                  _buildSubsectionHeader(theme, l10n, l10n.apreSystemTitle, l10n.apreSystemSubtitle),
+                  const SizedBox(height: 12),
+                  _buildApreSection(theme, l10n),
+
+                  const SizedBox(height: 16),
+
+                  // RPE Subsection
+                  _buildSubsectionHeader(theme, l10n, l10n.rpeSystemTitle, l10n.rpeSystemSubtitle),
+                  const SizedBox(height: 12),
+                  _buildRpeSection(theme, l10n),
 
                   const SizedBox(height: 24),
 
+                  // Information & Insights Section
+                  _buildSectionHeader(
+                    theme,
+                    l10n,
+                    icon: AppIcons.insights,
+                    title: l10n.informationInsightsSection,
+                    color: context.colors.success,
+                  ),
+                  const SizedBox(height: 12),
+                  // ✅ V3: SEPARATE toggle for exercise notes
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.noteAlt,
+                    iconColor: context.colors.warning,
+                    title: l10n.exerciseNotesTitle,
+                    subtitle: l10n.exerciseNotesDescription,
+                    tooltip: l10n.exerciseNotesTooltip,
+                    value: _showExerciseNotes,
+                    onChanged: (value) {
+                      setState(() => _showExerciseNotes = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  // ✅ V3: SEPARATE toggle for exercise insights
+                  // TODO: Add performance warning for charts (future enhancement)
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.insights,
+                    iconColor: context.colors.secondary,
+                    title: l10n.exerciseInsightsTitle,
+                    subtitle: l10n.exerciseInsightsDescription,
+                    tooltip: l10n.exerciseInsightsTooltip,
+                    value: _showExerciseInsights,
+                    onChanged: (value) {
+                      setState(() => _showExerciseInsights = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.lightbulb,
+                    iconColor: context.colors.secondary,
+                    title: l10n.communitySuggestionsTitle,
+                    subtitle: l10n.communitySuggestionsDescription,
+                    tooltip: l10n.communitySuggestionsTooltip,
+                    value: _showCommunitySuggestions,
+                    onChanged: (value) {
+                      setState(() => _showCommunitySuggestions = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.timer,
+                    iconColor: context.colors.success,
+                    title: l10n.tutInfoTitle,
+                    subtitle: l10n.tutInfoDescription,
+                    tooltip: l10n.tutInfoTooltip,
+                    value: _showTutInfo,
+                    onChanged: (value) {
+                      setState(() => _showTutInfo = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Quick Access Section
+                  _buildSectionHeader(
+                    theme,
+                    l10n,
+                    icon: AppIcons.touchApp,
+                    title: l10n.quickAccessSection,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 12),
+                  // ✅ V3: SEPARATE toggle for quick info icon
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.info,
+                    iconColor: context.colors.primary,
+                    title: l10n.quickInfoIconTitle,
+                    subtitle: l10n.quickInfoIconDescription,
+                    tooltip: l10n.quickInfoIconTooltip,
+                    value: _showQuickInfoIcon,
+                    onChanged: (value) {
+                      setState(() => _showQuickInfoIcon = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  // ✅ V3: SEPARATE toggle for warmup icon
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.workout,
+                    iconColor: context.colors.warning,
+                    title: l10n.quickWarmupIconTitle,
+                    subtitle: l10n.quickWarmupIconDescription,
+                    tooltip: l10n.quickWarmupIconTooltip,
+                    value: _showWarmupIcon,
+                    onChanged: (value) {
+                      setState(() => _showWarmupIcon = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  // ✅ V3: SEPARATE toggle for prevention icon
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.healthAndSafety,
+                    iconColor: context.colors.success,
+                    title: l10n.quickPreventionIconTitle,
+                    subtitle: l10n.quickPreventionIconDescription,
+                    tooltip: l10n.quickPreventionIconTooltip,
+                    value: _showPreventionIcon,
+                    onChanged: (value) {
+                      setState(() => _showPreventionIcon = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Interface & Performance Section
+                  _buildSectionHeader(
+                    theme,
+                    l10n,
+                    icon: AppIcons.settings,
+                    title: l10n.interfaceSection,
+                    color: context.colors.surfaceContainerHighest,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.moreVert,
+                    iconColor: context.colors.error,
+                    title: l10n.advancedMenuTitle,
+                    subtitle: l10n.advancedMenuDescription,
+                    tooltip: l10n.advancedMenuTooltip,
+                    value: _showAdvancedMenu,
+                    onChanged: (value) {
+                      setState(() => _showAdvancedMenu = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.timer,
+                    iconColor: context.colors.success,
+                    title: l10n.customTimersTitle,
+                    subtitle: l10n.customTimersDescription,
+                    tooltip: l10n.customTimersTooltip,
+                    value: _showCustomTimers,
+                    onChanged: (value) {
+                      setState(() => _showCustomTimers = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.visibilityOff,
+                    iconColor: context.colors.tertiary,
+                    title: l10n.collapseCountdownTitle,
+                    subtitle: l10n.collapseCountdownDescription,
+                    tooltip: l10n.collapseCountdownTooltip,
+                    value: _showCollapseCountdown,
+                    onChanged: (value) {
+                      setState(() => _showCollapseCountdown = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  _buildToggleCard(
+                    theme,
+                    l10n,
+                    icon: AppIcons.animation,
+                    iconColor: context.colors.warning,
+                    title: l10n.simplifiedAnimationsTitle,
+                    subtitle: l10n.simplifiedAnimationsDescription,
+                    tooltip: l10n.simplifiedAnimationsTooltip,
+                    value: _simplifiedAnimations,
+                    onChanged: (value) {
+                      setState(() => _simplifiedAnimations = value);
+                      _saveDisplaySettings();
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
 
                   // Info card
                   Container(
@@ -200,7 +422,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     child: Row(
                       children: [
                         Icon(
-                          AppIcons.infoOutline,
+                          AppIcons.info,
                           color: theme.colorScheme.primary,
                           size: 20,
                         ),
@@ -226,42 +448,6 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
   }
 
   // ✅ V4: _buildModeToggleSection and _buildModeButton removed (no Pro/Base mode)
-
-  /// ✅ V4 Phase 3: Smart dependency dialog
-  /// Shows clear dialog when enabling dependent feature without master enabled
-  /// Returns true if user confirmed to enable master, false to cancel
-  Future<bool> _showDependencyDialog({
-    required BuildContext context,
-    required String dependentName,
-    required String masterName,
-  }) async {
-    final l10n = AppLocalizations.of(context);
-
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.attentionRequired),
-        content: Text(
-          'Per utilizzare "$dependentName", devi prima abilitare "$masterName".\n\nAbilitare "$masterName" ora?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            child: Text(l10n.enable),
-          ),
-        ],
-      ),
-    );
-
-    return result ?? false;
-  }
 
   Widget _buildSectionHeader(
     ThemeData theme,
@@ -355,7 +541,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             ),
             IconButton(
               icon: Icon(
-                AppIcons.helpOutline,
+                AppIcons.help,
                 size: 18,
                 color: theme.colorScheme.primary,
               ),
@@ -387,7 +573,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         _buildToggleCard(
           theme,
           l10n,
-          icon: AppIcons.fitnessCenter,
+          icon: AppIcons.workout,
           iconColor: context.colors.tertiary,
           title: l10n.enableApreTitle,
           subtitle: l10n.enableApreDescription,
@@ -414,7 +600,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
           },
         ),
         if (_enableApre) ...[
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -439,17 +625,17 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     ButtonSegment<int>(
                       value: 3,
                       label: Text(l10n.apre3),
-                      icon: const Icon(AppIcons.looks3, size: 20),
+                      icon: Icon(AppIcons.looks3, size: 20),
                     ),
                     ButtonSegment<int>(
                       value: 6,
                       label: Text(l10n.apre6),
-                      icon: const Icon(AppIcons.looks6, size: 20),
+                      icon: Icon(AppIcons.looks6, size: 20),
                     ),
                     ButtonSegment<int>(
                       value: 10,
                       label: Text(l10n.apre10),
-                      icon: const Icon(AppIcons.filter9Plus, size: 20),
+                      icon: Icon(AppIcons.filter9Plus, size: 20),
                     ),
                   ],
                   selected: {_defaultApreProtocol},
@@ -460,14 +646,14 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     _saveSettings();
                   },
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   _getApreProtocolDescription(_defaultApreProtocol, l10n),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Divider(color: context.colors.tertiary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
@@ -495,7 +681,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        AppIcons.helpOutline,
+                        AppIcons.help,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -569,7 +755,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
           },
         ),
         if (_rpeTracking) ...[
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -606,7 +792,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        AppIcons.helpOutline,
+                        AppIcons.help,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -637,7 +823,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Divider(color: context.colors.secondary.withValues(alpha: 0.2)),
                 const SizedBox(height: 12),
                 Row(
@@ -665,7 +851,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        AppIcons.helpOutline,
+                        AppIcons.help,
                         size: 18,
                         color: theme.colorScheme.primary,
                       ),
@@ -722,7 +908,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 Row(
                   children: [
                     Icon(
-                      AppIcons.infoOutline,
+                      AppIcons.info,
                       color: theme.colorScheme.primary,
                       size: 24,
                     ),
@@ -779,9 +965,9 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
         Row(
           children: [
             Icon(AppIcons.star, color: context.colors.primary, size: 24),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
-              l10n.essentialsSection,
+              'Essenziali', // TODO: Localize in Phase 4
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: context.colors.primary,
@@ -789,14 +975,14 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             ),
           ],
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
-          l10n.essentialsSectionDesc,
+          'Impostazioni fondamentali per iniziare', // TODO: Localize in Phase 4
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
 
         // Toggle 1: Auto Rest Timer (Default ON)
         _buildToggleCard(
@@ -813,13 +999,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             _saveSettings();
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         // Toggle 2: Warmup Suggestions (Default ON)
         _buildToggleCard(
           theme,
           l10n,
-          icon: AppIcons.whatshot,
+          icon: AppIcons.trending,
           iconColor: context.colors.secondary,
           title: l10n.warmupSuggestionsTitle,
           subtitle: l10n.warmupSuggestionsDescription,
@@ -830,13 +1016,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             _saveSettings();
           },
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
 
         // Toggle 3: RPE Tracking (Default OFF - moved from Auto-Regulation)
         _buildToggleCard(
           theme,
           l10n,
-          icon: AppIcons.fitnessCenter,
+          icon: AppIcons.workout,
           iconColor: context.colors.tertiary,
           title: l10n.enableRpeTitle,
           subtitle: l10n.enableRpeDescription,
@@ -845,7 +1031,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
           onChanged: (value) {
             setState(() {
               _rpeTracking = value;
-              // ✅ V4 Phase 3: Auto-disable dependents when master disabled (no dialog needed)
+              // Auto-disable dependents when master disabled
               if (!value) {
                 _autoAdjustWeightFromRpe = false;
                 _autoAdjustRestFromRpe = false;
@@ -863,13 +1049,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
     return ExpansionTile(
       leading: Icon(AppIcons.settings, color: context.colors.tertiary),
       title: Text(
-        l10n.advancedSection,
+        'Avanzate', // TODO: Localize in Phase 4
         style: theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.bold,
         ),
       ),
       subtitle: Text(
-        l10n.advancedSectionDesc,
+        'Personalizzazioni per utenti esperti', // TODO: Localize in Phase 4
         style: theme.textTheme.bodySmall,
       ),
       initiallyExpanded: false, // Collapsed by default
@@ -883,13 +1069,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10n.visualizationCategory,
+                'Visualizzazione', // TODO: Localize in Phase 4
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.teal,
+                  color: context.colors.success,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Exercise Notes
               _buildToggleCard(
@@ -906,7 +1092,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Exercise Insights
               _buildToggleCard(
@@ -923,7 +1109,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Community Suggestions
               _buildToggleCard(
@@ -947,7 +1133,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 theme,
                 l10n,
                 icon: AppIcons.timer,
-                iconColor: Colors.teal,
+                iconColor: context.colors.success,
                 title: l10n.tutInfoTitle,
                 subtitle: l10n.tutInfoDescription,
                 tooltip: l10n.tutInfoTooltip,
@@ -957,13 +1143,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Quick Info Icon
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: AppIcons.infoOutline,
+                icon: AppIcons.info,
                 iconColor: context.colors.primary,
                 title: l10n.quickInfoIconTitle,
                 subtitle: l10n.quickInfoIconDescription,
@@ -974,13 +1160,13 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Quick Warmup Icon
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: AppIcons.fitnessCenter,
+                icon: AppIcons.workout,
                 iconColor: context.colors.warning,
                 title: l10n.quickWarmupIconTitle,
                 subtitle: l10n.quickWarmupIconDescription,
@@ -991,7 +1177,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Quick Prevention Icon
               _buildToggleCard(
@@ -1008,7 +1194,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Advanced Menu
               _buildToggleCard(
@@ -1025,7 +1211,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Custom Timers
               _buildToggleCard(
@@ -1043,59 +1229,44 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 },
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Subcategory 2: Auto-regolazione
               Text(
-                l10n.autoRegulationCategory,
+                'Auto-regolazione', // TODO: Localize in Phase 4
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.colors.tertiary,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // APRE System
               _buildApreSection(theme, l10n),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Auto-adjust Weight from RPE (depends on RPE tracking)
               _buildToggleCard(
                 theme,
                 l10n,
-                icon: AppIcons.fitnessCenter,
+                icon: AppIcons.workout,
                 iconColor: context.colors.warning,
-                title: l10n.autoAdjustWeightRpeTitle,
-                subtitle: l10n.autoAdjustWeightRpeDescription,
-                tooltip: l10n.autoAdjustWeightRpeTooltip,
+                title: l10n.autoAdjustWeightTitle,
+                subtitle: l10n.autoAdjustWeightDescription,
+                tooltip: l10n.autoAdjustWeightTooltip,
                 value: _autoAdjustWeightFromRpe,
-                onChanged: (value) async {
-                  // ✅ V4 Phase 3: Smart dependency handling with dialog
-                  if (value && !_rpeTracking) {
-                    // Show dialog asking to enable master
-                    final confirmed = await _showDependencyDialog(
-                      context: context,
-                      dependentName: l10n.autoAdjustWeightRpeTitle,
-                      masterName: l10n.enableRpeTitle,
-                    );
-
-                    if (!confirmed) return; // User cancelled
-
-                    // User confirmed: enable both
-                    setState(() {
+                onChanged: (value) {
+                  setState(() {
+                    // Validate: Enable RPE if trying to enable dependent
+                    if (value && !_rpeTracking) {
                       _rpeTracking = true;
-                      _autoAdjustWeightFromRpe = true;
-                    });
-                  } else {
-                    // Just toggle normally
-                    setState(() {
-                      _autoAdjustWeightFromRpe = value;
-                    });
-                  }
+                    }
+                    _autoAdjustWeightFromRpe = value;
+                  });
                   _saveSettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Auto-adjust Rest from RPE (depends on RPE tracking)
               _buildToggleCard(
@@ -1103,42 +1274,27 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 l10n,
                 icon: AppIcons.timer,
                 iconColor: context.colors.success,
-                title: l10n.autoAdjustRestRpeTitle,
-                subtitle: l10n.autoAdjustRestRpeDescription,
-                tooltip: l10n.autoAdjustRestRpeTooltip,
+                title: l10n.autoAdjustRestTitle,
+                subtitle: l10n.autoAdjustRestDescription,
+                tooltip: l10n.autoAdjustRestTooltip,
                 value: _autoAdjustRestFromRpe,
-                onChanged: (value) async {
-                  // ✅ V4 Phase 3: Smart dependency handling with dialog
-                  if (value && !_rpeTracking) {
-                    // Show dialog asking to enable master
-                    final confirmed = await _showDependencyDialog(
-                      context: context,
-                      dependentName: l10n.autoAdjustRestRpeTitle,
-                      masterName: l10n.enableRpeTitle,
-                    );
-
-                    if (!confirmed) return; // User cancelled
-
-                    // User confirmed: enable both
-                    setState(() {
+                onChanged: (value) {
+                  setState(() {
+                    // Validate: Enable RPE if trying to enable dependent
+                    if (value && !_rpeTracking) {
                       _rpeTracking = true;
-                      _autoAdjustRestFromRpe = true;
-                    });
-                  } else {
-                    // Just toggle normally
-                    setState(() {
-                      _autoAdjustRestFromRpe = value;
-                    });
-                  }
+                    }
+                    _autoAdjustRestFromRpe = value;
+                  });
                   _saveSettings();
                 },
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Subcategory 3: Interfaccia
               Text(
-                l10n.interfaceCategory,
+                'Interfaccia', // TODO: Localize in Phase 4
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: context.colors.surfaceContainerHighest,
@@ -1151,7 +1307,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                 theme,
                 l10n,
                 icon: AppIcons.unfoldLess,
-                iconColor: Colors.indigo,
+                iconColor: context.colors.primary,
                 title: l10n.autoCollapseTitle,
                 subtitle: l10n.autoCollapseDescription,
                 tooltip: l10n.autoCollapseTooltip,
@@ -1161,7 +1317,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveSettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Collapse Countdown
               _buildToggleCard(
@@ -1178,7 +1334,7 @@ class _WorkoutCustomizationModalV3State extends ConsumerState<WorkoutCustomizati
                   _saveDisplaySettings();
                 },
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
 
               // Simplified Animations
               _buildToggleCard(

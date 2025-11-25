@@ -66,7 +66,7 @@ class _AutoAdjustmentModalNoHistoryState
                     size: AppIconSize.large,
                     color: context.colors.error,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       context.l10n.apreNoHistory,
@@ -78,7 +78,7 @@ class _AutoAdjustmentModalNoHistoryState
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Description
               Text(
@@ -87,7 +87,7 @@ class _AutoAdjustmentModalNoHistoryState
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Options
               _buildOptionCard(
@@ -96,7 +96,7 @@ class _AutoAdjustmentModalNoHistoryState
                 description: context.l10n.apreOptionFromLastWorkoutDescription,
                 optionKey: 'lastWorkout',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               _buildOptionCard(
                 icon: AppIcons.edit,
@@ -104,7 +104,7 @@ class _AutoAdjustmentModalNoHistoryState
                 description: context.l10n.apreOptionManualEstimateDescription,
                 optionKey: 'manual',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               _buildOptionCard(
                 icon: AppIcons.science,
@@ -112,7 +112,7 @@ class _AutoAdjustmentModalNoHistoryState
                 description: context.l10n.apreOptionTestSetDescription,
                 optionKey: 'testSet',
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Input field (only for non-test options)
               if (_selectedOption != 'testSet') ...[
@@ -140,7 +140,7 @@ class _AutoAdjustmentModalNoHistoryState
               if (_isInputValid && _selectedOption != 'testSet')
                 _buildWeightPreview(),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Actions
               Row(
@@ -150,7 +150,7 @@ class _AutoAdjustmentModalNoHistoryState
                     onPressed: () => Navigator.pop(context),
                     child: Text(context.l10n.apreCancel),
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   FilledButton(
                     onPressed: _isInputValid ? _handleContinue : null,
                     child: Text(context.l10n.apreContinue),
@@ -220,7 +220,7 @@ class _AutoAdjustmentModalNoHistoryState
                     )
                   : null,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
 
             // Icon
             SemanticIcon(
@@ -231,7 +231,7 @@ class _AutoAdjustmentModalNoHistoryState
                   ? context.colors.primary
                   : context.colors.onSurfaceVariant,
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
 
             // Text content
             Expanded(
@@ -247,7 +247,7 @@ class _AutoAdjustmentModalNoHistoryState
                           : context.colors.onSurface,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(
                     description,
                     style: context.textTheme.bodySmall?.copyWith(
@@ -291,7 +291,7 @@ class _AutoAdjustmentModalNoHistoryState
                 size: AppIconSize.medium,
                 color: context.colors.primary,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 context.l10n.aprePreviewWeights,
                 style: context.textTheme.titleSmall?.copyWith(
@@ -306,7 +306,7 @@ class _AutoAdjustmentModalNoHistoryState
           _buildPreviewRow('APRE-3 (92%)', rm3),
           const SizedBox(height: 8),
           _buildPreviewRow('APRE-6 (83%)', rm6),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           _buildPreviewRow('APRE-10 (75%)', rm10),
         ],
       ),

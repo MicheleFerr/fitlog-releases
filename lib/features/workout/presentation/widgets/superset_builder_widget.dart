@@ -8,6 +8,8 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/domain/utils/weight_helper.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Tier-1 UX widget for creating supersets with professional fitness app design
 class SupersetBuilderWidget extends ConsumerStatefulWidget {
@@ -287,7 +289,11 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
             if (_rounds.length < 5)
               TextButton.icon(
                 onPressed: _addRound,
-                icon: const Icon(AppIcons.add, size: 16),
+                icon: const SemanticIcon(
+  icon: AppIcons.add,
+  semanticLabel: 'Add',
+  size: AppIconSize.tiny,
+),
                 label: const Text('Add Round'),
               ),
           ],
@@ -489,11 +495,12 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        AppIcons.info,
-                        size: 20,
-                        color: theme.colorScheme.primary,
-                      ),
+                      SemanticIcon(
+  icon: AppIcons.info,
+  semanticLabel: 'Information',
+  size: AppIconSize.small,
+  color: theme.colorScheme.primary,
+),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -579,7 +586,10 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: config.isValid ? () => _createSuperset(config) : null,
-        icon: const Icon(AppIcons.workout),
+        icon: const SemanticIcon(
+  icon: AppIcons.workout,
+  semanticLabel: 'Workout',
+),
         label: Text(l10n.createSuperset),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -732,7 +742,12 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                 ],
               ),
             ),
-            Icon(AppIcons.edit, size: 14, color: color.withValues(alpha: 0.7)),
+            SemanticIcon(
+  icon: AppIcons.edit,
+  semanticLabel: 'Edit',
+  size: AppIconSize.tiny,
+  color: color.withValues(alpha: 0.7,
+)),
           ],
         ),
       ),
