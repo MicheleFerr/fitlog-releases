@@ -8,8 +8,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 📊 Data point per grafici temporali
 class ChartDataPoint {
@@ -92,11 +90,11 @@ class FrequencyHeatmapData {
 
   /// Colore basato su intensità
   Color get color {
-    if (workoutCount == 0) return context.colors.surfaceVariant[200]!;
-    if (intensity < 0.3) return context.colors.success[200]!;
-    if (intensity < 0.6) return context.colors.success[400]!;
-    if (intensity < 0.8) return context.colors.success[600]!;
-    return context.colors.success[800]!;
+    if (workoutCount == 0) return Colors.grey[200]!;
+    if (intensity < 0.3) return Colors.green[200]!;
+    if (intensity < 0.6) return Colors.green[400]!;
+    if (intensity < 0.8) return Colors.green[600]!;
+    return Colors.green[800]!;
   }
 }
 
@@ -115,8 +113,8 @@ class MuscleVolumeDistribution {
   final bool isBalanced; // Entro MEV-MAV
 
   Color get statusColor {
-    if (isBalanced) return context.colors.success;
-    if (totalSets < 10) return context.colors.secondary; // Undertrained
-    return context.colors.error; // Overtrained
+    if (isBalanced) return Colors.green;
+    if (totalSets < 10) return Colors.orange; // Undertrained
+    return Colors.red; // Overtrained
   }
 }

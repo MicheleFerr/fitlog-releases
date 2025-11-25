@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/tools/firebase_exercise_importer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class ImportExercisesScreen extends StatefulWidget {
   const ImportExercisesScreen({super.key});
@@ -34,7 +33,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(
+            Icon(
               AppIcons.cloudUpload,
               size: 80,
               color: context.colors.primary,
@@ -51,7 +50,7 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: context.colors.surfaceVariant[100],
+                color: context.colors.surfaceContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -83,18 +82,18 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(context.colors.surface),
+                            valueColor: AlwaysStoppedAnimation<Color>(context.colors.onPrimary),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Text(
                           context.l10n.importing,
-                          style: context.textTheme.bodyMedium?.copyWith(color: context.colors.surface),
+                          style: context.textTheme.bodyMedium?.copyWith(color: context.colors.onPrimary),
                         ),
                       ],
                     )

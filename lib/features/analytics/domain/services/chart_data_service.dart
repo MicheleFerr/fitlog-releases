@@ -12,8 +12,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/chart_data.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/home/domain/services/ai_volume_calculator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// 📊 Servizio che trasforma dati raw in dati pronti per grafici
 class ChartDataService {
@@ -39,7 +37,7 @@ class ChartDataService {
     return ChartSeries(
       name: 'Volume Settimanale',
       dataPoints: points,
-      color: context.colors.primary,
+      color: Colors.blue,
       showTrendline: true,
     );
   }
@@ -68,7 +66,7 @@ class ChartDataService {
     return ChartSeries(
       name: exerciseName,
       dataPoints: points,
-      color: context.colors.success,
+      color: Colors.green,
       showTrendline: true,
     );
   }

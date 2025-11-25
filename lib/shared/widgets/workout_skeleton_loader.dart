@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 /// Skeleton loader widget for workout history items
 /// Shows animated placeholder while loading real data
 class WorkoutSkeletonLoader extends StatelessWidget {
-  
+
   const WorkoutSkeletonLoader({
     super.key,
     this.itemCount = 3,
@@ -17,10 +16,10 @@ class WorkoutSkeletonLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Shimmer.fromColors(
-      baseColor: isDark ? context.colors.surfaceVariant[800]! : context.colors.surfaceVariant[300]!,
-      highlightColor: isDark ? context.colors.surfaceVariant[700]! : context.colors.surfaceVariant[100]!,
+      baseColor: isDark ? context.colors.surfaceContainerHighest : context.colors.surfaceContainer,
+      highlightColor: isDark ? context.colors.surfaceContainer : context.colors.surface,
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

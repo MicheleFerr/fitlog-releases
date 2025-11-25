@@ -4,7 +4,6 @@ import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_act
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/widgets/workout_skeleton_loader.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
@@ -154,21 +153,12 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                 controller: _scrollController,
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16),
-                itemCount: displayedWorkoutsList.length + (canLoadMore ? 1 : 0),
+                itemCount: displayedWorkoutsList.length,
                 itemBuilder: (context, index) {
-                  // Show load more button/indicator at the end
-                  if (index == displayedWorkoutsList.length) {
-                    if (isLoadingMore) {
-                      return _buildLoadingIndicator(context);
-                    } else {
-                      return _buildLoadMoreButton(context);
-                    }
-                  }
-                  
                   final entry = displayedWorkoutsList[index];
                   final workoutActivities = entry.value;
                   final firstActivity = workoutActivities.first;
-                  
+
                   return _buildWorkoutItem(
                     context,
                     firstActivity.schedaName,
@@ -181,15 +171,15 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
                 },
               ),
             ),
-          
+
           // Show more workouts available indicator
-          if (!canLoadMore && displayedWorkoutsList.length < allWorkouts.length)
+          if (displayedWorkoutsList.length < allWorkouts.length)
             Padding(
               padding: const EdgeInsets.all(16),
               child: TextButton(
                 onPressed: () {
                   setState(() {
-                    _displayedWorkouts = _displayedWorkouts + 10;
+                    _displayedWorkouts = (_displayedWorkouts + 10).clamp(0, allWorkouts.length);
                   });
                 },
                 child: Text('Show ${allWorkouts.length - displayedWorkoutsList.length} more workouts'),
@@ -199,61 +189,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
       ),
     );
   }
-  
-  Widget _buildPhaseIndicator(BuildContext context, LoadingPhase phase) {
-    String phaseText;
-    Color phaseColor;
-    
-    switch (phase) {
-      case LoadingPhase.initial:
-        phaseText = 'Last 30 days';
-        phaseColor = context.colors.success;
-        break;
-      case LoadingPhase.extended:
-        phaseText = 'Last 3 months';
-        phaseColor = context.colors.primary;
-        break;
-      case LoadingPhase.full:
-        phaseText = 'Last year';
-        phaseColor = context.colors.secondary;
-        break;
-      case LoadingPhase.complete:
-        phaseText = 'All time';
-        phaseColor = context.colors.tertiary;
-        break;
-    }
-    
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: phaseColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: phaseColor.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: phaseColor,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            phaseText,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: phaseColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  
+
   Widget _buildWorkoutItem(
     BuildContext context,
     String workoutName,
@@ -383,43 +319,7 @@ class _LazyRecentWorkoutsCardState extends ConsumerState<LazyRecentWorkoutsCard>
       ),
     );
   }
-  
-  Widget _buildLoadingIndicator(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: Column(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: 8),
-            Text(
-              ref.read(lazyAnalyticsProvider.notifier).loadingMessage,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  
-  Widget _buildLoadMoreButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Center(
-        child: OutlinedButton.icon(
-          onPressed: () {
-            ref.read(lazyAnalyticsProvider.notifier).loadMoreData();
-          },
-          icon: const SemanticIcon(
-  icon: AppIcons.expandMore,
-  semanticLabel: 'Expand',
-),
-          label: const Text('Load older workouts'),
-        ),
-      ),
-    );
-  }
-  
+
   void _showWorkoutDetails(BuildContext context, List<ExerciseActivity> activities) {
     // Reuse the detailed bottom sheet from the original widget
     // (Implementation omitted for brevity - would be the same as original)

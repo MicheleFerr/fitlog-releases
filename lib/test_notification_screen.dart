@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 class TestNotificationScreen extends StatelessWidget {
   const TestNotificationScreen({super.key});
