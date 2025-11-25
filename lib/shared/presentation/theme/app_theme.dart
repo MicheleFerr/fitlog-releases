@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/shared/utils/contrast_checker.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class AppTheme {
   // Gym-inspired color palette
