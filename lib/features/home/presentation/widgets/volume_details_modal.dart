@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/features/home/providers/volume_settings_provider.dart';
 
 class VolumeDetailsModal extends ConsumerWidget {
@@ -88,9 +89,9 @@ class VolumeDetailsModal extends ConsumerWidget {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.fitness_center,
-                    color: Colors.white,
+                    color: context.colors.surface,
                     size: 28,
                   ),
                 ),
@@ -174,14 +175,14 @@ class VolumeDetailsModal extends ConsumerWidget {
                     children: [
                       Icon(
                         percentageChange >= 0 ? Icons.trending_up : Icons.trending_down,
-                        color: percentageChange >= 0 ? Colors.green : Colors.red,
+                        color: percentageChange >= 0 ? context.colors.success : context.colors.error,
                         size: 20,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '${percentageChange >= 0 ? '+' : ''}${percentageChange.toStringAsFixed(1)}%',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: percentageChange >= 0 ? Colors.green : Colors.red,
+                          color: percentageChange >= 0 ? context.colors.success : context.colors.error,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -211,7 +212,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     value: '${(settings.convertWeight(avgDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
                     icon: Icons.equalizer,
-                    color: Colors.blue,
+                    color: context.colors.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -221,7 +222,7 @@ class VolumeDetailsModal extends ConsumerWidget {
                     value: '${(settings.convertWeight(maxDailyVolume) / 1000).toStringAsFixed(1)}k',
                     unit: unitSymbol,
                     icon: Icons.emoji_events,
-                    color: Colors.orange,
+                    color: context.colors.warning,
                   ),
                 ),
               ],

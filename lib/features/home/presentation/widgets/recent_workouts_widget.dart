@@ -205,9 +205,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.history,
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       size: 24,
                     ),
                   ),
@@ -328,9 +328,9 @@ class RecentWorkoutsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.history,
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       size: 28,
                     ),
                   ),

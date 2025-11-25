@@ -43,8 +43,8 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                     theme.colorScheme.surface,
                   ]
                 : [
-                    Colors.amber.withValues(alpha: 0.1),
-                    Colors.orange.withValues(alpha: 0.05),
+                    context.colors.warning.withValues(alpha: 0.1),
+                    context.colors.warning.withValues(alpha: 0.05),
                   ],
             ),
           ),
@@ -62,13 +62,13 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                           theme.colorScheme.outline.withValues(alpha: 0.3),
                           theme.colorScheme.outline.withValues(alpha: 0.2),
                         ]
-                      : [Colors.amber, Colors.orange],
+                      : [context.colors.warning, context.colors.error],
                   ),
-                  boxShadow: bonusClaimedToday 
+                  boxShadow: bonusClaimedToday
                     ? []
                     : [
                         BoxShadow(
-                          color: Colors.amber.withValues(alpha: 0.3),
+                          color: context.colors.warning.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -138,7 +138,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       Text(
                         context.l10n.claimBonus(bonusInfo.currentDayBonus),
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.amber[700]!,
+                          color: context.colors.warning,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -156,9 +156,9 @@ class DailyLoginBonusWidget extends ConsumerWidget {
               if (!bonusClaimedToday)
                 Column(
                   children: [
-                    const Icon(
+                    Icon(
                       AppIcons.touchApp,
-                      color: Colors.amber,
+                      color: context.colors.warning,
                       size: 20,
                     ),
                     Text(
@@ -166,7 +166,7 @@ class DailyLoginBonusWidget extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber[700]!,
+                        color: context.colors.warning,
                       ),
                     ),
                   ],
@@ -258,20 +258,20 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       shape: BoxShape.circle,
                       gradient: isCompleted
                         ? LinearGradient(
-                            colors: [context.colors.success, Color.lerp(context.colors.success, Colors.black, 0.3)!],
+                            colors: [context.colors.success, context.colors.success.withValues(alpha: 0.7)],
                           )
                         : isToday
-                          ? const LinearGradient(
-                              colors: [Colors.amber, Colors.orange],
+                          ? LinearGradient(
+                              colors: [context.colors.warning, context.colors.error],
                             )
                           : null,
-                      color: isFuture 
+                      color: isFuture
                         ? theme.colorScheme.outline.withValues(alpha: 0.2)
                         : null,
                       boxShadow: isToday
                         ? [
                             BoxShadow(
-                              color: Colors.amber.withValues(alpha: 0.3),
+                              color: context.colors.warning.withValues(alpha: 0.3),
                               blurRadius: 8,
                             ),
                           ]
@@ -305,7 +305,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       color: isCompleted
                         ? context.colors.success
                         : isToday
-                          ? Colors.amber[700]!
+                          ? context.colors.warning
                           : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
@@ -341,7 +341,7 @@ class DailyLoginProgressionWidget extends ConsumerWidget {
                       context.l10n.maxBonusReached,
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color.lerp(context.colors.success, Colors.black, 0.3)!,
+                        color: context.colors.success,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

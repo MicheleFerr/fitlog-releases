@@ -386,8 +386,8 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.deepPurple[700]!,
-                                      Colors.deepPurple[900]!,
+                                      context.colors.tertiary,
+                                      context.colors.tertiary.withValues(alpha: 0.8),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(12),

@@ -404,7 +404,7 @@ class ModalTesterWidget extends ConsumerWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🚧 $modalName - Need to implement test'),
-        backgroundColor: Colors.orange,
+        backgroundColor: context.colors.warning,
       ),
     );
   }

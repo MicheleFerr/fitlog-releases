@@ -502,7 +502,7 @@ class ProgressDashboard extends ConsumerWidget {
   }
   
   Color _getStreakColor(BuildContext context, int streak, ThemeData theme) {
-    if (streak >= 7) return Colors.orange;
+    if (streak >= 7) return context.colors.warning;
     if (streak >= 3) return theme.colorScheme.primary;
     if (streak >= 1) return context.colors.success;
     return theme.colorScheme.outline;

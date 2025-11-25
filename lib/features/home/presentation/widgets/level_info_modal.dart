@@ -57,7 +57,7 @@ class LevelInfoModal extends ConsumerWidget {
                   ),
                   child: Icon(
                     _getLevelIcon(currentLevel),
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     size: 28,
                   ),
                 ),
@@ -237,7 +237,7 @@ class LevelInfoModal extends ConsumerWidget {
                                   isUnlocked ? Icons.check_circle : Icons.circle_outlined,
                                   size: 16,
                                   color: isUnlocked
-                                    ? Colors.green
+                                    ? theme.colorScheme.primary
                                     : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                                 ),
                                 const SizedBox(width: 8),
@@ -267,7 +267,7 @@ class LevelInfoModal extends ConsumerWidget {
                           child: Text(
                             l10n.current,
                             style: theme.textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
+                              color: theme.colorScheme.surface,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -284,11 +284,12 @@ class LevelInfoModal extends ConsumerWidget {
   }
   
   Color _getLevelColor(int level) {
-    if (level <= 2) return Colors.grey;
-    if (level <= 4) return Colors.green;
-    if (level <= 6) return Colors.blue;
-    if (level <= 8) return Colors.purple;
-    return Colors.orange;
+    // Using const hex colors as this method doesn't have BuildContext access
+    if (level <= 2) return const Color(0xFF9E9E9E); // grey
+    if (level <= 4) return const Color(0xFF4CAF50); // green/success
+    if (level <= 6) return const Color(0xFF2196F3); // blue/primary
+    if (level <= 8) return const Color(0xFF9C27B0); // purple/tertiary
+    return const Color(0xFFFF9800); // orange/warning
   }
   
   IconData _getLevelIcon(int level) {

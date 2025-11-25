@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:intl/intl.dart';
 
 class RealProgressStatsWidget extends ConsumerWidget {
@@ -167,9 +168,9 @@ class RealProgressStatsWidget extends ConsumerWidget {
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.analytics,
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       size: 24,
                     ),
                   ),
@@ -260,9 +261,9 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.insights,
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       size: 28,
                     ),
                   ),
@@ -304,7 +305,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         icon: Icons.fitness_center,
                         label: 'Allenamenti Totali',
                         value: '${analyticsState.activities.length}',
-                        color: Colors.blue,
+                        color: theme.colorScheme.primary,
                         subtitle: 'Dalla registrazione',
                       ),
                     ),
@@ -315,7 +316,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         icon: Icons.calendar_today,
                         label: 'Questo Mese',
                         value: '${frequencyStats['daysInLast30'] ?? 0}',
-                        color: Colors.orange,
+                        color: context.colors.warning,
                         subtitle: 'Giorni attivi',
                       ),
                     ),
@@ -326,7 +327,7 @@ class RealProgressStatsWidget extends ConsumerWidget {
                         icon: Icons.local_fire_department,
                         label: 'Streak Attuale',
                         value: '${frequencyStats['currentStreak'] ?? 0}',
-                        color: Colors.red,
+                        color: context.colors.error,
                         subtitle: 'Giorni consecutivi',
                       ),
                     ),
@@ -483,10 +484,10 @@ class RealProgressStatsWidget extends ConsumerWidget {
               getDotPainter: (spot, percent, barData, index) {
                 return FlDotCirclePainter(
                   radius: spot.y > 0 ? 4 : 2,
-                  color: Colors.white,
+                  color: theme.colorScheme.surface,
                   strokeWidth: 2,
-                  strokeColor: spot.y > 0 
-                    ? theme.colorScheme.primary 
+                  strokeColor: spot.y > 0
+                    ? theme.colorScheme.primary
                     : theme.colorScheme.outline.withValues(alpha: 0.3),
                 );
               },
@@ -543,8 +544,8 @@ class RealProgressStatsWidget extends ConsumerWidget {
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               return BarTooltipItem(
                 '${rod.toY.toStringAsFixed(0)} kg',
-                const TextStyle(
-                  color: Colors.white,
+                TextStyle(
+                  color: theme.colorScheme.surface,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),

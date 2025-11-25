@@ -223,15 +223,15 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.purple.withValues(alpha: 0.1),
+              color: context.colors.tertiary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.purple.withValues(alpha: 0.3),
+                color: context.colors.tertiary.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
               children: [
-                Icon(AppIcons.layers, color: Colors.purple, size: 24),
+                Icon(AppIcons.layers, color: context.colors.tertiary, size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -241,7 +241,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
                         'QuickEdit V2 - Production',
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.purple,
+                          color: context.colors.tertiary,
                         ),
                       ),
                       Text(
@@ -270,7 +270,7 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
 ),
               label: const Text('Test QuickEdit V2'),
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: context.colors.tertiary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),

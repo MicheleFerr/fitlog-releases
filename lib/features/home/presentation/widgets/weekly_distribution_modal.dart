@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
+import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 class WeeklyDistributionModal extends ConsumerWidget {
   
@@ -58,9 +59,9 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     ),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.calendar_view_week,
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     size: 24,
                   ),
                 ),
@@ -104,7 +105,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     value: trainingDays.toString(),
                     subtitle: l10n.thisWeek,
                     icon: Icons.calendar_today,
-                    color: Colors.blue,
+                    color: context.colors.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -114,7 +115,7 @@ class WeeklyDistributionModal extends ConsumerWidget {
                     value: '${(averageVolume / 1000).toStringAsFixed(1)}k',
                     subtitle: l10n.perDay,
                     icon: Icons.analytics,
-                    color: Colors.green,
+                    color: context.colors.success,
                   ),
                 ),
               ],
