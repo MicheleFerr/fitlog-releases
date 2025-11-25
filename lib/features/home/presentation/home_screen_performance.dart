@@ -139,93 +139,6 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
     super.dispose();
   }
 
-  /// Shows a dialog informing the user that the Community feature is coming soon
-  /// PRESERVED EXACTLY from HomeScreenOptimized
-  void _showCommunityComingSoonDialog(BuildContext context) {
-    final l10n = context.l10n;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              AppIcons.people,
-              color: context.colors.primary,
-              size: AppIconSize.large,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                l10n.communityComingSoonTitle,
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.communityComingSoonDescription,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurface.withValues(alpha: 0.8),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    AppIcons.construction,
-                    color: context.colors.primary,
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '🚀 ${l10n.comingSoon}',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colors.onPrimaryContainer,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              l10n.close,
-              style: context.textTheme.labelLarge?.copyWith(
-                color: context.colors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Builds a skeleton loading card while data is loading
   Widget _buildSkeletonCard({required double height}) {
     return Container(
@@ -339,15 +252,14 @@ class _HomeScreenPerformanceState extends ConsumerState<HomeScreenPerformance>
                     SmartWorkoutCTA(key: smartWorkoutCardKey),
                     const SizedBox(height: 24),
 
-                    // Community card - Coming Soon dialog
-                    // PRESERVED EXACTLY from HomeScreenOptimized
+                    // Community card - Navigate to community hub
                     Material(
                       key: communityCardKey,
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          _showCommunityComingSoonDialog(context);
+                          context.push('/community');
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Ink(

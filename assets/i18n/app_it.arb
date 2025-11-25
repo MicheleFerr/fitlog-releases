@@ -817,6 +817,8 @@
   "duration": "Durata",
   "calories": "Calorie",
   "aiCoach": "AI Coach",
+  "aiCoachRecoveryInsights": "Insights di Recupero",
+  "aiCoachRecoveryInsightsDesc": "Monitora prontezza, recupero muscolare e rischio sovrallenamento",
   "showPR": "Mostra PR",
   "analyzeVolume": "Analizza volume",
   "howIsTraining": "Come va l'allenamento?",
@@ -4979,6 +4981,11 @@
   "unknownWorkout": "Allenamento Sconosciuto",
   "videoTutorial": "Video Tutorial",
   "formCues": "Punti Tecnici",
+  "whyThisAnswer": "Perché questa risposta?",
+  "imageNotAvailable": "Immagine non disponibile",
+  "aiCoachLabel": "Coach",
+  "userLabel": "Tu",
+  "systemMessageLabel": "Sistema",
   "warmupPhase1Description": "Mobilizzazione articolare e stretching dinamico (5-10 min)",
   "warmupPhase2Description": "Attivazione muscolare con esercizi a corpo libero",
   "warmupPhase3Description": "2-3 serie di riscaldamento con carico progressivo",
@@ -10537,9 +10544,9 @@
   "@onboardingPlanExample": {
     "description": "Esempio capacità piano"
   },
-  "onboardingPatternExplanation": "💡 Analizzo i tuoi dati di allenamento localmente usando analisi basate su pattern. Nessun servizio AI cloud necessario!",
+  "onboardingPatternExplanation": "⚠️ Questo NON è un'intelligenza artificiale. Il tuo coach usa regole e modelli predefiniti per analizzare i tuoi dati di allenamento localmente. Tutte le risposte sono basate su pattern, non contenuto generato da AI.",
   "@onboardingPatternExplanation": {
-    "description": "Spiegazione pattern-based per onboarding"
+    "description": "Disclaimer che spiega che NON è AI - usa pattern matching"
   },
   "onboardingGotIt": "Perfetto!",
   "@onboardingGotIt": {
@@ -13753,5 +13760,243 @@
   "createTemplateButton": "Crea Template",
   "@createTemplateButton": {
     "description": "Testo pulsante crea template"
+  },
+  "smartWorkoutCTAErrorTitle": "Qualcosa è andato storto",
+  "@smartWorkoutCTAErrorTitle": {
+    "description": "Titolo stato errore Smart Workout CTA"
+  },
+  "smartWorkoutCTAInsufficientDataTitle": "Costruendo il tuo profilo",
+  "@smartWorkoutCTAInsufficientDataTitle": {
+    "description": "Titolo stato dati insufficienti"
+  },
+  "smartWorkoutCTAInsufficientDataSubtitle": "Completa altri {remaining} allenamenti per sbloccare i suggerimenti smart",
+  "@smartWorkoutCTAInsufficientDataSubtitle": {
+    "description": "Sottotitolo stato dati insufficienti",
+    "placeholders": {
+      "remaining": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "smartWorkoutCTAInsufficientDataProgress": "{count} di {total} allenamenti completati",
+  "@smartWorkoutCTAInsufficientDataProgress": {
+    "description": "Indicatore progresso stato dati insufficienti",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "smartWorkoutCTAReadyTitle": "Suggerito per te",
+  "@smartWorkoutCTAReadyTitle": {
+    "description": "Titolo stato pronto con allenamento suggerito"
+  },
+  "smartWorkoutCTAStartButton": "Inizia Allenamento",
+  "@smartWorkoutCTAStartButton": {
+    "description": "Testo pulsante inizia allenamento"
+  },
+  "smartWorkoutCTAWarningBanner": "{antagonist} ancora in recupero - considera di aspettare",
+  "@smartWorkoutCTAWarningBanner": {
+    "description": "Banner avviso conflitto muscolo antagonista",
+    "placeholders": {
+      "antagonist": {
+        "type": "String",
+        "example": "Schiena"
+      }
+    }
+  },
+  "smartWorkoutCTAProceedAnyway": "Inizia comunque",
+  "@smartWorkoutCTAProceedAnyway": {
+    "description": "Pulsante procedi comunque quando c'è avviso"
+  },
+  "smartWorkoutCTARestModeTitle": "Ottimo lavoro oggi!",
+  "@smartWorkoutCTARestModeTitle": {
+    "description": "Titolo modalità riposo dopo allenamento"
+  },
+  "smartWorkoutCTARestModeSubtitle": "È ora di recuperare. Ci vediamo domani!",
+  "@smartWorkoutCTARestModeSubtitle": {
+    "description": "Sottotitolo modalità riposo"
+  },
+  "smartWorkoutCTARestModeVolume": "{volume} kg sollevati",
+  "@smartWorkoutCTARestModeVolume": {
+    "description": "Statistiche volume modalità riposo",
+    "placeholders": {
+      "volume": {
+        "type": "String",
+        "example": "2500"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeDuration": "{duration} min",
+  "@smartWorkoutCTARestModeDuration": {
+    "description": "Statistiche durata modalità riposo",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "45"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeSets": "{sets} serie",
+  "@smartWorkoutCTARestModeSets": {
+    "description": "Statistiche serie modalità riposo",
+    "placeholders": {
+      "sets": {
+        "type": "String",
+        "example": "20"
+      }
+    }
+  },
+  "smartWorkoutCTAReasonPickerTitle": "Non ti va?",
+  "@smartWorkoutCTAReasonPickerTitle": {
+    "description": "Titolo selettore motivo rifiuto"
+  },
+  "smartWorkoutCTAReasonPickerSubtitle": "Dicci perché salti {templateName} così possiamo migliorare i suggerimenti",
+  "@smartWorkoutCTAReasonPickerSubtitle": {
+    "description": "Sottotitolo selettore motivo rifiuto",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Push Day"
+      }
+    }
+  },
+  "smartWorkoutCTAReasonPickerCustomHint": "Dicci di più (opzionale)",
+  "@smartWorkoutCTAReasonPickerCustomHint": {
+    "description": "Hint campo testo motivo personalizzato"
+  },
+  "smartWorkoutCTAReasonPickerConfirm": "Conferma",
+  "@smartWorkoutCTAReasonPickerConfirm": {
+    "description": "Pulsante conferma motivo rifiuto"
+  },
+  "smartWorkoutCTAReasonTooTired": "Troppo stanco oggi",
+  "@smartWorkoutCTAReasonTooTired": {
+    "description": "Motivo rifiuto: troppo stanco"
+  },
+  "smartWorkoutCTAReasonNoTime": "Non ho abbastanza tempo",
+  "@smartWorkoutCTAReasonNoTime": {
+    "description": "Motivo rifiuto: poco tempo"
+  },
+  "smartWorkoutCTAReasonInjury": "Infortunio o dolore",
+  "@smartWorkoutCTAReasonInjury": {
+    "description": "Motivo rifiuto: infortunio"
+  },
+  "smartWorkoutCTAReasonNotInMood": "Non sono dell'umore",
+  "@smartWorkoutCTAReasonNotInMood": {
+    "description": "Motivo rifiuto: non in mood"
+  },
+  "smartWorkoutCTAReasonOther": "Altro motivo",
+  "@smartWorkoutCTAReasonOther": {
+    "description": "Motivo rifiuto: altro"
+  },
+  "myContributions": "I Miei Contributi",
+  "@myContributions": {
+    "description": "Titolo tab per i propri contributi"
+  },
+  "guide": "Guida",
+  "@guide": {
+    "description": "Titolo tab per guida/onboarding community"
+  },
+  "contribute": "Contribuisci",
+  "@contribute": {
+    "description": "Pulsante per aggiungere un nuovo contributo"
+  },
+  "welcomeToCommunity": "Benvenuto nella Community!",
+  "@welcomeToCommunity": {
+    "description": "Titolo benvenuto onboarding community"
+  },
+  "communityDescription": "Condividi le tue conoscenze, aiuta gli altri a migliorare e guadagna XP contribuendo alla community fitness.",
+  "@communityDescription": {
+    "description": "Descrizione onboarding community"
+  },
+  "whatYouCanDo": "Cosa puoi fare",
+  "@whatYouCanDo": {
+    "description": "Intestazione sezione azioni community"
+  },
+  "shareTips": "Condividi Consigli",
+  "@shareTips": {
+    "description": "Azione community: condividere consigli esercizi"
+  },
+  "shareTipsDescription": "Aiuta gli altri con consigli sull'esecuzione e trucchi da pro",
+  "@shareTipsDescription": {
+    "description": "Descrizione per condivisione consigli"
+  },
+  "reportWarnings": "Segnala Avvertenze",
+  "@reportWarnings": {
+    "description": "Azione community: segnalare avvertenze"
+  },
+  "reportWarningsDescription": "Segnala esercizi con problemi di sicurezza o errori comuni",
+  "@reportWarningsDescription": {
+    "description": "Descrizione per segnalazione avvertenze"
+  },
+  "suggestCorrections": "Suggerisci Correzioni",
+  "@suggestCorrections": {
+    "description": "Azione community: suggerire correzioni"
+  },
+  "suggestCorrectionsDescription": "Migliora le descrizioni degli esercizi e le info sui muscoli coinvolti",
+  "@suggestCorrectionsDescription": {
+    "description": "Descrizione per suggerimento correzioni"
+  },
+  "xpSystem": "Sistema XP",
+  "@xpSystem": {
+    "description": "Intestazione sezione premi XP"
+  },
+  "submitContribution": "Invia contributo",
+  "@submitContribution": {
+    "description": "Azione XP: invio contributo"
+  },
+  "contributionApproved": "Contributo approvato",
+  "@contributionApproved": {
+    "description": "Azione XP: contributo approvato"
+  },
+  "contributionFeatured": "Contributo in evidenza",
+  "@contributionFeatured": {
+    "description": "Azione XP: contributo in evidenza"
+  },
+  "voteOnContribution": "Vota contributo",
+  "@voteOnContribution": {
+    "description": "Azione XP: votare un contributo"
+  },
+  "exploreCommunity": "Esplora Community",
+  "@exploreCommunity": {
+    "description": "Pulsante per iniziare esplorare community"
+  },
+  "underReview": "In Revisione",
+  "@underReview": {
+    "description": "Stato contributo: in revisione"
+  },
+  "noContributionsYet": "Nessun contributo ancora",
+  "@noContributionsYet": {
+    "description": "Titolo stato vuoto feed"
+  },
+  "beFirstToContribute": "Sii il primo a condividere le tue conoscenze!",
+  "@beFirstToContribute": {
+    "description": "Sottotitolo stato vuoto feed"
+  },
+  "noContributionsFromYou": "Non hai ancora contribuito",
+  "@noContributionsFromYou": {
+    "description": "Titolo stato vuoto i miei contributi"
+  },
+  "startContributing": "Condividi il tuo primo consiglio o suggerimento",
+  "@startContributing": {
+    "description": "Sottotitolo stato vuoto i miei contributi"
+  },
+  "offline": "Offline",
+  "@offline": {
+    "description": "Titolo stato errore rete"
+  },
+  "checkConnection": "Controlla la tua connessione internet",
+  "@checkConnection": {
+    "description": "Sottotitolo stato errore rete"
+  },
+  "somethingWentWrong": "Qualcosa è andato storto",
+  "@somethingWentWrong": {
+    "description": "Sottotitolo stato errore generico"
   }
 }

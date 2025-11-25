@@ -95,92 +95,6 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
     super.dispose();
   }
 
-  /// Shows a dialog informing the user that the Community feature is coming soon
-  void _showCommunityComingSoonDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Row(
-          children: [
-            Icon(
-              AppIcons.people,
-              color: Theme.of(context).colorScheme.primary,
-              size: AppIconSize.large,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                l10n.communityComingSoonTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.communityComingSoonDescription,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    AppIcons.construction,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: AppIconSize.small,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      '🚀 ${l10n.comingSoon}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              l10n.close,
-              style: context.textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // OPTIMIZED: Only watch if workout exists, not the entire workout object
@@ -267,14 +181,14 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 SmartWorkoutCTA(key: smartWorkoutCardKey),
                 const SizedBox(height: 24),
 
-                // Community card - Coming Soon dialog
+                // Community card - Navigate to community hub
                 Material(
                   key: communityCardKey,
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      _showCommunityComingSoonDialog(context);
+                      context.push('/community');
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: Ink(

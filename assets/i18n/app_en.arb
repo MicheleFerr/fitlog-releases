@@ -2927,6 +2927,14 @@
   "@aiCoach": {
     "description": "AI Coach section title"
   },
+  "aiCoachRecoveryInsights": "Recovery Insights",
+  "@aiCoachRecoveryInsights": {
+    "description": "AI Coach recovery insights setting title"
+  },
+  "aiCoachRecoveryInsightsDesc": "Track readiness, muscle recovery, and overtraining risk",
+  "@aiCoachRecoveryInsightsDesc": {
+    "description": "AI Coach recovery insights setting description"
+  },
   "showPR": "Show PR",
   "@showPR": {
     "description": "Suggestion chip: show personal records"
@@ -13023,6 +13031,26 @@
   "@formCues": {
     "description": "Section title for form cues"
   },
+  "whyThisAnswer": "Why this answer?",
+  "@whyThisAnswer": {
+    "description": "Expandable section title for reasoning transparency in AI coach"
+  },
+  "imageNotAvailable": "Image not available",
+  "@imageNotAvailable": {
+    "description": "Error message when exercise image fails to load"
+  },
+  "aiCoachLabel": "AI Coach",
+  "@aiCoachLabel": {
+    "description": "Label for AI coach avatar in chat"
+  },
+  "userLabel": "User",
+  "@userLabel": {
+    "description": "Label for user avatar in chat"
+  },
+  "systemMessageLabel": "System",
+  "@systemMessageLabel": {
+    "description": "Label for system messages in chat"
+  },
   "warmupPhase1Description": "Joint mobilization and dynamic stretching (5-10 min)",
   "@warmupPhase1Description": {
     "description": "Description for warmup phase 1"
@@ -21168,9 +21196,9 @@
   "@onboardingPlanExample": {
     "description": "Plan capability example"
   },
-  "onboardingPatternExplanation": "💡 I analyze your real workout data locally using pattern-based insights. No AI cloud services needed!",
+  "onboardingPatternExplanation": "⚠️ This is NOT artificial intelligence. Your coach uses pre-defined rules and templates to analyze your workout data locally. All responses are based on patterns, not AI-generated content.",
   "@onboardingPatternExplanation": {
-    "description": "Pattern-based explanation for onboarding"
+    "description": "Disclaimer explaining this is NOT AI - uses pattern matching"
   },
   "onboardingGotIt": "Got it!",
   "@onboardingGotIt": {
@@ -24265,5 +24293,243 @@
   "createTemplateButton": "Create Template",
   "@createTemplateButton": {
     "description": "Create template button text"
+  },
+  "smartWorkoutCTAErrorTitle": "Something went wrong",
+  "@smartWorkoutCTAErrorTitle": {
+    "description": "Error state title for Smart Workout CTA"
+  },
+  "smartWorkoutCTAInsufficientDataTitle": "Building Your Profile",
+  "@smartWorkoutCTAInsufficientDataTitle": {
+    "description": "Insufficient data state title"
+  },
+  "smartWorkoutCTAInsufficientDataSubtitle": "Complete {remaining} more workouts to unlock smart suggestions",
+  "@smartWorkoutCTAInsufficientDataSubtitle": {
+    "description": "Insufficient data state subtitle",
+    "placeholders": {
+      "remaining": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "smartWorkoutCTAInsufficientDataProgress": "{count} of {total} workouts completed",
+  "@smartWorkoutCTAInsufficientDataProgress": {
+    "description": "Progress indicator for insufficient data state",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "smartWorkoutCTAReadyTitle": "Suggested for You",
+  "@smartWorkoutCTAReadyTitle": {
+    "description": "Ready state title showing suggested workout"
+  },
+  "smartWorkoutCTAStartButton": "Start Workout",
+  "@smartWorkoutCTAStartButton": {
+    "description": "Start workout button text"
+  },
+  "smartWorkoutCTAWarningBanner": "{antagonist} still recovering - consider waiting",
+  "@smartWorkoutCTAWarningBanner": {
+    "description": "Warning banner for antagonist muscle conflict",
+    "placeholders": {
+      "antagonist": {
+        "type": "String",
+        "example": "Back"
+      }
+    }
+  },
+  "smartWorkoutCTAProceedAnyway": "Start Anyway",
+  "@smartWorkoutCTAProceedAnyway": {
+    "description": "Proceed anyway button when there is a warning"
+  },
+  "smartWorkoutCTARestModeTitle": "Great Work Today!",
+  "@smartWorkoutCTARestModeTitle": {
+    "description": "Rest mode title after completing workout"
+  },
+  "smartWorkoutCTARestModeSubtitle": "Time to recover. See you tomorrow!",
+  "@smartWorkoutCTARestModeSubtitle": {
+    "description": "Rest mode subtitle"
+  },
+  "smartWorkoutCTARestModeVolume": "{volume} kg lifted",
+  "@smartWorkoutCTARestModeVolume": {
+    "description": "Volume stat in rest mode",
+    "placeholders": {
+      "volume": {
+        "type": "String",
+        "example": "2500"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeDuration": "{duration} min",
+  "@smartWorkoutCTARestModeDuration": {
+    "description": "Duration stat in rest mode",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "45"
+      }
+    }
+  },
+  "smartWorkoutCTARestModeSets": "{sets} sets",
+  "@smartWorkoutCTARestModeSets": {
+    "description": "Sets stat in rest mode",
+    "placeholders": {
+      "sets": {
+        "type": "String",
+        "example": "20"
+      }
+    }
+  },
+  "smartWorkoutCTAReasonPickerTitle": "Not feeling it?",
+  "@smartWorkoutCTAReasonPickerTitle": {
+    "description": "Rejection reason picker title"
+  },
+  "smartWorkoutCTAReasonPickerSubtitle": "Tell us why you're skipping {templateName} so we can improve suggestions",
+  "@smartWorkoutCTAReasonPickerSubtitle": {
+    "description": "Rejection reason picker subtitle",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Push Day"
+      }
+    }
+  },
+  "smartWorkoutCTAReasonPickerCustomHint": "Tell us more (optional)",
+  "@smartWorkoutCTAReasonPickerCustomHint": {
+    "description": "Custom reason text field hint"
+  },
+  "smartWorkoutCTAReasonPickerConfirm": "Submit",
+  "@smartWorkoutCTAReasonPickerConfirm": {
+    "description": "Confirm rejection reason button"
+  },
+  "smartWorkoutCTAReasonTooTired": "Too tired today",
+  "@smartWorkoutCTAReasonTooTired": {
+    "description": "Rejection reason: too tired"
+  },
+  "smartWorkoutCTAReasonNoTime": "Not enough time",
+  "@smartWorkoutCTAReasonNoTime": {
+    "description": "Rejection reason: no time"
+  },
+  "smartWorkoutCTAReasonInjury": "Injury or pain",
+  "@smartWorkoutCTAReasonInjury": {
+    "description": "Rejection reason: injury"
+  },
+  "smartWorkoutCTAReasonNotInMood": "Not in the mood",
+  "@smartWorkoutCTAReasonNotInMood": {
+    "description": "Rejection reason: not in mood"
+  },
+  "smartWorkoutCTAReasonOther": "Other reason",
+  "@smartWorkoutCTAReasonOther": {
+    "description": "Rejection reason: other"
+  },
+  "myContributions": "My Contributions",
+  "@myContributions": {
+    "description": "Tab title for user's own contributions"
+  },
+  "guide": "Guide",
+  "@guide": {
+    "description": "Tab title for community guide/onboarding"
+  },
+  "contribute": "Contribute",
+  "@contribute": {
+    "description": "Button to add a new contribution"
+  },
+  "welcomeToCommunity": "Welcome to the Community!",
+  "@welcomeToCommunity": {
+    "description": "Community onboarding welcome title"
+  },
+  "communityDescription": "Share your knowledge, help others improve, and earn XP by contributing to the fitness community.",
+  "@communityDescription": {
+    "description": "Community onboarding description"
+  },
+  "whatYouCanDo": "What you can do",
+  "@whatYouCanDo": {
+    "description": "Section header for community actions"
+  },
+  "shareTips": "Share Tips",
+  "@shareTips": {
+    "description": "Community action: share exercise tips"
+  },
+  "shareTipsDescription": "Help others with exercise execution tips and pro tricks",
+  "@shareTipsDescription": {
+    "description": "Description for sharing tips action"
+  },
+  "reportWarnings": "Report Warnings",
+  "@reportWarnings": {
+    "description": "Community action: report warnings"
+  },
+  "reportWarningsDescription": "Flag exercises with safety concerns or common mistakes",
+  "@reportWarningsDescription": {
+    "description": "Description for reporting warnings action"
+  },
+  "suggestCorrections": "Suggest Corrections",
+  "@suggestCorrections": {
+    "description": "Community action: suggest corrections"
+  },
+  "suggestCorrectionsDescription": "Improve exercise descriptions and muscle targeting info",
+  "@suggestCorrectionsDescription": {
+    "description": "Description for suggesting corrections action"
+  },
+  "xpSystem": "XP System",
+  "@xpSystem": {
+    "description": "Section header for XP rewards explanation"
+  },
+  "submitContribution": "Submit contribution",
+  "@submitContribution": {
+    "description": "XP action: submitting a contribution"
+  },
+  "contributionApproved": "Contribution approved",
+  "@contributionApproved": {
+    "description": "XP action: when contribution is approved"
+  },
+  "contributionFeatured": "Contribution featured",
+  "@contributionFeatured": {
+    "description": "XP action: when contribution is featured"
+  },
+  "voteOnContribution": "Vote on contribution",
+  "@voteOnContribution": {
+    "description": "XP action: voting on a contribution"
+  },
+  "exploreCommunity": "Explore Community",
+  "@exploreCommunity": {
+    "description": "Button to start exploring community"
+  },
+  "underReview": "Under Review",
+  "@underReview": {
+    "description": "Contribution status: being reviewed"
+  },
+  "noContributionsYet": "No contributions yet",
+  "@noContributionsYet": {
+    "description": "Empty state title for feed"
+  },
+  "beFirstToContribute": "Be the first to share your knowledge!",
+  "@beFirstToContribute": {
+    "description": "Empty state subtitle for feed"
+  },
+  "noContributionsFromYou": "You haven't contributed yet",
+  "@noContributionsFromYou": {
+    "description": "Empty state title for my contributions"
+  },
+  "startContributing": "Share your first tip or suggestion",
+  "@startContributing": {
+    "description": "Empty state subtitle for my contributions"
+  },
+  "offline": "Offline",
+  "@offline": {
+    "description": "Network error state title"
+  },
+  "checkConnection": "Please check your internet connection",
+  "@checkConnection": {
+    "description": "Network error state subtitle"
+  },
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error state subtitle"
   }
 }

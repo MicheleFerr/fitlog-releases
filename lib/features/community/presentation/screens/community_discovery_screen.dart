@@ -14,10 +14,8 @@
 /// - Apple HIG compliant design
 library;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/features/community/domain/entities/contribution_filters.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
@@ -50,220 +48,32 @@ class _CommunityDiscoveryScreenState
 
   @override
   Widget build(BuildContext context) {
-    // ⚠️ ADMIN-ONLY CHECK
-    final userProfileAsync = ref.watch(userProfileProvider);
-
-    return userProfileAsync.when(
-      data: (userProfile) {
-        // 🐛 DEBUG: Log admin check
-        if (kDebugMode) {
-          debugPrint('🔍 [CommunityDiscovery] userProfile: ${userProfile?.uid}');
-          debugPrint('🔍 [CommunityDiscovery] isAdmin: ${userProfile?.isAdmin}');
-          debugPrint('🔍 [CommunityDiscovery] userProfile == null: ${userProfile == null}');
-        }
-
-        // Check if user is admin
-        if (userProfile == null || !userProfile.isAdmin) {
-          if (kDebugMode) {
-            debugPrint('❌ [CommunityDiscovery] Access DENIED - Not admin');
-          }
-          return _buildAdminOnlyScreen(context);
-        }
-
-        if (kDebugMode) {
-          debugPrint('✅ [CommunityDiscovery] Access GRANTED - Is admin');
-        }
-
-        // Admin user - show community
-        final searchResults = ref.watch(searchResultsProvider);
-        final activeFilters = ref.watch(activeFiltersProvider);
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(context.l10n.discover),
-            elevation: 0,
-            actions: [
-              // Admin badge
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: context.colors.tertiary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          AppIcons.shield,
-                          size: AppIconSize.small,
-                          color: context.colors.tertiary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Admin',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colors.tertiary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          body: Column(
-            children: [
-              // Search Bar
-              _buildSearchBar(),
-
-              // Filters & Sort Row
-              _buildFiltersRow(activeFilters),
-
-              // Results List
-              Expanded(
-                child: searchResults.when(
-                  data: (contributions) => _buildResultsList(contributions),
-                  loading: () => const LoadingIndicator(),
-                  error: (error, stack) => _buildErrorState(error),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      loading: () => const Scaffold(
-        body: Center(child: LoadingIndicator()),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('Error loading user profile: $error'),
-        ),
-      ),
-    );
-  }
-
-  /// Admin-only screen (non-admin users)
-  Widget _buildAdminOnlyScreen(BuildContext context) {
-    // Get current userProfile for debug info
-    final userProfileAsync = ref.watch(userProfileProvider);
-    final userProfile = userProfileAsync.valueOrNull;
+    // Community is now open to all users
+    final searchResults = ref.watch(searchResultsProvider);
+    final activeFilters = ref.watch(activeFiltersProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.discover),
         elevation: 0,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                AppIcons.shield,
-                size: AppIconSize.xxlarge * 2,
-                color: context.colors.onSurface.withValues(alpha: 0.3),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Admin Only',
-                style: context.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'This feature is currently restricted to administrators only.',
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Community discovery and contributions will be available to all users soon.',
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
+      body: Column(
+        children: [
+          // Search Bar
+          _buildSearchBar(),
 
-              // 🐛 DEBUG INFO (only in debug mode)
-              if (kDebugMode) ...[
-                const SizedBox(height: 32),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: context.colors.errorContainer.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: context.colors.error.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '🐛 DEBUG INFO',
-                        style: context.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.colors.error,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'UserProfile: ${userProfile == null ? "NULL ❌" : "✅ Loaded"}',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                      if (userProfile != null) ...[
-                        Text(
-                          'UID: ${userProfile.uid}',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                        Text(
-                          'isAdmin: ${userProfile.isAdmin ? "✅ true" : "❌ false"}',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontFamily: 'monospace',
-                            fontWeight: FontWeight.bold,
-                            color: userProfile.isAdmin
-                                ? context.colors.primary
-                                : context.colors.error,
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 8),
-                      Text(
-                        'To fix: Set isAdmin=true in Firestore',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: context.colors.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                      Text(
-                        'Path: users/{uid}/isAdmin',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'monospace',
-                          color: context.colors.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
+          // Filters & Sort Row
+          _buildFiltersRow(activeFilters),
+
+          // Results List
+          Expanded(
+            child: searchResults.when(
+              data: (contributions) => _buildResultsList(contributions),
+              loading: () => const LoadingIndicator(),
+              error: (error, stack) => _buildErrorState(error),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -4247,6 +4247,18 @@ abstract class AppLocalizations {
   /// **'AI Coach'**
   String get aiCoach;
 
+  /// AI Coach recovery insights setting title
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Insights'**
+  String get aiCoachRecoveryInsights;
+
+  /// AI Coach recovery insights setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Track readiness, muscle recovery, and overtraining risk'**
+  String get aiCoachRecoveryInsightsDesc;
+
   /// Suggestion chip: show personal records
   ///
   /// In en, this message translates to:
@@ -19200,6 +19212,36 @@ abstract class AppLocalizations {
   /// **'Form Cues'**
   String get formCues;
 
+  /// Expandable section title for reasoning transparency in AI coach
+  ///
+  /// In en, this message translates to:
+  /// **'Why this answer?'**
+  String get whyThisAnswer;
+
+  /// Error message when exercise image fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Image not available'**
+  String get imageNotAvailable;
+
+  /// Label for AI coach avatar in chat
+  ///
+  /// In en, this message translates to:
+  /// **'AI Coach'**
+  String get aiCoachLabel;
+
+  /// Label for user avatar in chat
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get userLabel;
+
+  /// Label for system messages in chat
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemMessageLabel;
+
   /// Description for warmup phase 1
   ///
   /// In en, this message translates to:
@@ -25086,35 +25128,35 @@ abstract class AppLocalizations {
   /// **'Routine updated ✓'**
   String get smartWorkoutCTARoutineUpdated;
 
-  /// Title for rest mode when user already worked out today
+  /// Rest mode title after completing workout
   ///
   /// In en, this message translates to:
-  /// **'💪 Enjoy your well-deserved rest'**
+  /// **'Great Work Today!'**
   String get smartWorkoutCTARestModeTitle;
 
-  /// Subtitle congratulating user on completed workout
+  /// Rest mode subtitle
   ///
   /// In en, this message translates to:
-  /// **'You crushed an amazing workout!'**
+  /// **'Time to recover. See you tomorrow!'**
   String get smartWorkoutCTARestModeSubtitle;
 
-  /// Total volume lifted in workout
+  /// Volume stat in rest mode
   ///
   /// In en, this message translates to:
-  /// **'Volume: {volume} kg'**
+  /// **'{volume} kg lifted'**
   String smartWorkoutCTARestModeVolume(String volume);
 
-  /// Total workout duration
+  /// Duration stat in rest mode
   ///
   /// In en, this message translates to:
-  /// **'Duration: {duration}'**
+  /// **'{duration} min'**
   String smartWorkoutCTARestModeDuration(String duration);
 
-  /// Total sets completed
+  /// Sets stat in rest mode
   ///
   /// In en, this message translates to:
-  /// **'Sets: {sets}'**
-  String smartWorkoutCTARestModeSets(int sets);
+  /// **'{sets} sets'**
+  String smartWorkoutCTARestModeSets(String sets);
 
   /// From quick wins migration - 11 occurrences
   ///
@@ -31272,10 +31314,10 @@ abstract class AppLocalizations {
   /// **'\"Need a new program?\" or \"Optimal frequency?\"'**
   String get onboardingPlanExample;
 
-  /// Pattern-based explanation for onboarding
+  /// Disclaimer explaining this is NOT AI - uses pattern matching
   ///
   /// In en, this message translates to:
-  /// **'💡 I analyze your real workout data locally using pattern-based insights. No AI cloud services needed!'**
+  /// **'⚠️ This is NOT artificial intelligence. Your coach uses pre-defined rules and templates to analyze your workout data locally. All responses are based on patterns, not AI-generated content.'**
   String get onboardingPatternExplanation;
 
   /// Onboarding dismissal button
@@ -33138,10 +33180,10 @@ abstract class AppLocalizations {
   /// **'Sending...'**
   String get sending;
 
-  /// Button label to submit contribution
+  /// XP action: submitting a contribution
   ///
   /// In en, this message translates to:
-  /// **'Submit Contribution'**
+  /// **'Submit contribution'**
   String get submitContribution;
 
   /// Label for exercise field
@@ -34973,6 +35015,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Template'**
   String get createTemplateButton;
+
+  /// Error state title for Smart Workout CTA
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get smartWorkoutCTAErrorTitle;
+
+  /// Insufficient data state title
+  ///
+  /// In en, this message translates to:
+  /// **'Building Your Profile'**
+  String get smartWorkoutCTAInsufficientDataTitle;
+
+  /// Insufficient data state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Complete {remaining} more workouts to unlock smart suggestions'**
+  String smartWorkoutCTAInsufficientDataSubtitle(int remaining);
+
+  /// Progress indicator for insufficient data state
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} workouts completed'**
+  String smartWorkoutCTAInsufficientDataProgress(int count, int total);
+
+  /// Ready state title showing suggested workout
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested for You'**
+  String get smartWorkoutCTAReadyTitle;
+
+  /// Start workout button text
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get smartWorkoutCTAStartButton;
+
+  /// Warning banner for antagonist muscle conflict
+  ///
+  /// In en, this message translates to:
+  /// **'{antagonist} still recovering - consider waiting'**
+  String smartWorkoutCTAWarningBanner(String antagonist);
+
+  /// Proceed anyway button when there is a warning
+  ///
+  /// In en, this message translates to:
+  /// **'Start Anyway'**
+  String get smartWorkoutCTAProceedAnyway;
+
+  /// Rejection reason picker title
+  ///
+  /// In en, this message translates to:
+  /// **'Not feeling it?'**
+  String get smartWorkoutCTAReasonPickerTitle;
+
+  /// Rejection reason picker subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us why you\'re skipping {templateName} so we can improve suggestions'**
+  String smartWorkoutCTAReasonPickerSubtitle(String templateName);
+
+  /// Custom reason text field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us more (optional)'**
+  String get smartWorkoutCTAReasonPickerCustomHint;
+
+  /// Confirm rejection reason button
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get smartWorkoutCTAReasonPickerConfirm;
+
+  /// Rejection reason: too tired
+  ///
+  /// In en, this message translates to:
+  /// **'Too tired today'**
+  String get smartWorkoutCTAReasonTooTired;
+
+  /// Rejection reason: no time
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough time'**
+  String get smartWorkoutCTAReasonNoTime;
+
+  /// Rejection reason: injury
+  ///
+  /// In en, this message translates to:
+  /// **'Injury or pain'**
+  String get smartWorkoutCTAReasonInjury;
+
+  /// Rejection reason: not in mood
+  ///
+  /// In en, this message translates to:
+  /// **'Not in the mood'**
+  String get smartWorkoutCTAReasonNotInMood;
+
+  /// Rejection reason: other
+  ///
+  /// In en, this message translates to:
+  /// **'Other reason'**
+  String get smartWorkoutCTAReasonOther;
+
+  /// Tab title for user's own contributions
+  ///
+  /// In en, this message translates to:
+  /// **'My Contributions'**
+  String get myContributions;
+
+  /// Tab title for community guide/onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Guide'**
+  String get guide;
+
+  /// Button to add a new contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute'**
+  String get contribute;
+
+  /// Community onboarding welcome title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to the Community!'**
+  String get welcomeToCommunity;
+
+  /// Community onboarding description
+  ///
+  /// In en, this message translates to:
+  /// **'Share your knowledge, help others improve, and earn XP by contributing to the fitness community.'**
+  String get communityDescription;
+
+  /// Section header for community actions
+  ///
+  /// In en, this message translates to:
+  /// **'What you can do'**
+  String get whatYouCanDo;
+
+  /// Community action: share exercise tips
+  ///
+  /// In en, this message translates to:
+  /// **'Share Tips'**
+  String get shareTips;
+
+  /// Description for sharing tips action
+  ///
+  /// In en, this message translates to:
+  /// **'Help others with exercise execution tips and pro tricks'**
+  String get shareTipsDescription;
+
+  /// Community action: report warnings
+  ///
+  /// In en, this message translates to:
+  /// **'Report Warnings'**
+  String get reportWarnings;
+
+  /// Description for reporting warnings action
+  ///
+  /// In en, this message translates to:
+  /// **'Flag exercises with safety concerns or common mistakes'**
+  String get reportWarningsDescription;
+
+  /// Community action: suggest corrections
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest Corrections'**
+  String get suggestCorrections;
+
+  /// Description for suggesting corrections action
+  ///
+  /// In en, this message translates to:
+  /// **'Improve exercise descriptions and muscle targeting info'**
+  String get suggestCorrectionsDescription;
+
+  /// Section header for XP rewards explanation
+  ///
+  /// In en, this message translates to:
+  /// **'XP System'**
+  String get xpSystem;
+
+  /// XP action: when contribution is approved
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution approved'**
+  String get contributionApproved;
+
+  /// XP action: when contribution is featured
+  ///
+  /// In en, this message translates to:
+  /// **'Contribution featured'**
+  String get contributionFeatured;
+
+  /// XP action: voting on a contribution
+  ///
+  /// In en, this message translates to:
+  /// **'Vote on contribution'**
+  String get voteOnContribution;
+
+  /// Button to start exploring community
+  ///
+  /// In en, this message translates to:
+  /// **'Explore Community'**
+  String get exploreCommunity;
+
+  /// Contribution status: being reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'Under Review'**
+  String get underReview;
+
+  /// Empty state title for feed
+  ///
+  /// In en, this message translates to:
+  /// **'No contributions yet'**
+  String get noContributionsYet;
+
+  /// Empty state subtitle for feed
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to share your knowledge!'**
+  String get beFirstToContribute;
+
+  /// Empty state title for my contributions
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t contributed yet'**
+  String get noContributionsFromYou;
+
+  /// Empty state subtitle for my contributions
+  ///
+  /// In en, this message translates to:
+  /// **'Share your first tip or suggestion'**
+  String get startContributing;
+
+  /// Network error state title
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// Network error state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection'**
+  String get checkConnection;
+
+  /// Generic error state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
 }
 
 class _AppLocalizationsDelegate

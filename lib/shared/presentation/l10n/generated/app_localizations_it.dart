@@ -2257,6 +2257,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get aiCoach => 'AI Coach';
 
   @override
+  String get aiCoachRecoveryInsights => 'Insights di Recupero';
+
+  @override
+  String get aiCoachRecoveryInsightsDesc =>
+      'Monitora prontezza, recupero muscolare e rischio sovrallenamento';
+
+  @override
   String get showPR => 'Mostra PR';
 
   @override
@@ -10930,6 +10937,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get formCues => 'Punti Tecnici';
 
   @override
+  String get whyThisAnswer => 'Perché questa risposta?';
+
+  @override
+  String get imageNotAvailable => 'Immagine non disponibile';
+
+  @override
+  String get aiCoachLabel => 'Coach';
+
+  @override
+  String get userLabel => 'Tu';
+
+  @override
+  String get systemMessageLabel => 'Sistema';
+
+  @override
   String get warmupPhase1Description =>
       'Mobilizzazione articolare e stretching dinamico (5-10 min)';
 
@@ -14270,25 +14292,25 @@ class AppLocalizationsIt extends AppLocalizations {
   String get smartWorkoutCTARoutineUpdated => 'Routine aggiornata ✓';
 
   @override
-  String get smartWorkoutCTARestModeTitle => '💪 Goditi il meritato riposo';
+  String get smartWorkoutCTARestModeTitle => 'Ottimo lavoro oggi!';
 
   @override
   String get smartWorkoutCTARestModeSubtitle =>
-      'Hai fatto un allenamento pazzesco!';
+      'È ora di recuperare. Ci vediamo domani!';
 
   @override
   String smartWorkoutCTARestModeVolume(String volume) {
-    return 'Volume: $volume kg';
+    return '$volume kg sollevati';
   }
 
   @override
   String smartWorkoutCTARestModeDuration(String duration) {
-    return 'Durata: $duration';
+    return '$duration min';
   }
 
   @override
-  String smartWorkoutCTARestModeSets(int sets) {
-    return 'Serie: $sets';
+  String smartWorkoutCTARestModeSets(String sets) {
+    return '$sets serie';
   }
 
   @override
@@ -17638,7 +17660,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onboardingPatternExplanation =>
-      '💡 Analizzo i tuoi dati di allenamento localmente usando analisi basate su pattern. Nessun servizio AI cloud necessario!';
+      '⚠️ Questo NON è un\'intelligenza artificiale. Il tuo coach usa regole e modelli predefiniti per analizzare i tuoi dati di allenamento localmente. Tutte le risposte sono basate su pattern, non contenuto generato da AI.';
 
   @override
   String get onboardingGotIt => 'Perfetto!';
@@ -18651,7 +18673,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get sending => 'Invio...';
 
   @override
-  String get submitContribution => 'Invia Contributo';
+  String get submitContribution => 'Invia contributo';
 
   @override
   String get exerciseLabel => 'Esercizio';
@@ -19721,4 +19743,146 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get createTemplateButton => 'Crea Template';
+
+  @override
+  String get smartWorkoutCTAErrorTitle => 'Qualcosa è andato storto';
+
+  @override
+  String get smartWorkoutCTAInsufficientDataTitle =>
+      'Costruendo il tuo profilo';
+
+  @override
+  String smartWorkoutCTAInsufficientDataSubtitle(int remaining) {
+    return 'Completa altri $remaining allenamenti per sbloccare i suggerimenti smart';
+  }
+
+  @override
+  String smartWorkoutCTAInsufficientDataProgress(int count, int total) {
+    return '$count di $total allenamenti completati';
+  }
+
+  @override
+  String get smartWorkoutCTAReadyTitle => 'Suggerito per te';
+
+  @override
+  String get smartWorkoutCTAStartButton => 'Inizia Allenamento';
+
+  @override
+  String smartWorkoutCTAWarningBanner(String antagonist) {
+    return '$antagonist ancora in recupero - considera di aspettare';
+  }
+
+  @override
+  String get smartWorkoutCTAProceedAnyway => 'Inizia comunque';
+
+  @override
+  String get smartWorkoutCTAReasonPickerTitle => 'Non ti va?';
+
+  @override
+  String smartWorkoutCTAReasonPickerSubtitle(String templateName) {
+    return 'Dicci perché salti $templateName così possiamo migliorare i suggerimenti';
+  }
+
+  @override
+  String get smartWorkoutCTAReasonPickerCustomHint =>
+      'Dicci di più (opzionale)';
+
+  @override
+  String get smartWorkoutCTAReasonPickerConfirm => 'Conferma';
+
+  @override
+  String get smartWorkoutCTAReasonTooTired => 'Troppo stanco oggi';
+
+  @override
+  String get smartWorkoutCTAReasonNoTime => 'Non ho abbastanza tempo';
+
+  @override
+  String get smartWorkoutCTAReasonInjury => 'Infortunio o dolore';
+
+  @override
+  String get smartWorkoutCTAReasonNotInMood => 'Non sono dell\'umore';
+
+  @override
+  String get smartWorkoutCTAReasonOther => 'Altro motivo';
+
+  @override
+  String get myContributions => 'I Miei Contributi';
+
+  @override
+  String get guide => 'Guida';
+
+  @override
+  String get contribute => 'Contribuisci';
+
+  @override
+  String get welcomeToCommunity => 'Benvenuto nella Community!';
+
+  @override
+  String get communityDescription =>
+      'Condividi le tue conoscenze, aiuta gli altri a migliorare e guadagna XP contribuendo alla community fitness.';
+
+  @override
+  String get whatYouCanDo => 'Cosa puoi fare';
+
+  @override
+  String get shareTips => 'Condividi Consigli';
+
+  @override
+  String get shareTipsDescription =>
+      'Aiuta gli altri con consigli sull\'esecuzione e trucchi da pro';
+
+  @override
+  String get reportWarnings => 'Segnala Avvertenze';
+
+  @override
+  String get reportWarningsDescription =>
+      'Segnala esercizi con problemi di sicurezza o errori comuni';
+
+  @override
+  String get suggestCorrections => 'Suggerisci Correzioni';
+
+  @override
+  String get suggestCorrectionsDescription =>
+      'Migliora le descrizioni degli esercizi e le info sui muscoli coinvolti';
+
+  @override
+  String get xpSystem => 'Sistema XP';
+
+  @override
+  String get contributionApproved => 'Contributo approvato';
+
+  @override
+  String get contributionFeatured => 'Contributo in evidenza';
+
+  @override
+  String get voteOnContribution => 'Vota contributo';
+
+  @override
+  String get exploreCommunity => 'Esplora Community';
+
+  @override
+  String get underReview => 'In Revisione';
+
+  @override
+  String get noContributionsYet => 'Nessun contributo ancora';
+
+  @override
+  String get beFirstToContribute =>
+      'Sii il primo a condividere le tue conoscenze!';
+
+  @override
+  String get noContributionsFromYou => 'Non hai ancora contribuito';
+
+  @override
+  String get startContributing =>
+      'Condividi il tuo primo consiglio o suggerimento';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get checkConnection => 'Controlla la tua connessione internet';
+
+  @override
+  String get somethingWentWrong => 'Qualcosa è andato storto';
 }
