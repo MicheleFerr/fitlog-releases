@@ -130,7 +130,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Storico Esercizi',
+                        context.l10n.exerciseHistory,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -145,14 +145,14 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                     onChanged: (value) {
                       setState(() {
                         _searchQuery = value;
-                        if (_selectedExercise != null && 
+                        if (_selectedExercise != null &&
                             !_filteredExercises.contains(_selectedExercise)) {
                           _selectedExercise = null;
                         }
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: 'Cerca un esercizio...',
+                      hintText: context.l10n.searchExercises,
                       prefixIcon: const SemanticIcon(
   icon: AppIcons.workout,
   semanticLabel: 'Workout',
@@ -211,7 +211,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
             ),
             const SizedBox(height: 16),
             Text(
-              'Nessun esercizio trovato',
+              context.l10n.noExercisesFound,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -288,7 +288,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
 ),
                             const SizedBox(width: 4),
                             Text(
-                              '${activities.length} sessioni',
+                              context.l10n.sessionsCount(activities.length),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -302,7 +302,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
 ),
                             const SizedBox(width: 4),
                             Text(
-                              _getRelativeTime(lastActivity.createdAt),
+                              _getRelativeTime(context, lastActivity.createdAt),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -311,7 +311,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Volume totale: ${(totalVolume / 1000).toStringAsFixed(1)}k kg',
+                          context.l10n.totalVolumeWithValue((totalVolume / 1000).toStringAsFixed(1)),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
@@ -432,28 +432,28 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem(
-            'Max Weight',
+            context.l10n.maxWeight,
             '${maxWeight.toStringAsFixed(1)} kg',
             AppIcons.workout,
             theme.colorScheme.primary,
             theme,
           ),
           _buildStatItem(
-            'Total Sets',
+            context.l10n.totalSets,
             totalSets.toString(),
             AppIcons.formatListNumbered,
             context.colors.secondary,
             theme,
           ),
           _buildStatItem(
-            'Total Reps',
+            context.l10n.totalRepsLabel,
             totalReps.toString(),
             AppIcons.repeat,
             context.colors.success,
             theme,
           ),
           _buildStatItem(
-            'Total Volume',
+            context.l10n.totalVolume,
             '${(totalVolume / 1000).toStringAsFixed(1)}k',
             AppIcons.barChart,
             context.colors.primary,
@@ -608,7 +608,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'LATEST',
+                      context.l10n.latestTag,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -619,14 +619,14 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
                 ],
                 Expanded(
                   child: Text(
-                    DateFormat('EEEE, d MMMM yyyy', 'it').format(activity.createdAt),
+                    DateFormat('EEEE, d MMMM yyyy', Localizations.localeOf(context).languageCode).format(activity.createdAt),
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 Text(
-                  _getRelativeTime(activity.createdAt),
+                  _getRelativeTime(context, activity.createdAt),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -687,7 +687,7 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
 ),
                           const SizedBox(width: 4),
                           Text(
-                            '$reps reps',
+                            context.l10n.repsWithCount(reps),
                             style: theme.textTheme.bodyMedium,
                           ),
                           ...[
@@ -727,11 +727,11 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total: ${activity.sets.length} sets',
+                  context.l10n.totalSetsWithCount(activity.sets.length),
                   style: theme.textTheme.bodyMedium,
                 ),
                 Text(
-                  'Volume: ${(totalVolume / 1000).toStringAsFixed(1)}k kg',
+                  context.l10n.volumeWithValue((totalVolume / 1000).toStringAsFixed(1)),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
@@ -763,22 +763,22 @@ class _ExerciseHistorySearchModalState extends State<ExerciseHistorySearchModal>
     return context.colors.success;
   }
   
-  String _getRelativeTime(DateTime date) {
+  String _getRelativeTime(BuildContext context, DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
-      return 'Oggi';
+      return context.l10n.today;
     } else if (difference.inDays == 1) {
-      return 'Ieri';
+      return context.l10n.yesterday;
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} giorni fa';
+      return context.l10n.daysAgo(difference.inDays);
     } else if (difference.inDays < 30) {
       final weeks = (difference.inDays / 7).round();
-      return '$weeks ${weeks == 1 ? "settimana" : "settimane"} fa';
+      return context.l10n.weeksAgo(weeks);
     } else {
       final months = (difference.inDays / 30).round();
-      return '$months ${months == 1 ? "mese" : "mesi"} fa';
+      return context.l10n.monthsAgo(months);
     }
   }
 }

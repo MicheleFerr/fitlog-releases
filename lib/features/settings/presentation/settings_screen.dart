@@ -13,7 +13,6 @@ import 'package:gymbro_flutter_new/features/strength_standards/presentation/prov
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_manager_screen.dart';
-import 'package:gymbro_flutter_new/debug/achievement_debug_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
@@ -81,10 +80,6 @@ class SettingsScreen extends ConsumerWidget {
             _buildAICoachSection(context),
             const SizedBox(height: 24),
 
-            // Notifications (v2.0)
-            _buildNotificationsSection(context),
-            const SizedBox(height: 24),
-
             // Health Sync (Apple Health / Health Connect)
             _buildHealthSyncSection(context),
             const SizedBox(height: 24),
@@ -96,50 +91,23 @@ class SettingsScreen extends ConsumerWidget {
             // Account Actions
             _buildAccountSection(context, ref),
 
-            // DEBUG: Achievement test (ferrara-michele only)
+            // DEBUG: Migration tool (ferrara-michele only)
             if (currentUser.value?.email?.toString().contains('ferrara-michele') == true)
               Padding(
                 padding: const EdgeInsets.only(top: 24),
-                child: Column(
-                  children: [
-                    // Migrate Analytics Button
-                    Center(
-                      child: FilledButton.tonalIcon(
-                        onPressed: () => showMigrationDialog(context, ref),
-                        icon: const SemanticIcon(
-  icon: AppIcons.analytics,
-  semanticLabel: 'Analytics',
-),
-                        label: Text(context.l10n.migrateWorkoutHistory),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: context.colors.primary.withValues(alpha: 0.1),
-                          foregroundColor: context.colors.primary,
-                        ),
-                      ),
+                child: Center(
+                  child: FilledButton.tonalIcon(
+                    onPressed: () => showMigrationDialog(context, ref),
+                    icon: const SemanticIcon(
+                      icon: AppIcons.analytics,
+                      semanticLabel: 'Analytics',
                     ),
-                    const SizedBox(height: 12),
-                    // Achievement Test Button
-                    Center(
-                      child: FilledButton.tonalIcon(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AchievementDebugScreen(),
-                            ),
-                          );
-                        },
-                        icon: const SemanticIcon(
-  icon: AppIcons.star,
-  semanticLabel: 'Star',
-),
-                        label: const Text('🧪 Test 13 Achievements'),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
-                          foregroundColor: context.colors.secondary,
-                        ),
-                      ),
+                    label: Text(context.l10n.migrateWorkoutHistory),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+                      foregroundColor: context.colors.primary,
                     ),
-                  ],
+                  ),
                 ),
               ),
           ],
@@ -536,50 +504,6 @@ class SettingsScreen extends ConsumerWidget {
                 semanticLabel: 'Analytics',
               ),
               onTap: () => context.pushNamed('ai-coach'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotificationsSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                SemanticIcon(
-                  icon: AppIcons.notifications,
-                  semanticLabel: 'Notifications',
-                  size: AppIconSize.medium,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.notifications,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Notification Settings Link
-            _buildSettingTile(
-              context,
-              title: context.l10n.notificationSettings,
-              subtitle: context.l10n.notificationSettingsDesc,
-              leading: const SemanticIcon(
-  icon: AppIcons.notifications,
-  semanticLabel: 'Notifications',
-),
-              onTap: () => context.pushNamed('notifications'),
             ),
           ],
         ),

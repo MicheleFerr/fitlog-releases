@@ -67,7 +67,6 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exerc
 // Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/screens/notification_settings_screen_v2.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/screens/health_sync_settings_screen.dart';
 
 // Profile branch
@@ -332,13 +331,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                         path: 'debug-log',
                         name: AppRoutes.debugLogSettingsName,
                         builder: (context, state) => const DebugLogSettingsScreen(),
-                      ),
-                      // Notifications
-                      GoRoute(
-                        path: 'notifications',
-                        name: AppRoutes.notificationsName,
-                        builder: (context, state) =>
-                            const NotificationSettingsScreenV2(),
                       ),
                       // Health sync
                       GoRoute(

@@ -6084,7 +6084,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String volumeWithValue(String value) {
-    return 'Volume: $value kg';
+    return 'Volume: ${value}k kg';
   }
 
   @override
@@ -20302,4 +20302,30 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get weeklyStatsStart =>
       'New week, new opportunities! Time to crush it!';
+
+  @override
+  String sessionsCount(int count) {
+    return '$count sessions';
+  }
+
+  @override
+  String totalVolumeWithValue(String value) {
+    return 'Total volume: ${value}k kg';
+  }
+
+  @override
+  String get totalRepsLabel => 'Total Reps';
+
+  @override
+  String get latestTag => 'LATEST';
+
+  @override
+  String totalSetsWithCount(int count) {
+    return 'Total: $count sets';
+  }
+
+  @override
+  String repsWithCount(int count) {
+    return '$count reps';
+  }
 }

@@ -14801,5 +14801,58 @@
   "weeklyStatsStart": "Nuova settimana, nuove opportunità! Tempo di spaccare!",
   "@weeklyStatsStart": {
     "description": "Messaggio motivazionale per 0 allenamenti questa settimana"
+  },
+  "sessionsCount": "{count} sessioni",
+  "@sessionsCount": {
+    "description": "Numero di sessioni",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalVolumeWithValue": "Volume totale: {value}k kg",
+  "@totalVolumeWithValue": {
+    "description": "Volume totale con valore",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "totalRepsLabel": "Reps Totali",
+  "@totalRepsLabel": {
+    "description": "Etichetta per statistica ripetizioni totali"
+  },
+  "latestTag": "ULTIMA",
+  "@latestTag": {
+    "description": "Tag per elemento più recente"
+  },
+  "totalSetsWithCount": "Totale: {count} serie",
+  "@totalSetsWithCount": {
+    "description": "Serie totali con conteggio",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeWithValue": "Volume: {value}k kg",
+  "@volumeWithValue": {
+    "description": "Volume con valore",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "repsWithCount": "{count} reps",
+  "@repsWithCount": {
+    "description": "Ripetizioni con conteggio",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

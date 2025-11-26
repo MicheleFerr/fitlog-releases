@@ -113,9 +113,6 @@ abstract final class AppRoutes {
   static const String debugLogSettingsPath = '/settings/debug-log';
   static const String debugLogSettingsName = 'debug-log-settings';
 
-  static const String notificationsPath = '/settings/notifications';
-  static const String notificationsName = 'notifications';
-
   static const String healthSyncPath = '/settings/health-sync';
   static const String healthSyncName = 'health-sync';
 

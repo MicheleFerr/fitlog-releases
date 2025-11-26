@@ -11039,10 +11039,10 @@ abstract class AppLocalizations {
   /// **'Sets Details'**
   String get setsDetails;
 
-  /// Volume label with value
+  /// Volume with value
   ///
   /// In en, this message translates to:
-  /// **'Volume: {value} kg'**
+  /// **'Volume: {value}k kg'**
   String volumeWithValue(String value);
 
   /// RPE label with value
@@ -36281,6 +36281,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New week, new opportunities! Time to crush it!'**
   String get weeklyStatsStart;
+
+  /// Number of sessions
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sessions'**
+  String sessionsCount(int count);
+
+  /// Total volume with value
+  ///
+  /// In en, this message translates to:
+  /// **'Total volume: {value}k kg'**
+  String totalVolumeWithValue(String value);
+
+  /// Label for total reps statistic
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reps'**
+  String get totalRepsLabel;
+
+  /// Tag for latest/most recent item
+  ///
+  /// In en, this message translates to:
+  /// **'LATEST'**
+  String get latestTag;
+
+  /// Total sets with count
+  ///
+  /// In en, this message translates to:
+  /// **'Total: {count} sets'**
+  String totalSetsWithCount(int count);
+
+  /// Reps with count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reps'**
+  String repsWithCount(int count);
 }
 
 class _AppLocalizationsDelegate

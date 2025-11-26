@@ -25434,5 +25434,58 @@
   "weeklyStatsStart": "New week, new opportunities! Time to crush it!",
   "@weeklyStatsStart": {
     "description": "Motivational message for 0 workouts this week"
+  },
+  "sessionsCount": "{count} sessions",
+  "@sessionsCount": {
+    "description": "Number of sessions",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalVolumeWithValue": "Total volume: {value}k kg",
+  "@totalVolumeWithValue": {
+    "description": "Total volume with value",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "totalRepsLabel": "Total Reps",
+  "@totalRepsLabel": {
+    "description": "Label for total reps statistic"
+  },
+  "latestTag": "LATEST",
+  "@latestTag": {
+    "description": "Tag for latest/most recent item"
+  },
+  "totalSetsWithCount": "Total: {count} sets",
+  "@totalSetsWithCount": {
+    "description": "Total sets with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeWithValue": "Volume: {value}k kg",
+  "@volumeWithValue": {
+    "description": "Volume with value",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "repsWithCount": "{count} reps",
+  "@repsWithCount": {
+    "description": "Reps with count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

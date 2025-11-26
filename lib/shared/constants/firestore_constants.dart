@@ -87,8 +87,6 @@ class FirestoreUserSubcollections {
   static const String prCelebrations = 'pr_celebrations';
   static const String recoveryHistory = 'recovery_history';
   static const String hrvReadings = 'hrv_readings';
-  static const String notificationSettings = 'notificationSettings';
-  static const String notificationHistory = 'notificationHistory';
 }
 
 // ============================================================================
@@ -274,17 +272,6 @@ class FirestoreFields {
 
   /// Fatigue level
   static const String fatigueLevel = 'fatigueLevel';
-
-  // ==================== NOTIFICATIONS ====================
-
-  /// Notification type
-  static const String notificationType = 'notificationType';
-
-  /// Enable workout reminders
-  static const String enableWorkoutReminders = 'enableWorkoutReminders';
-
-  /// Enable recovery alerts
-  static const String enableRecoveryAlerts = 'enableRecoveryAlerts';
 
   /// Settings version number
   static const String settingsVersion = 'settingsVersion';

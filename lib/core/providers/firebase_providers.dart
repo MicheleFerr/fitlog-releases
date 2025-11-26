@@ -8,7 +8,6 @@
 /// CANONICAL Firebase providers - Single Source of Truth
 ///
 /// Consolidates duplicate providers from:
-/// - features/notifications/presentation/providers/notification_settings_provider_v2.dart
 /// - features/feedback/presentation/providers/unified_feedback_provider.dart
 /// - features/admin/presentation/providers/exercise_review_provider.dart
 library;
