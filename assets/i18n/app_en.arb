@@ -1640,6 +1640,18 @@
   "@themeSystemDesc": {
     "description": "System theme description"
   },
+  "allSettings": "All Settings",
+  "@allSettings": {
+    "description": "Button to open full settings screen"
+  },
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Language selection title"
+  },
+  "systemDefault": "System Default",
+  "@systemDefault": {
+    "description": "System default language option"
+  },
   "fontSize": "Font Size",
   "@fontSize": {
     "description": "Font size setting"

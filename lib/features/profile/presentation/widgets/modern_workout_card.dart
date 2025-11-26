@@ -232,7 +232,7 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
     } else if (difference == 1) {
       return context.l10n.yesterdayAt(timeString);
     } else {
-      return '$difference ${context.l10n.daysAgo}';
+      return context.l10n.daysAgo(difference);
     }
   }
 

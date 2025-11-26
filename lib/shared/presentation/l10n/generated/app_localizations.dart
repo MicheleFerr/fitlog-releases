@@ -2455,6 +2455,24 @@ abstract class AppLocalizations {
   /// **'Follow system setting'**
   String get themeSystemDesc;
 
+  /// Button to open full settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'All Settings'**
+  String get allSettings;
+
+  /// Language selection title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// System default language option
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get systemDefault;
+
   /// Font size setting
   ///
   /// In en, this message translates to:

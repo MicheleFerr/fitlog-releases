@@ -1297,6 +1297,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeSystemDesc => 'Follow system setting';
 
   @override
+  String get allSettings => 'All Settings';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get systemDefault => 'System Default';
+
+  @override
   String get fontSize => 'Font Size';
 
   @override

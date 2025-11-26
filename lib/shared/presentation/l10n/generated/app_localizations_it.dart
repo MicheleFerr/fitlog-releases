@@ -1306,6 +1306,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get themeSystemDesc => 'Segui l\'impostazione di sistema';
 
   @override
+  String get allSettings => 'Tutte le Impostazioni';
+
+  @override
+  String get selectLanguage => 'Seleziona Lingua';
+
+  @override
+  String get systemDefault => 'Predefinito di Sistema';
+
+  @override
   String get fontSize => 'Dimensione Carattere';
 
   @override

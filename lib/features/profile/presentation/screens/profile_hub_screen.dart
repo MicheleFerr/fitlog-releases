@@ -15,13 +15,14 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/compact_profile_header.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/metric_ring_card.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/quick_action_chips.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/modern_workout_card.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_workout_calendar.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 
 /// Profile hub screen - Apple Fitness+ style design
@@ -67,7 +68,7 @@ class _ProfileHubContent extends ConsumerWidget {
           SliverToBoxAdapter(
             child: CompactProfileHeader(
               userName: userName,
-              onSettingsTap: () => context.pushNamed(AppRoutes.settingsName),
+              onSettingsTap: () => showSettingsBottomSheet(context),
               onEditTap: () => context.pushNamed(AppRoutes.editProfileName),
             ),
           ),
@@ -110,22 +111,12 @@ class _ProfileHubContent extends ConsumerWidget {
   }
 }
 
-/// Metric rings section with 3 progress indicators
+/// Metric rings section with weekly calendar and 2 progress indicators
 class _MetricRingsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weeklyWorkoutAsync = ref.watch(weeklyWorkoutProgressProvider);
     final weeklyVolumeAsync = ref.watch(weeklyVolumeProgressProvider);
     final streakWeeksAsync = ref.watch(streakWeeksProgressProvider);
-
-    // Default values while loading
-    final weeklyWorkout = weeklyWorkoutAsync.valueOrNull ??
-        const WeeklyWorkoutProgress(
-          current: 0,
-          goal: 2,
-          percentage: 0,
-          isComplete: false,
-        );
 
     final weeklyVolume = weeklyVolumeAsync.valueOrNull ??
         const WeeklyVolumeProgress(
@@ -143,81 +134,54 @@ class _MetricRingsSection extends ConsumerWidget {
           isComplete: false,
         );
 
-    return MetricRingsRow(
-      rings: [
-        // Streak Weeks
-        MetricRingConfig(
-          title: context.l10n.streakWeeks,
-          value: context.l10n.streakWeeksValue(
-            streakWeeks.current,
-            streakWeeks.goal,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          // Weekly workout calendar (Mon-Sun)
+          WeeklyWorkoutCalendar(
+            onTap: () => context.pushNamed(AppRoutes.streakCalendarName),
           ),
-          percentage: streakWeeks.percentage,
-          color: context.colors.success,
-          onTap: () => _showGoalSheet(
-            context,
-            ref,
-            _GoalType.streakWeeks,
-            streakWeeks.goal,
-          ),
-        ),
+          const SizedBox(height: 12),
 
-        // Workout Week
-        MetricRingConfig(
-          title: context.l10n.workoutWeek,
-          value: context.l10n.workoutsWeekGoal(
-            weeklyWorkout.current,
-            weeklyWorkout.goal,
-          ),
-          percentage: weeklyWorkout.percentage,
-          color: context.colors.primary,
-          onTap: () => _showGoalSheet(
-            context,
-            ref,
-            _GoalType.workoutsPerWeek,
-            weeklyWorkout.goal,
-          ),
-        ),
+          // Two metric rings below
+          Row(
+            children: [
+              // Streak Weeks (consecutive weeks with 2+ workouts)
+              Expanded(
+                child: MetricRingCard(
+                  config: MetricRingConfig(
+                    title: context.l10n.streakWeeks,
+                    value: '${streakWeeks.current}',
+                    percentage: 1.0, // Always full - it's a count, not a goal
+                    color: context.colors.success,
+                    onTap: () => context.pushNamed(AppRoutes.streakCalendarName),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
 
-        // Volume Goal
-        MetricRingConfig(
-          title: context.l10n.volumeGoal,
-          value: context.l10n.volumePercentage(
-            (weeklyVolume.percentage * 100).round(),
+              // Volume Goal
+              Expanded(
+                child: MetricRingCard(
+                  config: MetricRingConfig(
+                    title: context.l10n.volumeGoal,
+                    value: context.l10n.volumePercentage(
+                      (weeklyVolume.percentage * 100).round(),
+                    ),
+                    percentage: weeklyVolume.percentage,
+                    color: context.colors.secondary,
+                    onTap: () => _showVolumeGoalSheet(
+                      context,
+                      ref,
+                      weeklyVolume.goalKg,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          percentage: weeklyVolume.percentage,
-          color: context.colors.secondary,
-          onTap: () => _showVolumeGoalSheet(
-            context,
-            ref,
-            weeklyVolume.goalKg,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _showGoalSheet(
-    BuildContext context,
-    WidgetRef ref,
-    _GoalType type,
-    int currentValue,
-  ) {
-    HapticFeedback.lightImpact();
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => _GoalEditSheet(
-        type: type,
-        currentValue: currentValue,
-        onSave: (newValue) async {
-          final notifier = ref.read(userGoalsProvider.notifier);
-          switch (type) {
-            case _GoalType.workoutsPerWeek:
-              await notifier.setWorkoutsPerWeek(newValue);
-            case _GoalType.streakWeeks:
-              await notifier.setStreakWeeksGoal(newValue);
-          }
-        },
+        ],
       ),
     );
   }
@@ -236,144 +200,6 @@ class _MetricRingsSection extends ConsumerWidget {
           final notifier = ref.read(userGoalsProvider.notifier);
           await notifier.setWeeklyVolumeTarget(newValue);
         },
-      ),
-    );
-  }
-}
-
-enum _GoalType { workoutsPerWeek, streakWeeks }
-
-/// Bottom sheet for editing numeric goals
-class _GoalEditSheet extends StatefulWidget {
-  const _GoalEditSheet({
-    required this.type,
-    required this.currentValue,
-    required this.onSave,
-  });
-
-  final _GoalType type;
-  final int currentValue;
-  final Future<void> Function(int) onSave;
-
-  @override
-  State<_GoalEditSheet> createState() => _GoalEditSheetState();
-}
-
-class _GoalEditSheetState extends State<_GoalEditSheet> {
-  late int _value;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.currentValue;
-  }
-
-  int get _minValue => widget.type == _GoalType.workoutsPerWeek ? 1 : 1;
-  int get _maxValue => widget.type == _GoalType.workoutsPerWeek ? 7 : 52;
-
-  String get _title {
-    switch (widget.type) {
-      case _GoalType.workoutsPerWeek:
-        return context.l10n.workoutsPerWeek;
-      case _GoalType.streakWeeks:
-        return context.l10n.streakWeeks;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            context.l10n.modifyGoal,
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _title,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Value selector
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: _value > _minValue
-                    ? () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _value--);
-                      }
-                    : null,
-                icon: Icon(
-                  AppIcons.removeCircleOutline,
-                  size: 32,
-                  color: _value > _minValue
-                      ? context.colors.primary
-                      : context.colors.onSurfaceVariant.withValues(alpha: 0.3),
-                ),
-              ),
-              const SizedBox(width: 24),
-              Text(
-                '$_value',
-                style: context.textTheme.displayMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 24),
-              IconButton(
-                onPressed: _value < _maxValue
-                    ? () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _value++);
-                      }
-                    : null,
-                icon: Icon(
-                  AppIcons.addCircleOutline,
-                  size: 32,
-                  color: _value < _maxValue
-                      ? context.colors.primary
-                      : context.colors.onSurfaceVariant.withValues(alpha: 0.3),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            context.l10n.currentGoalValue('$_value'),
-            style: context.textTheme.bodySmall?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Save button
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: () async {
-                HapticFeedback.mediumImpact();
-                await widget.onSave(_value);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.l10n.goalSaved)),
-                  );
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text(context.l10n.save),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
       ),
     );
   }
@@ -460,7 +286,7 @@ class _VolumeGoalEditSheetState extends State<_VolumeGoalEditSheet> {
             width: double.infinity,
             child: FilledButton(
               onPressed: () async {
-                HapticFeedback.mediumImpact();
+                await HapticFeedback.mediumImpact();
                 final text = _controller.text.trim();
                 final value = text.isEmpty ? null : double.tryParse(text);
                 await widget.onSave(value);

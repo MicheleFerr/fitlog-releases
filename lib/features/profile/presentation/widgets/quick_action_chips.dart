@@ -34,16 +34,21 @@ class QuickActionConfig {
 /// Single quick action chip with M3 styling
 ///
 /// Features:
-/// - 32px visual height, 48px touch target
+/// - 48px height with centered content
 /// - Scale animation on press
 /// - Haptic feedback
+/// - Optional expanded mode for grid layout
 class QuickActionChip extends StatefulWidget {
   const QuickActionChip({
     required this.config,
+    this.expanded = false,
     super.key,
   });
 
   final QuickActionConfig config;
+
+  /// When true, chip expands to fill available width
+  final bool expanded;
 
   @override
   State<QuickActionChip> createState() => _QuickActionChipState();
@@ -106,40 +111,34 @@ class _QuickActionChipState extends State<QuickActionChip>
           );
         },
         child: Container(
-          // 48px touch target with 32px visual height
-          constraints: const BoxConstraints(
-            minHeight: 48,
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: context.colors.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: context.colors.outlineVariant,
+              width: 1,
+            ),
           ),
-          child: Center(
-            child: Container(
-              height: 32,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: context.colors.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: context.colors.outlineVariant,
-                  width: 1,
+          child: Row(
+            mainAxisSize: widget.expanded ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                widget.config.icon,
+                size: 20,
+                color: context.colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.config.label,
+                style: context.textTheme.labelLarge?.copyWith(
+                  color: context.colors.onSurface,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    widget.config.icon,
-                    size: 18,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    widget.config.label,
-                    style: context.textTheme.labelLarge?.copyWith(
-                      color: context.colors.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
         ),
       ),
@@ -147,29 +146,70 @@ class _QuickActionChipState extends State<QuickActionChip>
   }
 }
 
-/// Row of quick action chips with wrap layout
+/// 2x2 grid of quick action chips
 ///
-/// Displays 4 action chips in a single row with automatic
-/// wrapping on smaller screens.
+/// Displays 4 action chips in a 2x2 grid layout
+/// with equal size for all chips.
 class QuickActionChipsRow extends StatelessWidget {
   const QuickActionChipsRow({
     required this.actions,
     super.key,
   });
 
-  /// List of action configurations
+  /// List of action configurations (expects 4 items)
   final List<QuickActionConfig> actions;
 
   @override
   Widget build(BuildContext context) {
+    // Ensure we have exactly 4 actions for 2x2 grid
+    final gridActions = actions.take(4).toList();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: actions.map((action) {
-          return QuickActionChip(config: action);
-        }).toList(),
+      child: Column(
+        children: [
+          // First row
+          Row(
+            children: [
+              if (gridActions.isNotEmpty)
+                Expanded(
+                  child: QuickActionChip(
+                    config: gridActions[0],
+                    expanded: true,
+                  ),
+                ),
+              const SizedBox(width: 12),
+              if (gridActions.length > 1)
+                Expanded(
+                  child: QuickActionChip(
+                    config: gridActions[1],
+                    expanded: true,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Second row
+          Row(
+            children: [
+              if (gridActions.length > 2)
+                Expanded(
+                  child: QuickActionChip(
+                    config: gridActions[2],
+                    expanded: true,
+                  ),
+                ),
+              const SizedBox(width: 12),
+              if (gridActions.length > 3)
+                Expanded(
+                  child: QuickActionChip(
+                    config: gridActions[3],
+                    expanded: true,
+                  ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
