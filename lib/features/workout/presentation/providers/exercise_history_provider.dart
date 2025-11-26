@@ -24,18 +24,16 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart'; // Import for hybridExerciseActivityRepositoryProvider
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 
-// Service provider (OLD - uses Hive local storage)
+// Service provider (uses Hive local storage for exercise history)
 final exerciseHistoryServiceProvider = Provider<ExerciseHistoryService>((ref) {
   final boxManager = ref.watch(hiveBoxManagerProvider);
   return ExerciseHistoryService(boxManager: boxManager, enableDebugLogging: true);
 });
 
-// Repository provider (OLD - uses only Firestore)
-final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>((ref) {
-  return ExerciseActivityRepository();
-});
+// NOTE: exerciseActivityRepositoryProvider is defined in workout_provider.dart (canonical location)
+// Do NOT define it here to avoid duplication
 
-// NEW: Workout History Service provider (reads from 'workouts' collection)
+// Workout History Service provider (reads from 'workouts' collection)
 final workoutHistoryServiceProvider = Provider<WorkoutHistoryService>((ref) {
   return WorkoutHistoryService();
 });
