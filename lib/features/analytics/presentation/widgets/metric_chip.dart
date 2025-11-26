@@ -44,9 +44,11 @@ class MetricChip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch selected metrics from provider
-    final selectedMetrics = ref.watch(landscapeMetricsProvider);
-    final isSelected = selectedMetrics.contains(metric);
+    // Use select() to only rebuild when THIS metric's selection status changes
+    // This is high-impact: MetricChip is rendered once per MetricType
+    final isSelected = ref.watch(
+      landscapeMetricsProvider.select((metrics) => metrics.contains(metric)),
+    );
 
     return FilterChip(
       label: Text(_getLabel(context, metric)),

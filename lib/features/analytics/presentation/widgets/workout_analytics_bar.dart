@@ -43,7 +43,8 @@ class WorkoutAnalyticsBar extends ConsumerWidget {
     final completion = ref.watch(workoutCompletionProvider);
     final quality = ref.watch(workoutQualityProvider);
     final isLoading = ref.watch(analyticsLoadingProvider);
-    final hasNewPRs = ref.watch(currentPRsProvider).isNotEmpty;
+    // Use select() to only rebuild when PR existence changes, not on each PR addition
+    final hasNewPRs = ref.watch(currentPRsProvider.select((prs) => prs.isNotEmpty));
     final showsImprovement = ref.watch(workoutImprovementProvider);
 
     if (volume == 0 && completion == 0 && !isLoading) {
@@ -545,8 +546,9 @@ class FloatingAnalyticsWidget extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     
     final volume = ref.watch(currentWorkoutVolumeProvider);
-    final hasNewPRs = ref.watch(currentPRsProvider).isNotEmpty;
-    
+    // Use select() to only rebuild when PR existence changes
+    final hasNewPRs = ref.watch(currentPRsProvider.select((prs) => prs.isNotEmpty));
+
     if (volume == 0) return const SizedBox.shrink();
 
     return Positioned(
