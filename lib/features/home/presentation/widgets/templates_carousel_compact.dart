@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -18,172 +18,283 @@ class TemplatesCarouselCompact extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final templateState = ref.watch(templateProvider);
-    final templates = templateState.userTemplates;
-    final isLoading = templateState.isLoading;
+    final templatesAsync = ref.watch(customWorkoutTemplatesProvider);
 
-    // Ordina per updatedAt (più recente prima) e prendi i primi 3
-    final recentTemplates = [...templates]
-      ..sort((a, b) {
-        final aDate = a.updatedAt ?? a.createdAt;
-        final bDate = b.updatedAt ?? b.createdAt;
-        return bDate.compareTo(aDate);
-      });
-    final displayTemplates = recentTemplates.take(3).toList();
+    return templatesAsync.when(
+      loading: () => _buildContainer(context, child: const _LoadingSkeleton()),
+      error: (error, stack) => _buildContainer(context, child: _EmptyState()),
+      data: (templates) {
+        // Ordina per updatedAt (più recente prima) e prendi i primi 3
+        final recentTemplates = [...templates]
+          ..sort((a, b) {
+            return b.updatedAt.compareTo(a.updatedAt);
+          });
+        final displayTemplates = recentTemplates.take(3).toList();
+
+        return _buildContent(context, displayTemplates);
+      },
+    );
+  }
+
+  Widget _buildContainer(BuildContext context, {required Widget child}) {
+    final colorScheme = context.colors;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppSpacing.md),
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.secondaryContainer.withValues(alpha: 0.6),
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.9),
+            colorScheme.surfaceContainerHigh.withValues(alpha: 0.8),
+          ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.secondary.withValues(alpha: 0.1),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+            spreadRadius: 1,
+          ),
+        ],
         border: Border.all(
-          color: context.colors.outlineVariant.withValues(alpha: 0.3),
+          color: colorScheme.surface.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final colorScheme = context.colors;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 12, 12),
+      child: Row(
         children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
+          // Icon container with gradient
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                colors: [
+                  colorScheme.secondary.withValues(alpha: 0.8),
+                  colorScheme.secondary.withValues(alpha: 0.5),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.secondary.withValues(alpha: 0.2),
+                  blurRadius: 6,
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: SemanticIcon(
+              icon: AppIcons.listAlt,
+              semanticLabel: context.l10n.templates,
+              size: AppIconSize.small,
+              color: colorScheme.surface,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            context.l10n.templates,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const Spacer(),
+          TextButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              context.push('/templates');
+            },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                SemanticIcon(
-                  icon: AppIcons.listAlt,
-                  semanticLabel: context.l10n.templates,
-                  size: AppIconSize.small,
-                  color: context.colors.primary,
-                ),
-                const SizedBox(width: 8),
                 Text(
-                  context.l10n.templates,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  context.l10n.viewAll,
+                  style: context.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.secondary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    context.push('/templates');
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(context.l10n.viewAll),
-                      const SizedBox(width: 4),
-                      SemanticIcon(
-                        icon: AppIcons.chevronRight,
-                        semanticLabel: context.l10n.viewAll,
-                        size: AppIconSize.tiny,
-                        color: context.colors.primary,
-                      ),
-                    ],
-                  ),
+                const SizedBox(width: 4),
+                SemanticIcon(
+                  icon: AppIcons.chevronRight,
+                  semanticLabel: context.l10n.viewAll,
+                  size: AppIconSize.tiny,
+                  color: colorScheme.secondary,
                 ),
               ],
             ),
           ),
-
-          // Content
-          if (isLoading)
-            const _LoadingSkeleton()
-          else if (displayTemplates.isEmpty)
-            _EmptyState()
-          else
-            SizedBox(
-              height: 110,
-              child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: displayTemplates.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  return _TemplateCard(template: displayTemplates[index]);
-                },
-              ),
-            ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, List<WorkoutTemplate> displayTemplates) {
+    if (displayTemplates.isEmpty) {
+      return _buildContainer(context, child: _EmptyState());
+    }
+
+    return _buildContainer(
+      context,
+      child: SizedBox(
+        height: 110,
+        child: ListView.separated(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: displayTemplates.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            return _TemplateCard(template: displayTemplates[index]);
+          },
+        ),
       ),
     );
   }
 }
 
-/// Card singolo template
+/// Card singolo template with elevated design
 class _TemplateCard extends ConsumerWidget {
-  final CommunityWorkoutTemplate template;
 
   const _TemplateCard({required this.template});
+  final WorkoutTemplate template;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = context.colors;
     final name = template.name;
     final exerciseCount = template.exercises.length;
-    final estimatedDuration = template.estimatedDurationMinutes ?? 45;
+    final estimatedDuration = template.estimatedDuration;
 
     return SizedBox(
-      width: 140,
-      child: Material(
-        color: context.colors.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          onTap: () => _startWorkoutFromTemplate(context, ref),
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Nome template
-                Text(
-                  name,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+      width: 150,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.surface,
+              colorScheme.surfaceContainerLow.withValues(alpha: 0.9),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _startWorkoutFromTemplate(context, ref),
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Nome template
+                  Text(
+                    name,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
 
-                const Spacer(),
+                  const Spacer(),
 
-                // Stats
-                Row(
-                  children: [
-                    SemanticIcon(
-                      icon: AppIcons.workout,
-                      semanticLabel: context.l10n.exercises,
-                      size: AppIconSize.tiny,
-                      color: context.colors.onSurfaceVariant,
+                  // Stats row with pill backgrounds
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$exerciseCount ex.',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.workout,
+                          semanticLabel: context.l10n.exercises,
+                          size: AppIconSize.tiny,
+                          color: colorScheme.secondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$exerciseCount',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.secondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    SemanticIcon(
-                      icon: AppIcons.timer,
-                      semanticLabel: context.l10n.duration,
-                      size: AppIconSize.tiny,
-                      color: context.colors.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorScheme.tertiary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '~${estimatedDuration}min',
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SemanticIcon(
+                          icon: AppIcons.timer,
+                          semanticLabel: context.l10n.duration,
+                          size: AppIconSize.tiny,
+                          color: colorScheme.tertiary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${estimatedDuration}m',
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.tertiary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

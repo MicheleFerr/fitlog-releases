@@ -112,32 +112,70 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
             height: 200,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: BorderRadius.circular(12), // Apple HIG standard
+              // Enhanced gradient background for depth
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  context.colors.surface,
+                  context.colors.surfaceContainerLow.withValues(alpha: 0.95),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16), // Consistent with elevated design
+              // Enhanced shadow system for depth
               boxShadow: [
+                // Primary shadow for depth
                 BoxShadow(
-                  color: context.colors.onSurface.withValues(alpha: isDark ? 0.15 : 0.1),
-                  blurRadius: 8,
+                  color: context.colors.shadow.withValues(alpha: isDark ? 0.25 : 0.12),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                  spreadRadius: 1,
+                ),
+                // Secondary subtle shadow
+                BoxShadow(
+                  color: context.colors.onSurface.withValues(alpha: isDark ? 0.1 : 0.06),
+                  blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
               ],
+              // Subtle border for definition
+              border: Border.all(
+                color: context.colors.outlineVariant.withValues(alpha: isDark ? 0.15 : 0.1),
+                width: 1,
+              ),
             ),
             child: Stack(
               children: [
-                // Left accent strip (category color)
+                // Left accent strip (category color) with enhanced glow
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
                   curve: Curves.easeOut,
-                  width: _isPressed ? 4 : 2,
+                  width: _isPressed ? 5 : 3,
                   height: double.infinity,
                   decoration: BoxDecoration(
-                    color: _getStripColor(category).withValues(
-                      alpha: _isActiveWorkout ? 1.0 : 0.8,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        _getStripColor(category).withValues(
+                          alpha: _isActiveWorkout ? 1.0 : 0.9,
+                        ),
+                        _getStripColor(category).withValues(
+                          alpha: _isActiveWorkout ? 0.9 : 0.7,
+                        ),
+                      ],
                     ),
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      bottomLeft: Radius.circular(12),
+                      topLeft: Radius.circular(16),
+                      bottomLeft: Radius.circular(16),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getStripColor(category).withValues(alpha: 0.3),
+                        blurRadius: 6,
+                        offset: const Offset(2, 0),
+                      ),
+                    ],
                   ),
                 ),
 
