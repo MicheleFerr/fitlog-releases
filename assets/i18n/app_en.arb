@@ -25418,5 +25418,21 @@
   "editProfile": "Edit Profile",
   "@editProfile": {
     "description": "Button to edit user profile"
+  },
+  "weeklyStatsExcellent": "Amazing week! 5+ workouts shows real dedication!",
+  "@weeklyStatsExcellent": {
+    "description": "Motivational message for 5+ workouts this week"
+  },
+  "weeklyStatsGreat": "Great progress this week! Keep the momentum going!",
+  "@weeklyStatsGreat": {
+    "description": "Motivational message for 3-4 workouts this week"
+  },
+  "weeklyStatsGood": "Good start! Every workout brings you closer to your goals!",
+  "@weeklyStatsGood": {
+    "description": "Motivational message for 1-2 workouts this week"
+  },
+  "weeklyStatsStart": "New week, new opportunities! Time to crush it!",
+  "@weeklyStatsStart": {
+    "description": "Motivational message for 0 workouts this week"
   }
 }

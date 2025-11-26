@@ -382,7 +382,11 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
       const workoutType = 'GENERIC_WORKOUT';
 
       // Extract calories if available
-      final calories = (dataPoint.value as num?)?.toInt();
+      // health package v13+ returns NumericHealthValue, not raw num
+      final healthValue = dataPoint.value;
+      final calories = healthValue is health_pkg.NumericHealthValue
+          ? healthValue.numericValue.toInt()
+          : null;
 
       return {
         'type': workoutType,
@@ -418,8 +422,12 @@ class HealthRemoteDatasourceImpl implements IHealthRemoteDatasource {
     );
 
     // Map HealthDataPoint to BodyMeasurement
+    // health package v13+ returns NumericHealthValue, not raw num
     final measurements = weightData.map((dataPoint) {
-      final weightValue = (dataPoint.value as num?)?.toDouble() ?? 0.0;
+      final healthValue = dataPoint.value;
+      final weightValue = healthValue is health_pkg.NumericHealthValue
+          ? healthValue.numericValue.toDouble()
+          : 0.0;
 
       return BodyMeasurement(
         value: weightValue, // kg from health package

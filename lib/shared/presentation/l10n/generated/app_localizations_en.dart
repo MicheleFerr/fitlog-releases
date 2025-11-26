@@ -20286,4 +20286,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String minWorkout(int minutes) {
     return '$minutes min';
   }
+
+  @override
+  String get weeklyStatsExcellent =>
+      'Amazing week! 5+ workouts shows real dedication!';
+
+  @override
+  String get weeklyStatsGreat =>
+      'Great progress this week! Keep the momentum going!';
+
+  @override
+  String get weeklyStatsGood =>
+      'Good start! Every workout brings you closer to your goals!';
+
+  @override
+  String get weeklyStatsStart =>
+      'New week, new opportunities! Time to crush it!';
 }

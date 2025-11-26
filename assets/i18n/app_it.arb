@@ -14785,5 +14785,21 @@
   "editProfile": "Modifica Profilo",
   "@editProfile": {
     "description": "Pulsante per modificare il profilo utente"
+  },
+  "weeklyStatsExcellent": "Settimana incredibile! 5+ allenamenti mostrano vera dedizione!",
+  "@weeklyStatsExcellent": {
+    "description": "Messaggio motivazionale per 5+ allenamenti questa settimana"
+  },
+  "weeklyStatsGreat": "Ottimi progressi questa settimana! Continua così!",
+  "@weeklyStatsGreat": {
+    "description": "Messaggio motivazionale per 3-4 allenamenti questa settimana"
+  },
+  "weeklyStatsGood": "Buon inizio! Ogni allenamento ti avvicina ai tuoi obiettivi!",
+  "@weeklyStatsGood": {
+    "description": "Messaggio motivazionale per 1-2 allenamenti questa settimana"
+  },
+  "weeklyStatsStart": "Nuova settimana, nuove opportunità! Tempo di spaccare!",
+  "@weeklyStatsStart": {
+    "description": "Messaggio motivazionale per 0 allenamenti questa settimana"
   }
 }

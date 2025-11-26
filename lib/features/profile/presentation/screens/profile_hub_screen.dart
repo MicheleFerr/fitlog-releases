@@ -23,7 +23,9 @@ import 'package:gymbro_flutter_new/features/profile/presentation/widgets/quick_a
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/modern_workout_card.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_workout_calendar.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/weekly_stats_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
+import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 
 /// Profile hub screen - Apple Fitness+ style design
 ///
@@ -140,7 +142,7 @@ class _MetricRingsSection extends ConsumerWidget {
         children: [
           // Weekly workout calendar (Mon-Sun)
           WeeklyWorkoutCalendar(
-            onTap: () => context.pushNamed(AppRoutes.streakCalendarName),
+            onTap: () => showWeeklyStatsBottomSheet(context),
           ),
           const SizedBox(height: 12),
 
@@ -153,9 +155,14 @@ class _MetricRingsSection extends ConsumerWidget {
                   config: MetricRingConfig(
                     title: context.l10n.streakWeeks,
                     value: '${streakWeeks.current}',
-                    percentage: 1.0, // Always full - it's a count, not a goal
-                    color: context.colors.success,
-                    onTap: () => context.pushNamed(AppRoutes.streakCalendarName),
+                    // Empty ring when 0, full when > 0
+                    percentage: streakWeeks.current > 0 ? 1.0 : 0.0,
+                    // Neutral color when 0, success when active
+                    color: streakWeeks.current > 0
+                        ? context.colors.success
+                        : context.colors.outline,
+                    // No onTap - calendar already accessible via weekly calendar
+                    onTap: null,
                   ),
                 ),
               ),
@@ -345,8 +352,13 @@ class _RecentWorkoutsSection extends ConsumerWidget {
               return ModernWorkoutCardsList(
                 workouts: workouts,
                 onWorkoutTap: (workout) {
-                  // Navigate to workout detail
-                  // TODO: Add workout detail navigation
+                  HapticFeedback.lightImpact();
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => WorkoutDetailModal(workout: workout),
+                  );
                 },
                 maxItems: 3,
               );

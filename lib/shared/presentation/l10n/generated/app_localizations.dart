@@ -36257,6 +36257,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} min'**
   String minWorkout(int minutes);
+
+  /// Motivational message for 5+ workouts this week
+  ///
+  /// In en, this message translates to:
+  /// **'Amazing week! 5+ workouts shows real dedication!'**
+  String get weeklyStatsExcellent;
+
+  /// Motivational message for 3-4 workouts this week
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress this week! Keep the momentum going!'**
+  String get weeklyStatsGreat;
+
+  /// Motivational message for 1-2 workouts this week
+  ///
+  /// In en, this message translates to:
+  /// **'Good start! Every workout brings you closer to your goals!'**
+  String get weeklyStatsGood;
+
+  /// Motivational message for 0 workouts this week
+  ///
+  /// In en, this message translates to:
+  /// **'New week, new opportunities! Time to crush it!'**
+  String get weeklyStatsStart;
 }
 
 class _AppLocalizationsDelegate

@@ -434,11 +434,17 @@ class HealthKitService {
     String userId,
     MetricType metricType,
   ) {
+    // health package v13+ returns NumericHealthValue, not raw num
+    final healthValue = dataPoint.value;
+    final numericValue = healthValue is NumericHealthValue
+        ? healthValue.numericValue.toDouble()
+        : 0.0;
+
     return Measurement(
       id: const Uuid().v4(),
       userId: userId,
       metricType: metricType,
-      value: (dataPoint.value as num).toDouble(),
+      value: numericValue,
       unit: metricType.defaultUnit,
       timestamp: dataPoint.dateFrom,
       source: MeasurementSource.healthKit,
