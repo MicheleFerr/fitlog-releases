@@ -54,11 +54,16 @@ class _VolumeModalState extends State<VolumeModal> {
   /// Calculate workouts and volume for last N weeks
   List<({int workouts, double volume})> _calculateWeeklyData(int weeks) {
     final now = DateTime.now();
+    // Use date-only for consistent week boundaries
+    final today = DateTime(now.year, now.month, now.day);
     final weeklyData = <({int workouts, double volume})>[];
 
     for (int i = 0; i < weeks; i++) {
-      final weekStart = now.subtract(Duration(days: 7 * (i + 1)));
-      final weekEnd = now.subtract(Duration(days: 7 * i));
+      // Week boundaries: [weekStart, weekEnd] inclusive
+      // Week 0 (current): today - 6 days to today (7 days)
+      // Week 1: today - 13 days to today - 7 days (7 days)
+      final weekEnd = today.subtract(Duration(days: 7 * i));
+      final weekStart = weekEnd.subtract(const Duration(days: 6)); // 7 day range
 
       final workoutDates = <DateTime>{};
       double totalVolume = 0.0;
@@ -70,7 +75,8 @@ class _VolumeModalState extends State<VolumeModal> {
             session.date.month,
             session.date.day,
           );
-          if (dateOnly.isAfter(weekStart) && !dateOnly.isAfter(weekEnd)) {
+          // Check if within [weekStart, weekEnd] inclusive
+          if (!dateOnly.isBefore(weekStart) && !dateOnly.isAfter(weekEnd)) {
             workoutDates.add(dateOnly);
 
             // Calculate volume for this session (weight × reps × sets)

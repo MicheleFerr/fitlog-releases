@@ -81,7 +81,9 @@ class PRModal extends StatelessWidget {
   List<_PRInfo> _getAllPRs() {
     final prInfoList = <_PRInfo>[];
     final now = DateTime.now();
-    final weekAgo = now.subtract(const Duration(days: 7));
+    // Use date-only comparison for consistent "last 7 days" calculation
+    final today = DateTime(now.year, now.month, now.day);
+    final weekStart = today.subtract(const Duration(days: 6)); // 7 days = today + 6 previous
 
     for (final history in exerciseHistories) {
       if (history.sessions.isEmpty) continue;
@@ -102,8 +104,9 @@ class PRModal extends StatelessWidget {
 
       if (prDate == null) continue;
 
-      // Check if PR is recent (last 7 days)
-      final isRecent = prDate.isAfter(weekAgo);
+      // Check if PR is recent (last 7 days) using date-only comparison
+      final prDateOnly = DateTime(prDate.year, prDate.month, prDate.day);
+      final isRecent = !prDateOnly.isBefore(weekStart) && !prDateOnly.isAfter(today);
 
       prInfoList.add(_PRInfo(
         exerciseName: history.exerciseName,

@@ -879,9 +879,12 @@ class _QuickStatsSummary extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (_) => VolumeModal(
-                    exerciseHistories: exerciseHistories,
-                    volumeProgression: volumeProgression,
+                  builder: (sheetContext) => SizedBox(
+                    height: MediaQuery.of(sheetContext).size.height * 0.8,
+                    child: VolumeModal(
+                      exerciseHistories: exerciseHistories,
+                      volumeProgression: volumeProgression,
+                    ),
                   ),
                 );
               },
@@ -932,9 +935,12 @@ class _QuickStatsSummary extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (_) => PRModal(
-                    exerciseHistories: exerciseHistories,
-                    recentPRCount: recentPRs,
+                  builder: (sheetContext) => SizedBox(
+                    height: MediaQuery.of(sheetContext).size.height * 0.8,
+                    child: PRModal(
+                      exerciseHistories: exerciseHistories,
+                      recentPRCount: recentPRs,
+                    ),
                   ),
                 );
               },
