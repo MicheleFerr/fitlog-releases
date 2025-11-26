@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Carousel compatto di template per quick access
@@ -31,10 +32,10 @@ class TemplatesCarouselCompact extends ConsumerWidget {
     final displayTemplates = recentTemplates.take(3).toList();
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.md),
         border: Border.all(
           color: context.colors.outlineVariant.withValues(alpha: 0.3),
           width: 1,

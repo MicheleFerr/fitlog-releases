@@ -7,6 +7,7 @@ import 'package:gymbro_flutter_new/features/community/presentation/widgets/commu
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Card compatta per Exercise Wiki (ex Community Hub)
@@ -21,10 +22,10 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
 
     return CommunityInitializer.withInitialization(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
+        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         decoration: BoxDecoration(
           color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.md),
           border: Border.all(
             color: context.colors.outlineVariant.withValues(alpha: 0.3),
             width: 1,
@@ -37,9 +38,9 @@ class ExerciseWikiCardCompact extends ConsumerWidget {
               HapticFeedback.lightImpact();
               context.push('/community');
             },
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.md),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
                   // Icon

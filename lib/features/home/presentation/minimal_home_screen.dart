@@ -11,6 +11,7 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Minimal Home Screen - Clean dark premium design
@@ -80,9 +81,13 @@ class MinimalHomeScreen extends ConsumerWidget {
                 primaryAdviceAsync.when(
                   data: (advice) {
                     if (advice != null) {
-                      return const Padding(
-                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
-                        child: AICoachCard(),
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: AppSpacing.md,
+                          right: AppSpacing.md,
+                          bottom: AppSpacing.xl,
+                        ),
+                        child: const AICoachCard(),
                       );
                     }
                     return const SizedBox.shrink();
@@ -117,7 +122,7 @@ class _AdminFeedbackCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
