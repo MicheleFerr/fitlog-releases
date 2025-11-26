@@ -128,7 +128,7 @@ class TemplatesCarouselCompact extends ConsumerWidget {
               context.push('/templates');
             },
             style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -241,7 +241,7 @@ class _TemplateCard extends ConsumerWidget {
 
                   // Stats row with pill backgrounds
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
                     decoration: BoxDecoration(
                       color: colorScheme.secondary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -255,7 +255,7 @@ class _TemplateCard extends ConsumerWidget {
                           size: AppIconSize.tiny,
                           color: colorScheme.secondary,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppSpacing.xxs),
                         Text(
                           '$exerciseCount',
                           style: context.textTheme.labelSmall?.copyWith(
@@ -266,9 +266,9 @@ class _TemplateCard extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppSpacing.xxs),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
                     decoration: BoxDecoration(
                       color: colorScheme.tertiary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -282,7 +282,7 @@ class _TemplateCard extends ConsumerWidget {
                           size: AppIconSize.tiny,
                           color: colorScheme.tertiary,
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppSpacing.xxs),
                         Text(
                           '${estimatedDuration}m',
                           style: context.textTheme.labelSmall?.copyWith(

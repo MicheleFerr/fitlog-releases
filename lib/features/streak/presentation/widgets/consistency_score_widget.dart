@@ -15,7 +15,9 @@ import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_colors.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 
 /// Main consistency score widget with provider integration
 class ConsistencyScoreWidget extends ConsumerWidget {
@@ -119,10 +121,11 @@ class CompactScoreCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: Icon(
-                        _getBadgeIcon(indicatorsCount),
+                      child: SemanticIcon(
+                        icon: _getBadgeIcon(indicatorsCount),
+                        semanticLabel: context.l10n.consistencyIndicators,
                         color: colorScheme.surface,
-                        size: 20,
+                        size: AppIconSize.small,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -137,7 +140,7 @@ class CompactScoreCard extends StatelessWidget {
                     ),
                     // Status badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
                       decoration: BoxDecoration(
                         color: badgeColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
@@ -153,7 +156,7 @@ class CompactScoreCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.lg),
 
                 // Indicators with enhanced styling
                 _EnhancedIndicatorRow(
@@ -162,14 +165,14 @@ class CompactScoreCard extends StatelessWidget {
                   value: '${score.weeklyStats.avgWorkoutsPerWeek.toStringAsFixed(1)}/${context.l10n.perWeek}',
                   isOptimal: score.frequencyOptimal,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.sm),
                 _EnhancedIndicatorRow(
                   icon: AppIcons.bedtime,
                   label: context.l10n.rest,
                   value: '${score.weeklyStats.avgRestDaysPerWeek.toStringAsFixed(1)} ${context.l10n.days}',
                   isOptimal: score.restOptimal,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.sm),
                 _EnhancedIndicatorRow(
                   icon: AppIcons.trendingUp,
                   label: context.l10n.progress,
@@ -177,12 +180,12 @@ class CompactScoreCard extends StatelessWidget {
                   isOptimal: score.progressionPositive,
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
 
                 // Overall status badge
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
                   decoration: BoxDecoration(
                     color: badgeColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
@@ -190,8 +193,13 @@ class CompactScoreCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(_getBadgeIcon(indicatorsCount), size: 18, color: badgeColor),
-                      const SizedBox(width: 10),
+                      SemanticIcon(
+                        icon: _getBadgeIcon(indicatorsCount),
+                        semanticLabel: badgeText,
+                        size: AppIconSize.small,
+                        color: badgeColor,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Text(
                           badgeText,
@@ -285,7 +293,7 @@ class _EnhancedIndicatorRow extends StatelessWidget {
     final statusIcon = isOptimal ? AppIcons.checkCircle : AppIcons.cancel;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: colorScheme.surface.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
@@ -299,9 +307,14 @@ class _EnhancedIndicatorRow extends StatelessWidget {
               color: statusColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: AppIconSize.small, color: context.iconPrimary),
+            child: SemanticIcon(
+              icon: icon,
+              semanticLabel: label,
+              size: AppIconSize.small,
+              color: context.iconPrimary,
+            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               label,
@@ -310,8 +323,13 @@ class _EnhancedIndicatorRow extends StatelessWidget {
               ),
             ),
           ),
-          Icon(statusIcon, size: AppIconSize.small, color: statusColor),
-          const SizedBox(width: 8),
+          SemanticIcon(
+            icon: statusIcon,
+            semanticLabel: isOptimal ? 'Optimal' : 'Not optimal',
+            size: AppIconSize.small,
+            color: statusColor,
+          ),
+          const SizedBox(width: AppSpacing.xs),
           Text(
             value,
             style: context.textTheme.bodyMedium?.copyWith(

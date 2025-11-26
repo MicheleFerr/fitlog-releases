@@ -5,6 +5,7 @@ import 'package:gymbro_flutter_new/shared/presentation/constants/app_animations.
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/animated_icon_swap.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/pressable_card.dart';
 
@@ -55,7 +56,7 @@ class SecondaryActions extends ConsumerWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
 
         // Secondary Actions Grid - 4 columns
         _buildSecondaryActionsGrid(context, l10n),
@@ -94,9 +95,6 @@ class SecondaryActions extends ConsumerWidget {
     BuildContext context,
     AppLocalizations l10n,
   ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return [
       // Analytics - Blue → Purple gradient
       _SecondaryActionCard(
@@ -179,7 +177,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
         accentColor: widget.accentColor,
         onTap: widget.onTap,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -195,7 +193,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 size: AppAnimations.iconSizeMedium,
               ),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.xs),
 
               // Title
               Text(
@@ -209,7 +207,7 @@ class _SecondaryActionCardState extends State<_SecondaryActionCard> {
                 overflow: TextOverflow.ellipsis,
               ),
 
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xxs),
 
               // Subtitle
               Text(

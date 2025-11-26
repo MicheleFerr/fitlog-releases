@@ -10,6 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 
 /// Apple HIG compliant template card
 ///
@@ -181,7 +182,7 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
 
                 // Content
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,12 +201,12 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.sm),
                           _DifficultyBadge(difficulty: difficulty),
                         ],
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.sm),
 
                       // Exercise preview (clean text, no icons)
                       _ExercisePreview(template: widget.template),
@@ -282,7 +283,7 @@ class _DifficultyBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: _getBackgroundColor(context),
         borderRadius: BorderRadius.circular(12), // Capsule shape
@@ -361,7 +362,7 @@ class _MetadataRow extends StatelessWidget {
           size: AppIconSize.small, // 20dp
           color: context.colors.onSurfaceVariant,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.xxs),
         Text(
           '${template.estimatedDuration} min',
           style: context.textTheme.bodySmall?.copyWith(
@@ -372,16 +373,16 @@ class _MetadataRow extends StatelessWidget {
 
         // Bullet separator (8pt spacing each side)
         if (stats != null) ...[
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
           Container(
-            width: 4,
-            height: 4,
+            width: AppSpacing.xxs,
+            height: AppSpacing.xxs,
             decoration: BoxDecoration(
               color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.xs),
 
           // 🕐 Last performed
           Icon(
@@ -389,7 +390,7 @@ class _MetadataRow extends StatelessWidget {
             size: AppIconSize.small,
             color: stats!.statusColor(context) ?? context.colors.onSurfaceVariant,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.xxs),
           Text(
             stats!.formattedLastPerformed(context),
             style: context.textTheme.bodySmall?.copyWith(
