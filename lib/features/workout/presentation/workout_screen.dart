@@ -21,6 +21,7 @@ import 'package:gymbro_flutter_new/features/workout/domain/services/workout_temp
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exercise_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_header.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/exercise_list_item.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/superset_card.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
@@ -167,6 +168,86 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     }
   }
 
+  /// Get the weight of the next incomplete set.
+  double? _getNextSetWeight() {
+    final workout = ref.read(currentWorkoutProvider);
+    if (workout == null) return null;
+
+    for (final exercise in workout.exercises) {
+      for (final set in exercise.sets) {
+        if (!set.isCompleted && !set.isWarmup && set.weight != null && set.weight! > 0) {
+          return set.weight;
+        }
+      }
+    }
+    return null;
+  }
+
+  /// Show plate calculator bottom sheet.
+  void _showPlateCalculator(BuildContext context, double weight) {
+    final l10n = AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            // Drag handle
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.calculate,
+                    semanticLabel: l10n.plateCalculator,
+                    size: AppIconSize.medium,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.plateCalculator,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            // Plate calculator widget
+            Expanded(
+              child: PlateCalculatorWidget(
+                targetWeight: weight,
+                onWeightChanged: (newWeight) {
+                  // Optional: update the set weight
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
@@ -298,6 +379,25 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                     tooltip: context.l10n.backToHome,
                   ),
               actions: [
+                // Plate calculator button
+                if (isActive && hasExercises)
+                  Builder(
+                    builder: (context) {
+                      final nextWeight = _getNextSetWeight();
+                      if (nextWeight == null) return const SizedBox.shrink();
+
+                      return IconButton(
+                        onPressed: () => _showPlateCalculator(context, nextWeight),
+                        icon: const SemanticIcon(
+                          icon: AppIcons.calculate,
+                          semanticLabel: 'Plate Calculator',
+                          size: AppIconSize.medium,
+                        ),
+                        tooltip: '${context.l10n.nextSetWeight}: ${nextWeight.toStringAsFixed(1)}kg',
+                      );
+                    },
+                  ),
+                // Reorder button
                 if (isActive && hasExercises)
                   IconButton(
                     onPressed: () {
@@ -366,7 +466,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                       );
 
                       // Watch workout name separately for AppBar (rarely changes)
-                      final workoutName = ref.watch(
+                      // Note: workoutName is watched but currently not displayed in this section
+                      ref.watch(
                         currentWorkoutProvider.select((workout) => workout?.name ?? ''),
                       );
 
@@ -1550,31 +1651,67 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Quick Start Card - Most prominent (Apple HIG design)
+            // Quick Start Card - Most prominent (Elevated design with gradient)
             InkWell(
               onTap: () => _startQuickWorkout(context, ref),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(20),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12), // Apple HIG standard
-                  color: context.colors.primary, // Solid primary color (NO gradient)
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      context.colors.primary,
+                      context.colors.primary.withValues(alpha: 0.85),
+                      HSLColor.fromColor(context.colors.primary)
+                          .withLightness(
+                            (HSLColor.fromColor(context.colors.primary).lightness - 0.1).clamp(0.0, 1.0),
+                          )
+                          .toColor(),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: context.colors.onSurface.withValues(alpha: context.isDarkMode ? 0.2 : 0.15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      color: context.colors.primary.withValues(alpha: 0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                      spreadRadius: 2,
+                    ),
+                    BoxShadow(
+                      color: context.colors.primary.withValues(alpha: 0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
                   ],
+                  border: Border.all(
+                    color: context.colors.onPrimary.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
                 ),
                 padding: const EdgeInsets.all(20),
                 child: Row(
                   children: [
+                    // Enhanced icon container with gradient
                     Container(
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: context.colors.onPrimary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        gradient: RadialGradient(
+                          colors: [
+                            context.colors.onPrimary.withValues(alpha: 0.3),
+                            context.colors.onPrimary.withValues(alpha: 0.15),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: context.colors.onPrimary.withValues(alpha: 0.1),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                          ),
+                        ],
                       ),
                       child: SemanticIcon(
                         icon: AppIcons.flashOn,
@@ -1599,17 +1736,26 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
                           Text(
                             context.l10n.startImmediately,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colors.onPrimary.withValues(alpha: 0.85),
+                              color: context.colors.onPrimary.withValues(alpha: 0.9),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SemanticIcon(
-                      icon: AppIcons.forwardIos,
-                      semanticLabel: 'Start',
-                      size: AppIconSize.medium,
-                      color: context.colors.onPrimary,
+                    // Enhanced chevron with subtle background
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: context.colors.onPrimary.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: SemanticIcon(
+                        icon: AppIcons.forwardIos,
+                        semanticLabel: 'Start',
+                        size: AppIconSize.small,
+                        color: context.colors.onPrimary,
+                      ),
                     ),
                   ],
                 ),
@@ -2052,20 +2198,30 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen> with WidgetsBindi
     HapticFeedback.mediumImpact();
 
     // Show SnackBar with Undo button (5 seconds)
+    // ✅ FIX: Capture localized strings BEFORE the closure to avoid null context issues
+    final workoutCompletedText = context.l10n.workoutCompletedSuccess;
+    final undoText = context.l10n.undo;
+    final workoutResumedText = context.l10n.workoutResumed;
+    final primaryColor = context.colors.primary;
+    final onPrimaryColor = context.colors.onPrimary;
+
     final snackBar = SnackBar(
-      content: Text('✅ ${context.l10n.workoutCompletedSuccess}'),
+      content: Text('✅ $workoutCompletedText'),
       duration: const Duration(seconds: 5),
-      backgroundColor: context.colors.primary,
+      backgroundColor: primaryColor,
       action: SnackBarAction(
-        label: context.l10n.undo,
-        textColor: context.colors.onPrimary,
+        label: undoText,
+        textColor: onPrimaryColor,
         onPressed: () {
           // Undo completion - restore workout to "in progress"
           ref.read(currentWorkoutProvider.notifier).undoCompletion();
-          SnackBarService.showInfo(
-            context,
-            context.l10n.workoutResumed,
-          );
+          // ✅ FIX: Use captured string instead of context.l10n (context may be unmounted)
+          if (context.mounted) {
+            SnackBarService.showInfo(
+              context,
+              workoutResumedText,
+            );
+          }
         },
       ),
     );

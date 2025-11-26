@@ -2189,6 +2189,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get warmupIntelligentProgression => 'Progressione Intelligente';
 
   @override
+  String get warmupCustomizeTitle => 'Personalizza Riscaldamento';
+
+  @override
+  String get warmupAddSet => 'Aggiungi Set';
+
+  @override
   String warmupProgressionDescription(
     String startWeight,
     String endWeight,
@@ -20661,4 +20667,62 @@ class AppLocalizationsIt extends AppLocalizations {
   String nWorkoutsCount(int count) {
     return '$count allenamenti';
   }
+
+  @override
+  String get warmupProgression => 'Progressione Riscaldamento';
+
+  @override
+  String warmupAdjustWeight(int percentage) {
+    return 'Regola Set $percentage%';
+  }
+
+  @override
+  String get warmupCompletedMessage =>
+      'Riscaldamento completato! Pronto per le serie di lavoro';
+
+  @override
+  String get warmupTipForm => 'Concentrati su forma e tecnica';
+
+  @override
+  String get warmupTipActivate => 'Attiva i muscoli target';
+
+  @override
+  String get warmupTipNervous => 'Prepara il sistema nervoso';
+
+  @override
+  String get warmupTipAlmost => 'Quasi pronto! Preparazione finale';
+
+  @override
+  String get warmupDisclaimer =>
+      'I pesi sono arrotondati a 2.5kg. Tocca per modificare.';
+
+  @override
+  String get warmupRecommended => 'Riscaldamento Consigliato';
+
+  @override
+  String warmupSetsTarget(int count, double weight) {
+    return '$count set · Target ${weight}kg';
+  }
+
+  @override
+  String get warmupEmptyBar => 'Bilanciere vuoto';
+
+  @override
+  String warmupPerSide(String plates) {
+    return '$plates per lato';
+  }
+
+  @override
+  String get warmupCustomize => 'Personalizza';
+
+  @override
+  String get warmupAddAll => 'Aggiungi Tutti';
+
+  @override
+  String warmupSetNumber(int number) {
+    return 'Set $number';
+  }
+
+  @override
+  String get warmupScienceBased => 'Basato su ricerca scientifica';
 }

@@ -2172,6 +2172,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get warmupIntelligentProgression => 'Intelligent Progression';
 
   @override
+  String get warmupCustomizeTitle => 'Customize Warmup Sets';
+
+  @override
+  String get warmupAddSet => 'Add Warmup Set';
+
+  @override
   String warmupProgressionDescription(
     String startWeight,
     String endWeight,
@@ -20464,4 +20470,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String nWorkoutsCount(int count) {
     return '$count workouts';
   }
+
+  @override
+  String get warmupProgression => 'Warmup Progression';
+
+  @override
+  String warmupAdjustWeight(int percentage) {
+    return 'Adjust $percentage% Set';
+  }
+
+  @override
+  String get warmupCompletedMessage =>
+      'Warmup complete! Ready for working sets';
+
+  @override
+  String get warmupTipForm => 'Focus on form and technique';
+
+  @override
+  String get warmupTipActivate => 'Activate target muscles';
+
+  @override
+  String get warmupTipNervous => 'Prime your nervous system';
+
+  @override
+  String get warmupTipAlmost => 'Almost there! Final preparation';
+
+  @override
+  String get warmupDisclaimer =>
+      'Weights are rounded to 2.5kg. Tap to adjust if needed.';
+
+  @override
+  String get warmupRecommended => 'Recommended Warmup';
+
+  @override
+  String warmupSetsTarget(int count, double weight) {
+    return '$count sets · Target ${weight}kg';
+  }
+
+  @override
+  String get warmupEmptyBar => 'Empty bar';
+
+  @override
+  String warmupPerSide(String plates) {
+    return '$plates per side';
+  }
+
+  @override
+  String get warmupCustomize => 'Customize';
+
+  @override
+  String get warmupAddAll => 'Add All';
+
+  @override
+  String warmupSetNumber(int number) {
+    return 'Set $number';
+  }
+
+  @override
+  String get warmupScienceBased => 'Based on scientific research';
 }

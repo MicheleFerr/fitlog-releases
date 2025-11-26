@@ -337,7 +337,7 @@
   "continueImport": "Continua Importazione",
   "finalizeImport": "Finalizza Importazione",
   "importSuccessful": "Importazione completata con successo!",
-  "importing": "Importazione in corso...",
+  "importing": "Importazione...",
   "importCompleted": "Importazione Completata",
   "templatesImportedSuccessfully": "{count, plural, =1{1 scheda importata con successo!} other{{count} schede importate con successo!}}",
   "exportingTemplates": "Esportazione Schede",
@@ -421,18 +421,18 @@
   "step2PastePrompt": "Incolla il prompt copiato e invia",
   "step3CopyJSON": "Copia la risposta JSON dall'AI",
   "step4ReturnToApp": "Torna in FitLog Pro e usa 'Importa Scheda'",
-  "gotIt": "Capito!",
+  "gotIt": "Ho capito",
   "openChatGPT": "Apri ChatGPT",
   "cannotOpenUrl": "Impossibile aprire questo URL",
   "errorOpeningUrl": "Errore nell'apertura URL",
   "pleaseEnterWorkoutText": "Inserisci il testo dell'allenamento da convertire",
   "exerciseCategory": "Categoria Esercizio",
-  "sets": "serie",
+  "sets": "Serie",
   "addSet": "Aggiungi Serie",
   "weight": "Peso",
   "oneRmEstimated": "1RM (Stim.)",
   "weightTimesReps": "Peso × Rip",
-  "reps": "rip",
+  "reps": "Reps",
   "notes": "Note",
   "notesHint": "Aggiungi note sulla forma, progressione, ecc.",
   "exerciseTypeSingle": "Singolo",
@@ -609,9 +609,9 @@
   "measurements": "Misurazioni",
   "calendar": "Calendario",
   "startFresh": "Inizia da capo",
-  "history": "Storico",
+  "history": "Cronologia",
   "viewPastWorkouts": "Visualizza allenamenti passati",
-  "analytics": "Analisi",
+  "analytics": "Analytics",
   "detailedAnalysis": "Analisi Dettagliata",
   "trackProgress": "Traccia progressi",
   "templates": "Template",
@@ -642,7 +642,7 @@
   "progressTracking": "Monitoraggio Progressi",
   "detailedAnalytics": "Analisi Dettagliate",
   "thisWeek": "Questa Settimana",
-  "totalVolume": "Volume Totale",
+  "totalVolume": "Volume totale",
   "consistency": "Costanza",
   "totalWorkouts": "Allenamenti Totali",
   "completedSessions": "Sessioni Completate",
@@ -667,7 +667,7 @@
   "defaultView": "Vista Predefinita",
   "totalDays": "Giorni Totali",
   "days": "giorni",
-  "errorLoadingData": "Errore nel caricamento dei dati",
+  "errorLoadingData": "Errore caricamento dati",
   "exportData": "Esporta Dati",
   "viewDetails": "Visualizza Dettagli",
   "noVolumeData": "Nessun dato sul volume disponibile",
@@ -676,10 +676,10 @@
   "noExerciseData": "Nessun dato sugli esercizi disponibile",
   "noWorkoutData": "Nessun dato allenamento ancora",
   "completeWorkoutsToSeeAnalytics": "Completa alcuni allenamenti per vedere le\ntue analisi e progressi!",
-  "startFirstWorkout": "Inizia il Tuo Primo Allenamento",
-  "volumeIncreased": "Volume aumentato di {amount}kg dalla settimana scorsa",
+  "startFirstWorkout": "Inizia il tuo primo workout",
+  "volumeIncreased": "Il tuo volume è aumentato del {percent}% questo mese",
   "volumeDecreased": "Volume diminuito di {amount}kg dalla settimana scorsa",
-  "workouts": "allenamenti",
+  "workouts": "Allenamenti",
   "bestWorkoutDay": "Miglior giorno di allenamento: {day}",
   "averageWorkoutsPerDay": "Media: {average} allenamenti al giorno",
   "monday": "Lunedì",
@@ -716,7 +716,7 @@
   "muscleForearms": "Avambracci",
   "muscleAdductors": "Adduttori",
   "muscleLowerBack": "Lombari",
-  "lastWeek": "Ultima Settimana",
+  "lastWeek": "Scorsa Settimana",
   "lastMonth": "Ultimo Mese",
   "lastThreeMonths": "Ultimi 3 Mesi",
   "applyFilters": "Applica Filtri",
@@ -804,6 +804,8 @@
   "warmupSmart": "SMART",
   "warmupTap": "Tocca",
   "warmupIntelligentProgression": "Progressione Intelligente",
+  "warmupCustomizeTitle": "Personalizza Serie Riscaldamento",
+  "warmupAddSet": "Aggiungi Serie Riscaldamento",
   "warmupProgressionDescription": "Da {startWeight}kg a {endWeight}kg in {steps} step",
   "workingWeight": "Peso di Lavoro",
   "emptyBarbell": "Bilanciere Vuoto",
@@ -870,7 +872,7 @@
   "loadingTemplate": "Caricamento template...",
   "templateLoadError": "Errore nel caricamento template: {error}",
   "unexpectedError": "Errore imprevisto: {error}",
-  "workoutInProgress": "Allenamento in Corso",
+  "workoutInProgress": "Allenamento in corso",
   "workoutDiscarded": "Allenamento scartato",
   "workoutSavedSuccessfully": "Allenamento salvato con successo!",
   "howToEndWorkout": "Come vuoi terminare l'allenamento?",
@@ -1009,7 +1011,7 @@
   "restartCycleAfterDays": "Ricomincia il ciclo dopo {days} {days, plural, =1{giorno} other{giorni}}",
   "nextInRotation": "Prossimo nella rotazione",
   "yourMostFrequentWorkout": "Il tuo allenamento più frequente",
-  "selectExercise": "Seleziona un esercizio per vedere i progressi",
+  "selectExercise": "Seleziona Esercizio",
   "originalExercise": "Esercizio originale",
   "suggestedMatches": "Corrispondenze suggerite",
   "match": "corrispondenza",
@@ -1093,7 +1095,7 @@
   "decline": "Declino",
   "stall": "Stallo",
   "totalExercises": "Totale",
-  "totalSets": "Serie Totali",
+  "totalSets": "Serie totali",
   "avgVolumePerWorkout": "Volume Medio Per Allenamento",
   "average": "Media",
   "record": "Record",
@@ -1108,7 +1110,7 @@
   "other": "Altro",
   "personal": "Personale",
   "usages": "utilizzi",
-  "muscleDistribution": "Distribuzione Muscolare",
+  "muscleDistribution": "Distribuzione dei muscoli",
   "core": "CORE (Addominali/Lombare)",
   "chestFull": "Muscoli del Petto",
   "backFull": "Muscoli della Schiena",
@@ -1119,7 +1121,7 @@
   "overview": "Panoramica",
   "strength": "Forza",
   "insights": "Insight",
-  "muscleBalance": "Equilibrio Muscolare",
+  "muscleBalance": "Bilanciamento Muscolare",
   "allExercises": "Tutti gli Esercizi",
   "trainingInsights": "Insight di Allenamento",
   "recommendations": "Raccomandazioni",
@@ -1138,10 +1140,10 @@
   "volumeStatistics": "Statistiche Volume",
   "pleaseLogin": "Effettua l'accesso",
   "startWorkoutToSeeAnalytics": "Inizia un allenamento per vedere le tue analisi",
-  "recentWorkouts": "Allenamenti Recenti",
+  "recentWorkouts": "Workout Recenti",
   "highPriority": "Alta Priorità",
   "insight": "Suggerimento",
-  "recommendation": "Raccomandazione",
+  "recommendation": "Consiglio",
   "expand": "Espandi",
   "collapse": "Comprimi",
   "scientificStrategies": "Strategie Scientifiche",
@@ -1157,7 +1159,7 @@
   "recoveryRecommendation": "Raccomandazione Recupero",
   "trainingIntensity": "Intensità Allenamento",
   "noDataForSelectedPeriod": "Nessun dato disponibile per il periodo selezionato",
-  "previous": "Precedente",
+  "previous": "Prec",
   "tapForDetails": "Tocca per dettagli",
   "compareWithHistory": "Confronta con storico",
   "bestVolume": "Volume Migliore",
@@ -1274,7 +1276,7 @@
   "restDay": "Giorno di Riposo",
   "exerciseCount": "{count, plural, =0{Nessun esercizio} =1{1 esercizio} other{{count} esercizi}}",
   "durationMinutes": "{minutes} minuti",
-  "setsCount": "{count} serie",
+  "setsCount": "{count} {count, plural, =1{serie} other{serie}}",
   "setLabel": "Serie {number}",
   "weightLabel": "Peso (kg)",
   "repsLabel": "rip",
@@ -1599,8 +1601,8 @@
   "activityFor": "Attività per",
   "hoursAgo": "{hours}h fa",
   "minutesAgo": "{minutes}m fa",
-  "justNow": "Proprio ora",
-  "viewAll": "Visualizza Tutto",
+  "justNow": "ora",
+  "viewAll": "Vedi Tutti",
   "adminInfo": "Informazioni Admin",
   "welcomeAdmin": "Benvenuto, Admin!",
   "adminDashboardDescription": "Gestisci il sistema FitLog Pro e controlla i contributi della community",
@@ -1744,9 +1746,9 @@
   "@beFirstToShare": {
     "description": "Encouraging message to be first to contribute advice"
   },
-  "contributionSubmittedSuccess": "Il tuo contributo è stato inviato per la revisione!",
+  "contributionSubmittedSuccess": "✅ Contributo inviato! In attesa di approvazione",
   "@contributionSubmittedSuccess": {
-    "description": "Success message after submitting a contribution"
+    "description": "Success message after submission"
   },
   "thankYouForContributing": "Grazie per aver aiutato la community!",
   "@thankYouForContributing": {
@@ -1816,13 +1818,13 @@
     "description": "Button to add a new set"
   },
   "@sets": {
-    "description": "Forma plurale di serie esercizio"
+    "description": "Etichetta statistica serie"
   },
   "@weight": {
     "description": "Weight metric label"
   },
   "@reps": {
-    "description": "Reps metric label"
+    "description": "Intestazione tabella ripetizioni"
   },
   "@removeSet": {
     "description": "Tooltip for removing a set"
@@ -2291,7 +2293,7 @@
   "unableToLoadUserData": "Impossibile caricare i dati utente. Esci e accedi di nuovo.",
   "year": "Anno",
   "all": "Tutti",
-  "thisWeekProgress": "Progresso di Questa Settimana",
+  "thisWeekProgress": "{completed}/{total} questa settimana",
   "thisMonthProgress": "Progresso di Questo Mese",
   "thisYearProgress": "Progresso di Quest'Anno",
   "allTimeProgress": "Progresso Totale",
@@ -2301,8 +2303,8 @@
   "allTime": "Da sempre",
   "viewStats": "Vedi Statistiche",
   "noRecentWorkoutsDesc": "Inizia un allenamento per vedere i tuoi progressi",
-  "noRecentWorkouts": "Nessun allenamento recente",
-  "workoutsCount": "{count} / {goal} allenamenti",
+  "noRecentWorkouts": "Nessun workout recente",
+  "workoutsCount": "{count} / {goal} workout",
   "repsCount": "{count} reps",
   "noActivitiesInPeriod": "Nessuna attività in questo periodo",
   "noActivitiesForSelectedMuscleGroups": "Nessuna attività per i gruppi muscolari selezionati",
@@ -2311,7 +2313,7 @@
   "allActivitiesCount": "Tutte le Attività ({count})",
   "muscleGroupStatistics": "Statistiche Gruppi Muscolari",
   "setsDetails": "Dettagli Serie",
-  "volumeWithValue": "Volume: {value} kg",
+  "volumeWithValue": "Volume: {value}k kg",
   "rpeWithValue": "RPE: {value}",
   "kgMax": "{value} kg max",
   "totalRepsCount": "{count} ripetizioni",
@@ -3281,7 +3283,7 @@
   "customTemplateDescription": "Template personalizzato",
   "templateSavedSuccessfully": "Template \"{name}\" salvato con successo!",
   "templateDeletedSuccessfully": "Template \"{name}\" eliminato",
-  "errorWithMessage": "Errore: {error}",
+  "errorWithMessage": "Errore: {message}",
   "pdfSharedSuccessfully": "PDF condiviso con successo!",
   "sharingErrorMessage": "Errore nella condivisione: {error}",
   "printErrorMessage": "Errore nella stampa: {error}",
@@ -4157,7 +4159,7 @@
     "description": "Description for empty exercise list"
   },
   "@selectExercise": {
-    "description": "Hint to select an exercise"
+    "description": "Title for exercise selection section"
   },
   "@maxWeight": {
     "description": "Etichetta record peso massimo"
@@ -4221,11 +4223,11 @@
     "description": "Legend tap instruction"
   },
   "@volume": {
-    "description": "Volume metric label"
+    "description": "Etichetta statistica volume"
   },
   "effort": "Sforzo",
   "@effort": {
-    "description": "Effort (RPE) metric label"
+    "description": "Intestazione tabella sforzo"
   },
   "weightSettings": "Impostazioni Peso",
   "@weightSettings": {
@@ -4373,7 +4375,7 @@
     "description": "Message when no plates are needed"
   },
   "@close": {
-    "description": "Testo pulsante chiudi dialog"
+    "description": "Close button"
   },
   "resetSettingsConfirmation": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
   "@resetSettingsConfirmation": {
@@ -4623,28 +4625,26 @@
   "@quickSetCount": {
     "description": "Title for quick set count selector"
   },
-  "averageRpe": "RPE Medio",
+  "averageRpe": "RPE medio",
   "@averageRpe": {
-    "description": "Average Rate of Perceived Exertion label in workout summary"
+    "description": "Etichetta RPE medio"
   },
   "@justNow": {
-    "description": "Timestamp indicating action just happened"
+    "description": "Relative time for just now"
   },
   "@minutesAgo": {
-    "description": "Timestamp showing minutes elapsed",
+    "description": "Relative time format for minutes",
     "placeholders": {
       "minutes": {
-        "type": "int",
-        "description": "Number of minutes"
+        "type": "int"
       }
     }
   },
   "@hoursAgo": {
-    "description": "Timestamp showing hours elapsed",
+    "description": "Relative time format for hours",
     "placeholders": {
       "hours": {
-        "type": "int",
-        "description": "Number of hours"
+        "type": "int"
       }
     }
   },
@@ -4993,7 +4993,7 @@
   "matchingExercises": "Abbinamento esercizi...",
   "convertingWeights": "Conversione pesi...",
   "finalizing": "Finalizzazione...",
-  "importFailed": "Importazione fallita",
+  "importFailed": "❌ Importazione fallita",
   "noDescription": "Nessuna descrizione",
   "exerciseDetailSummary": "Sommario",
   "exerciseDetailHistory": "Cronologia",
@@ -5302,9 +5302,9 @@
   "timeRangeLabel30D": "30G",
   "timeRangeLabel90D": "90G",
   "timeRangeLabelAll": "Tutto",
-  "daysAgo": "{days} giorni fa",
-  "weeksAgo": "{weeks} settimane fa",
-  "monthsAgo": "{months} mesi fa",
+  "daysAgo": "{count} giorni fa",
+  "weeksAgo": "{count} settimane fa",
+  "monthsAgo": "{count} mesi fa",
   "dAgo": "{days}g fa",
   "setsCountShort": "{count} serie",
   "volumeInTons": "{value}t volume",
@@ -5394,7 +5394,7 @@
   "confirmPause": "Metti in Pausa",
   "pausedBadge": "In Pausa",
   "pausedUntil": "In pausa fino al {date}",
-  "daysRemaining": "giorni rimanenti",
+  "daysRemaining": "Giorni rimasti",
   "resumeRoutine": "Riprendi Routine",
   "routineResumed": "Routine ripresa!",
   "pauseValidationStartInPast": "La data di inizio non può essere nel passato",
@@ -6123,7 +6123,7 @@
   "distance": "Distance",
   "downloaded": "Downloaded",
   "duplicateWorkout": "Duplicate allenamento",
-  "editProfile": "Modifica profilo",
+  "editProfile": "Modifica Profilo",
   "editTemplateDescription": "Modifica modello descrizione",
   "enableLocation": "Enable location",
   "enableLocationForBetterMatches": "Enable location per better corrispondenze",
@@ -6232,8 +6232,8 @@
   "reportReasonFakeProfile": "Report reason fake profilo",
   "reportReasonHarassment": "Report reason harassment",
   "reportReasonInappropriatePhotos": "Report reason inappropriate photos",
-  "reportReasonOther": "Report reason other",
-  "reportReasonSpam": "Report reason spam",
+  "reportReasonOther": "Altro",
+  "reportReasonSpam": "Spam o pubblicità",
   "reportReasonUnderage": "Report reason underage",
   "reportUser": "Report user",
   "resetDefaults": "Reset defaults",
@@ -6413,29 +6413,35 @@
   "smartWorkoutCTAIncompleteRoutine": "Routine incompleta",
   "smartWorkoutCTATemplateNotFound": "Template non trovato",
   "smartWorkoutCTARoutineUpdated": "Routine aggiornata ✓",
-  "smartWorkoutCTARestModeTitle": "💪 Goditi il meritato riposo",
-  "smartWorkoutCTARestModeSubtitle": "Hai fatto un allenamento pazzesco!",
-  "smartWorkoutCTARestModeVolume": "Volume: {volume} kg",
+  "smartWorkoutCTARestModeTitle": "Ottimo lavoro oggi!",
+  "smartWorkoutCTARestModeSubtitle": "È ora di recuperare. Ci vediamo domani!",
+  "smartWorkoutCTARestModeVolume": "{volume} kg sollevati",
   "@smartWorkoutCTARestModeVolume": {
+    "description": "Statistiche volume modalità riposo",
     "placeholders": {
       "volume": {
-        "type": "String"
+        "type": "String",
+        "example": "2500"
       }
     }
   },
-  "smartWorkoutCTARestModeDuration": "Durata: {duration}",
+  "smartWorkoutCTARestModeDuration": "{duration} min",
   "@smartWorkoutCTARestModeDuration": {
+    "description": "Statistiche durata modalità riposo",
     "placeholders": {
       "duration": {
-        "type": "String"
+        "type": "String",
+        "example": "45"
       }
     }
   },
-  "smartWorkoutCTARestModeSets": "Serie: {sets}",
+  "smartWorkoutCTARestModeSets": "{sets} serie",
   "@smartWorkoutCTARestModeSets": {
+    "description": "Statistiche serie modalità riposo",
     "placeholders": {
       "sets": {
-        "type": "int"
+        "type": "String",
+        "example": "20"
       }
     }
   },
@@ -6444,10 +6450,9 @@
     "description": "From quick wins migration - 11 occurrences",
     "context": "Found in: lib/features/home/presentation/widgets/ai_coach_card.dart, lib/features/settings/presentation/providers/cloud_sync_provider.dart"
   },
-  "noDataAvailable": "No data available",
+  "noDataAvailable": "Nessun dato sufficiente",
   "@noDataAvailable": {
-    "description": "From quick wins migration - 5 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/workout_frequency_chart.dart, lib/features/analytics/presentation/screens/exercise_detail_screen.dart"
+    "description": "No data available message"
   },
   "selectAtLeastOneMetric": "Seleziona almeno una metrica",
   "@selectAtLeastOneMetric": {
@@ -7271,10 +7276,9 @@
     "description": "From quick wins migration - 1 occurrences",
     "context": "Found in: lib/features/analytics/presentation/widgets/weekly_dashboard_widget.dart"
   },
-  "fullHistoryComingSoon": "Full history coming soon!",
+  "fullHistoryComingSoon": "Cronologia completa in arrivo!",
   "@fullHistoryComingSoon": {
-    "description": "From quick wins migration - 1 occurrences",
-    "context": "Found in: lib/features/analytics/presentation/widgets/recent_workouts_card.dart"
+    "description": "Messaggio funzionalità cronologia completa in arrivo"
   },
   "trainingInsight": "💡 Training Insight",
   "@trainingInsight": {
@@ -9331,7 +9335,7 @@
     "description": "Etichetta per prossimo traguardo serie"
   },
   "@daysRemaining": {
-    "description": "Etichetta per giorni fino al prossimo traguardo"
+    "description": "Days remaining label"
   },
   "@longestStreak": {
     "description": "Etichetta per streak allenamenti più lungo raggiunto"
@@ -10200,7 +10204,7 @@
     "description": "Etichetta statistica migrazione"
   },
   "@totalSets": {
-    "description": "Etichetta statistica migrazione"
+    "description": "Etichetta riepilogo serie totali"
   },
   "skipped": "Saltati",
   "@skipped": {
@@ -10278,10 +10282,10 @@
     "description": "Etichetta per numero totale allenamenti"
   },
   "@today": {
-    "description": "Riferimento temporale oggi"
+    "description": "Today"
   },
   "@yesterday": {
-    "description": "Riferimento temporale ieri"
+    "description": "Yesterday"
   },
   "noRecordsYet": "Nessun record ancora",
   "@noRecordsYet": {
@@ -11102,7 +11106,7 @@
     "description": "Etichetta informazioni utente"
   },
   "@details": {
-    "description": "Testo pulsante visualizza dettagli feedback"
+    "description": "Etichetta tab dettagli"
   },
   "noFeedbackFound": "Nessun feedback trovato",
   "@noFeedbackFound": {
@@ -11422,7 +11426,7 @@
     }
   },
   "@totalVolume": {
-    "description": "Etichetta per volume totale (peso sollevato)"
+    "description": "Etichetta riepilogo volume totale"
   },
   "avgPerWorkout": "Media per Allenamento",
   "@avgPerWorkout": {
@@ -11464,7 +11468,7 @@
     "description": "Etichetta breve per settimana corrente"
   },
   "@workoutsCount": {
-    "description": "Formato per visualizzare conteggio allenamenti vs obiettivo",
+    "description": "Workouts count vs goal",
     "placeholders": {
       "count": {
         "type": "int"
@@ -11474,9 +11478,9 @@
       }
     }
   },
-  "goalAchieved": "Obiettivo!",
+  "goalAchieved": "Obiettivo raggiunto! 🎉",
   "@goalAchieved": {
-    "description": "Testo badge quando obiettivo è raggiunto"
+    "description": "Goal achieved celebration message"
   },
   "@mondayShort": {
     "description": "Forma breve per Lunedì"
@@ -11531,7 +11535,7 @@
   },
   "weeklyGoal": "Obiettivo Settimanale",
   "@weeklyGoal": {
-    "description": "Etichetta per impostazione obiettivo settimanale"
+    "description": "Weekly goal label"
   },
   "workoutsGoalLabel": "{count} allenamenti",
   "@workoutsGoalLabel": {
@@ -11651,7 +11655,7 @@
     "description": "Etichetta per indicatore giorni di riposo"
   },
   "@progress": {
-    "description": "Etichetta per indicatore progressione"
+    "description": "Etichetta tab progressi"
   },
   "doingWell": "Stai andando bene!",
   "@doingWell": {
@@ -11774,7 +11778,6 @@
   "@importExercisesReady": {
     "description": "Initial status message on import exercises screen"
   },
-  "importExercises": "Importa Esercizi",
   "@importExercises": {
     "description": "Title for import exercises screen"
   },
@@ -11786,7 +11789,6 @@
   "@testSingleExercise": {
     "description": "Button label to test single exercise conversion"
   },
-  "importing": "Importazione...",
   "@importing": {
     "description": "Status text during import process"
   },
@@ -11838,7 +11840,6 @@
   "@importSuccessMessage": {
     "description": "Success dialog message after import"
   },
-  "importFailed": "❌ Importazione fallita",
   "@importFailed": {
     "description": "Error status message when import fails"
   },
@@ -11887,7 +11888,6 @@
   "@downvoteSuccess": {
     "description": "Success message after downvoting"
   },
-  "errorWithMessage": "Errore: {message}",
   "@errorWithMessage": {
     "description": "Generic error message with details",
     "placeholders": {
@@ -11912,45 +11912,21 @@
   "@reportSubmittedSuccess": {
     "description": "Success message after submitting report"
   },
-  "weeksAgo": "{weeks} sett. fa",
   "@weeksAgo": {
-    "description": "Relative time format for weeks",
+    "description": "Weeks ago",
     "placeholders": {
-      "weeks": {
+      "count": {
         "type": "int"
       }
     }
   },
-  "daysAgo": "{days}g fa",
   "@daysAgo": {
-    "description": "Relative time format for days",
+    "description": "Days ago",
     "placeholders": {
-      "days": {
+      "count": {
         "type": "int"
       }
     }
-  },
-  "hoursAgo": "{hours}h fa",
-  "@hoursAgo": {
-    "description": "Relative time format for hours",
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "minutesAgo": "{minutes}m fa",
-  "@minutesAgo": {
-    "description": "Relative time format for minutes",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "justNow": "ora",
-  "@justNow": {
-    "description": "Relative time for just now"
   },
   "rejectContributionTitle": "Rifiuta Contributo",
   "@rejectContributionTitle": {
@@ -11964,7 +11940,6 @@
   "@rejectReasonHint": {
     "description": "Placeholder hint for rejection reason"
   },
-  "reportReasonSpam": "Spam o pubblicità",
   "@reportReasonSpam": {
     "description": "Report reason option for spam"
   },
@@ -11980,7 +11955,6 @@
   "@reportReasonDuplicate": {
     "description": "Report reason option for duplicate"
   },
-  "reportReasonOther": "Altro",
   "@reportReasonOther": {
     "description": "Report reason option for other"
   },
@@ -12064,17 +12038,13 @@
   "@sending": {
     "description": "Button loading state text"
   },
-  "submitContribution": "Invia Contributo",
+  "submitContribution": "Invia contributo",
   "@submitContribution": {
-    "description": "Button label to submit contribution"
+    "description": "Azione XP: invio contributo"
   },
   "exerciseLabel": "Esercizio",
   "@exerciseLabel": {
     "description": "Label for exercise field"
-  },
-  "selectExercise": "Seleziona Esercizio",
-  "@selectExercise": {
-    "description": "Title for exercise selection section"
   },
   "tapToSelectExercise": "Tocca per selezionare un esercizio",
   "@tapToSelectExercise": {
@@ -12087,10 +12057,6 @@
   "selectExerciseWarning": "⚠️ Seleziona un esercizio",
   "@selectExerciseWarning": {
     "description": "Warning when submitting without selecting exercise"
-  },
-  "contributionSubmittedSuccess": "✅ Contributo inviato! In attesa di approvazione",
-  "@contributionSubmittedSuccess": {
-    "description": "Success message after submission"
   },
   "descriptionHintTip": "Condividi un consiglio utile per questo esercizio...",
   "@descriptionHintTip": {
@@ -12168,11 +12134,9 @@
   "@startNewWorkout": {
     "description": "Start new workout button text"
   },
-  "tapToStart": "Tocca per iniziare",
   "@tapToStart": {
     "description": "Tap to start instruction"
   },
-  "workoutInProgress": "Allenamento in corso",
   "@workoutInProgress": {
     "description": "Workout in progress status"
   },
@@ -12189,7 +12153,6 @@
       }
     }
   },
-  "exercisesCount": "{count} esercizi",
   "@exercisesCount": {
     "description": "Exercises count",
     "placeholders": {
@@ -12198,16 +12161,14 @@
       }
     }
   },
-  "setsCount": "{count} serie",
   "@setsCount": {
-    "description": "Sets count",
+    "description": "Conteggio serie con plurale",
     "placeholders": {
       "count": {
         "type": "int"
       }
     }
   },
-  "resume": "Riprendi",
   "@resume": {
     "description": "Resume button"
   },
@@ -12215,7 +12176,6 @@
   "@finish": {
     "description": "Finish button"
   },
-  "workoutDiscarded": "Allenamento scartato",
   "@workoutDiscarded": {
     "description": "Workout discarded message"
   },
@@ -12251,31 +12211,25 @@
   "@selectSavedWorkout": {
     "description": "Select saved workout instruction"
   },
-  "history": "Cronologia",
   "@history": {
     "description": "History label"
   },
-  "analytics": "Analytics",
   "@analytics": {
     "description": "Analytics label"
   },
-  "settings": "Impostazioni",
   "@settings": {
     "description": "Settings label"
   },
-  "recentWorkouts": "Allenamenti Recenti",
   "@recentWorkouts": {
-    "description": "Recent workouts title"
+    "description": "Titolo card workout recenti"
   },
-  "noRecentWorkouts": "Nessun allenamento recente",
   "@noRecentWorkouts": {
-    "description": "No recent workouts empty state"
+    "description": "Messaggio stato vuoto per workout recenti"
   },
   "goals": "Obiettivi",
   "@goals": {
     "description": "Goals label"
   },
-  "thisWeekProgress": "{completed}/{total} questa settimana",
   "@thisWeekProgress": {
     "description": "This week progress",
     "placeholders": {
@@ -12366,7 +12320,6 @@
   "@considerRecoveryTime": {
     "description": "Recovery time advice"
   },
-  "volumeIncreased": "Il tuo volume è aumentato del {percent}% questo mese",
   "@volumeIncreased": {
     "description": "Volume increased message",
     "placeholders": {
@@ -12375,7 +12328,6 @@
       }
     }
   },
-  "muscleBalance": "Bilanciamento Muscolare",
   "@muscleBalance": {
     "description": "Muscle balance insight title"
   },
@@ -12421,17 +12373,9 @@
   "@viewAnalytics": {
     "description": "View analytics button"
   },
-  "close": "Chiudi",
-  "@close": {
-    "description": "Close button"
-  },
   "analysisBasedOnData": "Analisi basata sui tuoi dati",
   "@analysisBasedOnData": {
     "description": "Analysis based on data subtitle"
-  },
-  "noDataAvailable": "Nessun dato sufficiente",
-  "@noDataAvailable": {
-    "description": "No data available message"
   },
   "completeWorkoutsForAdvices": "Completa almeno {count} allenamenti per ricevere consigli personalizzati",
   "@completeWorkoutsForAdvices": {
@@ -12469,7 +12413,6 @@
       }
     }
   },
-  "repsCount": "{count} reps",
   "@repsCount": {
     "description": "Reps count",
     "placeholders": {
@@ -12487,33 +12430,6 @@
       }
     }
   },
-  "today": "Oggi",
-  "@today": {
-    "description": "Today"
-  },
-  "yesterday": "Ieri",
-  "@yesterday": {
-    "description": "Yesterday"
-  },
-  "daysAgo": "{count} giorni fa",
-  "@daysAgo": {
-    "description": "Days ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "weeksAgo": "{count} settimane fa",
-  "@weeksAgo": {
-    "description": "Weeks ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "monthsAgo": "{count} mesi fa",
   "@monthsAgo": {
     "description": "Months ago",
     "placeholders": {
@@ -12579,7 +12495,6 @@
       }
     }
   },
-  "errorLoadingData": "Errore caricamento dati",
   "@errorLoadingData": {
     "description": "Error loading data message"
   },
@@ -12668,11 +12583,6 @@
   "@goal": {
     "description": "Goal label"
   },
-  "goalAchieved": "Obiettivo raggiunto! 🎉",
-  "@goalAchieved": {
-    "description": "Goal achieved celebration message"
-  },
-  "startFirstWorkout": "Inizia il tuo primo workout",
   "@startFirstWorkout": {
     "description": "Prompt to start first workout"
   },
@@ -12685,29 +12595,9 @@
       }
     }
   },
-  "weeklyGoal": "Obiettivo Settimanale",
-  "@weeklyGoal": {
-    "description": "Weekly goal label"
-  },
-  "workoutsCount": "{count} / {goal} workout",
-  "@workoutsCount": {
-    "description": "Workouts count vs goal",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "goal": {
-        "type": "int"
-      }
-    }
-  },
   "completedCheckmark": "✓ Completato",
   "@completedCheckmark": {
     "description": "Completed with checkmark"
-  },
-  "progress": "Progresso",
-  "@progress": {
-    "description": "Progress label"
   },
   "goalsAndTips": "Obiettivi & Suggerimenti",
   "@goalsAndTips": {
@@ -12724,10 +12614,6 @@
   "goalLabel": "Obiettivo",
   "@goalLabel": {
     "description": "Goal label for stats"
-  },
-  "daysRemaining": "Giorni rimasti",
-  "@daysRemaining": {
-    "description": "Days remaining label"
   },
   "suggestionLabel": "Suggerimento",
   "@suggestionLabel": {
@@ -12771,21 +12657,8 @@
       }
     }
   },
-  "recentWorkouts": "Workout Recenti",
-  "@recentWorkouts": {
-    "description": "Titolo card workout recenti"
-  },
-  "fullHistoryComingSoon": "Cronologia completa in arrivo!",
-  "@fullHistoryComingSoon": {
-    "description": "Messaggio funzionalità cronologia completa in arrivo"
-  },
-  "viewAll": "Vedi Tutti",
   "@viewAll": {
     "description": "Testo pulsante vedi tutti"
-  },
-  "noRecentWorkouts": "Nessun workout recente",
-  "@noRecentWorkouts": {
-    "description": "Messaggio stato vuoto per workout recenti"
   },
   "exercisesWithCount": "{count} {count, plural, =1{esercizio} other{esercizi}}",
   "@exercisesWithCount": {
@@ -12800,26 +12673,8 @@
   "@volumeLabel": {
     "description": "Etichetta volume (minuscolo per uso inline)"
   },
-  "exercisesLabel": "Esercizi",
   "@exercisesLabel": {
     "description": "Etichetta riepilogo esercizi"
-  },
-  "totalSets": "Serie totali",
-  "@totalSets": {
-    "description": "Etichetta riepilogo serie totali"
-  },
-  "totalVolume": "Volume totale",
-  "@totalVolume": {
-    "description": "Etichetta riepilogo volume totale"
-  },
-  "setsCount": "{count} {count, plural, =1{serie} other{serie}}",
-  "@setsCount": {
-    "description": "Conteggio serie con plurale",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "kgVolume": "{volume} kg volume",
   "@kgVolume": {
@@ -12834,25 +12689,12 @@
   "@setHeader": {
     "description": "Intestazione tabella serie"
   },
-  "weightKg": "Peso (kg)",
   "@weightKg": {
     "description": "Intestazione tabella peso in kg"
-  },
-  "reps": "Reps",
-  "@reps": {
-    "description": "Intestazione tabella ripetizioni"
-  },
-  "effort": "Sforzo",
-  "@effort": {
-    "description": "Intestazione tabella sforzo"
   },
   "time": "Tempo",
   "@time": {
     "description": "Intestazione tabella tempo"
-  },
-  "averageRpe": "RPE medio",
-  "@averageRpe": {
-    "description": "Etichetta RPE medio"
   },
   "averageRir": "RIR medio",
   "@averageRir": {
@@ -12918,8 +12760,7 @@
   "autoAdjustRestTooltip": "RPE 8-10: +30s riposo. RPE ≤6: -15s riposo. Adatta automaticamente il tempo di recupero al tuo livello di fatica.",
   "@autoAdjustRestTooltip": {
     "description": "Tooltip funzione auto-regolazione riposo"
-  }
-,
+  },
   "streakViewMonthly": "Mensile",
   "@streakViewMonthly": {
     "description": "Modalità vista streak: calendario mensile"
@@ -12972,25 +12813,15 @@
   "@workedOutToday": {
     "description": "Messaggio quando l'utente si è allenato oggi (0 giorni)"
   },
-  "gotIt": "Ho capito",
   "@gotIt": {
     "description": "Pulsante di conferma nei dialog informativi"
   },
-  "muscleDistribution": "Distribuzione dei muscoli",
   "@muscleDistribution": {
     "description": "Titolo schermata analisi distribuzione muscolare"
-  },
-  "progress": "Progressi",
-  "@progress": {
-    "description": "Etichetta tab progressi"
   },
   "analysis": "Analisi",
   "@analysis": {
     "description": "Etichetta tab analisi"
-  },
-  "details": "Dettagli",
-  "@details": {
-    "description": "Etichetta tab dettagli"
   },
   "availableAnalytics": "Analisi disponibili",
   "@availableAnalytics": {
@@ -13036,21 +12867,11 @@
   "@previousPeriod": {
     "description": "Etichetta legenda periodo precedente nei grafici"
   },
-  "workouts": "Allenamenti",
   "@workouts": {
     "description": "Etichetta statistica allenamenti"
   },
-  "duration": "Durata",
   "@duration": {
     "description": "Etichetta statistica durata"
-  },
-  "volume": "Volume",
-  "@volume": {
-    "description": "Etichetta statistica volume"
-  },
-  "sets": "Serie",
-  "@sets": {
-    "description": "Etichetta statistica serie"
   },
   "increased": "Aumentato",
   "@increased": {
@@ -13060,11 +12881,9 @@
   "@decreased": {
     "description": "Etichetta semantica per freccia trend decrescente"
   },
-  "previous": "Prec",
   "@previous": {
     "description": "Etichetta breve per valore periodo precedente"
   },
-  "comingSoon": "Prossimamente",
   "@comingSoon": {
     "description": "Messaggio placeholder prossimamente"
   },
@@ -13844,43 +13663,11 @@
   "@smartWorkoutCTAProceedAnyway": {
     "description": "Pulsante procedi comunque quando c'è avviso"
   },
-  "smartWorkoutCTARestModeTitle": "Ottimo lavoro oggi!",
   "@smartWorkoutCTARestModeTitle": {
     "description": "Titolo modalità riposo dopo allenamento"
   },
-  "smartWorkoutCTARestModeSubtitle": "È ora di recuperare. Ci vediamo domani!",
   "@smartWorkoutCTARestModeSubtitle": {
     "description": "Sottotitolo modalità riposo"
-  },
-  "smartWorkoutCTARestModeVolume": "{volume} kg sollevati",
-  "@smartWorkoutCTARestModeVolume": {
-    "description": "Statistiche volume modalità riposo",
-    "placeholders": {
-      "volume": {
-        "type": "String",
-        "example": "2500"
-      }
-    }
-  },
-  "smartWorkoutCTARestModeDuration": "{duration} min",
-  "@smartWorkoutCTARestModeDuration": {
-    "description": "Statistiche durata modalità riposo",
-    "placeholders": {
-      "duration": {
-        "type": "String",
-        "example": "45"
-      }
-    }
-  },
-  "smartWorkoutCTARestModeSets": "{sets} serie",
-  "@smartWorkoutCTARestModeSets": {
-    "description": "Statistiche serie modalità riposo",
-    "placeholders": {
-      "sets": {
-        "type": "String",
-        "example": "20"
-      }
-    }
   },
   "smartWorkoutCTAReasonPickerTitle": "Non ti va?",
   "@smartWorkoutCTAReasonPickerTitle": {
@@ -13976,10 +13763,6 @@
   "@xpSystem": {
     "description": "Intestazione sezione premi XP"
   },
-  "submitContribution": "Invia contributo",
-  "@submitContribution": {
-    "description": "Azione XP: invio contributo"
-  },
   "contributionApproved": "Contributo approvato",
   "@contributionApproved": {
     "description": "Azione XP: contributo approvato"
@@ -14028,7 +13811,6 @@
   "@somethingWentWrong": {
     "description": "Sottotitolo stato errore generico"
   },
-
   "analyticsCorrelationsTitle": "Correlazioni",
   "@analyticsCorrelationsTitle": {
     "description": "Titolo sezione correlazioni in analytics"
@@ -14404,8 +14186,6 @@
   "@analyticsNotEnoughData": {
     "description": "Messaggio quando non ci sono dati sufficienti per calcolare il trend"
   },
-
-  "recommendation": "Consiglio",
   "@recommendation": {
     "description": "Etichetta per sezione raccomandazione"
   },
@@ -14417,7 +14197,6 @@
   "@confidenceLabel": {
     "description": "Etichetta per indicatore di confidenza"
   },
-
   "patternFatigueWarningTitle": "Avviso Fatica",
   "@patternFatigueWarningTitle": {
     "description": "Titolo per pattern di avviso fatica"
@@ -14434,7 +14213,6 @@
   "@patternFatigueWarningScience": {
     "description": "Spiegazione scientifica per avviso fatica"
   },
-
   "patternGreatProgressionTitle": "Ottima Progressione!",
   "@patternGreatProgressionTitle": {
     "description": "Titolo per pattern di ottima progressione"
@@ -14451,7 +14229,6 @@
   "@patternGreatProgressionScience": {
     "description": "Spiegazione scientifica per ottima progressione"
   },
-
   "patternOverreachingRiskTitle": "Rischio Overreaching",
   "@patternOverreachingRiskTitle": {
     "description": "Titolo per pattern di rischio overreaching"
@@ -14468,7 +14245,6 @@
   "@patternOverreachingRiskScience": {
     "description": "Spiegazione scientifica per rischio overreaching"
   },
-
   "patternAdaptationTitle": "Corpo in Adattamento",
   "@patternAdaptationTitle": {
     "description": "Titolo per pattern di adattamento"
@@ -14485,7 +14261,6 @@
   "@patternAdaptationScience": {
     "description": "Spiegazione scientifica per adattamento"
   },
-
   "patternVolumeSpikeTitle": "Picco di Volume",
   "@patternVolumeSpikeTitle": {
     "description": "Titolo per pattern di picco volume"
@@ -14502,7 +14277,6 @@
   "@patternVolumeSpikeScience": {
     "description": "Spiegazione scientifica per picco volume"
   },
-
   "patternOptimalTrainingTitle": "Allenamento Ottimale",
   "@patternOptimalTrainingTitle": {
     "description": "Titolo per pattern di allenamento ottimale"
@@ -14519,7 +14293,6 @@
   "@patternOptimalTrainingScience": {
     "description": "Spiegazione scientifica per allenamento ottimale"
   },
-
   "patternInconsistentTitle": "Dati Inconsistenti",
   "@patternInconsistentTitle": {
     "description": "Titolo per pattern inconsistente"
@@ -14536,7 +14309,6 @@
   "@patternInconsistentScience": {
     "description": "Spiegazione scientifica per dati inconsistenti"
   },
-
   "profileUpdated": "Profilo aggiornato",
   "@profileUpdated": {
     "description": "Messaggio mostrato quando il profilo viene aggiornato con successo"
@@ -14627,7 +14399,6 @@
       }
     }
   },
-  "restDay": "Giorno di Riposo",
   "@restDay": {
     "description": "Etichetta per giorno di riposo"
   },
@@ -14643,7 +14414,6 @@
   "@workoutWeek": {
     "description": "Etichetta per anello metrica workout settimanali"
   },
-  "volumeGoal": "Obiettivo Volume",
   "@volumeGoal": {
     "description": "Etichetta per anello metrica obiettivo volume"
   },
@@ -14783,7 +14553,6 @@
       }
     }
   },
-  "editProfile": "Modifica Profilo",
   "@editProfile": {
     "description": "Pulsante per modificare il profilo utente"
   },
@@ -14838,7 +14607,6 @@
       }
     }
   },
-  "volumeWithValue": "Volume: {value}k kg",
   "@volumeWithValue": {
     "description": "Volume con valore",
     "placeholders": {
@@ -15019,7 +14787,6 @@
       }
     }
   },
-  "lastWeek": "Scorsa Settimana",
   "@lastWeek": {
     "description": "Etichetta per sezione scorsa settimana"
   },
@@ -15044,5 +14811,100 @@
         "type": "int"
       }
     }
+  },
+  "warmupProgression": "Progressione Riscaldamento",
+  "@warmupProgression": {
+    "description": "Title for warmup progression modal"
+  },
+  "warmupAdjustWeight": "Regola Set {percentage}%",
+  "@warmupAdjustWeight": {
+    "description": "Title for weight adjustment dialog",
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "warmupCompletedMessage": "Riscaldamento completato! Pronto per le serie di lavoro",
+  "@warmupCompletedMessage": {
+    "description": "Message shown when all warmup sets are completed"
+  },
+  "warmupTipForm": "Concentrati su forma e tecnica",
+  "@warmupTipForm": {
+    "description": "Tip for initial warmup sets (40%)"
+  },
+  "warmupTipActivate": "Attiva i muscoli target",
+  "@warmupTipActivate": {
+    "description": "Tip for medium warmup sets (50-60%)"
+  },
+  "warmupTipNervous": "Prepara il sistema nervoso",
+  "@warmupTipNervous": {
+    "description": "Tip for heavier warmup sets (70-80%)"
+  },
+  "warmupTipAlmost": "Quasi pronto! Preparazione finale",
+  "@warmupTipAlmost": {
+    "description": "Tip for final warmup sets (90%)"
+  },
+  "warmupDisclaimer": "I pesi sono arrotondati a 2.5kg. Tocca per modificare.",
+  "@warmupDisclaimer": {
+    "description": "Disclaimer text at bottom of warmup modal"
+  },
+  "warmupRecommended": "Riscaldamento Consigliato",
+  "@warmupRecommended": {
+    "description": "Title for recommended warmup section"
+  },
+  "warmupSetsTarget": "{count} set · Target {weight}kg",
+  "@warmupSetsTarget": {
+    "description": "Warmup sets count and target weight",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "double"
+      }
+    }
+  },
+  "warmupEmptyBar": "Bilanciere vuoto",
+  "@warmupEmptyBar": {
+    "description": "Label for empty bar warmup set"
+  },
+  "warmupPerSide": "{plates} per lato",
+  "@warmupPerSide": {
+    "description": "Plates per side of the bar",
+    "placeholders": {
+      "plates": {
+        "type": "String"
+      }
+    }
+  },
+  "warmupCustomize": "Personalizza",
+  "@warmupCustomize": {
+    "description": "Button text to customize warmup sets"
+  },
+  "warmupAddAll": "Aggiungi Tutti",
+  "@warmupAddAll": {
+    "description": "Button text to add all warmup sets"
+  },
+  "warmupCustomizeTitle": "Personalizza Riscaldamento",
+  "@warmupCustomizeTitle": {
+    "description": "Title for warmup customization screen"
+  },
+  "warmupAddSet": "Aggiungi Set",
+  "@warmupAddSet": {
+    "description": "Button text to add a new warmup set"
+  },
+  "warmupSetNumber": "Set {number}",
+  "@warmupSetNumber": {
+    "description": "Label for warmup set number",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "warmupScienceBased": "Basato su ricerca scientifica",
+  "@warmupScienceBased": {
+    "description": "Label indicating warmup is science-based"
   }
 }

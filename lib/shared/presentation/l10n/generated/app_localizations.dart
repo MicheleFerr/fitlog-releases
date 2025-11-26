@@ -4129,6 +4129,18 @@ abstract class AppLocalizations {
   /// **'Intelligent Progression'**
   String get warmupIntelligentProgression;
 
+  /// Title for warmup customization modal
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Warmup Sets'**
+  String get warmupCustomizeTitle;
+
+  /// Button to add a new warmup set in customization modal
+  ///
+  /// In en, this message translates to:
+  /// **'Add Warmup Set'**
+  String get warmupAddSet;
+
   /// Warmup progression description with placeholders
   ///
   /// In en, this message translates to:
@@ -36539,6 +36551,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} workouts'**
   String nWorkoutsCount(int count);
+
+  /// Title for warmup progression modal
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup Progression'**
+  String get warmupProgression;
+
+  /// Title for weight adjustment dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust {percentage}% Set'**
+  String warmupAdjustWeight(int percentage);
+
+  /// Message shown when all warmup sets are completed
+  ///
+  /// In en, this message translates to:
+  /// **'Warmup complete! Ready for working sets'**
+  String get warmupCompletedMessage;
+
+  /// Tip for initial warmup sets (40%)
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on form and technique'**
+  String get warmupTipForm;
+
+  /// Tip for medium warmup sets (50-60%)
+  ///
+  /// In en, this message translates to:
+  /// **'Activate target muscles'**
+  String get warmupTipActivate;
+
+  /// Tip for heavier warmup sets (70-80%)
+  ///
+  /// In en, this message translates to:
+  /// **'Prime your nervous system'**
+  String get warmupTipNervous;
+
+  /// Tip for final warmup sets (90%)
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there! Final preparation'**
+  String get warmupTipAlmost;
+
+  /// Disclaimer text at bottom of warmup modal
+  ///
+  /// In en, this message translates to:
+  /// **'Weights are rounded to 2.5kg. Tap to adjust if needed.'**
+  String get warmupDisclaimer;
+
+  /// Title for recommended warmup section
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Warmup'**
+  String get warmupRecommended;
+
+  /// Warmup sets count and target weight
+  ///
+  /// In en, this message translates to:
+  /// **'{count} sets · Target {weight}kg'**
+  String warmupSetsTarget(int count, double weight);
+
+  /// Label for empty bar warmup set
+  ///
+  /// In en, this message translates to:
+  /// **'Empty bar'**
+  String get warmupEmptyBar;
+
+  /// Plates per side of the bar
+  ///
+  /// In en, this message translates to:
+  /// **'{plates} per side'**
+  String warmupPerSide(String plates);
+
+  /// Button text to customize warmup sets
+  ///
+  /// In en, this message translates to:
+  /// **'Customize'**
+  String get warmupCustomize;
+
+  /// Button text to add all warmup sets
+  ///
+  /// In en, this message translates to:
+  /// **'Add All'**
+  String get warmupAddAll;
+
+  /// Label for warmup set number
+  ///
+  /// In en, this message translates to:
+  /// **'Set {number}'**
+  String warmupSetNumber(int number);
+
+  /// Label indicating warmup is science-based
+  ///
+  /// In en, this message translates to:
+  /// **'Based on scientific research'**
+  String get warmupScienceBased;
 }
 
 class _AppLocalizationsDelegate
