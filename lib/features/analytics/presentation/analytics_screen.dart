@@ -891,9 +891,12 @@ class _QuickStatsSummary extends StatelessWidget {
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (_) => WeeklyModal(
-                    exerciseHistories: exerciseHistories,
-                    weeklyWorkouts: weeklyWorkouts,
+                  builder: (sheetContext) => SizedBox(
+                    height: MediaQuery.of(sheetContext).size.height * 0.8,
+                    child: WeeklyModal(
+                      exerciseHistories: exerciseHistories,
+                      weeklyWorkouts: weeklyWorkouts,
+                    ),
                   ),
                 );
               },

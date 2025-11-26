@@ -321,9 +321,9 @@ class _WeeklyModalState extends State<WeeklyModal> {
 
             return Column(
               children: [
-                // Day name
+                // Day name (weekday is 1-7, so -1 for 0-indexed array)
                 Text(
-                  weekDayNames[index],
+                  weekDayNames[dayDate.weekday - 1],
                   style: context.textTheme.labelSmall?.copyWith(
                     color: context.colors.onSurfaceVariant,
                     fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
