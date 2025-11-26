@@ -72,8 +72,12 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
     
-    final undoRedoState = ref.watch(undoRedoProvider);
-    final offlineState = ref.watch(offlineSyncProvider);
+    // Select only needed fields to prevent unnecessary rebuilds
+    final canUndo = ref.watch(undoRedoProvider.select((s) => s.canUndo));
+    final canRedo = ref.watch(undoRedoProvider.select((s) => s.canRedo));
+    final undoStack = ref.watch(undoRedoProvider.select((s) => s.undoStack));
+    final isOnline = ref.watch(offlineSyncProvider.select((s) => s.isOnline));
+    final pendingActionsCount = ref.watch(offlineSyncProvider.select((s) => s.pendingActions.length));
     
     return AnimatedBuilder(
       animation: _animationController,
@@ -107,7 +111,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                         _ActionButton(
                           icon: AppIcons.undo,
                           label: l10n.undo,
-                          enabled: undoRedoState.canUndo,
+                          enabled: canUndo,
                           onTap: () {
                             HapticFeedback.lightImpact();
                             ref.read(undoRedoProvider.notifier).undo();
@@ -121,7 +125,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                         _ActionButton(
                           icon: AppIcons.redo,
                           label: l10n.redo,
-                          enabled: undoRedoState.canRedo,
+                          enabled: canRedo,
                           onTap: () {
                             HapticFeedback.lightImpact();
                             ref.read(undoRedoProvider.notifier).redo();
@@ -132,9 +136,9 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                         const Spacer(),
                         
                         // Offline indicator
-                        if (!offlineState.isOnline)
+                        if (!isOnline)
                           _OfflineIndicator(
-                            pendingCount: offlineState.pendingActions.length,
+                            pendingCount: pendingActionsCount,
                           ),
                         
                         // Screen always on toggle
@@ -167,7 +171,7 @@ class _WorkoutActionBarState extends ConsumerState<WorkoutActionBar>
                   AnimatedSize(
                     duration: const Duration(milliseconds: 200),
                     child: _isExpanded
-                      ? _ActionHistory(actions: undoRedoState.undoStack)
+                      ? _ActionHistory(actions: undoStack)
                       : const SizedBox.shrink(),
                   ),
                 ],
@@ -667,14 +671,15 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-    final wakelockState = ref.watch(screenWakelockProvider);
+    // Select only isEnabled to prevent unnecessary rebuilds
+    final isEnabled = ref.watch(screenWakelockProvider.select((s) => s.isEnabled));
 
     return Tooltip(
-      message: wakelockState.isEnabled
+      message: isEnabled
         ? l10n.keepScreenOn
         : l10n.keepScreenOn,
       child: Material(
-        color: wakelockState.isEnabled
+        color: isEnabled
           ? theme.colorScheme.primaryContainer
           : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
@@ -687,7 +692,7 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  wakelockState.isEnabled
+                  isEnabled
                     ? 'Schermo sempre acceso disattivato'
                     : 'Schermo sempre acceso attivato',
                 ),
@@ -705,12 +710,12 @@ class _ScreenAlwaysOnToggle extends ConsumerWidget {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: Icon(
-                wakelockState.isEnabled
+                isEnabled
                   ? AppIcons.mobileScreenShare
                   : AppIcons.mobileOff,
-                key: ValueKey(wakelockState.isEnabled),
+                key: ValueKey(isEnabled),
                 size: 20,
-                color: wakelockState.isEnabled
+                color: isEnabled
                   ? theme.colorScheme.onPrimaryContainer
                   : theme.colorScheme.onSurfaceVariant,
               ),

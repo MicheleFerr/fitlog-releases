@@ -84,9 +84,12 @@ class _TemplateCardState extends ConsumerState<TemplateCard>
   }
 
   /// Check if this template is currently active
+  /// Uses select() to only rebuild when the specific templateId changes
   bool get _isActiveWorkout {
-    final currentWorkout = ref.watch(currentWorkoutProvider);
-    return currentWorkout?.templateId == widget.template.id;
+    final activeTemplateId = ref.watch(
+      currentWorkoutProvider.select((w) => w?.templateId),
+    );
+    return activeTemplateId == widget.template.id;
   }
 
   @override
