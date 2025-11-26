@@ -57,7 +57,10 @@ class _PRInfo {
 
   String formatDate(BuildContext context) {
     final now = DateTime.now();
-    final difference = now.difference(achievedDate).inDays;
+    // Use calendar days (without time) for correct comparison
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(achievedDate.year, achievedDate.month, achievedDate.day);
+    final difference = today.difference(targetDay).inDays;
 
     if (difference == 0) return context.l10n.prToday;
     if (difference == 1) return context.l10n.prYesterday;

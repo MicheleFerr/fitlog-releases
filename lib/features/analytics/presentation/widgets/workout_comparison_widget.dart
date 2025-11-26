@@ -310,7 +310,10 @@ class WorkoutComparisonWidget extends ConsumerWidget {
 
   String _formatComparisonDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
-    final difference = now.difference(date).inDays;
+    // Use calendar days (without time) for correct comparison
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(targetDay).inDays;
 
     if (difference == 0) {
       return l10n.today;
@@ -665,7 +668,10 @@ class DetailedWorkoutComparison extends ConsumerWidget {
 
   String _formatComparisonDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
-    final difference = now.difference(date).inDays;
+    // Use calendar days (without time) for correct comparison
+    final today = DateTime(now.year, now.month, now.day);
+    final targetDay = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(targetDay).inDays;
 
     if (difference == 0) {
       return l10n.today;

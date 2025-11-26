@@ -1327,7 +1327,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
 
   String _formatDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
-    final difference = now.difference(date).inDays;
+    // Use calendar days (without time) for correct comparison
+    final today = DateTime(now.year, now.month, now.day);
+    final workoutDay = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(workoutDay).inDays;
 
     if (difference == 0) {
       return '${l10n.today}, ${DateFormat('HH:mm').format(date)}';
