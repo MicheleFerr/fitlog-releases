@@ -75,15 +75,15 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
           controller: _tabController,
           tabs: [
             Tab(
-              icon: Icon(AppIcons.trendUp, size: AppIconSize.small),
+              icon: const Icon(AppIcons.trendUp, size: AppIconSize.small),
               text: context.l10n.popular,
             ),
             Tab(
-              icon: Icon(AppIcons.person, size: AppIconSize.small),
+              icon: const Icon(AppIcons.person, size: AppIconSize.small),
               text: context.l10n.myContributions,
             ),
             Tab(
-              icon: Icon(AppIcons.help, size: AppIconSize.small),
+              icon: const Icon(AppIcons.help, size: AppIconSize.small),
               text: context.l10n.guide,
             ),
           ],
@@ -102,7 +102,7 @@ class _CommunityHubScreenState extends ConsumerState<CommunityHubScreen>
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateModal(context),
-        icon: Icon(AppIcons.add),
+        icon: const Icon(AppIcons.add),
         label: Text(context.l10n.contribute),
         backgroundColor: context.colors.primary,
         foregroundColor: context.colors.onPrimary,
@@ -324,7 +324,7 @@ class _GuideTab extends StatelessWidget {
             width: double.infinity,
             child: FilledButton.icon(
               onPressed: onNavigateToFeed,
-              icon: Icon(AppIcons.trendUp),
+              icon: const Icon(AppIcons.trendUp),
               label: Text(context.l10n.exploreCommunity),
             ),
           ),
@@ -351,8 +351,11 @@ class _ContributionFeedCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(currentUserProvider);
-    final currentUserId = userAsync.asData?.value?.uid;
+    // Use select() to only rebuild when uid changes, not when other user data changes
+    // High-impact: _ContributionFeedCard is rendered N times in community feed
+    final currentUserId = ref.watch(
+      currentUserProvider.select((async) => async.asData?.value?.uid),
+    );
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -829,7 +832,7 @@ class _ErrorState extends StatelessWidget {
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: onRetry,
-              icon: Icon(AppIcons.refresh),
+              icon: const Icon(AppIcons.refresh),
               label: Text(context.l10n.retry),
             ),
           ],

@@ -268,13 +268,12 @@ class SmartWorkoutCTA extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Reason
-              if (suggestion.reason != null)
-                Text(
-                  suggestion.reason!,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colors.surface.withValues(alpha: 0.9),
-                  ),
+              Text(
+                suggestion.reason,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: context.colors.surface.withValues(alpha: 0.9),
                 ),
+              ),
 
               const SizedBox(height: 16),
 
@@ -293,7 +292,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      icon: Icon(AppIcons.play, size: AppIconSize.small),
+                      icon: const Icon(AppIcons.play, size: AppIconSize.small),
                       label: Text(context.l10n.smartWorkoutCTAStartButton),
                     ),
                   ),
@@ -423,7 +422,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    icon: Icon(AppIcons.play, size: AppIconSize.small),
+                    icon: const Icon(AppIcons.play, size: AppIconSize.small),
                     label: Text(context.l10n.smartWorkoutCTAProceedAnyway),
                   ),
                 ),
@@ -446,7 +445,7 @@ class SmartWorkoutCTA extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      icon: Icon(AppIcons.swapHoriz, size: AppIconSize.small),
+                      icon: const Icon(AppIcons.swapHoriz, size: AppIconSize.small),
                       label: Text(
                         conflict.suggestedAlternative!,
                         overflow: TextOverflow.ellipsis,
@@ -465,8 +464,10 @@ class SmartWorkoutCTA extends ConsumerWidget {
   Widget _buildRestModeState(BuildContext context, WidgetRef ref, Workout workout) {
     final stats = _calculateWorkoutStats(workout);
 
-    // Track analytics
-    final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
+    // Track analytics - use select() to only rebuild when uid changes
+    final userId = ref.watch(
+      firebaseUserProvider.select((async) => async.valueOrNull?.uid),
+    );
     if (userId != null) {
       WorkoutAnalytics.trackEvent(
         'rest_mode_shown',
