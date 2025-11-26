@@ -4,8 +4,8 @@
 /// Feature: Profile Hub
 /// Type: Screen
 ///
-/// Profile hub with user header, activity chart, quick actions, and workout feed.
-/// Central hub for Statistiche, Esercizi, Misurazioni, Calendario access.
+/// Apple Fitness+ style profile hub with compact header,
+/// metric ring cards, quick actions, and modern workout feed.
 library;
 
 import 'package:flutter/material.dart';
@@ -14,15 +14,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/providers/workout_history_provider.dart';
-import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
-import 'package:intl/intl.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/compact_profile_header.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/metric_ring_card.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/quick_action_chips.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/modern_workout_card.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/providers/user_goals_provider.dart';
 
-/// Profile hub screen - central navigation point for user-related features
+/// Profile hub screen - Apple Fitness+ style design
+///
+/// Features:
+/// - Compact horizontal header with tier progress
+/// - 3 metric ring cards (streak weeks, workout week, volume goal)
+/// - Quick action chips (Stats, History, Measures, Calendar)
+/// - Modern workout feed with exercise previews
 class ProfileHubScreen extends ConsumerWidget {
   const ProfileHubScreen({super.key});
 
@@ -31,7 +39,9 @@ class ProfileHubScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return userAsync.when(
-      data: (user) => _buildContent(context, ref, user),
+      data: (user) => _ProfileHubContent(
+        userName: user?.displayName ?? context.l10n.profile,
+      ),
       loading: () => const Scaffold(
         body: Center(child: LoadingIndicator()),
       ),
@@ -40,34 +50,54 @@ class ProfileHubScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildContent(BuildContext context, WidgetRef ref, user) {
+/// Main content of the Profile Hub
+class _ProfileHubContent extends ConsumerWidget {
+  const _ProfileHubContent({required this.userName});
+
+  final String userName;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // User header with settings icon
+          // Compact header with tier progress
           SliverToBoxAdapter(
-            child: _ProfileHeader(
-              userName: user?.displayName ?? context.l10n.profile,
-              userEmail: user?.email ?? '',
+            child: CompactProfileHeader(
+              userName: userName,
               onSettingsTap: () => context.pushNamed(AppRoutes.settingsName),
               onEditTap: () => context.pushNamed(AppRoutes.editProfileName),
             ),
           ),
 
-          // Activity chart section with workout durations
+          // Metric ring cards
           SliverToBoxAdapter(
-            child: _ActivityChartSection(),
+            child: _MetricRingsSection(),
           ),
 
-          // Quick actions grid (2x2)
-          SliverToBoxAdapter(
-            child: _QuickActionsGrid(),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 24),
           ),
 
-          // Recent workouts feed (actual data)
+          // Quick action chips
           SliverToBoxAdapter(
-            child: _RecentWorkoutsFeed(),
+            child: ProfileQuickActions(
+              onStatsTap: () => context.pushNamed(AppRoutes.analyticsName),
+              onHistoryTap: () => context.pushNamed(AppRoutes.workoutHistoryName),
+              onMeasuresTap: () => context.pushNamed(AppRoutes.bodyMeasurementsName),
+              onCalendarTap: () => context.pushNamed(AppRoutes.streakCalendarName),
+            ),
+          ),
+
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 24),
+          ),
+
+          // Recent workouts section
+          SliverToBoxAdapter(
+            child: _RecentWorkoutsSection(),
           ),
 
           // Bottom padding
@@ -80,397 +110,385 @@ class ProfileHubScreen extends ConsumerWidget {
   }
 }
 
-/// Profile header with user info and action icons (NO stats row)
-class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({
-    required this.userName,
-    required this.userEmail,
-    required this.onSettingsTap,
-    required this.onEditTap,
-  });
-
-  final String userName;
-  final String userEmail;
-  final VoidCallback onSettingsTap;
-  final VoidCallback onEditTap;
-
+/// Metric rings section with 3 progress indicators
+class _MetricRingsSection extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Top row: Edit, Share, Settings icons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    AppIcons.edit,
-                    size: AppIconSize.medium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    onEditTap();
-                  },
-                  tooltip: context.l10n.edit,
-                ),
-                IconButton(
-                  icon: Icon(
-                    AppIcons.share,
-                    size: AppIconSize.medium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    // TODO: Share profile
-                  },
-                  tooltip: context.l10n.share,
-                ),
-                IconButton(
-                  icon: Icon(
-                    AppIcons.settingsOutlined,
-                    size: AppIconSize.medium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    onSettingsTap();
-                  },
-                  tooltip: context.l10n.settings,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final weeklyWorkoutAsync = ref.watch(weeklyWorkoutProgressProvider);
+    final weeklyVolumeAsync = ref.watch(weeklyVolumeProgressProvider);
+    final streakWeeksAsync = ref.watch(streakWeeksProgressProvider);
 
-            // Avatar
-            CircleAvatar(
-              radius: 48,
-              backgroundColor: context.colors.primaryContainer,
-              child: Text(
-                userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                style: context.textTheme.headlineLarge?.copyWith(
-                  color: context.colors.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
+    // Default values while loading
+    final weeklyWorkout = weeklyWorkoutAsync.valueOrNull ??
+        const WeeklyWorkoutProgress(
+          current: 0,
+          goal: 2,
+          percentage: 0,
+          isComplete: false,
+        );
 
-            // Name
-            Text(
-              userName,
-              style: context.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
+    final weeklyVolume = weeklyVolumeAsync.valueOrNull ??
+        const WeeklyVolumeProgress(
+          currentKg: 0,
+          goalKg: null,
+          percentage: 0,
+          isComplete: false,
+        );
 
-            // Email or subtitle
-            Text(
-              userEmail,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-            // NOTE: Stats row (workouts, followers, following) removed per user request
-          ],
+    final streakWeeks = streakWeeksAsync.valueOrNull ??
+        const StreakWeeksProgress(
+          current: 0,
+          goal: 4,
+          percentage: 0,
+          isComplete: false,
+        );
+
+    return MetricRingsRow(
+      rings: [
+        // Streak Weeks
+        MetricRingConfig(
+          title: context.l10n.streakWeeks,
+          value: context.l10n.streakWeeksValue(
+            streakWeeks.current,
+            streakWeeks.goal,
+          ),
+          percentage: streakWeeks.percentage,
+          color: context.colors.success,
+          onTap: () => _showGoalSheet(
+            context,
+            ref,
+            _GoalType.streakWeeks,
+            streakWeeks.goal,
+          ),
         ),
+
+        // Workout Week
+        MetricRingConfig(
+          title: context.l10n.workoutWeek,
+          value: context.l10n.workoutsWeekGoal(
+            weeklyWorkout.current,
+            weeklyWorkout.goal,
+          ),
+          percentage: weeklyWorkout.percentage,
+          color: context.colors.primary,
+          onTap: () => _showGoalSheet(
+            context,
+            ref,
+            _GoalType.workoutsPerWeek,
+            weeklyWorkout.goal,
+          ),
+        ),
+
+        // Volume Goal
+        MetricRingConfig(
+          title: context.l10n.volumeGoal,
+          value: context.l10n.volumePercentage(
+            (weeklyVolume.percentage * 100).round(),
+          ),
+          percentage: weeklyVolume.percentage,
+          color: context.colors.secondary,
+          onTap: () => _showVolumeGoalSheet(
+            context,
+            ref,
+            weeklyVolume.goalKg,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showGoalSheet(
+    BuildContext context,
+    WidgetRef ref,
+    _GoalType type,
+    int currentValue,
+  ) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _GoalEditSheet(
+        type: type,
+        currentValue: currentValue,
+        onSave: (newValue) async {
+          final notifier = ref.read(userGoalsProvider.notifier);
+          switch (type) {
+            case _GoalType.workoutsPerWeek:
+              await notifier.setWorkoutsPerWeek(newValue);
+            case _GoalType.streakWeeks:
+              await notifier.setStreakWeeksGoal(newValue);
+          }
+        },
+      ),
+    );
+  }
+
+  void _showVolumeGoalSheet(
+    BuildContext context,
+    WidgetRef ref,
+    double? currentValue,
+  ) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _VolumeGoalEditSheet(
+        currentValue: currentValue,
+        onSave: (newValue) async {
+          final notifier = ref.read(userGoalsProvider.notifier);
+          await notifier.setWeeklyVolumeTarget(newValue);
+        },
       ),
     );
   }
 }
 
-/// Activity chart section showing workout duration cluster chart
-class _ActivityChartSection extends ConsumerWidget {
+enum _GoalType { workoutsPerWeek, streakWeeks }
+
+/// Bottom sheet for editing numeric goals
+class _GoalEditSheet extends StatefulWidget {
+  const _GoalEditSheet({
+    required this.type,
+    required this.currentValue,
+    required this.onSave,
+  });
+
+  final _GoalType type;
+  final int currentValue;
+  final Future<void> Function(int) onSave;
+
+  @override
+  State<_GoalEditSheet> createState() => _GoalEditSheetState();
+}
+
+class _GoalEditSheetState extends State<_GoalEditSheet> {
+  late int _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.currentValue;
+  }
+
+  int get _minValue => widget.type == _GoalType.workoutsPerWeek ? 1 : 1;
+  int get _maxValue => widget.type == _GoalType.workoutsPerWeek ? 7 : 52;
+
+  String get _title {
+    switch (widget.type) {
+      case _GoalType.workoutsPerWeek:
+        return context.l10n.workoutsPerWeek;
+      case _GoalType.streakWeeks:
+        return context.l10n.streakWeeks;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            context.l10n.modifyGoal,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _title,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Value selector
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                onPressed: _value > _minValue
+                    ? () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _value--);
+                      }
+                    : null,
+                icon: Icon(
+                  AppIcons.removeCircleOutline,
+                  size: 32,
+                  color: _value > _minValue
+                      ? context.colors.primary
+                      : context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                ),
+              ),
+              const SizedBox(width: 24),
+              Text(
+                '$_value',
+                style: context.textTheme.displayMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 24),
+              IconButton(
+                onPressed: _value < _maxValue
+                    ? () {
+                        HapticFeedback.lightImpact();
+                        setState(() => _value++);
+                      }
+                    : null,
+                icon: Icon(
+                  AppIcons.addCircleOutline,
+                  size: 32,
+                  color: _value < _maxValue
+                      ? context.colors.primary
+                      : context.colors.onSurfaceVariant.withValues(alpha: 0.3),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            context.l10n.currentGoalValue('$_value'),
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Save button
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: () async {
+                HapticFeedback.mediumImpact();
+                await widget.onSave(_value);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.l10n.goalSaved)),
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(context.l10n.save),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+}
+
+/// Bottom sheet for editing volume goal
+class _VolumeGoalEditSheet extends StatefulWidget {
+  const _VolumeGoalEditSheet({
+    required this.currentValue,
+    required this.onSave,
+  });
+
+  final double? currentValue;
+  final Future<void> Function(double?) onSave;
+
+  @override
+  State<_VolumeGoalEditSheet> createState() => _VolumeGoalEditSheetState();
+}
+
+class _VolumeGoalEditSheetState extends State<_VolumeGoalEditSheet> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: widget.currentValue?.toStringAsFixed(0) ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        24.0,
+        24.0,
+        24.0,
+        24.0 + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            context.l10n.modifyGoal,
+            style: context.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            context.l10n.weeklyVolumeTarget,
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Text input for volume
+          TextField(
+            controller: _controller,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            style: context.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+            decoration: InputDecoration(
+              hintText: '0',
+              suffixText: 'kg',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Save button
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: () async {
+                HapticFeedback.mediumImpact();
+                final text = _controller.text.trim();
+                final value = text.isEmpty ? null : double.tryParse(text);
+                await widget.onSave(value);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.l10n.goalSaved)),
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(context.l10n.save),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+}
+
+/// Recent workouts section with modern cards
+class _RecentWorkoutsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final workoutsAsync = ref.watch(workoutHistoryProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: workoutsAsync.when(
-          data: (workouts) => _buildChart(context, workouts),
-          loading: () => const Center(child: LoadingIndicator()),
-          error: (_, __) => Center(
-            child: Text(
-              context.l10n.errorLoadingData,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChart(BuildContext context, List<WorkoutHistoryDetail> workouts) {
-    if (workouts.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              AppIcons.analytics,
-              size: AppIconSize.xlarge,
-              color: context.colors.onSurfaceVariant,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              context.l10n.noWorkoutsYet,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Get last 14 days of workouts for the chart
-    final now = DateTime.now();
-    final twoWeeksAgo = now.subtract(const Duration(days: 13));
-
-    // Group workouts by date and sum durations
-    final durationsByDay = <int, int>{};
-    for (var i = 0; i < 14; i++) {
-      durationsByDay[i] = 0;
-    }
-
-    for (final workout in workouts) {
-      final workoutDate = DateTime(
-        workout.completedAt.year,
-        workout.completedAt.month,
-        workout.completedAt.day,
-      );
-      final daysDiff = workoutDate.difference(DateTime(twoWeeksAgo.year, twoWeeksAgo.month, twoWeeksAgo.day)).inDays;
-      if (daysDiff >= 0 && daysDiff < 14) {
-        durationsByDay[daysDiff] = (durationsByDay[daysDiff] ?? 0) + workout.duration.inMinutes;
-      }
-    }
-
-    // Find max duration for scaling
-    final maxDuration = durationsByDay.values.fold(0, (a, b) => a > b ? a : b);
-    final maxForScale = maxDuration > 0 ? maxDuration : 60; // Default to 60 min if no workouts
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.l10n.activityChart,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                context.l10n.lastNDays(14),
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(14, (index) {
-                final duration = durationsByDay[index] ?? 0;
-                final heightPercent = maxForScale > 0 ? duration / maxForScale : 0.0;
-                final date = twoWeeksAgo.add(Duration(days: index));
-                final isToday = date.day == now.day && date.month == now.month;
-
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Tooltip(
-                      message: '${DateFormat.MMMd(context.l10n.localeName).format(date)}: ${duration}min',
-                      child: Container(
-                        height: heightPercent > 0
-                            ? (heightPercent * 100).clamp(8.0, 100.0)
-                            : 4.0,
-                        decoration: BoxDecoration(
-                          color: duration > 0
-                              ? (isToday
-                                  ? context.colors.primary
-                                  : context.colors.primary.withValues(alpha: 0.6))
-                              : context.colors.surfaceContainerLow,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-          const SizedBox(height: 8),
-          // Day labels
-          Row(
-            children: List.generate(14, (index) {
-              final date = twoWeeksAgo.add(Duration(days: index));
-              // Only show label for every 3rd day
-              if (index % 3 != 0 && index != 13) return const Expanded(child: SizedBox());
-              return Expanded(
-                child: Text(
-                  DateFormat.d().format(date),
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colors.onSurfaceVariant,
-                    fontSize: 10,
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Quick actions 2x2 grid
-class _QuickActionsGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.l10n.quickActions,
-            style: context.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _QuickActionCard(
-                  icon: AppIcons.analytics,
-                  label: context.l10n.statistics,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.pushNamed(AppRoutes.analyticsName);
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _QuickActionCard(
-                  icon: AppIcons.history,
-                  label: context.l10n.workoutHistory,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    // Navigate to workout history
-                    context.pushNamed(AppRoutes.workoutHistoryName);
-                  },
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _QuickActionCard(
-                  icon: AppIcons.bodyMeasurements,
-                  label: context.l10n.measurements,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.pushNamed(AppRoutes.bodyMeasurementsName);
-                  },
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _QuickActionCard(
-                  icon: AppIcons.calendar,
-                  label: context.l10n.calendar,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.pushNamed(AppRoutes.streakCalendarName);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Quick action card widget
-class _QuickActionCard extends StatelessWidget {
-  const _QuickActionCard({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: context.colors.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                size: AppIconSize.large,
-                color: context.colors.primary,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Recent workouts feed section showing actual workout data
-class _RecentWorkoutsFeed extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final workoutsAsync = ref.watch(workoutHistoryProvider);
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -486,7 +504,6 @@ class _RecentWorkoutsFeed extends ConsumerWidget {
               TextButton(
                 onPressed: () {
                   HapticFeedback.lightImpact();
-                  // Navigate to full workout history
                   context.pushNamed(AppRoutes.workoutHistoryName);
                 },
                 child: Text(context.l10n.seeAll),
@@ -495,7 +512,19 @@ class _RecentWorkoutsFeed extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           workoutsAsync.when(
-            data: (workouts) => _buildWorkoutsList(context, workouts),
+            data: (workouts) {
+              if (workouts.isEmpty) {
+                return _EmptyWorkoutsCard();
+              }
+              return ModernWorkoutCardsList(
+                workouts: workouts,
+                onWorkoutTap: (workout) {
+                  // Navigate to workout detail
+                  // TODO: Add workout detail navigation
+                },
+                maxItems: 3,
+              );
+            },
             loading: () => Container(
               height: 120,
               decoration: BoxDecoration(
@@ -524,96 +553,30 @@ class _RecentWorkoutsFeed extends ConsumerWidget {
       ),
     );
   }
-
-  Widget _buildWorkoutsList(BuildContext context, List<WorkoutHistoryDetail> workouts) {
-    if (workouts.isEmpty) {
-      return Container(
-        height: 120,
-        decoration: BoxDecoration(
-          color: context.colors.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Center(
-          child: Text(
-            context.l10n.noRecentWorkouts,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colors.onSurfaceVariant,
-            ),
-          ),
-        ),
-      );
-    }
-
-    // Show last 3 workouts
-    final recentWorkouts = workouts.take(3).toList();
-
-    return Column(
-      children: recentWorkouts.map((workout) {
-        return _WorkoutCard(workout: workout);
-      }).toList(),
-    );
-  }
 }
 
-/// Individual workout card
-class _WorkoutCard extends StatelessWidget {
-  const _WorkoutCard({required this.workout});
-
-  final WorkoutHistoryDetail workout;
-
+/// Empty state for workouts
+class _EmptyWorkoutsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat.yMMMd(context.l10n.localeName);
-    final timeFormat = DateFormat.Hm(context.l10n.localeName);
-
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      height: 120,
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: context.colors.primaryContainer,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            AppIcons.workout,
-            color: context.colors.onPrimaryContainer,
-          ),
-        ),
-        title: Text(
-          workout.name,
-          style: context.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          '${dateFormat.format(workout.completedAt)} - ${timeFormat.format(workout.completedAt)}',
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
-        ),
-        trailing: Column(
+      child: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '${workout.duration.inMinutes} min',
-              style: context.textTheme.labelLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colors.primary,
-              ),
+              '🏋️',
+              style: context.textTheme.headlineMedium,
             ),
+            const SizedBox(height: 8),
             Text(
-              '${workout.exercises.length} ${context.l10n.exercises.toLowerCase()}',
-              style: context.textTheme.bodySmall?.copyWith(
+              context.l10n.noRecentWorkouts,
+              style: context.textTheme.bodyMedium?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),
             ),

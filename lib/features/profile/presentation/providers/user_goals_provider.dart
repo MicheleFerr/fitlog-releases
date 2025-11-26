@@ -242,7 +242,7 @@ final weeklyVolumeProgressProvider = FutureProvider<WeeklyVolumeProgress>((ref) 
       // Sum volume from all exercises
       for (final exercise in workout.exercises) {
         for (final set in exercise.sets) {
-          totalVolumeKg += (set.weight ?? 0) * (set.reps ?? 0);
+          totalVolumeKg += set.weight * set.reps;
         }
       }
     }
