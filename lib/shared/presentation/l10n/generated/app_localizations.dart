@@ -3205,11 +3205,11 @@ abstract class AppLocalizations {
   /// **'Workout Streak'**
   String get workoutStreak;
 
-  /// Label showing current streak in days
+  /// Label for day streak stat (no count)
   ///
   /// In en, this message translates to:
-  /// **'{days} day streak'**
-  String dayStreak(int days);
+  /// **'Day Streak'**
+  String get dayStreakLabel;
 
   /// Label for next streak milestone
   ///
@@ -36185,6 +36185,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weekly volume target (kg)'**
   String get weeklyVolumeTarget;
+
+  /// Label showing current streak in days
+  ///
+  /// In en, this message translates to:
+  /// **'{days} day streak'**
+  String dayStreak(int days);
 
   /// Label showing total workout count
   ///

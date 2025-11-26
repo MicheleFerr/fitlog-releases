@@ -106,7 +106,7 @@ class _StreakContent extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              context.l10n.dayStreak,
+              context.l10n.dayStreakLabel,
               style: context.textTheme.bodyLarge?.copyWith(
                 color: context.colors.onSurfaceVariant,
               ),

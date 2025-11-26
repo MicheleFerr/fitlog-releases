@@ -1701,9 +1701,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutStreak => 'Serie di Allenamenti';
 
   @override
-  String dayStreak(int days) {
-    return 'Serie Giorni';
-  }
+  String get dayStreakLabel => 'Serie Giorni';
 
   @override
   String get nextMilestone => 'Prossimo Traguardo';
@@ -13461,7 +13459,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get duplicateWorkout => 'Duplicate allenamento';
 
   @override
-  String get editProfile => 'Modifica profilo';
+  String get editProfile => 'Modifica Profilo';
 
   @override
   String get editTemplateDescription => 'Modifica modello descrizione';
@@ -20396,47 +20394,52 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tapWorkoutForDetails => 'Tocca un allenamento per i dettagli';
 
   @override
-  String get streakWeeks => 'Streak Weeks';
+  String get streakWeeks => 'Settimane Streak';
 
   @override
-  String get workoutWeek => 'Workout Week';
+  String get workoutWeek => 'Workout Settimana';
 
   @override
   String get statsAction => 'Stats';
 
   @override
-  String get historyAction => 'History';
+  String get historyAction => 'Cronologia';
 
   @override
-  String get measurementsAction => 'Measures';
+  String get measurementsAction => 'Misure';
 
   @override
-  String get calendarAction => 'Calendar';
+  String get calendarAction => 'Calendario';
 
   @override
   String todayAt(String time) {
-    return 'Today, $time';
+    return 'Oggi, $time';
   }
 
   @override
   String yesterdayAt(String time) {
-    return 'Yesterday, $time';
+    return 'Ieri, $time';
   }
 
   @override
   String andNMore(int count) {
-    return '+$count more';
+    return '+$count altri';
   }
 
   @override
-  String get modifyGoal => 'Modify Goal';
+  String get modifyGoal => 'Modifica Obiettivo';
 
   @override
-  String get weeklyVolumeTarget => 'Weekly volume target (kg)';
+  String get weeklyVolumeTarget => 'Obiettivo volume settimanale (kg)';
+
+  @override
+  String dayStreak(int days) {
+    return '$days giorni streak';
+  }
 
   @override
   String totalWorkoutsLabel(int count) {
-    return '$count total workouts';
+    return '$count workout totali';
   }
 
   @override
@@ -20445,16 +20448,16 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get goalSaved => 'Goal saved';
+  String get goalSaved => 'Obiettivo salvato';
 
   @override
   String currentGoalValue(String value) {
-    return 'Current goal: $value';
+    return 'Obiettivo attuale: $value';
   }
 
   @override
   String workoutsWeekGoal(int current, int goal) {
-    return '$current/$goal workouts';
+    return '$current/$goal workout';
   }
 
   @override

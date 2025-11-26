@@ -1684,9 +1684,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutStreak => 'Workout Streak';
 
   @override
-  String dayStreak(int days) {
-    return '$days day streak';
-  }
+  String get dayStreakLabel => 'Day Streak';
 
   @override
   String get nextMilestone => 'Next Milestone';
@@ -20236,6 +20234,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weeklyVolumeTarget => 'Weekly volume target (kg)';
+
+  @override
+  String dayStreak(int days) {
+    return '$days day streak';
+  }
 
   @override
   String totalWorkoutsLabel(int count) {

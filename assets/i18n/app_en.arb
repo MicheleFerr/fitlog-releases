@@ -2172,9 +2172,9 @@
   "@workoutStreak": {
     "description": "Workout streak card title"
   },
-  "dayStreak": "Day Streak",
-  "@dayStreak": {
-    "description": "Label for day streak stat"
+  "dayStreakLabel": "Day Streak",
+  "@dayStreakLabel": {
+    "description": "Label for day streak stat (no count)"
   },
   "nextMilestone": "Next Milestone",
   "@nextMilestone": {

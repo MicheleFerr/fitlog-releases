@@ -653,7 +653,7 @@
   "bodyPartDistribution": "Distribuzione Gruppi Muscolari",
   "topExercises": "Esercizi Principali",
   "workoutStreak": "Serie di Allenamenti",
-  "dayStreak": "Serie Giorni",
+  "dayStreakLabel": "Serie Giorni",
   "nextMilestone": "Prossimo Traguardo",
   "longestStreak": "Streak massimo",
   "shareYourProgress": "Condividi i Tuoi Progressi",
@@ -14630,5 +14630,157 @@
   "tapWorkoutForDetails": "Tocca un allenamento per i dettagli",
   "@tapWorkoutForDetails": {
     "description": "Testo suggerimento per lista allenamenti"
+  },
+  "streakWeeks": "Settimane Streak",
+  "@streakWeeks": {
+    "description": "Etichetta per anello metrica settimane streak"
+  },
+  "workoutWeek": "Workout Settimana",
+  "@workoutWeek": {
+    "description": "Etichetta per anello metrica workout settimanali"
+  },
+  "volumeGoal": "Obiettivo Volume",
+  "@volumeGoal": {
+    "description": "Etichetta per anello metrica obiettivo volume"
+  },
+  "statsAction": "Stats",
+  "@statsAction": {
+    "description": "Chip azione rapida per statistiche"
+  },
+  "historyAction": "Cronologia",
+  "@historyAction": {
+    "description": "Chip azione rapida per cronologia allenamenti"
+  },
+  "measurementsAction": "Misure",
+  "@measurementsAction": {
+    "description": "Chip azione rapida per misurazioni corporee"
+  },
+  "calendarAction": "Calendario",
+  "@calendarAction": {
+    "description": "Chip azione rapida per calendario streak"
+  },
+  "todayAt": "Oggi, {time}",
+  "@todayAt": {
+    "description": "Formato data relativa per oggi con orario",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayAt": "Ieri, {time}",
+  "@yesterdayAt": {
+    "description": "Formato data relativa per ieri con orario",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "andNMore": "+{count} altri",
+  "@andNMore": {
+    "description": "Etichetta per numero esercizi aggiuntivi",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifyGoal": "Modifica Obiettivo",
+  "@modifyGoal": {
+    "description": "Etichetta pulsante per modificare un obiettivo"
+  },
+  "weeklyVolumeTarget": "Obiettivo volume settimanale (kg)",
+  "@weeklyVolumeTarget": {
+    "description": "Etichetta per impostazione obiettivo volume settimanale"
+  },
+  "dayStreak": "{days} giorni streak",
+  "@dayStreak": {
+    "description": "Etichetta che mostra streak attuale in giorni",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWorkoutsLabel": "{count} workout totali",
+  "@totalWorkoutsLabel": {
+    "description": "Etichetta che mostra conteggio totale workout",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tierProgress": "{current} → {next}",
+  "@tierProgress": {
+    "description": "Indicatore progresso tier",
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSaved": "Obiettivo salvato",
+  "@goalSaved": {
+    "description": "Messaggio di conferma quando l'obiettivo viene salvato"
+  },
+  "currentGoalValue": "Obiettivo attuale: {value}",
+  "@currentGoalValue": {
+    "description": "Mostra valore obiettivo attuale",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutsWeekGoal": "{current}/{goal} workout",
+  "@workoutsWeekGoal": {
+    "description": "Workout completati vs obiettivo settimanale",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "volumePercentage": "{percent}%",
+  "@volumePercentage": {
+    "description": "Visualizzazione percentuale volume",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "streakWeeksValue": "{current}/{goal}",
+  "@streakWeeksValue": {
+    "description": "Settimane streak attuale vs obiettivo",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "minWorkout": "{minutes} min",
+  "@minWorkout": {
+    "description": "Durata workout in minuti",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "editProfile": "Modifica Profilo",
+  "@editProfile": {
+    "description": "Pulsante per modificare il profilo utente"
   }
 }

@@ -1956,7 +1956,7 @@ class _MinimalStatsBarDelegate extends SliverPersistentHeaderDelegate {
                 context,
                 AppIcons.streak,
                 '${stats.currentStreak}',
-                l10n.dayStreak,
+                l10n.dayStreakLabel,
                 theme.colorScheme.error,
               ),
             ),
