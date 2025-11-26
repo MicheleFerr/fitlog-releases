@@ -4198,6 +4198,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Inizia a tracciare i tuoi allenamenti per vederli qui';
 
   @override
+  String noWorkoutsFoundForQuery(String query) {
+    return 'Nessun allenamento trovato per \"$query\"';
+  }
+
+  @override
+  String get tryDifferentSearchTerms => 'Prova con altri termini di ricerca';
+
+  @override
   String get searchWorkouts => 'Cerca allenamenti...';
 
   @override

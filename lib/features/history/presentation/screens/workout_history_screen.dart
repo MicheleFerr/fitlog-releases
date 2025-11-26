@@ -264,10 +264,10 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             // Workouts List
             Expanded(
               child: workoutsAsync.when(
-                loading: () => _buildLoadingState(l10n, colorScheme),
-                error: (error, stack) => _buildErrorState(l10n, colorScheme, error),
+                loading: () => _buildLoadingState(l10n, colorScheme, theme),
+                error: (error, stack) => _buildErrorState(l10n, colorScheme, error, theme),
                 data: (workouts) => filteredWorkouts.isEmpty
-                    ? _buildEmptyState(context, l10n, colorScheme)
+                    ? _buildEmptyState(context, l10n, colorScheme, theme)
                     : ListView.builder(
                         key: const PageStorageKey('workout_history_list'),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -335,7 +335,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  Widget _buildLoadingState(AppLocalizations l10n, ColorScheme colorScheme) {
+  Widget _buildLoadingState(AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -346,7 +346,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           const SizedBox(height: 16),
           Text(
             l10n.loadingWorkouts,
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
@@ -355,7 +355,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  Widget _buildErrorState(AppLocalizations l10n, ColorScheme colorScheme, Object error) {
+  Widget _buildErrorState(AppLocalizations l10n, ColorScheme colorScheme, Object error, ThemeData theme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -371,7 +371,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             const SizedBox(height: 16),
             Text(
               l10n.errorLoadingWorkouts,
-              style: TextStyle(
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: colorScheme.error,
@@ -381,7 +381,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             const SizedBox(height: 8),
             Text(
               error.toString(),
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
@@ -399,7 +399,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -407,18 +407,17 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SemanticIcon(
-  icon: AppIcons.history,
-  semanticLabel: 'History',
-  size: AppIconSize.medium,
-  color: colorScheme.primary.withValues(alpha: 0.6,
-),
+              icon: AppIcons.history,
+              semanticLabel: 'History',
+              size: AppIconSize.medium,
+              color: colorScheme.primary.withValues(alpha: 0.6),
             ),
             const SizedBox(height: 16),
             Text(
               _searchQuery.isNotEmpty
-                  ? 'Nessun allenamento trovato per "$_searchQuery"'
+                  ? l10n.noWorkoutsFoundForQuery(_searchQuery)
                   : l10n.noWorkoutsInHistory,
-              style: TextStyle(
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: colorScheme.onSurface,
@@ -428,9 +427,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
             const SizedBox(height: 8),
             Text(
               _searchQuery.isNotEmpty
-                  ? 'Prova con altri termini di ricerca'
+                  ? l10n.tryDifferentSearchTerms
                   : l10n.startTrackingWorkouts,
-              style: TextStyle(
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.6),
               ),
               textAlign: TextAlign.center,
@@ -529,7 +528,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        _formatDate(workout.completedAt),
+                                        _formatDate(workout.completedAt, l10n),
                                         style: theme.textTheme.bodySmall?.copyWith(
                                           color: colorScheme.onSurface.withValues(alpha: 0.6),
                                         ),
@@ -647,16 +646,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
 
     if (difference == 0) {
-      return 'Oggi, ${DateFormat('HH:mm').format(date)}';
+      return '${l10n.today}, ${DateFormat('HH:mm').format(date)}';
     } else if (difference == 1) {
-      return 'Ieri, ${DateFormat('HH:mm').format(date)}';
+      return '${l10n.yesterday}, ${DateFormat('HH:mm').format(date)}';
     } else if (difference < 7) {
-      return '$difference giorni fa';
+      return l10n.daysAgo(difference);
     } else {
       return DateFormat('dd/MM/yyyy').format(date);
     }

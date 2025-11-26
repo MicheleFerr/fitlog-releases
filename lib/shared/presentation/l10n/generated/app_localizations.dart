@@ -7703,6 +7703,18 @@ abstract class AppLocalizations {
   /// **'Start tracking your workouts to see them here'**
   String get startTrackingWorkouts;
 
+  /// Message when search yields no results
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts found for \"{query}\"'**
+  String noWorkoutsFoundForQuery(String query);
+
+  /// Suggestion when search yields no results
+  ///
+  /// In en, this message translates to:
+  /// **'Try different search terms'**
+  String get tryDifferentSearchTerms;
+
   /// Placeholder for workout search field
   ///
   /// In en, this message translates to:

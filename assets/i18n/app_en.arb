@@ -5504,6 +5504,20 @@
   "@startTrackingWorkouts": {
     "description": "Instructions when no workouts exist"
   },
+  "noWorkoutsFoundForQuery": "No workouts found for \"{query}\"",
+  "@noWorkoutsFoundForQuery": {
+    "description": "Message when search yields no results",
+    "placeholders": {
+      "query": {
+        "type": "String",
+        "example": "chest"
+      }
+    }
+  },
+  "tryDifferentSearchTerms": "Try different search terms",
+  "@tryDifferentSearchTerms": {
+    "description": "Suggestion when search yields no results"
+  },
   "searchWorkouts": "Search workouts...",
   "@searchWorkouts": {
     "description": "Placeholder for workout search field"

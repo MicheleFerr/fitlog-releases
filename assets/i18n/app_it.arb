@@ -1512,6 +1512,8 @@
   "workoutUpdatedSuccessfully": "Allenamento aggiornato con successo",
   "noWorkoutsInHistory": "Nessun allenamento nello storico",
   "startTrackingWorkouts": "Inizia a tracciare i tuoi allenamenti per vederli qui",
+  "noWorkoutsFoundForQuery": "Nessun allenamento trovato per \"{query}\"",
+  "tryDifferentSearchTerms": "Prova con altri termini di ricerca",
   "searchWorkouts": "Cerca allenamenti...",
   "filterByExercise": "Filtra per esercizio",
   "sortByDate": "Ordina per data",
