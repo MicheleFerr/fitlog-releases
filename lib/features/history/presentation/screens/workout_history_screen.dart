@@ -10,7 +10,6 @@
 /// WorkoutHistoryScreen - Database completo e modificabile per allenamenti passati
 library;
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,14 +19,11 @@ import 'package:gymbro_flutter_new/features/history/presentation/providers/worko
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_history_editor_enhanced.dart';
-import 'package:gymbro_flutter_new/shared/presentation/providers/history_view_settings_provider.dart';
-import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -124,7 +120,6 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     final workoutsAsync = ref.watch(workoutHistoryProvider);
     final filteredWorkouts = ref.watch(filteredWorkoutsProvider);
     final syncStatus = ref.watch(currentSyncStatusProvider);
-    final viewSettings = ref.watch(historyViewSettingsProvider).valueOrNull;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -141,33 +136,17 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           onPressed: () => context.pop(),
         ),
         actions: [
-          // View Mode Toggle
-          if (viewSettings != null)
-            IconButton(
-              icon: Icon(_getViewModeIcon(viewSettings.viewMode)),
-              tooltip: _getViewModeTooltip(l10n, viewSettings.viewMode),
-              onPressed: () {
-                final nextMode = _getNextViewMode(viewSettings.viewMode);
-                ref.read(historyViewSettingsProvider.notifier).changeViewMode(nextMode);
-                HapticFeedback.lightImpact();
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${l10n.viewMode}: ${_getViewModeName(l10n, nextMode)}'),
-                    duration: const Duration(milliseconds: 800),
-                  ),
-                );
-              },
-            ),
+          // Search toggle
           IconButton(
             icon: Icon(_isSearchActive ? AppIcons.close : AppIcons.search),
             onPressed: _toggleSearch,
           ),
+          // Sort options
           PopupMenuButton<WorkoutSortOption>(
             icon: const SemanticIcon(
-  icon: AppIcons.sort,
-  semanticLabel: 'Sort',
-),
+              icon: AppIcons.sort,
+              semanticLabel: 'Sort',
+            ),
             onSelected: (value) {
               final currentFilter = ref.read(workoutHistoryFilterProvider);
               ref.read(workoutHistoryFilterProvider.notifier).state =
@@ -187,15 +166,6 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 child: Text(l10n.sortByVolume),
               ),
             ],
-          ),
-          IconButton(
-            icon: Icon(
-              syncStatus == SyncStatus.syncing ? AppIcons.syncIcon : AppIcons.refresh,
-              color: syncStatus == SyncStatus.syncing ? colorScheme.primary : null,
-            ),
-            onPressed: syncStatus == SyncStatus.syncing ? null : () {
-              ref.read(workoutHistoryOperationsProvider).forceSync();
-            },
           ),
         ],
       ),
@@ -296,40 +266,34 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.1),
-        ),
+        color: colorScheme.surfaceContainerHighest,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: TextField(
-            controller: _searchFieldController,
-            onChanged: _onSearchChanged,
-            decoration: InputDecoration(
-              hintText: l10n.searchWorkouts,
-              prefixIcon: Icon(
-                AppIcons.search,
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
-              suffixIcon: _searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: Icon(
-                        AppIcons.clear,
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                      onPressed: () {
-                        _searchFieldController.clear();
-                        _onSearchChanged('');
-                      },
-                    )
-                  : null,
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            ),
+        child: TextField(
+        controller: _searchFieldController,
+        onChanged: _onSearchChanged,
+        decoration: InputDecoration(
+          hintText: l10n.searchWorkouts,
+          prefixIcon: Icon(
+            AppIcons.search,
+            color: colorScheme.onSurfaceVariant,
           ),
+          suffixIcon: _searchQuery.isNotEmpty
+              ? IconButton(
+                  icon: Icon(
+                    AppIcons.clear,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () {
+                    _searchFieldController.clear();
+                    _onSearchChanged('');
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
         ),
       ),
     );
@@ -448,194 +412,159 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     AppLocalizations l10n,
     int index,
   ) {
+    final emoji = _getWorkoutEmoji(workout.name);
+    final intensity = _getIntensityBadge(workout);
+
     return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 200 + (index * 100)),
+      duration: Duration(milliseconds: 200 + (index * 50).clamp(0, 200)),
       tween: Tween(begin: 0.0, end: 1.0),
       builder: (context, value, child) {
         return Transform.translate(
           offset: Offset(0, 20 * (1 - value)),
           child: Opacity(
             opacity: value,
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorScheme.surfaceContainerHighest.withValues(alpha: 0.8),
-                    colorScheme.surfaceContainerHigh.withValues(alpha: 0.6),
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                _showWorkoutDetail(context, workout, l10n);
+              },
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
                   ],
                 ),
-                border: Border.all(
-                  color: colorScheme.outline.withValues(alpha: 0.1),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: context.colors.onSurface.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => _showWorkoutDetail(context, workout, l10n),
-                      borderRadius: BorderRadius.circular(20),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Header with date and actions
-                            Row(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header row: Emoji + Name + Duration + Menu
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Workout emoji
+                          Text(
+                            emoji,
+                            style: theme.textTheme.titleLarge,
+                          ),
+                          const SizedBox(width: 12),
+
+                          // Name and date
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    gradient: RadialGradient(
-                                      colors: [
-                                        colorScheme.primary.withValues(alpha: 0.8),
-                                        colorScheme.secondary.withValues(alpha: 0.6),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(24),
+                                Text(
+                                  workout.name,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  child: Icon(
-                                    AppIcons.workout,
-                                    color: colorScheme.onPrimary,
-                                    size: 24,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${_getTimeOfDayEmoji(workout.completedAt)} ${_formatDate(workout.completedAt, l10n)}',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: colorScheme.onSurfaceVariant,
                                   ),
                                 ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        workout.name,
-                                        style: theme.textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        _formatDate(workout.completedAt, l10n),
-                                        style: theme.textTheme.bodySmall?.copyWith(
-                                          color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuButton<String>(
-                                  icon: Icon(
-                                    AppIcons.moreVert,
-                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                                  ),
-                                  onSelected: (action) {
-                                    switch (action) {
-                                      case 'edit':
-                                        _editWorkout(context, workout, l10n);
-                                        break;
-                                      case 'delete':
-                                        _deleteWorkout(context, workout, l10n);
-                                        break;
-                                    }
-                                  },
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                      value: 'edit',
-                                      child: Row(
-                                        children: [
-                                          SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-  size: AppIconSize.small,
-  color: colorScheme.primary,
-),
-                                          const SizedBox(width: 12),
-                                          Text(l10n.editWorkout),
-                                        ],
-                                      ),
+                              ],
+                            ),
+                          ),
+
+                          // Duration
+                          Text(
+                            l10n.minWorkout(workout.duration.inMinutes),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          // Menu
+                          PopupMenuButton<String>(
+                            icon: Icon(
+                              AppIcons.moreVert,
+                              color: colorScheme.onSurfaceVariant,
+                              size: AppIconSize.small,
+                            ),
+                            padding: EdgeInsets.zero,
+                            onSelected: (action) {
+                              switch (action) {
+                                case 'edit':
+                                  _editWorkout(context, workout, l10n);
+                                  break;
+                                case 'delete':
+                                  _deleteWorkout(context, workout, l10n);
+                                  break;
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'edit',
+                                child: Row(
+                                  children: [
+                                    SemanticIcon(
+                                      icon: AppIcons.edit,
+                                      semanticLabel: l10n.editWorkout,
+                                      size: AppIconSize.small,
+                                      color: colorScheme.primary,
                                     ),
-                                    PopupMenuItem(
-                                      value: 'delete',
-                                      child: Row(
-                                        children: [
-                                          SemanticIcon(
-  icon: AppIcons.delete,
-  semanticLabel: 'Delete',
-  size: AppIconSize.small,
-  color: colorScheme.error,
-),
-                                          const SizedBox(width: 12),
-                                          Text(l10n.deleteWorkout),
-                                        ],
-                                      ),
-                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(l10n.editWorkout),
                                   ],
                                 ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 16),
-
-                            // Stats Row
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _StatItem(
-                                    icon: AppIcons.schedule,
-                                    label: l10n.duration,
-                                    value: _formatDuration(workout.duration),
-                                    color: colorScheme.tertiary,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: _StatItem(
-                                    icon: AppIcons.workout,
-                                    label: l10n.totalVolume,
-                                    value: '${workout.totalVolume.toInt()}kg',
-                                    color: colorScheme.secondary,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: _StatItem(
-                                    icon: AppIcons.list,
-                                    label: 'Esercizi',
-                                    value: '${workout.exercises.length}',
-                                    color: colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            // Exercise preview
-                            Text(
-                              'Esercizi: ${workout.exercises.map((e) => e.name).join(', ')}',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurface.withValues(alpha: 0.7),
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    SemanticIcon(
+                                      icon: AppIcons.delete,
+                                      semanticLabel: l10n.deleteWorkout,
+                                      size: AppIconSize.small,
+                                      color: colorScheme.error,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(l10n.deleteWorkout),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
+                      const SizedBox(height: 12),
+
+                      // Exercise chips row
+                      _buildExerciseChips(workout, colorScheme, theme, l10n),
+                      const SizedBox(height: 12),
+
+                      // Progress bar + intensity badge
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _IntensityBar(
+                              intensity: _calculateIntensity(workout),
+                              colorScheme: colorScheme,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            intensity,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -644,6 +573,125 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         );
       },
     );
+  }
+
+  Widget _buildExerciseChips(
+    WorkoutHistoryDetail workout,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final exercises = workout.exercises;
+    final visibleExercises = exercises.take(3).toList();
+    final remainingCount = exercises.length - 3;
+
+    return Row(
+      children: [
+        ...visibleExercises.map((exercise) {
+          final displayName = exercise.name.length > 8
+              ? '${exercise.name.substring(0, 7)}…'
+              : exercise.name;
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Container(
+              height: 24,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  width: 1,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  displayName,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          );
+        }),
+        if (remainingCount > 0)
+          Text(
+            l10n.andNMore(remainingCount),
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+      ],
+    );
+  }
+
+  String _getWorkoutEmoji(String workoutName) {
+    final nameLower = workoutName.toLowerCase();
+
+    if (nameLower.contains('push') ||
+        nameLower.contains('chest') ||
+        nameLower.contains('petto')) {
+      return '🏋️';
+    } else if (nameLower.contains('pull') ||
+        nameLower.contains('back') ||
+        nameLower.contains('schiena')) {
+      return '🔙';
+    } else if (nameLower.contains('leg') || nameLower.contains('gamb')) {
+      return '🦵';
+    } else if (nameLower.contains('arm') || nameLower.contains('bracc')) {
+      return '💪';
+    } else if (nameLower.contains('shoulder') || nameLower.contains('spall')) {
+      return '🤷';
+    } else if (nameLower.contains('core') ||
+        nameLower.contains('abs') ||
+        nameLower.contains('addom')) {
+      return '🎯';
+    } else if (nameLower.contains('full') || nameLower.contains('total')) {
+      return '⚡';
+    } else if (nameLower.contains('cardio')) {
+      return '🏃';
+    }
+
+    return '🏋️'; // Default
+  }
+
+  /// Returns emoji based on time of day
+  /// 🌅 Morning (5-11), ☀️ Afternoon (12-16), 🌆 Evening (17-20), 🌙 Night (21-4)
+  String _getTimeOfDayEmoji(DateTime date) {
+    final hour = date.hour;
+    if (hour >= 5 && hour < 12) {
+      return '🌅'; // Morning
+    } else if (hour >= 12 && hour < 17) {
+      return '☀️'; // Afternoon
+    } else if (hour >= 17 && hour < 21) {
+      return '🌆'; // Evening
+    } else {
+      return '🌙'; // Late night (21-4)
+    }
+  }
+
+  String _getIntensityBadge(WorkoutHistoryDetail workout) {
+    final intensity = _calculateIntensity(workout);
+    if (intensity > 0.8) return '🔥';
+    if (intensity > 0.6) return '⚡';
+    return '💪';
+  }
+
+  double _calculateIntensity(WorkoutHistoryDetail workout) {
+    final totalSets = workout.exercises.fold<int>(
+      0,
+      (sum, e) => sum + e.sets.length,
+    );
+
+    final durationMinutes = workout.duration.inMinutes;
+    if (durationMinutes == 0) return 0.5;
+
+    final setsPerMinute = totalSets / durationMinutes;
+    return (setsPerMinute * 2).clamp(0.0, 1.0);
   }
 
   String _formatDate(DateTime date, AppLocalizations l10n) {
@@ -658,16 +706,6 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
       return l10n.daysAgo(difference);
     } else {
       return DateFormat('dd/MM/yyyy').format(date);
-    }
-  }
-
-  String _formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes % 60;
-    if (hours > 0) {
-      return '${hours}h ${minutes}m';
-    } else {
-      return '${minutes}m';
     }
   }
 
@@ -739,113 +777,39 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
-  // View Mode helpers
-  IconData _getViewModeIcon(HistoryViewMode mode) {
-    switch (mode) {
-      case HistoryViewMode.list:
-        return AppIcons.viewList;
-      case HistoryViewMode.compact:
-        return AppIcons.viewAgenda;
-      case HistoryViewMode.calendar:
-        return AppIcons.calendarMonth;
-      case HistoryViewMode.stats:
-        return AppIcons.barChart;
-    }
-  }
-
-  String _getViewModeTooltip(AppLocalizations l10n, HistoryViewMode mode) {
-    switch (mode) {
-      case HistoryViewMode.list:
-        return l10n.viewModeList;
-      case HistoryViewMode.compact:
-        return l10n.viewModeCompact;
-      case HistoryViewMode.calendar:
-        return l10n.viewModeCalendar;
-      case HistoryViewMode.stats:
-        return l10n.viewModeStats;
-    }
-  }
-
-  String _getViewModeName(AppLocalizations l10n, HistoryViewMode mode) {
-    switch (mode) {
-      case HistoryViewMode.list:
-        return l10n.viewModeList;
-      case HistoryViewMode.compact:
-        return l10n.viewModeCompact;
-      case HistoryViewMode.calendar:
-        return l10n.viewModeCalendar;
-      case HistoryViewMode.stats:
-        return l10n.viewModeStats;
-    }
-  }
-
-  HistoryViewMode _getNextViewMode(HistoryViewMode current) {
-    switch (current) {
-      case HistoryViewMode.list:
-        return HistoryViewMode.compact;
-      case HistoryViewMode.compact:
-        return HistoryViewMode.calendar;
-      case HistoryViewMode.calendar:
-        return HistoryViewMode.stats;
-      case HistoryViewMode.stats:
-        return HistoryViewMode.list;
-    }
-  }
 }
 
-class _StatItem extends StatelessWidget {
-
-  const _StatItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
+/// Horizontal intensity bar
+class _IntensityBar extends StatelessWidget {
+  const _IntensityBar({
+    required this.intensity,
+    required this.colorScheme,
   });
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
+
+  final double intensity;
+  final ColorScheme colorScheme;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(2),
+      child: LinearProgressIndicator(
+        value: intensity,
+        minHeight: 4,
+        backgroundColor: colorScheme.surfaceContainerLow,
+        valueColor: AlwaysStoppedAnimation<Color>(
+          _getIntensityColor(intensity),
         ),
       ),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurface.withValues(alpha: 0.6),
-              fontSize: 10,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
+  }
+
+  Color _getIntensityColor(double intensity) {
+    if (intensity > 0.8) {
+      return colorScheme.error; // High intensity - red/orange
+    } else if (intensity > 0.5) {
+      return colorScheme.primary; // Medium intensity - primary
+    }
+    return colorScheme.tertiary; // Low intensity - tertiary
   }
 }
