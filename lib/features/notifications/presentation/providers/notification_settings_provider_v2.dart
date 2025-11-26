@@ -11,8 +11,6 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/entities/workout_notification.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/repositories/notification_settings_repository.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/datasources/notification_local_datasource.dart';
@@ -21,21 +19,13 @@ import 'package:gymbro_flutter_new/features/notifications/data/sync/notification
 import 'package:gymbro_flutter_new/features/notifications/data/repositories/notification_settings_repository_impl.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/daily_workout_reminder_service.dart';
+import 'package:gymbro_flutter_new/core/providers/firebase_providers.dart';
+import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:flutter/foundation.dart';
 
 // === Infrastructure Providers ===
-
-/// Provider for FirebaseFirestore
-final firestoreProvider = Provider<FirebaseFirestore>((ref) {
-  return FirebaseFirestore.instance;
-});
-
-/// Provider for current user ID (from Firebase Auth)
-/// Returns null if user is not authenticated
-/// NOTE: Intentionally without .autoDispose - global auth state needed app-wide
-final currentUserIdProvider = StreamProvider<String?>((ref) {
-  return FirebaseAuth.instance.authStateChanges().map((user) => user?.uid);
-});
+// NOTE: firestoreProvider is now in core/providers/firebase_providers.dart (canonical)
+// NOTE: currentUserIdProvider is now in auth/providers/consolidated_user_provider.dart (canonical)
 
 // === Data Source Providers ===
 
@@ -50,7 +40,7 @@ final notificationLocalDataSourceProvider =
 final notificationRemoteDataSourceProvider =
     Provider<NotificationRemoteDataSource>((ref) {
   final firestore = ref.watch(firestoreProvider);
-  final userId = ref.watch(currentUserIdProvider).value; // Extract String? from AsyncValue
+  final userId = ref.watch(currentUserIdProvider); // From consolidated_user_provider (Provider<String?>)
 
   return NotificationRemoteDataSource(
     firestore: firestore,

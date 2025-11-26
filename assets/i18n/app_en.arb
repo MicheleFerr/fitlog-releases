@@ -25254,5 +25254,157 @@
   "tapWorkoutForDetails": "Tap a workout to view details",
   "@tapWorkoutForDetails": {
     "description": "Hint text for workout list"
+  },
+  "streakWeeks": "Streak Weeks",
+  "@streakWeeks": {
+    "description": "Label for streak weeks metric ring"
+  },
+  "workoutWeek": "Workout Week",
+  "@workoutWeek": {
+    "description": "Label for weekly workout metric ring"
+  },
+  "volumeGoal": "Volume Goal",
+  "@volumeGoal": {
+    "description": "Label for volume goal metric ring"
+  },
+  "statsAction": "Stats",
+  "@statsAction": {
+    "description": "Quick action chip for statistics"
+  },
+  "historyAction": "History",
+  "@historyAction": {
+    "description": "Quick action chip for workout history"
+  },
+  "measurementsAction": "Measures",
+  "@measurementsAction": {
+    "description": "Quick action chip for body measurements"
+  },
+  "calendarAction": "Calendar",
+  "@calendarAction": {
+    "description": "Quick action chip for streak calendar"
+  },
+  "todayAt": "Today, {time}",
+  "@todayAt": {
+    "description": "Relative date format for today with time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayAt": "Yesterday, {time}",
+  "@yesterdayAt": {
+    "description": "Relative date format for yesterday with time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "andNMore": "+{count} more",
+  "@andNMore": {
+    "description": "Label showing additional exercises count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifyGoal": "Modify Goal",
+  "@modifyGoal": {
+    "description": "Button label to modify a goal"
+  },
+  "weeklyVolumeTarget": "Weekly volume target (kg)",
+  "@weeklyVolumeTarget": {
+    "description": "Label for weekly volume goal setting"
+  },
+  "dayStreak": "{days} day streak",
+  "@dayStreak": {
+    "description": "Label showing current streak in days",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "totalWorkoutsLabel": "{count} total workouts",
+  "@totalWorkoutsLabel": {
+    "description": "Label showing total workout count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tierProgress": "{current} → {next}",
+  "@tierProgress": {
+    "description": "Tier progress indicator",
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "goalSaved": "Goal saved",
+  "@goalSaved": {
+    "description": "Confirmation message when goal is saved"
+  },
+  "currentGoalValue": "Current goal: {value}",
+  "@currentGoalValue": {
+    "description": "Shows current goal value",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "workoutsWeekGoal": "{current}/{goal} workouts",
+  "@workoutsWeekGoal": {
+    "description": "Workouts completed vs weekly goal",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "volumePercentage": "{percent}%",
+  "@volumePercentage": {
+    "description": "Volume percentage display",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "streakWeeksValue": "{current}/{goal}",
+  "@streakWeeksValue": {
+    "description": "Streak weeks current vs goal",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "minWorkout": "{minutes} min",
+  "@minWorkout": {
+    "description": "Workout duration in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Button to edit user profile"
   }
 }

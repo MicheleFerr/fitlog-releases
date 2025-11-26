@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gymbro_flutter_new/core/providers/firebase_providers.dart';
 
 /// Exercise review report model
 class ExerciseReviewReport {
@@ -181,9 +182,7 @@ class FlaggedExercise {
 // ============================================================================
 // PROVIDERS
 // ============================================================================
-
-/// Provider for Firestore instance
-final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
+// NOTE: firestoreProvider is now in core/providers/firebase_providers.dart (canonical)
 
 /// Provider to get latest review report (real-time stream)
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks

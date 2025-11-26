@@ -14,21 +14,17 @@
 /// - AutoDispose for memory efficiency
 library;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/feedback/data/repositories/unified_feedback_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/entities/unified_feedback.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/enums/unified_feedback_type.dart';
 import 'package:gymbro_flutter_new/features/feedback/domain/repositories/i_unified_feedback_repository.dart';
+import 'package:gymbro_flutter_new/core/providers/firebase_providers.dart';
 
 // ============================================================================
 // REPOSITORY PROVIDERS
 // ============================================================================
-
-/// Firestore instance provider
-final firestoreProvider = Provider<FirebaseFirestore>((ref) {
-  return FirebaseFirestore.instance;
-});
+// NOTE: firestoreProvider is now in core/providers/firebase_providers.dart (canonical)
 
 /// Unified feedback repository provider (singleton)
 final unifiedFeedbackRepositoryProvider =

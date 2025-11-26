@@ -1701,7 +1701,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get workoutStreak => 'Serie di Allenamenti';
 
   @override
-  String get dayStreak => 'Serie Giorni';
+  String dayStreak(int days) {
+    return 'Serie Giorni';
+  }
 
   @override
   String get nextMilestone => 'Prossimo Traguardo';
@@ -20392,4 +20394,81 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tapWorkoutForDetails => 'Tocca un allenamento per i dettagli';
+
+  @override
+  String get streakWeeks => 'Streak Weeks';
+
+  @override
+  String get workoutWeek => 'Workout Week';
+
+  @override
+  String get statsAction => 'Stats';
+
+  @override
+  String get historyAction => 'History';
+
+  @override
+  String get measurementsAction => 'Measures';
+
+  @override
+  String get calendarAction => 'Calendar';
+
+  @override
+  String todayAt(String time) {
+    return 'Today, $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'Yesterday, $time';
+  }
+
+  @override
+  String andNMore(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String get modifyGoal => 'Modify Goal';
+
+  @override
+  String get weeklyVolumeTarget => 'Weekly volume target (kg)';
+
+  @override
+  String totalWorkoutsLabel(int count) {
+    return '$count total workouts';
+  }
+
+  @override
+  String tierProgress(String current, String next) {
+    return '$current → $next';
+  }
+
+  @override
+  String get goalSaved => 'Goal saved';
+
+  @override
+  String currentGoalValue(String value) {
+    return 'Current goal: $value';
+  }
+
+  @override
+  String workoutsWeekGoal(int current, int goal) {
+    return '$current/$goal workouts';
+  }
+
+  @override
+  String volumePercentage(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String streakWeeksValue(int current, int goal) {
+    return '$current/$goal';
+  }
+
+  @override
+  String minWorkout(int minutes) {
+    return '$minutes min';
+  }
 }

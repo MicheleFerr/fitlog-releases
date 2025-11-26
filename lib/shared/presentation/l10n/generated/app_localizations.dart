@@ -3205,11 +3205,11 @@ abstract class AppLocalizations {
   /// **'Workout Streak'**
   String get workoutStreak;
 
-  /// Label for day streak stat
+  /// Label showing current streak in days
   ///
   /// In en, this message translates to:
-  /// **'Day Streak'**
-  String get dayStreak;
+  /// **'{days} day streak'**
+  String dayStreak(int days);
 
   /// Label for next streak milestone
   ///
@@ -3619,7 +3619,7 @@ abstract class AppLocalizations {
   /// **'Workout Goal'**
   String get workoutGoal;
 
-  /// Volume goal label
+  /// Label for volume goal metric ring
   ///
   /// In en, this message translates to:
   /// **'Volume Goal'**
@@ -23544,10 +23544,10 @@ abstract class AppLocalizations {
   /// **'Duplicate workout'**
   String get duplicateWorkout;
 
-  /// Auto-generated for editProfile
+  /// Button to edit user profile
   ///
   /// In en, this message translates to:
-  /// **'Edit profile'**
+  /// **'Edit Profile'**
   String get editProfile;
 
   /// Auto-generated for editTemplateDescription
@@ -36119,6 +36119,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap a workout to view details'**
   String get tapWorkoutForDetails;
+
+  /// Label for streak weeks metric ring
+  ///
+  /// In en, this message translates to:
+  /// **'Streak Weeks'**
+  String get streakWeeks;
+
+  /// Label for weekly workout metric ring
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Week'**
+  String get workoutWeek;
+
+  /// Quick action chip for statistics
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get statsAction;
+
+  /// Quick action chip for workout history
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyAction;
+
+  /// Quick action chip for body measurements
+  ///
+  /// In en, this message translates to:
+  /// **'Measures'**
+  String get measurementsAction;
+
+  /// Quick action chip for streak calendar
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendarAction;
+
+  /// Relative date format for today with time
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {time}'**
+  String todayAt(String time);
+
+  /// Relative date format for yesterday with time
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday, {time}'**
+  String yesterdayAt(String time);
+
+  /// Label showing additional exercises count
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String andNMore(int count);
+
+  /// Button label to modify a goal
+  ///
+  /// In en, this message translates to:
+  /// **'Modify Goal'**
+  String get modifyGoal;
+
+  /// Label for weekly volume goal setting
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly volume target (kg)'**
+  String get weeklyVolumeTarget;
+
+  /// Label showing total workout count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} total workouts'**
+  String totalWorkoutsLabel(int count);
+
+  /// Tier progress indicator
+  ///
+  /// In en, this message translates to:
+  /// **'{current} → {next}'**
+  String tierProgress(String current, String next);
+
+  /// Confirmation message when goal is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Goal saved'**
+  String get goalSaved;
+
+  /// Shows current goal value
+  ///
+  /// In en, this message translates to:
+  /// **'Current goal: {value}'**
+  String currentGoalValue(String value);
+
+  /// Workouts completed vs weekly goal
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{goal} workouts'**
+  String workoutsWeekGoal(int current, int goal);
+
+  /// Volume percentage display
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String volumePercentage(int percent);
+
+  /// Streak weeks current vs goal
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{goal}'**
+  String streakWeeksValue(int current, int goal);
+
+  /// Workout duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minWorkout(int minutes);
 }
 
 class _AppLocalizationsDelegate

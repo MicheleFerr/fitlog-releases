@@ -18,6 +18,25 @@
     "migrationWizardSummaryRemoved",
     "migrationWizardWillUpdate",
     "migrationWizardApplying",
-    "migrationWizardUpdated"
+    "migrationWizardUpdated",
+    "streakWeeks",
+    "workoutWeek",
+    "statsAction",
+    "historyAction",
+    "measurementsAction",
+    "calendarAction",
+    "todayAt",
+    "yesterdayAt",
+    "andNMore",
+    "modifyGoal",
+    "weeklyVolumeTarget",
+    "totalWorkoutsLabel",
+    "tierProgress",
+    "goalSaved",
+    "currentGoalValue",
+    "workoutsWeekGoal",
+    "volumePercentage",
+    "streakWeeksValue",
+    "minWorkout"
   ]
 }
