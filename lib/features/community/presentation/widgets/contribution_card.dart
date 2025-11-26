@@ -19,11 +19,15 @@ class ContributionCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Check if contribution is saved by looking at saved IDs list
-    final savedIdsAsync = ref.watch(savedContributionIdsProvider);
-    final isSaved = savedIdsAsync.whenOrNull(
-      data: (ids) => ids.contains(contribution.id),
-    ) ?? false;
+    // Use select() to only rebuild when THIS contribution's saved status changes
+    // High-impact: ContributionCard is rendered N times in community list
+    final isSaved = ref.watch(
+      savedContributionIdsProvider.select(
+        (asyncValue) => asyncValue.whenOrNull(
+          data: (ids) => ids.contains(contribution.id),
+        ) ?? false,
+      ),
+    );
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

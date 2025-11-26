@@ -1190,9 +1190,13 @@ class _ExerciseHistoryCard extends ConsumerWidget{
     final sessionsCount = history.sessions.length;
     final weeklyProgression = history.weeklyVolumeProgression;
 
-    // Watch favorites state from provider (Task 5.2)
-    final favorites = ref.watch(favoriteExercisesNotifierProvider);
-    final isFavorite = favorites.contains(history.exerciseName);
+    // Use select() to only rebuild when THIS exercise's favorite status changes
+    // High-impact: _ExerciseHistoryCard is rendered N times in list
+    final isFavorite = ref.watch(
+      favoriteExercisesNotifierProvider.select(
+        (favorites) => favorites.contains(history.exerciseName),
+      ),
+    );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
