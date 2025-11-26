@@ -727,20 +727,24 @@ class _QuickStatsSummary extends StatelessWidget {
     return streak;
   }
 
-  /// Calculate workouts this week (last 7 days)
+  /// Calculate workouts this week (last 7 days including today)
   int _calculateWeeklyWorkouts() {
     final now = DateTime.now();
-    final weekAgo = now.subtract(const Duration(days: 7));
+    // Use date-only comparison (no time component) for consistency
+    final today = DateTime(now.year, now.month, now.day);
+    // 6 days back = 7 day range (today + 6 previous days)
+    final weekStart = today.subtract(const Duration(days: 6));
 
     final weeklyDates = <DateTime>{};
     for (final history in exerciseHistories) {
       for (final session in history.sessions) {
-        if (session.date.isAfter(weekAgo)) {
-          final dateOnly = DateTime(
-            session.date.year,
-            session.date.month,
-            session.date.day,
-          );
+        final dateOnly = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        // Include if within [weekStart, today] inclusive
+        if (!dateOnly.isBefore(weekStart) && !dateOnly.isAfter(today)) {
           weeklyDates.add(dateOnly);
         }
       }
@@ -765,10 +769,13 @@ class _QuickStatsSummary extends StatelessWidget {
     return avgProgression;
   }
 
-  /// Calculate recent PRs (last 7 days)
+  /// Calculate recent PRs (last 7 days including today)
   int _calculateRecentPRs() {
     final now = DateTime.now();
-    final weekAgo = now.subtract(const Duration(days: 7));
+    // Use date-only comparison (no time component) for consistency
+    final today = DateTime(now.year, now.month, now.day);
+    // 6 days back = 7 day range (today + 6 previous days)
+    final weekStart = today.subtract(const Duration(days: 6));
 
     int prCount = 0;
 
@@ -780,7 +787,13 @@ class _QuickStatsSummary extends StatelessWidget {
 
       // Check if any session in last 7 days achieved this PR
       for (final session in history.sessions) {
-        if (session.date.isAfter(weekAgo) &&
+        final sessionDate = DateTime(
+          session.date.year,
+          session.date.month,
+          session.date.day,
+        );
+        if (!sessionDate.isBefore(weekStart) &&
+            !sessionDate.isAfter(today) &&
             session.highestEstimated1RM >= pr * 0.99) {
           // Within 1% of PR (accounts for rounding)
           prCount++;
