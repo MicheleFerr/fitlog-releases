@@ -73,6 +73,8 @@ import 'package:gymbro_flutter_new/shared/data/services/debug_log_manager.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/log_category.dart';
 // 🏆 PR Celebration for workout completion achievements
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart' as service_pr show PersonalRecord;
+// 🔔 NOTIFICATIONS: Import for retention notification scheduling
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart' as domain_pr;
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/pr_type.dart';
@@ -693,7 +695,27 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
               if (kDebugMode) {
                 debugLog(LogCategory.workout, '✅ [WorkoutProvider] PR celebrations ready for UI display');
               }
-              // TODO: Re-implement PR notifications when notification system is rebuilt
+
+              // 🔔 NOTIFICATIONS: Schedule PR notification for first PR in list
+              // Only schedule for the first PR to avoid notification spam
+              try {
+                final isNotificationInitialized = ref.read(notificationInitializedProvider);
+                if (isNotificationInitialized && allNewPRs.isNotEmpty) {
+                  final scheduler = ref.read(notificationSchedulerProvider);
+                  final l10n = ref.read(appLocalizationsProvider);
+                  await scheduler.schedulePrNotification(
+                    exerciseName: allNewPRs.first.exerciseName,
+                    l10n: l10n,
+                  );
+                  if (kDebugMode) {
+                    debugLog(LogCategory.workout, '🔔 [WorkoutProvider] PR notification scheduled for ${allNewPRs.first.exerciseName}');
+                  }
+                }
+              } catch (notificationError) {
+                if (kDebugMode) {
+                  debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to schedule PR notification: $notificationError');
+                }
+              }
             } else if (kDebugMode) {
               debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] No new PRs detected');
             }
@@ -701,6 +723,23 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             // Non-critical error - log but don't fail workout save
             if (kDebugMode) {
               debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check PR achievements: $prError');
+            }
+          }
+
+          // 🔔 NOTIFICATIONS: Reset inactivity sequence after successful workout completion
+          // This ensures user won't get inactivity reminders after completing a workout
+          try {
+            final isNotificationInitialized = ref.read(notificationInitializedProvider);
+            if (isNotificationInitialized) {
+              final scheduler = ref.read(notificationSchedulerProvider);
+              await scheduler.resetInactivitySequence();
+              if (kDebugMode) {
+                debugLog(LogCategory.workout, '🔔 [WorkoutProvider] Inactivity notification sequence reset');
+              }
+            }
+          } catch (notificationError) {
+            if (kDebugMode) {
+              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to reset inactivity sequence: $notificationError');
             }
           }
         }

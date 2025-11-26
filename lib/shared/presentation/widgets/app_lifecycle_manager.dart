@@ -13,6 +13,8 @@
 /// - Flush batch queue quando app va in background
 /// - Cleanup risorse prima di suspend
 /// - Salvare stato corrente prima di terminate
+/// - Schedule "workout forgotten" notification when background + active workout
+/// - Cancel notification when returning to foreground
 ///
 /// **INTEGRAZIONE**:
 /// Wrappare l'app principale in main.dart:
@@ -27,9 +29,9 @@
 /// ```
 ///
 /// **EVENTI GESTITI**:
-/// - AppLifecycleState.paused: App in background (flush batch)
+/// - AppLifecycleState.paused: App in background (flush batch, schedule notification)
 /// - AppLifecycleState.inactive: App sta perdendo focus (pre-flush)
-/// - AppLifecycleState.resumed: App torna in foreground (nessuna azione)
+/// - AppLifecycleState.resumed: App torna in foreground (cancel notification)
 /// - AppLifecycleState.detached: App sta terminando (cleanup finale)
 library;
 
@@ -37,6 +39,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/shared/data/services/firestore_batch_writer.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Widget che gestisce il ciclo di vita dell'app
 ///
@@ -113,13 +118,19 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       });
     }
 
+    // TRIGGER 4: Schedule "workout forgotten" notification when going to background
+    // Only on paused (actual background), not inactive (control center, notifications)
+    if (state == AppLifecycleState.paused) {
+      _scheduleWorkoutForgottenIfNeeded();
+    }
+
     // App torna in foreground
     if (state == AppLifecycleState.resumed) {
       if (kDebugMode) {
         debugPrint('📱 [AppLifecycle] App resumed to foreground');
       }
-      // Nessuna azione necessaria per resumed
-      // Il batch writer riprenderà normalmente
+      // Cancel workout forgotten notification when returning to app
+      _cancelWorkoutForgottenNotification();
     }
 
     // App sta terminando (detached)
@@ -129,6 +140,60 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager>
       }
       // Final cleanup se necessario
       // Il dispose del provider gestirà il flush finale
+    }
+  }
+
+  /// Schedule workout forgotten notification if there's an active workout
+  void _scheduleWorkoutForgottenIfNeeded() {
+    // Check if notifications are initialized
+    final isInitialized = ref.read(notificationInitializedProvider);
+    if (!isInitialized) {
+      if (kDebugMode) {
+        debugPrint('📱 [AppLifecycle] Notifications not initialized, skipping');
+      }
+      return;
+    }
+
+    // Check if there's an active workout
+    final currentWorkout = ref.read(currentWorkoutProvider);
+    if (currentWorkout == null) {
+      if (kDebugMode) {
+        debugPrint('📱 [AppLifecycle] No active workout, skipping notification');
+      }
+      return;
+    }
+
+    // Get l10n without context using provider
+    final l10n = ref.read(appLocalizationsProvider);
+
+    // Schedule the notification
+    final scheduler = ref.read(notificationSchedulerProvider);
+    scheduler.scheduleWorkoutForgotten(l10n).catchError((error) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppLifecycle] Failed to schedule workout forgotten: $error');
+      }
+    });
+
+    if (kDebugMode) {
+      debugPrint('📱 [AppLifecycle] Scheduled workout forgotten notification');
+    }
+  }
+
+  /// Cancel workout forgotten notification when returning to app
+  void _cancelWorkoutForgottenNotification() {
+    // Check if notifications are initialized
+    final isInitialized = ref.read(notificationInitializedProvider);
+    if (!isInitialized) return;
+
+    final scheduler = ref.read(notificationSchedulerProvider);
+    scheduler.cancelWorkoutForgotten().catchError((error) {
+      if (kDebugMode) {
+        debugPrint('❌ [AppLifecycle] Failed to cancel workout forgotten: $error');
+      }
+    });
+
+    if (kDebugMode) {
+      debugPrint('📱 [AppLifecycle] Canceled workout forgotten notification');
     }
   }
 

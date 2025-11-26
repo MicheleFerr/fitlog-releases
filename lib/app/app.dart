@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/material.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
@@ -11,7 +14,18 @@ import 'package:gymbro_flutter_new/core/providers/analytics_initialization_provi
 import 'package:gymbro_flutter_new/shared/domain/auth/providers/session_timeout_providers.dart';
 import 'package:gymbro_flutter_new/shared/domain/auth/session_timeout_service.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:gymbro_flutter_new/core/navigation/app_router.dart';
+
+/// Provider for async notification initialization
+final notificationInitProvider = FutureProvider<void>((ref) async {
+  final scheduler = ref.watch(notificationSchedulerProvider);
+  await scheduler.initialize();
+  ref.read(notificationInitializedProvider.notifier).state = true;
+  if (kDebugMode) {
+    debugPrint('🔔 [APP] Notification system initialized');
+  }
+});
 
 class FitLogApp extends ConsumerWidget {
   const FitLogApp({super.key});
@@ -55,6 +69,16 @@ class FitLogApp extends ConsumerWidget {
     // ✅ FIX: Watch the provider to ensure it's initialized
     ref.watch(unifiedTimerProvider);
 
+    // 🔔 NOTIFICATIONS: Initialize notification system for retention reminders
+    // This enables workout forgotten, inactivity, and insight notifications
+    ref.watch(notificationInitProvider).whenOrNull(
+      error: (error, stack) {
+        if (kDebugMode) {
+          debugPrint('⚠️ [APP] Notification initialization failed: $error');
+        }
+      },
+    );
+
     // 🔒 SECURITY: Listen for session timeout events
     ref.listen(sessionTimeoutEventsProvider, (previous, next) {
       next.when(
@@ -89,7 +113,7 @@ class FitLogApp extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const CircularProgressIndicator(),
+                const LoadingIndicator(),
                 const SizedBox(height: 24),
                 Text(
                   'Loading FitLog Pro...',
@@ -151,8 +175,8 @@ class FitLogApp extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.error_outline,
-                    size: 64,
+                    AppIcons.error,
+                    size: AppIconSize.xxlarge,
                     color: themeMode == ThemeMode.dark
                       ? const Color(0xFFE57373)
                       : const Color(0xFFD32F2F),
