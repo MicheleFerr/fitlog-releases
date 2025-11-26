@@ -5512,6 +5512,10 @@
   "@noWorkoutsInHistory": {
     "description": "Message when no workouts exist"
   },
+  "noWorkoutsOnThisDay": "No workouts on this day",
+  "@noWorkoutsOnThisDay": {
+    "description": "Message when no workouts exist on selected calendar day"
+  },
   "startTrackingWorkouts": "Start tracking your workouts to see them here",
   "@startTrackingWorkouts": {
     "description": "Instructions when no workouts exist"

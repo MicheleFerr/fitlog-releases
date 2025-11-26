@@ -1514,6 +1514,7 @@
   "workoutDeletedSuccessfully": "Allenamento eliminato con successo",
   "workoutUpdatedSuccessfully": "Allenamento aggiornato con successo",
   "noWorkoutsInHistory": "Nessun allenamento nello storico",
+  "noWorkoutsOnThisDay": "Nessun allenamento in questo giorno",
   "startTrackingWorkouts": "Inizia a tracciare i tuoi allenamenti per vederli qui",
   "noWorkoutsFoundForQuery": "Nessun allenamento trovato per \"{query}\"",
   "tryDifferentSearchTerms": "Prova con altri termini di ricerca",

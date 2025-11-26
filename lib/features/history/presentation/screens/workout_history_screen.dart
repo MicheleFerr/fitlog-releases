@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/history/domain/entities/workout_hist
 import 'package:gymbro_flutter_new/features/history/domain/entities/sync_status.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_history_editor_enhanced.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -69,6 +70,16 @@ class HistoryViewSettings {
 /// Provider for tracking which sections are expanded
 final expandedSectionsProvider = StateProvider<Set<String>>((ref) {
   return {}; // All collapsed by default, will expand first section
+});
+
+/// Provider for the selected date in calendar view
+final selectedCalendarDateProvider = StateProvider<DateTime>((ref) {
+  return DateTime.now();
+});
+
+/// Provider for the focused month in calendar view
+final focusedCalendarDateProvider = StateProvider<DateTime>((ref) {
+  return DateTime.now();
 });
 
 /// Database completo e modificabile per la cronologia degli allenamenti
@@ -285,37 +296,45 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                 ),
               ),
 
-            // Workouts List
+            // Workouts List or Calendar View
             Expanded(
               child: workoutsAsync.when(
                 loading: () => _buildLoadingState(l10n, colorScheme, theme),
                 error: (error, stack) => _buildErrorState(l10n, colorScheme, error, theme),
-                data: (workouts) => filteredByDateRange.isEmpty
-                    ? _buildEmptyState(context, l10n, colorScheme, theme)
-                    : viewSettings.groupByDate
-                        ? _buildGroupedList(
-                            context,
-                            filteredByDateRange,
-                            colorScheme,
-                            theme,
-                            l10n,
-                          )
-                        : ListView.builder(
-                            key: const PageStorageKey('workout_history_list'),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount: filteredByDateRange.length,
-                            itemBuilder: (context, index) {
-                              final workout = filteredByDateRange[index];
-                              return _buildSwipeableWorkoutCard(
+                data: (workouts) => viewSettings.isCalendarView
+                    ? _buildCalendarView(
+                        context,
+                        filteredByDateRange,
+                        colorScheme,
+                        theme,
+                        l10n,
+                      )
+                    : filteredByDateRange.isEmpty
+                        ? _buildEmptyState(context, l10n, colorScheme, theme)
+                        : viewSettings.groupByDate
+                            ? _buildGroupedList(
                                 context,
-                                workout,
+                                filteredByDateRange,
                                 colorScheme,
                                 theme,
                                 l10n,
-                                index,
-                              );
-                            },
-                          ),
+                              )
+                            : ListView.builder(
+                                key: const PageStorageKey('workout_history_list'),
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                itemCount: filteredByDateRange.length,
+                                itemBuilder: (context, index) {
+                                  final workout = filteredByDateRange[index];
+                                  return _buildSwipeableWorkoutCard(
+                                    context,
+                                    workout,
+                                    colorScheme,
+                                    theme,
+                                    l10n,
+                                    index,
+                                  );
+                                },
+                              ),
               ),
             ),
           ],
@@ -532,6 +551,244 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                   fontWeight: FontWeight.w600,
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Calendar view with workout markers
+  Widget _buildCalendarView(
+    BuildContext context,
+    List<WorkoutHistoryDetail> workouts,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final selectedDay = ref.watch(selectedCalendarDateProvider);
+    final focusedDay = ref.watch(focusedCalendarDateProvider);
+
+    // Create a map of dates to workouts for markers
+    final workoutsByDate = <DateTime, List<WorkoutHistoryDetail>>{};
+    for (final workout in workouts) {
+      final date = DateTime(
+        workout.completedAt.year,
+        workout.completedAt.month,
+        workout.completedAt.day,
+      );
+      workoutsByDate.putIfAbsent(date, () => []);
+      workoutsByDate[date]!.add(workout);
+    }
+
+    // Get workouts for selected day
+    final selectedDayNormalized = DateTime(
+      selectedDay.year,
+      selectedDay.month,
+      selectedDay.day,
+    );
+    final selectedDayWorkouts = workoutsByDate[selectedDayNormalized] ?? [];
+
+    return Column(
+      children: [
+        // Calendar
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: TableCalendar<WorkoutHistoryDetail>(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.now().add(const Duration(days: 1)),
+            focusedDay: focusedDay,
+            selectedDayPredicate: (day) => isSameDay(selectedDay, day),
+            onDaySelected: (selected, focused) {
+              HapticFeedback.lightImpact();
+              ref.read(selectedCalendarDateProvider.notifier).state = selected;
+              ref.read(focusedCalendarDateProvider.notifier).state = focused;
+            },
+            onPageChanged: (focused) {
+              ref.read(focusedCalendarDateProvider.notifier).state = focused;
+            },
+            eventLoader: (day) {
+              final normalizedDay = DateTime(day.year, day.month, day.day);
+              return workoutsByDate[normalizedDay] ?? [];
+            },
+            calendarStyle: CalendarStyle(
+              // Today
+              todayDecoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(
+                color: colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.bold,
+              ),
+              // Selected
+              selectedDecoration: BoxDecoration(
+                color: colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+              ),
+              // Default
+              defaultTextStyle: TextStyle(color: colorScheme.onSurface),
+              weekendTextStyle: TextStyle(color: colorScheme.onSurface),
+              outsideTextStyle: TextStyle(
+                color: colorScheme.onSurface.withValues(alpha: 0.4),
+              ),
+              // Markers
+              markerDecoration: BoxDecoration(
+                color: colorScheme.tertiary,
+                shape: BoxShape.circle,
+              ),
+              markersMaxCount: 3,
+              markerSize: 6,
+              markerMargin: const EdgeInsets.symmetric(horizontal: 1),
+            ),
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: theme.textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+              leftChevronIcon: Icon(
+                AppIcons.chevronLeft,
+                color: colorScheme.primary,
+                size: AppIconSize.medium,
+              ),
+              rightChevronIcon: Icon(
+                AppIcons.chevronRight,
+                color: colorScheme.primary,
+                size: AppIconSize.medium,
+              ),
+            ),
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle: theme.textTheme.labelSmall!.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+              weekendStyle: theme.textTheme.labelSmall!.copyWith(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            locale: l10n.localeName,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Selected day workouts header
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Icon(
+                AppIcons.calendarToday,
+                size: AppIconSize.small,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                _formatSelectedDate(selectedDay, l10n),
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  l10n.nWorkoutsCount(selectedDayWorkouts.length),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Workouts list for selected day
+        Expanded(
+          child: selectedDayWorkouts.isEmpty
+              ? _buildNoWorkoutsForDay(context, selectedDay, colorScheme, theme, l10n)
+              : ListView.builder(
+                  key: const PageStorageKey('calendar_day_workouts'),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: selectedDayWorkouts.length,
+                  itemBuilder: (context, index) {
+                    return _buildSwipeableWorkoutCard(
+                      context,
+                      selectedDayWorkouts[index],
+                      colorScheme,
+                      theme,
+                      l10n,
+                      index,
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  /// Format the selected date for the calendar header
+  String _formatSelectedDate(DateTime date, AppLocalizations l10n) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final selectedNormalized = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(selectedNormalized).inDays;
+
+    if (difference == 0) {
+      return l10n.today;
+    } else if (difference == 1) {
+      return l10n.yesterday;
+    } else {
+      return DateFormat('EEEE, d MMMM', l10n.localeName).format(date);
+    }
+  }
+
+  /// Empty state when no workouts for selected day
+  Widget _buildNoWorkoutsForDay(
+    BuildContext context,
+    DateTime date,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              AppIcons.calendarMonth,
+              size: 48,
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.noWorkoutsOnThisDay,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

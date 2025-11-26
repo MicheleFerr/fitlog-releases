@@ -7715,6 +7715,12 @@ abstract class AppLocalizations {
   /// **'No workouts in history'**
   String get noWorkoutsInHistory;
 
+  /// Message when no workouts exist on selected calendar day
+  ///
+  /// In en, this message translates to:
+  /// **'No workouts on this day'**
+  String get noWorkoutsOnThisDay;
+
   /// Instructions when no workouts exist
   ///
   /// In en, this message translates to:

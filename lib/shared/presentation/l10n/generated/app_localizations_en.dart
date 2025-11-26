@@ -4173,6 +4173,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noWorkoutsInHistory => 'No workouts in history';
 
   @override
+  String get noWorkoutsOnThisDay => 'No workouts on this day';
+
+  @override
   String get startTrackingWorkouts =>
       'Start tracking your workouts to see them here';
 
