@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/presentation/providers/template_provider.dart';
-import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -22,10 +21,9 @@ class TemplatesCarouselCompact extends ConsumerWidget {
     final templates = templateState.userTemplates;
     final isLoading = templateState.isLoading;
 
-    // Ordina per usage count e prendi i primi 3
+    // Ordina per updatedAt (più recente prima) e prendi i primi 3
     final recentTemplates = [...templates]
       ..sort((a, b) {
-        // Prima per updatedAt (più recente prima)
         final aDate = a.updatedAt ?? a.createdAt;
         final bDate = b.updatedAt ?? b.createdAt;
         return bDate.compareTo(aDate);
@@ -113,17 +111,15 @@ class TemplatesCarouselCompact extends ConsumerWidget {
 
 /// Card singolo template
 class _TemplateCard extends ConsumerWidget {
-  final dynamic template; // CommunityWorkoutTemplate from provider
+  final CommunityWorkoutTemplate template;
 
   const _TemplateCard({required this.template});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Extract data from template (handles both CommunityWorkoutTemplate and WorkoutTemplate)
-    final name = template.name as String? ?? '';
-    final exercises = template.exercises as List? ?? [];
-    final exerciseCount = exercises.length;
-    final estimatedDuration = template.estimatedDuration as int? ?? 45;
+    final name = template.name;
+    final exerciseCount = template.exercises.length;
+    final estimatedDuration = template.estimatedDurationMinutes ?? 45;
 
     return SizedBox(
       width: 140,
@@ -196,13 +192,8 @@ class _TemplateCard extends ConsumerWidget {
 
   void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref) {
     HapticFeedback.mediumImpact();
-
-    // Template is already a WorkoutTemplate from the provider
-    final workoutTemplate = template as WorkoutTemplate;
-
-    // Start workout from template
-    ref.read(currentWorkoutProvider.notifier).startFromTemplate(workoutTemplate);
-    context.push('/workout');
+    // Navigate to templates screen where user can start the workout
+    context.push('/templates');
   }
 }
 

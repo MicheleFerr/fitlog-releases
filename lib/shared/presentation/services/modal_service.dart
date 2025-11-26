@@ -60,7 +60,7 @@ class ModalService {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) => Container(
-        height: height ?? context.screenHeight * 0.9,
+        height: height ?? context.screenHeight * 0.8,
         padding: EdgeInsets.only(
           bottom: context.mediaQuery.viewInsets.bottom,
         ),

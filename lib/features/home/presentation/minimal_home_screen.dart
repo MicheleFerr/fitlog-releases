@@ -81,7 +81,7 @@ class MinimalHomeScreen extends ConsumerWidget {
                   data: (advice) {
                     if (advice != null) {
                       return const Padding(
-                        padding: EdgeInsets.only(bottom: 24),
+                        padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
                         child: AICoachCard(),
                       );
                     }
