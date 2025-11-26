@@ -142,6 +142,19 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     super.dispose();
   }
 
+  /// Pull-to-refresh handler - syncs old workouts from Firestore
+  Future<void> _onRefresh() async {
+    unawaited(HapticFeedback.mediumImpact());
+
+    final repo = ref.read(workoutHistoryRepositoryProvider);
+
+    // Clear cache and re-sync everything from Firestore
+    await repo.clearCache();
+    await repo.forceSync();
+
+    // Invalidate the provider to force UI refresh
+    ref.invalidate(workoutHistoryProvider);
+  }
 
   void _onSearchChanged(String query) {
     setState(() {
@@ -178,7 +191,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     final syncStatus = ref.watch(currentSyncStatusProvider);
     final dateRangeFilter = ref.watch(dateRangeFilterProvider);
     final stats = ref.watch(workoutStatsProvider);
-    final viewSettings = ref.watch(historyViewSettingsProvider);
+    // Select only the fields we need to prevent unnecessary rebuilds
+    final isCalendarView = ref.watch(historyViewSettingsProvider.select((s) => s.isCalendarView));
+    final groupByDate = ref.watch(historyViewSettingsProvider.select((s) => s.groupByDate));
 
     // Get filtered workouts based on date range
     final filteredByDateRange = _getFilteredByDateRange(
@@ -301,7 +316,7 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
               child: workoutsAsync.when(
                 loading: () => _buildLoadingState(l10n, colorScheme, theme),
                 error: (error, stack) => _buildErrorState(l10n, colorScheme, error, theme),
-                data: (workouts) => viewSettings.isCalendarView
+                data: (workouts) => isCalendarView
                     ? _buildCalendarView(
                         context,
                         filteredByDateRange,
@@ -310,30 +325,34 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
                         l10n,
                       )
                     : filteredByDateRange.isEmpty
-                        ? _buildEmptyState(context, l10n, colorScheme, theme)
-                        : viewSettings.groupByDate
-                            ? _buildGroupedList(
+                        ? _buildEmptyStateWithRefresh(context, l10n, colorScheme, theme)
+                        : groupByDate
+                            ? _buildGroupedListWithRefresh(
                                 context,
                                 filteredByDateRange,
                                 colorScheme,
                                 theme,
                                 l10n,
                               )
-                            : ListView.builder(
-                                key: const PageStorageKey('workout_history_list'),
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                itemCount: filteredByDateRange.length,
-                                itemBuilder: (context, index) {
-                                  final workout = filteredByDateRange[index];
-                                  return _buildSwipeableWorkoutCard(
-                                    context,
-                                    workout,
-                                    colorScheme,
-                                    theme,
-                                    l10n,
-                                    index,
-                                  );
-                                },
+                            : RefreshIndicator(
+                                onRefresh: _onRefresh,
+                                color: colorScheme.primary,
+                                child: ListView.builder(
+                                  key: const PageStorageKey('workout_history_list'),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  itemCount: filteredByDateRange.length,
+                                  itemBuilder: (context, index) {
+                                    final workout = filteredByDateRange[index];
+                                    return _buildSwipeableWorkoutCard(
+                                      context,
+                                      workout,
+                                      colorScheme,
+                                      theme,
+                                      l10n,
+                                      index,
+                                    );
+                                  },
+                                ),
                               ),
               ),
             ),
@@ -485,6 +504,21 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           ],
         );
       },
+    );
+  }
+
+  /// Build grouped list with pull-to-refresh support
+  Widget _buildGroupedListWithRefresh(
+    BuildContext context,
+    List<WorkoutHistoryDetail> workouts,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      color: colorScheme.primary,
+      child: _buildGroupedList(context, workouts, colorScheme, theme, l10n),
     );
   }
 
@@ -1292,6 +1326,25 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     );
   }
 
+  /// Empty state with pull-to-refresh support to sync workouts from Firestore
+  Widget _buildEmptyStateWithRefresh(BuildContext context, AppLocalizations l10n, ColorScheme colorScheme, ThemeData theme) {
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      color: colorScheme.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: _buildEmptyState(context, l10n, colorScheme, theme),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildWorkoutCard(
     BuildContext context,
     WorkoutHistoryDetail workout,
@@ -1715,7 +1768,9 @@ class _ViewSettingsSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
-    final settings = ref.watch(historyViewSettingsProvider);
+    // Select only needed fields for surgical rebuilds
+    final isCalendarView = ref.watch(historyViewSettingsProvider.select((s) => s.isCalendarView));
+    final groupByDate = ref.watch(historyViewSettingsProvider.select((s) => s.groupByDate));
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -1762,17 +1817,18 @@ class _ViewSettingsSheet extends ConsumerWidget {
 
             // List View / Calendar View toggle
             _SettingsTile(
-              icon: settings.isCalendarView ? AppIcons.calendarMonth : AppIcons.list,
-              title: settings.isCalendarView ? l10n.calendarView : l10n.listView,
-              subtitle: settings.isCalendarView
+              icon: isCalendarView ? AppIcons.calendarMonth : AppIcons.list,
+              title: isCalendarView ? l10n.calendarView : l10n.listView,
+              subtitle: isCalendarView
                   ? l10n.calendarView
                   : l10n.listView,
               trailing: Switch.adaptive(
-                value: settings.isCalendarView,
+                value: isCalendarView,
                 onChanged: (value) {
                   HapticFeedback.lightImpact();
+                  final currentSettings = ref.read(historyViewSettingsProvider);
                   ref.read(historyViewSettingsProvider.notifier).state =
-                      settings.copyWith(isCalendarView: value);
+                      currentSettings.copyWith(isCalendarView: value);
                 },
               ),
             ),
@@ -1783,11 +1839,12 @@ class _ViewSettingsSheet extends ConsumerWidget {
               title: l10n.groupByDate,
               subtitle: l10n.groupByDate,
               trailing: Switch.adaptive(
-                value: settings.groupByDate,
+                value: groupByDate,
                 onChanged: (value) {
                   HapticFeedback.lightImpact();
+                  final currentSettings = ref.read(historyViewSettingsProvider);
                   ref.read(historyViewSettingsProvider.notifier).state =
-                      settings.copyWith(groupByDate: value);
+                      currentSettings.copyWith(groupByDate: value);
                 },
               ),
             ),
