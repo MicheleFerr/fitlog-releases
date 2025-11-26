@@ -64,11 +64,21 @@ import 'package:gymbro_flutter_new/features/analytics/presentation/tabbed_analyt
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_detail_screen.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/screens/exercise_progress_screen.dart';
 
-// Settings branch
+// Settings (pushed from Profile)
 import 'package:gymbro_flutter_new/features/settings/presentation/settings_screen.dart';
 import 'package:gymbro_flutter_new/features/settings/presentation/screens/debug_log_settings_screen.dart';
 import 'package:gymbro_flutter_new/features/notifications/presentation/screens/notification_settings_screen_v2.dart';
 import 'package:gymbro_flutter_new/features/health_sync/presentation/screens/health_sync_settings_screen.dart';
+
+// Profile branch
+import 'package:gymbro_flutter_new/features/profile/presentation/screens/profile_hub_screen.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/screens/streak_calendar_screen.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/presentation/screens/measurement_list_screen.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/data/repositories/consent_repository_provider.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
+import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/user_consent.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/loading_indicator.dart';
 
 // Other routes
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/admin_analytics_dashboard_screen.dart';
@@ -270,74 +280,98 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
 
           // ═════════════════════════════════════════════════════════════════
-          // BRANCH 2: ANALYTICS
+          // BRANCH 2: PROFILE (replaces Analytics + Settings tabs)
           // ═════════════════════════════════════════════════════════════════
           StatefulShellBranch(
-            navigatorKey: AppRoutes.analyticsNavigatorKey,
+            navigatorKey: AppRoutes.profileNavigatorKey,
             routes: [
               GoRoute(
-                path: AppRoutes.analyticsPath,
-                name: AppRoutes.analyticsName,
-                builder: (context, state) => const AnalyticsScreen(),
+                path: AppRoutes.profilePath,
+                name: AppRoutes.profileName,
+                builder: (context, state) => const ProfileHubScreen(),
                 routes: [
-                  // Analytics overview (tabbed)
+                  // Analytics (pushed from Statistiche quick action)
                   GoRoute(
-                    path: 'overview',
-                    name: AppRoutes.analyticsOverviewName,
-                    builder: (context, state) => const TabbedAnalyticsScreen(),
+                    path: 'analytics',
+                    name: AppRoutes.analyticsName,
+                    builder: (context, state) => const AnalyticsScreen(),
+                    routes: [
+                      // Analytics overview (tabbed)
+                      GoRoute(
+                        path: 'overview',
+                        name: AppRoutes.analyticsOverviewName,
+                        builder: (context, state) => const TabbedAnalyticsScreen(),
+                      ),
+                      // Exercise detail
+                      GoRoute(
+                        path: 'exercise/:exerciseName',
+                        name: AppRoutes.analyticsExerciseDetailName,
+                        builder: (context, state) {
+                          final exerciseName = state.pathParameters['exerciseName']!;
+                          return ExerciseDetailScreen(
+                            exerciseName: Uri.decodeComponent(exerciseName),
+                          );
+                        },
+                      ),
+                      // Exercise progress
+                      GoRoute(
+                        path: 'exercise-progress',
+                        name: AppRoutes.exerciseProgressName,
+                        builder: (context, state) => const ExerciseProgressScreen(),
+                      ),
+                    ],
                   ),
-                  // Exercise detail
+                  // Settings (pushed from ⚙️ icon)
                   GoRoute(
-                    path: 'exercise/:exerciseName',
-                    name: AppRoutes.analyticsExerciseDetailName,
-                    builder: (context, state) {
-                      final exerciseName = state.pathParameters['exerciseName']!;
-                      return ExerciseDetailScreen(
-                        exerciseName: Uri.decodeComponent(exerciseName),
-                      );
-                    },
+                    path: 'settings',
+                    name: AppRoutes.settingsName,
+                    builder: (context, state) => const SettingsScreen(),
+                    routes: [
+                      // Debug log settings
+                      GoRoute(
+                        path: 'debug-log',
+                        name: AppRoutes.debugLogSettingsName,
+                        builder: (context, state) => const DebugLogSettingsScreen(),
+                      ),
+                      // Notifications
+                      GoRoute(
+                        path: 'notifications',
+                        name: AppRoutes.notificationsName,
+                        builder: (context, state) =>
+                            const NotificationSettingsScreenV2(),
+                      ),
+                      // Health sync
+                      GoRoute(
+                        path: 'health-sync',
+                        name: AppRoutes.healthSyncName,
+                        builder: (context, state) =>
+                            const HealthSyncSettingsScreen(),
+                      ),
+                    ],
                   ),
-                  // Exercise progress
+                  // Body measurements (pushed from Misurazioni quick action)
                   GoRoute(
-                    path: 'exercise-progress',
-                    name: AppRoutes.exerciseProgressName,
-                    builder: (context, state) => const ExerciseProgressScreen(),
+                    path: 'measurements',
+                    name: AppRoutes.bodyMeasurementsName,
+                    builder: (context, state) => const _MeasurementListWrapper(),
                   ),
-                ],
-              ),
-            ],
-          ),
-
-          // ═════════════════════════════════════════════════════════════════
-          // BRANCH 3: SETTINGS
-          // ═════════════════════════════════════════════════════════════════
-          StatefulShellBranch(
-            navigatorKey: AppRoutes.settingsNavigatorKey,
-            routes: [
-              GoRoute(
-                path: AppRoutes.settingsPath,
-                name: AppRoutes.settingsName,
-                builder: (context, state) => const SettingsScreen(),
-                routes: [
-                  // Debug log settings
+                  // Streak calendar (pushed from Calendario quick action)
                   GoRoute(
-                    path: 'debug-log',
-                    name: AppRoutes.debugLogSettingsName,
-                    builder: (context, state) => const DebugLogSettingsScreen(),
+                    path: 'calendar',
+                    name: AppRoutes.streakCalendarName,
+                    builder: (context, state) => const StreakCalendarScreen(),
                   ),
-                  // Notifications
+                  // Exercise database (pushed from Esercizi quick action)
                   GoRoute(
-                    path: 'notifications',
-                    name: AppRoutes.notificationsName,
-                    builder: (context, state) =>
-                        const NotificationSettingsScreenV2(),
+                    path: 'exercises',
+                    name: AppRoutes.exerciseDatabaseName,
+                    builder: (context, state) => const WorkoutHistoryScreen(),
                   ),
-                  // Health sync
+                  // Edit profile (pushed from ✏️ icon)
                   GoRoute(
-                    path: 'health-sync',
-                    name: AppRoutes.healthSyncName,
-                    builder: (context, state) =>
-                        const HealthSyncSettingsScreen(),
+                    path: 'edit',
+                    name: AppRoutes.editProfileName,
+                    builder: (context, state) => const EditProfileScreen(),
                   ),
                 ],
               ),
@@ -413,3 +447,198 @@ class _RoutineComingSoonPlaceholder extends StatelessWidget {
     );
   }
 }
+
+/// Wrapper to provide userId to MeasurementListScreen with GDPR consent handling
+class _MeasurementListWrapper extends ConsumerStatefulWidget {
+  const _MeasurementListWrapper();
+
+  @override
+  ConsumerState<_MeasurementListWrapper> createState() =>
+      _MeasurementListWrapperState();
+}
+
+class _MeasurementListWrapperState
+    extends ConsumerState<_MeasurementListWrapper> {
+  bool _isCheckingConsent = true;
+  bool _hasConsent = false;
+  bool _isGrantingConsent = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkConsent();
+  }
+
+  Future<void> _checkConsent() async {
+    final userAsync = ref.read(firebaseUserProvider);
+    final user = userAsync.valueOrNull;
+    if (user == null) {
+      setState(() {
+        _isCheckingConsent = false;
+      });
+      return;
+    }
+
+    final consentRepo = ref.read(consentRepositoryProvider);
+    final result = await consentRepo.getConsent(user.uid);
+
+    if (!mounted) return;
+
+    result.fold(
+      (failure) {
+        // ConsentNotFoundFailure means no consent yet - show consent request
+        setState(() {
+          _isCheckingConsent = false;
+          _hasConsent = false;
+        });
+      },
+      (consent) {
+        // Check if user has granted consent for at least essential metrics
+        final hasEssentialConsent =
+            consent.groupConsents[MetricGroup.essential] == ConsentState.granted;
+        setState(() {
+          _isCheckingConsent = false;
+          _hasConsent = hasEssentialConsent;
+        });
+      },
+    );
+  }
+
+  Future<void> _grantConsent(String userId) async {
+    setState(() {
+      _isGrantingConsent = true;
+    });
+
+    final consentRepo = ref.read(consentRepositoryProvider);
+
+    // First try to create initial consent
+    var result = await consentRepo.createInitialConsent(
+      userId: userId,
+      ipAddress: '0.0.0.***', // Privacy: masked IP
+    );
+
+    // If consent already exists, we can proceed to grant
+    if (result.isLeft()) {
+      // Consent might already exist, try to grant directly
+      result = await consentRepo.grantConsent(
+        userId: userId,
+        group: MetricGroup.essential,
+        ipAddress: '0.0.0.***',
+      );
+
+      // Also grant measurements consent
+      await consentRepo.grantConsent(
+        userId: userId,
+        group: MetricGroup.measurements,
+        ipAddress: '0.0.0.***',
+      );
+    } else {
+      // Initial consent created, now grant essential + measurements
+      await consentRepo.grantConsent(
+        userId: userId,
+        group: MetricGroup.essential,
+        ipAddress: '0.0.0.***',
+      );
+      await consentRepo.grantConsent(
+        userId: userId,
+        group: MetricGroup.measurements,
+        ipAddress: '0.0.0.***',
+      );
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _isGrantingConsent = false;
+      _hasConsent = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userAsync = ref.watch(firebaseUserProvider);
+
+    return userAsync.when(
+      data: (user) {
+        if (user == null) {
+          return Scaffold(
+            appBar: AppBar(title: Text(context.l10n.measurements)),
+            body: Center(child: Text(context.l10n.pleaseSignIn)),
+          );
+        }
+
+        if (_isCheckingConsent) {
+          return Scaffold(
+            appBar: AppBar(title: Text(context.l10n.measurements)),
+            body: const Center(child: LoadingIndicator()),
+          );
+        }
+
+        if (!_hasConsent) {
+          return _buildConsentRequestScreen(context, user.uid);
+        }
+
+        return MeasurementListScreen(userId: user.uid);
+      },
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text(context.l10n.measurements)),
+        body: const Center(child: LoadingIndicator()),
+      ),
+      error: (error, _) => Scaffold(
+        appBar: AppBar(title: Text(context.l10n.measurements)),
+        body: Center(child: Text('Error: $error')),
+      ),
+    );
+  }
+
+  Widget _buildConsentRequestScreen(BuildContext context, String userId) {
+    return Scaffold(
+      appBar: AppBar(title: Text(context.l10n.measurements)),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                AppIcons.bodyMeasurements,
+                size: 64,
+                color: context.colors.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                context.l10n.bodyMeasurementsConsentTitle,
+                style: context.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                context.l10n.bodyMeasurementsConsentDescription,
+                style: context.textTheme.bodyLarge?.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              _isGrantingConsent
+                  ? const LoadingIndicator()
+                  : FilledButton.icon(
+                      onPressed: () => _grantConsent(userId),
+                      icon: const Icon(AppIcons.check),
+                      label: Text(context.l10n.bodyMeasurementsGrantConsent),
+                    ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => context.pop(),
+                child: Text(context.l10n.cancel),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

@@ -16,7 +16,10 @@
 ///
 /// **Usage**:
 /// ```dart
-/// context.push('/analytics/exercise/$exerciseName');
+/// context.pushNamed(
+///   AppRoutes.analyticsExerciseDetailName,
+///   pathParameters: {'exerciseName': Uri.encodeComponent(exerciseName)},
+/// );
 /// ```
 library;
 

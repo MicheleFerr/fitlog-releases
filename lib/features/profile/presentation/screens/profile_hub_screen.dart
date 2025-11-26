@@ -375,12 +375,12 @@ class _QuickActionsGrid extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _QuickActionCard(
-                  icon: AppIcons.exercise,
-                  label: context.l10n.exercises,
+                  icon: AppIcons.history,
+                  label: context.l10n.workoutHistory,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    // Navigate to workout history (exercise database/history)
-                    context.pushNamed(AppRoutes.exerciseDatabaseName);
+                    // Navigate to workout history
+                    context.pushNamed(AppRoutes.workoutHistoryName);
                   },
                 ),
               ),

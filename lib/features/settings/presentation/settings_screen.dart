@@ -579,7 +579,7 @@ class SettingsScreen extends ConsumerWidget {
   icon: AppIcons.notifications,
   semanticLabel: 'Notifications',
 ),
-              onTap: () => context.pushNamed('notifications-v2'),
+              onTap: () => context.pushNamed('notifications'),
             ),
           ],
         ),

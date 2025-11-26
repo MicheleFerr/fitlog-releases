@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/unified_stats_card.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_pulse_card.dart';
@@ -278,9 +279,9 @@ class HomeWidgetFactory {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildCompactStat(AppIcons.timer, context.l10n.minutesFormat(minutes), theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(AppIcons.workout, context.l10n.exercisesCount(exerciseCount), theme.colorScheme.onPrimaryContainer),
-                        _buildCompactStat(AppIcons.repeat, context.l10n.setsCount(totalSets), theme.colorScheme.onPrimaryContainer),
+                        _buildCompactStat(AppIcons.timer, context.l10n.minutesFormat(minutes), theme.colorScheme.onPrimaryContainer, theme),
+                        _buildCompactStat(AppIcons.workout, context.l10n.exercisesCount(exerciseCount), theme.colorScheme.onPrimaryContainer, theme),
+                        _buildCompactStat(AppIcons.repeat, context.l10n.setsCount(totalSets), theme.colorScheme.onPrimaryContainer, theme),
                       ],
                     ),
                   ],
@@ -333,7 +334,7 @@ class HomeWidgetFactory {
   static Widget _buildWorkoutStat(String emoji, String value, String label, ThemeData theme) {
     return Column(
       children: [
-        Text(emoji, style: const TextStyle(fontSize: 24)),
+        Text(emoji, style: theme.textTheme.headlineSmall?.copyWith(fontSize: 24)),
         const SizedBox(height: 4),
         Text(
           value,
@@ -351,7 +352,7 @@ class HomeWidgetFactory {
     );
   }
   
-  static Widget _buildCompactStat(IconData icon, String value, Color color) {
+  static Widget _buildCompactStat(IconData icon, String value, Color color, ThemeData theme) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -364,7 +365,7 @@ class HomeWidgetFactory {
         const SizedBox(width: 4),
         Text(
           value,
-          style: TextStyle(
+          style: theme.textTheme.labelSmall?.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: color,
@@ -425,7 +426,7 @@ class HomeWidgetFactory {
                 const SizedBox(width: 6),
                 Text(
                   label,
-                  style: TextStyle(
+                  style: theme.textTheme.labelMedium?.copyWith(
                     color: color,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
@@ -577,7 +578,7 @@ class HomeWidgetFactory {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -741,7 +742,7 @@ class HomeWidgetFactory {
                       ),
                       child: Text(
                         context.l10n.newInsightsCount(3),
-                        style: TextStyle(
+                        style: context.textTheme.labelSmall?.copyWith(
                           color: context.colors.surface,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -837,7 +838,7 @@ class HomeWidgetFactory {
                           ),
                           child: Text(
                             context.l10n.dataBasedBadge,
-                            style: TextStyle(
+                            style: theme.textTheme.labelSmall?.copyWith(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color: insight['color'] as Color,
@@ -932,7 +933,7 @@ class HomeWidgetFactory {
                         children: [
                           Text(
                             'AI Coach Insights',
-                            style: TextStyle(
+                            style: context.textTheme.titleMedium?.copyWith(
                               color: context.colors.surface,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -940,7 +941,7 @@ class HomeWidgetFactory {
                           ),
                           Text(
                             context.l10n.analysisBasedOnProgress,
-                            style: TextStyle(
+                            style: context.textTheme.bodySmall?.copyWith(
                               color: context.colors.surface.withValues(alpha: 0.9),
                               fontSize: 12,
                             ),
@@ -1036,7 +1037,7 @@ class HomeWidgetFactory {
 
                         if (!context.mounted) return;
 
-                        context.push('/analytics');
+                        context.pushNamed(AppRoutes.analyticsName);
                       },
                       child: Text(context.l10n.viewAnalytics),
                     ),
@@ -1443,7 +1444,7 @@ class HomeWidgetFactory {
                         Flexible(
                           child: Text(
                             insight['action'] as String,
-                            style: TextStyle(
+                            style: theme.textTheme.labelSmall?.copyWith(
                               color: insight['color'] as Color,
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
@@ -2037,7 +2038,7 @@ class _AICoachDialog extends ConsumerWidget {
                       children: [
                         Text(
                           'AI Coach Insights',
-                          style: TextStyle(
+                          style: context.textTheme.titleMedium?.copyWith(
                             color: context.colors.surface,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -2045,7 +2046,7 @@ class _AICoachDialog extends ConsumerWidget {
                         ),
                         Text(
                           context.l10n.analysisBasedOnData,
-                          style: TextStyle(
+                          style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.surface.withValues(alpha: 0.9),
                             fontSize: 12,
                           ),
@@ -2125,7 +2126,7 @@ class _AICoachDialog extends ConsumerWidget {
 
                       if (!context.mounted) return;
 
-                      context.push('/analytics');
+                      context.pushNamed(AppRoutes.analyticsName);
                     },
                     child: Text(context.l10n.viewAnalytics),
                   ),
@@ -2345,7 +2346,7 @@ class _AICoachDialog extends ConsumerWidget {
                       Flexible(
                         child: Text(
                           _generateProgressionAdvice(history, context),
-                          style: TextStyle(
+                          style: context.textTheme.labelSmall?.copyWith(
                             color: context.successColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 12,

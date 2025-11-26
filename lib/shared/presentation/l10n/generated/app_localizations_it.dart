@@ -15,6 +15,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get home => 'Home';
 
   @override
+  String get profile => 'Profilo';
+
+  @override
   String get welcome => 'Pronto per allenarti?';
 
   @override
@@ -1532,6 +1535,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get quickActions => 'Azioni Rapide';
+
+  @override
+  String get followers => 'Seguaci';
+
+  @override
+  String get following => 'Seguiti';
+
+  @override
+  String get activityChart => 'Grafico Attività';
+
+  @override
+  String get measurements => 'Misurazioni';
+
+  @override
+  String get calendar => 'Calendario';
 
   @override
   String get startFresh => 'Inizia da capo';
@@ -20297,4 +20315,73 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get patternInconsistentScience =>
       'L\'alta variabilità nell\'allenamento rende difficile il rilevamento di pattern. Una raccolta dati consistente permette una migliore analisi delle performance.';
+
+  @override
+  String get profileUpdated => 'Profilo aggiornato';
+
+  @override
+  String get errorSavingProfile => 'Errore nel salvataggio del profilo';
+
+  @override
+  String get personalInformation => 'Informazioni Personali';
+
+  @override
+  String get displayName => 'Nome Visualizzato';
+
+  @override
+  String get pleaseEnterName => 'Inserisci il tuo nome';
+
+  @override
+  String get age => 'Età';
+
+  @override
+  String get pleaseEnterValidAge => 'Inserisci un\'età valida (13-120)';
+
+  @override
+  String get gender => 'Genere';
+
+  @override
+  String get male => 'Maschio';
+
+  @override
+  String get female => 'Femmina';
+
+  @override
+  String get pleaseEnterValidHeight =>
+      'Inserisci un\'altezza valida (100-250 cm)';
+
+  @override
+  String get pleaseEnterValidWeight => 'Inserisci un peso valido (30-300 kg)';
+
+  @override
+  String get emailCannotBeChanged =>
+      'L\'indirizzo email non può essere modificato';
+
+  @override
+  String get noWorkout => 'Nessun allenamento';
+
+  @override
+  String get bodyMeasurementsGrantConsent => 'Abilita Misurazioni Corporee';
+
+  @override
+  String get weeks => 'settimane';
+
+  @override
+  String workoutsOnDate(String date) {
+    return 'Allenamenti del $date';
+  }
+
+  @override
+  String get noWorkoutOnThisDay => 'Nessun allenamento in questo giorno';
+
+  @override
+  String get viewWorkoutHistory => 'Vedi nella Cronologia';
+
+  @override
+  String nExercisesCount(int count) {
+    return '$count esercizi';
+  }
+
+  @override
+  String get tapWorkoutForDetails => 'Tocca un allenamento per i dettagli';
 }

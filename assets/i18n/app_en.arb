@@ -8,6 +8,10 @@
   "@home": {
     "description": "Home tab label in bottom navigation"
   },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile tab label in bottom navigation"
+  },
   "welcome": "Ready to train?",
   "@welcome": {
     "description": "Welcome message on the main screen"
@@ -1949,6 +1953,26 @@
   "quickActions": "Quick Actions",
   "@quickActions": {
     "description": "Quick actions section title"
+  },
+  "followers": "Followers",
+  "@followers": {
+    "description": "Followers count label in profile"
+  },
+  "following": "Following",
+  "@following": {
+    "description": "Following count label in profile"
+  },
+  "activityChart": "Activity Chart",
+  "@activityChart": {
+    "description": "Activity chart placeholder text"
+  },
+  "measurements": "Measurements",
+  "@measurements": {
+    "description": "Body measurements quick action label"
+  },
+  "calendar": "Calendar",
+  "@calendar": {
+    "description": "Streak calendar quick action label"
   },
   "startFresh": "Start fresh",
   "@startFresh": {
@@ -25117,5 +25141,104 @@
   "patternInconsistentScience": "High training variability makes pattern detection difficult. Consistent data collection enables better performance analysis.",
   "@patternInconsistentScience": {
     "description": "Scientific explanation for inconsistent data"
+  },
+
+  "profileUpdated": "Profile updated",
+  "@profileUpdated": {
+    "description": "Message shown when profile is updated successfully"
+  },
+  "errorSavingProfile": "Error saving profile",
+  "@errorSavingProfile": {
+    "description": "Error message when profile save fails"
+  },
+  "personalInformation": "Personal Information",
+  "@personalInformation": {
+    "description": "Section header for personal information in profile"
+  },
+  "displayName": "Display Name",
+  "@displayName": {
+    "description": "Label for display name field"
+  },
+  "pleaseEnterName": "Please enter your name",
+  "@pleaseEnterName": {
+    "description": "Validation message for name field"
+  },
+  "age": "Age",
+  "@age": {
+    "description": "Label for age field"
+  },
+  "pleaseEnterValidAge": "Please enter a valid age (13-120)",
+  "@pleaseEnterValidAge": {
+    "description": "Validation message for age field"
+  },
+  "gender": "Gender",
+  "@gender": {
+    "description": "Label for gender field"
+  },
+  "male": "Male",
+  "@male": {
+    "description": "Male gender option"
+  },
+  "female": "Female",
+  "@female": {
+    "description": "Female gender option"
+  },
+  "pleaseEnterValidHeight": "Please enter a valid height (100-250 cm)",
+  "@pleaseEnterValidHeight": {
+    "description": "Validation message for height field"
+  },
+  "pleaseEnterValidWeight": "Please enter a valid weight (30-300 kg)",
+  "@pleaseEnterValidWeight": {
+    "description": "Validation message for weight field"
+  },
+  "emailCannotBeChanged": "Email address cannot be changed",
+  "@emailCannotBeChanged": {
+    "description": "Note explaining that email is read-only"
+  },
+  "noWorkout": "No workout",
+  "@noWorkout": {
+    "description": "Label for days without workout in calendar"
+  },
+  "bodyMeasurementsGrantConsent": "Enable Body Measurements",
+  "@bodyMeasurementsGrantConsent": {
+    "description": "Button to grant consent for body measurements"
+  },
+  "weeks": "weeks",
+  "@weeks": {
+    "description": "Unit for weeks"
+  },
+  "workoutsOnDate": "Workouts on {date}",
+  "@workoutsOnDate": {
+    "description": "Title for day details bottom sheet",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noWorkoutOnThisDay": "No workout on this day",
+  "@noWorkoutOnThisDay": {
+    "description": "Message when no workout on selected day"
+  },
+  "viewWorkoutHistory": "View in History",
+  "@viewWorkoutHistory": {
+    "description": "Button to navigate to workout history"
+  },
+  "nExercisesCount": "{count} exercises",
+  "@nExercisesCount": {
+    "description": "Number of exercises in a workout",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restDay": "Rest Day",
+  "@restDay": {
+    "description": "Label for rest day"
+  },
+  "tapWorkoutForDetails": "Tap a workout to view details",
+  "@tapWorkoutForDetails": {
+    "description": "Hint text for workout list"
   }
 }

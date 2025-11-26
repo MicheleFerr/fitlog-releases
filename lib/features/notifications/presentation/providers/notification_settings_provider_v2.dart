@@ -20,6 +20,8 @@ import 'package:gymbro_flutter_new/features/notifications/data/datasources/notif
 import 'package:gymbro_flutter_new/features/notifications/data/sync/notification_sync_manager.dart';
 import 'package:gymbro_flutter_new/features/notifications/data/repositories/notification_settings_repository_impl.dart';
 import 'package:gymbro_flutter_new/shared/providers/shared_preferences_provider.dart';
+import 'package:gymbro_flutter_new/features/notifications/domain/services/daily_workout_reminder_service.dart';
+import 'package:flutter/foundation.dart';
 
 // === Infrastructure Providers ===
 
@@ -314,4 +316,89 @@ final needsMigrationProvider = FutureProvider<bool>((ref) async {
 final hasValidConsentProvider = FutureProvider<bool>((ref) async {
   final repository = ref.watch(notificationSettingsRepositoryV2Provider);
   return await repository.hasValidConsent();
+});
+
+// === Auto-Scheduling Integration ===
+
+/// Provider that automatically schedules/cancels notifications when settings change
+///
+/// **How it works**:
+/// 1. Watches `notificationSettingsV2Provider` for changes
+/// 2. When `enableWorkoutReminders` changes → schedules or cancels reminders
+/// 3. When `customTime` changes → reschedules with new time
+/// 4. Must be read in `NotificationServicesInitializer` to activate
+///
+/// **Example usage**:
+/// ```dart
+/// // In NotificationServicesInitializer
+/// ref.read(autoScheduleNotificationsV2Provider);
+/// ```
+final autoScheduleNotificationsV2Provider = Provider<void>((ref) {
+  ref.listen<AsyncValue<NotificationSettings>>(
+    notificationSettingsV2Provider,
+    (previous, next) async {
+      final prevSettings = previous?.value;
+      final newSettings = next.value;
+
+      // Skip if loading or error
+      if (newSettings == null) return;
+
+      try {
+        final reminderService = ref.read(dailyWorkoutReminderServiceProvider);
+
+        // Case 1: Workout reminders toggled
+        final wasEnabled = prevSettings?.enableWorkoutReminders ?? false;
+        final nowEnabled = newSettings.enableWorkoutReminders;
+
+        if (wasEnabled != nowEnabled) {
+          if (nowEnabled) {
+            // Schedule with user's preferred time
+            // v2.0: Check customTimePerType['workoutReminder'] first, then fallback to global customTime
+            final customTime = newSettings.customTimePerType['workoutReminder'] ??
+                newSettings.customTime;
+            await reminderService.scheduleDailyReminders(
+              customHour: customTime?.hour,
+              customMinute: customTime?.minute,
+            );
+            if (kDebugMode) {
+              debugPrint('✅ [AutoSchedule] Enabled → Scheduled reminders');
+            }
+          } else {
+            await reminderService.cancelAllReminders();
+            if (kDebugMode) {
+              debugPrint('🔕 [AutoSchedule] Disabled → Cancelled reminders');
+            }
+          }
+          return; // Don't check time change if toggle changed
+        }
+
+        // Case 2: Custom time changed (only if enabled)
+        // v2.0: Check customTimePerType['workoutReminder'] first, then fallback to global customTime
+        if (nowEnabled && prevSettings != null) {
+          final prevTime = prevSettings.customTimePerType['workoutReminder'] ??
+              prevSettings.customTime;
+          final newTime = newSettings.customTimePerType['workoutReminder'] ??
+              newSettings.customTime;
+
+          final timeChanged = prevTime?.hour != newTime?.hour ||
+              prevTime?.minute != newTime?.minute;
+
+          if (timeChanged) {
+            await reminderService.rescheduleReminders(
+              customHour: newTime?.hour,
+              customMinute: newTime?.minute,
+            );
+            if (kDebugMode) {
+              debugPrint('🔄 [AutoSchedule] Time changed → Rescheduled');
+            }
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('❌ [AutoSchedule] Error: $e');
+        }
+      }
+    },
+    fireImmediately: false, // Don't fire on initial load (handled by NotificationServicesInitializer)
+  );
 });

@@ -61,7 +61,7 @@ class RecentWorkoutsCard extends StatelessWidget {
                   padding: const EdgeInsets.all(32.0),
                   child: Text(
                     context.l10n.noRecentWorkouts,
-                    style: TextStyle(color: context.colors.surfaceContainerHighest),
+                    style: context.textTheme.bodyMedium?.copyWith(color: context.colors.surfaceContainerHighest),
                   ),
                 ),
               )
@@ -474,7 +474,11 @@ class RecentWorkoutsCard extends StatelessWidget {
                     ),
                   ),
                   // Set rows
-                  ...activity.sets.map((set) => Container(
+                  ...activity.sets.map((set) {
+                    // RPE = 0 means warmup set
+                    final isWarmupSet = set.isWarmup || (set.rpe != null && set.rpe == 0);
+
+                    return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
                       border: Border(
@@ -491,19 +495,23 @@ class RecentWorkoutsCard extends StatelessWidget {
                             width: 24,
                             height: 24,
                             decoration: BoxDecoration(
-                              color: set.done 
-                                  ? context.colors.primary.withValues(alpha: 0.2)
-                                  : context.colors.outline.withValues(alpha: 0.2),
+                              color: isWarmupSet
+                                  ? context.colors.warning.withValues(alpha: 0.2)
+                                  : set.done
+                                      ? context.colors.primary.withValues(alpha: 0.2)
+                                      : context.colors.outline.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
-                                '${set.set}',
+                                isWarmupSet ? 'W' : '${set.set}',
                                 style: context.textTheme.bodySmall?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: set.done 
-                                      ? context.colors.primary
-                                      : context.colors.onSurface.withValues(alpha: 0.5),
+                                  color: isWarmupSet
+                                      ? context.colors.warning
+                                      : set.done
+                                          ? context.colors.primary
+                                          : context.colors.onSurface.withValues(alpha: 0.5),
                                 ),
                               ),
                             ),
@@ -545,12 +553,13 @@ class RecentWorkoutsCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )),
+                  );
+                  }),
                 ],
               ),
             ),
-            // Additional stats if available
-            if (activity.sets.any((s) => s.rpe != null || s.rir != null)) ...[
+            // Additional stats if available (exclude warmup sets with RPE=0)
+            if (activity.sets.any((s) => s.rpe != null && s.rpe! > 0 || s.rir != null)) ...[
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -561,11 +570,12 @@ class RecentWorkoutsCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (activity.sets.any((s) => s.rpe != null))
+                    // Exclude warmup sets (RPE=0) from average calculation
+                    if (activity.sets.any((s) => s.rpe != null && s.rpe! > 0))
                       _buildAdditionalStat(
                         context,
                         context.l10n.averageRpe,
-                        (activity.sets.where((s) => s.rpe != null).fold<int>(0, (sum, s) => sum + s.rpe!) / activity.sets.where((s) => s.rpe != null).length).toStringAsFixed(1),
+                        (activity.sets.where((s) => s.rpe != null && s.rpe! > 0).fold<int>(0, (sum, s) => sum + s.rpe!) / activity.sets.where((s) => s.rpe != null && s.rpe! > 0).length).toStringAsFixed(1),
                       ),
                     if (activity.sets.any((s) => s.rir != null))
                       _buildAdditionalStat(

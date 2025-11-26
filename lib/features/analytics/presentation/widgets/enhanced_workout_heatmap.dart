@@ -445,7 +445,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                   duration: const Duration(milliseconds: 200),
                   width: _cellSize,
                   height: _cellSize,
-                  margin: const EdgeInsets.all(1),
+                  margin: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: _getColorForWorkoutData(workoutData, theme).withValues(
                       alpha: _animation.value,
@@ -464,7 +464,7 @@ class _EnhancedWorkoutHeatmapState extends ConsumerState<EnhancedWorkoutHeatmap>
                       ? Center(
                           child: Text(
                             workoutData.exercises.length.toString(),
-                            style: TextStyle(
+                            style: context.textTheme.labelSmall?.copyWith(
                               fontSize: _cellSize / 2.5,
                               color: context.colors.surface,
                               fontWeight: FontWeight.bold,
@@ -890,7 +890,7 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                           backgroundColor: theme.colorScheme.primaryContainer,
                           child: Text(
                             '${index + 1}',
-                            style: TextStyle(
+                            style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.onPrimaryContainer,
                               fontWeight: FontWeight.bold,
                             ),
@@ -982,7 +982,9 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                               ...exercise.sets.asMap().entries.map((entry) {
                                 final setIndex = entry.key;
                                 final set = entry.value;
-                                
+                                // Treat effort=0 as warmup (when RPE is 0)
+                                final isWarmupSet = set.isWarmup || (set.effort != null && set.effort == 0);
+
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 4),
                                   child: Row(
@@ -995,15 +997,16 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                                             vertical: 2,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: set.isWarmup
-                                                ? context.colors.secondary.withValues(alpha: 0.2)
+                                            color: isWarmupSet
+                                                ? context.colors.warning.withValues(alpha: 0.2)
                                                 : theme.colorScheme.primaryContainer,
                                             borderRadius: BorderRadius.circular(8),
                                           ),
                                           child: Text(
-                                            '${setIndex + 1}',
+                                            isWarmupSet ? 'W' : '${setIndex + 1}',
                                             style: theme.textTheme.bodySmall?.copyWith(
                                               fontWeight: FontWeight.w600,
+                                              color: isWarmupSet ? context.colors.warning : null,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -1110,14 +1113,14 @@ class _WorkoutDetailsSheetState extends State<WorkoutDetailsSheet> {
                 : context.colors.error;
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         '$effort',
-        style: TextStyle(
+        style: context.textTheme.labelSmall?.copyWith(
           fontSize: 11,
           fontWeight: FontWeight.bold,
           color: color,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/exercise_repository.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/hero_stat_card.dart';
@@ -401,46 +402,372 @@ class _AnalyticsOverviewTabState extends ConsumerState<AnalyticsOverviewTab> {
     final volume = workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume);
     final workoutName = workout.name;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          _showWorkoutDetail(context, workout);
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      workoutName,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '${workout.exercises.length} ${l10n.exercises} • $timeAgo',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                '${volume.toStringAsFixed(0)} kg',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              SemanticIcon(
+                icon: AppIcons.chevronRight,
+                semanticLabel: l10n.viewDetails,
+                size: AppIconSize.small,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showWorkoutDetail(BuildContext context, Workout workout) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.95,
+        minChildSize: 0.4,
+        expand: false,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: SemanticIcon(
+                        icon: AppIcons.workout,
+                        semanticLabel: l10n.workout,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            workout.name,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            DateFormat('dd MMMM yyyy - HH:mm').format(workout.endTime ?? workout.createdAt),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: SemanticIcon(
+                        icon: AppIcons.close,
+                        semanticLabel: l10n.close,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Stats summary
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    _buildStatChip(context, AppIcons.workout, '${workout.exercises.length}', l10n.exercises),
+                    const SizedBox(width: 12),
+                    _buildStatChip(context, AppIcons.scale, '${workout.exercises.fold(0.0, (sum, e) => sum + e.totalVolume).toStringAsFixed(0)} kg', l10n.volumeLabel),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+              // Exercise list
+              Expanded(
+                child: ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(20),
+                  itemCount: workout.exercises.length,
+                  itemBuilder: (context, index) {
+                    final exercise = workout.exercises[index];
+                    return _buildExerciseDetailCard(context, exercise, index + 1);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatChip(BuildContext context, IconData icon, String value, String label) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 4,
-            height: 40,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  workoutName,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+          Icon(icon, size: AppIconSize.small, color: theme.colorScheme.primary),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  '${workout.exercises.length} ${l10n.exercises} • $timeAgo',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+              ),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
-              ],
-            ),
-          ),
-          Text(
-            '${volume.toStringAsFixed(0)} kg',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseDetailCard(BuildContext context, Exercise exercise, int order) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Exercise header
+          Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    '$order',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  exercise.name,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                l10n.setsCount(exercise.sets.length),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Sets table header
+          Row(
+            children: [
+              SizedBox(width: 40, child: Text(l10n.sets, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold))),
+              Expanded(child: Text(l10n.weightLabel, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+              Expanded(child: Text(l10n.repsLabel, style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+              SizedBox(width: 60, child: Text('RPE', style: theme.textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Sets rows
+          ...exercise.sets.asMap().entries.map((entry) {
+            final setIndex = entry.key;
+            final set = entry.value;
+            // Display as warmup if RPE is 0 or if isWarmup is true
+            final isWarmupSet = set.isWarmup || (set.rpe != null && set.rpe == 0);
+
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                color: isWarmupSet
+                    ? theme.colorScheme.secondary.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: isWarmupSet
+                            ? theme.colorScheme.secondary.withValues(alpha: 0.2)
+                            : theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        isWarmupSet ? 'W' : '${setIndex + 1}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isWarmupSet ? theme.colorScheme.secondary : theme.colorScheme.primary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      set.weight != null ? '${set.weight!.toStringAsFixed(1)} kg' : '-',
+                      style: theme.textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      set.actualReps?.toString() ?? set.reps?.toString() ?? '-',
+                      style: theme.textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 60,
+                    child: isWarmupSet
+                        ? Text(
+                            l10n.warmup,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.secondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : set.rpe != null
+                            ? _buildRpeIndicator(context, set.rpe!)
+                            : Text('-', style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRpeIndicator(BuildContext context, int rpe) {
+    final theme = Theme.of(context);
+    final color = rpe <= 5
+        ? theme.colorScheme.primary.withValues(alpha: 0.7)
+        : rpe <= 7
+            ? theme.colorScheme.secondary
+            : rpe <= 8
+                ? theme.colorScheme.tertiary
+                : theme.colorScheme.error;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        '$rpe',
+        style: theme.textTheme.bodySmall?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: color,
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }

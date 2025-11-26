@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/exercise_view_mode_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/favorite_exercises_notifier.dart';
@@ -1175,8 +1176,13 @@ class _ExerciseHistoryCard extends ConsumerWidget{
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          // Navigate to Exercise Detail Screen with URI-encoded exercise name
-          context.push('/analytics/exercise/${Uri.encodeComponent(history.exerciseName)}');
+          // Navigate to Exercise Detail Screen using named route
+          context.pushNamed(
+            AppRoutes.analyticsExerciseDetailName,
+            pathParameters: {
+              'exerciseName': Uri.encodeComponent(history.exerciseName),
+            },
+          );
         },
         onLongPress: () {
           // Show correction sheet on long press

@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/correlation_result.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_analytics_data.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
@@ -535,7 +536,7 @@ class _ExerciseCorrelationsSheetState
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -755,7 +756,7 @@ class _ExerciseCorrelationsSheetState
                   children: [
                     Text(
                       '• ',
-                      style: TextStyle(
+                      style: context.textTheme.bodyMedium?.copyWith(
                         color: context.colors.tertiary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -814,8 +815,13 @@ class _ExerciseCorrelationsSheetState
         HapticFeedback.mediumImpact();
         // Critical Fix #1: Close bottom sheet before navigation
         Navigator.pop(context);
-        // Navigate to L3 full analytics screen
-        context.push('/analytics/exercise/${Uri.encodeComponent(widget.exerciseName)}');
+        // Navigate to L3 full analytics screen using named route
+        context.pushNamed(
+          AppRoutes.analyticsExerciseDetailName,
+          pathParameters: {
+            'exerciseName': Uri.encodeComponent(widget.exerciseName),
+          },
+        );
       },
       icon: const Icon(AppIcons.analytics),
       label: Text(context.l10n.analyticsViewFullAnalytics),

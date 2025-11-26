@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/daily_workout_reminder_service.dart';
 import 'package:gymbro_flutter_new/features/notifications/domain/services/streak_achievement_notification_service.dart';
+import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_settings_provider_v2.dart';
 
 /// Initializer widget for notification services
 ///
@@ -73,10 +74,13 @@ class _NotificationServicesInitializerState
         debugPrint('🔔 [NotificationServices] Initializing...');
       }
 
-      // 1. Schedule daily workout reminders (9:00 AM, 30 days)
+      // 1. Activate auto-scheduling listener (watches v2 settings changes)
+      _activateAutoScheduleListener();
+
+      // 2. Schedule daily workout reminders (using v2 settings)
       await _scheduleDailyReminders();
 
-      // 2. Enable auto-check for streak achievements
+      // 3. Enable auto-check for streak achievements
       _enableStreakAutoCheck();
 
       if (kDebugMode) {
@@ -90,17 +94,65 @@ class _NotificationServicesInitializerState
     }
   }
 
+  /// Activate auto-scheduling listener for settings v2.0
+  ///
+  /// This listener watches `notificationSettingsV2Provider` and automatically
+  /// schedules/cancels reminders when settings change.
+  void _activateAutoScheduleListener() {
+    try {
+      // Reading this provider activates the ref.listen() inside it
+      ref.read(autoScheduleNotificationsV2Provider);
+
+      if (kDebugMode) {
+        debugPrint('✅ [AutoSchedule] Listener activated');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ [AutoSchedule] Failed to activate: $e');
+      }
+    }
+  }
+
   /// Schedule daily workout reminders for next 30 days
+  ///
+  /// Uses v2 settings for:
+  /// - Enabled/disabled state
+  /// - Custom reminder time
   Future<void> _scheduleDailyReminders() async {
     try {
       final reminderService = ref.read(dailyWorkoutReminderServiceProvider);
 
-      // Schedule reminders at default time (9:00 AM)
-      await reminderService.scheduleDailyReminders();
+      // Get v2 settings (if available)
+      final settingsAsync = ref.read(notificationSettingsV2Provider);
+      final settings = settingsAsync.valueOrNull;
+
+      // Check if workout reminders are enabled
+      final isEnabled = settings?.enableWorkoutReminders ?? true;
+
+      if (!isEnabled) {
+        if (kDebugMode) {
+          debugPrint('🔕 [DailyReminders] Disabled in settings - skipping');
+        }
+        return;
+      }
+
+      // Use custom time from settings (or default 9:00 AM)
+      // v2.0: Check customTimePerType['workoutReminder'] first, then fallback to global customTime
+      final customTime = settings?.customTimePerType['workoutReminder'] ??
+          settings?.customTime;
+
+      await reminderService.scheduleDailyReminders(
+        customHour: customTime?.hour,
+        customMinute: customTime?.minute,
+      );
 
       if (kDebugMode) {
         final count = reminderService.getPendingReminderCount();
-        debugPrint('✅ [DailyReminders] Scheduled $count reminders');
+        final hour = customTime?.hour ?? 9;
+        final minute = customTime?.minute ?? 0;
+        debugPrint(
+          '✅ [DailyReminders] Scheduled $count reminders at $hour:${minute.toString().padLeft(2, '0')}',
+        );
       }
     } catch (e) {
       if (kDebugMode) {

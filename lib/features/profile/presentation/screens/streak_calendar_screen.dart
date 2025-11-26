@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -130,7 +131,7 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
 
           // Calendar view based on mode
           switch (_viewMode) {
-            _StreakViewMode.monthly => _buildMonthlyView(context, workoutDates),
+            _StreakViewMode.monthly => _buildMonthlyView(context, workoutDates, workouts),
             _StreakViewMode.annual => _buildAnnualView(context, workoutDates),
             _StreakViewMode.multiYear => _buildMultiYearView(context, workoutDates),
           },
@@ -146,32 +147,36 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
   ) {
     final daysSinceLastWorkout = _calculateDaysSinceLastWorkout(workoutDates);
 
-    return Row(
-      children: [
-        // Total workouts
-        Expanded(
-          child: _EmojiStatCard(
-            emoji: '💪',
-            label: context.l10n.totalWorkouts,
-            value: '${workouts.length}',
-            color: context.colors.primary,
+    // IntrinsicHeight ensures both cards have equal height regardless of text length
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Total workouts
+          Expanded(
+            child: _EmojiStatCard(
+              emoji: '💪',
+              label: context.l10n.totalWorkouts,
+              value: '${workouts.length}',
+              color: context.colors.primary,
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        // Days since last workout (riposo)
-        Expanded(
-          child: _EmojiStatCard(
-            emoji: '⏱️',
-            label: context.l10n.daysSinceLastWorkout,
-            value: '$daysSinceLastWorkout',
-            color: daysSinceLastWorkout == 0
-                ? context.colors.primary // Worked out today
-                : daysSinceLastWorkout <= 2
-                    ? context.colors.primary // Recent
-                    : context.colors.error, // Warning - need to workout
+          const SizedBox(width: 12),
+          // Days since last workout (riposo)
+          Expanded(
+            child: _EmojiStatCard(
+              emoji: '⏱️',
+              label: context.l10n.daysSinceLastWorkout,
+              value: '$daysSinceLastWorkout',
+              color: daysSinceLastWorkout == 0
+                  ? context.colors.primary // Worked out today
+                  : daysSinceLastWorkout <= 2
+                      ? context.colors.primary // Recent
+                      : context.colors.error, // Warning - need to workout
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -192,7 +197,45 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
     return daysSince < 0 ? 0 : daysSince;
   }
 
-  Widget _buildMonthlyView(BuildContext context, Set<DateTime> workoutDates) {
+  /// Show day details bottom sheet
+  void _showDayDetails(
+    BuildContext context,
+    DateTime date,
+    List<WorkoutHistoryDetail> workouts,
+  ) {
+    HapticFeedback.lightImpact();
+
+    // Filter workouts for the selected date
+    final dayWorkouts = workouts.where((w) {
+      final workoutDate = DateTime(
+        w.completedAt.year,
+        w.completedAt.month,
+        w.completedAt.day,
+      );
+      return workoutDate.year == date.year &&
+          workoutDate.month == date.month &&
+          workoutDate.day == date.day;
+    }).toList();
+
+    final dateFormat = DateFormat.yMMMd(context.l10n.localeName);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _DayDetailsSheet(
+        date: date,
+        formattedDate: dateFormat.format(date),
+        workouts: dayWorkouts,
+      ),
+    );
+  }
+
+  Widget _buildMonthlyView(
+    BuildContext context,
+    Set<DateTime> workoutDates,
+    List<WorkoutHistoryDetail> workouts,
+  ) {
     final now = DateTime.now();
     final firstDayOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
     final lastDayOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
@@ -276,28 +319,33 @@ class _StreakCalendarScreenState extends ConsumerState<StreakCalendarScreen> {
                 date.year == now.year;
             final isFuture = date.isAfter(now);
 
-            return Container(
-              decoration: BoxDecoration(
-                color: hasWorkout
-                    ? context.colors.primary
-                    : (isToday
-                        ? context.colors.primaryContainer
-                        : context.colors.surfaceContainerHighest),
-                borderRadius: BorderRadius.circular(8),
-                border: isToday
-                    ? Border.all(color: context.colors.primary, width: 2)
-                    : null,
-              ),
-              child: Center(
-                child: Text(
-                  '$day',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: hasWorkout
-                        ? context.colors.onPrimary
-                        : (isFuture
-                            ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
-                            : context.colors.onSurface),
-                    fontWeight: isToday ? FontWeight.bold : null,
+            return GestureDetector(
+              onTap: hasWorkout || !isFuture
+                  ? () => _showDayDetails(context, date, workouts)
+                  : null,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: hasWorkout
+                      ? context.colors.primary
+                      : (isToday
+                          ? context.colors.primaryContainer
+                          : context.colors.surfaceContainerHighest),
+                  borderRadius: BorderRadius.circular(8),
+                  border: isToday
+                      ? Border.all(color: context.colors.primary, width: 2)
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    '$day',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: hasWorkout
+                          ? context.colors.onPrimary
+                          : (isFuture
+                              ? context.colors.onSurfaceVariant.withValues(alpha: 0.5)
+                              : context.colors.onSurface),
+                      fontWeight: isToday ? FontWeight.bold : null,
+                    ),
                   ),
                 ),
               ),
@@ -668,6 +716,246 @@ class _LegendItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Bottom sheet showing workout details for a specific day
+class _DayDetailsSheet extends StatelessWidget {
+  const _DayDetailsSheet({
+    required this.date,
+    required this.formattedDate,
+    required this.workouts,
+  });
+
+  final DateTime date;
+  final String formattedDate;
+  final List<WorkoutHistoryDetail> workouts;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle bar
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    context.l10n.workoutsOnDate(formattedDate),
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(AppIcons.close, size: AppIconSize.medium),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          if (workouts.isEmpty)
+            _buildEmptyState(context)
+          else
+            _buildWorkoutList(context),
+
+          // Bottom padding for safe area
+          SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final selectedDate = DateTime(date.year, date.month, date.day);
+    final isPast = selectedDate.isBefore(today);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            isPast ? '😴' : '📅',
+            style: context.textTheme.displayMedium?.copyWith(fontSize: 48),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            isPast ? context.l10n.restDay : context.l10n.noWorkoutOnThisDay,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (isPast) ...[
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.noWorkoutOnThisDay,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWorkoutList(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: workouts.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final workout = workouts[index];
+        return _WorkoutCard(workout: workout);
+      },
+    );
+  }
+}
+
+/// Card showing a single workout summary
+class _WorkoutCard extends StatelessWidget {
+  const _WorkoutCard({required this.workout});
+
+  final WorkoutHistoryDetail workout;
+
+  @override
+  Widget build(BuildContext context) {
+    final timeFormat = DateFormat.Hm(context.l10n.localeName);
+    final durationMinutes = workout.duration.inMinutes;
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Navigator.pop(context);
+        // Navigate to workout history
+        context.pushNamed(AppRoutes.workoutHistoryName);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Workout name and time
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    workout.name,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  timeFormat.format(workout.completedAt),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+
+            // Stats row
+            Row(
+              children: [
+                // Duration
+                Icon(
+                  AppIcons.timer,
+                  size: AppIconSize.small,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '$durationMinutes ${context.l10n.minutes}',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(width: 16),
+
+                // Exercises count
+                Icon(
+                  AppIcons.workout,
+                  size: AppIconSize.small,
+                  color: context.colors.secondary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  context.l10n.nExercisesCount(workout.exercises.length),
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(width: 16),
+
+                // Sets count
+                Icon(
+                  AppIcons.repeat,
+                  size: AppIconSize.small,
+                  color: context.colors.tertiary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${workout.totalSets} ${context.l10n.sets}',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // View in history button
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.pop(context);
+                    context.pushNamed(AppRoutes.workoutHistoryName);
+                  },
+                  icon: const Icon(AppIcons.history, size: AppIconSize.small),
+                  label: Text(context.l10n.viewWorkoutHistory),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

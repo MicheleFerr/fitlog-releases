@@ -699,30 +699,33 @@ class _WorkoutHistoryEditorState extends ConsumerState<WorkoutHistoryEditor>
   }
 
   void _onClosePressed() {
+    final l10n = AppLocalizations.of(context);
+    final parentNavigator = Navigator.of(context); // Capture parent navigator before dialog
+
     if (_hasUnsavedChanges) {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context).unsavedChanges),
-          content: Text(AppLocalizations.of(context).unsavedChangesMessage),
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.unsavedChanges),
+          content: Text(l10n.unsavedChangesMessage),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context).cancel),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Close editor
+                Navigator.of(dialogContext).pop(); // Close dialog
+                parentNavigator.pop(); // Close editor using captured parent navigator
               },
-              child: Text(AppLocalizations.of(context).discard),
+              child: Text(l10n.discard),
             ),
             FilledButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(dialogContext).pop(); // Close dialog
                 _saveWorkout(); // This will close editor after saving
               },
-              child: Text(AppLocalizations.of(context).save),
+              child: Text(l10n.save),
             ),
           ],
         ),

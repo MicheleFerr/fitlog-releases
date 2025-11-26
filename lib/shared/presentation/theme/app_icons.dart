@@ -949,6 +949,18 @@ class AppIcons {
   /// 🏠 Home outlined
   static const IconData homeOutlined = Icons.home_outlined;
 
+  /// 🏋️ Workout outlined (fitness center)
+  static const IconData workoutOutlined = Icons.fitness_center_outlined;
+
+  /// 👤 Profile outlined
+  static const IconData profileOutlined = Icons.person_outline;
+
+  /// 📐 Body measurements (ruler/straighten)
+  static const IconData bodyMeasurements = Icons.straighten;
+
+  /// 🏃 Exercise (single exercise icon)
+  static const IconData exercise = Icons.sports_gymnastics;
+
   /// 💡 Lightbulb outline
   static const IconData lightbulbOutline = Icons.lightbulb_outline;
 

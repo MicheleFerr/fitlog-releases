@@ -110,6 +110,12 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get home;
 
+  /// Profile tab label in bottom navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
   /// Welcome message on the main screen
   ///
   /// In en, this message translates to:
@@ -2880,6 +2886,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quick Actions'**
   String get quickActions;
+
+  /// Followers count label in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Followers'**
+  String get followers;
+
+  /// Following count label in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get following;
+
+  /// Activity chart placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Chart'**
+  String get activityChart;
+
+  /// Body measurements quick action label
+  ///
+  /// In en, this message translates to:
+  /// **'Measurements'**
+  String get measurements;
+
+  /// Streak calendar quick action label
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get calendar;
 
   /// New workout subtitle
   ///
@@ -6941,7 +6977,7 @@ abstract class AppLocalizations {
   /// **'Total Duration'**
   String get totalDuration;
 
-  /// Day designated for rest
+  /// Label for rest day
   ///
   /// In en, this message translates to:
   /// **'Rest Day'**
@@ -35945,6 +35981,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'High training variability makes pattern detection difficult. Consistent data collection enables better performance analysis.'**
   String get patternInconsistentScience;
+
+  /// Message shown when profile is updated successfully
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated'**
+  String get profileUpdated;
+
+  /// Error message when profile save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving profile'**
+  String get errorSavingProfile;
+
+  /// Section header for personal information in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
+  String get personalInformation;
+
+  /// Label for display name field
+  ///
+  /// In en, this message translates to:
+  /// **'Display Name'**
+  String get displayName;
+
+  /// Validation message for name field
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get pleaseEnterName;
+
+  /// Label for age field
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get age;
+
+  /// Validation message for age field
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid age (13-120)'**
+  String get pleaseEnterValidAge;
+
+  /// Label for gender field
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// Male gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// Female gender option
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// Validation message for height field
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid height (100-250 cm)'**
+  String get pleaseEnterValidHeight;
+
+  /// Validation message for weight field
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid weight (30-300 kg)'**
+  String get pleaseEnterValidWeight;
+
+  /// Note explaining that email is read-only
+  ///
+  /// In en, this message translates to:
+  /// **'Email address cannot be changed'**
+  String get emailCannotBeChanged;
+
+  /// Label for days without workout in calendar
+  ///
+  /// In en, this message translates to:
+  /// **'No workout'**
+  String get noWorkout;
+
+  /// Button to grant consent for body measurements
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Body Measurements'**
+  String get bodyMeasurementsGrantConsent;
+
+  /// Unit for weeks
+  ///
+  /// In en, this message translates to:
+  /// **'weeks'**
+  String get weeks;
+
+  /// Title for day details bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Workouts on {date}'**
+  String workoutsOnDate(String date);
+
+  /// Message when no workout on selected day
+  ///
+  /// In en, this message translates to:
+  /// **'No workout on this day'**
+  String get noWorkoutOnThisDay;
+
+  /// Button to navigate to workout history
+  ///
+  /// In en, this message translates to:
+  /// **'View in History'**
+  String get viewWorkoutHistory;
+
+  /// Number of exercises in a workout
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercises'**
+  String nExercisesCount(int count);
+
+  /// Hint text for workout list
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a workout to view details'**
+  String get tapWorkoutForDetails;
 }
 
 class _AppLocalizationsDelegate

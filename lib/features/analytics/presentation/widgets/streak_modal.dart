@@ -496,46 +496,50 @@ class _StreakModalState extends State<StreakModal> {
 
   /// Stats header (weeks in a row, days since last workout)
   Widget _buildStatsHeader(BuildContext context, int weekStreak, int daysSinceLastWorkout) {
-    return Row(
-      children: [
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              _showWeekStreakInfo(context, weekStreak);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: _buildStatCard(
-              context,
-              icon: '🔥',
-              value: '$weekStreak',
-              label: context.l10n.weeksInRow,
-              color: context.colors.error,
+    // IntrinsicHeight ensures both cards have equal height regardless of text length
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                _showWeekStreakInfo(context, weekStreak);
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: _buildStatCard(
+                context,
+                icon: '🔥',
+                value: '$weekStreak',
+                label: context.l10n.weeksInRow,
+                color: context.colors.error,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              _showDaysSinceWorkoutInfo(context, daysSinceLastWorkout);
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: _buildStatCard(
-              context,
-              icon: '⏱️',
-              value: '$daysSinceLastWorkout',
-              label: context.l10n.daysSinceLastWorkout,
-              color: daysSinceLastWorkout == 0
-                  ? context.colors.success  // Green if worked out today
-                  : daysSinceLastWorkout <= 2
-                      ? context.colors.primary  // Blue if 1-2 days
-                      : context.colors.warning,  // Warning if 3+ days
+          const SizedBox(width: 12),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                _showDaysSinceWorkoutInfo(context, daysSinceLastWorkout);
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: _buildStatCard(
+                context,
+                icon: '⏱️',
+                value: '$daysSinceLastWorkout',
+                label: context.l10n.daysSinceLastWorkout,
+                color: daysSinceLastWorkout == 0
+                    ? context.colors.success  // Green if worked out today
+                    : daysSinceLastWorkout <= 2
+                        ? context.colors.primary  // Blue if 1-2 days
+                        : context.colors.warning,  // Warning if 3+ days
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

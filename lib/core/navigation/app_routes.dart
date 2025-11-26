@@ -32,13 +32,9 @@ abstract final class AppRoutes {
   static final GlobalKey<NavigatorState> workoutNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'workout');
 
-  /// Navigator key for Analytics branch
-  static final GlobalKey<NavigatorState> analyticsNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'analytics');
-
-  /// Navigator key for Settings branch
-  static final GlobalKey<NavigatorState> settingsNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'settings');
+  /// Navigator key for Profile branch (replaces Analytics + Settings tabs)
+  static final GlobalKey<NavigatorState> profileNavigatorKey =
+      GlobalKey<NavigatorState>(debugLabel: 'profile');
 
   /// Root navigator key
   static final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -66,12 +62,17 @@ abstract final class AppRoutes {
   static const String workoutPath = '/workout';
   static const String workoutName = 'workout';
 
-  /// Analytics tab - stats and progress
-  static const String analyticsPath = '/analytics';
+  /// Profile tab - user hub with quick actions
+  static const String profilePath = '/profile';
+  static const String profileName = 'profile';
+
+  // Note: Analytics and Settings are now pushed routes from Profile hub
+  /// Analytics screen - pushed from Profile > Statistiche
+  static const String analyticsPath = '/profile/analytics';
   static const String analyticsName = 'analytics';
 
-  /// Settings tab - app configuration
-  static const String settingsPath = '/settings';
+  /// Settings screen - pushed from Profile > ⚙️ icon
+  static const String settingsPath = '/profile/settings';
   static const String settingsName = 'settings';
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -92,17 +93,17 @@ abstract final class AppRoutes {
   static const String workoutHistoryName = 'workout-history';
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // Analytics Sub-Routes
+  // Analytics Sub-Routes (under /profile/analytics)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  static const String analyticsOverviewPath = '/analytics/overview';
+  static const String analyticsOverviewPath = '/profile/analytics/overview';
   static const String analyticsOverviewName = 'analytics-overview';
 
   static const String analyticsExerciseDetailPath =
-      '/analytics/exercise/:exerciseName';
+      '/profile/analytics/exercise/:exerciseName';
   static const String analyticsExerciseDetailName = 'analytics-exercise-detail';
 
-  static const String exerciseProgressPath = '/analytics/exercise-progress';
+  static const String exerciseProgressPath = '/profile/analytics/exercise-progress';
   static const String exerciseProgressName = 'exercise-progress';
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -144,14 +145,33 @@ abstract final class AppRoutes {
   static const String unauthorizedName = 'unauthorized';
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Profile Sub-Routes (pushed from Profile hub quick actions)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Body measurements screen - pushed from Profile > Misurazioni
+  static const String bodyMeasurementsPath = '/profile/measurements';
+  static const String bodyMeasurementsName = 'body-measurements';
+
+  /// Streak calendar screen - pushed from Profile > Calendario
+  static const String streakCalendarPath = '/profile/calendar';
+  static const String streakCalendarName = 'streak-calendar';
+
+  /// Exercise database/history - pushed from Profile > Esercizi
+  static const String exerciseDatabasePath = '/profile/exercises';
+  static const String exerciseDatabaseName = 'exercise-database';
+
+  /// Edit profile screen - pushed from Profile > ✏️ icon
+  static const String editProfilePath = '/profile/edit';
+  static const String editProfileName = 'edit-profile';
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // Branch Index Mapping (for StatefulShellRoute)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Branch index for each main tab
+  /// Branch index for each main tab (3 tabs: Home, Workout, Profile)
   static const int homeBranchIndex = 0;
   static const int workoutBranchIndex = 1;
-  static const int analyticsBranchIndex = 2;
-  static const int settingsBranchIndex = 3;
+  static const int profileBranchIndex = 2;
 
   /// Get branch index from route path
   static int? getBranchIndex(String path) {
@@ -161,11 +181,8 @@ abstract final class AppRoutes {
     if (path.startsWith(workoutPath)) {
       return workoutBranchIndex;
     }
-    if (path.startsWith(analyticsPath)) {
-      return analyticsBranchIndex;
-    }
-    if (path.startsWith(settingsPath)) {
-      return settingsBranchIndex;
+    if (path.startsWith(profilePath)) {
+      return profileBranchIndex;
     }
     return null; // Not a shell route
   }

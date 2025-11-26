@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/core/navigation/app_routes.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/tabs/analytics_overview_tab.dart';
@@ -69,7 +70,7 @@ class TabbedAnalyticsScreen extends ConsumerWidget {
             tooltip: l10n.detailedAnalysis,
             onPressed: () {
               HapticFeedback.lightImpact();
-              context.push('/analytics/detailed');
+              context.pushNamed(AppRoutes.exerciseProgressName);
             },
           ),
           if (authState == AuthState.authenticated)

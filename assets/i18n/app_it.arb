@@ -2,6 +2,7 @@
   "@locale": "it",
   "appTitle": "FitLog Pro",
   "home": "Home",
+  "profile": "Profilo",
   "welcome": "Pronto per allenarti?",
   "welcomeDescription": "Traccia allenamenti, cronometra i riposi e sincronizza con Apple Health.",
   "onboardingWelcomeTitle": "Benvenuto nel Tuo Hub di Allenamento",
@@ -599,6 +600,11 @@
   "welcomeToGymBro": "Benvenuto nel tuo nuovo compagno fitness!",
   "homeWelcomeDescription": "Traccia i tuoi allenamenti con precisione. Inizia una nuova sessione o continua da dove avevi lasciato.",
   "quickActions": "Azioni Rapide",
+  "followers": "Seguaci",
+  "following": "Seguiti",
+  "activityChart": "Grafico Attività",
+  "measurements": "Misurazioni",
+  "calendar": "Calendario",
   "startFresh": "Inizia da capo",
   "history": "Storico",
   "viewPastWorkouts": "Visualizza allenamenti passati",
@@ -14523,5 +14529,104 @@
   "patternInconsistentScience": "L'alta variabilità nell'allenamento rende difficile il rilevamento di pattern. Una raccolta dati consistente permette una migliore analisi delle performance.",
   "@patternInconsistentScience": {
     "description": "Spiegazione scientifica per dati inconsistenti"
+  },
+
+  "profileUpdated": "Profilo aggiornato",
+  "@profileUpdated": {
+    "description": "Messaggio mostrato quando il profilo viene aggiornato con successo"
+  },
+  "errorSavingProfile": "Errore nel salvataggio del profilo",
+  "@errorSavingProfile": {
+    "description": "Messaggio di errore quando il salvataggio fallisce"
+  },
+  "personalInformation": "Informazioni Personali",
+  "@personalInformation": {
+    "description": "Intestazione sezione per informazioni personali"
+  },
+  "displayName": "Nome Visualizzato",
+  "@displayName": {
+    "description": "Etichetta per campo nome visualizzato"
+  },
+  "pleaseEnterName": "Inserisci il tuo nome",
+  "@pleaseEnterName": {
+    "description": "Messaggio di validazione per campo nome"
+  },
+  "age": "Età",
+  "@age": {
+    "description": "Etichetta per campo età"
+  },
+  "pleaseEnterValidAge": "Inserisci un'età valida (13-120)",
+  "@pleaseEnterValidAge": {
+    "description": "Messaggio di validazione per campo età"
+  },
+  "gender": "Genere",
+  "@gender": {
+    "description": "Etichetta per campo genere"
+  },
+  "male": "Maschio",
+  "@male": {
+    "description": "Opzione genere maschile"
+  },
+  "female": "Femmina",
+  "@female": {
+    "description": "Opzione genere femminile"
+  },
+  "pleaseEnterValidHeight": "Inserisci un'altezza valida (100-250 cm)",
+  "@pleaseEnterValidHeight": {
+    "description": "Messaggio di validazione per campo altezza"
+  },
+  "pleaseEnterValidWeight": "Inserisci un peso valido (30-300 kg)",
+  "@pleaseEnterValidWeight": {
+    "description": "Messaggio di validazione per campo peso"
+  },
+  "emailCannotBeChanged": "L'indirizzo email non può essere modificato",
+  "@emailCannotBeChanged": {
+    "description": "Nota che spiega che l'email è di sola lettura"
+  },
+  "noWorkout": "Nessun allenamento",
+  "@noWorkout": {
+    "description": "Etichetta per giorni senza allenamento nel calendario"
+  },
+  "bodyMeasurementsGrantConsent": "Abilita Misurazioni Corporee",
+  "@bodyMeasurementsGrantConsent": {
+    "description": "Pulsante per concedere consenso alle misurazioni corporee"
+  },
+  "weeks": "settimane",
+  "@weeks": {
+    "description": "Unità per settimane"
+  },
+  "workoutsOnDate": "Allenamenti del {date}",
+  "@workoutsOnDate": {
+    "description": "Titolo per la scheda dettagli giorno",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "noWorkoutOnThisDay": "Nessun allenamento in questo giorno",
+  "@noWorkoutOnThisDay": {
+    "description": "Messaggio quando non c'è allenamento nel giorno selezionato"
+  },
+  "viewWorkoutHistory": "Vedi nella Cronologia",
+  "@viewWorkoutHistory": {
+    "description": "Pulsante per navigare alla cronologia allenamenti"
+  },
+  "nExercisesCount": "{count} esercizi",
+  "@nExercisesCount": {
+    "description": "Numero di esercizi in un allenamento",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restDay": "Giorno di Riposo",
+  "@restDay": {
+    "description": "Etichetta per giorno di riposo"
+  },
+  "tapWorkoutForDetails": "Tocca un allenamento per i dettagli",
+  "@tapWorkoutForDetails": {
+    "description": "Testo suggerimento per lista allenamenti"
   }
 }

@@ -68,7 +68,8 @@ class MainShell extends StatelessWidget {
   }
 }
 
-/// Material 3 NavigationBar with 4 destinations
+/// Material 3 NavigationBar with 3 destinations
+/// Redesigned: Home, Workout, Profile (Analytics/Settings moved to Profile hub)
 class _BottomNavigationBar extends StatelessWidget {
   const _BottomNavigationBar({
     required this.currentIndex,
@@ -80,79 +81,80 @@ class _BottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: currentIndex,
-      onDestinationSelected: onDestinationSelected,
-      // Material 3 styling
-      elevation: 0,
-      backgroundColor: context.colors.surface,
-      indicatorColor: context.colors.primaryContainer,
-      surfaceTintColor: Colors.transparent,
-      height: 80,
-      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-      animationDuration: const Duration(milliseconds: 200),
-      destinations: [
-        // Home
-        NavigationDestination(
-          icon: Icon(
-            AppIcons.home,
-            size: AppIconSize.medium,
-            color: context.colors.onSurfaceVariant,
-          ),
-          selectedIcon: Icon(
-            AppIcons.home,
-            size: AppIconSize.medium,
-            color: context.colors.onPrimaryContainer,
-          ),
-          label: context.l10n.home,
-          tooltip: context.l10n.home,
+    return Theme(
+      data: Theme.of(context).copyWith(
+        navigationBarTheme: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            final isSelected = states.contains(WidgetState.selected);
+            return context.textTheme.labelSmall?.copyWith(
+              fontSize: 11,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected
+                  ? context.colors.primary
+                  : context.colors.onSurfaceVariant,
+            );
+          }),
         ),
-        // Workout
-        NavigationDestination(
-          icon: Icon(
-            AppIcons.workout,
-            size: AppIconSize.medium,
-            color: context.colors.onSurfaceVariant,
+      ),
+      child: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: onDestinationSelected,
+        // Material 3 styling - iOS standard 64px height
+        elevation: 0,
+        backgroundColor: context.colors.surface,
+        indicatorColor: Colors.transparent, // No indicator background
+        surfaceTintColor: Colors.transparent,
+        height: 64,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        animationDuration: const Duration(milliseconds: 200),
+        destinations: [
+          // Home - outlined icon, color change on selection
+          NavigationDestination(
+            icon: Icon(
+              AppIcons.homeOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.onSurfaceVariant,
+            ),
+            selectedIcon: Icon(
+              AppIcons.homeOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            label: context.l10n.home,
+            tooltip: context.l10n.home,
           ),
-          selectedIcon: Icon(
-            AppIcons.workout,
-            size: AppIconSize.medium,
-            color: context.colors.onPrimaryContainer,
+          // Workout - outlined icon, color change on selection
+          NavigationDestination(
+            icon: Icon(
+              AppIcons.workoutOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.onSurfaceVariant,
+            ),
+            selectedIcon: Icon(
+              AppIcons.workoutOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            label: context.l10n.workout,
+            tooltip: context.l10n.workout,
           ),
-          label: context.l10n.workout,
-          tooltip: context.l10n.workout,
-        ),
-        // Analytics
-        NavigationDestination(
-          icon: Icon(
-            AppIcons.analytics,
-            size: AppIconSize.medium,
-            color: context.colors.onSurfaceVariant,
+          // Profile - outlined icon, color change on selection
+          NavigationDestination(
+            icon: Icon(
+              AppIcons.profileOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.onSurfaceVariant,
+            ),
+            selectedIcon: Icon(
+              AppIcons.profileOutlined,
+              size: AppIconSize.medium,
+              color: context.colors.primary,
+            ),
+            label: context.l10n.profile,
+            tooltip: context.l10n.profile,
           ),
-          selectedIcon: Icon(
-            AppIcons.analytics,
-            size: AppIconSize.medium,
-            color: context.colors.onPrimaryContainer,
-          ),
-          label: context.l10n.analytics,
-          tooltip: context.l10n.analytics,
-        ),
-        // Settings
-        NavigationDestination(
-          icon: Icon(
-            AppIcons.settings,
-            size: AppIconSize.medium,
-            color: context.colors.onSurfaceVariant,
-          ),
-          selectedIcon: Icon(
-            AppIcons.settings,
-            size: AppIconSize.medium,
-            color: context.colors.onPrimaryContainer,
-          ),
-          label: context.l10n.settings,
-          tooltip: context.l10n.settings,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

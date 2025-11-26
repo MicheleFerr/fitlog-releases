@@ -678,30 +678,33 @@ class _WorkoutHistoryEditorEnhancedState
   }
 
   void _onClosePressed() {
+    final l10n = AppLocalizations.of(context);
+    final parentNavigator = Navigator.of(context); // Capture parent navigator before dialog
+
     if (_hasUnsavedChanges) {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context).unsavedChanges),
-          content: Text(AppLocalizations.of(context).unsavedChangesMessage),
+        builder: (dialogContext) => AlertDialog(
+          title: Text(l10n.unsavedChanges),
+          content: Text(l10n.unsavedChangesMessage),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(AppLocalizations.of(context).cancel),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop(); // Close dialog
+                parentNavigator.pop(); // Close modal using captured parent navigator
               },
-              child: Text(AppLocalizations.of(context).discard),
+              child: Text(l10n.discard),
             ),
             FilledButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                _saveWorkout();
+                Navigator.of(dialogContext).pop(); // Close dialog
+                _saveWorkout(); // Save will close modal after completion
               },
-              child: Text(AppLocalizations.of(context).save),
+              child: Text(l10n.save),
             ),
           ],
         ),

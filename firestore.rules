@@ -47,93 +47,53 @@ service cloud.firestore {
     }
 
     /// Get metric group for metric type (for consent validation)
+    /// Simplified to use ternary expressions (Firestore rules syntax)
     function getMetricGroup(metricType) {
-      // Essential group
-      let essential = ['weight', 'bodyFatPercentage', 'height', 'leanMass', 'bmi', 'bmr'];
-      if (metricType in essential) {
-        return 'essential';
-      }
-
-      // Vitals group
-      let vitals = ['bodyTemperature', 'waterMass', 'boneMass'];
-      if (metricType in vitals) {
-        return 'vitals';
-      }
-
-      // Measurements group (all circumferences)
-      return 'measurements';
+      return metricType in ['weight', 'bodyFatPercentage', 'height', 'leanMass', 'bmi', 'bmr']
+        ? 'essential'
+        : (metricType in ['bodyTemperature', 'waterMass', 'boneMass']
+            ? 'vitals'
+            : 'measurements');
     }
 
     /// Check if user has consent for metric (GDPR Article 6 - Legal Basis)
+    /// Simplified to use single expression (Firestore rules syntax)
     function hasConsentForMetric(userId, metricType) {
-      // Check if consent document exists
-      let consentDoc = /databases/$(database)/documents/userConsents/$(userId);
-
-      if (!exists(consentDoc)) {
-        return false; // No consent = no access
-      }
-
-      // Get metric group (essential, measurements, vitals)
-      let metricGroup = getMetricGroup(metricType);
-
-      // Check if consent is granted for this group
-      let consent = get(consentDoc).data;
-
-      // groupConsents is a map: { essential: 'granted', measurements: 'notAsked', vitals: 'denied' }
-      return consent.groupConsents[metricGroup] == 'granted';
+      return exists(/databases/$(database)/documents/userConsents/$(userId))
+        && get(/databases/$(database)/documents/userConsents/$(userId)).data.groupConsents[getMetricGroup(metricType)] == 'granted';
     }
 
     /// Validate encrypted measurement schema
+    /// Simplified to single expression (Firestore rules syntax)
     function isValidEncryptedMeasurement(data) {
-      // Required fields for encrypted measurement
-      let requiredFields = ['id', 'userId', 'metricType', 'encryptedData', 'iv', 'tag', 'timestamp'];
-
-      // Check all required fields exist
-      let hasAllFields = data.keys().hasAll(requiredFields);
-
-      // Validate field types
-      let validTypes = data.id is string
+      return data.keys().hasAll(['id', 'userId', 'metricType', 'encryptedData', 'iv', 'tag', 'timestamp'])
+        && data.id is string
         && data.userId is string
         && data.metricType is string
         && data.encryptedData is string
         && data.iv is string
         && data.tag is string
-        && data.timestamp is timestamp;
-
-      // Validate encryption fields are base64 (non-empty strings)
-      let validEncryption = data.encryptedData.size() > 0
+        && data.timestamp is timestamp
+        && data.encryptedData.size() > 0
         && data.iv.size() > 0
-        && data.tag.size() > 0;
-
-      // Validate metric type
-      let validMetricType = isValidMetricType(data.metricType);
-
-      return hasAllFields && validTypes && validEncryption && validMetricType;
+        && data.tag.size() > 0
+        && isValidMetricType(data.metricType);
     }
 
     /// Validate consent schema
+    /// Simplified to single expression (Firestore rules syntax)
     function isValidConsent(data) {
-      let requiredFields = ['id', 'userId', 'groupConsents', 'consentVersion', 'acceptedAt', 'ipAddress'];
-
-      let hasAllFields = data.keys().hasAll(requiredFields);
-
-      // groupConsents must be a map with 3 keys
-      let validGroupConsents = data.groupConsents is map
-        && data.groupConsents.keys().hasAll(['essential', 'measurements', 'vitals']);
-
-      // Each consent state must be 'notAsked', 'granted', or 'denied'
-      let validStates = data.groupConsents.essential in ['notAsked', 'granted', 'denied']
+      return data.keys().hasAll(['id', 'userId', 'groupConsents', 'consentVersion', 'acceptedAt', 'ipAddress'])
+        && data.groupConsents is map
+        && data.groupConsents.keys().hasAll(['essential', 'measurements', 'vitals'])
+        && data.groupConsents.essential in ['notAsked', 'granted', 'denied']
         && data.groupConsents.measurements in ['notAsked', 'granted', 'denied']
-        && data.groupConsents.vitals in ['notAsked', 'granted', 'denied'];
-
-      // Validate types
-      let validTypes = data.id is string
+        && data.groupConsents.vitals in ['notAsked', 'granted', 'denied']
+        && data.id is string
         && data.userId is string
         && data.consentVersion is int
         && data.acceptedAt is timestamp
         && data.ipAddress is string;
-
-      return hasAllFields && validGroupConsents && validStates && validTypes;
     }
 
     /// Rate limiting: Max 100 measurements per day per user

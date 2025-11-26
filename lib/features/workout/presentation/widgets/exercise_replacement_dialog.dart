@@ -770,10 +770,14 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
     AppLocalizations l10n,
   ) {
     HapticFeedback.mediumImpact();
-    
+
+    // Capture references before dialog opens
+    final parentNavigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -822,17 +826,17 @@ class _ExerciseReplacementDialogState extends ConsumerState<ExerciseReplacementD
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
               widget.onReplace(newExercise);
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              
-              // Show success snackbar
-              ScaffoldMessenger.of(context).showSnackBar(
+              Navigator.of(dialogContext).pop(); // Close confirmation dialog
+              parentNavigator.pop(); // Close replacement modal
+
+              // Show success snackbar using captured reference
+              scaffoldMessenger.showSnackBar(
                 SnackBar(
                   content: Text(l10n.exerciseReplaced),
                   backgroundColor: theme.colorScheme.primary,

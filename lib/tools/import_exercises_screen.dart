@@ -168,21 +168,23 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
         _isImporting = false;
         _status = context.l10n.importSuccess;
       });
-      
+
       // Show success dialog
       if (mounted) {
+        final l10n = context.l10n;
+        final parentNavigator = Navigator.of(context);
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(context.l10n.importSuccessTitle),
-            content: Text(context.l10n.importSuccessMessage),
+          builder: (dialogContext) => AlertDialog(
+            title: Text(l10n.importSuccessTitle),
+            content: Text(l10n.importSuccessMessage),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop(); // Go back to previous screen
+                  Navigator.of(dialogContext).pop(); // Close dialog
+                  parentNavigator.pop(); // Go back to previous screen
                 },
-                child: Text(context.l10n.ok),
+                child: Text(l10n.ok),
               ),
             ],
           ),
@@ -196,15 +198,16 @@ class _ImportExercisesScreenState extends State<ImportExercisesScreen> {
 
       // Show error dialog
       if (mounted) {
+        final l10n = context.l10n;
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Text(context.l10n.importFailedTitle),
-            content: Text(context.l10n.error),
+          builder: (dialogContext) => AlertDialog(
+            title: Text(l10n.importFailedTitle),
+            content: Text(l10n.error),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(context.l10n.ok),
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(l10n.ok),
               ),
             ],
           ),
