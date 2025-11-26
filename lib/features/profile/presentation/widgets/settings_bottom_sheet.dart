@@ -103,16 +103,6 @@ class _SettingsBottomSheetContent extends ConsumerWidget {
               ),
             ),
 
-            // Notifications
-            _SettingsTile(
-              icon: AppIcons.notificationsOutlined,
-              title: context.l10n.notifications,
-              onTap: () {
-                Navigator.pop(context);
-                context.pushNamed(AppRoutes.notificationsName);
-              },
-            ),
-
             const Divider(height: 32),
 
             // All settings button

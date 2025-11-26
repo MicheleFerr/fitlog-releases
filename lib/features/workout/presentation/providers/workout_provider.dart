@@ -20,9 +20,6 @@ import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workou
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/services/intelligent_notification_service.dart';
-// 🔥 Streak Achievement Notification Service for workout completion triggers
-import 'package:gymbro_flutter_new/features/notifications/domain/services/streak_achievement_notification_service.dart';
 import 'package:gymbro_flutter_new/features/history/domain/entities/workout_history_detail.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/screen_wakelock_provider.dart';
 // Auto-sync for cached progress stats
@@ -616,22 +613,6 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
             SyncStatusToast.showWorkoutSavedLocally(context);
           }
 
-          // 🔥 STREAK ACHIEVEMENT: Check for streak milestones after successful save
-          // This triggers achievement notifications for 3/7/14/30 day streaks
-          try {
-            final streakService = ref.read(streakAchievementNotificationServiceProvider);
-            await streakService.checkAndNotifyStreak();
-
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '✅ [WorkoutProvider] Streak achievement check completed');
-            }
-          } catch (streakError) {
-            // Non-critical error - log but don't fail workout save
-            if (kDebugMode) {
-              debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Failed to check streak achievement: $streakError');
-            }
-          }
-
           // 🏆 PR CELEBRATION: Check for new personal records after successful save
           // Records PRs to repository for future celebration and tracking
           try {
@@ -712,16 +693,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
               if (kDebugMode) {
                 debugLog(LogCategory.workout, '✅ [WorkoutProvider] PR celebrations ready for UI display');
               }
-
-              // 📬 Schedule delayed notification (5 minutes after workout)
-              final prNotificationService = ref.read(prNotificationServiceProvider);
-              for (final celebration in celebrations) {
-                await prNotificationService.scheduleDelayedPRNotification(
-                  userId: userId,
-                  celebration: celebration,
-                  workoutEndTime: workout.endTime ?? DateTime.now(),
-                );
-              }
+              // TODO: Re-implement PR notifications when notification system is rebuilt
             } else if (kDebugMode) {
               debugLog(LogCategory.workout, 'ℹ️ [WorkoutProvider] No new PRs detected');
             }
@@ -896,33 +868,7 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
         ref.invalidate(cachedProgressProvider);
       }
 
-      // 6. Generate intelligent notifications + Achievement notifications
-      try {
-        final intelligentService = ref.read(intelligentNotificationServiceProvider);
-        final notifications = await intelligentService.analyzeWorkoutCompletion(workout);
-
-        // CRITICAL FIX: Check disposal after notification generation
-        if (_isDisposed) {
-          debugLog(LogCategory.workout, '⚠️ [WorkoutProvider] Provider disposed after notification generation - skipping notification addition');
-          return;
-        }
-
-        // ✅ Achievement Notifications - Streak Milestones
-        // Uses unified notification system via StreakAchievementNotificationService
-        try {
-          final streakService = ref.read(streakAchievementNotificationServiceProvider);
-          await streakService.checkAndNotifyStreak();
-          debugLog(LogCategory.workout, '🏆 [Achievements] Checked streak milestones via unified notification system');
-        } catch (achievementError) {
-          debugLog(LogCategory.workout, '⚠️ [Achievements] Failed to check streak achievements: $achievementError');
-          // Non-critical - continue with other operations
-        }
-
-        // REMOVED: notification provider bridge (cleanup)
-        // Old AI notifications code removed during cleanup
-      } catch (notificationError) {
-        // Non-critical
-      }
+      // TODO: Re-implement intelligent notifications when notification system is rebuilt
 
       // ⚠️ ROUTINE FEATURE DISABLED (v2.0 API migration pending)
       // 7. Auto-complete routine day if applicable (disabled)

@@ -11,9 +11,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_state.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/unified_notification_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/use_cases/schedule_notification_use_case.dart';
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/set_duration_tracker_provider.dart';
 import 'package:gymbro_flutter_new/features/timer/domain/services/notification_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
@@ -990,18 +987,13 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
   /// Send notification when audio fails completely
   Future<void> _sendAudioErrorNotification() async {
     try {
-      final notificationProvider = ref.read(unifiedNotificationProvider.notifier);
-      
-      await notificationProvider.scheduleNotification(ScheduleNotificationParams(
-        type: NotificationType.timerComplete,
+      // Use timer's notification service for fallback
+      await NotificationService().sendWorkoutReminder(
         title: 'Timer Complete',
         body: 'Your timer has finished (audio failed)',
-        scheduledTime: DateTime.now(),
-        priority: NotificationPriority.high,
-        payload: {'audioError': true},
-      ));
-      
+      );
     } catch (e) {
+      // Notification failed silently
     }
   }
 
@@ -1212,43 +1204,17 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
           );
         }
 
-        return; // CRITICAL: Always return - no fallback to unified notifications
+        return; // CRITICAL: Always return for iOS
       }
-      
-      // Android continues to use the unified notification provider
-      final notificationProvider = ref.read(unifiedNotificationProvider.notifier);
-      
-      // Create notification parameters
-      final params = ScheduleNotificationParams(
-        type: NotificationType.timerComplete,
-        title: _getNotificationTitle(),
-        body: _getNotificationBody(),
-        scheduledTime: DateTime.now(), // Send immediately
-        priority: NotificationPriority.high,
-        soundName: state!.customSoundName ?? 'sound',
-        workoutId: state!.workoutId,
-        exerciseId: state!.exerciseName,
-        payload: {
-          'timerType': state!.type.name,
-          'originalDuration': state!.totalDurationSeconds,
-          'completedAt': DateTime.now().toIso8601String(),
-          'currentSet': state!.currentSet,
-          'totalSets': state!.totalSets,
-        },
-        androidConfig: AndroidNotificationConfig(
-          channelId: 'timer_complete',
-          channelName: 'Timer Complete',
-          channelDescription: 'Notifications when workout timers complete',
-          autoCancel: true,
-        ),
+
+      // Android: Use timer notification service
+      await NotificationService().sendTimerCompletionNotification(
+        exerciseName: state!.exerciseName ?? 'Exercise',
+        currentSet: state!.currentSet ?? 1,
+        totalSets: state!.totalSets ?? 1,
+        workoutName: state!.workoutId,
+        customSoundFile: state!.customSoundName ?? 'sound',
       );
-      
-      // Schedule the notification
-      final result = await notificationProvider.scheduleNotification(params);
-      
-      if (result.isSuccess) {
-      } else {
-      }
     } catch (e) {
       // Continue execution even if notification fails
     }

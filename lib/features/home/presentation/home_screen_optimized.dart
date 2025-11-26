@@ -7,7 +7,6 @@ import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_locali
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/premium_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_hub.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/services/workout_analytics.dart';
 // import 'package:gymbro_flutter_new/features/community/presentation/widgets/community_pulse_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/enhanced_workout_banner.dart';
@@ -138,7 +137,7 @@ class _HomeScreenOptimizedState extends ConsumerState<HomeScreenOptimized>
                 titlePadding: EdgeInsets.only(left: 20, bottom: 16),
               ),
             ),
-            actions: [NotificationHub(key: notificationHubKey), const SizedBox(width: 16)],
+            actions: const [SizedBox(width: 16)],
           ),
 
           // Main content

@@ -7,9 +7,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/usecases/check_and_
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/achievement_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/pr_celebration_repository_impl.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
-import 'package:gymbro_flutter_new/features/analytics/data/services/pr_notification_service.dart';
 import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
-import 'package:gymbro_flutter_new/features/notifications/presentation/providers/notification_providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Provider for AchievementRepository
@@ -38,17 +36,6 @@ final prCelebrationRepositoryProvider = Provider((ref) {
   return PRCelebrationRepositoryImpl(
     firestore: FirebaseFirestore.instance,
     analyticsService: analyticsService,
-  );
-});
-
-/// Provider for PRNotificationService
-///
-/// Service for scheduling delayed PR celebration notifications.
-/// Implements 5-minute post-workout notification window for retention.
-final prNotificationServiceProvider = Provider((ref) {
-  return PRNotificationService(
-    notificationRepository: ref.watch(notificationRepositoryProvider),
-    celebrationRepository: ref.watch(prCelebrationRepositoryProvider),
   );
 });
 

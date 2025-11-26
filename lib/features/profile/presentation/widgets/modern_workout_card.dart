@@ -146,7 +146,7 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          _getRelativeDate(context, workout.completedAt),
+                          '${_getTimeOfDayEmoji(workout.completedAt)} ${_getRelativeDate(context, workout.completedAt)}',
                           style: context.textTheme.bodySmall?.copyWith(
                             color: context.colors.onSurfaceVariant,
                           ),
@@ -233,6 +233,21 @@ class _ModernWorkoutCardState extends State<ModernWorkoutCard>
       return context.l10n.yesterdayAt(timeString);
     } else {
       return context.l10n.daysAgo(difference);
+    }
+  }
+
+  /// Returns emoji based on time of day
+  /// 🌅 Morning (5-11), ☀️ Afternoon (12-16), 🌆 Evening (17-20), 🌙 Night (21-4)
+  String _getTimeOfDayEmoji(DateTime date) {
+    final hour = date.hour;
+    if (hour >= 5 && hour < 12) {
+      return '🌅'; // Morning
+    } else if (hour >= 12 && hour < 17) {
+      return '☀️'; // Afternoon
+    } else if (hour >= 17 && hour < 21) {
+      return '🌆'; // Evening
+    } else {
+      return '🌙'; // Late night (21-4)
     }
   }
 

@@ -31,23 +31,12 @@ import 'package:gymbro_flutter_new/shared/domain/privacy/privacy_manager.dart';
 import 'package:gymbro_flutter_new/shared/services/privacy_safe_analytics.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // 🔐 SECURITY: Hive encryption migration
-// 🔔 DEEP LINKING: Required imports for cold-start notification deep linking
-import 'dart:convert';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:gymbro_flutter_new/features/notifications/domain/entities/unified_notification.dart';
-// 🔔 NOTIFICATION SERVICES: Initializer widget for notification services
-import 'package:gymbro_flutter_new/features/notifications/presentation/widgets/notification_services_initializer.dart';
+// NOTE: Notification deep linking imports removed - will be rebuilt from scratch
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ========================================
-  // 🔔 DEEP LINKING: Initialize timezone for scheduled notifications
-  // ========================================
-  // MUST be called before scheduling any notifications
-  // Uses IANA timezone database for accurate scheduling across timezones
-  tz.initializeTimeZones();
+  // NOTE: Timezone initialization removed - will be added when notifications are rebuilt
 
   // ========================================
   // 🔐 SECURITY: Load Environment Variables from .env
@@ -73,59 +62,9 @@ void main() async {
   // ========================================
   // 🔔 DEEP LINKING: Cold-Start Detection (T=0ms to T=250ms)
   // ========================================
-  // Detect if app was launched by tapping a notification (cold-start)
-  // This runs BEFORE Firebase to minimize app launch time
-  // Timeout protection prevents hanging if platform channel is slow
-
+  // NOTE: Notification deep linking temporarily disabled (notification system removed)
+  // TODO: Re-implement when notification system is rebuilt
   String? initialDeepLink;
-
-  try {
-    DeepLinkLogger.logColdStartAttempt('Starting cold-start detection...');
-
-    final launchDetails = await FlutterLocalNotificationsPlugin()
-        .getNotificationAppLaunchDetails()
-        .timeout(
-          const Duration(milliseconds: 500),
-          onTimeout: () {
-            DeepLinkLogger.logTimeout();
-            return null;
-          },
-        );
-
-    if (launchDetails?.didNotificationLaunchApp ?? false) {
-      final payload = launchDetails!.notificationResponse?.payload;
-      DeepLinkLogger.logColdStartAttempt('Payload: $payload');
-
-      if (payload != null && payload.isNotEmpty) {
-        try {
-          final data = jsonDecode(payload) as Map<String, dynamic>;
-          final typeString = data['type'] as String?;
-
-          if (typeString != null) {
-            final type = NotificationType.values.firstWhere(
-              (t) => t.toString() == typeString,
-              orElse: () => NotificationType.workoutReminder,
-            );
-
-            final rawDeepLink = _buildDeepLinkSync(type, data);
-            initialDeepLink = _validateDeepLink(rawDeepLink);
-
-            if (initialDeepLink != null) {
-              DeepLinkLogger.logColdStartAttempt('✅ Valid deep link: $initialDeepLink');
-            } else {
-              DeepLinkLogger.logColdStartAttempt('⚠️ Invalid deep link, using home: $rawDeepLink');
-            }
-          }
-        } catch (jsonError) {
-          DeepLinkLogger.logNavigationError(jsonError, StackTrace.current);
-        }
-      }
-    } else {
-      DeepLinkLogger.logColdStartAttempt('ℹ️ Normal app launch (not from notification)');
-    }
-  } catch (e, stackTrace) {
-    DeepLinkLogger.logNavigationError(e, stackTrace);
-  }
 
   // Initialize Firebase (handle Android auto-initialization)
   try {
@@ -331,110 +270,19 @@ void main() async {
         // Override sharedPreferencesProvider with initialized instance
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
       ],
-      // 🔔 NOTIFICATION SERVICES: Wrap app with NotificationServicesInitializer
-      // This initializes notification services after ProviderScope is ready:
-      // - Daily workout reminders (9:00 AM, 30 days)
-      // - Streak achievement auto-check
+      // App lifecycle manager handles background/foreground transitions
       child: const AppLifecycleManager(
-        child: NotificationServicesInitializer(
-          child: FitLogApp(),
-        ),
+        child: FitLogApp(),
       ),
     ),
   );
 }
 
 // ========================================
-// 🔔 DEEP LINKING: Helper Functions
+// 🔔 DEEP LINKING: Helper Functions (DISABLED)
 // ========================================
-
-/// Build deep link synchronously from notification payload
-/// Returns route path with query parameters (e.g., '/workout', '/analytics/exercise?id=123')
-///
-/// Synchronous to avoid race conditions with GoRouter initialization
-/// Maps NotificationType to corresponding app routes
-String _buildDeepLinkSync(NotificationType type, Map<String, dynamic> data) {
-  // ✅ CORRECTED: Route mapping based on notification type (using ACTUAL GoRouter routes)
-  // Note: Query parameters are removed as existing routes don't support them
-  // Deep linking navigates to general screens where user can find specific content
-  final routeMap = {
-    NotificationType.workoutReminder: '/workout',
-    NotificationType.achievementUnlocked: '/analytics', // Generic analytics screen
-    NotificationType.progressMilestone: '/analytics',   // Generic analytics screen
-    NotificationType.restReminder: '/routine',          // Routine center (CORRECT route name)
-    NotificationType.workoutSummary: '/analytics',
-    NotificationType.streakReminder: '/analytics',
-    NotificationType.timerComplete: '/workout',
-  };
-
-  final baseRoute = routeMap[type] ?? '/';
-
-  // Return base route without query params (existing routes don't support them)
-  return baseRoute;
-}
-
-/// Validate deep link and return null if invalid
-///
-/// Prevents navigation to invalid routes that would cause errors
-/// ✅ CORRECTED: Uses actual GoRouter routes (no query params needed)
-String? _validateDeepLink(String deepLink) {
-  // ✅ CORRECTED: Allowed routes (must match ACTUAL GoRouter routes in app.dart)
-  const allowedRoutes = [
-    '/',
-    '/workout',
-    '/analytics',
-    '/routine',
-    '/settings',
-    '/community',
-    '/workout-history',
-  ];
-
-  // Check if route is allowed (no query params anymore, so simple check)
-  if (!allowedRoutes.contains(deepLink)) {
-    DeepLinkLogger.logColdStartAttempt('❌ Invalid route: $deepLink (not in allowed list)');
-    return null; // Invalid route, use home screen
-  }
-
-  return deepLink; // Valid deep link
-}
-
-/// Structured logging for deep linking events
-///
-/// Provides debug visibility into cold-start and warm-start navigation
-/// All logs are debug-only (stripped in release builds)
-class DeepLinkLogger {
-  /// Log cold-start deep link attempt (app completely closed)
-  static void logColdStartAttempt(String message) {
-    if (kDebugMode) {
-      debugPrint('🔔 [Deep Link COLD-START] $message');
-    }
-  }
-
-  /// Log warm-start deep link attempt (app already running)
-  static void logWarmStartAttempt(String message) {
-    if (kDebugMode) {
-      debugPrint('🔔 [Deep Link WARM-START] $message');
-    }
-  }
-
-  /// Log timeout during platform channel call
-  static void logTimeout() {
-    if (kDebugMode) {
-      debugPrint('⏱️ [Deep Link] Timeout on getNotificationAppLaunchDetails (500ms limit)');
-      debugPrint('   Using home screen as fallback');
-    }
-  }
-
-  /// Log navigation errors
-  static void logNavigationError(dynamic error, StackTrace? stackTrace) {
-    if (kDebugMode) {
-      debugPrint('❌ [Deep Link] Navigation error: $error');
-      if (stackTrace != null) {
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    }
-  }
-}
+// NOTE: Deep linking from notifications temporarily disabled
+// TODO: Re-implement when notification system is rebuilt
 
 /// Initialize all storage systems
 Future<void> _initializeStorage() async {
@@ -474,28 +322,7 @@ Future<void> _initializeStorage() async {
     // Removed: ExerciseFuzzyMatcher - overengineered, simple token matching is sufficient
   ]);
 
-  // 🔔 NOTIFICATION SERVICES: Initialize notification system after storage
-  // This must run AFTER Hive initialization since services may use local storage
-  await _initializeNotificationServices();
-}
-
-/// Initialize notification services at app startup
-///
-/// This function:
-/// 1. Schedules daily workout reminders for next 30 days (9:00 AM)
-/// 2. Sets up auto-check for streak achievements
-///
-/// Called once during app initialization, after storage is ready.
-Future<void> _initializeNotificationServices() async {
-  // NOTE: We cannot use Riverpod ref here since we're in main.dart
-  // Notification services will be properly initialized when ProviderScope is created
-  // This is just a placeholder for documentation purposes
-
-  if (kDebugMode) {
-    debugPrint('🔔 [Notifications] Services will initialize after ProviderScope creation');
-    debugPrint('   - Daily workout reminders (9:00 AM, 30 days)');
-    debugPrint('   - Streak achievement auto-check');
-  }
+  // NOTE: Notification services removed - will be rebuilt from scratch
 }
 
 /// Helper function to safely initialize services with error handling
