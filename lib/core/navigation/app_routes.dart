@@ -129,6 +129,9 @@ abstract final class AppRoutes {
   static const String routinePath = '/routine';
   static const String routineName = 'routine';
 
+  static const String templatesPath = '/templates';
+  static const String templatesName = 'templates';
+
   static const String onboardingPath = '/onboarding';
   static const String onboardingName = 'onboarding';
 

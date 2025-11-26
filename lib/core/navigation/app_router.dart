@@ -45,10 +45,11 @@ import 'package:gymbro_flutter_new/features/auth/presentation/register_screen.da
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 
 // Home branch
-import 'package:gymbro_flutter_new/features/home/presentation/home_screen_optimized.dart';
+import 'package:gymbro_flutter_new/features/home/presentation/minimal_home_screen.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/presentation/screens/ai_coach_screen.dart';
 import 'package:gymbro_flutter_new/features/community/presentation/screens/community_hub_screen.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/global_onboarding_screen.dart';
+import 'package:gymbro_flutter_new/features/workout_templates/presentation/screens/templates_home_screen.dart';
 
 // Workout branch
 import 'package:gymbro_flutter_new/features/workout/presentation/workout_screen.dart';
@@ -198,7 +199,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.homePath,
                 name: AppRoutes.homeName,
-                builder: (context, state) => const HomeScreenOptimized(),
+                builder: (context, state) => const MinimalHomeScreen(),
                 routes: [
                   // AI Coach (sub-route of home)
                   GoRoute(
@@ -224,6 +225,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                     name: AppRoutes.routineName,
                     builder: (context, state) =>
                         const _RoutineComingSoonPlaceholder(),
+                  ),
+                  // Templates
+                  GoRoute(
+                    path: 'templates',
+                    name: AppRoutes.templatesName,
+                    builder: (context, state) => const TemplatesHomeScreen(),
                   ),
                 ],
               ),
