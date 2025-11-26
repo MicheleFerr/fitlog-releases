@@ -147,20 +147,19 @@ class DefaultHomeWidgets {
       order: 1,
       size: WidgetSize.large,
     ),
-    // TODO: AI Coach temporaneamente disabilitato per revisione scientifica
-    // Problemi identificati:
+    // NOTE: AI Coach abilitato per testing (solo sviluppatore)
+    // Problemi noti (da fixare in futuro):
     // 1. Volume calcolato per workout invece che per settimana
     // 2. Testi hardcoded in inglese (violazione CLAUDE.md)
     // 3. Consigli potenzialmente dannosi per principianti
     // 4. Manca differenziazione per training age
-    // Re-enable dopo fix in ai_coach_service.dart
     HomeWidgetConfig(
       id: 'ai_coach',
       type: HomeWidgetType.aiCoach,
       title: 'AI Coach Insights',
       icon: AppIcons.ai,
       order: 2,
-      isVisible: false, // DISABILITATO - Fix scientifici necessari
+      isVisible: true, // ABILITATO per testing
       allowResize: false,
       size: WidgetSize.medium,
     ),

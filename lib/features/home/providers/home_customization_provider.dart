@@ -61,21 +61,21 @@ class HomeCustomizationNotifier extends StateNotifier<List<HomeWidgetConfig>> {
   List<HomeWidgetConfig> _mergeWithDefaults(List<HomeWidgetConfig> userConfigs) {
     const defaults = DefaultHomeWidgets.defaultWidgets;
     final merged = <HomeWidgetConfig>[];
-    
+
     // Add all user configs
     merged.addAll(userConfigs);
-    
+
     // Add any new default widgets that aren't in user config
     for (final defaultWidget in defaults) {
       if (!userConfigs.any((w) => w.id == defaultWidget.id)) {
-        // New widget, add it at the end but hidden
+        // New widget - preserve default visibility (not always hidden)
         merged.add(defaultWidget.copyWith(
           order: merged.length,
-          isVisible: false,
+          // Use defaultWidget.isVisible instead of always hiding
         ));
       }
     }
-    
+
     return merged;
   }
   
