@@ -10,6 +10,8 @@
 /// WorkoutHistoryScreen - Database completo e modificabile per allenamenti passati
 library;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +26,50 @@ import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/features/history/presentation/widgets/workout_detail_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
+
+/// Date range filter options
+enum DateRangeOption {
+  today,
+  thisWeek,
+  thisMonth,
+  allTime,
+}
+
+/// Provider for the selected date range filter
+final dateRangeFilterProvider = StateProvider<DateRangeOption>((ref) {
+  return DateRangeOption.allTime;
+});
+
+/// Provider for view settings (grouping, calendar view)
+final historyViewSettingsProvider = StateProvider<HistoryViewSettings>((ref) {
+  return const HistoryViewSettings();
+});
+
+/// View settings for workout history
+class HistoryViewSettings {
+  const HistoryViewSettings({
+    this.groupByDate = false,
+    this.isCalendarView = false,
+  });
+
+  final bool groupByDate;
+  final bool isCalendarView;
+
+  HistoryViewSettings copyWith({
+    bool? groupByDate,
+    bool? isCalendarView,
+  }) {
+    return HistoryViewSettings(
+      groupByDate: groupByDate ?? this.groupByDate,
+      isCalendarView: isCalendarView ?? this.isCalendarView,
+    );
+  }
+}
+
+/// Provider for tracking which sections are expanded
+final expandedSectionsProvider = StateProvider<Set<String>>((ref) {
+  return {}; // All collapsed by default, will expand first section
+});
 
 /// Database completo e modificabile per la cronologia degli allenamenti
 class WorkoutHistoryScreen extends ConsumerStatefulWidget {
@@ -118,8 +164,16 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final workoutsAsync = ref.watch(workoutHistoryProvider);
-    final filteredWorkouts = ref.watch(filteredWorkoutsProvider);
     final syncStatus = ref.watch(currentSyncStatusProvider);
+    final dateRangeFilter = ref.watch(dateRangeFilterProvider);
+    final stats = ref.watch(workoutStatsProvider);
+    final viewSettings = ref.watch(historyViewSettingsProvider);
+
+    // Get filtered workouts based on date range
+    final filteredByDateRange = _getFilteredByDateRange(
+      ref.watch(filteredWorkoutsProvider),
+      dateRangeFilter,
+    );
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -130,9 +184,9 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: const SemanticIcon(
-  icon: AppIcons.arrowBackIos,
-  semanticLabel: 'Arrow back ios',
-),
+            icon: AppIcons.arrowBackIos,
+            semanticLabel: 'Arrow back ios',
+          ),
           onPressed: () => context.pop(),
         ),
         actions: [
@@ -140,6 +194,14 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
           IconButton(
             icon: Icon(_isSearchActive ? AppIcons.close : AppIcons.search),
             onPressed: _toggleSearch,
+          ),
+          // Settings button
+          IconButton(
+            icon: const SemanticIcon(
+              icon: AppIcons.settings,
+              semanticLabel: 'Settings',
+            ),
+            onPressed: () => _showViewSettingsSheet(context, l10n),
           ),
           // Sort options
           PopupMenuButton<WorkoutSortOption>(
@@ -190,21 +252,13 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
               },
             ),
 
-            // Subtitle
+            // Quick Stats Header
             if (!_isSearchActive)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    l10n.editableWorkoutHistory,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ),
+              _buildQuickStatsHeader(context, stats, colorScheme, theme, l10n),
+
+            // Date Range Filter Chips
+            if (!_isSearchActive)
+              _buildDateFilterChips(context, dateRangeFilter, colorScheme, l10n),
 
             // Sync Status Indicator
             if (syncStatus == SyncStatus.initialSyncing)
@@ -236,29 +290,606 @@ class _WorkoutHistoryScreenState extends ConsumerState<WorkoutHistoryScreen>
               child: workoutsAsync.when(
                 loading: () => _buildLoadingState(l10n, colorScheme, theme),
                 error: (error, stack) => _buildErrorState(l10n, colorScheme, error, theme),
-                data: (workouts) => filteredWorkouts.isEmpty
+                data: (workouts) => filteredByDateRange.isEmpty
                     ? _buildEmptyState(context, l10n, colorScheme, theme)
-                    : ListView.builder(
-                        key: const PageStorageKey('workout_history_list'),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: filteredWorkouts.length,
-                        itemBuilder: (context, index) {
-                          final workout = filteredWorkouts[index];
-                          return _buildWorkoutCard(
+                    : viewSettings.groupByDate
+                        ? _buildGroupedList(
                             context,
-                            workout,
+                            filteredByDateRange,
                             colorScheme,
                             theme,
                             l10n,
-                            index,
-                          );
-                        },
-                      ),
+                          )
+                        : ListView.builder(
+                            key: const PageStorageKey('workout_history_list'),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: filteredByDateRange.length,
+                            itemBuilder: (context, index) {
+                              final workout = filteredByDateRange[index];
+                              return _buildSwipeableWorkoutCard(
+                                context,
+                                workout,
+                                colorScheme,
+                                theme,
+                                l10n,
+                                index,
+                              );
+                            },
+                          ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  /// Filter workouts by selected date range
+  List<WorkoutHistoryDetail> _getFilteredByDateRange(
+    List<WorkoutHistoryDetail> workouts,
+    DateRangeOption dateRange,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    switch (dateRange) {
+      case DateRangeOption.today:
+        return workouts.where((w) {
+          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
+          return workoutDay.isAtSameMomentAs(today);
+        }).toList();
+      case DateRangeOption.thisWeek:
+        final weekStart = today.subtract(Duration(days: today.weekday - 1));
+        return workouts.where((w) {
+          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
+          return workoutDay.isAfter(weekStart.subtract(const Duration(days: 1))) ||
+                 workoutDay.isAtSameMomentAs(weekStart);
+        }).toList();
+      case DateRangeOption.thisMonth:
+        final monthStart = DateTime(now.year, now.month, 1);
+        return workouts.where((w) {
+          final workoutDay = DateTime(w.completedAt.year, w.completedAt.month, w.completedAt.day);
+          return workoutDay.isAfter(monthStart.subtract(const Duration(days: 1))) ||
+                 workoutDay.isAtSameMomentAs(monthStart);
+        }).toList();
+      case DateRangeOption.allTime:
+        return workouts;
+    }
+  }
+
+  /// Group workouts by week
+  Map<String, List<WorkoutHistoryDetail>> _groupWorkoutsByWeek(
+    List<WorkoutHistoryDetail> workouts,
+    AppLocalizations l10n,
+  ) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
+    final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
+
+    final groups = <String, List<WorkoutHistoryDetail>>{};
+
+    for (final workout in workouts) {
+      final workoutDay = DateTime(
+        workout.completedAt.year,
+        workout.completedAt.month,
+        workout.completedAt.day,
+      );
+
+      String groupKey;
+      if (workoutDay.isAfter(thisWeekStart.subtract(const Duration(days: 1))) ||
+          workoutDay.isAtSameMomentAs(thisWeekStart)) {
+        groupKey = l10n.thisWeek;
+      } else if (workoutDay.isAfter(lastWeekStart.subtract(const Duration(days: 1))) ||
+          workoutDay.isAtSameMomentAs(lastWeekStart)) {
+        groupKey = l10n.lastWeek;
+      } else {
+        // Get start of the week for this workout
+        final weekStart = workoutDay.subtract(Duration(days: workoutDay.weekday - 1));
+        final weekLabel = DateFormat('d MMM', l10n.localeName).format(weekStart);
+        groupKey = l10n.weekOfDate(weekLabel);
+      }
+
+      groups.putIfAbsent(groupKey, () => []);
+      groups[groupKey]!.add(workout);
+    }
+
+    return groups;
+  }
+
+  /// Build grouped list with collapsible sections
+  Widget _buildGroupedList(
+    BuildContext context,
+    List<WorkoutHistoryDetail> workouts,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final groupedWorkouts = _groupWorkoutsByWeek(workouts, l10n);
+    final expandedSections = ref.watch(expandedSectionsProvider);
+    final sectionKeys = groupedWorkouts.keys.toList();
+
+    // Expand first section by default if nothing is expanded
+    if (expandedSections.isEmpty && sectionKeys.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(expandedSectionsProvider.notifier).state = {sectionKeys.first};
+      });
+    }
+
+    return ListView.builder(
+      key: const PageStorageKey('workout_history_grouped_list'),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: sectionKeys.length,
+      itemBuilder: (context, sectionIndex) {
+        final sectionKey = sectionKeys[sectionIndex];
+        final sectionWorkouts = groupedWorkouts[sectionKey]!;
+        final isExpanded = expandedSections.contains(sectionKey);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Section Header
+            _buildSectionHeader(
+              context,
+              sectionKey,
+              sectionWorkouts.length,
+              isExpanded,
+              colorScheme,
+              theme,
+              l10n,
+            ),
+
+            // Section Content (animated)
+            AnimatedCrossFade(
+              firstChild: const SizedBox.shrink(),
+              secondChild: Column(
+                children: [
+                  for (int i = 0; i < sectionWorkouts.length; i++)
+                    _buildSwipeableWorkoutCard(
+                      context,
+                      sectionWorkouts[i],
+                      colorScheme,
+                      theme,
+                      l10n,
+                      i,
+                    ),
+                ],
+              ),
+              crossFadeState: isExpanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 200),
+            ),
+
+            if (sectionIndex < sectionKeys.length - 1)
+              const SizedBox(height: 8),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Build section header with expand/collapse toggle
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    int workoutCount,
+    bool isExpanded,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        final currentExpanded = ref.read(expandedSectionsProvider);
+        final newExpanded = Set<String>.from(currentExpanded);
+        if (isExpanded) {
+          newExpanded.remove(title);
+        } else {
+          newExpanded.add(title);
+        }
+        ref.read(expandedSectionsProvider.notifier).state = newExpanded;
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        child: Row(
+          children: [
+            // Expand/collapse icon
+            AnimatedRotation(
+              turns: isExpanded ? 0.25 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                AppIcons.chevronRight,
+                size: AppIconSize.small,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // Section title
+            Expanded(
+              child: Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+
+            // Workout count badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                l10n.nWorkoutsCount(workoutCount),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Quick Stats Header widget
+  Widget _buildQuickStatsHeader(
+    BuildContext context,
+    WorkoutStats stats,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer,
+            colorScheme.primaryContainer.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildStatItem(
+            context,
+            '🏋️',
+            stats.totalWorkouts.toString(),
+            l10n.totalWorkouts,
+            colorScheme,
+            theme,
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+          ),
+          _buildStatItem(
+            context,
+            '⏱️',
+            _formatTotalTime(stats.totalTime),
+            l10n.totalTime,
+            colorScheme,
+            theme,
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+          ),
+          _buildStatItem(
+            context,
+            '💪',
+            _formatVolume(stats.totalVolume),
+            l10n.totalVolume,
+            colorScheme,
+            theme,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    BuildContext context,
+    String emoji,
+    String value,
+    String label,
+    ColorScheme colorScheme,
+    ThemeData theme,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(emoji, style: theme.textTheme.titleLarge),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onPrimaryContainer,
+          ),
+        ),
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.7),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatTotalTime(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    if (hours > 0) {
+      return '${hours}h ${minutes}m';
+    }
+    return '${minutes}m';
+  }
+
+  String _formatVolume(double volume) {
+    if (volume >= 1000000) {
+      return '${(volume / 1000000).toStringAsFixed(1)}M kg';
+    } else if (volume >= 1000) {
+      return '${(volume / 1000).toStringAsFixed(1)}K kg';
+    }
+    return '${volume.toInt()} kg';
+  }
+
+  /// Date filter chips
+  Widget _buildDateFilterChips(
+    BuildContext context,
+    DateRangeOption selected,
+    ColorScheme colorScheme,
+    AppLocalizations l10n,
+  ) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Row(
+        children: [
+          _buildFilterChip(
+            context,
+            l10n.today,
+            DateRangeOption.today,
+            selected,
+            colorScheme,
+          ),
+          const SizedBox(width: 8),
+          _buildFilterChip(
+            context,
+            l10n.thisWeek,
+            DateRangeOption.thisWeek,
+            selected,
+            colorScheme,
+          ),
+          const SizedBox(width: 8),
+          _buildFilterChip(
+            context,
+            l10n.thisMonth,
+            DateRangeOption.thisMonth,
+            selected,
+            colorScheme,
+          ),
+          const SizedBox(width: 8),
+          _buildFilterChip(
+            context,
+            l10n.allTime,
+            DateRangeOption.allTime,
+            selected,
+            colorScheme,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterChip(
+    BuildContext context,
+    String label,
+    DateRangeOption option,
+    DateRangeOption selected,
+    ColorScheme colorScheme,
+  ) {
+    final isSelected = option == selected;
+    final theme = Theme.of(context);
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) {
+        HapticFeedback.lightImpact();
+        ref.read(dateRangeFilterProvider.notifier).state = option;
+      },
+      backgroundColor: colorScheme.surfaceContainerHighest,
+      selectedColor: colorScheme.primaryContainer,
+      checkmarkColor: colorScheme.onPrimaryContainer,
+      labelStyle: theme.textTheme.labelMedium?.copyWith(
+        color: isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+    );
+  }
+
+  /// Swipeable workout card with delete and repeat actions
+  Widget _buildSwipeableWorkoutCard(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    ColorScheme colorScheme,
+    ThemeData theme,
+    AppLocalizations l10n,
+    int index,
+  ) {
+    return Dismissible(
+      key: Key(workout.id),
+      background: _buildSwipeBackground(
+        context,
+        colorScheme.tertiary,
+        AppIcons.refresh,
+        l10n.repeatWorkout,
+        Alignment.centerLeft,
+      ),
+      secondaryBackground: _buildSwipeBackground(
+        context,
+        colorScheme.error,
+        AppIcons.delete,
+        l10n.deleteWorkout,
+        Alignment.centerRight,
+      ),
+      confirmDismiss: (direction) async {
+        // Fire-and-forget haptic feedback
+        unawaited(HapticFeedback.mediumImpact());
+        if (direction == DismissDirection.startToEnd) {
+          // Repeat workout
+          await _repeatWorkout(context, workout, l10n);
+          return false; // Don't dismiss
+        } else {
+          // Delete workout - show confirmation
+          return await _confirmDelete(context, workout, l10n);
+        }
+      },
+      child: _buildWorkoutCard(
+        context,
+        workout,
+        colorScheme,
+        theme,
+        l10n,
+        index,
+      ),
+    );
+  }
+
+  Widget _buildSwipeBackground(
+    BuildContext context,
+    Color color,
+    IconData icon,
+    String label,
+    Alignment alignment,
+  ) {
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.labelLarge?.copyWith(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    );
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      alignment: alignment,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: alignment == Alignment.centerLeft
+            ? [
+                Icon(icon, color: Colors.white, size: AppIconSize.medium),
+                const SizedBox(width: 8),
+                Text(label, style: textStyle),
+              ]
+            : [
+                Text(label, style: textStyle),
+                const SizedBox(width: 8),
+                Icon(icon, color: Colors.white, size: AppIconSize.medium),
+              ],
+      ),
+    );
+  }
+
+  Future<void> _repeatWorkout(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) async {
+    // Navigate to start workout from template
+    // For now, show a snackbar confirmation
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.workoutRepeated),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+      ),
+    );
+    // TODO: Implement actual repeat functionality (create workout from history)
+  }
+
+  Future<bool> _confirmDelete(
+    BuildContext context,
+    WorkoutHistoryDetail workout,
+    AppLocalizations l10n,
+  ) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.deleteWorkoutConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.discardChanges),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            child: Text(l10n.deleteWorkout),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && context.mounted) {
+      final deleteResult = await ref.read(workoutHistoryOperationsProvider)
+          .deleteWorkout(workout.id);
+
+      deleteResult.fold(
+        (failure) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error: ${failure.message}'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+        },
+        (_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.workoutDeletedSuccessfully)),
+            );
+          }
+        },
+      );
+    }
+
+    return false; // We handle deletion ourselves
+  }
+
+  /// Show view settings bottom sheet
+  void _showViewSettingsSheet(BuildContext context, AppLocalizations l10n) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _ViewSettingsSheet(l10n: l10n),
     );
   }
 
@@ -811,5 +1442,149 @@ class _IntensityBar extends StatelessWidget {
       return colorScheme.primary; // Medium intensity - primary
     }
     return colorScheme.tertiary; // Low intensity - tertiary
+  }
+}
+
+/// View settings bottom sheet
+class _ViewSettingsSheet extends ConsumerWidget {
+  const _ViewSettingsSheet({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final settings = ref.watch(historyViewSettingsProvider);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Drag handle
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Icon(
+                    AppIcons.settings,
+                    size: AppIconSize.medium,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    l10n.viewSettings,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // List View / Calendar View toggle
+            _SettingsTile(
+              icon: settings.isCalendarView ? AppIcons.calendarMonth : AppIcons.list,
+              title: settings.isCalendarView ? l10n.calendarView : l10n.listView,
+              subtitle: settings.isCalendarView
+                  ? l10n.calendarView
+                  : l10n.listView,
+              trailing: Switch.adaptive(
+                value: settings.isCalendarView,
+                onChanged: (value) {
+                  HapticFeedback.lightImpact();
+                  ref.read(historyViewSettingsProvider.notifier).state =
+                      settings.copyWith(isCalendarView: value);
+                },
+              ),
+            ),
+
+            // Group by date toggle
+            _SettingsTile(
+              icon: AppIcons.calendarToday,
+              title: l10n.groupByDate,
+              subtitle: l10n.groupByDate,
+              trailing: Switch.adaptive(
+                value: settings.groupByDate,
+                onChanged: (value) {
+                  HapticFeedback.lightImpact();
+                  ref.read(historyViewSettingsProvider.notifier).state =
+                      settings.copyWith(groupByDate: value);
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Close button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonal(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(l10n.close),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Settings tile widget
+class _SettingsTile extends StatelessWidget {
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    this.trailing,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    return ListTile(
+      leading: Icon(
+        icon,
+        size: AppIconSize.medium,
+        color: colorScheme.onSurfaceVariant,
+      ),
+      title: Text(
+        title,
+        style: theme.textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: trailing,
+    );
   }
 }

@@ -3583,7 +3583,7 @@ abstract class AppLocalizations {
   /// **'Lower Back'**
   String get muscleLowerBack;
 
-  /// Last week filter option
+  /// Label for last week section in workout history
   ///
   /// In en, this message translates to:
   /// **'Last Week'**
@@ -36317,6 +36317,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} reps'**
   String repsWithCount(int count);
+
+  /// Exercise wiki feature name
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Wiki'**
+  String get exerciseWiki;
+
+  /// Number of community tips pending review
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tips to review'**
+  String tipsToReviewCount(int count);
+
+  /// Message when all tips have been reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'All reviewed'**
+  String get allReviewed;
+
+  /// Encourage users to contribute to wiki
+  ///
+  /// In en, this message translates to:
+  /// **'Earn points contributing'**
+  String get earnPoints;
+
+  /// CTA text for starting workout
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to begin tracking'**
+  String get tapToBeginTracking;
+
+  /// Action to repeat a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat Workout'**
+  String get repeatWorkout;
+
+  /// Total time spent on workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Total Time'**
+  String get totalTime;
+
+  /// Settings for view options
+  ///
+  /// In en, this message translates to:
+  /// **'View Settings'**
+  String get viewSettings;
+
+  /// View workouts in calendar format
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar View'**
+  String get calendarView;
+
+  /// Option to group workouts by date
+  ///
+  /// In en, this message translates to:
+  /// **'Group by Date'**
+  String get groupByDate;
+
+  /// Hint for delete swipe action
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe left to delete'**
+  String get swipeLeftToDelete;
+
+  /// Hint for repeat swipe action
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe right to repeat'**
+  String get swipeRightToRepeat;
+
+  /// Confirmation message when workout is repeated
+  ///
+  /// In en, this message translates to:
+  /// **'Workout repeated'**
+  String get workoutRepeated;
+
+  /// Confirmation question for saving workout
+  ///
+  /// In en, this message translates to:
+  /// **'Save this workout?'**
+  String get saveWorkoutQuestion;
+
+  /// Confirmation question for discarding workout
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to discard this workout?'**
+  String get discardWorkoutQuestion;
+
+  /// Title for workout forgotten notification
+  ///
+  /// In en, this message translates to:
+  /// **'Workout in progress'**
+  String get notificationWorkoutForgottenTitle;
+
+  /// Body message 1 for workout forgotten notification
+  ///
+  /// In en, this message translates to:
+  /// **'You have an active workout. Come back to save it!'**
+  String get notificationWorkoutForgottenBody1;
+
+  /// Body message 2 for workout forgotten notification
+  ///
+  /// In en, this message translates to:
+  /// **'Your workout is waiting. Complete it or save your progress!'**
+  String get notificationWorkoutForgottenBody2;
+
+  /// Body message 3 for workout forgotten notification
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t lose your workout! Tap to continue.'**
+  String get notificationWorkoutForgottenBody3;
+
+  /// Title for inactivity notification
+  ///
+  /// In en, this message translates to:
+  /// **'Time to train!'**
+  String get notificationInactivityTitle;
+
+  /// Body message 1 for inactivity notification
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s been a few days. Ready to get back?'**
+  String get notificationInactivityBody1;
+
+  /// Body message 2 for inactivity notification
+  ///
+  /// In en, this message translates to:
+  /// **'Your gains are waiting. Let\'s go!'**
+  String get notificationInactivityBody2;
+
+  /// Body message 3 for inactivity notification
+  ///
+  /// In en, this message translates to:
+  /// **'A quick workout today?'**
+  String get notificationInactivityBody3;
+
+  /// Title for PR notification
+  ///
+  /// In en, this message translates to:
+  /// **'New Personal Record!'**
+  String get notificationPrTitle;
+
+  /// Body message 1 for PR notification
+  ///
+  /// In en, this message translates to:
+  /// **'You crushed it on {exerciseName}! See details.'**
+  String notificationPrBody1(String exerciseName);
+
+  /// Body message 2 for PR notification
+  ///
+  /// In en, this message translates to:
+  /// **'PR on {exerciseName}! Keep it up!'**
+  String notificationPrBody2(String exerciseName);
+
+  /// Body message 3 for PR notification (no placeholder)
+  ///
+  /// In en, this message translates to:
+  /// **'You just set a personal record! Check it out.'**
+  String get notificationPrBody3;
+
+  /// Title for streak notification
+  ///
+  /// In en, this message translates to:
+  /// **'Streak milestone!'**
+  String get notificationStreakTitle;
+
+  /// Body message 1 for streak notification
+  ///
+  /// In en, this message translates to:
+  /// **'{streakDays} days in a row! Amazing work!'**
+  String notificationStreakBody1(int streakDays);
+
+  /// Body message 2 for streak notification
+  ///
+  /// In en, this message translates to:
+  /// **'{streakDays}-day streak! Keep the momentum!'**
+  String notificationStreakBody2(int streakDays);
+
+  /// Title for volume notification
+  ///
+  /// In en, this message translates to:
+  /// **'Great progress!'**
+  String get notificationVolumeTitle;
+
+  /// Body message 1 for volume notification
+  ///
+  /// In en, this message translates to:
+  /// **'Volume up {volumePercent}% this week!'**
+  String notificationVolumeBody1(int volumePercent);
+
+  /// Body message 2 for volume notification
+  ///
+  /// In en, this message translates to:
+  /// **'Super week: {volumePercent}% more volume!'**
+  String notificationVolumeBody2(int volumePercent);
+
+  /// Label for week section with date
+  ///
+  /// In en, this message translates to:
+  /// **'Week of {date}'**
+  String weekOfDate(String date);
+
+  /// Label for older workouts section
+  ///
+  /// In en, this message translates to:
+  /// **'Older'**
+  String get olderWorkouts;
+
+  /// Count of workouts in a section
+  ///
+  /// In en, this message translates to:
+  /// **'{count} workouts'**
+  String nWorkoutsCount(int count);
 }
 
 class _AppLocalizationsDelegate

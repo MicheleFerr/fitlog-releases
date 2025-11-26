@@ -20328,4 +20328,137 @@ class AppLocalizationsEn extends AppLocalizations {
   String repsWithCount(int count) {
     return '$count reps';
   }
+
+  @override
+  String get exerciseWiki => 'Exercise Wiki';
+
+  @override
+  String tipsToReviewCount(int count) {
+    return '$count tips to review';
+  }
+
+  @override
+  String get allReviewed => 'All reviewed';
+
+  @override
+  String get earnPoints => 'Earn points contributing';
+
+  @override
+  String get tapToBeginTracking => 'Tap to begin tracking';
+
+  @override
+  String get repeatWorkout => 'Repeat Workout';
+
+  @override
+  String get totalTime => 'Total Time';
+
+  @override
+  String get viewSettings => 'View Settings';
+
+  @override
+  String get calendarView => 'Calendar View';
+
+  @override
+  String get groupByDate => 'Group by Date';
+
+  @override
+  String get swipeLeftToDelete => 'Swipe left to delete';
+
+  @override
+  String get swipeRightToRepeat => 'Swipe right to repeat';
+
+  @override
+  String get workoutRepeated => 'Workout repeated';
+
+  @override
+  String get saveWorkoutQuestion => 'Save this workout?';
+
+  @override
+  String get discardWorkoutQuestion =>
+      'Are you sure you want to discard this workout?';
+
+  @override
+  String get notificationWorkoutForgottenTitle => 'Workout in progress';
+
+  @override
+  String get notificationWorkoutForgottenBody1 =>
+      'You have an active workout. Come back to save it!';
+
+  @override
+  String get notificationWorkoutForgottenBody2 =>
+      'Your workout is waiting. Complete it or save your progress!';
+
+  @override
+  String get notificationWorkoutForgottenBody3 =>
+      'Don\'t lose your workout! Tap to continue.';
+
+  @override
+  String get notificationInactivityTitle => 'Time to train!';
+
+  @override
+  String get notificationInactivityBody1 =>
+      'It\'s been a few days. Ready to get back?';
+
+  @override
+  String get notificationInactivityBody2 =>
+      'Your gains are waiting. Let\'s go!';
+
+  @override
+  String get notificationInactivityBody3 => 'A quick workout today?';
+
+  @override
+  String get notificationPrTitle => 'New Personal Record!';
+
+  @override
+  String notificationPrBody1(String exerciseName) {
+    return 'You crushed it on $exerciseName! See details.';
+  }
+
+  @override
+  String notificationPrBody2(String exerciseName) {
+    return 'PR on $exerciseName! Keep it up!';
+  }
+
+  @override
+  String get notificationPrBody3 =>
+      'You just set a personal record! Check it out.';
+
+  @override
+  String get notificationStreakTitle => 'Streak milestone!';
+
+  @override
+  String notificationStreakBody1(int streakDays) {
+    return '$streakDays days in a row! Amazing work!';
+  }
+
+  @override
+  String notificationStreakBody2(int streakDays) {
+    return '$streakDays-day streak! Keep the momentum!';
+  }
+
+  @override
+  String get notificationVolumeTitle => 'Great progress!';
+
+  @override
+  String notificationVolumeBody1(int volumePercent) {
+    return 'Volume up $volumePercent% this week!';
+  }
+
+  @override
+  String notificationVolumeBody2(int volumePercent) {
+    return 'Super week: $volumePercent% more volume!';
+  }
+
+  @override
+  String weekOfDate(String date) {
+    return 'Week of $date';
+  }
+
+  @override
+  String get olderWorkouts => 'Older';
+
+  @override
+  String nWorkoutsCount(int count) {
+    return '$count workouts';
+  }
 }

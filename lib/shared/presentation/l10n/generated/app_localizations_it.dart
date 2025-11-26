@@ -1901,7 +1901,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get muscleLowerBack => 'Lombari';
 
   @override
-  String get lastWeek => 'Ultima Settimana';
+  String get lastWeek => 'Scorsa Settimana';
 
   @override
   String get lastMonth => 'Ultimo Mese';
@@ -20524,5 +20524,138 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String repsWithCount(int count) {
     return '$count reps';
+  }
+
+  @override
+  String get exerciseWiki => 'Wiki Esercizi';
+
+  @override
+  String tipsToReviewCount(int count) {
+    return '$count consigli da revisionare';
+  }
+
+  @override
+  String get allReviewed => 'Tutto revisionato';
+
+  @override
+  String get earnPoints => 'Contribuisci e guadagna punti';
+
+  @override
+  String get tapToBeginTracking => 'Tocca per iniziare a tracciare';
+
+  @override
+  String get repeatWorkout => 'Ripeti Allenamento';
+
+  @override
+  String get totalTime => 'Tempo Totale';
+
+  @override
+  String get viewSettings => 'Impostazioni Vista';
+
+  @override
+  String get calendarView => 'Vista Calendario';
+
+  @override
+  String get groupByDate => 'Raggruppa per Data';
+
+  @override
+  String get swipeLeftToDelete => 'Scorri a sinistra per eliminare';
+
+  @override
+  String get swipeRightToRepeat => 'Scorri a destra per ripetere';
+
+  @override
+  String get workoutRepeated => 'Allenamento ripetuto';
+
+  @override
+  String get saveWorkoutQuestion => 'Vuoi salvare questo allenamento?';
+
+  @override
+  String get discardWorkoutQuestion =>
+      'Sei sicuro di voler scartare questo allenamento?';
+
+  @override
+  String get notificationWorkoutForgottenTitle => 'Allenamento in corso';
+
+  @override
+  String get notificationWorkoutForgottenBody1 =>
+      'Hai un allenamento attivo. Torna per salvarlo!';
+
+  @override
+  String get notificationWorkoutForgottenBody2 =>
+      'Il tuo allenamento ti aspetta. Completa o salva i progressi!';
+
+  @override
+  String get notificationWorkoutForgottenBody3 =>
+      'Non perdere l\'allenamento! Tocca per continuare.';
+
+  @override
+  String get notificationInactivityTitle => 'È ora di allenarti!';
+
+  @override
+  String get notificationInactivityBody1 =>
+      'Sono passati alcuni giorni. Pronto a tornare?';
+
+  @override
+  String get notificationInactivityBody2 =>
+      'I tuoi progressi ti aspettano. Forza!';
+
+  @override
+  String get notificationInactivityBody3 => 'Un allenamento veloce oggi?';
+
+  @override
+  String get notificationPrTitle => 'Nuovo Record Personale!';
+
+  @override
+  String notificationPrBody1(String exerciseName) {
+    return 'Hai spaccato su $exerciseName! Vedi i dettagli.';
+  }
+
+  @override
+  String notificationPrBody2(String exerciseName) {
+    return 'PR su $exerciseName! Continua così!';
+  }
+
+  @override
+  String get notificationPrBody3 =>
+      'Hai appena battuto un record personale! Scopri di più.';
+
+  @override
+  String get notificationStreakTitle => 'Traguardo streak!';
+
+  @override
+  String notificationStreakBody1(int streakDays) {
+    return '$streakDays giorni consecutivi! Fantastico!';
+  }
+
+  @override
+  String notificationStreakBody2(int streakDays) {
+    return 'Streak di $streakDays giorni! Mantieni il ritmo!';
+  }
+
+  @override
+  String get notificationVolumeTitle => 'Ottimi progressi!';
+
+  @override
+  String notificationVolumeBody1(int volumePercent) {
+    return 'Volume +$volumePercent% questa settimana!';
+  }
+
+  @override
+  String notificationVolumeBody2(int volumePercent) {
+    return 'Settimana super: $volumePercent% più volume!';
+  }
+
+  @override
+  String weekOfDate(String date) {
+    return 'Settimana del $date';
+  }
+
+  @override
+  String get olderWorkouts => 'Precedenti';
+
+  @override
+  String nWorkoutsCount(int count) {
+    return '$count allenamenti';
   }
 }

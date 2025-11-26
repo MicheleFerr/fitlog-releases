@@ -14854,5 +14854,194 @@
         "type": "int"
       }
     }
+  },
+  "exerciseWiki": "Wiki Esercizi",
+  "@exerciseWiki": {
+    "description": "Nome feature wiki esercizi"
+  },
+  "tipsToReviewCount": "{count} consigli da revisionare",
+  "@tipsToReviewCount": {
+    "description": "Numero di consigli community in attesa di revisione",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allReviewed": "Tutto revisionato",
+  "@allReviewed": {
+    "description": "Messaggio quando tutti i consigli sono stati revisionati"
+  },
+  "earnPoints": "Contribuisci e guadagna punti",
+  "@earnPoints": {
+    "description": "Invita gli utenti a contribuire al wiki"
+  },
+  "tapToBeginTracking": "Tocca per iniziare a tracciare",
+  "@tapToBeginTracking": {
+    "description": "Testo CTA per iniziare allenamento"
+  },
+  "totalTime": "Tempo Totale",
+  "@totalTime": {
+    "description": "Tempo totale dedicato agli allenamenti"
+  },
+  "viewSettings": "Impostazioni Vista",
+  "@viewSettings": {
+    "description": "Impostazioni per le opzioni di visualizzazione"
+  },
+  "calendarView": "Vista Calendario",
+  "@calendarView": {
+    "description": "Visualizza allenamenti in formato calendario"
+  },
+  "groupByDate": "Raggruppa per Data",
+  "@groupByDate": {
+    "description": "Opzione per raggruppare allenamenti per data"
+  },
+  "swipeLeftToDelete": "Scorri a sinistra per eliminare",
+  "@swipeLeftToDelete": {
+    "description": "Suggerimento per azione swipe elimina"
+  },
+  "swipeRightToRepeat": "Scorri a destra per ripetere",
+  "@swipeRightToRepeat": {
+    "description": "Suggerimento per azione swipe ripeti"
+  },
+  "workoutRepeated": "Allenamento ripetuto",
+  "@workoutRepeated": {
+    "description": "Messaggio di conferma quando l'allenamento viene ripetuto"
+  },
+  "saveWorkoutQuestion": "Vuoi salvare questo allenamento?",
+  "@saveWorkoutQuestion": {
+    "description": "Domanda di conferma per salvare l'allenamento"
+  },
+  "discardWorkoutQuestion": "Sei sicuro di voler scartare questo allenamento?",
+  "@discardWorkoutQuestion": {
+    "description": "Domanda di conferma per scartare l'allenamento"
+  },
+  "notificationWorkoutForgottenTitle": "Allenamento in corso",
+  "@notificationWorkoutForgottenTitle": {
+    "description": "Titolo per notifica allenamento dimenticato"
+  },
+  "notificationWorkoutForgottenBody1": "Hai un allenamento attivo. Torna per salvarlo!",
+  "@notificationWorkoutForgottenBody1": {
+    "description": "Messaggio 1 per notifica allenamento dimenticato"
+  },
+  "notificationWorkoutForgottenBody2": "Il tuo allenamento ti aspetta. Completa o salva i progressi!",
+  "@notificationWorkoutForgottenBody2": {
+    "description": "Messaggio 2 per notifica allenamento dimenticato"
+  },
+  "notificationWorkoutForgottenBody3": "Non perdere l'allenamento! Tocca per continuare.",
+  "@notificationWorkoutForgottenBody3": {
+    "description": "Messaggio 3 per notifica allenamento dimenticato"
+  },
+  "notificationInactivityTitle": "È ora di allenarti!",
+  "@notificationInactivityTitle": {
+    "description": "Titolo per notifica inattività"
+  },
+  "notificationInactivityBody1": "Sono passati alcuni giorni. Pronto a tornare?",
+  "@notificationInactivityBody1": {
+    "description": "Messaggio 1 per notifica inattività"
+  },
+  "notificationInactivityBody2": "I tuoi progressi ti aspettano. Forza!",
+  "@notificationInactivityBody2": {
+    "description": "Messaggio 2 per notifica inattività"
+  },
+  "notificationInactivityBody3": "Un allenamento veloce oggi?",
+  "@notificationInactivityBody3": {
+    "description": "Messaggio 3 per notifica inattività"
+  },
+  "notificationPrTitle": "Nuovo Record Personale!",
+  "@notificationPrTitle": {
+    "description": "Titolo per notifica PR"
+  },
+  "notificationPrBody1": "Hai spaccato su {exerciseName}! Vedi i dettagli.",
+  "@notificationPrBody1": {
+    "description": "Messaggio 1 per notifica PR",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationPrBody2": "PR su {exerciseName}! Continua così!",
+  "@notificationPrBody2": {
+    "description": "Messaggio 2 per notifica PR",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationPrBody3": "Hai appena battuto un record personale! Scopri di più.",
+  "@notificationPrBody3": {
+    "description": "Messaggio 3 per notifica PR (senza placeholder)"
+  },
+  "notificationStreakTitle": "Traguardo streak!",
+  "@notificationStreakTitle": {
+    "description": "Titolo per notifica streak"
+  },
+  "notificationStreakBody1": "{streakDays} giorni consecutivi! Fantastico!",
+  "@notificationStreakBody1": {
+    "description": "Messaggio 1 per notifica streak",
+    "placeholders": {
+      "streakDays": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationStreakBody2": "Streak di {streakDays} giorni! Mantieni il ritmo!",
+  "@notificationStreakBody2": {
+    "description": "Messaggio 2 per notifica streak",
+    "placeholders": {
+      "streakDays": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationVolumeTitle": "Ottimi progressi!",
+  "@notificationVolumeTitle": {
+    "description": "Titolo per notifica volume"
+  },
+  "notificationVolumeBody1": "Volume +{volumePercent}% questa settimana!",
+  "@notificationVolumeBody1": {
+    "description": "Messaggio 1 per notifica volume",
+    "placeholders": {
+      "volumePercent": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationVolumeBody2": "Settimana super: {volumePercent}% più volume!",
+  "@notificationVolumeBody2": {
+    "description": "Messaggio 2 per notifica volume",
+    "placeholders": {
+      "volumePercent": {
+        "type": "int"
+      }
+    }
+  },
+  "lastWeek": "Scorsa Settimana",
+  "@lastWeek": {
+    "description": "Etichetta per sezione scorsa settimana"
+  },
+  "weekOfDate": "Settimana del {date}",
+  "@weekOfDate": {
+    "description": "Etichetta per sezione settimana con data",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "olderWorkouts": "Precedenti",
+  "@olderWorkouts": {
+    "description": "Etichetta per sezione allenamenti precedenti"
+  },
+  "nWorkoutsCount": "{count} allenamenti",
+  "@nWorkoutsCount": {
+    "description": "Conteggio allenamenti in una sezione",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

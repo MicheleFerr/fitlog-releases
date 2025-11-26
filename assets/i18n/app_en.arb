@@ -25487,5 +25487,198 @@
         "type": "int"
       }
     }
+  },
+  "exerciseWiki": "Exercise Wiki",
+  "@exerciseWiki": {
+    "description": "Exercise wiki feature name"
+  },
+  "tipsToReviewCount": "{count} tips to review",
+  "@tipsToReviewCount": {
+    "description": "Number of community tips pending review",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allReviewed": "All reviewed",
+  "@allReviewed": {
+    "description": "Message when all tips have been reviewed"
+  },
+  "earnPoints": "Earn points contributing",
+  "@earnPoints": {
+    "description": "Encourage users to contribute to wiki"
+  },
+  "tapToBeginTracking": "Tap to begin tracking",
+  "@tapToBeginTracking": {
+    "description": "CTA text for starting workout"
+  },
+  "repeatWorkout": "Repeat Workout",
+  "@repeatWorkout": {
+    "description": "Action to repeat a workout"
+  },
+  "totalTime": "Total Time",
+  "@totalTime": {
+    "description": "Total time spent on workouts"
+  },
+  "viewSettings": "View Settings",
+  "@viewSettings": {
+    "description": "Settings for view options"
+  },
+  "calendarView": "Calendar View",
+  "@calendarView": {
+    "description": "View workouts in calendar format"
+  },
+  "groupByDate": "Group by Date",
+  "@groupByDate": {
+    "description": "Option to group workouts by date"
+  },
+  "swipeLeftToDelete": "Swipe left to delete",
+  "@swipeLeftToDelete": {
+    "description": "Hint for delete swipe action"
+  },
+  "swipeRightToRepeat": "Swipe right to repeat",
+  "@swipeRightToRepeat": {
+    "description": "Hint for repeat swipe action"
+  },
+  "workoutRepeated": "Workout repeated",
+  "@workoutRepeated": {
+    "description": "Confirmation message when workout is repeated"
+  },
+  "saveWorkoutQuestion": "Save this workout?",
+  "@saveWorkoutQuestion": {
+    "description": "Confirmation question for saving workout"
+  },
+  "discardWorkoutQuestion": "Are you sure you want to discard this workout?",
+  "@discardWorkoutQuestion": {
+    "description": "Confirmation question for discarding workout"
+  },
+  "notificationWorkoutForgottenTitle": "Workout in progress",
+  "@notificationWorkoutForgottenTitle": {
+    "description": "Title for workout forgotten notification"
+  },
+  "notificationWorkoutForgottenBody1": "You have an active workout. Come back to save it!",
+  "@notificationWorkoutForgottenBody1": {
+    "description": "Body message 1 for workout forgotten notification"
+  },
+  "notificationWorkoutForgottenBody2": "Your workout is waiting. Complete it or save your progress!",
+  "@notificationWorkoutForgottenBody2": {
+    "description": "Body message 2 for workout forgotten notification"
+  },
+  "notificationWorkoutForgottenBody3": "Don't lose your workout! Tap to continue.",
+  "@notificationWorkoutForgottenBody3": {
+    "description": "Body message 3 for workout forgotten notification"
+  },
+  "notificationInactivityTitle": "Time to train!",
+  "@notificationInactivityTitle": {
+    "description": "Title for inactivity notification"
+  },
+  "notificationInactivityBody1": "It's been a few days. Ready to get back?",
+  "@notificationInactivityBody1": {
+    "description": "Body message 1 for inactivity notification"
+  },
+  "notificationInactivityBody2": "Your gains are waiting. Let's go!",
+  "@notificationInactivityBody2": {
+    "description": "Body message 2 for inactivity notification"
+  },
+  "notificationInactivityBody3": "A quick workout today?",
+  "@notificationInactivityBody3": {
+    "description": "Body message 3 for inactivity notification"
+  },
+  "notificationPrTitle": "New Personal Record!",
+  "@notificationPrTitle": {
+    "description": "Title for PR notification"
+  },
+  "notificationPrBody1": "You crushed it on {exerciseName}! See details.",
+  "@notificationPrBody1": {
+    "description": "Body message 1 for PR notification",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationPrBody2": "PR on {exerciseName}! Keep it up!",
+  "@notificationPrBody2": {
+    "description": "Body message 2 for PR notification",
+    "placeholders": {
+      "exerciseName": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationPrBody3": "You just set a personal record! Check it out.",
+  "@notificationPrBody3": {
+    "description": "Body message 3 for PR notification (no placeholder)"
+  },
+  "notificationStreakTitle": "Streak milestone!",
+  "@notificationStreakTitle": {
+    "description": "Title for streak notification"
+  },
+  "notificationStreakBody1": "{streakDays} days in a row! Amazing work!",
+  "@notificationStreakBody1": {
+    "description": "Body message 1 for streak notification",
+    "placeholders": {
+      "streakDays": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationStreakBody2": "{streakDays}-day streak! Keep the momentum!",
+  "@notificationStreakBody2": {
+    "description": "Body message 2 for streak notification",
+    "placeholders": {
+      "streakDays": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationVolumeTitle": "Great progress!",
+  "@notificationVolumeTitle": {
+    "description": "Title for volume notification"
+  },
+  "notificationVolumeBody1": "Volume up {volumePercent}% this week!",
+  "@notificationVolumeBody1": {
+    "description": "Body message 1 for volume notification",
+    "placeholders": {
+      "volumePercent": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationVolumeBody2": "Super week: {volumePercent}% more volume!",
+  "@notificationVolumeBody2": {
+    "description": "Body message 2 for volume notification",
+    "placeholders": {
+      "volumePercent": {
+        "type": "int"
+      }
+    }
+  },
+  "lastWeek": "Last Week",
+  "@lastWeek": {
+    "description": "Label for last week section in workout history"
+  },
+  "weekOfDate": "Week of {date}",
+  "@weekOfDate": {
+    "description": "Label for week section with date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "olderWorkouts": "Older",
+  "@olderWorkouts": {
+    "description": "Label for older workouts section"
+  },
+  "nWorkoutsCount": "{count} workouts",
+  "@nWorkoutsCount": {
+    "description": "Count of workouts in a section",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
