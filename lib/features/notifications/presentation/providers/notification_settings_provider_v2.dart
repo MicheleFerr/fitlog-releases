@@ -32,6 +32,7 @@ final firestoreProvider = Provider<FirebaseFirestore>((ref) {
 
 /// Provider for current user ID (from Firebase Auth)
 /// Returns null if user is not authenticated
+/// NOTE: Intentionally without .autoDispose - global auth state needed app-wide
 final currentUserIdProvider = StreamProvider<String?>((ref) {
   return FirebaseAuth.instance.authStateChanges().map((user) => user?.uid);
 });
@@ -287,6 +288,7 @@ class NotificationSettingsNotifierV2
 /// Stream provider for NotificationSettings (real-time Firestore updates)
 ///
 /// **Use case**: Multi-device sync - see changes from other devices in real-time
+/// NOTE: Intentionally without .autoDispose - settings needed throughout app lifecycle
 final notificationSettingsStreamV2Provider =
     StreamProvider<NotificationSettings>((ref) {
   final repository = ref.watch(notificationSettingsRepositoryV2Provider);
@@ -295,13 +297,13 @@ final notificationSettingsStreamV2Provider =
 });
 
 /// Provider for last sync time
-final lastSyncTimeProvider = FutureProvider<DateTime?>((ref) async {
+final lastSyncTimeProvider = FutureProvider.autoDispose<DateTime?>((ref) async {
   final repository = ref.watch(notificationSettingsRepositoryV2Provider);
   return await repository.getLastSyncTime();
 });
 
 /// Provider for out-of-sync status (last sync > 24h)
-final isOutOfSyncProvider = FutureProvider<bool>((ref) async {
+final isOutOfSyncProvider = FutureProvider.autoDispose<bool>((ref) async {
   final repository = ref.watch(notificationSettingsRepositoryV2Provider);
   return await repository.isOutOfSync();
 });
