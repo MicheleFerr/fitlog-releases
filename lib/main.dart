@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -32,9 +32,20 @@ import 'package:gymbro_flutter_new/shared/services/privacy_safe_analytics.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // 🔐 SECURITY: Hive encryption migration
 // NOTE: Notification deep linking imports removed - will be rebuilt from scratch
+import 'package:voo_logging/voo_logging.dart'; // 🔍 Unified logging + HTTP inspector
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ========================================
+  // 🔍 LOGGING: Initialize VooLogger
+  // ========================================
+  // Unified logging with HTTP monitoring (replaces alice)
+  // Only enabled in debug mode
+  if (kDebugMode) {
+    await VooLogger.initialize();
+    debugPrint('✅ VooLogger initialized (debug mode)');
+  }
 
   // NOTE: Timezone initialization removed - will be added when notifications are rebuilt
 

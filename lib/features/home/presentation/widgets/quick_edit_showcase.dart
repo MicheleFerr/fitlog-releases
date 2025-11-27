@@ -66,6 +66,8 @@ class _QuickEditShowcaseState extends ConsumerState<QuickEditShowcase> {
       onSave: (updatedSet) => _handleSave(updatedSet, version),
       position: position,
       previousSet: _previousSet,
+      exerciseName: 'Bench Press', // Demo exercise for showcase
+      setNumber: 1, // Demo set number for showcase
     );
   }
 

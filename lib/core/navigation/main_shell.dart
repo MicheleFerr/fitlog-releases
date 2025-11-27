@@ -80,7 +80,7 @@ class _MainShellState extends ConsumerState<MainShell> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 72, // 64pt nav + 8pt margin
+              bottom: 68, // 64pt nav + 4pt margin (compact)
               child: WorkoutMiniBar(workout: workout),
             ),
         ],
