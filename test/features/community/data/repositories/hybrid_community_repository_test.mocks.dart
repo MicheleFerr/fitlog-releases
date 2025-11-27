@@ -15,7 +15,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_core/firebase_core.dart' as _i2;
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart'
     as _i11;
-import 'package:hive_flutter/hive_flutter.dart' as _i8;
+import 'package:hive_ce_flutter/hive_flutter.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i9;
 

@@ -13,7 +13,7 @@
  */
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 import 'dart:io';

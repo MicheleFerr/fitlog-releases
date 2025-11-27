@@ -7,7 +7,7 @@ import 'package:gymbro_flutter_new/features/community/data/repositories/hybrid_c
     as repo;
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'hybrid_community_repository_test.mocks.dart';
 

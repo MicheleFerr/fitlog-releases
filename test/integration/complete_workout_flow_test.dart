@@ -13,7 +13,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 // ✅ MIGRATION COMPLETE: Now uses unified notification provider directly
 import 'package:gymbro_flutter_new/features/notifications/presentation/providers/unified_notification_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/skip_analytics_provider.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 
