@@ -127,17 +127,19 @@ final strengthStandardsMetadataProvider =
 // ============================================================================
 
 /// User fitness questionnaire state notifier
-final userFitnessQuestionnaireProvider = StateNotifierProvider<
-    UserFitnessQuestionnaireNotifier, UserFitnessQuestionnaire?>((ref) {
-  return UserFitnessQuestionnaireNotifier(ref);
-});
+final userFitnessQuestionnaireProvider = NotifierProvider<
+    UserFitnessQuestionnaireNotifier, UserFitnessQuestionnaire?>(
+  UserFitnessQuestionnaireNotifier.new,
+);
 
 /// Notifier for managing user fitness questionnaire state
 class UserFitnessQuestionnaireNotifier
-    extends StateNotifier<UserFitnessQuestionnaire?> {
+    extends Notifier<UserFitnessQuestionnaire?> {
 
-  UserFitnessQuestionnaireNotifier(this._ref) : super(null);
-  final Ref _ref;
+  @override
+  UserFitnessQuestionnaire? build() {
+    return null;
+  }
 
   /// Update questionnaire data
   void updateQuestionnaire(UserFitnessQuestionnaire questionnaire) {
@@ -196,10 +198,10 @@ class UserFitnessQuestionnaireNotifier
 
   /// Load questionnaire from Hive persistence
   Future<void> loadQuestionnaire() async {
-    final userId = _ref.read(currentUserIdProvider);
+    final userId = ref.read(currentUserIdProvider);
     if (userId == null) return;
 
-    final datasource = _ref.read(fitnessProfileLocalDataSourceProvider);
+    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
     final questionnaire = await datasource.getFitnessQuestionnaire(userId);
 
     if (questionnaire != null) {
@@ -211,26 +213,28 @@ class UserFitnessQuestionnaireNotifier
   Future<void> saveQuestionnaire() async {
     if (state == null) return;
 
-    final userId = _ref.read(currentUserIdProvider);
+    final userId = ref.read(currentUserIdProvider);
     if (userId == null) return;
 
-    final datasource = _ref.read(fitnessProfileLocalDataSourceProvider);
+    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
     await datasource.saveFitnessQuestionnaire(state!, userId);
   }
 }
 
 /// Medical clearance questionnaire state notifier
-final medicalClearanceQuestionnaireProvider = StateNotifierProvider<
-    MedicalClearanceQuestionnaireNotifier, MedicalClearanceQuestionnaire?>((ref) {
-  return MedicalClearanceQuestionnaireNotifier(ref);
-});
+final medicalClearanceQuestionnaireProvider = NotifierProvider<
+    MedicalClearanceQuestionnaireNotifier, MedicalClearanceQuestionnaire?>(
+  MedicalClearanceQuestionnaireNotifier.new,
+);
 
 /// Notifier for managing medical clearance questionnaire state
 class MedicalClearanceQuestionnaireNotifier
-    extends StateNotifier<MedicalClearanceQuestionnaire?> {
+    extends Notifier<MedicalClearanceQuestionnaire?> {
 
-  MedicalClearanceQuestionnaireNotifier(this._ref) : super(null);
-  final Ref _ref;
+  @override
+  MedicalClearanceQuestionnaire? build() {
+    return null;
+  }
 
   /// Update medical clearance data
   void updateClearance(MedicalClearanceQuestionnaire clearance) {
@@ -253,10 +257,10 @@ class MedicalClearanceQuestionnaireNotifier
 
   /// Load medical clearance from Hive persistence
   Future<void> loadClearance() async {
-    final userId = _ref.read(currentUserIdProvider);
+    final userId = ref.read(currentUserIdProvider);
     if (userId == null) return;
 
-    final datasource = _ref.read(fitnessProfileLocalDataSourceProvider);
+    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
     final clearance = await datasource.getMedicalClearance(userId);
 
     if (clearance != null) {
@@ -268,10 +272,10 @@ class MedicalClearanceQuestionnaireNotifier
   Future<void> saveClearance() async {
     if (state == null) return;
 
-    final userId = _ref.read(currentUserIdProvider);
+    final userId = ref.read(currentUserIdProvider);
     if (userId == null) return;
 
-    final datasource = _ref.read(fitnessProfileLocalDataSourceProvider);
+    final datasource = ref.read(fitnessProfileLocalDataSourceProvider);
     await datasource.saveMedicalClearance(state!, userId);
   }
 }
@@ -424,22 +428,24 @@ class MappingStatistics {
 // ============================================================================
 
 /// Current questionnaire analytics session provider
-final currentQuestionnaireAnalyticsProvider = StateNotifierProvider<
-    QuestionnaireAnalyticsNotifier, QuestionnaireAnalytics?>((ref) {
-  return QuestionnaireAnalyticsNotifier(ref);
-});
+final currentQuestionnaireAnalyticsProvider = NotifierProvider<
+    QuestionnaireAnalyticsNotifier, QuestionnaireAnalytics?>(
+  QuestionnaireAnalyticsNotifier.new,
+);
 
 /// Notifier for managing questionnaire analytics during completion
 class QuestionnaireAnalyticsNotifier
-    extends StateNotifier<QuestionnaireAnalytics?> {
-  QuestionnaireAnalyticsNotifier(this._ref) : super(null);
-  final Ref _ref;
-
+    extends Notifier<QuestionnaireAnalytics?> {
   DateTime? _stepStartTime;
+
+  @override
+  QuestionnaireAnalytics? build() {
+    return null;
+  }
 
   /// Start new analytics session
   Future<void> startSession() async {
-    final userId = _ref.read(currentUserIdProvider);
+    final userId = ref.read(currentUserIdProvider);
     if (userId == null) return;
 
     // Get platform and app version
@@ -546,7 +552,7 @@ class QuestionnaireAnalyticsNotifier
   Future<void> _saveAnalytics() async {
     if (state == null) return;
 
-    final datasource = _ref.read(questionnaireAnalyticsDataSourceProvider);
+    final datasource = ref.read(questionnaireAnalyticsDataSourceProvider);
     await datasource.saveQuestionnaireAnalytics(state!);
   }
 

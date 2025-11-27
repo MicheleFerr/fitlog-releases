@@ -48,20 +48,20 @@ class SkipAnalytics {
 }
 
 // Provider for skip analytics
-final skipAnalyticsProvider = StateNotifierProvider<SkipAnalyticsNotifier, SkipAnalytics>((ref) {
-  return SkipAnalyticsNotifier(ref);
-});
+final skipAnalyticsProvider = NotifierProvider<SkipAnalyticsNotifier, SkipAnalytics>(
+  SkipAnalyticsNotifier.new,
+);
 
-class SkipAnalyticsNotifier extends StateNotifier<SkipAnalytics> {
-
-  SkipAnalyticsNotifier(this.ref) :
-    _localRepository = SkipAnalyticsLocalRepository(ref.read(hiveBoxManagerProvider)),
-    super(SkipAnalytics.empty()) {
-    _initRepository();
-  }
-  final Ref ref;
+class SkipAnalyticsNotifier extends Notifier<SkipAnalytics> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final SkipAnalyticsLocalRepository _localRepository;
+  late final SkipAnalyticsLocalRepository _localRepository;
+
+  @override
+  SkipAnalytics build() {
+    _localRepository = SkipAnalyticsLocalRepository(ref.read(hiveBoxManagerProvider));
+    _initRepository();
+    return SkipAnalytics.empty();
+  }
   
   Future<void> _initRepository() async {
     await _localRepository.init();

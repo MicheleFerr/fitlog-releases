@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/workout_metrics.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/personal_record.dart';
@@ -192,13 +192,7 @@ class TrendData {
 }
 
 /// Admin analytics sync notifier
-class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> {
-
-  AdminAnalyticsSyncNotifier(this._ref) : super(const AdminAnalyticsSyncState()) {
-    _initCompleter = Completer<void>();
-    _initialize();
-  }
-  final Ref _ref;
+class AdminAnalyticsSyncNotifier extends Notifier<AdminAnalyticsSyncState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   Timer? _progressTimer;
@@ -210,6 +204,49 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
   Box? _adminPrefsBox;
+
+  @override
+  AdminAnalyticsSyncState build() {
+    _initCompleter = Completer<void>();
+    _initialize();
+
+    // Cleanup on dispose
+    ref.onDispose(() {
+      if (kDebugMode) {
+        debugPrint('🧹 [AdminAnalytics] Starting disposal');
+      }
+
+      _isDisposed = true;
+
+      try {
+        // Cancel progress timer
+        _stopProgressTracking();
+
+        // Close Hive box if open
+        if (_adminPrefsBox != null && _adminPrefsBox!.isOpen) {
+          _adminPrefsBox!.close();
+          if (kDebugMode) {
+            debugPrint('✅ [AdminAnalytics] Closed Hive box');
+          }
+        }
+        _adminPrefsBox = null;
+
+        // Null out completer
+        _initCompleter = null;
+
+        if (kDebugMode) {
+          debugPrint('✅ [AdminAnalytics] Disposal completed');
+        }
+      } catch (e, stackTrace) {
+        if (kDebugMode) {
+          debugPrint('❌ [AdminAnalytics] Error during disposal: $e');
+          debugPrint('📍 Stack trace: $stackTrace');
+        }
+      }
+    });
+
+    return const AdminAnalyticsSyncState();
+  }
   
   /// Initialize with retry logic
   Future<void> _initialize() async {
@@ -219,7 +256,7 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
       }
 
       // Open Hive box with timeout
-      final boxManager = _ref.read(hiveBoxManagerProvider);
+      final boxManager = ref.read(hiveBoxManagerProvider);
       _adminPrefsBox = await boxManager.openBox('admin_preferences').timeout(
         const Duration(seconds: 10),
         onTimeout: () {
@@ -295,7 +332,7 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
   /// 🔐 SECURITY: Uses Firebase Custom Claims (server-validated)
   /// REPLACED: user?.email?.contains('admin') (insecure)
   bool get isAdmin {
-    return _ref.read(isAdminProvider);
+    return ref.read(isAdminProvider);
   }
   
   /// Trigger reverse sync for all users (admin only)
@@ -948,49 +985,13 @@ class AdminAnalyticsSyncNotifier extends StateNotifier<AdminAnalyticsSyncState> 
     }
   }
   
-  @override
-  void dispose() {
-    if (kDebugMode) {
-      debugPrint('🧹 [AdminAnalytics] Starting disposal');
-    }
-
-    _isDisposed = true;
-
-    try {
-      // Cancel progress timer
-      _stopProgressTracking();
-
-      // Close Hive box if open
-      if (_adminPrefsBox != null && _adminPrefsBox!.isOpen) {
-        _adminPrefsBox!.close();
-        if (kDebugMode) {
-          debugPrint('✅ [AdminAnalytics] Closed Hive box');
-        }
-      }
-      _adminPrefsBox = null;
-
-      // Null out completer
-      _initCompleter = null;
-
-      if (kDebugMode) {
-        debugPrint('✅ [AdminAnalytics] Disposal completed');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AdminAnalytics] Error during disposal: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    } finally {
-      super.dispose();
-    }
-  }
 }
 
 /// Admin analytics sync provider
-final adminAnalyticsSyncProvider = 
-    StateNotifierProvider<AdminAnalyticsSyncNotifier, AdminAnalyticsSyncState>((ref) {
-  return AdminAnalyticsSyncNotifier(ref);
-});
+final adminAnalyticsSyncProvider =
+    NotifierProvider<AdminAnalyticsSyncNotifier, AdminAnalyticsSyncState>(
+  AdminAnalyticsSyncNotifier.new,
+);
 
 /// 🔐 SECURITY: Check if current user is admin
 /// Import from core/auth/admin_status_provider.dart (global provider using Custom Claims)
