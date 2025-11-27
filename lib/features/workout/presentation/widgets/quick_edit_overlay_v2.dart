@@ -10,6 +10,7 @@
 /// QuickEditOverlayV2 - Optimized version with better UX and performance
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_counting_mode.dart'; // ✅ NUOVO
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/last_workout_set_data.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/plate_calculator_widget.dart';
@@ -35,6 +37,7 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
     required this.position,
     this.previousSet,
     this.exerciseName,
+    this.setNumber, // For querying last workout data
     this.exerciseNames,
     this.exerciseSets,
     this.onSupersetSave,
@@ -51,6 +54,7 @@ class QuickEditOverlayV2 extends ConsumerStatefulWidget {
   final Offset position;
   final ExerciseSet? previousSet;
   final String? exerciseName;
+  final int? setNumber; // For querying last workout data (1-based)
   final ExerciseCountingMode countingMode; // ✅ NUOVO: Determines which fields to show/edit
 
   // Superset support
@@ -455,6 +459,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
           
           const SizedBox(height: 16),
           
+          // Last Workout badge (Feature 1 - Pre-fill)
+          if (widget.exerciseName != null && widget.setNumber != null && !widget.isSuperset) ...[
+            _buildLastWorkoutBadge(theme),
+            const SizedBox(height: 12),
+          ],
+
           // Recent Weights (if available)
           if (widget.exerciseName != null || (widget.isSuperset && widget.exerciseNames != null)) ...[
             _buildRecentWeights(theme),
@@ -958,29 +968,38 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
     return Consumer(
       builder: (context, ref, child) {
         // Get exercise name for recent weights
-        final exerciseName = widget.isSuperset 
+        final exerciseName = widget.isSuperset
           ? widget.exerciseNames![_currentExerciseIndex]
           : widget.exerciseName!;
-          
+
         final recentWeightsAsync = ref.watch(
           recentWeightsWithDetailsProvider(exerciseName)
         );
-        
+
         return recentWeightsAsync.when(
           data: (weights) {
-            if (weights.isEmpty) return const SizedBox.shrink();
-            
+            // DEBUG: Show message when no history found
+            if (weights.isEmpty) {
+              if (kDebugMode) {
+                debugPrint('[QuickEdit] No recent weights for: $exerciseName');
+              }
+              return const SizedBox.shrink();
+            }
+
+            // Take up to 10 weights for horizontal slider
+            final displayWeights = weights.take(10).toList();
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     SemanticIcon(
-  icon: AppIcons.history,
-  semanticLabel: 'History',
-  size: AppIconSize.tiny,
-  color: theme.colorScheme.onSurfaceVariant,
-),
+                      icon: AppIcons.history,
+                      semanticLabel: 'History',
+                      size: AppIconSize.tiny,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       AppLocalizations.of(context).recentWeights,
@@ -991,65 +1010,78 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: weights.take(8).map((data) {
-                    final weight = data.weight ?? 0;
-                    final isSelected = (_selectedWeight - weight).abs() < 0.1;
-                    final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
-                    final isFromLast3Days = data.date.isAfter(threeDaysAgo);
-                    
-                    return ActionChip(
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        _setWeight(weight);
-                      },
-                      label: Text(
-                        '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)}kg',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                          color: isSelected 
-                            ? theme.colorScheme.onPrimary
-                            : isFromLast3Days 
+                const SizedBox(height: 6),
+                // ✅ HORIZONTAL SLIDER instead of Wrap (saves vertical space)
+                SizedBox(
+                  height: 36,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: displayWeights.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final data = displayWeights[index];
+                      final weight = data.weight ?? 0;
+                      final isSelected = (_selectedWeight - weight).abs() < 0.1;
+                      final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
+                      final isFromLast3Days = data.date.isAfter(threeDaysAgo);
+
+                      return GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          _setWeight(weight);
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: isSelected
                               ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
+                              : isFromLast3Days
+                                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.8)
+                                : theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: isSelected
+                                ? theme.colorScheme.primary
+                                : isFromLast3Days
+                                  ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                                  : theme.colorScheme.outline.withValues(alpha: 0.3),
+                              width: isSelected ? 2 : 1,
+                            ),
+                            boxShadow: isSelected ? [
+                              BoxShadow(
+                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ] : null,
+                          ),
+                          child: Text(
+                            '${weight.toStringAsFixed(weight % 1 == 0 ? 0 : 1)}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                              color: isSelected
+                                ? theme.colorScheme.onPrimary
+                                : isFromLast3Days
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.onSurface,
+                            ),
+                          ),
                         ),
-                      ),
-                      backgroundColor: isSelected 
-                        ? theme.colorScheme.primary
-                        : isFromLast3Days 
-                          ? theme.colorScheme.primaryContainer.withValues(alpha: 0.8)
-                          : theme.colorScheme.surfaceContainerHighest,
-                      side: BorderSide(
-                        color: isSelected
-                          ? theme.colorScheme.primary
-                          : isFromLast3Days
-                            ? theme.colorScheme.primary.withValues(alpha: 0.5)
-                            : theme.colorScheme.outline.withValues(alpha: 0.3),
-                        width: isSelected ? 2 : 1,
-                      ),
-                      elevation: isSelected ? 2 : 0,
-                      shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity: VisualDensity.compact,
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    );
-                  }).toList(),
+                      );
+                    },
+                  ),
                 ),
               ],
             );
           },
-          loading: () => Container(
-            height: 60,
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: theme.colorScheme.primary,
+          loading: () => const SizedBox(
+            height: 36,
+            child: Center(
+              child: SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
               ),
             ),
           ),
@@ -1057,6 +1089,164 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
         );
       },
     );
+  }
+
+  /// Build "Last Workout" badge for pre-fill functionality (Feature 1)
+  /// Shows weight/reps from the same set number in the previous completed workout
+  /// ✅ COMPACT VERSION - Single row to save vertical space
+  Widget _buildLastWorkoutBadge(ThemeData theme) {
+    // Only show for single exercise mode (not superset) with valid exercise name and set number
+    if (widget.isSuperset || widget.exerciseName == null || widget.setNumber == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Consumer(
+      builder: (context, ref, child) {
+        final lastWorkoutAsync = ref.watch(
+          lastCompletedWorkoutSetProvider(
+            LastWorkoutSetParams(
+              exerciseName: widget.exerciseName!,
+              setNumber: widget.setNumber!,
+            ),
+          ),
+        );
+
+        return lastWorkoutAsync.when(
+          data: (lastWorkoutData) {
+            if (lastWorkoutData == null) {
+              return const SizedBox.shrink();
+            }
+
+            // Format the date compactly
+            final now = DateTime.now();
+            final daysDiff = now.difference(lastWorkoutData.date).inDays;
+            String dateLabel;
+            if (daysDiff == 0) {
+              dateLabel = AppLocalizations.of(context).today;
+            } else if (daysDiff == 1) {
+              dateLabel = AppLocalizations.of(context).yesterday;
+            } else if (daysDiff < 7) {
+              dateLabel = '${daysDiff}d';
+            } else {
+              dateLabel = '${lastWorkoutData.date.day}/${lastWorkoutData.date.month}';
+            }
+
+            // ✅ COMPACT SINGLE-ROW LAYOUT
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  _applyLastWorkoutValues(lastWorkoutData);
+                },
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.tertiaryContainer.withValues(alpha: 0.5),
+                        theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Icon + Label
+                      SemanticIcon(
+                        icon: AppIcons.history,
+                        semanticLabel: 'Last Workout',
+                        size: AppIconSize.tiny,
+                        color: theme.colorScheme.tertiary,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        AppLocalizations.of(context).lastWorkout,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.tertiary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Date badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.tertiary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          dateLabel,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.tertiary,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      // Weight + Reps compact
+                      Text(
+                        '${lastWorkoutData.weight.toStringAsFixed(lastWorkoutData.weight % 1 == 0 ? 0 : 1)}kg',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                      Text(
+                        ' × ',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onTertiaryContainer.withValues(alpha: 0.6),
+                        ),
+                      ),
+                      Text(
+                        '${lastWorkoutData.reps}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Tap hint
+                      SemanticIcon(
+                        icon: AppIcons.touchApp,
+                        semanticLabel: 'Tap to apply',
+                        size: AppIconSize.tiny,
+                        color: theme.colorScheme.tertiary.withValues(alpha: 0.6),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(), // Don't show loading state
+          error: (_, __) => const SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
+  /// Apply values from last workout to current fields
+  void _applyLastWorkoutValues(LastWorkoutSetData data) {
+    // Apply weight
+    _setWeight(data.weight);
+
+    // Apply reps
+    setState(() {
+      _selectedReps = data.reps;
+      _repsTextController.text = _selectedReps.toString();
+    });
+    _repsController.animateToItem(
+      _selectedReps > 0 ? _selectedReps - 1 : 0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+
+    HapticFeedback.mediumImpact();
   }
 
   // NEW: Redesigned Primary Toolbar
@@ -1946,6 +2136,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
     required Offset position,
     ExerciseSet? previousSet,
     String? exerciseName,
+    int? setNumber, // For querying last workout data
     ExerciseCountingMode countingMode = ExerciseCountingMode.weighted, // ✅ NUOVO
   }) {
     return showDialog(
@@ -1976,6 +2167,7 @@ extension QuickEditOverlayV2Extension on BuildContext {
             position: position,
             previousSet: previousSet,
             exerciseName: exerciseName,
+            setNumber: setNumber, // For last workout pre-fill
             countingMode: countingMode, // ✅ NUOVO
           ),
         ],

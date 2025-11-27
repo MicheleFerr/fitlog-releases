@@ -183,6 +183,70 @@ class WorkoutHistoryService {
     }
   }
 
+  /// Ottiene i dati storici dell'esercizio con i dettagli di ogni set
+  /// Usato per Feature Pre-fill Last Workout - ritorna i dati completi dei set
+  Future<List<Map<String, dynamic>>> getExerciseHistoryWithSetDetails({
+    required String exerciseName,
+    required String userId,
+    int limit = 50,
+  }) async {
+    try {
+      final historyWithSets = <Map<String, dynamic>>[];
+
+      // Query per trovare workout che contengono l'esercizio
+      final querySnapshot = await _firestore
+          .collection(_workoutsCollection)
+          .where('userId', isEqualTo: userId)
+          .orderBy('completedAt', descending: true)
+          .limit(100) // Prendiamo più workout per cercare l'esercizio
+          .get();
+
+      // Cerca l'esercizio nei workout
+      for (final doc in querySnapshot.docs) {
+        try {
+          final workoutData = WorkoutHistoryDetail.fromFirestore(doc);
+
+          // Trova l'esercizio nel workout
+          final exercise = workoutData.exercises.where((ex) =>
+            _isExerciseMatch(ex.name, exerciseName)
+          ).firstOrNull;
+
+          if (exercise != null && exercise.sets.isNotEmpty) {
+            // Converti i set in Map per accesso flessibile
+            final setsList = exercise.sets.map((set) => {
+              'setNumber': set.setNumber,
+              'weight': set.weight,
+              'reps': set.reps,
+              'actualReps': set.reps, // Nel nuovo formato, reps è già il valore effettivo
+              'rpe': set.rpe,
+              'isWarmup': set.isWarmup,
+            }).toList();
+
+            historyWithSets.add({
+              'workoutId': workoutData.id,
+              'workoutName': workoutData.name,
+              'date': workoutData.completedAt,
+              'exerciseName': exercise.name,
+              'sets': setsList,
+            });
+
+            if (historyWithSets.length >= limit) break;
+          }
+        } catch (e) {
+          // Salta workout corrotti
+          continue;
+        }
+      }
+
+      return historyWithSets;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('❌ Errore getExerciseHistoryWithSetDetails: $e');
+      }
+      return [];
+    }
+  }
+
   /// Ottiene l'ultimo peso e data per un esercizio
   Future<({double? weight, DateTime? date})> getLastExerciseData({
     required String exerciseName,

@@ -781,6 +781,7 @@ class _ExerciseListItemSetsState extends ConsumerState<ExerciseListItemSets> {
       previousSet: previousSet,
       exerciseName: widget.exercise.name,
       countingMode: countingMode,
+      setNumber: set.setNumber, // For pre-fill from last workout
     );
   }
 

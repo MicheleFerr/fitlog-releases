@@ -22,6 +22,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_te
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/widgets/tier1_minimal_timer_overlay.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/workout_customization_modal_v3.dart';
 import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
@@ -740,6 +741,20 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
+              // Customize workout
+              ListTile(
+                leading: SemanticIcon(
+                  icon: AppIcons.tune,
+                  size: AppIconSize.medium,
+                  semanticLabel: l10n.customizeWorkout,
+                ),
+                title: Text(l10n.customizeWorkout),
+                subtitle: Text(l10n.rpeTimerAndMore),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _showWorkoutCustomization(context);
+                },
+              ),
               // Save as template
               ListTile(
                 leading: SemanticIcon(
@@ -785,5 +800,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     if (currentWorkout == null) return;
 
     SaveTemplateHelper.showSaveAsTemplateDialog(context, ref);
+  }
+
+  /// Show workout customization modal
+  void _showWorkoutCustomization(BuildContext context) {
+    WorkoutCustomizationModalV3.show(context);
   }
 }

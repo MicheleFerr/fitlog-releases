@@ -10,7 +10,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/auto_adjustment_modal.dart';
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
-import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_provider.dart';
+import 'package:gymbro_flutter_new/features/timer/presentation/providers/unified_timer_extensions.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/tut_info_dialog.dart' show showTutInfoBottomSheet;
 import 'package:gymbro_flutter_new/features/community/presentation/providers/community_provider.dart';
@@ -572,11 +572,14 @@ class _ExerciseListItemState extends ConsumerState<ExerciseListItem> {
   // ========================================================================
 
   void _handleStartRestTimer(BuildContext context, ExerciseSet set) {
-    // Start rest timer using the unified timer provider
-    final timerNotifier = ref.read(unifiedTimerProvider.notifier);
-    timerNotifier.startTimer(
-      durationSeconds: set.restTime ?? 90,
+    // Start rest timer using tier1 timer actions (includes UI + sound preference)
+    final timerActions = ref.read(tier1TimerActionsProvider);
+    timerActions.startExerciseRest(
+      seconds: set.restTime ?? 90,
       exerciseName: widget.exercise.name,
+      exerciseId: widget.exercise.id,
+      currentSet: set.setNumber,
+      totalSets: widget.exercise.sets.length,
     );
   }
 

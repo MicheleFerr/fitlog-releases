@@ -22,6 +22,8 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart'; // Import for hybridExerciseActivityRepositoryProvider
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/last_workout_set_data.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/set_progress_data.dart';
 
 // Service provider (uses Hive local storage for exercise history)
 final exerciseHistoryServiceProvider = Provider<ExerciseHistoryService>((ref) {
@@ -1130,5 +1132,212 @@ final recentWeightsWithDetailsFromWorkoutsProvider = FutureProvider.family.autoD
       debugPrint('📍 Stack trace: $stackTrace');
     }
     return [];
+  }
+});
+
+// ============================================================================
+// FEATURE: Pre-fill Last Workout Data
+// ============================================================================
+
+/// Provider to fetch the last completed workout set data for a specific exercise and set number.
+/// Used in QuickEditOverlayV2 to show "Last Workout" badge with pre-fill functionality.
+///
+/// Returns null if no previous workout data exists for this exercise/set combination.
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final lastCompletedWorkoutSetProvider = FutureProvider.family
+    .autoDispose<LastWorkoutSetData?, LastWorkoutSetParams>((ref, params) async {
+  try {
+    // Input validation
+    if (params.exerciseName.trim().isEmpty) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] lastCompletedWorkoutSet: Empty exercise name');
+      }
+      return null;
+    }
+
+    if (params.setNumber < 1) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] lastCompletedWorkoutSet: Invalid set number ${params.setNumber}');
+      }
+      return null;
+    }
+
+    final service = ref.read(workoutHistoryServiceProvider);
+
+    // Get UID directly from Firebase Auth
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      if (kDebugMode) {
+        debugPrint('⚠️ [ExerciseHistory] lastCompletedWorkoutSet: No user UID');
+      }
+      return null;
+    }
+
+    // Fetch exercise history from workouts collection
+    // We need to find workouts that have this exercise with at least setNumber sets
+    final historyDataList = await service.getExerciseHistoryWithSetDetails(
+      exerciseName: params.exerciseName,
+      userId: uid,
+      limit: 50, // Get recent workouts to find matching set
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        if (kDebugMode) {
+          debugPrint('⚠️ [ExerciseHistory] lastCompletedWorkoutSet: Timeout after 10s');
+        }
+        return <Map<String, dynamic>>[];
+      },
+    );
+
+    if (historyDataList.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('ℹ️ [ExerciseHistory] lastCompletedWorkoutSet: No history found for "${params.exerciseName}"');
+      }
+      return null;
+    }
+
+    // Find the most recent workout that has data for the requested set number
+    // historyDataList is sorted by date descending (most recent first)
+    for (final workoutData in historyDataList) {
+      final sets = workoutData['sets'] as List<dynamic>?;
+      if (sets == null || sets.length < params.setNumber) continue;
+
+      // Get the specific set (setNumber is 1-based, list is 0-indexed)
+      final setData = sets[params.setNumber - 1] as Map<String, dynamic>?;
+      if (setData == null) continue;
+
+      // Extract weight and reps from set data
+      final weight = _parseDouble(setData['weight']);
+      final reps = _parseInt(setData['actualReps'] ?? setData['reps']);
+
+      if (weight == null || reps == null) continue;
+
+      // Parse date
+      final dateValue = workoutData['date'];
+      DateTime date;
+      if (dateValue is DateTime) {
+        date = dateValue;
+      } else if (dateValue is String) {
+        date = DateTime.tryParse(dateValue) ?? DateTime.now();
+      } else {
+        date = DateTime.now();
+      }
+
+      final result = LastWorkoutSetData(
+        weight: weight,
+        reps: reps,
+        rpe: _parseInt(setData['rpe']),
+        date: date,
+        workoutName: workoutData['workoutName'] as String?,
+        setNumber: params.setNumber,
+        exerciseName: params.exerciseName,
+      );
+
+      if (kDebugMode) {
+        debugPrint('✅ [ExerciseHistory] lastCompletedWorkoutSet: Found ${result.weight}kg x ${result.reps} for "${params.exerciseName}" set #${params.setNumber}');
+      }
+
+      return result;
+    }
+
+    if (kDebugMode) {
+      debugPrint('ℹ️ [ExerciseHistory] lastCompletedWorkoutSet: No matching set #${params.setNumber} found for "${params.exerciseName}"');
+    }
+    return null;
+  } catch (e, stackTrace) {
+    if (kDebugMode) {
+      debugPrint('❌ [ExerciseHistory] lastCompletedWorkoutSet error: $e');
+      debugPrint('📍 Stack trace: $stackTrace');
+    }
+    return null;
+  }
+});
+
+/// Helper function to parse double from various types
+double? _parseDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is double) return value;
+  if (value is int) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
+
+/// Helper function to parse int from various types
+int? _parseInt(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is double) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
+// =========================================================================
+// FEATURE 2: SET PROGRESS PROVIDER
+// =========================================================================
+// Provides progress comparison data for displaying progress arrows in set rows.
+// Compares current weight/reps with the last workout for the same exercise/set.
+// =========================================================================
+
+/// Provider that computes progress data for a specific set.
+/// Returns SetProgressData comparing current values with the last workout.
+final setProgressProvider = FutureProvider.family
+    .autoDispose<SetProgressData?, SetProgressParams>((ref, params) async {
+  try {
+    // Validate inputs
+    if (params.exerciseName.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('📊 setProgressProvider: Empty exercise name');
+      }
+      return null;
+    }
+
+    // Get last workout data for this exercise/set using the existing provider
+    final lastWorkoutParams = LastWorkoutSetParams(
+      exerciseName: params.exerciseName,
+      setNumber: params.setNumber,
+    );
+
+    final lastWorkoutData = await ref.watch(
+      lastCompletedWorkoutSetProvider(lastWorkoutParams).future,
+    );
+
+    if (lastWorkoutData == null) {
+      if (kDebugMode) {
+        debugPrint(
+          '📊 setProgressProvider: No last workout data for '
+          '${params.exerciseName} set ${params.setNumber}',
+        );
+      }
+      return null;
+    }
+
+    // Create progress data comparing current vs last
+    final progressData = SetProgressData(
+      currentWeight: params.currentWeight,
+      lastWeight: lastWorkoutData.weight,
+      currentReps: params.currentReps,
+      lastReps: lastWorkoutData.reps,
+      lastWorkoutDate: lastWorkoutData.date,
+      setNumber: params.setNumber,
+      exerciseName: params.exerciseName,
+    );
+
+    if (kDebugMode) {
+      debugPrint(
+        '📊 setProgressProvider: Progress for ${params.exerciseName} '
+        'set ${params.setNumber}: '
+        '${params.currentWeight}kg → ${lastWorkoutData.weight}kg, '
+        '${params.currentReps}reps → ${lastWorkoutData.reps}reps '
+        '(${progressData.overallStatus})',
+      );
+    }
+
+    return progressData;
+  } catch (e, stack) {
+    if (kDebugMode) {
+      debugPrint('❌ setProgressProvider error: $e');
+      debugPrint('Stack: $stack');
+    }
+    return null;
   }
 });
