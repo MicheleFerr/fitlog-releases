@@ -103,24 +103,24 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     setState(() {
-      // Update drag offset with limits
+      // Update drag offset with rubber-band effect in both directions
       final newOffset = _dragOffset + details.delta.dy;
 
-      // Clamp the offset:
-      // - Negative values (dragging up): apply resistance after threshold
-      // - Positive values (dragging down): hard limit at maxDragDown
       if (newOffset < 0) {
-        // Dragging up - apply rubber band effect
+        // Dragging UP - moderate rubber band effect
         final resistance = 1 - (newOffset.abs() / (_maxDragUp.abs() * 2)).clamp(0.0, 0.8);
-        _dragOffset = (_dragOffset + details.delta.dy * resistance).clamp(_maxDragUp, _maxDragDown);
+        _dragOffset = (_dragOffset + details.delta.dy * resistance).clamp(_maxDragUp, _maxDragDown * 3);
       } else {
-        // Dragging down - hard limit
-        _dragOffset = newOffset.clamp(_maxDragUp, _maxDragDown);
+        // Dragging DOWN - high resistance rubber band effect (smooth but limited)
+        // Exponential resistance: gets harder the further you drag
+        const resistanceFactor = 0.15; // Very high resistance (lower = more resistance)
+        final resistance = resistanceFactor / (1 + (newOffset / _maxDragDown));
+        _dragOffset = (_dragOffset + details.delta.dy * resistance).clamp(_maxDragUp, _maxDragDown * 3);
       }
     });
 
     // Light haptic on significant drag
-    if (_dragOffset.abs() > 20 && _dragOffset.abs() % 20 < 2) {
+    if (_dragOffset.abs() > 15 && _dragOffset.abs() % 15 < 2) {
       HapticFeedback.selectionClick();
     }
   }
