@@ -5,3 +5,8 @@ targets:
         options:
           # Enable explicitToJson for nested object serialization (used by Freezed)
           explicit_to_json: true
+      # Disable problematic hive_ce auto-registrar (has bugs with some file structures)
+      hive_ce_generator:hive_registrar_intermediate_generator:
+        enabled: false
+      hive_ce_generator:hive_registrar_generator:
+        enabled: false
