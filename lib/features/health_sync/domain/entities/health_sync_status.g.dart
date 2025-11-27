@@ -6,9 +6,8 @@ part of 'health_sync_status.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$HealthSyncStatusImpl _$$HealthSyncStatusImplFromJson(
-        Map<String, dynamic> json) =>
-    _$HealthSyncStatusImpl(
+_HealthSyncStatus _$HealthSyncStatusFromJson(Map<String, dynamic> json) =>
+    _HealthSyncStatus(
       dataType: $enumDecode(_$HealthDataTypeEnumMap, json['dataType']),
       lastSyncTime: json['lastSyncTime'] == null
           ? null
@@ -18,8 +17,7 @@ _$HealthSyncStatusImpl _$$HealthSyncStatusImplFromJson(
       errorMessage: json['errorMessage'] as String?,
     );
 
-Map<String, dynamic> _$$HealthSyncStatusImplToJson(
-        _$HealthSyncStatusImpl instance) =>
+Map<String, dynamic> _$HealthSyncStatusToJson(_HealthSyncStatus instance) =>
     <String, dynamic>{
       'dataType': _$HealthDataTypeEnumMap[instance.dataType]!,
       'lastSyncTime': instance.lastSyncTime?.toIso8601String(),

@@ -34,7 +34,7 @@ part 'queued_sync.g.dart';
 /// ```
 @freezed
 @HiveType(typeId: 10) // AI Coach feature = 10-19 range
-class QueuedSync with _$QueuedSync {
+abstract class QueuedSync with _$QueuedSync {
   const factory QueuedSync({
     /// Unique ID for this sync attempt
     @HiveField(0) required String id,

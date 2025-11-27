@@ -6,16 +6,15 @@ part of 'achievement.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AchievementImpl _$$AchievementImplFromJson(Map<String, dynamic> json) =>
-    _$AchievementImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      badgeType: $enumDecode(_$BadgeTypeEnumMap, json['badgeType']),
-      unlockedAt: DateTime.parse(json['unlockedAt'] as String),
-      evidence: json['evidence'] as Map<String, dynamic>,
-    );
+_Achievement _$AchievementFromJson(Map<String, dynamic> json) => _Achievement(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  badgeType: $enumDecode(_$BadgeTypeEnumMap, json['badgeType']),
+  unlockedAt: DateTime.parse(json['unlockedAt'] as String),
+  evidence: json['evidence'] as Map<String, dynamic>,
+);
 
-Map<String, dynamic> _$$AchievementImplToJson(_$AchievementImpl instance) =>
+Map<String, dynamic> _$AchievementToJson(_Achievement instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

@@ -24,6 +24,7 @@ class WelcomeView extends ConsumerWidget {
     required this.onEditTemplate,
     required this.onDeleteTemplate,
     required this.onCreateTemplate,
+    this.onScheduleTemplate,
     super.key,
   });
 
@@ -47,6 +48,9 @@ class WelcomeView extends ConsumerWidget {
 
   /// Callback when the user wants to create a new template
   final VoidCallback onCreateTemplate;
+
+  /// Callback when the user wants to schedule a template (swipe right action)
+  final void Function(wt.WorkoutTemplate template)? onScheduleTemplate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -300,6 +304,9 @@ class WelcomeView extends ConsumerWidget {
           onDuplicate: () => onDuplicateTemplate(template),
           onEdit: () => onEditTemplate(template),
           onDelete: () => onDeleteTemplate(template),
+          onSchedule: onScheduleTemplate != null
+              ? () => onScheduleTemplate!(template)
+              : null,
         );
       },
     );

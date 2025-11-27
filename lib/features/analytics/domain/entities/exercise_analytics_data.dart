@@ -34,7 +34,7 @@ part 'exercise_analytics_data.freezed.dart';
 
 /// Single data point for charts
 @freezed
-class ChartDataPoint with _$ChartDataPoint {
+abstract class ChartDataPoint with _$ChartDataPoint {
   const factory ChartDataPoint({
     /// Date of the data point
     required DateTime date,
@@ -72,7 +72,7 @@ enum OverloadStatus {
 
 /// Progressive overload analysis result
 @freezed
-class ProgressiveOverloadData with _$ProgressiveOverloadData {
+abstract class ProgressiveOverloadData with _$ProgressiveOverloadData {
   const factory ProgressiveOverloadData({
     /// Current weekly progression percentage
     required double currentPercent,
@@ -113,7 +113,7 @@ class ProgressiveOverloadData with _$ProgressiveOverloadData {
 
 /// Intensity analysis (1RM estimation)
 @freezed
-class IntensityData with _$IntensityData {
+abstract class IntensityData with _$IntensityData {
   const factory IntensityData({
     /// Estimated 1RM in kg
     required double estimated1RM,
@@ -153,7 +153,7 @@ class IntensityData with _$IntensityData {
 
 /// Main analytics data container
 @freezed
-class ExerciseAnalyticsData with _$ExerciseAnalyticsData {
+abstract class ExerciseAnalyticsData with _$ExerciseAnalyticsData {
   const factory ExerciseAnalyticsData({
     /// Exercise identifier
     required String exerciseId,

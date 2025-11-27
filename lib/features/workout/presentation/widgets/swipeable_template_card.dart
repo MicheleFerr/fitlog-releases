@@ -11,8 +11,9 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 /// iOS-style swipeable wrapper for TemplateCard
 ///
 /// Features:
+/// - Swipe right to reveal Schedule action
 /// - Swipe left to reveal 4 action buttons
-/// - Actions: Share, Duplicate, Edit, Delete
+/// - Actions: Schedule (left), Share, Duplicate, Edit, Delete (right)
 /// - Actions stay open until explicitly closed
 /// - Smooth reveal animation
 /// - HapticFeedback on actions
@@ -26,6 +27,7 @@ class SwipeableTemplateCard extends StatelessWidget {
     required this.onDuplicate,
     required this.onEdit,
     required this.onDelete,
+    this.onSchedule,
   });
 
   final WorkoutTemplate template;
@@ -34,11 +36,50 @@ class SwipeableTemplateCard extends StatelessWidget {
   final VoidCallback onDuplicate;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback? onSchedule;
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
       key: ValueKey(template.id),
+      // Schedule action (swipe right to reveal)
+      startActionPane: onSchedule != null
+          ? ActionPane(
+              motion: const DrawerMotion(),
+              extentRatio: 0.25, // Single action
+              children: [
+                CustomSlidableAction(
+                  onPressed: (context) {
+                    HapticFeedback.mediumImpact();
+                    onSchedule!();
+                  },
+                  backgroundColor: context.colors.success,
+                  foregroundColor: context.colors.onSuccess,
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SemanticIcon(
+                        icon: AppIcons.schedule,
+                        semanticLabel: context.l10n.scheduleWorkout,
+                        size: AppIconSize.medium,
+                        color: context.colors.onSuccess,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        context.l10n.scheduleWorkout,
+                        style: context.textTheme.labelSmall?.copyWith(
+                          color: context.colors.onSuccess,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : null,
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
         extentRatio: 0.75, // Show all 4 actions

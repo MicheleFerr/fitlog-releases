@@ -6,8 +6,8 @@ part of 'exercise_patch.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExercisePatchImpl _$$ExercisePatchImplFromJson(Map<String, dynamic> json) =>
-    _$ExercisePatchImpl(
+_ExercisePatch _$ExercisePatchFromJson(Map<String, dynamic> json) =>
+    _ExercisePatch(
       id: json['id'] as String,
       exerciseId: json['exerciseId'] as String,
       userId: json['userId'] as String,
@@ -35,7 +35,7 @@ _$ExercisePatchImpl _$$ExercisePatchImplFromJson(Map<String, dynamic> json) =>
       userDisplayName: json['userDisplayName'] as String?,
     );
 
-Map<String, dynamic> _$$ExercisePatchImplToJson(_$ExercisePatchImpl instance) =>
+Map<String, dynamic> _$ExercisePatchToJson(_ExercisePatch instance) =>
     <String, dynamic>{
       'id': instance.id,
       'exerciseId': instance.exerciseId,

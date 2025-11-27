@@ -6,9 +6,8 @@ part of 'workout_suggestion.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WorkoutSuggestionImpl _$$WorkoutSuggestionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$WorkoutSuggestionImpl(
+_WorkoutSuggestion _$WorkoutSuggestionFromJson(Map<String, dynamic> json) =>
+    _WorkoutSuggestion(
       level: $enumDecode(_$SuggestionLevelEnumMap, json['level']),
       workoutName: json['workoutName'] as String,
       confidence: (json['confidence'] as num).toDouble(),
@@ -28,8 +27,7 @@ _$WorkoutSuggestionImpl _$$WorkoutSuggestionImplFromJson(
           : DateTime.parse(json['recoveryDate'] as String),
     );
 
-Map<String, dynamic> _$$WorkoutSuggestionImplToJson(
-        _$WorkoutSuggestionImpl instance) =>
+Map<String, dynamic> _$WorkoutSuggestionToJson(_WorkoutSuggestion instance) =>
     <String, dynamic>{
       'level': _$SuggestionLevelEnumMap[instance.level]!,
       'workoutName': instance.workoutName,

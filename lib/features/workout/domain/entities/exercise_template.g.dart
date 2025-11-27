@@ -6,9 +6,8 @@ part of 'exercise_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseTemplateImpl _$$ExerciseTemplateImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseTemplateImpl(
+_ExerciseTemplate _$ExerciseTemplateFromJson(Map<String, dynamic> json) =>
+    _ExerciseTemplate(
       exerciseName: json['exerciseName'] as String,
       defaultWeight: (json['defaultWeight'] as num).toDouble(),
       defaultReps: (json['defaultReps'] as num).toInt(),
@@ -16,8 +15,7 @@ _$ExerciseTemplateImpl _$$ExerciseTemplateImplFromJson(
       notes: json['notes'] as String?,
     );
 
-Map<String, dynamic> _$$ExerciseTemplateImplToJson(
-        _$ExerciseTemplateImpl instance) =>
+Map<String, dynamic> _$ExerciseTemplateToJson(_ExerciseTemplate instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'defaultWeight': instance.defaultWeight,

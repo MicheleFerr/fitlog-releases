@@ -40,7 +40,7 @@ part 'readiness_score.g.dart';
 /// // 💪 85/100 - Great! Ready for a challenging workout.
 /// ```
 @freezed
-class ReadinessScore with _$ReadinessScore {
+abstract class ReadinessScore with _$ReadinessScore {
   const factory ReadinessScore({
     /// Readiness score (0-100)
     ///
@@ -149,7 +149,7 @@ enum ReadinessCategory {
 /// print('Consistency: ${factors.consistencyScore}/100');
 /// ```
 @freezed
-class ReadinessFactors with _$ReadinessFactors {
+abstract class ReadinessFactors with _$ReadinessFactors {
   const factory ReadinessFactors({
     /// Workout frequency score (0-100)
     ///

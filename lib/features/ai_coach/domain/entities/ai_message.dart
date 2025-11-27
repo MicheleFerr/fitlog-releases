@@ -5,7 +5,7 @@ part 'ai_message.g.dart';
 
 /// Represents a message in the AI Coach conversation
 @freezed
-class AIMessage with _$AIMessage {
+abstract class AIMessage with _$AIMessage {
   const factory AIMessage({
     required String id,
     required String content,
@@ -26,7 +26,7 @@ class AIMessage with _$AIMessage {
 
 /// Follow-up chip for branching conversations
 @freezed
-class FollowUpChip with _$FollowUpChip {
+abstract class FollowUpChip with _$FollowUpChip {
   const factory FollowUpChip({
     required String label, // Display text (e.g., "📊 Dettagli numeri")
     required String intent, // Sub-intent (e.g., "progression.details")

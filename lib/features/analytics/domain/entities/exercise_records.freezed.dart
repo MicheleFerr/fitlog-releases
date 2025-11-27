@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,357 +9,315 @@ part of 'exercise_records.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ExerciseRecords _$ExerciseRecordsFromJson(Map<String, dynamic> json) {
-  return _ExerciseRecords.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ExerciseRecords {
-  /// Exercise name (matches ExerciseHistory.exerciseName)
-  String get exerciseName => throw _privateConstructorUsedError;
 
-  /// Personal Records
-  double get maxWeightRecord =>
-      throw _privateConstructorUsedError; // Heaviest single set weight (kg)
-  double get estimated1RM =>
-      throw _privateConstructorUsedError; // Estimated 1 rep max (Epley formula)
-  double get totalVolumeRecord =>
-      throw _privateConstructorUsedError; // Highest single-workout volume (kg)
-  int get totalSetsRecord =>
-      throw _privateConstructorUsedError; // Most sets in single workout
-  /// Recent Activity
-  DateTime get lastWorkoutDate =>
-      throw _privateConstructorUsedError; // Most recent workout date
-  double get weeklyFrequency =>
-      throw _privateConstructorUsedError; // Avg workouts per week (last 4 weeks)
-  /// Time Range
-  DateTime get firstWorkoutDate =>
-      throw _privateConstructorUsedError; // First recorded workout
-  int get totalWorkouts => throw _privateConstructorUsedError;
+/// Exercise name (matches ExerciseHistory.exerciseName)
+ String get exerciseName;/// Personal Records
+ double get maxWeightRecord;// Heaviest single set weight (kg)
+ double get estimated1RM;// Estimated 1 rep max (Epley formula)
+ double get totalVolumeRecord;// Highest single-workout volume (kg)
+ int get totalSetsRecord;// Most sets in single workout
+/// Recent Activity
+ DateTime get lastWorkoutDate;// Most recent workout date
+ double get weeklyFrequency;// Avg workouts per week (last 4 weeks)
+/// Time Range
+ DateTime get firstWorkoutDate;// First recorded workout
+ int get totalWorkouts;
+/// Create a copy of ExerciseRecords
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ExerciseRecordsCopyWith<ExerciseRecords> get copyWith => _$ExerciseRecordsCopyWithImpl<ExerciseRecords>(this as ExerciseRecords, _$identity);
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ExerciseRecordsCopyWith<ExerciseRecords> get copyWith =>
-      throw _privateConstructorUsedError;
+  /// Serializes this ExerciseRecords to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseRecords&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.maxWeightRecord, maxWeightRecord) || other.maxWeightRecord == maxWeightRecord)&&(identical(other.estimated1RM, estimated1RM) || other.estimated1RM == estimated1RM)&&(identical(other.totalVolumeRecord, totalVolumeRecord) || other.totalVolumeRecord == totalVolumeRecord)&&(identical(other.totalSetsRecord, totalSetsRecord) || other.totalSetsRecord == totalSetsRecord)&&(identical(other.lastWorkoutDate, lastWorkoutDate) || other.lastWorkoutDate == lastWorkoutDate)&&(identical(other.weeklyFrequency, weeklyFrequency) || other.weeklyFrequency == weeklyFrequency)&&(identical(other.firstWorkoutDate, firstWorkoutDate) || other.firstWorkoutDate == firstWorkoutDate)&&(identical(other.totalWorkouts, totalWorkouts) || other.totalWorkouts == totalWorkouts));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,exerciseName,maxWeightRecord,estimated1RM,totalVolumeRecord,totalSetsRecord,lastWorkoutDate,weeklyFrequency,firstWorkoutDate,totalWorkouts);
+
+@override
+String toString() {
+  return 'ExerciseRecords(exerciseName: $exerciseName, maxWeightRecord: $maxWeightRecord, estimated1RM: $estimated1RM, totalVolumeRecord: $totalVolumeRecord, totalSetsRecord: $totalSetsRecord, lastWorkoutDate: $lastWorkoutDate, weeklyFrequency: $weeklyFrequency, firstWorkoutDate: $firstWorkoutDate, totalWorkouts: $totalWorkouts)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ExerciseRecordsCopyWith<$Res> {
-  factory $ExerciseRecordsCopyWith(
-          ExerciseRecords value, $Res Function(ExerciseRecords) then) =
-      _$ExerciseRecordsCopyWithImpl<$Res, ExerciseRecords>;
-  @useResult
-  $Res call(
-      {String exerciseName,
-      double maxWeightRecord,
-      double estimated1RM,
-      double totalVolumeRecord,
-      int totalSetsRecord,
-      DateTime lastWorkoutDate,
-      double weeklyFrequency,
-      DateTime firstWorkoutDate,
-      int totalWorkouts});
-}
+abstract mixin class $ExerciseRecordsCopyWith<$Res>  {
+  factory $ExerciseRecordsCopyWith(ExerciseRecords value, $Res Function(ExerciseRecords) _then) = _$ExerciseRecordsCopyWithImpl;
+@useResult
+$Res call({
+ String exerciseName, double maxWeightRecord, double estimated1RM, double totalVolumeRecord, int totalSetsRecord, DateTime lastWorkoutDate, double weeklyFrequency, DateTime firstWorkoutDate, int totalWorkouts
+});
 
+
+
+
+}
 /// @nodoc
-class _$ExerciseRecordsCopyWithImpl<$Res, $Val extends ExerciseRecords>
+class _$ExerciseRecordsCopyWithImpl<$Res>
     implements $ExerciseRecordsCopyWith<$Res> {
-  _$ExerciseRecordsCopyWithImpl(this._value, this._then);
+  _$ExerciseRecordsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ExerciseRecords _self;
+  final $Res Function(ExerciseRecords) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? exerciseName = null,
-    Object? maxWeightRecord = null,
-    Object? estimated1RM = null,
-    Object? totalVolumeRecord = null,
-    Object? totalSetsRecord = null,
-    Object? lastWorkoutDate = null,
-    Object? weeklyFrequency = null,
-    Object? firstWorkoutDate = null,
-    Object? totalWorkouts = null,
-  }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxWeightRecord: null == maxWeightRecord
-          ? _value.maxWeightRecord
-          : maxWeightRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolumeRecord: null == totalVolumeRecord
-          ? _value.totalVolumeRecord
-          : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSetsRecord: null == totalSetsRecord
-          ? _value.totalSetsRecord
-          : totalSetsRecord // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weeklyFrequency: null == weeklyFrequency
-          ? _value.weeklyFrequency
-          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
-              as double,
-      firstWorkoutDate: null == firstWorkoutDate
-          ? _value.firstWorkoutDate
-          : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
-  }
+/// Create a copy of ExerciseRecords
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? exerciseName = null,Object? maxWeightRecord = null,Object? estimated1RM = null,Object? totalVolumeRecord = null,Object? totalSetsRecord = null,Object? lastWorkoutDate = null,Object? weeklyFrequency = null,Object? firstWorkoutDate = null,Object? totalWorkouts = null,}) {
+  return _then(_self.copyWith(
+exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,maxWeightRecord: null == maxWeightRecord ? _self.maxWeightRecord : maxWeightRecord // ignore: cast_nullable_to_non_nullable
+as double,estimated1RM: null == estimated1RM ? _self.estimated1RM : estimated1RM // ignore: cast_nullable_to_non_nullable
+as double,totalVolumeRecord: null == totalVolumeRecord ? _self.totalVolumeRecord : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
+as double,totalSetsRecord: null == totalSetsRecord ? _self.totalSetsRecord : totalSetsRecord // ignore: cast_nullable_to_non_nullable
+as int,lastWorkoutDate: null == lastWorkoutDate ? _self.lastWorkoutDate : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime,weeklyFrequency: null == weeklyFrequency ? _self.weeklyFrequency : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+as double,firstWorkoutDate: null == firstWorkoutDate ? _self.firstWorkoutDate : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime,totalWorkouts: null == totalWorkouts ? _self.totalWorkouts : totalWorkouts // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ExerciseRecordsImplCopyWith<$Res>
-    implements $ExerciseRecordsCopyWith<$Res> {
-  factory _$$ExerciseRecordsImplCopyWith(_$ExerciseRecordsImpl value,
-          $Res Function(_$ExerciseRecordsImpl) then) =
-      __$$ExerciseRecordsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String exerciseName,
-      double maxWeightRecord,
-      double estimated1RM,
-      double totalVolumeRecord,
-      int totalSetsRecord,
-      DateTime lastWorkoutDate,
-      double weeklyFrequency,
-      DateTime firstWorkoutDate,
-      int totalWorkouts});
 }
 
-/// @nodoc
-class __$$ExerciseRecordsImplCopyWithImpl<$Res>
-    extends _$ExerciseRecordsCopyWithImpl<$Res, _$ExerciseRecordsImpl>
-    implements _$$ExerciseRecordsImplCopyWith<$Res> {
-  __$$ExerciseRecordsImplCopyWithImpl(
-      _$ExerciseRecordsImpl _value, $Res Function(_$ExerciseRecordsImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? exerciseName = null,
-    Object? maxWeightRecord = null,
-    Object? estimated1RM = null,
-    Object? totalVolumeRecord = null,
-    Object? totalSetsRecord = null,
-    Object? lastWorkoutDate = null,
-    Object? weeklyFrequency = null,
-    Object? firstWorkoutDate = null,
-    Object? totalWorkouts = null,
-  }) {
-    return _then(_$ExerciseRecordsImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxWeightRecord: null == maxWeightRecord
-          ? _value.maxWeightRecord
-          : maxWeightRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolumeRecord: null == totalVolumeRecord
-          ? _value.totalVolumeRecord
-          : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSetsRecord: null == totalSetsRecord
-          ? _value.totalSetsRecord
-          : totalSetsRecord // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weeklyFrequency: null == weeklyFrequency
-          ? _value.weeklyFrequency
-          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
-              as double,
-      firstWorkoutDate: null == firstWorkoutDate
-          ? _value.firstWorkoutDate
-          : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
-  }
+/// Adds pattern-matching-related methods to [ExerciseRecords].
+extension ExerciseRecordsPatterns on ExerciseRecords {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ExerciseRecords value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ExerciseRecords() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ExerciseRecords value)  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseRecords():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ExerciseRecords value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseRecords() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String exerciseName,  double maxWeightRecord,  double estimated1RM,  double totalVolumeRecord,  int totalSetsRecord,  DateTime lastWorkoutDate,  double weeklyFrequency,  DateTime firstWorkoutDate,  int totalWorkouts)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ExerciseRecords() when $default != null:
+return $default(_that.exerciseName,_that.maxWeightRecord,_that.estimated1RM,_that.totalVolumeRecord,_that.totalSetsRecord,_that.lastWorkoutDate,_that.weeklyFrequency,_that.firstWorkoutDate,_that.totalWorkouts);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String exerciseName,  double maxWeightRecord,  double estimated1RM,  double totalVolumeRecord,  int totalSetsRecord,  DateTime lastWorkoutDate,  double weeklyFrequency,  DateTime firstWorkoutDate,  int totalWorkouts)  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseRecords():
+return $default(_that.exerciseName,_that.maxWeightRecord,_that.estimated1RM,_that.totalVolumeRecord,_that.totalSetsRecord,_that.lastWorkoutDate,_that.weeklyFrequency,_that.firstWorkoutDate,_that.totalWorkouts);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String exerciseName,  double maxWeightRecord,  double estimated1RM,  double totalVolumeRecord,  int totalSetsRecord,  DateTime lastWorkoutDate,  double weeklyFrequency,  DateTime firstWorkoutDate,  int totalWorkouts)?  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseRecords() when $default != null:
+return $default(_that.exerciseName,_that.maxWeightRecord,_that.estimated1RM,_that.totalVolumeRecord,_that.totalSetsRecord,_that.lastWorkoutDate,_that.weeklyFrequency,_that.firstWorkoutDate,_that.totalWorkouts);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseRecordsImpl implements _ExerciseRecords {
-  const _$ExerciseRecordsImpl(
-      {required this.exerciseName,
-      required this.maxWeightRecord,
-      required this.estimated1RM,
-      required this.totalVolumeRecord,
-      required this.totalSetsRecord,
-      required this.lastWorkoutDate,
-      required this.weeklyFrequency,
-      required this.firstWorkoutDate,
-      required this.totalWorkouts});
 
-  factory _$ExerciseRecordsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseRecordsImplFromJson(json);
+class _ExerciseRecords implements ExerciseRecords {
+  const _ExerciseRecords({required this.exerciseName, required this.maxWeightRecord, required this.estimated1RM, required this.totalVolumeRecord, required this.totalSetsRecord, required this.lastWorkoutDate, required this.weeklyFrequency, required this.firstWorkoutDate, required this.totalWorkouts});
+  factory _ExerciseRecords.fromJson(Map<String, dynamic> json) => _$ExerciseRecordsFromJson(json);
 
-  /// Exercise name (matches ExerciseHistory.exerciseName)
-  @override
-  final String exerciseName;
-
-  /// Personal Records
-  @override
-  final double maxWeightRecord;
+/// Exercise name (matches ExerciseHistory.exerciseName)
+@override final  String exerciseName;
+/// Personal Records
+@override final  double maxWeightRecord;
 // Heaviest single set weight (kg)
-  @override
-  final double estimated1RM;
+@override final  double estimated1RM;
 // Estimated 1 rep max (Epley formula)
-  @override
-  final double totalVolumeRecord;
+@override final  double totalVolumeRecord;
 // Highest single-workout volume (kg)
-  @override
-  final int totalSetsRecord;
+@override final  int totalSetsRecord;
 // Most sets in single workout
-  /// Recent Activity
-  @override
-  final DateTime lastWorkoutDate;
+/// Recent Activity
+@override final  DateTime lastWorkoutDate;
 // Most recent workout date
-  @override
-  final double weeklyFrequency;
+@override final  double weeklyFrequency;
 // Avg workouts per week (last 4 weeks)
-  /// Time Range
-  @override
-  final DateTime firstWorkoutDate;
+/// Time Range
+@override final  DateTime firstWorkoutDate;
 // First recorded workout
-  @override
-  final int totalWorkouts;
+@override final  int totalWorkouts;
 
-  @override
-  String toString() {
-    return 'ExerciseRecords(exerciseName: $exerciseName, maxWeightRecord: $maxWeightRecord, estimated1RM: $estimated1RM, totalVolumeRecord: $totalVolumeRecord, totalSetsRecord: $totalSetsRecord, lastWorkoutDate: $lastWorkoutDate, weeklyFrequency: $weeklyFrequency, firstWorkoutDate: $firstWorkoutDate, totalWorkouts: $totalWorkouts)';
-  }
+/// Create a copy of ExerciseRecords
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ExerciseRecordsCopyWith<_ExerciseRecords> get copyWith => __$ExerciseRecordsCopyWithImpl<_ExerciseRecords>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ExerciseRecordsImpl &&
-            (identical(other.exerciseName, exerciseName) ||
-                other.exerciseName == exerciseName) &&
-            (identical(other.maxWeightRecord, maxWeightRecord) ||
-                other.maxWeightRecord == maxWeightRecord) &&
-            (identical(other.estimated1RM, estimated1RM) ||
-                other.estimated1RM == estimated1RM) &&
-            (identical(other.totalVolumeRecord, totalVolumeRecord) ||
-                other.totalVolumeRecord == totalVolumeRecord) &&
-            (identical(other.totalSetsRecord, totalSetsRecord) ||
-                other.totalSetsRecord == totalSetsRecord) &&
-            (identical(other.lastWorkoutDate, lastWorkoutDate) ||
-                other.lastWorkoutDate == lastWorkoutDate) &&
-            (identical(other.weeklyFrequency, weeklyFrequency) ||
-                other.weeklyFrequency == weeklyFrequency) &&
-            (identical(other.firstWorkoutDate, firstWorkoutDate) ||
-                other.firstWorkoutDate == firstWorkoutDate) &&
-            (identical(other.totalWorkouts, totalWorkouts) ||
-                other.totalWorkouts == totalWorkouts));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      exerciseName,
-      maxWeightRecord,
-      estimated1RM,
-      totalVolumeRecord,
-      totalSetsRecord,
-      lastWorkoutDate,
-      weeklyFrequency,
-      firstWorkoutDate,
-      totalWorkouts);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ExerciseRecordsImplCopyWith<_$ExerciseRecordsImpl> get copyWith =>
-      __$$ExerciseRecordsImplCopyWithImpl<_$ExerciseRecordsImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExerciseRecordsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ExerciseRecordsToJson(this, );
 }
 
-abstract class _ExerciseRecords implements ExerciseRecords {
-  const factory _ExerciseRecords(
-      {required final String exerciseName,
-      required final double maxWeightRecord,
-      required final double estimated1RM,
-      required final double totalVolumeRecord,
-      required final int totalSetsRecord,
-      required final DateTime lastWorkoutDate,
-      required final double weeklyFrequency,
-      required final DateTime firstWorkoutDate,
-      required final int totalWorkouts}) = _$ExerciseRecordsImpl;
-
-  factory _ExerciseRecords.fromJson(Map<String, dynamic> json) =
-      _$ExerciseRecordsImpl.fromJson;
-
-  @override
-
-  /// Exercise name (matches ExerciseHistory.exerciseName)
-  String get exerciseName;
-  @override
-
-  /// Personal Records
-  double get maxWeightRecord;
-  @override // Heaviest single set weight (kg)
-  double get estimated1RM;
-  @override // Estimated 1 rep max (Epley formula)
-  double get totalVolumeRecord;
-  @override // Highest single-workout volume (kg)
-  int get totalSetsRecord;
-  @override // Most sets in single workout
-  /// Recent Activity
-  DateTime get lastWorkoutDate;
-  @override // Most recent workout date
-  double get weeklyFrequency;
-  @override // Avg workouts per week (last 4 weeks)
-  /// Time Range
-  DateTime get firstWorkoutDate;
-  @override // First recorded workout
-  int get totalWorkouts;
-  @override
-  @JsonKey(ignore: true)
-  _$$ExerciseRecordsImplCopyWith<_$ExerciseRecordsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseRecords&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.maxWeightRecord, maxWeightRecord) || other.maxWeightRecord == maxWeightRecord)&&(identical(other.estimated1RM, estimated1RM) || other.estimated1RM == estimated1RM)&&(identical(other.totalVolumeRecord, totalVolumeRecord) || other.totalVolumeRecord == totalVolumeRecord)&&(identical(other.totalSetsRecord, totalSetsRecord) || other.totalSetsRecord == totalSetsRecord)&&(identical(other.lastWorkoutDate, lastWorkoutDate) || other.lastWorkoutDate == lastWorkoutDate)&&(identical(other.weeklyFrequency, weeklyFrequency) || other.weeklyFrequency == weeklyFrequency)&&(identical(other.firstWorkoutDate, firstWorkoutDate) || other.firstWorkoutDate == firstWorkoutDate)&&(identical(other.totalWorkouts, totalWorkouts) || other.totalWorkouts == totalWorkouts));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,exerciseName,maxWeightRecord,estimated1RM,totalVolumeRecord,totalSetsRecord,lastWorkoutDate,weeklyFrequency,firstWorkoutDate,totalWorkouts);
+
+@override
+String toString() {
+  return 'ExerciseRecords(exerciseName: $exerciseName, maxWeightRecord: $maxWeightRecord, estimated1RM: $estimated1RM, totalVolumeRecord: $totalVolumeRecord, totalSetsRecord: $totalSetsRecord, lastWorkoutDate: $lastWorkoutDate, weeklyFrequency: $weeklyFrequency, firstWorkoutDate: $firstWorkoutDate, totalWorkouts: $totalWorkouts)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ExerciseRecordsCopyWith<$Res> implements $ExerciseRecordsCopyWith<$Res> {
+  factory _$ExerciseRecordsCopyWith(_ExerciseRecords value, $Res Function(_ExerciseRecords) _then) = __$ExerciseRecordsCopyWithImpl;
+@override @useResult
+$Res call({
+ String exerciseName, double maxWeightRecord, double estimated1RM, double totalVolumeRecord, int totalSetsRecord, DateTime lastWorkoutDate, double weeklyFrequency, DateTime firstWorkoutDate, int totalWorkouts
+});
+
+
+
+
+}
+/// @nodoc
+class __$ExerciseRecordsCopyWithImpl<$Res>
+    implements _$ExerciseRecordsCopyWith<$Res> {
+  __$ExerciseRecordsCopyWithImpl(this._self, this._then);
+
+  final _ExerciseRecords _self;
+  final $Res Function(_ExerciseRecords) _then;
+
+/// Create a copy of ExerciseRecords
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? exerciseName = null,Object? maxWeightRecord = null,Object? estimated1RM = null,Object? totalVolumeRecord = null,Object? totalSetsRecord = null,Object? lastWorkoutDate = null,Object? weeklyFrequency = null,Object? firstWorkoutDate = null,Object? totalWorkouts = null,}) {
+  return _then(_ExerciseRecords(
+exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,maxWeightRecord: null == maxWeightRecord ? _self.maxWeightRecord : maxWeightRecord // ignore: cast_nullable_to_non_nullable
+as double,estimated1RM: null == estimated1RM ? _self.estimated1RM : estimated1RM // ignore: cast_nullable_to_non_nullable
+as double,totalVolumeRecord: null == totalVolumeRecord ? _self.totalVolumeRecord : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
+as double,totalSetsRecord: null == totalSetsRecord ? _self.totalSetsRecord : totalSetsRecord // ignore: cast_nullable_to_non_nullable
+as int,lastWorkoutDate: null == lastWorkoutDate ? _self.lastWorkoutDate : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime,weeklyFrequency: null == weeklyFrequency ? _self.weeklyFrequency : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+as double,firstWorkoutDate: null == firstWorkoutDate ? _self.firstWorkoutDate : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
+as DateTime,totalWorkouts: null == totalWorkouts ? _self.totalWorkouts : totalWorkouts // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -6,9 +6,8 @@ part of 'notification_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationRecordImpl _$$NotificationRecordImplFromJson(
-        Map<String, dynamic> json) =>
-    _$NotificationRecordImpl(
+_NotificationRecord _$NotificationRecordFromJson(Map<String, dynamic> json) =>
+    _NotificationRecord(
       id: json['id'] as String,
       type: $enumDecode(_$NotificationTypeEnumMap, json['type']),
       sentAt: DateTime.parse(json['sentAt'] as String),
@@ -21,8 +20,7 @@ _$NotificationRecordImpl _$$NotificationRecordImplFromJson(
       wasCanceled: json['wasCanceled'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$NotificationRecordImplToJson(
-        _$NotificationRecordImpl instance) =>
+Map<String, dynamic> _$NotificationRecordToJson(_NotificationRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': _$NotificationTypeEnumMap[instance.type]!,
@@ -42,9 +40,8 @@ const _$NotificationTypeEnumMap = {
   NotificationType.insightVolume: 'insightVolume',
 };
 
-_$NotificationStatsImpl _$$NotificationStatsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$NotificationStatsImpl(
+_NotificationStats _$NotificationStatsFromJson(Map<String, dynamic> json) =>
+    _NotificationStats(
       totalSent: (json['totalSent'] as num).toInt(),
       totalOpened: (json['totalOpened'] as num).toInt(),
       consecutiveIgnores: (json['consecutiveIgnores'] as num).toInt(),
@@ -54,8 +51,7 @@ _$NotificationStatsImpl _$$NotificationStatsImplFromJson(
       lastMessageKey: json['lastMessageKey'] as String?,
     );
 
-Map<String, dynamic> _$$NotificationStatsImplToJson(
-        _$NotificationStatsImpl instance) =>
+Map<String, dynamic> _$NotificationStatsToJson(_NotificationStats instance) =>
     <String, dynamic>{
       'totalSent': instance.totalSent,
       'totalOpened': instance.totalOpened,

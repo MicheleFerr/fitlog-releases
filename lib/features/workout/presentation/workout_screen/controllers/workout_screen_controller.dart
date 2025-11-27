@@ -19,7 +19,7 @@ part 'workout_screen_controller.freezed.dart';
 
 /// State for WorkoutScreen UI
 @freezed
-class WorkoutScreenState with _$WorkoutScreenState {
+abstract class WorkoutScreenState with _$WorkoutScreenState {
   const factory WorkoutScreenState({
     /// Whether exercise reorder mode is active
     @Default(false) bool isReorderMode,

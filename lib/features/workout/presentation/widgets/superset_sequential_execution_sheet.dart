@@ -382,11 +382,10 @@ class _SupersetSequentialExecutionSheetState
                                 ),
                                 // ✅ Visual hint for double-tap
                                 SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-  size: AppIconSize.tiny,
-  color: context.colors.outline.withValues(alpha: 0.5,
-),
+                                  icon: AppIcons.edit,
+                                  semanticLabel: 'Edit',
+                                  size: AppIconSize.tiny,
+                                  color: context.colors.outline.withValues(alpha: 0.5),
                                 ),
                               ],
                             ),

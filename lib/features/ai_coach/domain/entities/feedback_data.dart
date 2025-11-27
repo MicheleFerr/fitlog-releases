@@ -65,7 +65,7 @@ enum DismissReason {
 /// - Personalize insights based on user preferences
 /// - Track engagement metrics
 @freezed
-class FeedbackData with _$FeedbackData {
+abstract class FeedbackData with _$FeedbackData {
   const factory FeedbackData({
     /// Unique feedback ID
     required String id,
@@ -126,7 +126,7 @@ extension FeedbackDataX on FeedbackData {
 ///
 /// Aggregated feedback metrics for specific insight type or category
 @freezed
-class FeedbackStats with _$FeedbackStats {
+abstract class FeedbackStats with _$FeedbackStats {
   const factory FeedbackStats({
     /// Insight type or category
     required String identifier,

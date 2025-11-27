@@ -6,22 +6,23 @@ part of 'user_context.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserContextImpl _$$UserContextImplFromJson(Map<String, dynamic> json) =>
-    _$UserContextImpl(
-      userId: json['userId'] as String,
-      experienceLevel:
-          $enumDecode(_$ExperienceLevelEnumMap, json['experienceLevel']),
-      primaryGoal: $enumDecode(_$TrainingGoalEnumMap, json['primaryGoal']),
-      weeklyAvailability: (json['weeklyAvailability'] as num).toInt(),
-      injuryHistory: (json['injuryHistory'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      preferredExercises: (json['preferredExercises'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    );
+_UserContext _$UserContextFromJson(Map<String, dynamic> json) => _UserContext(
+  userId: json['userId'] as String,
+  experienceLevel: $enumDecode(
+    _$ExperienceLevelEnumMap,
+    json['experienceLevel'],
+  ),
+  primaryGoal: $enumDecode(_$TrainingGoalEnumMap, json['primaryGoal']),
+  weeklyAvailability: (json['weeklyAvailability'] as num).toInt(),
+  injuryHistory: (json['injuryHistory'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  preferredExercises: (json['preferredExercises'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+);
 
-Map<String, dynamic> _$$UserContextImplToJson(_$UserContextImpl instance) =>
+Map<String, dynamic> _$UserContextToJson(_UserContext instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'experienceLevel': _$ExperienceLevelEnumMap[instance.experienceLevel]!,

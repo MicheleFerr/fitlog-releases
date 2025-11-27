@@ -2630,13 +2630,13 @@
   },
   "workoutReminderTitle": "Workout Reminder",
   "@workoutReminderTitle": {
-    "description": "Title for workout reminder notification"
+    "description": "Notification title for workout reminder"
   },
-  "workoutReminderBody": "Time for your {workoutName} workout! 💪",
+  "workoutReminderBody": "Time for \"{name}\"",
   "@workoutReminderBody": {
-    "description": "Body for workout reminder notification",
+    "description": "Notification body for workout reminder",
     "placeholders": {
-      "workoutName": {
+      "name": {
         "type": "String"
       }
     }
@@ -9844,6 +9844,10 @@
   "goToHome": "Go to Home",
   "@goToHome": {
     "description": "Go to home button"
+  },
+  "goToWorkout": "Go to workout",
+  "@goToWorkout": {
+    "description": "Accessibility label for navigate to workout"
   },
   "workoutPausedContinue": "Workout paused - Continue anytime from Home",
   "@workoutPausedContinue": {
@@ -19821,6 +19825,23 @@
   "settingsResetSettingsDialog": "Reset Settings",
   "settingsResetSettingsDialogDesc": "Are you sure you want to reset all settings to defaults? This cannot be undone.",
   "settingsSignOutConfirm": "Are you sure you want to sign out?",
+  "settingsTutorialHelp": "Tutorial & Help",
+  "settingsContextualTutorials": "Contextual Tutorials",
+  "settingsContextualTutorialsDesc": "Show helpful tips as you use the app",
+  "settingsTutorialsEnabled": "Tutorials enabled",
+  "settingsTutorialsDisabled": "Tutorials disabled",
+  "settingsTutorialsSeenCount": "{seen} of {total} tutorials seen",
+  "@settingsTutorialsSeenCount": {
+    "placeholders": {
+      "seen": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "settingsResetTutorials": "Reset Tutorials",
+  "settingsResetTutorialsDesc": "See all tutorials again from the beginning",
+  "settingsResetTutorialsConfirmTitle": "Reset Tutorials?",
+  "settingsResetTutorialsConfirmBody": "This will allow you to see all contextual tutorials again. Your workout data and settings will not be affected.",
+  "settingsTutorialsResetSuccess": "Tutorials reset successfully! Tips will appear again as you use the app.",
   "settingsApreCalculationMethodUpdated": "APRE calculation method updated to {method}",
   "settingsApreCalculationMethodLoading": "APRE Calculation Method",
   "settingsLoadingGeneric": "Loading...",
@@ -25456,5 +25477,220 @@
   "fabViewPreviousWorkouts": "View previous workouts",
   "@fabViewPreviousWorkouts": {
     "description": "Description for viewing previous workouts"
+  },
+  "scheduleWorkout": "Schedule",
+  "@scheduleWorkout": {
+    "description": "Button to schedule a workout"
+  },
+  "scheduleWorkoutTitle": "Schedule \"{name}\"",
+  "@scheduleWorkoutTitle": {
+    "description": "Title for schedule bottom sheet",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tapDaysToSelect": "Tap days to select/deselect",
+  "@tapDaysToSelect": {
+    "description": "Instruction for calendar selection"
+  },
+  "daysSelected": "{count, plural, =0{No days selected} =1{1 day selected} other{{count} days selected}}",
+  "@daysSelected": {
+    "description": "Count of selected days",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderTime": "Reminder time",
+  "@reminderTime": {
+    "description": "Label for reminder time picker"
+  },
+  "confirmSchedule": "Confirm Schedule",
+  "@confirmSchedule": {
+    "description": "Button to confirm scheduling"
+  },
+  "cancelSchedule": "Cancel",
+  "@cancelSchedule": {
+    "description": "Button to cancel scheduling"
+  },
+  "workoutScheduledSuccess": "\"{name}\" scheduled for {count} days",
+  "@workoutScheduledSuccess": {
+    "description": "Success message after scheduling",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduledWorkouts": "Scheduled Workouts",
+  "@scheduledWorkouts": {
+    "description": "Title for scheduled workouts screen"
+  },
+  "noScheduledWorkouts": "No scheduled workouts yet",
+  "@noScheduledWorkouts": {
+    "description": "Empty state message"
+  },
+  "deleteScheduleConfirm": "Delete this scheduled workout?",
+  "@deleteScheduleConfirm": {
+    "description": "Confirmation for deleting schedule"
+  },
+  "deleteScheduleMessage": "This action cannot be undone. The scheduled reminder will also be cancelled.",
+  "@deleteScheduleMessage": {
+    "description": "Message for delete schedule confirmation dialog"
+  },
+  "scheduledForToday": "Scheduled for today",
+  "@scheduledForToday": {
+    "description": "Label for workout scheduled today"
+  },
+  "scheduledForTomorrow": "Scheduled for tomorrow",
+  "@scheduledForTomorrow": {
+    "description": "Label for workout scheduled tomorrow"
+  },
+  "upcomingWorkouts": "Upcoming Workouts",
+  "@upcomingWorkouts": {
+    "description": "Section title for upcoming workouts"
+  },
+  "skipScheduledWorkout": "Skip",
+  "@skipScheduledWorkout": {
+    "description": "Button to skip a scheduled workout"
+  },
+  "startScheduledWorkout": "Start Workout",
+  "@startScheduledWorkout": {
+    "description": "Button to start a scheduled workout"
+  },
+
+  "tutorialLoggingSetTitle": "How to Log a Set",
+  "@tutorialLoggingSetTitle": {
+    "description": "Title for the logging set tutorial"
+  },
+  "tutorialLoggingSetDesc": "Tap here to enter your weight and reps. Each completed set will be saved automatically.",
+  "@tutorialLoggingSetDesc": {
+    "description": "Description for the logging set tutorial"
+  },
+  "tutorialRestTimerTitle": "Rest Timer",
+  "@tutorialRestTimerTitle": {
+    "description": "Title for the rest timer tutorial"
+  },
+  "tutorialRestTimerDesc": "Your rest timer has started! You can adjust the time, skip it, or let it count down. A sound will play when it's time for your next set.",
+  "@tutorialRestTimerDesc": {
+    "description": "Description for the rest timer tutorial"
+  },
+  "tutorialExerciseMgmtTitle": "Managing Exercises",
+  "@tutorialExerciseMgmtTitle": {
+    "description": "Title for the exercise management tutorial"
+  },
+  "tutorialExerciseMgmtDesc": "Long-press on any exercise to reorder, edit, or delete it. You can also drag exercises to change their order.",
+  "@tutorialExerciseMgmtDesc": {
+    "description": "Description for the exercise management tutorial"
+  },
+  "tutorialWorkoutCompleteTitle": "Great Work!",
+  "@tutorialWorkoutCompleteTitle": {
+    "description": "Title for the workout completion tutorial"
+  },
+  "tutorialWorkoutCompleteDesc": "You've completed your first workout! Your progress is saved and you can view your stats in the Analytics tab.",
+  "@tutorialWorkoutCompleteDesc": {
+    "description": "Description for the workout completion tutorial"
+  },
+  "tutorialAnalyticsTitle": "Your Analytics",
+  "@tutorialAnalyticsTitle": {
+    "description": "Title for the analytics tutorial"
+  },
+  "tutorialAnalyticsDesc": "After 3 workouts, you'll start seeing useful insights: volume trends, muscle distribution, and progress charts.",
+  "@tutorialAnalyticsDesc": {
+    "description": "Description for the analytics tutorial"
+  },
+  "tutorialTemplatesTitle": "Workout Templates",
+  "@tutorialTemplatesTitle": {
+    "description": "Title for the templates tutorial"
+  },
+  "tutorialTemplatesDesc": "Save your favorite workout routines as templates. Start workouts faster by loading them with one tap.",
+  "@tutorialTemplatesDesc": {
+    "description": "Description for the templates tutorial"
+  },
+  "tutorialAdvancedTitle": "Advanced Techniques",
+  "@tutorialAdvancedTitle": {
+    "description": "Title for the advanced techniques tutorial"
+  },
+  "tutorialAdvancedDesc": "Supersets, drop sets, and rest-pause sets help you train more efficiently. Try them when you're ready for a challenge!",
+  "@tutorialAdvancedDesc": {
+    "description": "Description for the advanced techniques tutorial"
+  },
+  "tutorialSupersetBuilderTitle": "Superset Builder",
+  "@tutorialSupersetBuilderTitle": {
+    "description": "Title for the superset builder tutorial"
+  },
+  "tutorialSupersetBuilderDesc": "Create supersets by pairing exercises. Perform them back-to-back with no rest for maximum intensity!",
+  "@tutorialSupersetBuilderDesc": {
+    "description": "Description for the superset builder tutorial"
+  },
+  "tutorialExerciseDbTitle": "Exercise Database",
+  "@tutorialExerciseDbTitle": {
+    "description": "Title for the exercise database tutorial"
+  },
+  "tutorialExerciseDbDesc": "Search 800+ exercises, filter by muscle group, and save your favorites. You can also create custom exercises!",
+  "@tutorialExerciseDbDesc": {
+    "description": "Description for the exercise database tutorial"
+  },
+  "tutorialRpeTitle": "RPE Scale",
+  "@tutorialRpeTitle": {
+    "description": "Title for the RPE selector tutorial"
+  },
+  "tutorialRpeDesc": "Rate of Perceived Exertion (RPE) helps track intensity. 10 = maximum effort, 6 = warm-up. Tap to set your RPE for each set.",
+  "@tutorialRpeDesc": {
+    "description": "Description for the RPE selector tutorial"
+  },
+  "tutorialQuickEditTitle": "Quick Edit",
+  "@tutorialQuickEditTitle": {
+    "description": "Title for the quick edit tutorial"
+  },
+  "tutorialQuickEditDesc": "Quickly adjust weight and reps with increment buttons. Long-press for bigger jumps!",
+  "@tutorialQuickEditDesc": {
+    "description": "Description for the quick edit tutorial"
+  },
+  "tutorialHistoryTitle": "Workout History",
+  "@tutorialHistoryTitle": {
+    "description": "Title for the history tutorial"
+  },
+  "tutorialHistoryDesc": "View all your past workouts, track progress over time, and compare your performance. Tap any workout for details!",
+  "@tutorialHistoryDesc": {
+    "description": "Description for the history tutorial"
+  },
+  "tutorialRoutineCenterTitle": "Routine Center",
+  "@tutorialRoutineCenterTitle": {
+    "description": "Title for the routine center tutorial"
+  },
+  "tutorialRoutineCenterDesc": "Create and manage your workout routines. Save templates for quick starts and organize your training programs.",
+  "@tutorialRoutineCenterDesc": {
+    "description": "Description for the routine center tutorial"
+  },
+  "tutorialSettingsTitle": "Settings",
+  "@tutorialSettingsTitle": {
+    "description": "Title for the settings tutorial"
+  },
+  "tutorialSettingsDesc": "Customize your experience: timer durations, sounds, theme, units, and more. Make the app work your way!",
+  "@tutorialSettingsDesc": {
+    "description": "Description for the settings tutorial"
+  },
+  "tutorialExportTitle": "Export Data",
+  "@tutorialExportTitle": {
+    "description": "Title for the export data tutorial"
+  },
+  "tutorialExportDesc": "Export your workout data as CSV or JSON. Perfect for backup or analysis in other apps!",
+  "@tutorialExportDesc": {
+    "description": "Description for the export data tutorial"
+  },
+  "tutorialActionGotIt": "Got it!",
+  "@tutorialActionGotIt": {
+    "description": "Action button text to dismiss tutorial"
+  },
+  "tutorialActionLearnMore": "Learn more",
+  "@tutorialActionLearnMore": {
+    "description": "Action button text to learn more about feature"
   }
 }

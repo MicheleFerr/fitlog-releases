@@ -6,9 +6,8 @@ part of 'suggestion_accuracy.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SuggestionAccuracyImpl _$$SuggestionAccuracyImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SuggestionAccuracyImpl(
+_SuggestionAccuracy _$SuggestionAccuracyFromJson(Map<String, dynamic> json) =>
+    _SuggestionAccuracy(
       id: json['id'] as String,
       userId: json['userId'] as String,
       exerciseId: json['exerciseId'] as String,
@@ -25,8 +24,7 @@ _$SuggestionAccuracyImpl _$$SuggestionAccuracyImplFromJson(
       perceivedExertion: (json['perceivedExertion'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$SuggestionAccuracyImplToJson(
-        _$SuggestionAccuracyImpl instance) =>
+Map<String, dynamic> _$SuggestionAccuracyToJson(_SuggestionAccuracy instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

@@ -30,7 +30,7 @@ part 'measurement.g.dart';
 /// );
 /// ```
 @freezed
-class Measurement with _$Measurement {
+abstract class Measurement with _$Measurement {
   const factory Measurement({
     /// Unique identifier (UUID v4)
     required String id,
@@ -86,7 +86,7 @@ class Measurement with _$Measurement {
 ///
 /// Used for audit logging and analytics (GDPR compliant)
 @freezed
-class MeasurementMetadata with _$MeasurementMetadata {
+abstract class MeasurementMetadata with _$MeasurementMetadata {
   const factory MeasurementMetadata({
     /// Device info (anonymized)
     /// Example: "iOS 17.2, iPhone 14 Pro"

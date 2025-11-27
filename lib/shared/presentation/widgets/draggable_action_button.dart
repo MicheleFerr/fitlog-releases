@@ -69,11 +69,13 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
   bool _isDragging = false;
   bool _isOnLeft = false;
   bool _isHidden = false; // PiP-style hidden state
+  bool _isAnimatingIn = false; // Tracks slide-in animation
 
   // Soglie per snap
   static const double _edgePadding = 16.0;
   static const double _hiddenTabWidth = 24.0; // Larghezza linguetta visibile
   static const double _hideThreshold = 50.0; // Distanza per triggerare hide
+  static const double _buttonWidth = 180.0; // Larghezza stimata del button
   
   @override
   void initState() {
@@ -113,11 +115,27 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     await prefs.setBool('fab_hidden_${widget.positionKey}', _isHidden);
   }
 
-  /// Toggle hide state (PiP-style)
+  /// Toggle hide state (PiP-style) with smooth animation
   void _toggleHidden() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
+    if (_isHidden) {
+      // Unhiding: trigger slide-in animation
+      setState(() {
+        _isHidden = false;
+        _isAnimatingIn = true;
+      });
+      _animationController.forward(from: 0).then((_) {
+        if (mounted) {
+          setState(() {
+            _isAnimatingIn = false;
+          });
+        }
+      });
+    } else {
+      // Hiding: instant transition to tab
+      setState(() {
+        _isHidden = true;
+      });
+    }
     HapticFeedback.mediumImpact();
     _savePosition();
   }
@@ -381,23 +399,40 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
     // Calcola la posizione base (sinistra o destra)
     final double baseX = _isOnLeft
         ? _edgePadding
-        : screenWidth - 180 - _edgePadding; // 180 è la larghezza stimata
+        : screenWidth - _buttonWidth - _edgePadding;
 
     // Aggiungi l'offset del drag
     double currentX = baseX + (_isDragging ? _currentX : 0);
 
     // Limita il movimento ai bordi dello schermo
-    currentX = currentX.clamp(_edgePadding, screenWidth - 180 - _edgePadding);
+    currentX = currentX.clamp(_edgePadding, screenWidth - _buttonWidth - _edgePadding);
 
-    return Positioned(
-      bottom: 16,
-      left: currentX,
-      child: AnimatedContainer(
-        duration: _isDragging
-            ? Duration.zero
-            : const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-        child: Stack(
+    // Calculate slide-in animation offset
+    final double slideOffset = _isAnimatingIn
+        ? (_isOnLeft ? -_buttonWidth : _buttonWidth) *
+            (1 - Curves.elasticOut.transform(_animationController.value))
+        : 0;
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Positioned(
+          bottom: 16,
+          left: currentX + (_isAnimatingIn ? slideOffset : 0),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 150),
+            opacity: _isAnimatingIn ? _animationController.value : 1.0,
+            child: AnimatedContainer(
+              duration: _isDragging
+                  ? Duration.zero
+                  : const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              child: child,
+            ),
+          ),
+        );
+      },
+      child: Stack(
           children: [
             // Button principale con gesture detector
             GestureDetector(
@@ -471,7 +506,6 @@ class _DraggableActionButtonState extends State<DraggableActionButton>
               ),
           ],
         ),
-      ),
     );
   }
 

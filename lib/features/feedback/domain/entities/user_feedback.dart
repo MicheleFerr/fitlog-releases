@@ -43,7 +43,7 @@ enum FeedbackStatus {
 
 /// User feedback entity
 @freezed
-class UserFeedback with _$UserFeedback {
+abstract class UserFeedback with _$UserFeedback {
   const factory UserFeedback({
     required String id,
     required String userId,

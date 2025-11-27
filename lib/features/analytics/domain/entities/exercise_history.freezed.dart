@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,217 +9,288 @@ part of 'exercise_history.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ExerciseHistory _$ExerciseHistoryFromJson(Map<String, dynamic> json) {
-  return _ExerciseHistory.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ExerciseHistory {
-  /// Name of the exercise (e.g., "Bench Press", "Squat")
-  String get exerciseName => throw _privateConstructorUsedError;
 
-  /// Target muscle group (e.g., "chest", "back", "legs")
-  String get muscleGroup => throw _privateConstructorUsedError;
+/// Name of the exercise (e.g., "Bench Press", "Squat")
+ String get exerciseName;/// Target muscle group (e.g., "chest", "back", "legs")
+ String get muscleGroup;/// All sessions performed for this exercise (sorted by date)
+ List<ExerciseSession> get sessions;
+/// Create a copy of ExerciseHistory
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ExerciseHistoryCopyWith<ExerciseHistory> get copyWith => _$ExerciseHistoryCopyWithImpl<ExerciseHistory>(this as ExerciseHistory, _$identity);
 
-  /// All sessions performed for this exercise (sorted by date)
-  List<ExerciseSession> get sessions => throw _privateConstructorUsedError;
+  /// Serializes this ExerciseHistory to a JSON map.
+  Map<String, dynamic> toJson();
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ExerciseHistoryCopyWith<ExerciseHistory> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseHistory&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other.sessions, sessions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,exerciseName,muscleGroup,const DeepCollectionEquality().hash(sessions));
+
+@override
+String toString() {
+  return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $ExerciseHistoryCopyWith<$Res> {
-  factory $ExerciseHistoryCopyWith(
-          ExerciseHistory value, $Res Function(ExerciseHistory) then) =
-      _$ExerciseHistoryCopyWithImpl<$Res, ExerciseHistory>;
-  @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSession> sessions});
-}
+abstract mixin class $ExerciseHistoryCopyWith<$Res>  {
+  factory $ExerciseHistoryCopyWith(ExerciseHistory value, $Res Function(ExerciseHistory) _then) = _$ExerciseHistoryCopyWithImpl;
+@useResult
+$Res call({
+ String exerciseName, String muscleGroup, List<ExerciseSession> sessions
+});
 
+
+
+
+}
 /// @nodoc
-class _$ExerciseHistoryCopyWithImpl<$Res, $Val extends ExerciseHistory>
+class _$ExerciseHistoryCopyWithImpl<$Res>
     implements $ExerciseHistoryCopyWith<$Res> {
-  _$ExerciseHistoryCopyWithImpl(this._value, this._then);
+  _$ExerciseHistoryCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ExerciseHistory _self;
+  final $Res Function(ExerciseHistory) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? exerciseName = null,
-    Object? muscleGroup = null,
-    Object? sessions = null,
-  }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value.sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSession>,
-    ) as $Val);
-  }
+/// Create a copy of ExerciseHistory
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
+  return _then(_self.copyWith(
+exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,muscleGroup: null == muscleGroup ? _self.muscleGroup : muscleGroup // ignore: cast_nullable_to_non_nullable
+as String,sessions: null == sessions ? _self.sessions : sessions // ignore: cast_nullable_to_non_nullable
+as List<ExerciseSession>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ExerciseHistoryImplCopyWith<$Res>
-    implements $ExerciseHistoryCopyWith<$Res> {
-  factory _$$ExerciseHistoryImplCopyWith(_$ExerciseHistoryImpl value,
-          $Res Function(_$ExerciseHistoryImpl) then) =
-      __$$ExerciseHistoryImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSession> sessions});
 }
 
-/// @nodoc
-class __$$ExerciseHistoryImplCopyWithImpl<$Res>
-    extends _$ExerciseHistoryCopyWithImpl<$Res, _$ExerciseHistoryImpl>
-    implements _$$ExerciseHistoryImplCopyWith<$Res> {
-  __$$ExerciseHistoryImplCopyWithImpl(
-      _$ExerciseHistoryImpl _value, $Res Function(_$ExerciseHistoryImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? exerciseName = null,
-    Object? muscleGroup = null,
-    Object? sessions = null,
-  }) {
-    return _then(_$ExerciseHistoryImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value._sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSession>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [ExerciseHistory].
+extension ExerciseHistoryPatterns on ExerciseHistory {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ExerciseHistory value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ExerciseHistory() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ExerciseHistory value)  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseHistory():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ExerciseHistory value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseHistory() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ExerciseHistory() when $default != null:
+return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseHistory():
+return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String exerciseName,  String muscleGroup,  List<ExerciseSession> sessions)?  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseHistory() when $default != null:
+return $default(_that.exerciseName,_that.muscleGroup,_that.sessions);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseHistoryImpl extends _ExerciseHistory {
-  const _$ExerciseHistoryImpl(
-      {required this.exerciseName,
-      required this.muscleGroup,
-      required final List<ExerciseSession> sessions})
-      : _sessions = sessions,
-        super._();
 
-  factory _$ExerciseHistoryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseHistoryImplFromJson(json);
+class _ExerciseHistory extends ExerciseHistory {
+  const _ExerciseHistory({required this.exerciseName, required this.muscleGroup, required final  List<ExerciseSession> sessions}): _sessions = sessions,super._();
+  factory _ExerciseHistory.fromJson(Map<String, dynamic> json) => _$ExerciseHistoryFromJson(json);
 
-  /// Name of the exercise (e.g., "Bench Press", "Squat")
-  @override
-  final String exerciseName;
-
-  /// Target muscle group (e.g., "chest", "back", "legs")
-  @override
-  final String muscleGroup;
-
-  /// All sessions performed for this exercise (sorted by date)
-  final List<ExerciseSession> _sessions;
-
-  /// All sessions performed for this exercise (sorted by date)
-  @override
-  List<ExerciseSession> get sessions {
-    if (_sessions is EqualUnmodifiableListView) return _sessions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_sessions);
-  }
-
-  @override
-  String toString() {
-    return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ExerciseHistoryImpl &&
-            (identical(other.exerciseName, exerciseName) ||
-                other.exerciseName == exerciseName) &&
-            (identical(other.muscleGroup, muscleGroup) ||
-                other.muscleGroup == muscleGroup) &&
-            const DeepCollectionEquality().equals(other._sessions, _sessions));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, muscleGroup,
-      const DeepCollectionEquality().hash(_sessions));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ExerciseHistoryImplCopyWith<_$ExerciseHistoryImpl> get copyWith =>
-      __$$ExerciseHistoryImplCopyWithImpl<_$ExerciseHistoryImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExerciseHistoryImplToJson(
-      this,
-    );
-  }
+/// Name of the exercise (e.g., "Bench Press", "Squat")
+@override final  String exerciseName;
+/// Target muscle group (e.g., "chest", "back", "legs")
+@override final  String muscleGroup;
+/// All sessions performed for this exercise (sorted by date)
+ final  List<ExerciseSession> _sessions;
+/// All sessions performed for this exercise (sorted by date)
+@override List<ExerciseSession> get sessions {
+  if (_sessions is EqualUnmodifiableListView) return _sessions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_sessions);
 }
 
-abstract class _ExerciseHistory extends ExerciseHistory {
-  const factory _ExerciseHistory(
-      {required final String exerciseName,
-      required final String muscleGroup,
-      required final List<ExerciseSession> sessions}) = _$ExerciseHistoryImpl;
-  const _ExerciseHistory._() : super._();
 
-  factory _ExerciseHistory.fromJson(Map<String, dynamic> json) =
-      _$ExerciseHistoryImpl.fromJson;
+/// Create a copy of ExerciseHistory
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ExerciseHistoryCopyWith<_ExerciseHistory> get copyWith => __$ExerciseHistoryCopyWithImpl<_ExerciseHistory>(this, _$identity);
 
-  @override
-
-  /// Name of the exercise (e.g., "Bench Press", "Squat")
-  String get exerciseName;
-  @override
-
-  /// Target muscle group (e.g., "chest", "back", "legs")
-  String get muscleGroup;
-  @override
-
-  /// All sessions performed for this exercise (sorted by date)
-  List<ExerciseSession> get sessions;
-  @override
-  @JsonKey(ignore: true)
-  _$$ExerciseHistoryImplCopyWith<_$ExerciseHistoryImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$ExerciseHistoryToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseHistory&&(identical(other.exerciseName, exerciseName) || other.exerciseName == exerciseName)&&(identical(other.muscleGroup, muscleGroup) || other.muscleGroup == muscleGroup)&&const DeepCollectionEquality().equals(other._sessions, _sessions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,exerciseName,muscleGroup,const DeepCollectionEquality().hash(_sessions));
+
+@override
+String toString() {
+  return 'ExerciseHistory(exerciseName: $exerciseName, muscleGroup: $muscleGroup, sessions: $sessions)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ExerciseHistoryCopyWith<$Res> implements $ExerciseHistoryCopyWith<$Res> {
+  factory _$ExerciseHistoryCopyWith(_ExerciseHistory value, $Res Function(_ExerciseHistory) _then) = __$ExerciseHistoryCopyWithImpl;
+@override @useResult
+$Res call({
+ String exerciseName, String muscleGroup, List<ExerciseSession> sessions
+});
+
+
+
+
+}
+/// @nodoc
+class __$ExerciseHistoryCopyWithImpl<$Res>
+    implements _$ExerciseHistoryCopyWith<$Res> {
+  __$ExerciseHistoryCopyWithImpl(this._self, this._then);
+
+  final _ExerciseHistory _self;
+  final $Res Function(_ExerciseHistory) _then;
+
+/// Create a copy of ExerciseHistory
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? exerciseName = null,Object? muscleGroup = null,Object? sessions = null,}) {
+  return _then(_ExerciseHistory(
+exerciseName: null == exerciseName ? _self.exerciseName : exerciseName // ignore: cast_nullable_to_non_nullable
+as String,muscleGroup: null == muscleGroup ? _self.muscleGroup : muscleGroup // ignore: cast_nullable_to_non_nullable
+as String,sessions: null == sessions ? _self._sessions : sessions // ignore: cast_nullable_to_non_nullable
+as List<ExerciseSession>,
+  ));
+}
+
+
+}
+
+// dart format on

@@ -8,7 +8,7 @@ part of 'queued_sync.dart';
 
 class QueuedSyncAdapter extends TypeAdapter<QueuedSync> {
   @override
-  final int typeId = 10;
+  final typeId = 10;
 
   @override
   QueuedSync read(BinaryReader reader) {
@@ -21,8 +21,8 @@ class QueuedSyncAdapter extends TypeAdapter<QueuedSync> {
       timestamp: fields[1] as DateTime,
       healthMetrics: (fields[2] as Map).cast<String, dynamic>(),
       error: fields[3] as String,
-      retryCount: (fields[4] as num).toInt(),
-      retryable: fields[5] as bool,
+      retryCount: fields[4] == null ? 0 : (fields[4] as num).toInt(),
+      retryable: fields[5] == null ? true : fields[5] as bool,
       nextRetryAt: fields[6] as DateTime?,
     );
   }
@@ -62,20 +62,19 @@ class QueuedSyncAdapter extends TypeAdapter<QueuedSync> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$QueuedSyncImpl _$$QueuedSyncImplFromJson(Map<String, dynamic> json) =>
-    _$QueuedSyncImpl(
-      id: json['id'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      healthMetrics: json['healthMetrics'] as Map<String, dynamic>,
-      error: json['error'] as String,
-      retryCount: (json['retryCount'] as num?)?.toInt() ?? 0,
-      retryable: json['retryable'] as bool? ?? true,
-      nextRetryAt: json['nextRetryAt'] == null
-          ? null
-          : DateTime.parse(json['nextRetryAt'] as String),
-    );
+_QueuedSync _$QueuedSyncFromJson(Map<String, dynamic> json) => _QueuedSync(
+  id: json['id'] as String,
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  healthMetrics: json['healthMetrics'] as Map<String, dynamic>,
+  error: json['error'] as String,
+  retryCount: (json['retryCount'] as num?)?.toInt() ?? 0,
+  retryable: json['retryable'] as bool? ?? true,
+  nextRetryAt: json['nextRetryAt'] == null
+      ? null
+      : DateTime.parse(json['nextRetryAt'] as String),
+);
 
-Map<String, dynamic> _$$QueuedSyncImplToJson(_$QueuedSyncImpl instance) =>
+Map<String, dynamic> _$QueuedSyncToJson(_QueuedSync instance) =>
     <String, dynamic>{
       'id': instance.id,
       'timestamp': instance.timestamp.toIso8601String(),

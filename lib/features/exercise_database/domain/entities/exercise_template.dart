@@ -22,7 +22,7 @@ part 'exercise_template.g.dart';
 typedef ExerciseTemplate = ExerciseDefinitionTemplate;
 
 @freezed
-class ExerciseDefinitionTemplate with _$ExerciseDefinitionTemplate {
+abstract class ExerciseDefinitionTemplate with _$ExerciseDefinitionTemplate {
   const factory ExerciseDefinitionTemplate({
     required String id,
     required String name,

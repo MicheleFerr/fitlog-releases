@@ -14,7 +14,7 @@ part 'weekly_stats.g.dart';
 
 /// Weekly statistics entity - aggregated workout metrics for 7-day period
 @freezed
-class WeeklyStats with _$WeeklyStats {
+abstract class WeeklyStats with _$WeeklyStats {
   const factory WeeklyStats({
     /// Average workouts completed per week
     @Default(0.0) double avgWorkoutsPerWeek,

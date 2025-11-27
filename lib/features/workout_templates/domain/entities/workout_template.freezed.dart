@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,1323 +9,966 @@ part of 'workout_template.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
-    Map<String, dynamic> json) {
-  return _CommunityWorkoutTemplate.fromJson(json);
-}
 
 /// @nodoc
 mixin _$CommunityWorkoutTemplate {
-  String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
-  List<Exercise> get exercises => throw _privateConstructorUsedError;
-  TemplateCategory get category => throw _privateConstructorUsedError;
-  TemplateVisibility get visibility =>
-      throw _privateConstructorUsedError; // Metadata
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime? get updatedAt =>
-      throw _privateConstructorUsedError; // Stats pubbliche
-  int get downloadCount => throw _privateConstructorUsedError;
-  int get likeCount => throw _privateConstructorUsedError;
-  int get reviewCount => throw _privateConstructorUsedError;
-  double get averageRating => throw _privateConstructorUsedError; // Info autore
-  String? get authorName => throw _privateConstructorUsedError;
-  String? get authorPhotoUrl =>
-      throw _privateConstructorUsedError; // Tags per ricerca
-  List<String> get tags =>
-      throw _privateConstructorUsedError; // Durata stimata in minuti
-  int? get estimatedDurationMinutes =>
-      throw _privateConstructorUsedError; // Livello difficoltà
-  String? get difficultyLevel =>
-      throw _privateConstructorUsedError; // beginner, intermediate, advanced, expert
+
+ String get id; String get userId; String get name; String? get description; List<Exercise> get exercises; TemplateCategory get category; TemplateVisibility get visibility;// Metadata
+ DateTime get createdAt; DateTime? get updatedAt;// Stats pubbliche
+ int get downloadCount; int get likeCount; int get reviewCount; double get averageRating;// Info autore
+ String? get authorName; String? get authorPhotoUrl;// Tags per ricerca
+ List<String> get tags;// Durata stimata in minuti
+ int? get estimatedDurationMinutes;// Livello difficoltà
+ String? get difficultyLevel;// beginner, intermediate, advanced, expert
 // Equipment necessario
-  List<String> get requiredEquipment =>
-      throw _privateConstructorUsedError; // Muscoli target
-  List<String> get targetMuscles => throw _privateConstructorUsedError;
+ List<String> get requiredEquipment;// Muscoli target
+ List<String> get targetMuscles;
+/// Create a copy of CommunityWorkoutTemplate
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommunityWorkoutTemplateCopyWith<CommunityWorkoutTemplate> get copyWith => _$CommunityWorkoutTemplateCopyWithImpl<CommunityWorkoutTemplate>(this as CommunityWorkoutTemplate, _$identity);
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CommunityWorkoutTemplateCopyWith<CommunityWorkoutTemplate> get copyWith =>
-      throw _privateConstructorUsedError;
+  /// Serializes this CommunityWorkoutTemplate to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.exercises, exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other.requiredEquipment, requiredEquipment)&&const DeepCollectionEquality().equals(other.targetMuscles, targetMuscles));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(tags),estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(requiredEquipment),const DeepCollectionEquality().hash(targetMuscles)]);
+
+@override
+String toString() {
+  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CommunityWorkoutTemplateCopyWith<$Res> {
-  factory $CommunityWorkoutTemplateCopyWith(CommunityWorkoutTemplate value,
-          $Res Function(CommunityWorkoutTemplate) then) =
-      _$CommunityWorkoutTemplateCopyWithImpl<$Res, CommunityWorkoutTemplate>;
-  @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      List<Exercise> exercises,
-      TemplateCategory category,
-      TemplateVisibility visibility,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      int downloadCount,
-      int likeCount,
-      int reviewCount,
-      double averageRating,
-      String? authorName,
-      String? authorPhotoUrl,
-      List<String> tags,
-      int? estimatedDurationMinutes,
-      String? difficultyLevel,
-      List<String> requiredEquipment,
-      List<String> targetMuscles});
-}
+abstract mixin class $CommunityWorkoutTemplateCopyWith<$Res>  {
+  factory $CommunityWorkoutTemplateCopyWith(CommunityWorkoutTemplate value, $Res Function(CommunityWorkoutTemplate) _then) = _$CommunityWorkoutTemplateCopyWithImpl;
+@useResult
+$Res call({
+ String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles
+});
 
+
+
+
+}
 /// @nodoc
-class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
-        $Val extends CommunityWorkoutTemplate>
+class _$CommunityWorkoutTemplateCopyWithImpl<$Res>
     implements $CommunityWorkoutTemplateCopyWith<$Res> {
-  _$CommunityWorkoutTemplateCopyWithImpl(this._value, this._then);
+  _$CommunityWorkoutTemplateCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CommunityWorkoutTemplate _self;
+  final $Res Function(CommunityWorkoutTemplate) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? userId = null,
-    Object? name = null,
-    Object? description = freezed,
-    Object? exercises = null,
-    Object? category = null,
-    Object? visibility = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? downloadCount = null,
-    Object? likeCount = null,
-    Object? reviewCount = null,
-    Object? averageRating = null,
-    Object? authorName = freezed,
-    Object? authorPhotoUrl = freezed,
-    Object? tags = null,
-    Object? estimatedDurationMinutes = freezed,
-    Object? difficultyLevel = freezed,
-    Object? requiredEquipment = null,
-    Object? targetMuscles = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      exercises: null == exercises
-          ? _value.exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as TemplateCategory,
-      visibility: null == visibility
-          ? _value.visibility
-          : visibility // ignore: cast_nullable_to_non_nullable
-              as TemplateVisibility,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      downloadCount: null == downloadCount
-          ? _value.downloadCount
-          : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      reviewCount: null == reviewCount
-          ? _value.reviewCount
-          : reviewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      averageRating: null == averageRating
-          ? _value.averageRating
-          : averageRating // ignore: cast_nullable_to_non_nullable
-              as double,
-      authorName: freezed == authorName
-          ? _value.authorName
-          : authorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorPhotoUrl: freezed == authorPhotoUrl
-          ? _value.authorPhotoUrl
-          : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      tags: null == tags
-          ? _value.tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      estimatedDurationMinutes: freezed == estimatedDurationMinutes
-          ? _value.estimatedDurationMinutes
-          : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requiredEquipment: null == requiredEquipment
-          ? _value.requiredEquipment
-          : requiredEquipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      targetMuscles: null == targetMuscles
-          ? _value.targetMuscles
-          : targetMuscles // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
-  }
+/// Create a copy of CommunityWorkoutTemplate
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
+as List<Exercise>,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as TemplateCategory,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
+as TemplateVisibility,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,downloadCount: null == downloadCount ? _self.downloadCount : downloadCount // ignore: cast_nullable_to_non_nullable
+as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,reviewCount: null == reviewCount ? _self.reviewCount : reviewCount // ignore: cast_nullable_to_non_nullable
+as int,averageRating: null == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double,authorName: freezed == authorName ? _self.authorName : authorName // ignore: cast_nullable_to_non_nullable
+as String?,authorPhotoUrl: freezed == authorPhotoUrl ? _self.authorPhotoUrl : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,estimatedDurationMinutes: freezed == estimatedDurationMinutes ? _self.estimatedDurationMinutes : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
+as int?,difficultyLevel: freezed == difficultyLevel ? _self.difficultyLevel : difficultyLevel // ignore: cast_nullable_to_non_nullable
+as String?,requiredEquipment: null == requiredEquipment ? _self.requiredEquipment : requiredEquipment // ignore: cast_nullable_to_non_nullable
+as List<String>,targetMuscles: null == targetMuscles ? _self.targetMuscles : targetMuscles // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CommunityWorkoutTemplateImplCopyWith<$Res>
-    implements $CommunityWorkoutTemplateCopyWith<$Res> {
-  factory _$$CommunityWorkoutTemplateImplCopyWith(
-          _$CommunityWorkoutTemplateImpl value,
-          $Res Function(_$CommunityWorkoutTemplateImpl) then) =
-      __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      List<Exercise> exercises,
-      TemplateCategory category,
-      TemplateVisibility visibility,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      int downloadCount,
-      int likeCount,
-      int reviewCount,
-      double averageRating,
-      String? authorName,
-      String? authorPhotoUrl,
-      List<String> tags,
-      int? estimatedDurationMinutes,
-      String? difficultyLevel,
-      List<String> requiredEquipment,
-      List<String> targetMuscles});
 }
 
-/// @nodoc
-class __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>
-    extends _$CommunityWorkoutTemplateCopyWithImpl<$Res,
-        _$CommunityWorkoutTemplateImpl>
-    implements _$$CommunityWorkoutTemplateImplCopyWith<$Res> {
-  __$$CommunityWorkoutTemplateImplCopyWithImpl(
-      _$CommunityWorkoutTemplateImpl _value,
-      $Res Function(_$CommunityWorkoutTemplateImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? userId = null,
-    Object? name = null,
-    Object? description = freezed,
-    Object? exercises = null,
-    Object? category = null,
-    Object? visibility = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? downloadCount = null,
-    Object? likeCount = null,
-    Object? reviewCount = null,
-    Object? averageRating = null,
-    Object? authorName = freezed,
-    Object? authorPhotoUrl = freezed,
-    Object? tags = null,
-    Object? estimatedDurationMinutes = freezed,
-    Object? difficultyLevel = freezed,
-    Object? requiredEquipment = null,
-    Object? targetMuscles = null,
-  }) {
-    return _then(_$CommunityWorkoutTemplateImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      exercises: null == exercises
-          ? _value._exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as TemplateCategory,
-      visibility: null == visibility
-          ? _value.visibility
-          : visibility // ignore: cast_nullable_to_non_nullable
-              as TemplateVisibility,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      downloadCount: null == downloadCount
-          ? _value.downloadCount
-          : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      reviewCount: null == reviewCount
-          ? _value.reviewCount
-          : reviewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      averageRating: null == averageRating
-          ? _value.averageRating
-          : averageRating // ignore: cast_nullable_to_non_nullable
-              as double,
-      authorName: freezed == authorName
-          ? _value.authorName
-          : authorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorPhotoUrl: freezed == authorPhotoUrl
-          ? _value.authorPhotoUrl
-          : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      tags: null == tags
-          ? _value._tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      estimatedDurationMinutes: freezed == estimatedDurationMinutes
-          ? _value.estimatedDurationMinutes
-          : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requiredEquipment: null == requiredEquipment
-          ? _value._requiredEquipment
-          : requiredEquipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      targetMuscles: null == targetMuscles
-          ? _value._targetMuscles
-          : targetMuscles // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CommunityWorkoutTemplate].
+extension CommunityWorkoutTemplatePatterns on CommunityWorkoutTemplate {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommunityWorkoutTemplate value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommunityWorkoutTemplate value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommunityWorkoutTemplate value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate() when $default != null:
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)  $default,) {final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate():
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  String name,  String? description,  List<Exercise> exercises,  TemplateCategory category,  TemplateVisibility visibility,  DateTime createdAt,  DateTime? updatedAt,  int downloadCount,  int likeCount,  int reviewCount,  double averageRating,  String? authorName,  String? authorPhotoUrl,  List<String> tags,  int? estimatedDurationMinutes,  String? difficultyLevel,  List<String> requiredEquipment,  List<String> targetMuscles)?  $default,) {final _that = this;
+switch (_that) {
+case _CommunityWorkoutTemplate() when $default != null:
+return $default(_that.id,_that.userId,_that.name,_that.description,_that.exercises,_that.category,_that.visibility,_that.createdAt,_that.updatedAt,_that.downloadCount,_that.likeCount,_that.reviewCount,_that.averageRating,_that.authorName,_that.authorPhotoUrl,_that.tags,_that.estimatedDurationMinutes,_that.difficultyLevel,_that.requiredEquipment,_that.targetMuscles);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
-  const _$CommunityWorkoutTemplateImpl(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      this.description,
-      required final List<Exercise> exercises,
-      required this.category,
-      required this.visibility,
-      required this.createdAt,
-      this.updatedAt,
-      this.downloadCount = 0,
-      this.likeCount = 0,
-      this.reviewCount = 0,
-      this.averageRating = 0.0,
-      this.authorName,
-      this.authorPhotoUrl,
-      final List<String> tags = const [],
-      this.estimatedDurationMinutes,
-      this.difficultyLevel,
-      final List<String> requiredEquipment = const [],
-      final List<String> targetMuscles = const []})
-      : _exercises = exercises,
-        _tags = tags,
-        _requiredEquipment = requiredEquipment,
-        _targetMuscles = targetMuscles;
 
-  factory _$CommunityWorkoutTemplateImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CommunityWorkoutTemplateImplFromJson(json);
+class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
+  const _CommunityWorkoutTemplate({required this.id, required this.userId, required this.name, this.description, required final  List<Exercise> exercises, required this.category, required this.visibility, required this.createdAt, this.updatedAt, this.downloadCount = 0, this.likeCount = 0, this.reviewCount = 0, this.averageRating = 0.0, this.authorName, this.authorPhotoUrl, final  List<String> tags = const [], this.estimatedDurationMinutes, this.difficultyLevel, final  List<String> requiredEquipment = const [], final  List<String> targetMuscles = const []}): _exercises = exercises,_tags = tags,_requiredEquipment = requiredEquipment,_targetMuscles = targetMuscles;
+  factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) => _$CommunityWorkoutTemplateFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final String userId;
-  @override
-  final String name;
-  @override
-  final String? description;
-  final List<Exercise> _exercises;
-  @override
-  List<Exercise> get exercises {
-    if (_exercises is EqualUnmodifiableListView) return _exercises;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_exercises);
-  }
+@override final  String id;
+@override final  String userId;
+@override final  String name;
+@override final  String? description;
+ final  List<Exercise> _exercises;
+@override List<Exercise> get exercises {
+  if (_exercises is EqualUnmodifiableListView) return _exercises;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_exercises);
+}
 
-  @override
-  final TemplateCategory category;
-  @override
-  final TemplateVisibility visibility;
+@override final  TemplateCategory category;
+@override final  TemplateVisibility visibility;
 // Metadata
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime? updatedAt;
+@override final  DateTime createdAt;
+@override final  DateTime? updatedAt;
 // Stats pubbliche
-  @override
-  @JsonKey()
-  final int downloadCount;
-  @override
-  @JsonKey()
-  final int likeCount;
-  @override
-  @JsonKey()
-  final int reviewCount;
-  @override
-  @JsonKey()
-  final double averageRating;
+@override@JsonKey() final  int downloadCount;
+@override@JsonKey() final  int likeCount;
+@override@JsonKey() final  int reviewCount;
+@override@JsonKey() final  double averageRating;
 // Info autore
-  @override
-  final String? authorName;
-  @override
-  final String? authorPhotoUrl;
+@override final  String? authorName;
+@override final  String? authorPhotoUrl;
 // Tags per ricerca
-  final List<String> _tags;
+ final  List<String> _tags;
 // Tags per ricerca
-  @override
-  @JsonKey()
-  List<String> get tags {
-    if (_tags is EqualUnmodifiableListView) return _tags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tags);
-  }
+@override@JsonKey() List<String> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
 
 // Durata stimata in minuti
-  @override
-  final int? estimatedDurationMinutes;
+@override final  int? estimatedDurationMinutes;
 // Livello difficoltà
-  @override
-  final String? difficultyLevel;
+@override final  String? difficultyLevel;
 // beginner, intermediate, advanced, expert
 // Equipment necessario
-  final List<String> _requiredEquipment;
+ final  List<String> _requiredEquipment;
 // beginner, intermediate, advanced, expert
 // Equipment necessario
-  @override
-  @JsonKey()
-  List<String> get requiredEquipment {
-    if (_requiredEquipment is EqualUnmodifiableListView)
-      return _requiredEquipment;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_requiredEquipment);
-  }
+@override@JsonKey() List<String> get requiredEquipment {
+  if (_requiredEquipment is EqualUnmodifiableListView) return _requiredEquipment;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_requiredEquipment);
+}
 
 // Muscoli target
-  final List<String> _targetMuscles;
+ final  List<String> _targetMuscles;
 // Muscoli target
-  @override
-  @JsonKey()
-  List<String> get targetMuscles {
-    if (_targetMuscles is EqualUnmodifiableListView) return _targetMuscles;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_targetMuscles);
-  }
-
-  @override
-  String toString() {
-    return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CommunityWorkoutTemplateImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            const DeepCollectionEquality()
-                .equals(other._exercises, _exercises) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.visibility, visibility) ||
-                other.visibility == visibility) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.downloadCount, downloadCount) ||
-                other.downloadCount == downloadCount) &&
-            (identical(other.likeCount, likeCount) ||
-                other.likeCount == likeCount) &&
-            (identical(other.reviewCount, reviewCount) ||
-                other.reviewCount == reviewCount) &&
-            (identical(other.averageRating, averageRating) ||
-                other.averageRating == averageRating) &&
-            (identical(other.authorName, authorName) ||
-                other.authorName == authorName) &&
-            (identical(other.authorPhotoUrl, authorPhotoUrl) ||
-                other.authorPhotoUrl == authorPhotoUrl) &&
-            const DeepCollectionEquality().equals(other._tags, _tags) &&
-            (identical(
-                    other.estimatedDurationMinutes, estimatedDurationMinutes) ||
-                other.estimatedDurationMinutes == estimatedDurationMinutes) &&
-            (identical(other.difficultyLevel, difficultyLevel) ||
-                other.difficultyLevel == difficultyLevel) &&
-            const DeepCollectionEquality()
-                .equals(other._requiredEquipment, _requiredEquipment) &&
-            const DeepCollectionEquality()
-                .equals(other._targetMuscles, _targetMuscles));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        userId,
-        name,
-        description,
-        const DeepCollectionEquality().hash(_exercises),
-        category,
-        visibility,
-        createdAt,
-        updatedAt,
-        downloadCount,
-        likeCount,
-        reviewCount,
-        averageRating,
-        authorName,
-        authorPhotoUrl,
-        const DeepCollectionEquality().hash(_tags),
-        estimatedDurationMinutes,
-        difficultyLevel,
-        const DeepCollectionEquality().hash(_requiredEquipment),
-        const DeepCollectionEquality().hash(_targetMuscles)
-      ]);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
-      get copyWith => __$$CommunityWorkoutTemplateImplCopyWithImpl<
-          _$CommunityWorkoutTemplateImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CommunityWorkoutTemplateImplToJson(
-      this,
-    );
-  }
+@override@JsonKey() List<String> get targetMuscles {
+  if (_targetMuscles is EqualUnmodifiableListView) return _targetMuscles;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_targetMuscles);
 }
 
-abstract class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
-  const factory _CommunityWorkoutTemplate(
-      {required final String id,
-      required final String userId,
-      required final String name,
-      final String? description,
-      required final List<Exercise> exercises,
-      required final TemplateCategory category,
-      required final TemplateVisibility visibility,
-      required final DateTime createdAt,
-      final DateTime? updatedAt,
-      final int downloadCount,
-      final int likeCount,
-      final int reviewCount,
-      final double averageRating,
-      final String? authorName,
-      final String? authorPhotoUrl,
-      final List<String> tags,
-      final int? estimatedDurationMinutes,
-      final String? difficultyLevel,
-      final List<String> requiredEquipment,
-      final List<String> targetMuscles}) = _$CommunityWorkoutTemplateImpl;
 
-  factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) =
-      _$CommunityWorkoutTemplateImpl.fromJson;
+/// Create a copy of CommunityWorkoutTemplate
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommunityWorkoutTemplateCopyWith<_CommunityWorkoutTemplate> get copyWith => __$CommunityWorkoutTemplateCopyWithImpl<_CommunityWorkoutTemplate>(this, _$identity);
 
-  @override
-  String get id;
-  @override
-  String get userId;
-  @override
-  String get name;
-  @override
-  String? get description;
-  @override
-  List<Exercise> get exercises;
-  @override
-  TemplateCategory get category;
-  @override
-  TemplateVisibility get visibility;
-  @override // Metadata
-  DateTime get createdAt;
-  @override
-  DateTime? get updatedAt;
-  @override // Stats pubbliche
-  int get downloadCount;
-  @override
-  int get likeCount;
-  @override
-  int get reviewCount;
-  @override
-  double get averageRating;
-  @override // Info autore
-  String? get authorName;
-  @override
-  String? get authorPhotoUrl;
-  @override // Tags per ricerca
-  List<String> get tags;
-  @override // Durata stimata in minuti
-  int? get estimatedDurationMinutes;
-  @override // Livello difficoltà
-  String? get difficultyLevel;
-  @override // beginner, intermediate, advanced, expert
-// Equipment necessario
-  List<String> get requiredEquipment;
-  @override // Muscoli target
-  List<String> get targetMuscles;
-  @override
-  @JsonKey(ignore: true)
-  _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$CommunityWorkoutTemplateToJson(this, );
 }
 
-TemplateReview _$TemplateReviewFromJson(Map<String, dynamic> json) {
-  return _TemplateReview.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWorkoutTemplate&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._exercises, _exercises)&&(identical(other.category, category) || other.category == category)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.downloadCount, downloadCount) || other.downloadCount == downloadCount)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&(identical(other.reviewCount, reviewCount) || other.reviewCount == reviewCount)&&(identical(other.averageRating, averageRating) || other.averageRating == averageRating)&&(identical(other.authorName, authorName) || other.authorName == authorName)&&(identical(other.authorPhotoUrl, authorPhotoUrl) || other.authorPhotoUrl == authorPhotoUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.estimatedDurationMinutes, estimatedDurationMinutes) || other.estimatedDurationMinutes == estimatedDurationMinutes)&&(identical(other.difficultyLevel, difficultyLevel) || other.difficultyLevel == difficultyLevel)&&const DeepCollectionEquality().equals(other._requiredEquipment, _requiredEquipment)&&const DeepCollectionEquality().equals(other._targetMuscles, _targetMuscles));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,id,userId,name,description,const DeepCollectionEquality().hash(_exercises),category,visibility,createdAt,updatedAt,downloadCount,likeCount,reviewCount,averageRating,authorName,authorPhotoUrl,const DeepCollectionEquality().hash(_tags),estimatedDurationMinutes,difficultyLevel,const DeepCollectionEquality().hash(_requiredEquipment),const DeepCollectionEquality().hash(_targetMuscles)]);
+
+@override
+String toString() {
+  return 'CommunityWorkoutTemplate(id: $id, userId: $userId, name: $name, description: $description, exercises: $exercises, category: $category, visibility: $visibility, createdAt: $createdAt, updatedAt: $updatedAt, downloadCount: $downloadCount, likeCount: $likeCount, reviewCount: $reviewCount, averageRating: $averageRating, authorName: $authorName, authorPhotoUrl: $authorPhotoUrl, tags: $tags, estimatedDurationMinutes: $estimatedDurationMinutes, difficultyLevel: $difficultyLevel, requiredEquipment: $requiredEquipment, targetMuscles: $targetMuscles)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommunityWorkoutTemplateCopyWith<$Res> implements $CommunityWorkoutTemplateCopyWith<$Res> {
+  factory _$CommunityWorkoutTemplateCopyWith(_CommunityWorkoutTemplate value, $Res Function(_CommunityWorkoutTemplate) _then) = __$CommunityWorkoutTemplateCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String userId, String name, String? description, List<Exercise> exercises, TemplateCategory category, TemplateVisibility visibility, DateTime createdAt, DateTime? updatedAt, int downloadCount, int likeCount, int reviewCount, double averageRating, String? authorName, String? authorPhotoUrl, List<String> tags, int? estimatedDurationMinutes, String? difficultyLevel, List<String> requiredEquipment, List<String> targetMuscles
+});
+
+
+
+
+}
+/// @nodoc
+class __$CommunityWorkoutTemplateCopyWithImpl<$Res>
+    implements _$CommunityWorkoutTemplateCopyWith<$Res> {
+  __$CommunityWorkoutTemplateCopyWithImpl(this._self, this._then);
+
+  final _CommunityWorkoutTemplate _self;
+  final $Res Function(_CommunityWorkoutTemplate) _then;
+
+/// Create a copy of CommunityWorkoutTemplate
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? name = null,Object? description = freezed,Object? exercises = null,Object? category = null,Object? visibility = null,Object? createdAt = null,Object? updatedAt = freezed,Object? downloadCount = null,Object? likeCount = null,Object? reviewCount = null,Object? averageRating = null,Object? authorName = freezed,Object? authorPhotoUrl = freezed,Object? tags = null,Object? estimatedDurationMinutes = freezed,Object? difficultyLevel = freezed,Object? requiredEquipment = null,Object? targetMuscles = null,}) {
+  return _then(_CommunityWorkoutTemplate(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,exercises: null == exercises ? _self._exercises : exercises // ignore: cast_nullable_to_non_nullable
+as List<Exercise>,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as TemplateCategory,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
+as TemplateVisibility,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,downloadCount: null == downloadCount ? _self.downloadCount : downloadCount // ignore: cast_nullable_to_non_nullable
+as int,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,reviewCount: null == reviewCount ? _self.reviewCount : reviewCount // ignore: cast_nullable_to_non_nullable
+as int,averageRating: null == averageRating ? _self.averageRating : averageRating // ignore: cast_nullable_to_non_nullable
+as double,authorName: freezed == authorName ? _self.authorName : authorName // ignore: cast_nullable_to_non_nullable
+as String?,authorPhotoUrl: freezed == authorPhotoUrl ? _self.authorPhotoUrl : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,estimatedDurationMinutes: freezed == estimatedDurationMinutes ? _self.estimatedDurationMinutes : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
+as int?,difficultyLevel: freezed == difficultyLevel ? _self.difficultyLevel : difficultyLevel // ignore: cast_nullable_to_non_nullable
+as String?,requiredEquipment: null == requiredEquipment ? _self._requiredEquipment : requiredEquipment // ignore: cast_nullable_to_non_nullable
+as List<String>,targetMuscles: null == targetMuscles ? _self._targetMuscles : targetMuscles // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$TemplateReview {
-  String get id => throw _privateConstructorUsedError;
-  String get templateId => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get userName => throw _privateConstructorUsedError;
-  String? get userPhotoUrl => throw _privateConstructorUsedError;
-  double get rating => throw _privateConstructorUsedError; // 1-5 stelle
-  String get comment => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  int get helpfulCount => throw _privateConstructorUsedError;
-  List<String> get helpfulVoters => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TemplateReviewCopyWith<TemplateReview> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get id; String get templateId; String get userId; String get userName; String? get userPhotoUrl; double get rating;// 1-5 stelle
+ String get comment; DateTime get createdAt; int get helpfulCount; List<String> get helpfulVoters;
+/// Create a copy of TemplateReview
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TemplateReviewCopyWith<TemplateReview> get copyWith => _$TemplateReviewCopyWithImpl<TemplateReview>(this as TemplateReview, _$identity);
+
+  /// Serializes this TemplateReview to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TemplateReview&&(identical(other.id, id) || other.id == id)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userPhotoUrl, userPhotoUrl) || other.userPhotoUrl == userPhotoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.helpfulCount, helpfulCount) || other.helpfulCount == helpfulCount)&&const DeepCollectionEquality().equals(other.helpfulVoters, helpfulVoters));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,templateId,userId,userName,userPhotoUrl,rating,comment,createdAt,helpfulCount,const DeepCollectionEquality().hash(helpfulVoters));
+
+@override
+String toString() {
+  return 'TemplateReview(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, rating: $rating, comment: $comment, createdAt: $createdAt, helpfulCount: $helpfulCount, helpfulVoters: $helpfulVoters)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TemplateReviewCopyWith<$Res> {
-  factory $TemplateReviewCopyWith(
-          TemplateReview value, $Res Function(TemplateReview) then) =
-      _$TemplateReviewCopyWithImpl<$Res, TemplateReview>;
-  @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      double rating,
-      String comment,
-      DateTime createdAt,
-      int helpfulCount,
-      List<String> helpfulVoters});
-}
+abstract mixin class $TemplateReviewCopyWith<$Res>  {
+  factory $TemplateReviewCopyWith(TemplateReview value, $Res Function(TemplateReview) _then) = _$TemplateReviewCopyWithImpl;
+@useResult
+$Res call({
+ String id, String templateId, String userId, String userName, String? userPhotoUrl, double rating, String comment, DateTime createdAt, int helpfulCount, List<String> helpfulVoters
+});
 
+
+
+
+}
 /// @nodoc
-class _$TemplateReviewCopyWithImpl<$Res, $Val extends TemplateReview>
+class _$TemplateReviewCopyWithImpl<$Res>
     implements $TemplateReviewCopyWith<$Res> {
-  _$TemplateReviewCopyWithImpl(this._value, this._then);
+  _$TemplateReviewCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TemplateReview _self;
+  final $Res Function(TemplateReview) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? templateId = null,
-    Object? userId = null,
-    Object? userName = null,
-    Object? userPhotoUrl = freezed,
-    Object? rating = null,
-    Object? comment = null,
-    Object? createdAt = null,
-    Object? helpfulCount = null,
-    Object? helpfulVoters = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
-      comment: null == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulVoters: null == helpfulVoters
-          ? _value.helpfulVoters
-          : helpfulVoters // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
-  }
+/// Create a copy of TemplateReview
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? templateId = null,Object? userId = null,Object? userName = null,Object? userPhotoUrl = freezed,Object? rating = null,Object? comment = null,Object? createdAt = null,Object? helpfulCount = null,Object? helpfulVoters = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,templateId: null == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String,userPhotoUrl: freezed == userPhotoUrl ? _self.userPhotoUrl : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
+as double,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,helpfulCount: null == helpfulCount ? _self.helpfulCount : helpfulCount // ignore: cast_nullable_to_non_nullable
+as int,helpfulVoters: null == helpfulVoters ? _self.helpfulVoters : helpfulVoters // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TemplateReviewImplCopyWith<$Res>
-    implements $TemplateReviewCopyWith<$Res> {
-  factory _$$TemplateReviewImplCopyWith(_$TemplateReviewImpl value,
-          $Res Function(_$TemplateReviewImpl) then) =
-      __$$TemplateReviewImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      double rating,
-      String comment,
-      DateTime createdAt,
-      int helpfulCount,
-      List<String> helpfulVoters});
 }
 
-/// @nodoc
-class __$$TemplateReviewImplCopyWithImpl<$Res>
-    extends _$TemplateReviewCopyWithImpl<$Res, _$TemplateReviewImpl>
-    implements _$$TemplateReviewImplCopyWith<$Res> {
-  __$$TemplateReviewImplCopyWithImpl(
-      _$TemplateReviewImpl _value, $Res Function(_$TemplateReviewImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? templateId = null,
-    Object? userId = null,
-    Object? userName = null,
-    Object? userPhotoUrl = freezed,
-    Object? rating = null,
-    Object? comment = null,
-    Object? createdAt = null,
-    Object? helpfulCount = null,
-    Object? helpfulVoters = null,
-  }) {
-    return _then(_$TemplateReviewImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
-      comment: null == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulVoters: null == helpfulVoters
-          ? _value._helpfulVoters
-          : helpfulVoters // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
-  }
+/// Adds pattern-matching-related methods to [TemplateReview].
+extension TemplateReviewPatterns on TemplateReview {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TemplateReview value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TemplateReview() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TemplateReview value)  $default,){
+final _that = this;
+switch (_that) {
+case _TemplateReview():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TemplateReview value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TemplateReview() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  double rating,  String comment,  DateTime createdAt,  int helpfulCount,  List<String> helpfulVoters)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TemplateReview() when $default != null:
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.rating,_that.comment,_that.createdAt,_that.helpfulCount,_that.helpfulVoters);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  double rating,  String comment,  DateTime createdAt,  int helpfulCount,  List<String> helpfulVoters)  $default,) {final _that = this;
+switch (_that) {
+case _TemplateReview():
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.rating,_that.comment,_that.createdAt,_that.helpfulCount,_that.helpfulVoters);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  double rating,  String comment,  DateTime createdAt,  int helpfulCount,  List<String> helpfulVoters)?  $default,) {final _that = this;
+switch (_that) {
+case _TemplateReview() when $default != null:
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.rating,_that.comment,_that.createdAt,_that.helpfulCount,_that.helpfulVoters);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TemplateReviewImpl implements _TemplateReview {
-  const _$TemplateReviewImpl(
-      {required this.id,
-      required this.templateId,
-      required this.userId,
-      required this.userName,
-      this.userPhotoUrl,
-      required this.rating,
-      required this.comment,
-      required this.createdAt,
-      this.helpfulCount = 0,
-      final List<String> helpfulVoters = const []})
-      : _helpfulVoters = helpfulVoters;
 
-  factory _$TemplateReviewImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TemplateReviewImplFromJson(json);
+class _TemplateReview implements TemplateReview {
+  const _TemplateReview({required this.id, required this.templateId, required this.userId, required this.userName, this.userPhotoUrl, required this.rating, required this.comment, required this.createdAt, this.helpfulCount = 0, final  List<String> helpfulVoters = const []}): _helpfulVoters = helpfulVoters;
+  factory _TemplateReview.fromJson(Map<String, dynamic> json) => _$TemplateReviewFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final String templateId;
-  @override
-  final String userId;
-  @override
-  final String userName;
-  @override
-  final String? userPhotoUrl;
-  @override
-  final double rating;
+@override final  String id;
+@override final  String templateId;
+@override final  String userId;
+@override final  String userName;
+@override final  String? userPhotoUrl;
+@override final  double rating;
 // 1-5 stelle
-  @override
-  final String comment;
-  @override
-  final DateTime createdAt;
-  @override
-  @JsonKey()
-  final int helpfulCount;
-  final List<String> _helpfulVoters;
-  @override
-  @JsonKey()
-  List<String> get helpfulVoters {
-    if (_helpfulVoters is EqualUnmodifiableListView) return _helpfulVoters;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_helpfulVoters);
-  }
-
-  @override
-  String toString() {
-    return 'TemplateReview(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, rating: $rating, comment: $comment, createdAt: $createdAt, helpfulCount: $helpfulCount, helpfulVoters: $helpfulVoters)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TemplateReviewImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.templateId, templateId) ||
-                other.templateId == templateId) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
-            (identical(other.userPhotoUrl, userPhotoUrl) ||
-                other.userPhotoUrl == userPhotoUrl) &&
-            (identical(other.rating, rating) || other.rating == rating) &&
-            (identical(other.comment, comment) || other.comment == comment) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.helpfulCount, helpfulCount) ||
-                other.helpfulCount == helpfulCount) &&
-            const DeepCollectionEquality()
-                .equals(other._helpfulVoters, _helpfulVoters));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      templateId,
-      userId,
-      userName,
-      userPhotoUrl,
-      rating,
-      comment,
-      createdAt,
-      helpfulCount,
-      const DeepCollectionEquality().hash(_helpfulVoters));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
-      __$$TemplateReviewImplCopyWithImpl<_$TemplateReviewImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TemplateReviewImplToJson(
-      this,
-    );
-  }
+@override final  String comment;
+@override final  DateTime createdAt;
+@override@JsonKey() final  int helpfulCount;
+ final  List<String> _helpfulVoters;
+@override@JsonKey() List<String> get helpfulVoters {
+  if (_helpfulVoters is EqualUnmodifiableListView) return _helpfulVoters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_helpfulVoters);
 }
 
-abstract class _TemplateReview implements TemplateReview {
-  const factory _TemplateReview(
-      {required final String id,
-      required final String templateId,
-      required final String userId,
-      required final String userName,
-      final String? userPhotoUrl,
-      required final double rating,
-      required final String comment,
-      required final DateTime createdAt,
-      final int helpfulCount,
-      final List<String> helpfulVoters}) = _$TemplateReviewImpl;
 
-  factory _TemplateReview.fromJson(Map<String, dynamic> json) =
-      _$TemplateReviewImpl.fromJson;
+/// Create a copy of TemplateReview
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TemplateReviewCopyWith<_TemplateReview> get copyWith => __$TemplateReviewCopyWithImpl<_TemplateReview>(this, _$identity);
 
-  @override
-  String get id;
-  @override
-  String get templateId;
-  @override
-  String get userId;
-  @override
-  String get userName;
-  @override
-  String? get userPhotoUrl;
-  @override
-  double get rating;
-  @override // 1-5 stelle
-  String get comment;
-  @override
-  DateTime get createdAt;
-  @override
-  int get helpfulCount;
-  @override
-  List<String> get helpfulVoters;
-  @override
-  @JsonKey(ignore: true)
-  _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$TemplateReviewToJson(this, );
 }
 
-TemplateComment _$TemplateCommentFromJson(Map<String, dynamic> json) {
-  return _TemplateComment.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TemplateReview&&(identical(other.id, id) || other.id == id)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userPhotoUrl, userPhotoUrl) || other.userPhotoUrl == userPhotoUrl)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.helpfulCount, helpfulCount) || other.helpfulCount == helpfulCount)&&const DeepCollectionEquality().equals(other._helpfulVoters, _helpfulVoters));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,templateId,userId,userName,userPhotoUrl,rating,comment,createdAt,helpfulCount,const DeepCollectionEquality().hash(_helpfulVoters));
+
+@override
+String toString() {
+  return 'TemplateReview(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, rating: $rating, comment: $comment, createdAt: $createdAt, helpfulCount: $helpfulCount, helpfulVoters: $helpfulVoters)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TemplateReviewCopyWith<$Res> implements $TemplateReviewCopyWith<$Res> {
+  factory _$TemplateReviewCopyWith(_TemplateReview value, $Res Function(_TemplateReview) _then) = __$TemplateReviewCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String templateId, String userId, String userName, String? userPhotoUrl, double rating, String comment, DateTime createdAt, int helpfulCount, List<String> helpfulVoters
+});
+
+
+
+
+}
+/// @nodoc
+class __$TemplateReviewCopyWithImpl<$Res>
+    implements _$TemplateReviewCopyWith<$Res> {
+  __$TemplateReviewCopyWithImpl(this._self, this._then);
+
+  final _TemplateReview _self;
+  final $Res Function(_TemplateReview) _then;
+
+/// Create a copy of TemplateReview
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? templateId = null,Object? userId = null,Object? userName = null,Object? userPhotoUrl = freezed,Object? rating = null,Object? comment = null,Object? createdAt = null,Object? helpfulCount = null,Object? helpfulVoters = null,}) {
+  return _then(_TemplateReview(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,templateId: null == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String,userPhotoUrl: freezed == userPhotoUrl ? _self.userPhotoUrl : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,rating: null == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
+as double,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,helpfulCount: null == helpfulCount ? _self.helpfulCount : helpfulCount // ignore: cast_nullable_to_non_nullable
+as int,helpfulVoters: null == helpfulVoters ? _self._helpfulVoters : helpfulVoters // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$TemplateComment {
-  String get id => throw _privateConstructorUsedError;
-  String get templateId => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  String get userName => throw _privateConstructorUsedError;
-  String? get userPhotoUrl => throw _privateConstructorUsedError;
-  String get text => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  int get likeCount => throw _privateConstructorUsedError;
-  List<String> get likedBy => throw _privateConstructorUsedError;
-  String? get replyToId => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TemplateCommentCopyWith<TemplateComment> get copyWith =>
-      throw _privateConstructorUsedError;
+ String get id; String get templateId; String get userId; String get userName; String? get userPhotoUrl; String get text; DateTime get createdAt; int get likeCount; List<String> get likedBy; String? get replyToId;
+/// Create a copy of TemplateComment
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TemplateCommentCopyWith<TemplateComment> get copyWith => _$TemplateCommentCopyWithImpl<TemplateComment>(this as TemplateComment, _$identity);
+
+  /// Serializes this TemplateComment to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TemplateComment&&(identical(other.id, id) || other.id == id)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userPhotoUrl, userPhotoUrl) || other.userPhotoUrl == userPhotoUrl)&&(identical(other.text, text) || other.text == text)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&const DeepCollectionEquality().equals(other.likedBy, likedBy)&&(identical(other.replyToId, replyToId) || other.replyToId == replyToId));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,templateId,userId,userName,userPhotoUrl,text,createdAt,likeCount,const DeepCollectionEquality().hash(likedBy),replyToId);
+
+@override
+String toString() {
+  return 'TemplateComment(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, text: $text, createdAt: $createdAt, likeCount: $likeCount, likedBy: $likedBy, replyToId: $replyToId)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $TemplateCommentCopyWith<$Res> {
-  factory $TemplateCommentCopyWith(
-          TemplateComment value, $Res Function(TemplateComment) then) =
-      _$TemplateCommentCopyWithImpl<$Res, TemplateComment>;
-  @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      String text,
-      DateTime createdAt,
-      int likeCount,
-      List<String> likedBy,
-      String? replyToId});
-}
+abstract mixin class $TemplateCommentCopyWith<$Res>  {
+  factory $TemplateCommentCopyWith(TemplateComment value, $Res Function(TemplateComment) _then) = _$TemplateCommentCopyWithImpl;
+@useResult
+$Res call({
+ String id, String templateId, String userId, String userName, String? userPhotoUrl, String text, DateTime createdAt, int likeCount, List<String> likedBy, String? replyToId
+});
 
+
+
+
+}
 /// @nodoc
-class _$TemplateCommentCopyWithImpl<$Res, $Val extends TemplateComment>
+class _$TemplateCommentCopyWithImpl<$Res>
     implements $TemplateCommentCopyWith<$Res> {
-  _$TemplateCommentCopyWithImpl(this._value, this._then);
+  _$TemplateCommentCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final TemplateComment _self;
+  final $Res Function(TemplateComment) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? templateId = null,
-    Object? userId = null,
-    Object? userName = null,
-    Object? userPhotoUrl = freezed,
-    Object? text = null,
-    Object? createdAt = null,
-    Object? likeCount = null,
-    Object? likedBy = null,
-    Object? replyToId = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value.likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      replyToId: freezed == replyToId
-          ? _value.replyToId
-          : replyToId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of TemplateComment
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? templateId = null,Object? userId = null,Object? userName = null,Object? userPhotoUrl = freezed,Object? text = null,Object? createdAt = null,Object? likeCount = null,Object? likedBy = null,Object? replyToId = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,templateId: null == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String,userPhotoUrl: freezed == userPhotoUrl ? _self.userPhotoUrl : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,likedBy: null == likedBy ? _self.likedBy : likedBy // ignore: cast_nullable_to_non_nullable
+as List<String>,replyToId: freezed == replyToId ? _self.replyToId : replyToId // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$TemplateCommentImplCopyWith<$Res>
-    implements $TemplateCommentCopyWith<$Res> {
-  factory _$$TemplateCommentImplCopyWith(_$TemplateCommentImpl value,
-          $Res Function(_$TemplateCommentImpl) then) =
-      __$$TemplateCommentImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      String text,
-      DateTime createdAt,
-      int likeCount,
-      List<String> likedBy,
-      String? replyToId});
 }
 
-/// @nodoc
-class __$$TemplateCommentImplCopyWithImpl<$Res>
-    extends _$TemplateCommentCopyWithImpl<$Res, _$TemplateCommentImpl>
-    implements _$$TemplateCommentImplCopyWith<$Res> {
-  __$$TemplateCommentImplCopyWithImpl(
-      _$TemplateCommentImpl _value, $Res Function(_$TemplateCommentImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? templateId = null,
-    Object? userId = null,
-    Object? userName = null,
-    Object? userPhotoUrl = freezed,
-    Object? text = null,
-    Object? createdAt = null,
-    Object? likeCount = null,
-    Object? likedBy = null,
-    Object? replyToId = freezed,
-  }) {
-    return _then(_$TemplateCommentImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value._likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      replyToId: freezed == replyToId
-          ? _value.replyToId
-          : replyToId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [TemplateComment].
+extension TemplateCommentPatterns on TemplateComment {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TemplateComment value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TemplateComment() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TemplateComment value)  $default,){
+final _that = this;
+switch (_that) {
+case _TemplateComment():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TemplateComment value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TemplateComment() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  String text,  DateTime createdAt,  int likeCount,  List<String> likedBy,  String? replyToId)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TemplateComment() when $default != null:
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.text,_that.createdAt,_that.likeCount,_that.likedBy,_that.replyToId);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  String text,  DateTime createdAt,  int likeCount,  List<String> likedBy,  String? replyToId)  $default,) {final _that = this;
+switch (_that) {
+case _TemplateComment():
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.text,_that.createdAt,_that.likeCount,_that.likedBy,_that.replyToId);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String templateId,  String userId,  String userName,  String? userPhotoUrl,  String text,  DateTime createdAt,  int likeCount,  List<String> likedBy,  String? replyToId)?  $default,) {final _that = this;
+switch (_that) {
+case _TemplateComment() when $default != null:
+return $default(_that.id,_that.templateId,_that.userId,_that.userName,_that.userPhotoUrl,_that.text,_that.createdAt,_that.likeCount,_that.likedBy,_that.replyToId);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$TemplateCommentImpl implements _TemplateComment {
-  const _$TemplateCommentImpl(
-      {required this.id,
-      required this.templateId,
-      required this.userId,
-      required this.userName,
-      this.userPhotoUrl,
-      required this.text,
-      required this.createdAt,
-      this.likeCount = 0,
-      final List<String> likedBy = const [],
-      this.replyToId})
-      : _likedBy = likedBy;
 
-  factory _$TemplateCommentImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TemplateCommentImplFromJson(json);
+class _TemplateComment implements TemplateComment {
+  const _TemplateComment({required this.id, required this.templateId, required this.userId, required this.userName, this.userPhotoUrl, required this.text, required this.createdAt, this.likeCount = 0, final  List<String> likedBy = const [], this.replyToId}): _likedBy = likedBy;
+  factory _TemplateComment.fromJson(Map<String, dynamic> json) => _$TemplateCommentFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final String templateId;
-  @override
-  final String userId;
-  @override
-  final String userName;
-  @override
-  final String? userPhotoUrl;
-  @override
-  final String text;
-  @override
-  final DateTime createdAt;
-  @override
-  @JsonKey()
-  final int likeCount;
-  final List<String> _likedBy;
-  @override
-  @JsonKey()
-  List<String> get likedBy {
-    if (_likedBy is EqualUnmodifiableListView) return _likedBy;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_likedBy);
-  }
-
-  @override
-  final String? replyToId;
-
-  @override
-  String toString() {
-    return 'TemplateComment(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, text: $text, createdAt: $createdAt, likeCount: $likeCount, likedBy: $likedBy, replyToId: $replyToId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$TemplateCommentImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.templateId, templateId) ||
-                other.templateId == templateId) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
-            (identical(other.userPhotoUrl, userPhotoUrl) ||
-                other.userPhotoUrl == userPhotoUrl) &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.likeCount, likeCount) ||
-                other.likeCount == likeCount) &&
-            const DeepCollectionEquality().equals(other._likedBy, _likedBy) &&
-            (identical(other.replyToId, replyToId) ||
-                other.replyToId == replyToId));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      templateId,
-      userId,
-      userName,
-      userPhotoUrl,
-      text,
-      createdAt,
-      likeCount,
-      const DeepCollectionEquality().hash(_likedBy),
-      replyToId);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
-      __$$TemplateCommentImplCopyWithImpl<_$TemplateCommentImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TemplateCommentImplToJson(
-      this,
-    );
-  }
+@override final  String id;
+@override final  String templateId;
+@override final  String userId;
+@override final  String userName;
+@override final  String? userPhotoUrl;
+@override final  String text;
+@override final  DateTime createdAt;
+@override@JsonKey() final  int likeCount;
+ final  List<String> _likedBy;
+@override@JsonKey() List<String> get likedBy {
+  if (_likedBy is EqualUnmodifiableListView) return _likedBy;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_likedBy);
 }
 
-abstract class _TemplateComment implements TemplateComment {
-  const factory _TemplateComment(
-      {required final String id,
-      required final String templateId,
-      required final String userId,
-      required final String userName,
-      final String? userPhotoUrl,
-      required final String text,
-      required final DateTime createdAt,
-      final int likeCount,
-      final List<String> likedBy,
-      final String? replyToId}) = _$TemplateCommentImpl;
+@override final  String? replyToId;
 
-  factory _TemplateComment.fromJson(Map<String, dynamic> json) =
-      _$TemplateCommentImpl.fromJson;
+/// Create a copy of TemplateComment
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TemplateCommentCopyWith<_TemplateComment> get copyWith => __$TemplateCommentCopyWithImpl<_TemplateComment>(this, _$identity);
 
-  @override
-  String get id;
-  @override
-  String get templateId;
-  @override
-  String get userId;
-  @override
-  String get userName;
-  @override
-  String? get userPhotoUrl;
-  @override
-  String get text;
-  @override
-  DateTime get createdAt;
-  @override
-  int get likeCount;
-  @override
-  List<String> get likedBy;
-  @override
-  String? get replyToId;
-  @override
-  @JsonKey(ignore: true)
-  _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$TemplateCommentToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TemplateComment&&(identical(other.id, id) || other.id == id)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.userPhotoUrl, userPhotoUrl) || other.userPhotoUrl == userPhotoUrl)&&(identical(other.text, text) || other.text == text)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.likeCount, likeCount) || other.likeCount == likeCount)&&const DeepCollectionEquality().equals(other._likedBy, _likedBy)&&(identical(other.replyToId, replyToId) || other.replyToId == replyToId));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,templateId,userId,userName,userPhotoUrl,text,createdAt,likeCount,const DeepCollectionEquality().hash(_likedBy),replyToId);
+
+@override
+String toString() {
+  return 'TemplateComment(id: $id, templateId: $templateId, userId: $userId, userName: $userName, userPhotoUrl: $userPhotoUrl, text: $text, createdAt: $createdAt, likeCount: $likeCount, likedBy: $likedBy, replyToId: $replyToId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TemplateCommentCopyWith<$Res> implements $TemplateCommentCopyWith<$Res> {
+  factory _$TemplateCommentCopyWith(_TemplateComment value, $Res Function(_TemplateComment) _then) = __$TemplateCommentCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String templateId, String userId, String userName, String? userPhotoUrl, String text, DateTime createdAt, int likeCount, List<String> likedBy, String? replyToId
+});
+
+
+
+
+}
+/// @nodoc
+class __$TemplateCommentCopyWithImpl<$Res>
+    implements _$TemplateCommentCopyWith<$Res> {
+  __$TemplateCommentCopyWithImpl(this._self, this._then);
+
+  final _TemplateComment _self;
+  final $Res Function(_TemplateComment) _then;
+
+/// Create a copy of TemplateComment
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? templateId = null,Object? userId = null,Object? userName = null,Object? userPhotoUrl = freezed,Object? text = null,Object? createdAt = null,Object? likeCount = null,Object? likedBy = null,Object? replyToId = freezed,}) {
+  return _then(_TemplateComment(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,templateId: null == templateId ? _self.templateId : templateId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String,userPhotoUrl: freezed == userPhotoUrl ? _self.userPhotoUrl : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,likeCount: null == likeCount ? _self.likeCount : likeCount // ignore: cast_nullable_to_non_nullable
+as int,likedBy: null == likedBy ? _self._likedBy : likedBy // ignore: cast_nullable_to_non_nullable
+as List<String>,replyToId: freezed == replyToId ? _self.replyToId : replyToId // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

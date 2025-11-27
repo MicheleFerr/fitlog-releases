@@ -68,7 +68,7 @@ enum AchievementRarity {
 /// - "Volume King" → Lift 100,000 kg total
 /// - "Template Master" → Create 10 custom templates
 @freezed
-class AchievementData with _$AchievementData {
+abstract class AchievementData with _$AchievementData {
   const factory AchievementData({
     /// Unique achievement identifier
     required String id,

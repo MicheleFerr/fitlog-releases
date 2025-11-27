@@ -32,7 +32,7 @@ part 'conversation_node.freezed.dart';
 part 'conversation_node.g.dart';
 
 @freezed
-class ConversationNode with _$ConversationNode {
+abstract class ConversationNode with _$ConversationNode {
 
   const factory ConversationNode({
     /// Unique node ID (UUID)

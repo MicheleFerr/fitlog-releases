@@ -8,7 +8,7 @@ part of 'legal_consent.dart';
 
 class LegalConsentAdapter extends TypeAdapter<LegalConsent> {
   @override
-  final int typeId = 10;
+  final typeId = 10;
 
   @override
   LegalConsent read(BinaryReader reader) {
@@ -57,7 +57,7 @@ class LegalConsentAdapter extends TypeAdapter<LegalConsent> {
 
 class ConsentTypeAdapter extends TypeAdapter<ConsentType> {
   @override
-  final int typeId = 11;
+  final typeId = 11;
 
   @override
   ConsentType read(BinaryReader reader) {
@@ -82,19 +82,14 @@ class ConsentTypeAdapter extends TypeAdapter<ConsentType> {
     switch (obj) {
       case ConsentType.disclaimer:
         writer.writeByte(0);
-        break;
       case ConsentType.privacyPolicy:
         writer.writeByte(1);
-        break;
       case ConsentType.tosAccepted:
         writer.writeByte(2);
-        break;
       case ConsentType.ageVerified:
         writer.writeByte(3);
-        break;
       case ConsentType.firebaseDPA:
         writer.writeByte(4);
-        break;
     }
   }
 

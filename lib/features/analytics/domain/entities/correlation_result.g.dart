@@ -6,9 +6,8 @@ part of 'correlation_result.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CorrelationResultImpl _$$CorrelationResultImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CorrelationResultImpl(
+_CorrelationResult _$CorrelationResultFromJson(Map<String, dynamic> json) =>
+    _CorrelationResult(
       r: (json['r'] as num).toDouble(),
       rSquared: (json['rSquared'] as num).toDouble(),
       strength: $enumDecode(_$CorrelationStrengthEnumMap, json['strength']),
@@ -17,8 +16,7 @@ _$CorrelationResultImpl _$$CorrelationResultImplFromJson(
       isSignificant: json['isSignificant'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$CorrelationResultImplToJson(
-        _$CorrelationResultImpl instance) =>
+Map<String, dynamic> _$CorrelationResultToJson(_CorrelationResult instance) =>
     <String, dynamic>{
       'r': instance.r,
       'rSquared': instance.rSquared,
@@ -35,21 +33,22 @@ const _$CorrelationStrengthEnumMap = {
   CorrelationStrength.insufficient: 'insufficient',
 };
 
-_$CorrelationResultsImpl _$$CorrelationResultsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CorrelationResultsImpl(
-      weightRpe:
-          CorrelationResult.fromJson(json['weightRpe'] as Map<String, dynamic>),
-      volumeRpe:
-          CorrelationResult.fromJson(json['volumeRpe'] as Map<String, dynamic>),
+_CorrelationResults _$CorrelationResultsFromJson(Map<String, dynamic> json) =>
+    _CorrelationResults(
+      weightRpe: CorrelationResult.fromJson(
+        json['weightRpe'] as Map<String, dynamic>,
+      ),
+      volumeRpe: CorrelationResult.fromJson(
+        json['volumeRpe'] as Map<String, dynamic>,
+      ),
       weightVolume: json['weightVolume'] == null
           ? null
           : CorrelationResult.fromJson(
-              json['weightVolume'] as Map<String, dynamic>),
+              json['weightVolume'] as Map<String, dynamic>,
+            ),
     );
 
-Map<String, dynamic> _$$CorrelationResultsImplToJson(
-        _$CorrelationResultsImpl instance) =>
+Map<String, dynamic> _$CorrelationResultsToJson(_CorrelationResults instance) =>
     <String, dynamic>{
       'weightRpe': instance.weightRpe.toJson(),
       'volumeRpe': instance.volumeRpe.toJson(),

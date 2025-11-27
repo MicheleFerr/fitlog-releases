@@ -37,7 +37,7 @@ enum InsightType {
 /// Represents an actionable insight shown to the user with tracking
 /// for visibility and engagement metrics to measure effectiveness.
 @freezed
-class Insight with _$Insight {
+abstract class Insight with _$Insight {
   const factory Insight({
     /// Unique insight identifier
     required String id,

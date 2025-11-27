@@ -5,7 +5,7 @@ part 'user_context.g.dart';
 
 /// User context for personalized AI Coach insights
 @freezed
-class UserContext with _$UserContext {
+abstract class UserContext with _$UserContext {
   const factory UserContext({
     required String userId,
     required ExperienceLevel experienceLevel,

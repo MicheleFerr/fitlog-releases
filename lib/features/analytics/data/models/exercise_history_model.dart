@@ -68,7 +68,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 part 'exercise_history_model.freezed.dart';
 
 @freezed
-class ExerciseHistoryModel with _$ExerciseHistoryModel {
+abstract class ExerciseHistoryModel with _$ExerciseHistoryModel {
 
   const factory ExerciseHistoryModel({
     /// Name of the exercise (also the document ID)

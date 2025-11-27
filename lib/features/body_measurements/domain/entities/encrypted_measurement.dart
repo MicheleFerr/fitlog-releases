@@ -41,7 +41,7 @@ part 'encrypted_measurement.g.dart';
 /// final decrypted = await decryptMeasurement.call(encrypted, key);
 /// ```
 @freezed
-class EncryptedMeasurement with _$EncryptedMeasurement {
+abstract class EncryptedMeasurement with _$EncryptedMeasurement {
   const factory EncryptedMeasurement({
     /// Measurement ID (same as original Measurement.id)
     required String id,
@@ -101,7 +101,7 @@ class EncryptedMeasurement with _$EncryptedMeasurement {
 ///
 /// Used for key rotation and audit logging
 @freezed
-class EncryptionMetadata with _$EncryptionMetadata {
+abstract class EncryptionMetadata with _$EncryptionMetadata {
   const factory EncryptionMetadata({
     /// Encryption key version (incremented on key rotation)
     ///

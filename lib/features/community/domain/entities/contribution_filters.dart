@@ -6,7 +6,7 @@ part 'contribution_filters.freezed.dart';
 part 'contribution_filters.g.dart';
 
 @freezed
-class ContributionFilters with _$ContributionFilters {
+abstract class ContributionFilters with _$ContributionFilters {
   const factory ContributionFilters({
     @Default([]) List<String> exerciseIds,
     String? type, // correction, tip, warning, variant, translation, technique

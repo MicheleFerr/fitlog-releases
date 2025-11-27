@@ -179,7 +179,7 @@ extension TimePeriodExtension on TimePeriod {
 /// - Numero di serie per gruppo muscolare
 /// - Percentuale di distribuzione (0-100%)
 @freezed
-class MuscleDistributionData with _$MuscleDistributionData {
+abstract class MuscleDistributionData with _$MuscleDistributionData {
   const factory MuscleDistributionData({
     /// Mappa gruppo muscolare → volume totale (kg)
     required Map<MuscleGroup, double> volumeByMuscle,
@@ -230,7 +230,7 @@ class MuscleDistributionData with _$MuscleDistributionData {
 
 /// Statistiche aggregate per il periodo (mostrate nelle card sotto il grafico)
 @freezed
-class PeriodStatistics with _$PeriodStatistics {
+abstract class PeriodStatistics with _$PeriodStatistics {
   const factory PeriodStatistics({
     /// Numero di allenamenti completati
     required int workoutsCount,
@@ -285,7 +285,7 @@ class PeriodStatistics with _$PeriodStatistics {
 /// - Statistiche aggregate periodo attuale
 /// - Statistiche aggregate periodo precedente
 @freezed
-class MuscleAnalyticsData with _$MuscleAnalyticsData {
+abstract class MuscleAnalyticsData with _$MuscleAnalyticsData {
   const factory MuscleAnalyticsData({
     /// Distribuzione muscolare periodo attuale
     required MuscleDistributionData current,

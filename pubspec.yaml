@@ -22,7 +22,7 @@ dependencies:
   firebase_performance: ^0.11.1+1  # Performance monitoring
   firebase_app_check: ^0.4.1+1  # 🔐 SECURITY: Prevents API abuse
   # plausible_analytics: ^0.3.0  # 🔐 PRIVACY: EU-hosted analytics (TODO: add when implementing)
-  google_sign_in: ^6.3.0   # Supporta GoogleUtilities 8.0+
+  google_sign_in: ^7.2.0  # ✅ Migrated from ^6.3.0 (2025-11-27) - singleton pattern
   sign_in_with_apple: ^7.0.0  # Upgraded for Flutter Android embedding compatibility
   
   # State Management
@@ -48,12 +48,12 @@ dependencies:
   
   # HealthKit & Fitness (Task 4.1: AI Coach health data integration)
   health: ^13.2.1  # Latest version with HealthKit + Health Connect support
-  permission_handler: ^11.0.1
+  permission_handler: ^12.0.1  # Migrated from ^11.0.1 (2025-11-27)
   device_info_plus: ^12.2.0  # For Android API level checks (Task 5.6)
   speech_to_text: ^7.1.0  # Voice input for AI Coach (Phase 3.1)
   
   # Navigation & UI
-  go_router: ^12.1.3
+  go_router: ^17.0.0  # ✅ Migrated from ^12.1.3 (2025-11-27) - case-sensitive URLs
   flutter_animate: ^4.3.0
   cached_network_image: ^3.3.1
   url_launcher: ^6.3.1
@@ -61,15 +61,15 @@ dependencies:
   # Utils
   intl: ^0.20.2
   package_info_plus: ^9.0.0
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^7.0.0  # Migrated from ^6.0.5 (2025-11-27)
   timeago: ^3.7.0  # Relative time formatting
-  flutter_dotenv: ^5.1.0  # 🔐 SECURITY: Environment variable management
+  flutter_dotenv: ^6.0.0  # 🔐 SECURITY: Migrated from ^5.1.0 (2025-11-27)
 
   # PDF Generation & Sharing
   pdf: ^3.11.0
   printing: ^5.13.0
   equatable: ^2.0.5
-  share_plus: ^10.1.0
+  share_plus: ^12.0.1  # Migrated from ^10.1.0 (2025-11-27)
   csv: ^6.0.0
 
   # Firebase Functions
@@ -79,13 +79,13 @@ dependencies:
   visibility_detector: ^0.4.0+2
 
   # AdMob Integration
-  google_mobile_ads: ^5.1.0
+  google_mobile_ads: ^6.0.0  # ✅ Migrated from ^5.1.0 (2025-11-27) - minSdk 23
 
   # Icons
   cupertino_icons: ^1.0.8
 
   # Code generation
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.1.0  # Migrated from ^2.4.1 (2025-11-27)
   json_annotation: ^4.8.1
   rxdart: ^0.28.0
   fl_chart: ^1.1.0
@@ -116,6 +116,7 @@ dependencies:
 
   # 🔍 Unified logging + HTTP inspector (debug builds)
   voo_logging: ^0.4.7
+  calendar_date_picker2: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -131,7 +132,7 @@ dev_dependencies:
   
   # Code generation
   build_runner: ^2.4.7
-  freezed: ^2.4.6
+  freezed: ^3.2.3  # Migrated from ^2.4.6 (2025-11-27)
   json_serializable: ^6.7.1
   hive_ce_generator: ^1.4.0  # ✅ Migrated from abandoned hive_generator (2025-11-27)
   

@@ -6,9 +6,8 @@ part of 'exercise_session.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseSessionImpl _$$ExerciseSessionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseSessionImpl(
+_ExerciseSession _$ExerciseSessionFromJson(Map<String, dynamic> json) =>
+    _ExerciseSession(
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sets: (json['sets'] as List<dynamic>)
@@ -17,8 +16,7 @@ _$ExerciseSessionImpl _$$ExerciseSessionImplFromJson(
       date: DateTime.parse(json['date'] as String),
     );
 
-Map<String, dynamic> _$$ExerciseSessionImplToJson(
-        _$ExerciseSessionImpl instance) =>
+Map<String, dynamic> _$ExerciseSessionToJson(_ExerciseSession instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'muscleGroup': instance.muscleGroup,

@@ -1039,7 +1039,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                               : isFromLast3Days
                                 ? theme.colorScheme.primaryContainer.withValues(alpha: 0.8)
                                 : theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isSelected
                                 ? theme.colorScheme.primary
@@ -1139,9 +1139,9 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                   HapticFeedback.mediumImpact();
                   _applyLastWorkoutValues(lastWorkoutData);
                 },
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -1149,7 +1149,7 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                         theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
                     ),
@@ -1174,10 +1174,10 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
                       const SizedBox(width: 8),
                       // Date badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.tertiary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           dateLabel,
@@ -1402,13 +1402,12 @@ class _QuickEditOverlayV2State extends ConsumerState<QuickEditOverlayV2>
             mainAxisSize: MainAxisSize.min,
             children: [
               SemanticIcon(
-  icon: AppIcons.calculateRounded,
-  semanticLabel: 'Calculate rounded',
-  size: AppIconSize.tiny,
-  color: hasWeight 
-                  ? theme.colorScheme.onSecondary 
-                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5,
-),
+                icon: AppIcons.calculateRounded,
+                semanticLabel: 'Calculate rounded',
+                size: AppIconSize.tiny,
+                color: hasWeight
+                    ? theme.colorScheme.onSecondary
+                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               const SizedBox(width: 6),
               Text(

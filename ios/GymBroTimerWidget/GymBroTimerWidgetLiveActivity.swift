@@ -523,3 +523,236 @@ struct LockScreenRPEView: View {
         // ✅ NESSUNA OMBREGGIATURA come richiesto
     }
 }
+
+// MARK: - ✅ Schedule Countdown Live Activity Widget
+@available(iOS 16.1, *)
+struct GymBroScheduleLiveActivity: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: GymBroScheduleAttributes.self) { context in
+            // Lock Screen / Banner UI
+            LockScreenScheduleView(context: context)
+        } dynamicIsland: { context in
+            // Dynamic Island UI
+            DynamicIsland {
+                // Expanded UI
+                DynamicIslandExpandedRegion(.leading) {
+                    HStack {
+                        Image(systemName: context.state.iconName)
+                            .foregroundColor(context.state.urgencyColor)
+                            .font(.title2)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(context.attributes.workoutName)
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .lineLimit(1)
+
+                            Text(context.state.statusText)
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+
+                DynamicIslandExpandedRegion(.trailing) {
+                    VStack(alignment: .trailing, spacing: 4) {
+                        // Countdown display
+                        if context.state.isTimeUp {
+                            Text(WidgetStrings.Schedule.go)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
+                        } else {
+                            Text(context.state.formattedTimeRemaining)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .monospacedDigit()
+                                .foregroundColor(context.state.urgencyColor)
+                        }
+
+                        Text("\(WidgetStrings.Common.at) \(context.state.scheduledTimeFormatted)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                DynamicIslandExpandedRegion(.bottom) {
+                    // Countdown progress bar
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            // Background track
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color(.systemGray4))
+                                .frame(height: 8)
+
+                            // Progress fill (shrinks as time approaches)
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(context.state.urgencyColor)
+                                .frame(width: geometry.size.width * context.state.countdownProgress, height: 8)
+                        }
+                    }
+                    .frame(height: 8)
+                }
+
+            } compactLeading: {
+                // Compact Leading with icon
+                Image(systemName: context.state.iconName)
+                    .foregroundColor(context.state.urgencyColor)
+                    .font(.system(size: 16))
+
+            } compactTrailing: {
+                // Compact Trailing with countdown
+                VStack(spacing: 0) {
+                    Text(context.state.shortTimeRemaining)
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundColor(context.state.urgencyColor)
+
+                    Text(WidgetStrings.Schedule.left)
+                        .font(.system(size: 6, weight: .medium))
+                        .foregroundColor(.secondary)
+                }
+
+            } minimal: {
+                // Minimal view with urgency indicator
+                ZStack {
+                    Circle()
+                        .fill(context.state.urgencyColor)
+                        .frame(width: 12, height: 12)
+
+                    if context.state.isTimeUp {
+                        Image(systemName: "figure.run")
+                            .font(.system(size: 6))
+                            .foregroundColor(.white)
+                    } else {
+                        Image(systemName: "clock.fill")
+                            .font(.system(size: 6))
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+            .widgetURL(URL(string: "gymbro://schedule/\(context.attributes.workoutId)"))
+            .keylineTint(context.state.urgencyColor)
+        }
+    }
+}
+
+// MARK: - Lock Screen Schedule View
+@available(iOS 16.1, *)
+struct LockScreenScheduleView: View {
+    let context: ActivityViewContext<GymBroScheduleAttributes>
+
+    var body: some View {
+        VStack(spacing: 12) {
+            // Header with workout info
+            HStack {
+                // Icon with urgency color
+                ZStack {
+                    Circle()
+                        .fill(context.state.urgencyColor.opacity(0.2))
+                        .frame(width: 44, height: 44)
+
+                    Image(systemName: context.state.iconName)
+                        .foregroundColor(context.state.urgencyColor)
+                        .font(.title2)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(context.attributes.workoutName)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+
+                    HStack {
+                        Text(context.state.statusText)
+                            .font(.subheadline)
+                            .foregroundColor(context.state.urgencyColor)
+
+                        Spacer()
+
+                        Text("\(WidgetStrings.Common.at) \(context.state.scheduledTimeFormatted)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Spacer()
+
+                // Countdown display
+                VStack(alignment: .trailing, spacing: 4) {
+                    if context.state.isTimeUp {
+                        VStack(spacing: 2) {
+                            Text("🏋️")
+                                .font(.title2)
+                            Text(WidgetStrings.Schedule.start)
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
+                        }
+                    } else {
+                        Text(context.state.formattedTimeRemaining)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .monospacedDigit()
+                            .foregroundColor(context.state.urgencyColor)
+
+                        Text(WidgetStrings.Schedule.remaining)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            // Progress bar showing time remaining
+            if !context.state.isTimeUp {
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        // Background track
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color(.systemGray5))
+                            .frame(height: 8)
+
+                        // Progress fill
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(
+                                LinearGradient(
+                                    colors: [context.state.urgencyColor, context.state.urgencyColor.opacity(0.7)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(width: geometry.size.width * context.state.countdownProgress, height: 8)
+                    }
+                }
+                .frame(height: 8)
+            } else {
+                // "Time to start" call to action
+                HStack {
+                    Spacer()
+
+                    Label(WidgetStrings.Schedule.tapToStart, systemImage: "arrow.right.circle.fill")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundColor(.green)
+
+                    Spacer()
+                }
+                .padding(.vertical, 4)
+                .background(Color.green.opacity(0.1))
+                .cornerRadius(8)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            LinearGradient(
+                colors: [
+                    context.state.urgencyColor.opacity(0.05),
+                    context.state.urgencyColor.opacity(0.1)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .cornerRadius(16)
+    }
+}

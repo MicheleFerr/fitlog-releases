@@ -7,7 +7,8 @@ import SwiftUI
           GymBroTimerWidget()
           if #available(iOS 16.1, *) {
               GymBroTimerLiveActivity()
-              GymBroRPELiveActivity()  // ✅ Aggiungi widget RPE
+              GymBroRPELiveActivity()       // ✅ Widget RPE
+              GymBroScheduleLiveActivity()  // ✅ Widget Schedule Countdown
           }
       }
   }

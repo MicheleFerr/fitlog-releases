@@ -6,9 +6,8 @@ part of 'set_progress_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SetProgressDataImpl _$$SetProgressDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SetProgressDataImpl(
+_SetProgressData _$SetProgressDataFromJson(Map<String, dynamic> json) =>
+    _SetProgressData(
       currentWeight: (json['currentWeight'] as num).toDouble(),
       lastWeight: (json['lastWeight'] as num).toDouble(),
       currentReps: (json['currentReps'] as num).toInt(),
@@ -18,8 +17,7 @@ _$SetProgressDataImpl _$$SetProgressDataImplFromJson(
       exerciseName: json['exerciseName'] as String,
     );
 
-Map<String, dynamic> _$$SetProgressDataImplToJson(
-        _$SetProgressDataImpl instance) =>
+Map<String, dynamic> _$SetProgressDataToJson(_SetProgressData instance) =>
     <String, dynamic>{
       'currentWeight': instance.currentWeight,
       'lastWeight': instance.lastWeight,
@@ -30,17 +28,15 @@ Map<String, dynamic> _$$SetProgressDataImplToJson(
       'exerciseName': instance.exerciseName,
     };
 
-_$SetProgressParamsImpl _$$SetProgressParamsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SetProgressParamsImpl(
+_SetProgressParams _$SetProgressParamsFromJson(Map<String, dynamic> json) =>
+    _SetProgressParams(
       exerciseName: json['exerciseName'] as String,
       setNumber: (json['setNumber'] as num).toInt(),
       currentWeight: (json['currentWeight'] as num).toDouble(),
       currentReps: (json['currentReps'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$SetProgressParamsImplToJson(
-        _$SetProgressParamsImpl instance) =>
+Map<String, dynamic> _$SetProgressParamsToJson(_SetProgressParams instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'setNumber': instance.setNumber,

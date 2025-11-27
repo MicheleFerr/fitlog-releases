@@ -27,7 +27,7 @@ part 'unified_feedback.g.dart';
 ///
 /// **Firestore Collection**: `feedback` (replaces 5 separate collections)
 @freezed
-class UnifiedFeedback with _$UnifiedFeedback {
+abstract class UnifiedFeedback with _$UnifiedFeedback {
   const factory UnifiedFeedback({
     /// Unique feedback ID (Firestore document ID)
     required String id,

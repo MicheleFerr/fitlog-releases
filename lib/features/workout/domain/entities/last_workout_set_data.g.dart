@@ -6,9 +6,8 @@ part of 'last_workout_set_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LastWorkoutSetDataImpl _$$LastWorkoutSetDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LastWorkoutSetDataImpl(
+_LastWorkoutSetData _$LastWorkoutSetDataFromJson(Map<String, dynamic> json) =>
+    _LastWorkoutSetData(
       weight: (json['weight'] as num).toDouble(),
       reps: (json['reps'] as num).toInt(),
       rpe: (json['rpe'] as num?)?.toInt(),
@@ -18,8 +17,7 @@ _$LastWorkoutSetDataImpl _$$LastWorkoutSetDataImplFromJson(
       exerciseName: json['exerciseName'] as String,
     );
 
-Map<String, dynamic> _$$LastWorkoutSetDataImplToJson(
-        _$LastWorkoutSetDataImpl instance) =>
+Map<String, dynamic> _$LastWorkoutSetDataToJson(_LastWorkoutSetData instance) =>
     <String, dynamic>{
       'weight': instance.weight,
       'reps': instance.reps,
@@ -30,16 +28,16 @@ Map<String, dynamic> _$$LastWorkoutSetDataImplToJson(
       'exerciseName': instance.exerciseName,
     };
 
-_$LastWorkoutSetParamsImpl _$$LastWorkoutSetParamsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LastWorkoutSetParamsImpl(
-      exerciseName: json['exerciseName'] as String,
-      setNumber: (json['setNumber'] as num).toInt(),
-    );
+_LastWorkoutSetParams _$LastWorkoutSetParamsFromJson(
+  Map<String, dynamic> json,
+) => _LastWorkoutSetParams(
+  exerciseName: json['exerciseName'] as String,
+  setNumber: (json['setNumber'] as num).toInt(),
+);
 
-Map<String, dynamic> _$$LastWorkoutSetParamsImplToJson(
-        _$LastWorkoutSetParamsImpl instance) =>
-    <String, dynamic>{
-      'exerciseName': instance.exerciseName,
-      'setNumber': instance.setNumber,
-    };
+Map<String, dynamic> _$LastWorkoutSetParamsToJson(
+  _LastWorkoutSetParams instance,
+) => <String, dynamic>{
+  'exerciseName': instance.exerciseName,
+  'setNumber': instance.setNumber,
+};

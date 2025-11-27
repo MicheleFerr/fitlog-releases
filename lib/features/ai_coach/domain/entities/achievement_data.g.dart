@@ -6,9 +6,8 @@ part of 'achievement_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AchievementDataImpl _$$AchievementDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$AchievementDataImpl(
+_AchievementData _$AchievementDataFromJson(Map<String, dynamic> json) =>
+    _AchievementData(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String,
@@ -25,8 +24,7 @@ _$AchievementDataImpl _$$AchievementDataImplFromJson(
       sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
     );
 
-Map<String, dynamic> _$$AchievementDataImplToJson(
-        _$AchievementDataImpl instance) =>
+Map<String, dynamic> _$AchievementDataToJson(_AchievementData instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

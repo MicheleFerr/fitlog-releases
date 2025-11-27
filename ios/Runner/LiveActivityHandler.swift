@@ -181,6 +181,17 @@ class LiveActivityHandler: NSObject {
             confirmRPEAndCompleteSet(call.arguments as? [String: Any], result: result)
         case "dismissRPEInterface":
             dismissRPEInterface(call.arguments as? [String: Any], result: result)
+        // ✅ Schedule Countdown Live Activities
+        case "startScheduleLiveActivity":
+            startScheduleLiveActivity(call.arguments as? [String: Any], result: result)
+        case "updateScheduleLiveActivity":
+            updateScheduleLiveActivity(call.arguments as? [String: Any], result: result)
+        case "endScheduleLiveActivity":
+            endScheduleLiveActivity(call.arguments as? [String: Any], result: result)
+        case "endAllScheduleLiveActivities":
+            endAllScheduleLiveActivities(result: result)
+        case "getActiveScheduleLiveActivities":
+            getActiveScheduleLiveActivities(result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1292,5 +1303,220 @@ class LiveActivityHandler: NSObject {
             - Battery-optimized update frequency
             """, category: .general)
         return true
+    }
+
+    // MARK: - ✅ Schedule Countdown Live Activities Implementation
+    private var currentScheduleActivity: Activity<GymBroScheduleAttributes>?
+
+    /// Start a schedule countdown Live Activity
+    func startScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else {
+            result(FlutterError(code: "DISABLED", message: "Live Activities are disabled", details: nil))
+            return
+        }
+
+        guard let args = arguments else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing arguments", details: nil))
+            return
+        }
+
+        // Extract schedule parameters
+        guard let workoutName = args["workoutName"] as? String,
+              let workoutId = args["workoutId"] as? String,
+              let scheduledTimestamp = args["scheduledTimestamp"] as? Int64 else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing required schedule parameters", details: nil))
+            return
+        }
+
+        let reminderTimestamp = args["reminderTimestamp"] as? Int64
+
+        // Convert timestamps to dates
+        let scheduledDate = Date(timeIntervalSince1970: Double(scheduledTimestamp) / 1000.0)
+        let reminderTime = reminderTimestamp != nil ?
+            Date(timeIntervalSince1970: Double(reminderTimestamp!) / 1000.0) : nil
+
+        // Calculate remaining minutes
+        let remainingMinutes = max(0, Int(scheduledDate.timeIntervalSinceNow / 60.0))
+        let isStartingSoon = remainingMinutes <= 30
+
+        Logger.shared.debug("""
+            📅 [SCHEDULE-LA] Starting Schedule Live Activity:
+            - Workout: \(workoutName)
+            - Scheduled: \(scheduledDate)
+            - Remaining: \(remainingMinutes) minutes
+            - Starting soon: \(isStartingSoon)
+            """, category: .general)
+
+        // End any existing schedule activity first
+        Task {
+            if let existingActivity = currentScheduleActivity {
+                await existingActivity.end(dismissalPolicy: .immediate)
+                currentScheduleActivity = nil
+                Logger.shared.debug("🧹 Ended existing schedule Live Activity", category: .general)
+            }
+
+            // Create schedule activity attributes
+            let attributes = GymBroScheduleAttributes(
+                workoutName: workoutName,
+                workoutId: workoutId,
+                reminderTime: reminderTime
+            )
+
+            // Create initial content state
+            let initialContentState = GymBroScheduleAttributes.ContentState(
+                scheduledDate: scheduledDate,
+                remainingMinutes: remainingMinutes,
+                isStartingSoon: isStartingSoon,
+                lastUpdated: Date()
+            )
+
+            do {
+                // Start the schedule activity
+                let activity = try Activity<GymBroScheduleAttributes>.request(
+                    attributes: attributes,
+                    content: ActivityContent<GymBroScheduleAttributes.ContentState>(
+                        state: initialContentState,
+                        staleDate: scheduledDate.addingTimeInterval(300) // Stale 5 min after scheduled time
+                    ),
+                    pushType: nil
+                )
+
+                self.currentScheduleActivity = activity
+                Logger.shared.debug("✅ Schedule Live Activity created: \(activity.id)", category: .general)
+                result(activity.id)
+
+            } catch {
+                Logger.shared.log(.error, "❌ Failed to create Schedule Live Activity: \(error)", category: .general)
+                result(FlutterError(
+                    code: "SCHEDULE_LA_START_FAILED",
+                    message: "Failed to start Schedule Live Activity: \(error.localizedDescription)",
+                    details: nil
+                ))
+            }
+        }
+    }
+
+    /// Update a schedule countdown Live Activity
+    func updateScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        guard let args = arguments,
+              let activityId = args["activityId"] as? String else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            return
+        }
+
+        // Find schedule activity by ID
+        let activity = Activity<GymBroScheduleAttributes>.activities.first { $0.id == activityId }
+
+        guard let activity = activity else {
+            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
+            return
+        }
+
+        // Extract update parameters
+        guard let scheduledTimestamp = args["scheduledTimestamp"] as? Int64 else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing scheduledTimestamp", details: nil))
+            return
+        }
+
+        let scheduledDate = Date(timeIntervalSince1970: Double(scheduledTimestamp) / 1000.0)
+        let remainingMinutes = max(0, Int(scheduledDate.timeIntervalSinceNow / 60.0))
+        let isStartingSoon = remainingMinutes <= 30
+
+        // Create updated content state
+        let updatedContentState = GymBroScheduleAttributes.ContentState(
+            scheduledDate: scheduledDate,
+            remainingMinutes: remainingMinutes,
+            isStartingSoon: isStartingSoon,
+            lastUpdated: Date()
+        )
+
+        Task {
+            await activity.update(
+                ActivityContent<GymBroScheduleAttributes.ContentState>(
+                    state: updatedContentState,
+                    staleDate: scheduledDate.addingTimeInterval(300)
+                )
+            )
+
+            Logger.shared.log(.debug, "✅ Schedule Live Activity updated: \(remainingMinutes)m remaining", category: .general)
+            result(true)
+        }
+    }
+
+    /// End a schedule countdown Live Activity
+    func endScheduleLiveActivity(_ arguments: [String: Any]?, result: @escaping FlutterResult) {
+        guard let args = arguments,
+              let activityId = args["activityId"] as? String else {
+            result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing activityId", details: nil))
+            return
+        }
+
+        let dismissPolicy = args["dismissPolicy"] as? String ?? "immediate"
+
+        // Find schedule activity by ID
+        let activity = Activity<GymBroScheduleAttributes>.activities.first { $0.id == activityId }
+
+        guard let activity = activity else {
+            result(FlutterError(code: "ACTIVITY_NOT_FOUND", message: "Schedule Activity not found", details: nil))
+            return
+        }
+
+        Task {
+            let policy: ActivityUIDismissalPolicy
+            switch dismissPolicy {
+            case "immediate":
+                policy = .immediate
+            case "after_5s":
+                policy = .after(Date().addingTimeInterval(5))
+            case "after_30s":
+                policy = .after(Date().addingTimeInterval(30))
+            default:
+                policy = .immediate
+            }
+
+            await activity.end(
+                ActivityContent<GymBroScheduleAttributes.ContentState>(
+                    state: activity.content.state,
+                    staleDate: nil
+                ),
+                dismissalPolicy: policy
+            )
+
+            if self.currentScheduleActivity?.id == activityId {
+                self.currentScheduleActivity = nil
+            }
+
+            Logger.shared.debug("✅ Schedule Live Activity ended: \(activityId)", category: .general)
+            result(true)
+        }
+    }
+
+    /// End all schedule Live Activities
+    func endAllScheduleLiveActivities(result: @escaping FlutterResult) {
+        Task {
+            let activities = Activity<GymBroScheduleAttributes>.activities
+
+            if activities.isEmpty {
+                Logger.shared.debug("✅ No schedule Live Activities to end", category: .general)
+                result(true)
+                return
+            }
+
+            Logger.shared.debug("🧹 Ending \(activities.count) schedule Live Activities", category: .general)
+
+            for activity in activities {
+                await activity.end(dismissalPolicy: .immediate)
+            }
+
+            currentScheduleActivity = nil
+            Logger.shared.debug("✅ All schedule Live Activities ended", category: .general)
+            result(true)
+        }
+    }
+
+    /// Get active schedule Live Activities
+    func getActiveScheduleLiveActivities(result: @escaping FlutterResult) {
+        let activityIds = Activity<GymBroScheduleAttributes>.activities.map { $0.id }
+        result(activityIds)
     }
 }

@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,434 +9,321 @@ part of 'exercise_mapping.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ExerciseMapping _$ExerciseMappingFromJson(Map<String, dynamic> json) {
-  return _ExerciseMapping.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ExerciseMapping {
-  /// GymBro exercise ID
-  String get gymbroId => throw _privateConstructorUsedError;
 
-  /// GymBro exercise name
-  String get gymbroName => throw _privateConstructorUsedError;
+/// GymBro exercise ID
+ String get gymbroId;/// GymBro exercise name
+ String get gymbroName;/// GymBro equipment type
+ String get gymbroEquipment;/// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
+ String? get gymbroFocus;/// Semantic similarity confidence (0.0-1.0)
+ double get confidence;/// Mapping status: "auto", "review", or "fallback"
+ MappingStatus get status;/// Strength standard ID (null if fallback)
+ String? get standardId;/// Strength standard name (null if fallback)
+ String? get standardName;/// Strength standard equipment (null if fallback)
+ String? get standardEquipment;/// Data source (null if fallback)
+ String? get dataSource;/// Fallback reason (only for fallback status)
+ String? get fallbackReason;
+/// Create a copy of ExerciseMapping
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ExerciseMappingCopyWith<ExerciseMapping> get copyWith => _$ExerciseMappingCopyWithImpl<ExerciseMapping>(this as ExerciseMapping, _$identity);
 
-  /// GymBro equipment type
-  String get gymbroEquipment => throw _privateConstructorUsedError;
+  /// Serializes this ExerciseMapping to a JSON map.
+  Map<String, dynamic> toJson();
 
-  /// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
-  String? get gymbroFocus => throw _privateConstructorUsedError;
 
-  /// Semantic similarity confidence (0.0-1.0)
-  double get confidence => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseMapping&&(identical(other.gymbroId, gymbroId) || other.gymbroId == gymbroId)&&(identical(other.gymbroName, gymbroName) || other.gymbroName == gymbroName)&&(identical(other.gymbroEquipment, gymbroEquipment) || other.gymbroEquipment == gymbroEquipment)&&(identical(other.gymbroFocus, gymbroFocus) || other.gymbroFocus == gymbroFocus)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.standardId, standardId) || other.standardId == standardId)&&(identical(other.standardName, standardName) || other.standardName == standardName)&&(identical(other.standardEquipment, standardEquipment) || other.standardEquipment == standardEquipment)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&(identical(other.fallbackReason, fallbackReason) || other.fallbackReason == fallbackReason));
+}
 
-  /// Mapping status: "auto", "review", or "fallback"
-  MappingStatus get status => throw _privateConstructorUsedError;
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,gymbroId,gymbroName,gymbroEquipment,gymbroFocus,confidence,status,standardId,standardName,standardEquipment,dataSource,fallbackReason);
 
-  /// Strength standard ID (null if fallback)
-  String? get standardId => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'ExerciseMapping(gymbroId: $gymbroId, gymbroName: $gymbroName, gymbroEquipment: $gymbroEquipment, gymbroFocus: $gymbroFocus, confidence: $confidence, status: $status, standardId: $standardId, standardName: $standardName, standardEquipment: $standardEquipment, dataSource: $dataSource, fallbackReason: $fallbackReason)';
+}
 
-  /// Strength standard name (null if fallback)
-  String? get standardName => throw _privateConstructorUsedError;
 
-  /// Strength standard equipment (null if fallback)
-  String? get standardEquipment => throw _privateConstructorUsedError;
-
-  /// Data source (null if fallback)
-  String? get dataSource => throw _privateConstructorUsedError;
-
-  /// Fallback reason (only for fallback status)
-  String? get fallbackReason => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ExerciseMappingCopyWith<ExerciseMapping> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ExerciseMappingCopyWith<$Res> {
-  factory $ExerciseMappingCopyWith(
-          ExerciseMapping value, $Res Function(ExerciseMapping) then) =
-      _$ExerciseMappingCopyWithImpl<$Res, ExerciseMapping>;
-  @useResult
-  $Res call(
-      {String gymbroId,
-      String gymbroName,
-      String gymbroEquipment,
-      String? gymbroFocus,
-      double confidence,
-      MappingStatus status,
-      String? standardId,
-      String? standardName,
-      String? standardEquipment,
-      String? dataSource,
-      String? fallbackReason});
-}
+abstract mixin class $ExerciseMappingCopyWith<$Res>  {
+  factory $ExerciseMappingCopyWith(ExerciseMapping value, $Res Function(ExerciseMapping) _then) = _$ExerciseMappingCopyWithImpl;
+@useResult
+$Res call({
+ String gymbroId, String gymbroName, String gymbroEquipment, String? gymbroFocus, double confidence, MappingStatus status, String? standardId, String? standardName, String? standardEquipment, String? dataSource, String? fallbackReason
+});
 
+
+
+
+}
 /// @nodoc
-class _$ExerciseMappingCopyWithImpl<$Res, $Val extends ExerciseMapping>
+class _$ExerciseMappingCopyWithImpl<$Res>
     implements $ExerciseMappingCopyWith<$Res> {
-  _$ExerciseMappingCopyWithImpl(this._value, this._then);
+  _$ExerciseMappingCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final ExerciseMapping _self;
+  final $Res Function(ExerciseMapping) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? gymbroId = null,
-    Object? gymbroName = null,
-    Object? gymbroEquipment = null,
-    Object? gymbroFocus = freezed,
-    Object? confidence = null,
-    Object? status = null,
-    Object? standardId = freezed,
-    Object? standardName = freezed,
-    Object? standardEquipment = freezed,
-    Object? dataSource = freezed,
-    Object? fallbackReason = freezed,
-  }) {
-    return _then(_value.copyWith(
-      gymbroId: null == gymbroId
-          ? _value.gymbroId
-          : gymbroId // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroName: null == gymbroName
-          ? _value.gymbroName
-          : gymbroName // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroEquipment: null == gymbroEquipment
-          ? _value.gymbroEquipment
-          : gymbroEquipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroFocus: freezed == gymbroFocus
-          ? _value.gymbroFocus
-          : gymbroFocus // ignore: cast_nullable_to_non_nullable
-              as String?,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as MappingStatus,
-      standardId: freezed == standardId
-          ? _value.standardId
-          : standardId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardName: freezed == standardName
-          ? _value.standardName
-          : standardName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardEquipment: freezed == standardEquipment
-          ? _value.standardEquipment
-          : standardEquipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dataSource: freezed == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String?,
-      fallbackReason: freezed == fallbackReason
-          ? _value.fallbackReason
-          : fallbackReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
+/// Create a copy of ExerciseMapping
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? gymbroId = null,Object? gymbroName = null,Object? gymbroEquipment = null,Object? gymbroFocus = freezed,Object? confidence = null,Object? status = null,Object? standardId = freezed,Object? standardName = freezed,Object? standardEquipment = freezed,Object? dataSource = freezed,Object? fallbackReason = freezed,}) {
+  return _then(_self.copyWith(
+gymbroId: null == gymbroId ? _self.gymbroId : gymbroId // ignore: cast_nullable_to_non_nullable
+as String,gymbroName: null == gymbroName ? _self.gymbroName : gymbroName // ignore: cast_nullable_to_non_nullable
+as String,gymbroEquipment: null == gymbroEquipment ? _self.gymbroEquipment : gymbroEquipment // ignore: cast_nullable_to_non_nullable
+as String,gymbroFocus: freezed == gymbroFocus ? _self.gymbroFocus : gymbroFocus // ignore: cast_nullable_to_non_nullable
+as String?,confidence: null == confidence ? _self.confidence : confidence // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MappingStatus,standardId: freezed == standardId ? _self.standardId : standardId // ignore: cast_nullable_to_non_nullable
+as String?,standardName: freezed == standardName ? _self.standardName : standardName // ignore: cast_nullable_to_non_nullable
+as String?,standardEquipment: freezed == standardEquipment ? _self.standardEquipment : standardEquipment // ignore: cast_nullable_to_non_nullable
+as String?,dataSource: freezed == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as String?,fallbackReason: freezed == fallbackReason ? _self.fallbackReason : fallbackReason // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$ExerciseMappingImplCopyWith<$Res>
-    implements $ExerciseMappingCopyWith<$Res> {
-  factory _$$ExerciseMappingImplCopyWith(_$ExerciseMappingImpl value,
-          $Res Function(_$ExerciseMappingImpl) then) =
-      __$$ExerciseMappingImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String gymbroId,
-      String gymbroName,
-      String gymbroEquipment,
-      String? gymbroFocus,
-      double confidence,
-      MappingStatus status,
-      String? standardId,
-      String? standardName,
-      String? standardEquipment,
-      String? dataSource,
-      String? fallbackReason});
 }
 
-/// @nodoc
-class __$$ExerciseMappingImplCopyWithImpl<$Res>
-    extends _$ExerciseMappingCopyWithImpl<$Res, _$ExerciseMappingImpl>
-    implements _$$ExerciseMappingImplCopyWith<$Res> {
-  __$$ExerciseMappingImplCopyWithImpl(
-      _$ExerciseMappingImpl _value, $Res Function(_$ExerciseMappingImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? gymbroId = null,
-    Object? gymbroName = null,
-    Object? gymbroEquipment = null,
-    Object? gymbroFocus = freezed,
-    Object? confidence = null,
-    Object? status = null,
-    Object? standardId = freezed,
-    Object? standardName = freezed,
-    Object? standardEquipment = freezed,
-    Object? dataSource = freezed,
-    Object? fallbackReason = freezed,
-  }) {
-    return _then(_$ExerciseMappingImpl(
-      gymbroId: null == gymbroId
-          ? _value.gymbroId
-          : gymbroId // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroName: null == gymbroName
-          ? _value.gymbroName
-          : gymbroName // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroEquipment: null == gymbroEquipment
-          ? _value.gymbroEquipment
-          : gymbroEquipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroFocus: freezed == gymbroFocus
-          ? _value.gymbroFocus
-          : gymbroFocus // ignore: cast_nullable_to_non_nullable
-              as String?,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as MappingStatus,
-      standardId: freezed == standardId
-          ? _value.standardId
-          : standardId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardName: freezed == standardName
-          ? _value.standardName
-          : standardName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardEquipment: freezed == standardEquipment
-          ? _value.standardEquipment
-          : standardEquipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dataSource: freezed == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String?,
-      fallbackReason: freezed == fallbackReason
-          ? _value.fallbackReason
-          : fallbackReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [ExerciseMapping].
+extension ExerciseMappingPatterns on ExerciseMapping {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ExerciseMapping value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ExerciseMapping() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ExerciseMapping value)  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseMapping():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ExerciseMapping value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ExerciseMapping() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String gymbroId,  String gymbroName,  String gymbroEquipment,  String? gymbroFocus,  double confidence,  MappingStatus status,  String? standardId,  String? standardName,  String? standardEquipment,  String? dataSource,  String? fallbackReason)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ExerciseMapping() when $default != null:
+return $default(_that.gymbroId,_that.gymbroName,_that.gymbroEquipment,_that.gymbroFocus,_that.confidence,_that.status,_that.standardId,_that.standardName,_that.standardEquipment,_that.dataSource,_that.fallbackReason);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String gymbroId,  String gymbroName,  String gymbroEquipment,  String? gymbroFocus,  double confidence,  MappingStatus status,  String? standardId,  String? standardName,  String? standardEquipment,  String? dataSource,  String? fallbackReason)  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseMapping():
+return $default(_that.gymbroId,_that.gymbroName,_that.gymbroEquipment,_that.gymbroFocus,_that.confidence,_that.status,_that.standardId,_that.standardName,_that.standardEquipment,_that.dataSource,_that.fallbackReason);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String gymbroId,  String gymbroName,  String gymbroEquipment,  String? gymbroFocus,  double confidence,  MappingStatus status,  String? standardId,  String? standardName,  String? standardEquipment,  String? dataSource,  String? fallbackReason)?  $default,) {final _that = this;
+switch (_that) {
+case _ExerciseMapping() when $default != null:
+return $default(_that.gymbroId,_that.gymbroName,_that.gymbroEquipment,_that.gymbroFocus,_that.confidence,_that.status,_that.standardId,_that.standardName,_that.standardEquipment,_that.dataSource,_that.fallbackReason);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseMappingImpl implements _ExerciseMapping {
-  const _$ExerciseMappingImpl(
-      {required this.gymbroId,
-      required this.gymbroName,
-      required this.gymbroEquipment,
-      this.gymbroFocus,
-      required this.confidence,
-      required this.status,
-      this.standardId,
-      this.standardName,
-      this.standardEquipment,
-      this.dataSource,
-      this.fallbackReason});
 
-  factory _$ExerciseMappingImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseMappingImplFromJson(json);
+class _ExerciseMapping implements ExerciseMapping {
+  const _ExerciseMapping({required this.gymbroId, required this.gymbroName, required this.gymbroEquipment, this.gymbroFocus, required this.confidence, required this.status, this.standardId, this.standardName, this.standardEquipment, this.dataSource, this.fallbackReason});
+  factory _ExerciseMapping.fromJson(Map<String, dynamic> json) => _$ExerciseMappingFromJson(json);
 
-  /// GymBro exercise ID
-  @override
-  final String gymbroId;
+/// GymBro exercise ID
+@override final  String gymbroId;
+/// GymBro exercise name
+@override final  String gymbroName;
+/// GymBro equipment type
+@override final  String gymbroEquipment;
+/// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
+@override final  String? gymbroFocus;
+/// Semantic similarity confidence (0.0-1.0)
+@override final  double confidence;
+/// Mapping status: "auto", "review", or "fallback"
+@override final  MappingStatus status;
+/// Strength standard ID (null if fallback)
+@override final  String? standardId;
+/// Strength standard name (null if fallback)
+@override final  String? standardName;
+/// Strength standard equipment (null if fallback)
+@override final  String? standardEquipment;
+/// Data source (null if fallback)
+@override final  String? dataSource;
+/// Fallback reason (only for fallback status)
+@override final  String? fallbackReason;
 
-  /// GymBro exercise name
-  @override
-  final String gymbroName;
+/// Create a copy of ExerciseMapping
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ExerciseMappingCopyWith<_ExerciseMapping> get copyWith => __$ExerciseMappingCopyWithImpl<_ExerciseMapping>(this, _$identity);
 
-  /// GymBro equipment type
-  @override
-  final String gymbroEquipment;
-
-  /// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
-  @override
-  final String? gymbroFocus;
-
-  /// Semantic similarity confidence (0.0-1.0)
-  @override
-  final double confidence;
-
-  /// Mapping status: "auto", "review", or "fallback"
-  @override
-  final MappingStatus status;
-
-  /// Strength standard ID (null if fallback)
-  @override
-  final String? standardId;
-
-  /// Strength standard name (null if fallback)
-  @override
-  final String? standardName;
-
-  /// Strength standard equipment (null if fallback)
-  @override
-  final String? standardEquipment;
-
-  /// Data source (null if fallback)
-  @override
-  final String? dataSource;
-
-  /// Fallback reason (only for fallback status)
-  @override
-  final String? fallbackReason;
-
-  @override
-  String toString() {
-    return 'ExerciseMapping(gymbroId: $gymbroId, gymbroName: $gymbroName, gymbroEquipment: $gymbroEquipment, gymbroFocus: $gymbroFocus, confidence: $confidence, status: $status, standardId: $standardId, standardName: $standardName, standardEquipment: $standardEquipment, dataSource: $dataSource, fallbackReason: $fallbackReason)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ExerciseMappingImpl &&
-            (identical(other.gymbroId, gymbroId) ||
-                other.gymbroId == gymbroId) &&
-            (identical(other.gymbroName, gymbroName) ||
-                other.gymbroName == gymbroName) &&
-            (identical(other.gymbroEquipment, gymbroEquipment) ||
-                other.gymbroEquipment == gymbroEquipment) &&
-            (identical(other.gymbroFocus, gymbroFocus) ||
-                other.gymbroFocus == gymbroFocus) &&
-            (identical(other.confidence, confidence) ||
-                other.confidence == confidence) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.standardId, standardId) ||
-                other.standardId == standardId) &&
-            (identical(other.standardName, standardName) ||
-                other.standardName == standardName) &&
-            (identical(other.standardEquipment, standardEquipment) ||
-                other.standardEquipment == standardEquipment) &&
-            (identical(other.dataSource, dataSource) ||
-                other.dataSource == dataSource) &&
-            (identical(other.fallbackReason, fallbackReason) ||
-                other.fallbackReason == fallbackReason));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      gymbroId,
-      gymbroName,
-      gymbroEquipment,
-      gymbroFocus,
-      confidence,
-      status,
-      standardId,
-      standardName,
-      standardEquipment,
-      dataSource,
-      fallbackReason);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ExerciseMappingImplCopyWith<_$ExerciseMappingImpl> get copyWith =>
-      __$$ExerciseMappingImplCopyWithImpl<_$ExerciseMappingImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExerciseMappingImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$ExerciseMappingToJson(this, );
 }
 
-abstract class _ExerciseMapping implements ExerciseMapping {
-  const factory _ExerciseMapping(
-      {required final String gymbroId,
-      required final String gymbroName,
-      required final String gymbroEquipment,
-      final String? gymbroFocus,
-      required final double confidence,
-      required final MappingStatus status,
-      final String? standardId,
-      final String? standardName,
-      final String? standardEquipment,
-      final String? dataSource,
-      final String? fallbackReason}) = _$ExerciseMappingImpl;
-
-  factory _ExerciseMapping.fromJson(Map<String, dynamic> json) =
-      _$ExerciseMappingImpl.fromJson;
-
-  @override
-
-  /// GymBro exercise ID
-  String get gymbroId;
-  @override
-
-  /// GymBro exercise name
-  String get gymbroName;
-  @override
-
-  /// GymBro equipment type
-  String get gymbroEquipment;
-  @override
-
-  /// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
-  String? get gymbroFocus;
-  @override
-
-  /// Semantic similarity confidence (0.0-1.0)
-  double get confidence;
-  @override
-
-  /// Mapping status: "auto", "review", or "fallback"
-  MappingStatus get status;
-  @override
-
-  /// Strength standard ID (null if fallback)
-  String? get standardId;
-  @override
-
-  /// Strength standard name (null if fallback)
-  String? get standardName;
-  @override
-
-  /// Strength standard equipment (null if fallback)
-  String? get standardEquipment;
-  @override
-
-  /// Data source (null if fallback)
-  String? get dataSource;
-  @override
-
-  /// Fallback reason (only for fallback status)
-  String? get fallbackReason;
-  @override
-  @JsonKey(ignore: true)
-  _$$ExerciseMappingImplCopyWith<_$ExerciseMappingImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseMapping&&(identical(other.gymbroId, gymbroId) || other.gymbroId == gymbroId)&&(identical(other.gymbroName, gymbroName) || other.gymbroName == gymbroName)&&(identical(other.gymbroEquipment, gymbroEquipment) || other.gymbroEquipment == gymbroEquipment)&&(identical(other.gymbroFocus, gymbroFocus) || other.gymbroFocus == gymbroFocus)&&(identical(other.confidence, confidence) || other.confidence == confidence)&&(identical(other.status, status) || other.status == status)&&(identical(other.standardId, standardId) || other.standardId == standardId)&&(identical(other.standardName, standardName) || other.standardName == standardName)&&(identical(other.standardEquipment, standardEquipment) || other.standardEquipment == standardEquipment)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource)&&(identical(other.fallbackReason, fallbackReason) || other.fallbackReason == fallbackReason));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,gymbroId,gymbroName,gymbroEquipment,gymbroFocus,confidence,status,standardId,standardName,standardEquipment,dataSource,fallbackReason);
+
+@override
+String toString() {
+  return 'ExerciseMapping(gymbroId: $gymbroId, gymbroName: $gymbroName, gymbroEquipment: $gymbroEquipment, gymbroFocus: $gymbroFocus, confidence: $confidence, status: $status, standardId: $standardId, standardName: $standardName, standardEquipment: $standardEquipment, dataSource: $dataSource, fallbackReason: $fallbackReason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ExerciseMappingCopyWith<$Res> implements $ExerciseMappingCopyWith<$Res> {
+  factory _$ExerciseMappingCopyWith(_ExerciseMapping value, $Res Function(_ExerciseMapping) _then) = __$ExerciseMappingCopyWithImpl;
+@override @useResult
+$Res call({
+ String gymbroId, String gymbroName, String gymbroEquipment, String? gymbroFocus, double confidence, MappingStatus status, String? standardId, String? standardName, String? standardEquipment, String? dataSource, String? fallbackReason
+});
+
+
+
+
+}
+/// @nodoc
+class __$ExerciseMappingCopyWithImpl<$Res>
+    implements _$ExerciseMappingCopyWith<$Res> {
+  __$ExerciseMappingCopyWithImpl(this._self, this._then);
+
+  final _ExerciseMapping _self;
+  final $Res Function(_ExerciseMapping) _then;
+
+/// Create a copy of ExerciseMapping
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? gymbroId = null,Object? gymbroName = null,Object? gymbroEquipment = null,Object? gymbroFocus = freezed,Object? confidence = null,Object? status = null,Object? standardId = freezed,Object? standardName = freezed,Object? standardEquipment = freezed,Object? dataSource = freezed,Object? fallbackReason = freezed,}) {
+  return _then(_ExerciseMapping(
+gymbroId: null == gymbroId ? _self.gymbroId : gymbroId // ignore: cast_nullable_to_non_nullable
+as String,gymbroName: null == gymbroName ? _self.gymbroName : gymbroName // ignore: cast_nullable_to_non_nullable
+as String,gymbroEquipment: null == gymbroEquipment ? _self.gymbroEquipment : gymbroEquipment // ignore: cast_nullable_to_non_nullable
+as String,gymbroFocus: freezed == gymbroFocus ? _self.gymbroFocus : gymbroFocus // ignore: cast_nullable_to_non_nullable
+as String?,confidence: null == confidence ? _self.confidence : confidence // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MappingStatus,standardId: freezed == standardId ? _self.standardId : standardId // ignore: cast_nullable_to_non_nullable
+as String?,standardName: freezed == standardName ? _self.standardName : standardName // ignore: cast_nullable_to_non_nullable
+as String?,standardEquipment: freezed == standardEquipment ? _self.standardEquipment : standardEquipment // ignore: cast_nullable_to_non_nullable
+as String?,dataSource: freezed == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as String?,fallbackReason: freezed == fallbackReason ? _self.fallbackReason : fallbackReason // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

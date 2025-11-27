@@ -6,10 +6,10 @@ part of 'contribution_filters.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ContributionFiltersImpl _$$ContributionFiltersImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ContributionFiltersImpl(
-      exerciseIds: (json['exerciseIds'] as List<dynamic>?)
+_ContributionFilters _$ContributionFiltersFromJson(Map<String, dynamic> json) =>
+    _ContributionFilters(
+      exerciseIds:
+          (json['exerciseIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -25,14 +25,14 @@ _$ContributionFiltersImpl _$$ContributionFiltersImplFromJson(
       sortBy: json['sortBy'] as String? ?? 'helpful',
     );
 
-Map<String, dynamic> _$$ContributionFiltersImplToJson(
-        _$ContributionFiltersImpl instance) =>
-    <String, dynamic>{
-      'exerciseIds': instance.exerciseIds,
-      'type': instance.type,
-      'difficulty': instance.difficulty,
-      'authorTier': instance.authorTier,
-      'dateFrom': instance.dateFrom?.toIso8601String(),
-      'dateTo': instance.dateTo?.toIso8601String(),
-      'sortBy': instance.sortBy,
-    };
+Map<String, dynamic> _$ContributionFiltersToJson(
+  _ContributionFilters instance,
+) => <String, dynamic>{
+  'exerciseIds': instance.exerciseIds,
+  'type': instance.type,
+  'difficulty': instance.difficulty,
+  'authorTier': instance.authorTier,
+  'dateFrom': instance.dateFrom?.toIso8601String(),
+  'dateTo': instance.dateTo?.toIso8601String(),
+  'sortBy': instance.sortBy,
+};

@@ -6,12 +6,12 @@ part of 'conversation_node.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConversationNodeImpl _$$ConversationNodeImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ConversationNodeImpl(
+_ConversationNode _$ConversationNodeFromJson(Map<String, dynamic> json) =>
+    _ConversationNode(
       id: json['id'] as String,
       parentId: json['parentId'] as String?,
-      childrenIds: (json['childrenIds'] as List<dynamic>?)
+      childrenIds:
+          (json['childrenIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -20,8 +20,7 @@ _$ConversationNodeImpl _$$ConversationNodeImplFromJson(
       isCurrent: json['isCurrent'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$ConversationNodeImplToJson(
-        _$ConversationNodeImpl instance) =>
+Map<String, dynamic> _$ConversationNodeToJson(_ConversationNode instance) =>
     <String, dynamic>{
       'id': instance.id,
       'parentId': instance.parentId,

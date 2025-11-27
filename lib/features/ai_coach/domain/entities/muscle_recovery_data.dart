@@ -49,7 +49,7 @@ part 'muscle_recovery_data.g.dart';
 /// // Chest: 💪 (Recovered)
 /// ```
 @freezed
-class MuscleRecoveryData with _$MuscleRecoveryData {
+abstract class MuscleRecoveryData with _$MuscleRecoveryData {
   const factory MuscleRecoveryData({
     /// Map of muscle group to recovery status
     ///
@@ -142,7 +142,7 @@ enum MuscleGroup {
 
 /// Recovery status for a specific muscle group
 @freezed
-class MuscleRecoveryStatus with _$MuscleRecoveryStatus {
+abstract class MuscleRecoveryStatus with _$MuscleRecoveryStatus {
   const factory MuscleRecoveryStatus({
     /// Muscle group this status applies to
     required MuscleGroup group,

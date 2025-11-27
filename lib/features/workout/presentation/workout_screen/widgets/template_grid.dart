@@ -23,6 +23,7 @@ class TemplateGrid extends StatelessWidget {
     required this.onTemplateEdit,
     required this.onTemplateDelete,
     required this.onCreateTemplate,
+    this.onTemplateSchedule,
   });
 
   /// List of templates to display
@@ -51,6 +52,9 @@ class TemplateGrid extends StatelessWidget {
 
   /// Callback when user creates a new template (only shown in empty state for custom tab)
   final VoidCallback onCreateTemplate;
+
+  /// Callback when user schedules a template (swipe right action)
+  final void Function(wt.WorkoutTemplate template)? onTemplateSchedule;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +114,9 @@ class TemplateGrid extends StatelessWidget {
           onDuplicate: () => onTemplateDuplicate(template),
           onEdit: () => onTemplateEdit(template),
           onDelete: () => onTemplateDelete(template),
+          onSchedule: onTemplateSchedule != null
+              ? () => onTemplateSchedule!(template)
+              : null,
         );
       },
     );

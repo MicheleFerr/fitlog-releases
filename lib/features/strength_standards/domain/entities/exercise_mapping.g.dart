@@ -6,9 +6,8 @@ part of 'exercise_mapping.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseMappingImpl _$$ExerciseMappingImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseMappingImpl(
+_ExerciseMapping _$ExerciseMappingFromJson(Map<String, dynamic> json) =>
+    _ExerciseMapping(
       gymbroId: json['gymbroId'] as String,
       gymbroName: json['gymbroName'] as String,
       gymbroEquipment: json['gymbroEquipment'] as String,
@@ -22,8 +21,7 @@ _$ExerciseMappingImpl _$$ExerciseMappingImplFromJson(
       fallbackReason: json['fallbackReason'] as String?,
     );
 
-Map<String, dynamic> _$$ExerciseMappingImplToJson(
-        _$ExerciseMappingImpl instance) =>
+Map<String, dynamic> _$ExerciseMappingToJson(_ExerciseMapping instance) =>
     <String, dynamic>{
       'gymbroId': instance.gymbroId,
       'gymbroName': instance.gymbroName,

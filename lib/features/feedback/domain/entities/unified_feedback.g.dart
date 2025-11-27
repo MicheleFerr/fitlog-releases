@@ -6,9 +6,8 @@ part of 'unified_feedback.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UnifiedFeedbackImpl _$$UnifiedFeedbackImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UnifiedFeedbackImpl(
+_UnifiedFeedback _$UnifiedFeedbackFromJson(Map<String, dynamic> json) =>
+    _UnifiedFeedback(
       id: json['id'] as String,
       userId: json['userId'] as String,
       type: $enumDecode(_$UnifiedFeedbackTypeEnumMap, json['type']),
@@ -29,8 +28,7 @@ _$UnifiedFeedbackImpl _$$UnifiedFeedbackImplFromJson(
       userDisplayName: json['userDisplayName'] as String?,
     );
 
-Map<String, dynamic> _$$UnifiedFeedbackImplToJson(
-        _$UnifiedFeedbackImpl instance) =>
+Map<String, dynamic> _$UnifiedFeedbackToJson(_UnifiedFeedback instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

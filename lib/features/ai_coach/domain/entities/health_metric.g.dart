@@ -6,8 +6,8 @@ part of 'health_metric.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$HealthMetricImpl _$$HealthMetricImplFromJson(Map<String, dynamic> json) =>
-    _$HealthMetricImpl(
+_HealthMetric _$HealthMetricFromJson(Map<String, dynamic> json) =>
+    _HealthMetric(
       type: $enumDecode(_$HealthMetricTypeEnumMap, json['type']),
       value: (json['value'] as num).toDouble(),
       unit: json['unit'] as String,
@@ -20,7 +20,7 @@ _$HealthMetricImpl _$$HealthMetricImplFromJson(Map<String, dynamic> json) =>
       workoutDistance: (json['workoutDistance'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$$HealthMetricImplToJson(_$HealthMetricImpl instance) =>
+Map<String, dynamic> _$HealthMetricToJson(_HealthMetric instance) =>
     <String, dynamic>{
       'type': _$HealthMetricTypeEnumMap[instance.type]!,
       'value': instance.value,
@@ -42,9 +42,8 @@ const _$HealthMetricTypeEnumMap = {
   HealthMetricType.workout: 'workout',
 };
 
-_$HealthMetricSummaryImpl _$$HealthMetricSummaryImplFromJson(
-        Map<String, dynamic> json) =>
-    _$HealthMetricSummaryImpl(
+_HealthMetricSummary _$HealthMetricSummaryFromJson(Map<String, dynamic> json) =>
+    _HealthMetricSummary(
       metricType: $enumDecode(_$HealthMetricTypeEnumMap, json['metricType']),
       totalValue: (json['totalValue'] as num).toDouble(),
       averageValue: (json['averageValue'] as num).toDouble(),
@@ -56,16 +55,16 @@ _$HealthMetricSummaryImpl _$$HealthMetricSummaryImplFromJson(
       unit: json['unit'] as String,
     );
 
-Map<String, dynamic> _$$HealthMetricSummaryImplToJson(
-        _$HealthMetricSummaryImpl instance) =>
-    <String, dynamic>{
-      'metricType': _$HealthMetricTypeEnumMap[instance.metricType]!,
-      'totalValue': instance.totalValue,
-      'averageValue': instance.averageValue,
-      'minValue': instance.minValue,
-      'maxValue': instance.maxValue,
-      'dataPoints': instance.dataPoints,
-      'periodStart': instance.periodStart.toIso8601String(),
-      'periodEnd': instance.periodEnd.toIso8601String(),
-      'unit': instance.unit,
-    };
+Map<String, dynamic> _$HealthMetricSummaryToJson(
+  _HealthMetricSummary instance,
+) => <String, dynamic>{
+  'metricType': _$HealthMetricTypeEnumMap[instance.metricType]!,
+  'totalValue': instance.totalValue,
+  'averageValue': instance.averageValue,
+  'minValue': instance.minValue,
+  'maxValue': instance.maxValue,
+  'dataPoints': instance.dataPoints,
+  'periodStart': instance.periodStart.toIso8601String(),
+  'periodEnd': instance.periodEnd.toIso8601String(),
+  'unit': instance.unit,
+};

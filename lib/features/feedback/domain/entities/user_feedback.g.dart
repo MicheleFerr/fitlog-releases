@@ -6,8 +6,8 @@ part of 'user_feedback.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserFeedbackImpl _$$UserFeedbackImplFromJson(Map<String, dynamic> json) =>
-    _$UserFeedbackImpl(
+_UserFeedback _$UserFeedbackFromJson(Map<String, dynamic> json) =>
+    _UserFeedback(
       id: json['id'] as String,
       userId: json['userId'] as String,
       message: json['message'] as String,
@@ -27,7 +27,7 @@ _$UserFeedbackImpl _$$UserFeedbackImplFromJson(Map<String, dynamic> json) =>
       adminNotes: json['adminNotes'] as String?,
     );
 
-Map<String, dynamic> _$$UserFeedbackImplToJson(_$UserFeedbackImpl instance) =>
+Map<String, dynamic> _$UserFeedbackToJson(_UserFeedback instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

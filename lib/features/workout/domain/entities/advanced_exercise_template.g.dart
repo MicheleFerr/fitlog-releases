@@ -6,44 +6,45 @@ part of 'advanced_exercise_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AdvancedExerciseTemplateImpl _$$AdvancedExerciseTemplateImplFromJson(
-        Map<String, dynamic> json) =>
-    _$AdvancedExerciseTemplateImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      type: $enumDecode(_$AdvancedExerciseTypeEnumMap, json['type']),
-      config: AdvancedExerciseConfig.fromJson(
-          json['config'] as Map<String, dynamic>),
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
-      usageCount: (json['usageCount'] as num?)?.toInt() ?? 0,
-      isFavorite: json['isFavorite'] as bool? ?? false,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      lastUsedAt: json['lastUsedAt'] == null
-          ? null
-          : DateTime.parse(json['lastUsedAt'] as String),
-    );
+_AdvancedExerciseTemplate _$AdvancedExerciseTemplateFromJson(
+  Map<String, dynamic> json,
+) => _AdvancedExerciseTemplate(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  name: json['name'] as String,
+  description: json['description'] as String?,
+  type: $enumDecode(_$AdvancedExerciseTypeEnumMap, json['type']),
+  config: AdvancedExerciseConfig.fromJson(
+    json['config'] as Map<String, dynamic>,
+  ),
+  tags:
+      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  usageCount: (json['usageCount'] as num?)?.toInt() ?? 0,
+  isFavorite: json['isFavorite'] as bool? ?? false,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  lastUsedAt: json['lastUsedAt'] == null
+      ? null
+      : DateTime.parse(json['lastUsedAt'] as String),
+);
 
-Map<String, dynamic> _$$AdvancedExerciseTemplateImplToJson(
-        _$AdvancedExerciseTemplateImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'name': instance.name,
-      'description': instance.description,
-      'type': _$AdvancedExerciseTypeEnumMap[instance.type]!,
-      'config': instance.config.toJson(),
-      'tags': instance.tags,
-      'usageCount': instance.usageCount,
-      'isFavorite': instance.isFavorite,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
-      'lastUsedAt': instance.lastUsedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$AdvancedExerciseTemplateToJson(
+  _AdvancedExerciseTemplate instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'name': instance.name,
+  'description': instance.description,
+  'type': _$AdvancedExerciseTypeEnumMap[instance.type]!,
+  'config': instance.config.toJson(),
+  'tags': instance.tags,
+  'usageCount': instance.usageCount,
+  'isFavorite': instance.isFavorite,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+  'lastUsedAt': instance.lastUsedAt?.toIso8601String(),
+};
 
 const _$AdvancedExerciseTypeEnumMap = {
   AdvancedExerciseType.superset: 'superset',
@@ -51,8 +52,8 @@ const _$AdvancedExerciseTypeEnumMap = {
   AdvancedExerciseType.restPause: 'restPause',
 };
 
-_$SupersetConfigImpl _$$SupersetConfigImplFromJson(Map<String, dynamic> json) =>
-    _$SupersetConfigImpl(
+SupersetConfig _$SupersetConfigFromJson(Map<String, dynamic> json) =>
+    SupersetConfig(
       exerciseNames: (json['exerciseNames'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -66,8 +67,7 @@ _$SupersetConfigImpl _$$SupersetConfigImplFromJson(Map<String, dynamic> json) =>
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$SupersetConfigImplToJson(
-        _$SupersetConfigImpl instance) =>
+Map<String, dynamic> _$SupersetConfigToJson(SupersetConfig instance) =>
     <String, dynamic>{
       'exerciseNames': instance.exerciseNames,
       'exerciseIds': instance.exerciseIds,
@@ -77,8 +77,8 @@ Map<String, dynamic> _$$SupersetConfigImplToJson(
       'runtimeType': instance.$type,
     };
 
-_$DropSetConfigImpl _$$DropSetConfigImplFromJson(Map<String, dynamic> json) =>
-    _$DropSetConfigImpl(
+DropSetConfig _$DropSetConfigFromJson(Map<String, dynamic> json) =>
+    DropSetConfig(
       exerciseName: json['exerciseName'] as String,
       exerciseId: json['exerciseId'] as String,
       drops: (json['drops'] as num).toInt(),
@@ -89,7 +89,7 @@ _$DropSetConfigImpl _$$DropSetConfigImplFromJson(Map<String, dynamic> json) =>
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$DropSetConfigImplToJson(_$DropSetConfigImpl instance) =>
+Map<String, dynamic> _$DropSetConfigToJson(DropSetConfig instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'exerciseId': instance.exerciseId,
@@ -99,9 +99,8 @@ Map<String, dynamic> _$$DropSetConfigImplToJson(_$DropSetConfigImpl instance) =>
       'runtimeType': instance.$type,
     };
 
-_$RestPauseConfigImpl _$$RestPauseConfigImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RestPauseConfigImpl(
+RestPauseConfig _$RestPauseConfigFromJson(Map<String, dynamic> json) =>
+    RestPauseConfig(
       exerciseName: json['exerciseName'] as String,
       exerciseId: json['exerciseId'] as String,
       miniSets: (json['miniSets'] as num).toInt(),
@@ -110,8 +109,7 @@ _$RestPauseConfigImpl _$$RestPauseConfigImplFromJson(
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$RestPauseConfigImplToJson(
-        _$RestPauseConfigImpl instance) =>
+Map<String, dynamic> _$RestPauseConfigToJson(RestPauseConfig instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'exerciseId': instance.exerciseId,

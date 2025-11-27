@@ -7,9 +7,9 @@ import FirebaseCore
 // import workmanager // Not needed - using flutter_background_service instead
 
 /// Refactored AppDelegate using modular manager pattern
+/// Traditional lifecycle (without UIScene)
 @main
 @objc class AppDelegate: FlutterAppDelegate {
-
 
     // MARK: - Properties
 
@@ -31,68 +31,37 @@ import FirebaseCore
         NetworkConfiguration.shared
         NetworkConfiguration.preferIPv4ForFirebase()
 
-        // Configure Firebase FIRST before any other initialization
-        FirebaseApp.configure()
-        Logger.shared.log(.info, "✅ Firebase configured successfully", category: .general)
-
-        // Call super first to set up Flutter properly
+        // Call super FIRST to set up Flutter engine (traditional lifecycle)
         let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
-        // Workmanager setup - commented out as we're using flutter_background_service instead
-        // WorkmanagerPlugin.setPluginRegistrantCallback { registry in
-        //     GeneratedPluginRegistrant.register(with: registry)
-        // }
-        // WorkmanagerPlugin.registerBGTaskWithIdentifier("dev.flutter.background.refresh")
+        // Firebase initialization is handled by Flutter's firebase_core plugin
+        // via Firebase.initializeApp() in main.dart - don't call FirebaseApp.configure() here
+        Logger.shared.log(.info, "✅ Flutter engine initialized", category: .general)
 
-        // Register plugins with the controller
-        if let controller = window?.rootViewController as? FlutterViewController {
-            GeneratedPluginRegistrant.register(with: controller)
-        }
+        // Setup Flutter integration (channels, plugins)
+        setupFlutterIntegration()
 
-        // Initialize managers based on feature flags
+        // Initialize managers based on feature flags (non-Flutter related)
         initializeManagers()
 
         // Setup keyboard monitoring to prevent warnings
         KeyboardManager.shared.setupKeyboardMonitoring()
 
-        // Setup Flutter integration
-        setupFlutterIntegration()
-        
         // Setup notification categories BEFORE checking permissions
         setupNotificationCategories()
-        
+
         // Set notification delegate for foreground notifications
         UNUserNotificationCenter.current().delegate = self
-        
+
         // Check permissions
         PermissionManager.shared.checkAllPermissions()
 
-        // Request tracking authorization for better analytics (optional)
-        // This fixes the AdSupport Framework warning
-        // DISABLED: Comment out if you want to re-enable tracking request
-        /*
-        if #available(iOS 14.5, *) {
-            // Delay request to avoid showing on first launch
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                AdSupportManager.shared.requestTrackingAuthorization { _ in
-                    // Analytics will work with or without authorization
-                }
-            }
-        }
-        */
-
         // CRITICAL: Ensure notification permissions for timer audio
         ensureNotificationPermissions()
-        
-        // CRITICAL: Setup notification delegate to prevent double sounds
-        if let controller = window?.rootViewController as? FlutterViewController {
-            NotificationDelegate.shared.setupWithMessenger(controller.binaryMessenger)
-        }
-        Logger.shared.log(.info, "✅ NotificationDelegate configured", category: .general)
 
         return result
     }
-    
+
     // MARK: - Background/Foreground Transitions
     
     override func applicationDidEnterBackground(_ application: UIApplication) {
@@ -289,18 +258,18 @@ import FirebaseCore
     }
     
     private func setupFlutterIntegration() {
-        // Use the shared Flutter engine's binary messenger
-        guard let controller = window?.rootViewController as? FlutterViewController else { return }
+        // Use window.rootViewController (traditional lifecycle without UIScene)
+        guard let controller = window?.rootViewController as? FlutterViewController else {
+            Logger.shared.log(.error, "❌ FlutterViewController not available for Flutter integration", category: .general)
+            return
+        }
         let messenger = controller.binaryMessenger
 
+        // Register plugins explicitly
+        GeneratedPluginRegistrant.register(with: self)
+
         // UnifiedTimerCoordinator now coordinates ALL timer operations
-        // This prevents audio duplicates, race conditions, and manages Live Activities
         UnifiedTimerCoordinator.shared.setupChannel(with: messenger)
-
-        // Legacy channels are now internally routed through UnifiedTimerCoordinator
-
-        // Legacy channels are now internally routed through UnifiedTimerCoordinator
-        // Individual manager setup removed to prevent conflicts
 
         // Setup feature flag channel for Flutter
         setupFeatureFlagChannel(with: messenger)
@@ -308,11 +277,12 @@ import FirebaseCore
         // Setup notification channel for custom sounds
         setupNotificationChannel(with: messenger)
 
-        // Test sound manager removed - functionality integrated in TimerSoundFix
+        // Setup notification delegate
+        NotificationDelegate.shared.setupWithMessenger(messenger)
 
-        Logger.shared.log(.info, "Flutter integration setup completed")
+        Logger.shared.log(.info, "✅ Flutter integration setup completed", category: .general)
     }
-    
+
     private func setupFeatureFlagChannel(with messenger: FlutterBinaryMessenger) {
         let channel = FlutterMethodChannel(
             name: "com.gymbro.feature_flags",
@@ -749,7 +719,7 @@ extension AppDelegate {
         if categoryIdentifier == "TIMER_COMPLETE" {
             // Timer completion - show banner and play sound even in foreground
             Logger.shared.log(.info, "⏰ Timer completion notification received in foreground", category: .general)
-            
+
             // CRITICAL FIX: Notify Flutter that audio has been played via iOS notification
             if let controller = window?.rootViewController as? FlutterViewController {
                 let unifiedChannel = FlutterMethodChannel(name: "com.gymbro.timer/unified",
@@ -759,6 +729,8 @@ extension AppDelegate {
                     "source": "notification"
                 ])
                 Logger.shared.log(.info, "✅ Notified Flutter that audio was played by iOS notification", category: .general)
+            } else {
+                Logger.shared.log(.warning, "⚠️ Could not notify Flutter - no FlutterViewController available", category: .general)
             }
 
             completionHandler([.banner, .sound, .badge])

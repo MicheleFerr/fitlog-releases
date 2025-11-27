@@ -22,7 +22,7 @@ enum OvertrainingRisk {
 
 /// Consistency score entity - measures workout adherence quality
 @freezed
-class ConsistencyScore with _$ConsistencyScore {
+abstract class ConsistencyScore with _$ConsistencyScore {
   const factory ConsistencyScore({
     // NEW: Binary indicators (100% validated thresholds)
     /// Frequency is optimal (3-5 workouts per week)

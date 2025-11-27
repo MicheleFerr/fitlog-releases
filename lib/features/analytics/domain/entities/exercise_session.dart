@@ -44,7 +44,7 @@ part 'exercise_session.freezed.dart';
 part 'exercise_session.g.dart';
 
 @freezed
-class ExerciseSession with _$ExerciseSession {
+abstract class ExerciseSession with _$ExerciseSession {
 
   const factory ExerciseSession({
     /// Name of the exercise (e.g., "Bench Press", "Squat")

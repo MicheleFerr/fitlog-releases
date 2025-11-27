@@ -12,7 +12,7 @@ enum WorkoutStatus {
 }
 
 @freezed
-class Workout with _$Workout {
+abstract class Workout with _$Workout {
   const factory Workout({
     required String id,
     required String name,

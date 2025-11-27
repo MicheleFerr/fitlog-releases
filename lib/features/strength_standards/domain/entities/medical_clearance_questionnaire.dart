@@ -11,7 +11,7 @@ part 'medical_clearance_questionnaire.g.dart';
 ///
 /// Administered BEFORE fitness questionnaire to ensure safety.
 @freezed
-class MedicalClearanceQuestionnaire with _$MedicalClearanceQuestionnaire {
+abstract class MedicalClearanceQuestionnaire with _$MedicalClearanceQuestionnaire {
   const factory MedicalClearanceQuestionnaire({
     // Core PAR-Q+ questions (simplified for app context)
 

@@ -40,7 +40,7 @@ part 'exercise_history.freezed.dart';
 part 'exercise_history.g.dart';
 
 @freezed
-class ExerciseHistory with _$ExerciseHistory {
+abstract class ExerciseHistory with _$ExerciseHistory {
 
   const factory ExerciseHistory({
     /// Name of the exercise (e.g., "Bench Press", "Squat")

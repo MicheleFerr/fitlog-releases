@@ -42,7 +42,7 @@ enum CorrelationStrength {
 }
 
 @freezed
-class CorrelationResult with _$CorrelationResult {
+abstract class CorrelationResult with _$CorrelationResult {
   const factory CorrelationResult({
     /// Pearson correlation coefficient (-1 to +1)
     /// - +1: Perfect positive correlation
@@ -95,7 +95,7 @@ class CorrelationResult with _$CorrelationResult {
 
 /// Results container for all metric correlations
 @freezed
-class CorrelationResults with _$CorrelationResults {
+abstract class CorrelationResults with _$CorrelationResults {
   const factory CorrelationResults({
     /// Weight vs RPE correlation
     required CorrelationResult weightRpe,

@@ -21,7 +21,7 @@ part 'exercise_patch.freezed.dart';
 part 'exercise_patch.g.dart';
 
 @freezed
-class ExercisePatch with _$ExercisePatch {
+abstract class ExercisePatch with _$ExercisePatch {
   const factory ExercisePatch({
     /// Unique patch ID (Firestore document ID)
     required String id,

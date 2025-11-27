@@ -6,22 +6,23 @@ part of 'conversation_tree.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConversationTreeImpl _$$ConversationTreeImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ConversationTreeImpl(
+_ConversationTree _$ConversationTreeFromJson(Map<String, dynamic> json) =>
+    _ConversationTree(
       userId: json['userId'] as String,
       rootNodeId: json['rootNodeId'] as String?,
       currentNodeId: json['currentNodeId'] as String?,
-      nodes: (json['nodes'] as Map<String, dynamic>?)?.map(
+      nodes:
+          (json['nodes'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(
-                k, ConversationNode.fromJson(e as Map<String, dynamic>)),
+              k,
+              ConversationNode.fromJson(e as Map<String, dynamic>),
+            ),
           ) ??
           const {},
       lastUpdated: DateTime.parse(json['lastUpdated'] as String),
     );
 
-Map<String, dynamic> _$$ConversationTreeImplToJson(
-        _$ConversationTreeImpl instance) =>
+Map<String, dynamic> _$ConversationTreeToJson(_ConversationTree instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'rootNodeId': instance.rootNodeId,

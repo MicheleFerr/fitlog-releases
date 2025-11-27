@@ -8,7 +8,7 @@ part of 'app_config.dart';
 
 class AppConfigAdapter extends TypeAdapter<AppConfig> {
   @override
-  final int typeId = 0;
+  final typeId = 0;
 
   @override
   AppConfig read(BinaryReader reader) {
@@ -17,29 +17,31 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AppConfig(
-      languageCode: fields[0] as String,
-      countryCode: fields[1] as String,
-      themeMode: fields[2] as ThemeMode,
-      measurementUnit: fields[3] as String,
-      soundEnabled: fields[4] as bool,
-      vibrationsEnabled: fields[5] as bool,
-      timerSound: fields[16] as String,
-      defaultRestTime: (fields[6] as num).toInt(),
-      autoStartTimer: fields[7] as bool,
-      strengthRestTime: (fields[13] as num).toInt(),
-      hypertrophyRestTime: (fields[14] as num).toInt(),
-      enduranceRestTime: (fields[15] as num).toInt(),
-      showIntensityTechniques: fields[8] as bool,
-      primaryColor: fields[9] as String,
-      enableLiveActivities: fields[10] as bool,
-      syncWithHealthKit: fields[11] as bool,
-      fontSize: (fields[12] as num).toDouble(),
+      languageCode: fields[0] == null ? 'en' : fields[0] as String,
+      countryCode: fields[1] == null ? 'US' : fields[1] as String,
+      themeMode: fields[2] == null ? ThemeMode.system : fields[2] as ThemeMode,
+      measurementUnit: fields[3] == null ? 'kg' : fields[3] as String,
+      soundEnabled: fields[4] == null ? true : fields[4] as bool,
+      vibrationsEnabled: fields[5] == null ? true : fields[5] as bool,
+      timerSound: fields[16] == null ? 'timer_complete' : fields[16] as String,
+      defaultRestTime: fields[6] == null ? 90 : (fields[6] as num).toInt(),
+      autoStartTimer: fields[7] == null ? true : fields[7] as bool,
+      strengthRestTime: fields[13] == null ? 180 : (fields[13] as num).toInt(),
+      hypertrophyRestTime: fields[14] == null
+          ? 90
+          : (fields[14] as num).toInt(),
+      enduranceRestTime: fields[15] == null ? 60 : (fields[15] as num).toInt(),
+      showIntensityTechniques: fields[8] == null ? true : fields[8] as bool,
+      primaryColor: fields[9] == null ? '2196F3' : fields[9] as String,
+      enableLiveActivities: fields[10] == null ? true : fields[10] as bool,
+      syncWithHealthKit: fields[11] == null ? false : fields[11] as bool,
+      fontSize: fields[12] == null ? 1.0 : (fields[12] as num).toDouble(),
       preferredTemplateId: fields[17] as String?,
-      rpeTracking: fields[18] as bool?,
-      autoRestTimer: fields[19] as bool?,
+      rpeTracking: fields[18] == null ? true : fields[18] as bool?,
+      autoRestTimer: fields[19] == null ? true : fields[19] as bool?,
       setDurationTracking: fields[20] as bool?,
-      plateCalculator: fields[21] as bool?,
-      warmupSuggestions: fields[22] as bool?,
+      plateCalculator: fields[21] == null ? true : fields[21] as bool?,
+      warmupSuggestions: fields[22] == null ? true : fields[22] as bool?,
       availablePlates: (fields[23] as List?)?.cast<double>(),
       isProMode: fields[24] as bool?,
       autoCollapseCompleted: fields[25] as bool?,
@@ -51,12 +53,14 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       showAdvancedMenu: fields[31] as bool?,
       showCollapseCountdown: fields[32] as bool?,
       simplifiedAnimations: fields[33] as bool?,
-      hasSeenWorkoutOnboarding: fields[34] as bool,
-      onboardingVersion: (fields[35] as num).toInt(),
+      hasSeenWorkoutOnboarding: fields[34] == null ? false : fields[34] as bool,
+      onboardingVersion: fields[35] == null ? 1 : (fields[35] as num).toInt(),
       betaModeEnabled: fields[36] as bool?,
-      enableApre: fields[37] as bool?,
-      defaultApreProtocol: (fields[38] as num?)?.toInt(),
-      autoAdjustRestTime: fields[39] as bool?,
+      enableApre: fields[37] == null ? true : fields[37] as bool?,
+      defaultApreProtocol: fields[38] == null
+          ? 6
+          : (fields[38] as num?)?.toInt(),
+      autoAdjustRestTime: fields[39] == null ? true : fields[39] as bool?,
       showQuickInfoIcon: fields[40] as bool?,
       showWarmupIcon: fields[41] as bool?,
       showPreventionIcon: fields[42] as bool?,
@@ -81,18 +85,10 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..write(obj.soundEnabled)
       ..writeByte(5)
       ..write(obj.vibrationsEnabled)
-      ..writeByte(16)
-      ..write(obj.timerSound)
       ..writeByte(6)
       ..write(obj.defaultRestTime)
       ..writeByte(7)
       ..write(obj.autoStartTimer)
-      ..writeByte(13)
-      ..write(obj.strengthRestTime)
-      ..writeByte(14)
-      ..write(obj.hypertrophyRestTime)
-      ..writeByte(15)
-      ..write(obj.enduranceRestTime)
       ..writeByte(8)
       ..write(obj.showIntensityTechniques)
       ..writeByte(9)
@@ -103,6 +99,14 @@ class AppConfigAdapter extends TypeAdapter<AppConfig> {
       ..write(obj.syncWithHealthKit)
       ..writeByte(12)
       ..write(obj.fontSize)
+      ..writeByte(13)
+      ..write(obj.strengthRestTime)
+      ..writeByte(14)
+      ..write(obj.hypertrophyRestTime)
+      ..writeByte(15)
+      ..write(obj.enduranceRestTime)
+      ..writeByte(16)
+      ..write(obj.timerSound)
       ..writeByte(17)
       ..write(obj.preferredTemplateId)
       ..writeByte(18)

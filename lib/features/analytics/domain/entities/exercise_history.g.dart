@@ -6,9 +6,8 @@ part of 'exercise_history.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseHistoryImpl _$$ExerciseHistoryImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseHistoryImpl(
+_ExerciseHistory _$ExerciseHistoryFromJson(Map<String, dynamic> json) =>
+    _ExerciseHistory(
       exerciseName: json['exerciseName'] as String,
       muscleGroup: json['muscleGroup'] as String,
       sessions: (json['sessions'] as List<dynamic>)
@@ -16,8 +15,7 @@ _$ExerciseHistoryImpl _$$ExerciseHistoryImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ExerciseHistoryImplToJson(
-        _$ExerciseHistoryImpl instance) =>
+Map<String, dynamic> _$ExerciseHistoryToJson(_ExerciseHistory instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'muscleGroup': instance.muscleGroup,

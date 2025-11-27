@@ -39,7 +39,7 @@ part 'muscle_correction.g.dart';
 ///
 /// **Immutable** value object using Freezed
 @freezed
-class MuscleCorrection with _$MuscleCorrection {
+abstract class MuscleCorrection with _$MuscleCorrection {
   const factory MuscleCorrection({
     /// Exercise name (e.g., "Bench Press", "Squat")
     required String exerciseName,

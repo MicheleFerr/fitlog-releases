@@ -6,41 +6,40 @@ part of 'encrypted_measurement.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EncryptedMeasurementImpl _$$EncryptedMeasurementImplFromJson(
-        Map<String, dynamic> json) =>
-    _$EncryptedMeasurementImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      metricType: json['metricType'] as String,
-      encryptedData: json['encryptedData'] as String,
-      iv: json['iv'] as String,
-      tag: json['tag'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-    );
+_EncryptedMeasurement _$EncryptedMeasurementFromJson(
+  Map<String, dynamic> json,
+) => _EncryptedMeasurement(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  metricType: json['metricType'] as String,
+  encryptedData: json['encryptedData'] as String,
+  iv: json['iv'] as String,
+  tag: json['tag'] as String,
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+);
 
-Map<String, dynamic> _$$EncryptedMeasurementImplToJson(
-        _$EncryptedMeasurementImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'metricType': instance.metricType,
-      'encryptedData': instance.encryptedData,
-      'iv': instance.iv,
-      'tag': instance.tag,
-      'timestamp': instance.timestamp.toIso8601String(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$EncryptedMeasurementToJson(
+  _EncryptedMeasurement instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'metricType': instance.metricType,
+  'encryptedData': instance.encryptedData,
+  'iv': instance.iv,
+  'tag': instance.tag,
+  'timestamp': instance.timestamp.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+};
 
-_$EncryptionMetadataImpl _$$EncryptionMetadataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$EncryptionMetadataImpl(
+_EncryptionMetadata _$EncryptionMetadataFromJson(Map<String, dynamic> json) =>
+    _EncryptionMetadata(
       keyVersion: (json['keyVersion'] as num).toInt(),
       keyGeneratedAt: DateTime.parse(json['keyGeneratedAt'] as String),
       keyLastRotated: json['keyLastRotated'] == null
@@ -53,8 +52,7 @@ _$EncryptionMetadataImpl _$$EncryptionMetadataImplFromJson(
       keyDerivationFunction: json['keyDerivationFunction'] as String?,
     );
 
-Map<String, dynamic> _$$EncryptionMetadataImplToJson(
-        _$EncryptionMetadataImpl instance) =>
+Map<String, dynamic> _$EncryptionMetadataToJson(_EncryptionMetadata instance) =>
     <String, dynamic>{
       'keyVersion': instance.keyVersion,
       'keyGeneratedAt': instance.keyGeneratedAt.toIso8601String(),

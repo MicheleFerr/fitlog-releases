@@ -72,22 +72,18 @@ class _MainShellState extends ConsumerState<MainShell> {
     // _handleAutoPause(currentIndex, workout);
 
     return Scaffold(
-      body: Stack(
+      body: widget.navigationShell,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          widget.navigationShell,
-          // Mini-bar positioned above bottom nav
-          if (showMiniBar)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 68, // 64pt nav + 4pt margin (compact)
-              child: WorkoutMiniBar(workout: workout),
-            ),
+          // Mini-bar integrated directly above nav bar
+          if (showMiniBar) WorkoutMiniBar(workout: workout),
+          _BottomNavigationBar(
+            currentIndex: currentIndex,
+            onDestinationSelected: (index) =>
+                _onDestinationSelected(context, index),
+          ),
         ],
-      ),
-      bottomNavigationBar: _BottomNavigationBar(
-        currentIndex: currentIndex,
-        onDestinationSelected: (index) => _onDestinationSelected(context, index),
       ),
     );
   }

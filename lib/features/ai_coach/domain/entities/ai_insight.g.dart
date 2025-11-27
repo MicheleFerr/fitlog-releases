@@ -6,27 +6,26 @@ part of 'ai_insight.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AIInsightImpl _$$AIInsightImplFromJson(Map<String, dynamic> json) =>
-    _$AIInsightImpl(
-      id: json['id'] as String,
-      type: $enumDecode(_$InsightTypeEnumMap, json['type']),
-      severity: $enumDecode(_$InsightSeverityEnumMap, json['severity']),
-      title: json['title'] as String,
-      description: json['description'] as String,
-      recommendation: json['recommendation'] as String,
-      priority: (json['priority'] as num).toInt(),
-      affectedExercise: json['affectedExercise'] as String?,
-      affectedTemplates: (json['affectedTemplates'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      scientificStrategies: (json['scientificStrategies'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      dataPoints: json['dataPoints'] as Map<String, dynamic>?,
-      timestamp: DateTime.parse(json['timestamp'] as String),
-    );
+_AIInsight _$AIInsightFromJson(Map<String, dynamic> json) => _AIInsight(
+  id: json['id'] as String,
+  type: $enumDecode(_$InsightTypeEnumMap, json['type']),
+  severity: $enumDecode(_$InsightSeverityEnumMap, json['severity']),
+  title: json['title'] as String,
+  description: json['description'] as String,
+  recommendation: json['recommendation'] as String,
+  priority: (json['priority'] as num).toInt(),
+  affectedExercise: json['affectedExercise'] as String?,
+  affectedTemplates: (json['affectedTemplates'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  scientificStrategies: (json['scientificStrategies'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  dataPoints: json['dataPoints'] as Map<String, dynamic>?,
+  timestamp: DateTime.parse(json['timestamp'] as String),
+);
 
-Map<String, dynamic> _$$AIInsightImplToJson(_$AIInsightImpl instance) =>
+Map<String, dynamic> _$AIInsightToJson(_AIInsight instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': _$InsightTypeEnumMap[instance.type]!,

@@ -20,7 +20,7 @@ part 'workout_suggestion.g.dart';
 /// );
 /// ```
 @freezed
-class WorkoutSuggestion with _$WorkoutSuggestion {
+abstract class WorkoutSuggestion with _$WorkoutSuggestion {
   const factory WorkoutSuggestion({
     /// Suggestion level (pattern/routine/frequency/dayBased)
     required SuggestionLevel level,

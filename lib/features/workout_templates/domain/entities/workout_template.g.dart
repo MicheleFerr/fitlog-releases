@@ -6,68 +6,69 @@ part of 'workout_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CommunityWorkoutTemplateImpl _$$CommunityWorkoutTemplateImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CommunityWorkoutTemplateImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      exercises: (json['exercises'] as List<dynamic>)
-          .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      category: $enumDecode(_$TemplateCategoryEnumMap, json['category']),
-      visibility: $enumDecode(_$TemplateVisibilityEnumMap, json['visibility']),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      downloadCount: (json['downloadCount'] as num?)?.toInt() ?? 0,
-      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
-      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
-      authorName: json['authorName'] as String?,
-      authorPhotoUrl: json['authorPhotoUrl'] as String?,
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
-      estimatedDurationMinutes:
-          (json['estimatedDurationMinutes'] as num?)?.toInt(),
-      difficultyLevel: json['difficultyLevel'] as String?,
-      requiredEquipment: (json['requiredEquipment'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      targetMuscles: (json['targetMuscles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-    );
+_CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
+  Map<String, dynamic> json,
+) => _CommunityWorkoutTemplate(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  name: json['name'] as String,
+  description: json['description'] as String?,
+  exercises: (json['exercises'] as List<dynamic>)
+      .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  category: $enumDecode(_$TemplateCategoryEnumMap, json['category']),
+  visibility: $enumDecode(_$TemplateVisibilityEnumMap, json['visibility']),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  downloadCount: (json['downloadCount'] as num?)?.toInt() ?? 0,
+  likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+  reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
+  averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+  authorName: json['authorName'] as String?,
+  authorPhotoUrl: json['authorPhotoUrl'] as String?,
+  tags:
+      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  estimatedDurationMinutes: (json['estimatedDurationMinutes'] as num?)?.toInt(),
+  difficultyLevel: json['difficultyLevel'] as String?,
+  requiredEquipment:
+      (json['requiredEquipment'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  targetMuscles:
+      (json['targetMuscles'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+);
 
-Map<String, dynamic> _$$CommunityWorkoutTemplateImplToJson(
-        _$CommunityWorkoutTemplateImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'name': instance.name,
-      'description': instance.description,
-      'exercises': instance.exercises.map((e) => e.toJson()).toList(),
-      'category': _$TemplateCategoryEnumMap[instance.category]!,
-      'visibility': _$TemplateVisibilityEnumMap[instance.visibility]!,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-      'downloadCount': instance.downloadCount,
-      'likeCount': instance.likeCount,
-      'reviewCount': instance.reviewCount,
-      'averageRating': instance.averageRating,
-      'authorName': instance.authorName,
-      'authorPhotoUrl': instance.authorPhotoUrl,
-      'tags': instance.tags,
-      'estimatedDurationMinutes': instance.estimatedDurationMinutes,
-      'difficultyLevel': instance.difficultyLevel,
-      'requiredEquipment': instance.requiredEquipment,
-      'targetMuscles': instance.targetMuscles,
-    };
+Map<String, dynamic> _$CommunityWorkoutTemplateToJson(
+  _CommunityWorkoutTemplate instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'name': instance.name,
+  'description': instance.description,
+  'exercises': instance.exercises.map((e) => e.toJson()).toList(),
+  'category': _$TemplateCategoryEnumMap[instance.category]!,
+  'visibility': _$TemplateVisibilityEnumMap[instance.visibility]!,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'downloadCount': instance.downloadCount,
+  'likeCount': instance.likeCount,
+  'reviewCount': instance.reviewCount,
+  'averageRating': instance.averageRating,
+  'authorName': instance.authorName,
+  'authorPhotoUrl': instance.authorPhotoUrl,
+  'tags': instance.tags,
+  'estimatedDurationMinutes': instance.estimatedDurationMinutes,
+  'difficultyLevel': instance.difficultyLevel,
+  'requiredEquipment': instance.requiredEquipment,
+  'targetMuscles': instance.targetMuscles,
+};
 
 const _$TemplateCategoryEnumMap = {
   TemplateCategory.strength: 'strength',
@@ -88,8 +89,8 @@ const _$TemplateVisibilityEnumMap = {
   TemplateVisibility.friends: 'friends',
 };
 
-_$TemplateReviewImpl _$$TemplateReviewImplFromJson(Map<String, dynamic> json) =>
-    _$TemplateReviewImpl(
+_TemplateReview _$TemplateReviewFromJson(Map<String, dynamic> json) =>
+    _TemplateReview(
       id: json['id'] as String,
       templateId: json['templateId'] as String,
       userId: json['userId'] as String,
@@ -99,14 +100,14 @@ _$TemplateReviewImpl _$$TemplateReviewImplFromJson(Map<String, dynamic> json) =>
       comment: json['comment'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       helpfulCount: (json['helpfulCount'] as num?)?.toInt() ?? 0,
-      helpfulVoters: (json['helpfulVoters'] as List<dynamic>?)
+      helpfulVoters:
+          (json['helpfulVoters'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
     );
 
-Map<String, dynamic> _$$TemplateReviewImplToJson(
-        _$TemplateReviewImpl instance) =>
+Map<String, dynamic> _$TemplateReviewToJson(_TemplateReview instance) =>
     <String, dynamic>{
       'id': instance.id,
       'templateId': instance.templateId,
@@ -120,9 +121,8 @@ Map<String, dynamic> _$$TemplateReviewImplToJson(
       'helpfulVoters': instance.helpfulVoters,
     };
 
-_$TemplateCommentImpl _$$TemplateCommentImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TemplateCommentImpl(
+_TemplateComment _$TemplateCommentFromJson(Map<String, dynamic> json) =>
+    _TemplateComment(
       id: json['id'] as String,
       templateId: json['templateId'] as String,
       userId: json['userId'] as String,
@@ -131,15 +131,15 @@ _$TemplateCommentImpl _$$TemplateCommentImplFromJson(
       text: json['text'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      likedBy: (json['likedBy'] as List<dynamic>?)
+      likedBy:
+          (json['likedBy'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
       replyToId: json['replyToId'] as String?,
     );
 
-Map<String, dynamic> _$$TemplateCommentImplToJson(
-        _$TemplateCommentImpl instance) =>
+Map<String, dynamic> _$TemplateCommentToJson(_TemplateComment instance) =>
     <String, dynamic>{
       'id': instance.id,
       'templateId': instance.templateId,

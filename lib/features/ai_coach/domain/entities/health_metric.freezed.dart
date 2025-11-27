@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,773 +9,621 @@ part of 'health_metric.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-HealthMetric _$HealthMetricFromJson(Map<String, dynamic> json) {
-  return _HealthMetric.fromJson(json);
-}
 
 /// @nodoc
 mixin _$HealthMetric {
-  /// Metric type (steps, heart rate, etc.)
-  HealthMetricType get type => throw _privateConstructorUsedError;
 
-  /// Numeric value (e.g., 8500 steps, 72 BPM)
-  double get value => throw _privateConstructorUsedError;
+/// Metric type (steps, heart rate, etc.)
+ HealthMetricType get type;/// Numeric value (e.g., 8500 steps, 72 BPM)
+ double get value;/// Unit of measurement (count, bpm, kcal, minutes)
+ String get unit;/// Start timestamp for metric collection
+ DateTime get dateFrom;/// End timestamp for metric collection
+ DateTime get dateTo;/// Source device (optional)
+ String? get sourceDevice;/// Source app (optional)
+ String? get sourceApp;/// Workout type (for HealthMetricType.workout only)
+ String? get workoutType;/// Workout duration (seconds, for HealthMetricType.workout only)
+ int? get workoutDuration;/// Workout distance (meters, for HealthMetricType.workout only)
+ double? get workoutDistance;
+/// Create a copy of HealthMetric
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$HealthMetricCopyWith<HealthMetric> get copyWith => _$HealthMetricCopyWithImpl<HealthMetric>(this as HealthMetric, _$identity);
 
-  /// Unit of measurement (count, bpm, kcal, minutes)
-  String get unit => throw _privateConstructorUsedError;
+  /// Serializes this HealthMetric to a JSON map.
+  Map<String, dynamic> toJson();
 
-  /// Start timestamp for metric collection
-  DateTime get dateFrom => throw _privateConstructorUsedError;
 
-  /// End timestamp for metric collection
-  DateTime get dateTo => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthMetric&&(identical(other.type, type) || other.type == type)&&(identical(other.value, value) || other.value == value)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.dateFrom, dateFrom) || other.dateFrom == dateFrom)&&(identical(other.dateTo, dateTo) || other.dateTo == dateTo)&&(identical(other.sourceDevice, sourceDevice) || other.sourceDevice == sourceDevice)&&(identical(other.sourceApp, sourceApp) || other.sourceApp == sourceApp)&&(identical(other.workoutType, workoutType) || other.workoutType == workoutType)&&(identical(other.workoutDuration, workoutDuration) || other.workoutDuration == workoutDuration)&&(identical(other.workoutDistance, workoutDistance) || other.workoutDistance == workoutDistance));
+}
 
-  /// Source device (optional)
-  String? get sourceDevice => throw _privateConstructorUsedError;
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,value,unit,dateFrom,dateTo,sourceDevice,sourceApp,workoutType,workoutDuration,workoutDistance);
 
-  /// Source app (optional)
-  String? get sourceApp => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'HealthMetric(type: $type, value: $value, unit: $unit, dateFrom: $dateFrom, dateTo: $dateTo, sourceDevice: $sourceDevice, sourceApp: $sourceApp, workoutType: $workoutType, workoutDuration: $workoutDuration, workoutDistance: $workoutDistance)';
+}
 
-  /// Workout type (for HealthMetricType.workout only)
-  String? get workoutType => throw _privateConstructorUsedError;
 
-  /// Workout duration (seconds, for HealthMetricType.workout only)
-  int? get workoutDuration => throw _privateConstructorUsedError;
-
-  /// Workout distance (meters, for HealthMetricType.workout only)
-  double? get workoutDistance => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $HealthMetricCopyWith<HealthMetric> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $HealthMetricCopyWith<$Res> {
-  factory $HealthMetricCopyWith(
-          HealthMetric value, $Res Function(HealthMetric) then) =
-      _$HealthMetricCopyWithImpl<$Res, HealthMetric>;
-  @useResult
-  $Res call(
-      {HealthMetricType type,
-      double value,
-      String unit,
-      DateTime dateFrom,
-      DateTime dateTo,
-      String? sourceDevice,
-      String? sourceApp,
-      String? workoutType,
-      int? workoutDuration,
-      double? workoutDistance});
-}
+abstract mixin class $HealthMetricCopyWith<$Res>  {
+  factory $HealthMetricCopyWith(HealthMetric value, $Res Function(HealthMetric) _then) = _$HealthMetricCopyWithImpl;
+@useResult
+$Res call({
+ HealthMetricType type, double value, String unit, DateTime dateFrom, DateTime dateTo, String? sourceDevice, String? sourceApp, String? workoutType, int? workoutDuration, double? workoutDistance
+});
 
+
+
+
+}
 /// @nodoc
-class _$HealthMetricCopyWithImpl<$Res, $Val extends HealthMetric>
+class _$HealthMetricCopyWithImpl<$Res>
     implements $HealthMetricCopyWith<$Res> {
-  _$HealthMetricCopyWithImpl(this._value, this._then);
+  _$HealthMetricCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final HealthMetric _self;
+  final $Res Function(HealthMetric) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? value = null,
-    Object? unit = null,
-    Object? dateFrom = null,
-    Object? dateTo = null,
-    Object? sourceDevice = freezed,
-    Object? sourceApp = freezed,
-    Object? workoutType = freezed,
-    Object? workoutDuration = freezed,
-    Object? workoutDistance = freezed,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as HealthMetricType,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
-              as String,
-      dateFrom: null == dateFrom
-          ? _value.dateFrom
-          : dateFrom // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dateTo: null == dateTo
-          ? _value.dateTo
-          : dateTo // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      sourceDevice: freezed == sourceDevice
-          ? _value.sourceDevice
-          : sourceDevice // ignore: cast_nullable_to_non_nullable
-              as String?,
-      sourceApp: freezed == sourceApp
-          ? _value.sourceApp
-          : sourceApp // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutType: freezed == workoutType
-          ? _value.workoutType
-          : workoutType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutDuration: freezed == workoutDuration
-          ? _value.workoutDuration
-          : workoutDuration // ignore: cast_nullable_to_non_nullable
-              as int?,
-      workoutDistance: freezed == workoutDistance
-          ? _value.workoutDistance
-          : workoutDistance // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
-  }
+/// Create a copy of HealthMetric
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? value = null,Object? unit = null,Object? dateFrom = null,Object? dateTo = null,Object? sourceDevice = freezed,Object? sourceApp = freezed,Object? workoutType = freezed,Object? workoutDuration = freezed,Object? workoutDistance = freezed,}) {
+  return _then(_self.copyWith(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as HealthMetricType,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,dateFrom: null == dateFrom ? _self.dateFrom : dateFrom // ignore: cast_nullable_to_non_nullable
+as DateTime,dateTo: null == dateTo ? _self.dateTo : dateTo // ignore: cast_nullable_to_non_nullable
+as DateTime,sourceDevice: freezed == sourceDevice ? _self.sourceDevice : sourceDevice // ignore: cast_nullable_to_non_nullable
+as String?,sourceApp: freezed == sourceApp ? _self.sourceApp : sourceApp // ignore: cast_nullable_to_non_nullable
+as String?,workoutType: freezed == workoutType ? _self.workoutType : workoutType // ignore: cast_nullable_to_non_nullable
+as String?,workoutDuration: freezed == workoutDuration ? _self.workoutDuration : workoutDuration // ignore: cast_nullable_to_non_nullable
+as int?,workoutDistance: freezed == workoutDistance ? _self.workoutDistance : workoutDistance // ignore: cast_nullable_to_non_nullable
+as double?,
+  ));
 }
 
-/// @nodoc
-abstract class _$$HealthMetricImplCopyWith<$Res>
-    implements $HealthMetricCopyWith<$Res> {
-  factory _$$HealthMetricImplCopyWith(
-          _$HealthMetricImpl value, $Res Function(_$HealthMetricImpl) then) =
-      __$$HealthMetricImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {HealthMetricType type,
-      double value,
-      String unit,
-      DateTime dateFrom,
-      DateTime dateTo,
-      String? sourceDevice,
-      String? sourceApp,
-      String? workoutType,
-      int? workoutDuration,
-      double? workoutDistance});
 }
 
-/// @nodoc
-class __$$HealthMetricImplCopyWithImpl<$Res>
-    extends _$HealthMetricCopyWithImpl<$Res, _$HealthMetricImpl>
-    implements _$$HealthMetricImplCopyWith<$Res> {
-  __$$HealthMetricImplCopyWithImpl(
-      _$HealthMetricImpl _value, $Res Function(_$HealthMetricImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? value = null,
-    Object? unit = null,
-    Object? dateFrom = null,
-    Object? dateTo = null,
-    Object? sourceDevice = freezed,
-    Object? sourceApp = freezed,
-    Object? workoutType = freezed,
-    Object? workoutDuration = freezed,
-    Object? workoutDistance = freezed,
-  }) {
-    return _then(_$HealthMetricImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as HealthMetricType,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
-              as String,
-      dateFrom: null == dateFrom
-          ? _value.dateFrom
-          : dateFrom // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dateTo: null == dateTo
-          ? _value.dateTo
-          : dateTo // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      sourceDevice: freezed == sourceDevice
-          ? _value.sourceDevice
-          : sourceDevice // ignore: cast_nullable_to_non_nullable
-              as String?,
-      sourceApp: freezed == sourceApp
-          ? _value.sourceApp
-          : sourceApp // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutType: freezed == workoutType
-          ? _value.workoutType
-          : workoutType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      workoutDuration: freezed == workoutDuration
-          ? _value.workoutDuration
-          : workoutDuration // ignore: cast_nullable_to_non_nullable
-              as int?,
-      workoutDistance: freezed == workoutDistance
-          ? _value.workoutDistance
-          : workoutDistance // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
-  }
+/// Adds pattern-matching-related methods to [HealthMetric].
+extension HealthMetricPatterns on HealthMetric {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _HealthMetric value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _HealthMetric() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _HealthMetric value)  $default,){
+final _that = this;
+switch (_that) {
+case _HealthMetric():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _HealthMetric value)?  $default,){
+final _that = this;
+switch (_that) {
+case _HealthMetric() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HealthMetricType type,  double value,  String unit,  DateTime dateFrom,  DateTime dateTo,  String? sourceDevice,  String? sourceApp,  String? workoutType,  int? workoutDuration,  double? workoutDistance)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _HealthMetric() when $default != null:
+return $default(_that.type,_that.value,_that.unit,_that.dateFrom,_that.dateTo,_that.sourceDevice,_that.sourceApp,_that.workoutType,_that.workoutDuration,_that.workoutDistance);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HealthMetricType type,  double value,  String unit,  DateTime dateFrom,  DateTime dateTo,  String? sourceDevice,  String? sourceApp,  String? workoutType,  int? workoutDuration,  double? workoutDistance)  $default,) {final _that = this;
+switch (_that) {
+case _HealthMetric():
+return $default(_that.type,_that.value,_that.unit,_that.dateFrom,_that.dateTo,_that.sourceDevice,_that.sourceApp,_that.workoutType,_that.workoutDuration,_that.workoutDistance);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HealthMetricType type,  double value,  String unit,  DateTime dateFrom,  DateTime dateTo,  String? sourceDevice,  String? sourceApp,  String? workoutType,  int? workoutDuration,  double? workoutDistance)?  $default,) {final _that = this;
+switch (_that) {
+case _HealthMetric() when $default != null:
+return $default(_that.type,_that.value,_that.unit,_that.dateFrom,_that.dateTo,_that.sourceDevice,_that.sourceApp,_that.workoutType,_that.workoutDuration,_that.workoutDistance);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$HealthMetricImpl implements _HealthMetric {
-  const _$HealthMetricImpl(
-      {required this.type,
-      required this.value,
-      required this.unit,
-      required this.dateFrom,
-      required this.dateTo,
-      this.sourceDevice,
-      this.sourceApp,
-      this.workoutType,
-      this.workoutDuration,
-      this.workoutDistance});
 
-  factory _$HealthMetricImpl.fromJson(Map<String, dynamic> json) =>
-      _$$HealthMetricImplFromJson(json);
+class _HealthMetric implements HealthMetric {
+  const _HealthMetric({required this.type, required this.value, required this.unit, required this.dateFrom, required this.dateTo, this.sourceDevice, this.sourceApp, this.workoutType, this.workoutDuration, this.workoutDistance});
+  factory _HealthMetric.fromJson(Map<String, dynamic> json) => _$HealthMetricFromJson(json);
 
-  /// Metric type (steps, heart rate, etc.)
-  @override
-  final HealthMetricType type;
+/// Metric type (steps, heart rate, etc.)
+@override final  HealthMetricType type;
+/// Numeric value (e.g., 8500 steps, 72 BPM)
+@override final  double value;
+/// Unit of measurement (count, bpm, kcal, minutes)
+@override final  String unit;
+/// Start timestamp for metric collection
+@override final  DateTime dateFrom;
+/// End timestamp for metric collection
+@override final  DateTime dateTo;
+/// Source device (optional)
+@override final  String? sourceDevice;
+/// Source app (optional)
+@override final  String? sourceApp;
+/// Workout type (for HealthMetricType.workout only)
+@override final  String? workoutType;
+/// Workout duration (seconds, for HealthMetricType.workout only)
+@override final  int? workoutDuration;
+/// Workout distance (meters, for HealthMetricType.workout only)
+@override final  double? workoutDistance;
 
-  /// Numeric value (e.g., 8500 steps, 72 BPM)
-  @override
-  final double value;
+/// Create a copy of HealthMetric
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$HealthMetricCopyWith<_HealthMetric> get copyWith => __$HealthMetricCopyWithImpl<_HealthMetric>(this, _$identity);
 
-  /// Unit of measurement (count, bpm, kcal, minutes)
-  @override
-  final String unit;
-
-  /// Start timestamp for metric collection
-  @override
-  final DateTime dateFrom;
-
-  /// End timestamp for metric collection
-  @override
-  final DateTime dateTo;
-
-  /// Source device (optional)
-  @override
-  final String? sourceDevice;
-
-  /// Source app (optional)
-  @override
-  final String? sourceApp;
-
-  /// Workout type (for HealthMetricType.workout only)
-  @override
-  final String? workoutType;
-
-  /// Workout duration (seconds, for HealthMetricType.workout only)
-  @override
-  final int? workoutDuration;
-
-  /// Workout distance (meters, for HealthMetricType.workout only)
-  @override
-  final double? workoutDistance;
-
-  @override
-  String toString() {
-    return 'HealthMetric(type: $type, value: $value, unit: $unit, dateFrom: $dateFrom, dateTo: $dateTo, sourceDevice: $sourceDevice, sourceApp: $sourceApp, workoutType: $workoutType, workoutDuration: $workoutDuration, workoutDistance: $workoutDistance)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$HealthMetricImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.dateFrom, dateFrom) ||
-                other.dateFrom == dateFrom) &&
-            (identical(other.dateTo, dateTo) || other.dateTo == dateTo) &&
-            (identical(other.sourceDevice, sourceDevice) ||
-                other.sourceDevice == sourceDevice) &&
-            (identical(other.sourceApp, sourceApp) ||
-                other.sourceApp == sourceApp) &&
-            (identical(other.workoutType, workoutType) ||
-                other.workoutType == workoutType) &&
-            (identical(other.workoutDuration, workoutDuration) ||
-                other.workoutDuration == workoutDuration) &&
-            (identical(other.workoutDistance, workoutDistance) ||
-                other.workoutDistance == workoutDistance));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      type,
-      value,
-      unit,
-      dateFrom,
-      dateTo,
-      sourceDevice,
-      sourceApp,
-      workoutType,
-      workoutDuration,
-      workoutDistance);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$HealthMetricImplCopyWith<_$HealthMetricImpl> get copyWith =>
-      __$$HealthMetricImplCopyWithImpl<_$HealthMetricImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$HealthMetricImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$HealthMetricToJson(this, );
 }
 
-abstract class _HealthMetric implements HealthMetric {
-  const factory _HealthMetric(
-      {required final HealthMetricType type,
-      required final double value,
-      required final String unit,
-      required final DateTime dateFrom,
-      required final DateTime dateTo,
-      final String? sourceDevice,
-      final String? sourceApp,
-      final String? workoutType,
-      final int? workoutDuration,
-      final double? workoutDistance}) = _$HealthMetricImpl;
-
-  factory _HealthMetric.fromJson(Map<String, dynamic> json) =
-      _$HealthMetricImpl.fromJson;
-
-  @override
-
-  /// Metric type (steps, heart rate, etc.)
-  HealthMetricType get type;
-  @override
-
-  /// Numeric value (e.g., 8500 steps, 72 BPM)
-  double get value;
-  @override
-
-  /// Unit of measurement (count, bpm, kcal, minutes)
-  String get unit;
-  @override
-
-  /// Start timestamp for metric collection
-  DateTime get dateFrom;
-  @override
-
-  /// End timestamp for metric collection
-  DateTime get dateTo;
-  @override
-
-  /// Source device (optional)
-  String? get sourceDevice;
-  @override
-
-  /// Source app (optional)
-  String? get sourceApp;
-  @override
-
-  /// Workout type (for HealthMetricType.workout only)
-  String? get workoutType;
-  @override
-
-  /// Workout duration (seconds, for HealthMetricType.workout only)
-  int? get workoutDuration;
-  @override
-
-  /// Workout distance (meters, for HealthMetricType.workout only)
-  double? get workoutDistance;
-  @override
-  @JsonKey(ignore: true)
-  _$$HealthMetricImplCopyWith<_$HealthMetricImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthMetric&&(identical(other.type, type) || other.type == type)&&(identical(other.value, value) || other.value == value)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.dateFrom, dateFrom) || other.dateFrom == dateFrom)&&(identical(other.dateTo, dateTo) || other.dateTo == dateTo)&&(identical(other.sourceDevice, sourceDevice) || other.sourceDevice == sourceDevice)&&(identical(other.sourceApp, sourceApp) || other.sourceApp == sourceApp)&&(identical(other.workoutType, workoutType) || other.workoutType == workoutType)&&(identical(other.workoutDuration, workoutDuration) || other.workoutDuration == workoutDuration)&&(identical(other.workoutDistance, workoutDistance) || other.workoutDistance == workoutDistance));
 }
 
-HealthMetricSummary _$HealthMetricSummaryFromJson(Map<String, dynamic> json) {
-  return _HealthMetricSummary.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,type,value,unit,dateFrom,dateTo,sourceDevice,sourceApp,workoutType,workoutDuration,workoutDistance);
+
+@override
+String toString() {
+  return 'HealthMetric(type: $type, value: $value, unit: $unit, dateFrom: $dateFrom, dateTo: $dateTo, sourceDevice: $sourceDevice, sourceApp: $sourceApp, workoutType: $workoutType, workoutDuration: $workoutDuration, workoutDistance: $workoutDistance)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$HealthMetricCopyWith<$Res> implements $HealthMetricCopyWith<$Res> {
+  factory _$HealthMetricCopyWith(_HealthMetric value, $Res Function(_HealthMetric) _then) = __$HealthMetricCopyWithImpl;
+@override @useResult
+$Res call({
+ HealthMetricType type, double value, String unit, DateTime dateFrom, DateTime dateTo, String? sourceDevice, String? sourceApp, String? workoutType, int? workoutDuration, double? workoutDistance
+});
+
+
+
+
+}
+/// @nodoc
+class __$HealthMetricCopyWithImpl<$Res>
+    implements _$HealthMetricCopyWith<$Res> {
+  __$HealthMetricCopyWithImpl(this._self, this._then);
+
+  final _HealthMetric _self;
+  final $Res Function(_HealthMetric) _then;
+
+/// Create a copy of HealthMetric
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? value = null,Object? unit = null,Object? dateFrom = null,Object? dateTo = null,Object? sourceDevice = freezed,Object? sourceApp = freezed,Object? workoutType = freezed,Object? workoutDuration = freezed,Object? workoutDistance = freezed,}) {
+  return _then(_HealthMetric(
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as HealthMetricType,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
+as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,dateFrom: null == dateFrom ? _self.dateFrom : dateFrom // ignore: cast_nullable_to_non_nullable
+as DateTime,dateTo: null == dateTo ? _self.dateTo : dateTo // ignore: cast_nullable_to_non_nullable
+as DateTime,sourceDevice: freezed == sourceDevice ? _self.sourceDevice : sourceDevice // ignore: cast_nullable_to_non_nullable
+as String?,sourceApp: freezed == sourceApp ? _self.sourceApp : sourceApp // ignore: cast_nullable_to_non_nullable
+as String?,workoutType: freezed == workoutType ? _self.workoutType : workoutType // ignore: cast_nullable_to_non_nullable
+as String?,workoutDuration: freezed == workoutDuration ? _self.workoutDuration : workoutDuration // ignore: cast_nullable_to_non_nullable
+as int?,workoutDistance: freezed == workoutDistance ? _self.workoutDistance : workoutDistance // ignore: cast_nullable_to_non_nullable
+as double?,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$HealthMetricSummary {
-  /// Metric type being summarized
-  HealthMetricType get metricType => throw _privateConstructorUsedError;
 
-  /// Total/sum of all values in period
-  double get totalValue => throw _privateConstructorUsedError;
+/// Metric type being summarized
+ HealthMetricType get metricType;/// Total/sum of all values in period
+ double get totalValue;/// Average value per day
+ double get averageValue;/// Minimum value in period
+ double get minValue;/// Maximum value in period
+ double get maxValue;/// Number of data points
+ int get dataPoints;/// Period start
+ DateTime get periodStart;/// Period end
+ DateTime get periodEnd;/// Unit of measurement
+ String get unit;
+/// Create a copy of HealthMetricSummary
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$HealthMetricSummaryCopyWith<HealthMetricSummary> get copyWith => _$HealthMetricSummaryCopyWithImpl<HealthMetricSummary>(this as HealthMetricSummary, _$identity);
 
-  /// Average value per day
-  double get averageValue => throw _privateConstructorUsedError;
+  /// Serializes this HealthMetricSummary to a JSON map.
+  Map<String, dynamic> toJson();
 
-  /// Minimum value in period
-  double get minValue => throw _privateConstructorUsedError;
 
-  /// Maximum value in period
-  double get maxValue => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthMetricSummary&&(identical(other.metricType, metricType) || other.metricType == metricType)&&(identical(other.totalValue, totalValue) || other.totalValue == totalValue)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&(identical(other.dataPoints, dataPoints) || other.dataPoints == dataPoints)&&(identical(other.periodStart, periodStart) || other.periodStart == periodStart)&&(identical(other.periodEnd, periodEnd) || other.periodEnd == periodEnd)&&(identical(other.unit, unit) || other.unit == unit));
+}
 
-  /// Number of data points
-  int get dataPoints => throw _privateConstructorUsedError;
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,metricType,totalValue,averageValue,minValue,maxValue,dataPoints,periodStart,periodEnd,unit);
 
-  /// Period start
-  DateTime get periodStart => throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'HealthMetricSummary(metricType: $metricType, totalValue: $totalValue, averageValue: $averageValue, minValue: $minValue, maxValue: $maxValue, dataPoints: $dataPoints, periodStart: $periodStart, periodEnd: $periodEnd, unit: $unit)';
+}
 
-  /// Period end
-  DateTime get periodEnd => throw _privateConstructorUsedError;
 
-  /// Unit of measurement
-  String get unit => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $HealthMetricSummaryCopyWith<HealthMetricSummary> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $HealthMetricSummaryCopyWith<$Res> {
-  factory $HealthMetricSummaryCopyWith(
-          HealthMetricSummary value, $Res Function(HealthMetricSummary) then) =
-      _$HealthMetricSummaryCopyWithImpl<$Res, HealthMetricSummary>;
-  @useResult
-  $Res call(
-      {HealthMetricType metricType,
-      double totalValue,
-      double averageValue,
-      double minValue,
-      double maxValue,
-      int dataPoints,
-      DateTime periodStart,
-      DateTime periodEnd,
-      String unit});
-}
+abstract mixin class $HealthMetricSummaryCopyWith<$Res>  {
+  factory $HealthMetricSummaryCopyWith(HealthMetricSummary value, $Res Function(HealthMetricSummary) _then) = _$HealthMetricSummaryCopyWithImpl;
+@useResult
+$Res call({
+ HealthMetricType metricType, double totalValue, double averageValue, double minValue, double maxValue, int dataPoints, DateTime periodStart, DateTime periodEnd, String unit
+});
 
+
+
+
+}
 /// @nodoc
-class _$HealthMetricSummaryCopyWithImpl<$Res, $Val extends HealthMetricSummary>
+class _$HealthMetricSummaryCopyWithImpl<$Res>
     implements $HealthMetricSummaryCopyWith<$Res> {
-  _$HealthMetricSummaryCopyWithImpl(this._value, this._then);
+  _$HealthMetricSummaryCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final HealthMetricSummary _self;
+  final $Res Function(HealthMetricSummary) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? metricType = null,
-    Object? totalValue = null,
-    Object? averageValue = null,
-    Object? minValue = null,
-    Object? maxValue = null,
-    Object? dataPoints = null,
-    Object? periodStart = null,
-    Object? periodEnd = null,
-    Object? unit = null,
-  }) {
-    return _then(_value.copyWith(
-      metricType: null == metricType
-          ? _value.metricType
-          : metricType // ignore: cast_nullable_to_non_nullable
-              as HealthMetricType,
-      totalValue: null == totalValue
-          ? _value.totalValue
-          : totalValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageValue: null == averageValue
-          ? _value.averageValue
-          : averageValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      minValue: null == minValue
-          ? _value.minValue
-          : minValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxValue: null == maxValue
-          ? _value.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      dataPoints: null == dataPoints
-          ? _value.dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      periodStart: null == periodStart
-          ? _value.periodStart
-          : periodStart // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      periodEnd: null == periodEnd
-          ? _value.periodEnd
-          : periodEnd // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
-  }
+/// Create a copy of HealthMetricSummary
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? metricType = null,Object? totalValue = null,Object? averageValue = null,Object? minValue = null,Object? maxValue = null,Object? dataPoints = null,Object? periodStart = null,Object? periodEnd = null,Object? unit = null,}) {
+  return _then(_self.copyWith(
+metricType: null == metricType ? _self.metricType : metricType // ignore: cast_nullable_to_non_nullable
+as HealthMetricType,totalValue: null == totalValue ? _self.totalValue : totalValue // ignore: cast_nullable_to_non_nullable
+as double,averageValue: null == averageValue ? _self.averageValue : averageValue // ignore: cast_nullable_to_non_nullable
+as double,minValue: null == minValue ? _self.minValue : minValue // ignore: cast_nullable_to_non_nullable
+as double,maxValue: null == maxValue ? _self.maxValue : maxValue // ignore: cast_nullable_to_non_nullable
+as double,dataPoints: null == dataPoints ? _self.dataPoints : dataPoints // ignore: cast_nullable_to_non_nullable
+as int,periodStart: null == periodStart ? _self.periodStart : periodStart // ignore: cast_nullable_to_non_nullable
+as DateTime,periodEnd: null == periodEnd ? _self.periodEnd : periodEnd // ignore: cast_nullable_to_non_nullable
+as DateTime,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$HealthMetricSummaryImplCopyWith<$Res>
-    implements $HealthMetricSummaryCopyWith<$Res> {
-  factory _$$HealthMetricSummaryImplCopyWith(_$HealthMetricSummaryImpl value,
-          $Res Function(_$HealthMetricSummaryImpl) then) =
-      __$$HealthMetricSummaryImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {HealthMetricType metricType,
-      double totalValue,
-      double averageValue,
-      double minValue,
-      double maxValue,
-      int dataPoints,
-      DateTime periodStart,
-      DateTime periodEnd,
-      String unit});
 }
 
-/// @nodoc
-class __$$HealthMetricSummaryImplCopyWithImpl<$Res>
-    extends _$HealthMetricSummaryCopyWithImpl<$Res, _$HealthMetricSummaryImpl>
-    implements _$$HealthMetricSummaryImplCopyWith<$Res> {
-  __$$HealthMetricSummaryImplCopyWithImpl(_$HealthMetricSummaryImpl _value,
-      $Res Function(_$HealthMetricSummaryImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? metricType = null,
-    Object? totalValue = null,
-    Object? averageValue = null,
-    Object? minValue = null,
-    Object? maxValue = null,
-    Object? dataPoints = null,
-    Object? periodStart = null,
-    Object? periodEnd = null,
-    Object? unit = null,
-  }) {
-    return _then(_$HealthMetricSummaryImpl(
-      metricType: null == metricType
-          ? _value.metricType
-          : metricType // ignore: cast_nullable_to_non_nullable
-              as HealthMetricType,
-      totalValue: null == totalValue
-          ? _value.totalValue
-          : totalValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageValue: null == averageValue
-          ? _value.averageValue
-          : averageValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      minValue: null == minValue
-          ? _value.minValue
-          : minValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxValue: null == maxValue
-          ? _value.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      dataPoints: null == dataPoints
-          ? _value.dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      periodStart: null == periodStart
-          ? _value.periodStart
-          : periodStart // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      periodEnd: null == periodEnd
-          ? _value.periodEnd
-          : periodEnd // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Adds pattern-matching-related methods to [HealthMetricSummary].
+extension HealthMetricSummaryPatterns on HealthMetricSummary {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _HealthMetricSummary value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _HealthMetricSummary() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _HealthMetricSummary value)  $default,){
+final _that = this;
+switch (_that) {
+case _HealthMetricSummary():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _HealthMetricSummary value)?  $default,){
+final _that = this;
+switch (_that) {
+case _HealthMetricSummary() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( HealthMetricType metricType,  double totalValue,  double averageValue,  double minValue,  double maxValue,  int dataPoints,  DateTime periodStart,  DateTime periodEnd,  String unit)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _HealthMetricSummary() when $default != null:
+return $default(_that.metricType,_that.totalValue,_that.averageValue,_that.minValue,_that.maxValue,_that.dataPoints,_that.periodStart,_that.periodEnd,_that.unit);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( HealthMetricType metricType,  double totalValue,  double averageValue,  double minValue,  double maxValue,  int dataPoints,  DateTime periodStart,  DateTime periodEnd,  String unit)  $default,) {final _that = this;
+switch (_that) {
+case _HealthMetricSummary():
+return $default(_that.metricType,_that.totalValue,_that.averageValue,_that.minValue,_that.maxValue,_that.dataPoints,_that.periodStart,_that.periodEnd,_that.unit);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( HealthMetricType metricType,  double totalValue,  double averageValue,  double minValue,  double maxValue,  int dataPoints,  DateTime periodStart,  DateTime periodEnd,  String unit)?  $default,) {final _that = this;
+switch (_that) {
+case _HealthMetricSummary() when $default != null:
+return $default(_that.metricType,_that.totalValue,_that.averageValue,_that.minValue,_that.maxValue,_that.dataPoints,_that.periodStart,_that.periodEnd,_that.unit);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$HealthMetricSummaryImpl implements _HealthMetricSummary {
-  const _$HealthMetricSummaryImpl(
-      {required this.metricType,
-      required this.totalValue,
-      required this.averageValue,
-      required this.minValue,
-      required this.maxValue,
-      required this.dataPoints,
-      required this.periodStart,
-      required this.periodEnd,
-      required this.unit});
 
-  factory _$HealthMetricSummaryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$HealthMetricSummaryImplFromJson(json);
+class _HealthMetricSummary implements HealthMetricSummary {
+  const _HealthMetricSummary({required this.metricType, required this.totalValue, required this.averageValue, required this.minValue, required this.maxValue, required this.dataPoints, required this.periodStart, required this.periodEnd, required this.unit});
+  factory _HealthMetricSummary.fromJson(Map<String, dynamic> json) => _$HealthMetricSummaryFromJson(json);
 
-  /// Metric type being summarized
-  @override
-  final HealthMetricType metricType;
+/// Metric type being summarized
+@override final  HealthMetricType metricType;
+/// Total/sum of all values in period
+@override final  double totalValue;
+/// Average value per day
+@override final  double averageValue;
+/// Minimum value in period
+@override final  double minValue;
+/// Maximum value in period
+@override final  double maxValue;
+/// Number of data points
+@override final  int dataPoints;
+/// Period start
+@override final  DateTime periodStart;
+/// Period end
+@override final  DateTime periodEnd;
+/// Unit of measurement
+@override final  String unit;
 
-  /// Total/sum of all values in period
-  @override
-  final double totalValue;
+/// Create a copy of HealthMetricSummary
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$HealthMetricSummaryCopyWith<_HealthMetricSummary> get copyWith => __$HealthMetricSummaryCopyWithImpl<_HealthMetricSummary>(this, _$identity);
 
-  /// Average value per day
-  @override
-  final double averageValue;
-
-  /// Minimum value in period
-  @override
-  final double minValue;
-
-  /// Maximum value in period
-  @override
-  final double maxValue;
-
-  /// Number of data points
-  @override
-  final int dataPoints;
-
-  /// Period start
-  @override
-  final DateTime periodStart;
-
-  /// Period end
-  @override
-  final DateTime periodEnd;
-
-  /// Unit of measurement
-  @override
-  final String unit;
-
-  @override
-  String toString() {
-    return 'HealthMetricSummary(metricType: $metricType, totalValue: $totalValue, averageValue: $averageValue, minValue: $minValue, maxValue: $maxValue, dataPoints: $dataPoints, periodStart: $periodStart, periodEnd: $periodEnd, unit: $unit)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$HealthMetricSummaryImpl &&
-            (identical(other.metricType, metricType) ||
-                other.metricType == metricType) &&
-            (identical(other.totalValue, totalValue) ||
-                other.totalValue == totalValue) &&
-            (identical(other.averageValue, averageValue) ||
-                other.averageValue == averageValue) &&
-            (identical(other.minValue, minValue) ||
-                other.minValue == minValue) &&
-            (identical(other.maxValue, maxValue) ||
-                other.maxValue == maxValue) &&
-            (identical(other.dataPoints, dataPoints) ||
-                other.dataPoints == dataPoints) &&
-            (identical(other.periodStart, periodStart) ||
-                other.periodStart == periodStart) &&
-            (identical(other.periodEnd, periodEnd) ||
-                other.periodEnd == periodEnd) &&
-            (identical(other.unit, unit) || other.unit == unit));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      metricType,
-      totalValue,
-      averageValue,
-      minValue,
-      maxValue,
-      dataPoints,
-      periodStart,
-      periodEnd,
-      unit);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$HealthMetricSummaryImplCopyWith<_$HealthMetricSummaryImpl> get copyWith =>
-      __$$HealthMetricSummaryImplCopyWithImpl<_$HealthMetricSummaryImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$HealthMetricSummaryImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$HealthMetricSummaryToJson(this, );
 }
 
-abstract class _HealthMetricSummary implements HealthMetricSummary {
-  const factory _HealthMetricSummary(
-      {required final HealthMetricType metricType,
-      required final double totalValue,
-      required final double averageValue,
-      required final double minValue,
-      required final double maxValue,
-      required final int dataPoints,
-      required final DateTime periodStart,
-      required final DateTime periodEnd,
-      required final String unit}) = _$HealthMetricSummaryImpl;
-
-  factory _HealthMetricSummary.fromJson(Map<String, dynamic> json) =
-      _$HealthMetricSummaryImpl.fromJson;
-
-  @override
-
-  /// Metric type being summarized
-  HealthMetricType get metricType;
-  @override
-
-  /// Total/sum of all values in period
-  double get totalValue;
-  @override
-
-  /// Average value per day
-  double get averageValue;
-  @override
-
-  /// Minimum value in period
-  double get minValue;
-  @override
-
-  /// Maximum value in period
-  double get maxValue;
-  @override
-
-  /// Number of data points
-  int get dataPoints;
-  @override
-
-  /// Period start
-  DateTime get periodStart;
-  @override
-
-  /// Period end
-  DateTime get periodEnd;
-  @override
-
-  /// Unit of measurement
-  String get unit;
-  @override
-  @JsonKey(ignore: true)
-  _$$HealthMetricSummaryImplCopyWith<_$HealthMetricSummaryImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthMetricSummary&&(identical(other.metricType, metricType) || other.metricType == metricType)&&(identical(other.totalValue, totalValue) || other.totalValue == totalValue)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.minValue, minValue) || other.minValue == minValue)&&(identical(other.maxValue, maxValue) || other.maxValue == maxValue)&&(identical(other.dataPoints, dataPoints) || other.dataPoints == dataPoints)&&(identical(other.periodStart, periodStart) || other.periodStart == periodStart)&&(identical(other.periodEnd, periodEnd) || other.periodEnd == periodEnd)&&(identical(other.unit, unit) || other.unit == unit));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,metricType,totalValue,averageValue,minValue,maxValue,dataPoints,periodStart,periodEnd,unit);
+
+@override
+String toString() {
+  return 'HealthMetricSummary(metricType: $metricType, totalValue: $totalValue, averageValue: $averageValue, minValue: $minValue, maxValue: $maxValue, dataPoints: $dataPoints, periodStart: $periodStart, periodEnd: $periodEnd, unit: $unit)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$HealthMetricSummaryCopyWith<$Res> implements $HealthMetricSummaryCopyWith<$Res> {
+  factory _$HealthMetricSummaryCopyWith(_HealthMetricSummary value, $Res Function(_HealthMetricSummary) _then) = __$HealthMetricSummaryCopyWithImpl;
+@override @useResult
+$Res call({
+ HealthMetricType metricType, double totalValue, double averageValue, double minValue, double maxValue, int dataPoints, DateTime periodStart, DateTime periodEnd, String unit
+});
+
+
+
+
+}
+/// @nodoc
+class __$HealthMetricSummaryCopyWithImpl<$Res>
+    implements _$HealthMetricSummaryCopyWith<$Res> {
+  __$HealthMetricSummaryCopyWithImpl(this._self, this._then);
+
+  final _HealthMetricSummary _self;
+  final $Res Function(_HealthMetricSummary) _then;
+
+/// Create a copy of HealthMetricSummary
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? metricType = null,Object? totalValue = null,Object? averageValue = null,Object? minValue = null,Object? maxValue = null,Object? dataPoints = null,Object? periodStart = null,Object? periodEnd = null,Object? unit = null,}) {
+  return _then(_HealthMetricSummary(
+metricType: null == metricType ? _self.metricType : metricType // ignore: cast_nullable_to_non_nullable
+as HealthMetricType,totalValue: null == totalValue ? _self.totalValue : totalValue // ignore: cast_nullable_to_non_nullable
+as double,averageValue: null == averageValue ? _self.averageValue : averageValue // ignore: cast_nullable_to_non_nullable
+as double,minValue: null == minValue ? _self.minValue : minValue // ignore: cast_nullable_to_non_nullable
+as double,maxValue: null == maxValue ? _self.maxValue : maxValue // ignore: cast_nullable_to_non_nullable
+as double,dataPoints: null == dataPoints ? _self.dataPoints : dataPoints // ignore: cast_nullable_to_non_nullable
+as int,periodStart: null == periodStart ? _self.periodStart : periodStart // ignore: cast_nullable_to_non_nullable
+as DateTime,periodEnd: null == periodEnd ? _self.periodEnd : periodEnd // ignore: cast_nullable_to_non_nullable
+as DateTime,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+// dart format on

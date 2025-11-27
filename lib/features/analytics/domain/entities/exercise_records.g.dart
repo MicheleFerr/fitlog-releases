@@ -6,9 +6,8 @@ part of 'exercise_records.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseRecordsImpl _$$ExerciseRecordsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseRecordsImpl(
+_ExerciseRecords _$ExerciseRecordsFromJson(Map<String, dynamic> json) =>
+    _ExerciseRecords(
       exerciseName: json['exerciseName'] as String,
       maxWeightRecord: (json['maxWeightRecord'] as num).toDouble(),
       estimated1RM: (json['estimated1RM'] as num).toDouble(),
@@ -20,8 +19,7 @@ _$ExerciseRecordsImpl _$$ExerciseRecordsImplFromJson(
       totalWorkouts: (json['totalWorkouts'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$ExerciseRecordsImplToJson(
-        _$ExerciseRecordsImpl instance) =>
+Map<String, dynamic> _$ExerciseRecordsToJson(_ExerciseRecords instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'maxWeightRecord': instance.maxWeightRecord,

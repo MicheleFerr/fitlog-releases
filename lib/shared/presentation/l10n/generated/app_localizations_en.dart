@@ -2025,8 +2025,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutReminderTitle => 'Workout Reminder';
 
   @override
-  String workoutReminderBody(String workoutName) {
-    return 'Time for your $workoutName workout! 💪';
+  String workoutReminderBody(String name) {
+    return 'Time for \"$name\"';
   }
 
   @override
@@ -8372,6 +8372,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goToHome => 'Go to Home';
+
+  @override
+  String get goToWorkout => 'Go to workout';
 
   @override
   String get workoutPausedContinue =>
@@ -16158,6 +16161,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSignOutConfirm => 'Are you sure you want to sign out?';
 
   @override
+  String get settingsTutorialHelp => 'Tutorial & Help';
+
+  @override
+  String get settingsContextualTutorials => 'Contextual Tutorials';
+
+  @override
+  String get settingsContextualTutorialsDesc =>
+      'Show helpful tips as you use the app';
+
+  @override
+  String get settingsTutorialsEnabled => 'Tutorials enabled';
+
+  @override
+  String get settingsTutorialsDisabled => 'Tutorials disabled';
+
+  @override
+  String settingsTutorialsSeenCount(int seen, int total) {
+    return '$seen of $total tutorials seen';
+  }
+
+  @override
+  String get settingsResetTutorials => 'Reset Tutorials';
+
+  @override
+  String get settingsResetTutorialsDesc =>
+      'See all tutorials again from the beginning';
+
+  @override
+  String get settingsResetTutorialsConfirmTitle => 'Reset Tutorials?';
+
+  @override
+  String get settingsResetTutorialsConfirmBody =>
+      'This will allow you to see all contextual tutorials again. Your workout data and settings will not be affected.';
+
+  @override
+  String get settingsTutorialsResetSuccess =>
+      'Tutorials reset successfully! Tips will appear again as you use the app.';
+
+  @override
   String settingsApreCalculationMethodUpdated(Object method) {
     return 'APRE calculation method updated to $method';
   }
@@ -20601,4 +20643,180 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fabViewPreviousWorkouts => 'View previous workouts';
+
+  @override
+  String get scheduleWorkout => 'Schedule';
+
+  @override
+  String scheduleWorkoutTitle(String name) {
+    return 'Schedule \"$name\"';
+  }
+
+  @override
+  String get tapDaysToSelect => 'Tap days to select/deselect';
+
+  @override
+  String daysSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days selected',
+      one: '1 day selected',
+      zero: 'No days selected',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderTime => 'Reminder time';
+
+  @override
+  String get confirmSchedule => 'Confirm Schedule';
+
+  @override
+  String get cancelSchedule => 'Cancel';
+
+  @override
+  String workoutScheduledSuccess(String name, int count) {
+    return '\"$name\" scheduled for $count days';
+  }
+
+  @override
+  String get scheduledWorkouts => 'Scheduled Workouts';
+
+  @override
+  String get noScheduledWorkouts => 'No scheduled workouts yet';
+
+  @override
+  String get deleteScheduleConfirm => 'Delete this scheduled workout?';
+
+  @override
+  String get deleteScheduleMessage =>
+      'This action cannot be undone. The scheduled reminder will also be cancelled.';
+
+  @override
+  String get scheduledForToday => 'Scheduled for today';
+
+  @override
+  String get scheduledForTomorrow => 'Scheduled for tomorrow';
+
+  @override
+  String get upcomingWorkouts => 'Upcoming Workouts';
+
+  @override
+  String get skipScheduledWorkout => 'Skip';
+
+  @override
+  String get startScheduledWorkout => 'Start Workout';
+
+  @override
+  String get tutorialLoggingSetTitle => 'How to Log a Set';
+
+  @override
+  String get tutorialLoggingSetDesc =>
+      'Tap here to enter your weight and reps. Each completed set will be saved automatically.';
+
+  @override
+  String get tutorialRestTimerTitle => 'Rest Timer';
+
+  @override
+  String get tutorialRestTimerDesc =>
+      'Your rest timer has started! You can adjust the time, skip it, or let it count down. A sound will play when it\'s time for your next set.';
+
+  @override
+  String get tutorialExerciseMgmtTitle => 'Managing Exercises';
+
+  @override
+  String get tutorialExerciseMgmtDesc =>
+      'Long-press on any exercise to reorder, edit, or delete it. You can also drag exercises to change their order.';
+
+  @override
+  String get tutorialWorkoutCompleteTitle => 'Great Work!';
+
+  @override
+  String get tutorialWorkoutCompleteDesc =>
+      'You\'ve completed your first workout! Your progress is saved and you can view your stats in the Analytics tab.';
+
+  @override
+  String get tutorialAnalyticsTitle => 'Your Analytics';
+
+  @override
+  String get tutorialAnalyticsDesc =>
+      'After 3 workouts, you\'ll start seeing useful insights: volume trends, muscle distribution, and progress charts.';
+
+  @override
+  String get tutorialTemplatesTitle => 'Workout Templates';
+
+  @override
+  String get tutorialTemplatesDesc =>
+      'Save your favorite workout routines as templates. Start workouts faster by loading them with one tap.';
+
+  @override
+  String get tutorialAdvancedTitle => 'Advanced Techniques';
+
+  @override
+  String get tutorialAdvancedDesc =>
+      'Supersets, drop sets, and rest-pause sets help you train more efficiently. Try them when you\'re ready for a challenge!';
+
+  @override
+  String get tutorialSupersetBuilderTitle => 'Superset Builder';
+
+  @override
+  String get tutorialSupersetBuilderDesc =>
+      'Create supersets by pairing exercises. Perform them back-to-back with no rest for maximum intensity!';
+
+  @override
+  String get tutorialExerciseDbTitle => 'Exercise Database';
+
+  @override
+  String get tutorialExerciseDbDesc =>
+      'Search 800+ exercises, filter by muscle group, and save your favorites. You can also create custom exercises!';
+
+  @override
+  String get tutorialRpeTitle => 'RPE Scale';
+
+  @override
+  String get tutorialRpeDesc =>
+      'Rate of Perceived Exertion (RPE) helps track intensity. 10 = maximum effort, 6 = warm-up. Tap to set your RPE for each set.';
+
+  @override
+  String get tutorialQuickEditTitle => 'Quick Edit';
+
+  @override
+  String get tutorialQuickEditDesc =>
+      'Quickly adjust weight and reps with increment buttons. Long-press for bigger jumps!';
+
+  @override
+  String get tutorialHistoryTitle => 'Workout History';
+
+  @override
+  String get tutorialHistoryDesc =>
+      'View all your past workouts, track progress over time, and compare your performance. Tap any workout for details!';
+
+  @override
+  String get tutorialRoutineCenterTitle => 'Routine Center';
+
+  @override
+  String get tutorialRoutineCenterDesc =>
+      'Create and manage your workout routines. Save templates for quick starts and organize your training programs.';
+
+  @override
+  String get tutorialSettingsTitle => 'Settings';
+
+  @override
+  String get tutorialSettingsDesc =>
+      'Customize your experience: timer durations, sounds, theme, units, and more. Make the app work your way!';
+
+  @override
+  String get tutorialExportTitle => 'Export Data';
+
+  @override
+  String get tutorialExportDesc =>
+      'Export your workout data as CSV or JSON. Perfect for backup or analysis in other apps!';
+
+  @override
+  String get tutorialActionGotIt => 'Got it!';
+
+  @override
+  String get tutorialActionLearnMore => 'Learn more';
 }

@@ -224,7 +224,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
         ),
         title: Text(
           exercise.nome,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
         subtitle: Text('${exercise.focus} • ${exercise.attrezzatura}'),
         trailing: IconButton(
@@ -261,7 +261,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
               const SizedBox(width: 8),
               Text(
                 l10n.addExercise,
-                style: TextStyle(
+                style: theme.textTheme.labelLarge?.copyWith(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -333,7 +333,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                   child: Center(
                     child: Text(
                       '${round.roundNumber}',
-                      style: TextStyle(
+                      style: theme.textTheme.labelMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.secondary,
                       ),
@@ -396,8 +396,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                           child: Center(
                             child: Text(
                               '${exerciseIndex + 1}',
-                              style: TextStyle(
-                                fontSize: 11,
+                              style: theme.textTheme.labelSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               ),
@@ -593,8 +592,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
         label: Text(l10n.createSuperset),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          textStyle: const TextStyle(
-            fontSize: 16,
+          textStyle: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -743,11 +741,11 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
               ),
             ),
             SemanticIcon(
-  icon: AppIcons.edit,
-  semanticLabel: 'Edit',
-  size: AppIconSize.tiny,
-  color: color.withValues(alpha: 0.7,
-)),
+              icon: AppIcons.edit,
+              semanticLabel: 'Edit',
+              size: AppIconSize.tiny,
+              color: color.withValues(alpha: 0.7),
+            ),
           ],
         ),
       ),
@@ -807,7 +805,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                     },
                     backgroundColor: theme.colorScheme.surface,
                     selectedColor: theme.colorScheme.secondaryContainer,
-                    labelStyle: TextStyle(
+                    labelStyle: theme.textTheme.labelMedium?.copyWith(
                       color: isSelected
                           ? theme.colorScheme.onSecondaryContainer
                           : theme.colorScheme.onSurface,
@@ -946,7 +944,7 @@ class _SupersetBuilderWidgetState extends ConsumerState<SupersetBuilderWidget>
                     ),
                     child: Text(
                       jump > 0 ? '+$jump' : '$jump',
-                      style: TextStyle(
+                      style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: jump > 0
                             ? theme.colorScheme.primary

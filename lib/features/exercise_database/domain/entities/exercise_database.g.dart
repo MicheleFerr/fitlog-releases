@@ -6,9 +6,8 @@ part of 'exercise_database.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseDatabaseImpl _$$ExerciseDatabaseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ExerciseDatabaseImpl(
+_ExerciseDatabase _$ExerciseDatabaseFromJson(Map<String, dynamic> json) =>
+    _ExerciseDatabase(
       id: json['id'] as String,
       name: json['name'] as String,
       category: json['category'] as String?,
@@ -26,8 +25,7 @@ _$ExerciseDatabaseImpl _$$ExerciseDatabaseImplFromJson(
       metadata: json['metadata'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$$ExerciseDatabaseImplToJson(
-        _$ExerciseDatabaseImpl instance) =>
+Map<String, dynamic> _$ExerciseDatabaseToJson(_ExerciseDatabase instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

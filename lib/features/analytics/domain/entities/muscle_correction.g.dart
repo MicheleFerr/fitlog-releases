@@ -6,17 +6,15 @@ part of 'muscle_correction.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MuscleCorrectionImpl _$$MuscleCorrectionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MuscleCorrectionImpl(
+_MuscleCorrection _$MuscleCorrectionFromJson(Map<String, dynamic> json) =>
+    _MuscleCorrection(
       exerciseName: json['exerciseName'] as String,
       oldMuscleGroup: json['oldMuscleGroup'] as String,
       newMuscleGroup: json['newMuscleGroup'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
     );
 
-Map<String, dynamic> _$$MuscleCorrectionImplToJson(
-        _$MuscleCorrectionImpl instance) =>
+Map<String, dynamic> _$MuscleCorrectionToJson(_MuscleCorrection instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'oldMuscleGroup': instance.oldMuscleGroup,

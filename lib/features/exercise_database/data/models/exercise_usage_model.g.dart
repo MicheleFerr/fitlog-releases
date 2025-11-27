@@ -8,7 +8,7 @@ part of 'exercise_usage_model.dart';
 
 class ExerciseUsageModelAdapter extends TypeAdapter<ExerciseUsageModel> {
   @override
-  final int typeId = 30;
+  final typeId = 30;
 
   @override
   ExerciseUsageModel read(BinaryReader reader) {

@@ -4,7 +4,7 @@ part 'exercise_progress_metrics.freezed.dart';
 
 /// Metrics for a specific exercise across all workouts
 @freezed
-class ExerciseProgressMetrics with _$ExerciseProgressMetrics {
+abstract class ExerciseProgressMetrics with _$ExerciseProgressMetrics {
   const factory ExerciseProgressMetrics({
     required String exerciseName,
     required int totalSessions,
@@ -49,7 +49,7 @@ class ExerciseProgressMetrics with _$ExerciseProgressMetrics {
 
 /// Individual set data for charting
 @freezed
-class ExerciseSetData with _$ExerciseSetData {
+abstract class ExerciseSetData with _$ExerciseSetData {
   const factory ExerciseSetData({
     required DateTime date,
     required double weight,

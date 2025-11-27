@@ -4,7 +4,7 @@ part 'workout_streak.freezed.dart';
 
 /// Represents user's workout streak statistics
 @freezed
-class WorkoutStreak with _$WorkoutStreak {
+abstract class WorkoutStreak with _$WorkoutStreak {
   const factory WorkoutStreak({
     required int currentStreak,
     required int longestStreak,

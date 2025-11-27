@@ -18,7 +18,7 @@ part 'suggestion_accuracy.g.dart';
 
 /// Single suggestion accuracy record
 @freezed
-class SuggestionAccuracy with _$SuggestionAccuracy {
+abstract class SuggestionAccuracy with _$SuggestionAccuracy {
   const factory SuggestionAccuracy({
     /// Unique ID for this record
     required String id,

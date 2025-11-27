@@ -40,7 +40,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/analytics_
 part 'analytics_set_model.freezed.dart';
 
 @freezed
-class AnalyticsSetModel with _$AnalyticsSetModel {
+abstract class AnalyticsSetModel with _$AnalyticsSetModel {
 
   const factory AnalyticsSetModel({
     /// Weight lifted in kg

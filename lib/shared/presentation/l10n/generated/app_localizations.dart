@@ -3847,17 +3847,17 @@ abstract class AppLocalizations {
   /// **'We\'ll keep you updated on your progress!'**
   String get notificationsDescription;
 
-  /// Title for workout reminder notification
+  /// Notification title for workout reminder
   ///
   /// In en, this message translates to:
   /// **'Workout Reminder'**
   String get workoutReminderTitle;
 
-  /// Body for workout reminder notification
+  /// Notification body for workout reminder
   ///
   /// In en, this message translates to:
-  /// **'Time for your {workoutName} workout! 💪'**
-  String workoutReminderBody(String workoutName);
+  /// **'Time for \"{name}\"'**
+  String workoutReminderBody(String name);
 
   /// Title for recovery alert notification
   ///
@@ -14995,6 +14995,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to Home'**
   String get goToHome;
+
+  /// Accessibility label for navigate to workout
+  ///
+  /// In en, this message translates to:
+  /// **'Go to workout'**
+  String get goToWorkout;
 
   /// Snackbar message for paused workout
   ///
@@ -28878,6 +28884,72 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to sign out?'**
   String get settingsSignOutConfirm;
 
+  /// No description provided for @settingsTutorialHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial & Help'**
+  String get settingsTutorialHelp;
+
+  /// No description provided for @settingsContextualTutorials.
+  ///
+  /// In en, this message translates to:
+  /// **'Contextual Tutorials'**
+  String get settingsContextualTutorials;
+
+  /// No description provided for @settingsContextualTutorialsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show helpful tips as you use the app'**
+  String get settingsContextualTutorialsDesc;
+
+  /// No description provided for @settingsTutorialsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorials enabled'**
+  String get settingsTutorialsEnabled;
+
+  /// No description provided for @settingsTutorialsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorials disabled'**
+  String get settingsTutorialsDisabled;
+
+  /// No description provided for @settingsTutorialsSeenCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{seen} of {total} tutorials seen'**
+  String settingsTutorialsSeenCount(int seen, int total);
+
+  /// No description provided for @settingsResetTutorials.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Tutorials'**
+  String get settingsResetTutorials;
+
+  /// No description provided for @settingsResetTutorialsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'See all tutorials again from the beginning'**
+  String get settingsResetTutorialsDesc;
+
+  /// No description provided for @settingsResetTutorialsConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Tutorials?'**
+  String get settingsResetTutorialsConfirmTitle;
+
+  /// No description provided for @settingsResetTutorialsConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This will allow you to see all contextual tutorials again. Your workout data and settings will not be affected.'**
+  String get settingsResetTutorialsConfirmBody;
+
+  /// No description provided for @settingsTutorialsResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorials reset successfully! Tips will appear again as you use the app.'**
+  String get settingsTutorialsResetSuccess;
+
   /// No description provided for @settingsApreCalculationMethodUpdated.
   ///
   /// In en, this message translates to:
@@ -36791,6 +36863,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View previous workouts'**
   String get fabViewPreviousWorkouts;
+
+  /// Button to schedule a workout
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleWorkout;
+
+  /// Title for schedule bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule \"{name}\"'**
+  String scheduleWorkoutTitle(String name);
+
+  /// Instruction for calendar selection
+  ///
+  /// In en, this message translates to:
+  /// **'Tap days to select/deselect'**
+  String get tapDaysToSelect;
+
+  /// Count of selected days
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No days selected} =1{1 day selected} other{{count} days selected}}'**
+  String daysSelected(int count);
+
+  /// Label for reminder time picker
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder time'**
+  String get reminderTime;
+
+  /// Button to confirm scheduling
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Schedule'**
+  String get confirmSchedule;
+
+  /// Button to cancel scheduling
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelSchedule;
+
+  /// Success message after scheduling
+  ///
+  /// In en, this message translates to:
+  /// **'\"{name}\" scheduled for {count} days'**
+  String workoutScheduledSuccess(String name, int count);
+
+  /// Title for scheduled workouts screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Workouts'**
+  String get scheduledWorkouts;
+
+  /// Empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'No scheduled workouts yet'**
+  String get noScheduledWorkouts;
+
+  /// Confirmation for deleting schedule
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this scheduled workout?'**
+  String get deleteScheduleConfirm;
+
+  /// Message for delete schedule confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This action cannot be undone. The scheduled reminder will also be cancelled.'**
+  String get deleteScheduleMessage;
+
+  /// Label for workout scheduled today
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled for today'**
+  String get scheduledForToday;
+
+  /// Label for workout scheduled tomorrow
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled for tomorrow'**
+  String get scheduledForTomorrow;
+
+  /// Section title for upcoming workouts
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Workouts'**
+  String get upcomingWorkouts;
+
+  /// Button to skip a scheduled workout
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipScheduledWorkout;
+
+  /// Button to start a scheduled workout
+  ///
+  /// In en, this message translates to:
+  /// **'Start Workout'**
+  String get startScheduledWorkout;
+
+  /// Title for the logging set tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'How to Log a Set'**
+  String get tutorialLoggingSetTitle;
+
+  /// Description for the logging set tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to enter your weight and reps. Each completed set will be saved automatically.'**
+  String get tutorialLoggingSetDesc;
+
+  /// Title for the rest timer tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Rest Timer'**
+  String get tutorialRestTimerTitle;
+
+  /// Description for the rest timer tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Your rest timer has started! You can adjust the time, skip it, or let it count down. A sound will play when it\'s time for your next set.'**
+  String get tutorialRestTimerDesc;
+
+  /// Title for the exercise management tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Managing Exercises'**
+  String get tutorialExerciseMgmtTitle;
+
+  /// Description for the exercise management tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press on any exercise to reorder, edit, or delete it. You can also drag exercises to change their order.'**
+  String get tutorialExerciseMgmtDesc;
+
+  /// Title for the workout completion tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Great Work!'**
+  String get tutorialWorkoutCompleteTitle;
+
+  /// Description for the workout completion tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve completed your first workout! Your progress is saved and you can view your stats in the Analytics tab.'**
+  String get tutorialWorkoutCompleteDesc;
+
+  /// Title for the analytics tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Your Analytics'**
+  String get tutorialAnalyticsTitle;
+
+  /// Description for the analytics tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'After 3 workouts, you\'ll start seeing useful insights: volume trends, muscle distribution, and progress charts.'**
+  String get tutorialAnalyticsDesc;
+
+  /// Title for the templates tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Templates'**
+  String get tutorialTemplatesTitle;
+
+  /// Description for the templates tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Save your favorite workout routines as templates. Start workouts faster by loading them with one tap.'**
+  String get tutorialTemplatesDesc;
+
+  /// Title for the advanced techniques tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Techniques'**
+  String get tutorialAdvancedTitle;
+
+  /// Description for the advanced techniques tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Supersets, drop sets, and rest-pause sets help you train more efficiently. Try them when you\'re ready for a challenge!'**
+  String get tutorialAdvancedDesc;
+
+  /// Title for the superset builder tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Superset Builder'**
+  String get tutorialSupersetBuilderTitle;
+
+  /// Description for the superset builder tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Create supersets by pairing exercises. Perform them back-to-back with no rest for maximum intensity!'**
+  String get tutorialSupersetBuilderDesc;
+
+  /// Title for the exercise database tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise Database'**
+  String get tutorialExerciseDbTitle;
+
+  /// Description for the exercise database tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Search 800+ exercises, filter by muscle group, and save your favorites. You can also create custom exercises!'**
+  String get tutorialExerciseDbDesc;
+
+  /// Title for the RPE selector tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'RPE Scale'**
+  String get tutorialRpeTitle;
+
+  /// Description for the RPE selector tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Rate of Perceived Exertion (RPE) helps track intensity. 10 = maximum effort, 6 = warm-up. Tap to set your RPE for each set.'**
+  String get tutorialRpeDesc;
+
+  /// Title for the quick edit tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Edit'**
+  String get tutorialQuickEditTitle;
+
+  /// Description for the quick edit tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Quickly adjust weight and reps with increment buttons. Long-press for bigger jumps!'**
+  String get tutorialQuickEditDesc;
+
+  /// Title for the history tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Workout History'**
+  String get tutorialHistoryTitle;
+
+  /// Description for the history tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'View all your past workouts, track progress over time, and compare your performance. Tap any workout for details!'**
+  String get tutorialHistoryDesc;
+
+  /// Title for the routine center tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Center'**
+  String get tutorialRoutineCenterTitle;
+
+  /// Description for the routine center tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Create and manage your workout routines. Save templates for quick starts and organize your training programs.'**
+  String get tutorialRoutineCenterDesc;
+
+  /// Title for the settings tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get tutorialSettingsTitle;
+
+  /// Description for the settings tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Customize your experience: timer durations, sounds, theme, units, and more. Make the app work your way!'**
+  String get tutorialSettingsDesc;
+
+  /// Title for the export data tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get tutorialExportTitle;
+
+  /// Description for the export data tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Export your workout data as CSV or JSON. Perfect for backup or analysis in other apps!'**
+  String get tutorialExportDesc;
+
+  /// Action button text to dismiss tutorial
+  ///
+  /// In en, this message translates to:
+  /// **'Got it!'**
+  String get tutorialActionGotIt;
+
+  /// Action button text to learn more about feature
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get tutorialActionLearnMore;
 }
 
 class _AppLocalizationsDelegate

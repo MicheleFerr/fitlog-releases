@@ -8,7 +8,7 @@ part of 'exercise.dart';
 
 class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
   @override
-  final int typeId = 2;
+  final typeId = 2;
 
   @override
   ExerciseDefinition read(BinaryReader reader) {
@@ -38,7 +38,9 @@ class ExerciseDefinitionAdapter extends TypeAdapter<ExerciseDefinition> {
       spiegazioneTermini: fields[18] as String?,
       tempoEsecuzione: fields[19] as String?,
       tempoNote: fields[20] as String?,
-      aliases: (fields[21] as List).cast<String>(),
+      aliases: fields[21] == null
+          ? const []
+          : (fields[21] as List).cast<String>(),
       normalizedNome: fields[22] as String?,
       searchableFields: (fields[23] as List?)?.cast<String>(),
     );

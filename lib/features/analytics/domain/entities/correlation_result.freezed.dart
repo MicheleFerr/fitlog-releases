@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,547 +9,641 @@ part of 'correlation_result.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-CorrelationResult _$CorrelationResultFromJson(Map<String, dynamic> json) {
-  return _CorrelationResult.fromJson(json);
-}
 
 /// @nodoc
 mixin _$CorrelationResult {
-  /// Pearson correlation coefficient (-1 to +1)
-  /// - +1: Perfect positive correlation
-  /// - 0: No correlation
-  /// - -1: Perfect negative correlation
-  double get r => throw _privateConstructorUsedError;
 
-  /// Coefficient of determination (0 to 1)
-  /// - Shows how much variance in Y is explained by X
-  /// - 0.72 means 72% of variance explained
-  double get rSquared => throw _privateConstructorUsedError;
+/// Pearson correlation coefficient (-1 to +1)
+/// - +1: Perfect positive correlation
+/// - 0: No correlation
+/// - -1: Perfect negative correlation
+ double get r;/// Coefficient of determination (0 to 1)
+/// - Shows how much variance in Y is explained by X
+/// - 0.72 means 72% of variance explained
+ double get rSquared;/// Strength classification
+ CorrelationStrength get strength;/// Human-readable interpretation
+ String get interpretation;/// Number of data points used
+ int get dataPoints;/// Whether the result is statistically significant
+ bool get isSignificant;
+/// Create a copy of CorrelationResult
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<CorrelationResult> get copyWith => _$CorrelationResultCopyWithImpl<CorrelationResult>(this as CorrelationResult, _$identity);
 
-  /// Strength classification
-  CorrelationStrength get strength => throw _privateConstructorUsedError;
+  /// Serializes this CorrelationResult to a JSON map.
+  Map<String, dynamic> toJson();
 
-  /// Human-readable interpretation
-  String get interpretation => throw _privateConstructorUsedError;
 
-  /// Number of data points used
-  int get dataPoints => throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CorrelationResult&&(identical(other.r, r) || other.r == r)&&(identical(other.rSquared, rSquared) || other.rSquared == rSquared)&&(identical(other.strength, strength) || other.strength == strength)&&(identical(other.interpretation, interpretation) || other.interpretation == interpretation)&&(identical(other.dataPoints, dataPoints) || other.dataPoints == dataPoints)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant));
+}
 
-  /// Whether the result is statistically significant
-  bool get isSignificant => throw _privateConstructorUsedError;
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,r,rSquared,strength,interpretation,dataPoints,isSignificant);
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CorrelationResultCopyWith<CorrelationResult> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'CorrelationResult(r: $r, rSquared: $rSquared, strength: $strength, interpretation: $interpretation, dataPoints: $dataPoints, isSignificant: $isSignificant)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CorrelationResultCopyWith<$Res> {
-  factory $CorrelationResultCopyWith(
-          CorrelationResult value, $Res Function(CorrelationResult) then) =
-      _$CorrelationResultCopyWithImpl<$Res, CorrelationResult>;
-  @useResult
-  $Res call(
-      {double r,
-      double rSquared,
-      CorrelationStrength strength,
-      String interpretation,
-      int dataPoints,
-      bool isSignificant});
-}
+abstract mixin class $CorrelationResultCopyWith<$Res>  {
+  factory $CorrelationResultCopyWith(CorrelationResult value, $Res Function(CorrelationResult) _then) = _$CorrelationResultCopyWithImpl;
+@useResult
+$Res call({
+ double r, double rSquared, CorrelationStrength strength, String interpretation, int dataPoints, bool isSignificant
+});
 
+
+
+
+}
 /// @nodoc
-class _$CorrelationResultCopyWithImpl<$Res, $Val extends CorrelationResult>
+class _$CorrelationResultCopyWithImpl<$Res>
     implements $CorrelationResultCopyWith<$Res> {
-  _$CorrelationResultCopyWithImpl(this._value, this._then);
+  _$CorrelationResultCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CorrelationResult _self;
+  final $Res Function(CorrelationResult) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? r = null,
-    Object? rSquared = null,
-    Object? strength = null,
-    Object? interpretation = null,
-    Object? dataPoints = null,
-    Object? isSignificant = null,
-  }) {
-    return _then(_value.copyWith(
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as double,
-      rSquared: null == rSquared
-          ? _value.rSquared
-          : rSquared // ignore: cast_nullable_to_non_nullable
-              as double,
-      strength: null == strength
-          ? _value.strength
-          : strength // ignore: cast_nullable_to_non_nullable
-              as CorrelationStrength,
-      interpretation: null == interpretation
-          ? _value.interpretation
-          : interpretation // ignore: cast_nullable_to_non_nullable
-              as String,
-      dataPoints: null == dataPoints
-          ? _value.dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      isSignificant: null == isSignificant
-          ? _value.isSignificant
-          : isSignificant // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
-  }
+/// Create a copy of CorrelationResult
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? r = null,Object? rSquared = null,Object? strength = null,Object? interpretation = null,Object? dataPoints = null,Object? isSignificant = null,}) {
+  return _then(_self.copyWith(
+r: null == r ? _self.r : r // ignore: cast_nullable_to_non_nullable
+as double,rSquared: null == rSquared ? _self.rSquared : rSquared // ignore: cast_nullable_to_non_nullable
+as double,strength: null == strength ? _self.strength : strength // ignore: cast_nullable_to_non_nullable
+as CorrelationStrength,interpretation: null == interpretation ? _self.interpretation : interpretation // ignore: cast_nullable_to_non_nullable
+as String,dataPoints: null == dataPoints ? _self.dataPoints : dataPoints // ignore: cast_nullable_to_non_nullable
+as int,isSignificant: null == isSignificant ? _self.isSignificant : isSignificant // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$CorrelationResultImplCopyWith<$Res>
-    implements $CorrelationResultCopyWith<$Res> {
-  factory _$$CorrelationResultImplCopyWith(_$CorrelationResultImpl value,
-          $Res Function(_$CorrelationResultImpl) then) =
-      __$$CorrelationResultImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {double r,
-      double rSquared,
-      CorrelationStrength strength,
-      String interpretation,
-      int dataPoints,
-      bool isSignificant});
 }
 
-/// @nodoc
-class __$$CorrelationResultImplCopyWithImpl<$Res>
-    extends _$CorrelationResultCopyWithImpl<$Res, _$CorrelationResultImpl>
-    implements _$$CorrelationResultImplCopyWith<$Res> {
-  __$$CorrelationResultImplCopyWithImpl(_$CorrelationResultImpl _value,
-      $Res Function(_$CorrelationResultImpl) _then)
-      : super(_value, _then);
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? r = null,
-    Object? rSquared = null,
-    Object? strength = null,
-    Object? interpretation = null,
-    Object? dataPoints = null,
-    Object? isSignificant = null,
-  }) {
-    return _then(_$CorrelationResultImpl(
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as double,
-      rSquared: null == rSquared
-          ? _value.rSquared
-          : rSquared // ignore: cast_nullable_to_non_nullable
-              as double,
-      strength: null == strength
-          ? _value.strength
-          : strength // ignore: cast_nullable_to_non_nullable
-              as CorrelationStrength,
-      interpretation: null == interpretation
-          ? _value.interpretation
-          : interpretation // ignore: cast_nullable_to_non_nullable
-              as String,
-      dataPoints: null == dataPoints
-          ? _value.dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      isSignificant: null == isSignificant
-          ? _value.isSignificant
-          : isSignificant // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
-  }
+/// Adds pattern-matching-related methods to [CorrelationResult].
+extension CorrelationResultPatterns on CorrelationResult {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CorrelationResult value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CorrelationResult() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CorrelationResult value)  $default,){
+final _that = this;
+switch (_that) {
+case _CorrelationResult():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CorrelationResult value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CorrelationResult() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double r,  double rSquared,  CorrelationStrength strength,  String interpretation,  int dataPoints,  bool isSignificant)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CorrelationResult() when $default != null:
+return $default(_that.r,_that.rSquared,_that.strength,_that.interpretation,_that.dataPoints,_that.isSignificant);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double r,  double rSquared,  CorrelationStrength strength,  String interpretation,  int dataPoints,  bool isSignificant)  $default,) {final _that = this;
+switch (_that) {
+case _CorrelationResult():
+return $default(_that.r,_that.rSquared,_that.strength,_that.interpretation,_that.dataPoints,_that.isSignificant);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double r,  double rSquared,  CorrelationStrength strength,  String interpretation,  int dataPoints,  bool isSignificant)?  $default,) {final _that = this;
+switch (_that) {
+case _CorrelationResult() when $default != null:
+return $default(_that.r,_that.rSquared,_that.strength,_that.interpretation,_that.dataPoints,_that.isSignificant);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CorrelationResultImpl extends _CorrelationResult {
-  const _$CorrelationResultImpl(
-      {required this.r,
-      required this.rSquared,
-      required this.strength,
-      required this.interpretation,
-      this.dataPoints = 0,
-      this.isSignificant = false})
-      : super._();
 
-  factory _$CorrelationResultImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CorrelationResultImplFromJson(json);
+class _CorrelationResult extends CorrelationResult {
+  const _CorrelationResult({required this.r, required this.rSquared, required this.strength, required this.interpretation, this.dataPoints = 0, this.isSignificant = false}): super._();
+  factory _CorrelationResult.fromJson(Map<String, dynamic> json) => _$CorrelationResultFromJson(json);
 
-  /// Pearson correlation coefficient (-1 to +1)
-  /// - +1: Perfect positive correlation
-  /// - 0: No correlation
-  /// - -1: Perfect negative correlation
-  @override
-  final double r;
+/// Pearson correlation coefficient (-1 to +1)
+/// - +1: Perfect positive correlation
+/// - 0: No correlation
+/// - -1: Perfect negative correlation
+@override final  double r;
+/// Coefficient of determination (0 to 1)
+/// - Shows how much variance in Y is explained by X
+/// - 0.72 means 72% of variance explained
+@override final  double rSquared;
+/// Strength classification
+@override final  CorrelationStrength strength;
+/// Human-readable interpretation
+@override final  String interpretation;
+/// Number of data points used
+@override@JsonKey() final  int dataPoints;
+/// Whether the result is statistically significant
+@override@JsonKey() final  bool isSignificant;
 
-  /// Coefficient of determination (0 to 1)
-  /// - Shows how much variance in Y is explained by X
-  /// - 0.72 means 72% of variance explained
-  @override
-  final double rSquared;
+/// Create a copy of CorrelationResult
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CorrelationResultCopyWith<_CorrelationResult> get copyWith => __$CorrelationResultCopyWithImpl<_CorrelationResult>(this, _$identity);
 
-  /// Strength classification
-  @override
-  final CorrelationStrength strength;
-
-  /// Human-readable interpretation
-  @override
-  final String interpretation;
-
-  /// Number of data points used
-  @override
-  @JsonKey()
-  final int dataPoints;
-
-  /// Whether the result is statistically significant
-  @override
-  @JsonKey()
-  final bool isSignificant;
-
-  @override
-  String toString() {
-    return 'CorrelationResult(r: $r, rSquared: $rSquared, strength: $strength, interpretation: $interpretation, dataPoints: $dataPoints, isSignificant: $isSignificant)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CorrelationResultImpl &&
-            (identical(other.r, r) || other.r == r) &&
-            (identical(other.rSquared, rSquared) ||
-                other.rSquared == rSquared) &&
-            (identical(other.strength, strength) ||
-                other.strength == strength) &&
-            (identical(other.interpretation, interpretation) ||
-                other.interpretation == interpretation) &&
-            (identical(other.dataPoints, dataPoints) ||
-                other.dataPoints == dataPoints) &&
-            (identical(other.isSignificant, isSignificant) ||
-                other.isSignificant == isSignificant));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, r, rSquared, strength,
-      interpretation, dataPoints, isSignificant);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CorrelationResultImplCopyWith<_$CorrelationResultImpl> get copyWith =>
-      __$$CorrelationResultImplCopyWithImpl<_$CorrelationResultImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CorrelationResultImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$CorrelationResultToJson(this, );
 }
 
-abstract class _CorrelationResult extends CorrelationResult {
-  const factory _CorrelationResult(
-      {required final double r,
-      required final double rSquared,
-      required final CorrelationStrength strength,
-      required final String interpretation,
-      final int dataPoints,
-      final bool isSignificant}) = _$CorrelationResultImpl;
-  const _CorrelationResult._() : super._();
-
-  factory _CorrelationResult.fromJson(Map<String, dynamic> json) =
-      _$CorrelationResultImpl.fromJson;
-
-  @override
-
-  /// Pearson correlation coefficient (-1 to +1)
-  /// - +1: Perfect positive correlation
-  /// - 0: No correlation
-  /// - -1: Perfect negative correlation
-  double get r;
-  @override
-
-  /// Coefficient of determination (0 to 1)
-  /// - Shows how much variance in Y is explained by X
-  /// - 0.72 means 72% of variance explained
-  double get rSquared;
-  @override
-
-  /// Strength classification
-  CorrelationStrength get strength;
-  @override
-
-  /// Human-readable interpretation
-  String get interpretation;
-  @override
-
-  /// Number of data points used
-  int get dataPoints;
-  @override
-
-  /// Whether the result is statistically significant
-  bool get isSignificant;
-  @override
-  @JsonKey(ignore: true)
-  _$$CorrelationResultImplCopyWith<_$CorrelationResultImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CorrelationResult&&(identical(other.r, r) || other.r == r)&&(identical(other.rSquared, rSquared) || other.rSquared == rSquared)&&(identical(other.strength, strength) || other.strength == strength)&&(identical(other.interpretation, interpretation) || other.interpretation == interpretation)&&(identical(other.dataPoints, dataPoints) || other.dataPoints == dataPoints)&&(identical(other.isSignificant, isSignificant) || other.isSignificant == isSignificant));
 }
 
-CorrelationResults _$CorrelationResultsFromJson(Map<String, dynamic> json) {
-  return _CorrelationResults.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,r,rSquared,strength,interpretation,dataPoints,isSignificant);
+
+@override
+String toString() {
+  return 'CorrelationResult(r: $r, rSquared: $rSquared, strength: $strength, interpretation: $interpretation, dataPoints: $dataPoints, isSignificant: $isSignificant)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CorrelationResultCopyWith<$Res> implements $CorrelationResultCopyWith<$Res> {
+  factory _$CorrelationResultCopyWith(_CorrelationResult value, $Res Function(_CorrelationResult) _then) = __$CorrelationResultCopyWithImpl;
+@override @useResult
+$Res call({
+ double r, double rSquared, CorrelationStrength strength, String interpretation, int dataPoints, bool isSignificant
+});
+
+
+
+
+}
+/// @nodoc
+class __$CorrelationResultCopyWithImpl<$Res>
+    implements _$CorrelationResultCopyWith<$Res> {
+  __$CorrelationResultCopyWithImpl(this._self, this._then);
+
+  final _CorrelationResult _self;
+  final $Res Function(_CorrelationResult) _then;
+
+/// Create a copy of CorrelationResult
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? r = null,Object? rSquared = null,Object? strength = null,Object? interpretation = null,Object? dataPoints = null,Object? isSignificant = null,}) {
+  return _then(_CorrelationResult(
+r: null == r ? _self.r : r // ignore: cast_nullable_to_non_nullable
+as double,rSquared: null == rSquared ? _self.rSquared : rSquared // ignore: cast_nullable_to_non_nullable
+as double,strength: null == strength ? _self.strength : strength // ignore: cast_nullable_to_non_nullable
+as CorrelationStrength,interpretation: null == interpretation ? _self.interpretation : interpretation // ignore: cast_nullable_to_non_nullable
+as String,dataPoints: null == dataPoints ? _self.dataPoints : dataPoints // ignore: cast_nullable_to_non_nullable
+as int,isSignificant: null == isSignificant ? _self.isSignificant : isSignificant // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$CorrelationResults {
-  /// Weight vs RPE correlation
-  CorrelationResult get weightRpe => throw _privateConstructorUsedError;
 
-  /// Volume vs RPE correlation
-  CorrelationResult get volumeRpe => throw _privateConstructorUsedError;
+/// Weight vs RPE correlation
+ CorrelationResult get weightRpe;/// Volume vs RPE correlation
+ CorrelationResult get volumeRpe;/// Weight vs Volume correlation (optional)
+ CorrelationResult? get weightVolume;
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CorrelationResultsCopyWith<CorrelationResults> get copyWith => _$CorrelationResultsCopyWithImpl<CorrelationResults>(this as CorrelationResults, _$identity);
 
-  /// Weight vs Volume correlation (optional)
-  CorrelationResult? get weightVolume => throw _privateConstructorUsedError;
+  /// Serializes this CorrelationResults to a JSON map.
+  Map<String, dynamic> toJson();
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $CorrelationResultsCopyWith<CorrelationResults> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CorrelationResults&&(identical(other.weightRpe, weightRpe) || other.weightRpe == weightRpe)&&(identical(other.volumeRpe, volumeRpe) || other.volumeRpe == volumeRpe)&&(identical(other.weightVolume, weightVolume) || other.weightVolume == weightVolume));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,weightRpe,volumeRpe,weightVolume);
+
+@override
+String toString() {
+  return 'CorrelationResults(weightRpe: $weightRpe, volumeRpe: $volumeRpe, weightVolume: $weightVolume)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $CorrelationResultsCopyWith<$Res> {
-  factory $CorrelationResultsCopyWith(
-          CorrelationResults value, $Res Function(CorrelationResults) then) =
-      _$CorrelationResultsCopyWithImpl<$Res, CorrelationResults>;
-  @useResult
-  $Res call(
-      {CorrelationResult weightRpe,
-      CorrelationResult volumeRpe,
-      CorrelationResult? weightVolume});
+abstract mixin class $CorrelationResultsCopyWith<$Res>  {
+  factory $CorrelationResultsCopyWith(CorrelationResults value, $Res Function(CorrelationResults) _then) = _$CorrelationResultsCopyWithImpl;
+@useResult
+$Res call({
+ CorrelationResult weightRpe, CorrelationResult volumeRpe, CorrelationResult? weightVolume
+});
 
-  $CorrelationResultCopyWith<$Res> get weightRpe;
-  $CorrelationResultCopyWith<$Res> get volumeRpe;
-  $CorrelationResultCopyWith<$Res>? get weightVolume;
+
+$CorrelationResultCopyWith<$Res> get weightRpe;$CorrelationResultCopyWith<$Res> get volumeRpe;$CorrelationResultCopyWith<$Res>? get weightVolume;
+
 }
-
 /// @nodoc
-class _$CorrelationResultsCopyWithImpl<$Res, $Val extends CorrelationResults>
+class _$CorrelationResultsCopyWithImpl<$Res>
     implements $CorrelationResultsCopyWith<$Res> {
-  _$CorrelationResultsCopyWithImpl(this._value, this._then);
+  _$CorrelationResultsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final CorrelationResults _self;
+  final $Res Function(CorrelationResults) _then;
 
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? weightRpe = null,
-    Object? volumeRpe = null,
-    Object? weightVolume = freezed,
-  }) {
-    return _then(_value.copyWith(
-      weightRpe: null == weightRpe
-          ? _value.weightRpe
-          : weightRpe // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult,
-      volumeRpe: null == volumeRpe
-          ? _value.volumeRpe
-          : volumeRpe // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult,
-      weightVolume: freezed == weightVolume
-          ? _value.weightVolume
-          : weightVolume // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult?,
-    ) as $Val);
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? weightRpe = null,Object? volumeRpe = null,Object? weightVolume = freezed,}) {
+  return _then(_self.copyWith(
+weightRpe: null == weightRpe ? _self.weightRpe : weightRpe // ignore: cast_nullable_to_non_nullable
+as CorrelationResult,volumeRpe: null == volumeRpe ? _self.volumeRpe : volumeRpe // ignore: cast_nullable_to_non_nullable
+as CorrelationResult,weightVolume: freezed == weightVolume ? _self.weightVolume : weightVolume // ignore: cast_nullable_to_non_nullable
+as CorrelationResult?,
+  ));
+}
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res> get weightRpe {
+  
+  return $CorrelationResultCopyWith<$Res>(_self.weightRpe, (value) {
+    return _then(_self.copyWith(weightRpe: value));
+  });
+}/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res> get volumeRpe {
+  
+  return $CorrelationResultCopyWith<$Res>(_self.volumeRpe, (value) {
+    return _then(_self.copyWith(volumeRpe: value));
+  });
+}/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res>? get weightVolume {
+    if (_self.weightVolume == null) {
+    return null;
   }
 
-  @override
-  @pragma('vm:prefer-inline')
-  $CorrelationResultCopyWith<$Res> get weightRpe {
-    return $CorrelationResultCopyWith<$Res>(_value.weightRpe, (value) {
-      return _then(_value.copyWith(weightRpe: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CorrelationResultCopyWith<$Res> get volumeRpe {
-    return $CorrelationResultCopyWith<$Res>(_value.volumeRpe, (value) {
-      return _then(_value.copyWith(volumeRpe: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CorrelationResultCopyWith<$Res>? get weightVolume {
-    if (_value.weightVolume == null) {
-      return null;
-    }
-
-    return $CorrelationResultCopyWith<$Res>(_value.weightVolume!, (value) {
-      return _then(_value.copyWith(weightVolume: value) as $Val);
-    });
-  }
+  return $CorrelationResultCopyWith<$Res>(_self.weightVolume!, (value) {
+    return _then(_self.copyWith(weightVolume: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$CorrelationResultsImplCopyWith<$Res>
-    implements $CorrelationResultsCopyWith<$Res> {
-  factory _$$CorrelationResultsImplCopyWith(_$CorrelationResultsImpl value,
-          $Res Function(_$CorrelationResultsImpl) then) =
-      __$$CorrelationResultsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {CorrelationResult weightRpe,
-      CorrelationResult volumeRpe,
-      CorrelationResult? weightVolume});
 
-  @override
-  $CorrelationResultCopyWith<$Res> get weightRpe;
-  @override
-  $CorrelationResultCopyWith<$Res> get volumeRpe;
-  @override
-  $CorrelationResultCopyWith<$Res>? get weightVolume;
+/// Adds pattern-matching-related methods to [CorrelationResults].
+extension CorrelationResultsPatterns on CorrelationResults {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CorrelationResults value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CorrelationResults() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CorrelationResults value)  $default,){
+final _that = this;
+switch (_that) {
+case _CorrelationResults():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CorrelationResults value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CorrelationResults() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CorrelationResult weightRpe,  CorrelationResult volumeRpe,  CorrelationResult? weightVolume)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CorrelationResults() when $default != null:
+return $default(_that.weightRpe,_that.volumeRpe,_that.weightVolume);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CorrelationResult weightRpe,  CorrelationResult volumeRpe,  CorrelationResult? weightVolume)  $default,) {final _that = this;
+switch (_that) {
+case _CorrelationResults():
+return $default(_that.weightRpe,_that.volumeRpe,_that.weightVolume);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CorrelationResult weightRpe,  CorrelationResult volumeRpe,  CorrelationResult? weightVolume)?  $default,) {final _that = this;
+switch (_that) {
+case _CorrelationResults() when $default != null:
+return $default(_that.weightRpe,_that.volumeRpe,_that.weightVolume);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$CorrelationResultsImplCopyWithImpl<$Res>
-    extends _$CorrelationResultsCopyWithImpl<$Res, _$CorrelationResultsImpl>
-    implements _$$CorrelationResultsImplCopyWith<$Res> {
-  __$$CorrelationResultsImplCopyWithImpl(_$CorrelationResultsImpl _value,
-      $Res Function(_$CorrelationResultsImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? weightRpe = null,
-    Object? volumeRpe = null,
-    Object? weightVolume = freezed,
-  }) {
-    return _then(_$CorrelationResultsImpl(
-      weightRpe: null == weightRpe
-          ? _value.weightRpe
-          : weightRpe // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult,
-      volumeRpe: null == volumeRpe
-          ? _value.volumeRpe
-          : volumeRpe // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult,
-      weightVolume: freezed == weightVolume
-          ? _value.weightVolume
-          : weightVolume // ignore: cast_nullable_to_non_nullable
-              as CorrelationResult?,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CorrelationResultsImpl extends _CorrelationResults {
-  const _$CorrelationResultsImpl(
-      {required this.weightRpe, required this.volumeRpe, this.weightVolume})
-      : super._();
 
-  factory _$CorrelationResultsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CorrelationResultsImplFromJson(json);
+class _CorrelationResults extends CorrelationResults {
+  const _CorrelationResults({required this.weightRpe, required this.volumeRpe, this.weightVolume}): super._();
+  factory _CorrelationResults.fromJson(Map<String, dynamic> json) => _$CorrelationResultsFromJson(json);
 
-  /// Weight vs RPE correlation
-  @override
-  final CorrelationResult weightRpe;
+/// Weight vs RPE correlation
+@override final  CorrelationResult weightRpe;
+/// Volume vs RPE correlation
+@override final  CorrelationResult volumeRpe;
+/// Weight vs Volume correlation (optional)
+@override final  CorrelationResult? weightVolume;
 
-  /// Volume vs RPE correlation
-  @override
-  final CorrelationResult volumeRpe;
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CorrelationResultsCopyWith<_CorrelationResults> get copyWith => __$CorrelationResultsCopyWithImpl<_CorrelationResults>(this, _$identity);
 
-  /// Weight vs Volume correlation (optional)
-  @override
-  final CorrelationResult? weightVolume;
-
-  @override
-  String toString() {
-    return 'CorrelationResults(weightRpe: $weightRpe, volumeRpe: $volumeRpe, weightVolume: $weightVolume)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$CorrelationResultsImpl &&
-            (identical(other.weightRpe, weightRpe) ||
-                other.weightRpe == weightRpe) &&
-            (identical(other.volumeRpe, volumeRpe) ||
-                other.volumeRpe == volumeRpe) &&
-            (identical(other.weightVolume, weightVolume) ||
-                other.weightVolume == weightVolume));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, weightRpe, volumeRpe, weightVolume);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$CorrelationResultsImplCopyWith<_$CorrelationResultsImpl> get copyWith =>
-      __$$CorrelationResultsImplCopyWithImpl<_$CorrelationResultsImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CorrelationResultsImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$CorrelationResultsToJson(this, );
 }
 
-abstract class _CorrelationResults extends CorrelationResults {
-  const factory _CorrelationResults(
-      {required final CorrelationResult weightRpe,
-      required final CorrelationResult volumeRpe,
-      final CorrelationResult? weightVolume}) = _$CorrelationResultsImpl;
-  const _CorrelationResults._() : super._();
-
-  factory _CorrelationResults.fromJson(Map<String, dynamic> json) =
-      _$CorrelationResultsImpl.fromJson;
-
-  @override
-
-  /// Weight vs RPE correlation
-  CorrelationResult get weightRpe;
-  @override
-
-  /// Volume vs RPE correlation
-  CorrelationResult get volumeRpe;
-  @override
-
-  /// Weight vs Volume correlation (optional)
-  CorrelationResult? get weightVolume;
-  @override
-  @JsonKey(ignore: true)
-  _$$CorrelationResultsImplCopyWith<_$CorrelationResultsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CorrelationResults&&(identical(other.weightRpe, weightRpe) || other.weightRpe == weightRpe)&&(identical(other.volumeRpe, volumeRpe) || other.volumeRpe == volumeRpe)&&(identical(other.weightVolume, weightVolume) || other.weightVolume == weightVolume));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,weightRpe,volumeRpe,weightVolume);
+
+@override
+String toString() {
+  return 'CorrelationResults(weightRpe: $weightRpe, volumeRpe: $volumeRpe, weightVolume: $weightVolume)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CorrelationResultsCopyWith<$Res> implements $CorrelationResultsCopyWith<$Res> {
+  factory _$CorrelationResultsCopyWith(_CorrelationResults value, $Res Function(_CorrelationResults) _then) = __$CorrelationResultsCopyWithImpl;
+@override @useResult
+$Res call({
+ CorrelationResult weightRpe, CorrelationResult volumeRpe, CorrelationResult? weightVolume
+});
+
+
+@override $CorrelationResultCopyWith<$Res> get weightRpe;@override $CorrelationResultCopyWith<$Res> get volumeRpe;@override $CorrelationResultCopyWith<$Res>? get weightVolume;
+
+}
+/// @nodoc
+class __$CorrelationResultsCopyWithImpl<$Res>
+    implements _$CorrelationResultsCopyWith<$Res> {
+  __$CorrelationResultsCopyWithImpl(this._self, this._then);
+
+  final _CorrelationResults _self;
+  final $Res Function(_CorrelationResults) _then;
+
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? weightRpe = null,Object? volumeRpe = null,Object? weightVolume = freezed,}) {
+  return _then(_CorrelationResults(
+weightRpe: null == weightRpe ? _self.weightRpe : weightRpe // ignore: cast_nullable_to_non_nullable
+as CorrelationResult,volumeRpe: null == volumeRpe ? _self.volumeRpe : volumeRpe // ignore: cast_nullable_to_non_nullable
+as CorrelationResult,weightVolume: freezed == weightVolume ? _self.weightVolume : weightVolume // ignore: cast_nullable_to_non_nullable
+as CorrelationResult?,
+  ));
+}
+
+/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res> get weightRpe {
+  
+  return $CorrelationResultCopyWith<$Res>(_self.weightRpe, (value) {
+    return _then(_self.copyWith(weightRpe: value));
+  });
+}/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res> get volumeRpe {
+  
+  return $CorrelationResultCopyWith<$Res>(_self.volumeRpe, (value) {
+    return _then(_self.copyWith(volumeRpe: value));
+  });
+}/// Create a copy of CorrelationResults
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CorrelationResultCopyWith<$Res>? get weightVolume {
+    if (_self.weightVolume == null) {
+    return null;
+  }
+
+  return $CorrelationResultCopyWith<$Res>(_self.weightVolume!, (value) {
+    return _then(_self.copyWith(weightVolume: value));
+  });
+}
+}
+
+// dart format on
