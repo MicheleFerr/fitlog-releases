@@ -6,8 +6,8 @@ part of 'pr_celebration.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PRCelebrationImpl _$$PRCelebrationImplFromJson(Map<String, dynamic> json) =>
-    _$PRCelebrationImpl(
+_PRCelebration _$PRCelebrationFromJson(Map<String, dynamic> json) =>
+    _PRCelebration(
       id: json['id'] as String,
       userId: json['userId'] as String,
       prId: json['prId'] as String,
@@ -26,7 +26,7 @@ _$PRCelebrationImpl _$$PRCelebrationImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['notificationSentAt'] as String),
     );
 
-Map<String, dynamic> _$$PRCelebrationImplToJson(_$PRCelebrationImpl instance) =>
+Map<String, dynamic> _$PRCelebrationToJson(_PRCelebration instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

@@ -6,8 +6,8 @@ part of 'health_metric.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$HealthMetricImpl _$$HealthMetricImplFromJson(Map<String, dynamic> json) =>
-    _$HealthMetricImpl(
+_HealthMetric _$HealthMetricFromJson(Map<String, dynamic> json) =>
+    _HealthMetric(
       type: $enumDecode(_$HealthMetricTypeEnumMap, json['type']),
       value: (json['value'] as num).toDouble(),
       unit: json['unit'] as String,
@@ -20,7 +20,7 @@ _$HealthMetricImpl _$$HealthMetricImplFromJson(Map<String, dynamic> json) =>
       workoutDistance: (json['workoutDistance'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$$HealthMetricImplToJson(_$HealthMetricImpl instance) =>
+Map<String, dynamic> _$HealthMetricToJson(_HealthMetric instance) =>
     <String, dynamic>{
       'type': _$HealthMetricTypeEnumMap[instance.type]!,
       'value': instance.value,
@@ -42,22 +42,21 @@ const _$HealthMetricTypeEnumMap = {
   HealthMetricType.workout: 'workout',
 };
 
-_$HealthMetricSummaryImpl _$$HealthMetricSummaryImplFromJson(
-  Map<String, dynamic> json,
-) => _$HealthMetricSummaryImpl(
-  metricType: $enumDecode(_$HealthMetricTypeEnumMap, json['metricType']),
-  totalValue: (json['totalValue'] as num).toDouble(),
-  averageValue: (json['averageValue'] as num).toDouble(),
-  minValue: (json['minValue'] as num).toDouble(),
-  maxValue: (json['maxValue'] as num).toDouble(),
-  dataPoints: (json['dataPoints'] as num).toInt(),
-  periodStart: DateTime.parse(json['periodStart'] as String),
-  periodEnd: DateTime.parse(json['periodEnd'] as String),
-  unit: json['unit'] as String,
-);
+_HealthMetricSummary _$HealthMetricSummaryFromJson(Map<String, dynamic> json) =>
+    _HealthMetricSummary(
+      metricType: $enumDecode(_$HealthMetricTypeEnumMap, json['metricType']),
+      totalValue: (json['totalValue'] as num).toDouble(),
+      averageValue: (json['averageValue'] as num).toDouble(),
+      minValue: (json['minValue'] as num).toDouble(),
+      maxValue: (json['maxValue'] as num).toDouble(),
+      dataPoints: (json['dataPoints'] as num).toInt(),
+      periodStart: DateTime.parse(json['periodStart'] as String),
+      periodEnd: DateTime.parse(json['periodEnd'] as String),
+      unit: json['unit'] as String,
+    );
 
-Map<String, dynamic> _$$HealthMetricSummaryImplToJson(
-  _$HealthMetricSummaryImpl instance,
+Map<String, dynamic> _$HealthMetricSummaryToJson(
+  _HealthMetricSummary instance,
 ) => <String, dynamic>{
   'metricType': _$HealthMetricTypeEnumMap[instance.metricType]!,
   'totalValue': instance.totalValue,

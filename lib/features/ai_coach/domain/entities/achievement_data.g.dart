@@ -6,41 +6,39 @@ part of 'achievement_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AchievementDataImpl _$$AchievementDataImplFromJson(
-  Map<String, dynamic> json,
-) => _$AchievementDataImpl(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String,
-  category: $enumDecode(_$AchievementCategoryEnumMap, json['category']),
-  rarity: $enumDecode(_$AchievementRarityEnumMap, json['rarity']),
-  conditionDescription: json['conditionDescription'] as String,
-  iconKey: json['iconKey'] as String,
-  rewardMessage: json['rewardMessage'] as String,
-  unlockedAt: json['unlockedAt'] == null
-      ? null
-      : DateTime.parse(json['unlockedAt'] as String),
-  progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
-  isHidden: json['isHidden'] as bool? ?? false,
-  sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
-);
+_AchievementData _$AchievementDataFromJson(Map<String, dynamic> json) =>
+    _AchievementData(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      category: $enumDecode(_$AchievementCategoryEnumMap, json['category']),
+      rarity: $enumDecode(_$AchievementRarityEnumMap, json['rarity']),
+      conditionDescription: json['conditionDescription'] as String,
+      iconKey: json['iconKey'] as String,
+      rewardMessage: json['rewardMessage'] as String,
+      unlockedAt: json['unlockedAt'] == null
+          ? null
+          : DateTime.parse(json['unlockedAt'] as String),
+      progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
+      isHidden: json['isHidden'] as bool? ?? false,
+      sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
+    );
 
-Map<String, dynamic> _$$AchievementDataImplToJson(
-  _$AchievementDataImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'description': instance.description,
-  'category': _$AchievementCategoryEnumMap[instance.category]!,
-  'rarity': _$AchievementRarityEnumMap[instance.rarity]!,
-  'conditionDescription': instance.conditionDescription,
-  'iconKey': instance.iconKey,
-  'rewardMessage': instance.rewardMessage,
-  'unlockedAt': instance.unlockedAt?.toIso8601String(),
-  'progress': instance.progress,
-  'isHidden': instance.isHidden,
-  'sortOrder': instance.sortOrder,
-};
+Map<String, dynamic> _$AchievementDataToJson(_AchievementData instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'description': instance.description,
+      'category': _$AchievementCategoryEnumMap[instance.category]!,
+      'rarity': _$AchievementRarityEnumMap[instance.rarity]!,
+      'conditionDescription': instance.conditionDescription,
+      'iconKey': instance.iconKey,
+      'rewardMessage': instance.rewardMessage,
+      'unlockedAt': instance.unlockedAt?.toIso8601String(),
+      'progress': instance.progress,
+      'isHidden': instance.isHidden,
+      'sortOrder': instance.sortOrder,
+    };
 
 const _$AchievementCategoryEnumMap = {
   AchievementCategory.firstTime: 'firstTime',

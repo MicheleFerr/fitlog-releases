@@ -6,9 +6,9 @@ part of 'user_fitness_questionnaire.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserFitnessQuestionnaireImpl _$$UserFitnessQuestionnaireImplFromJson(
+_UserFitnessQuestionnaire _$UserFitnessQuestionnaireFromJson(
   Map<String, dynamic> json,
-) => _$UserFitnessQuestionnaireImpl(
+) => _UserFitnessQuestionnaire(
   bodyweightKg: (json['bodyweightKg'] as num).toDouble(),
   age: (json['age'] as num).toInt(),
   sex: $enumDecode(_$BiologicalSexEnumMap, json['sex']),
@@ -44,8 +44,8 @@ _$UserFitnessQuestionnaireImpl _$$UserFitnessQuestionnaireImplFromJson(
       SelfReportCalibration.realistic,
 );
 
-Map<String, dynamic> _$$UserFitnessQuestionnaireImplToJson(
-  _$UserFitnessQuestionnaireImpl instance,
+Map<String, dynamic> _$UserFitnessQuestionnaireToJson(
+  _UserFitnessQuestionnaire instance,
 ) => <String, dynamic>{
   'bodyweightKg': instance.bodyweightKg,
   'age': instance.age,
@@ -98,8 +98,8 @@ const _$SelfReportCalibrationEnumMap = {
   SelfReportCalibration.conservative: 'conservative',
 };
 
-_$InjuryDetailsImpl _$$InjuryDetailsImplFromJson(Map<String, dynamic> json) =>
-    _$InjuryDetailsImpl(
+_InjuryDetails _$InjuryDetailsFromJson(Map<String, dynamic> json) =>
+    _InjuryDetails(
       injuryType: json['injuryType'] as String,
       region: $enumDecode(_$InjuryRegionEnumMap, json['region']),
       monthsSinceInjury: (json['monthsSinceInjury'] as num).toInt(),
@@ -112,7 +112,7 @@ _$InjuryDetailsImpl _$$InjuryDetailsImplFromJson(Map<String, dynamic> json) =>
           const [],
     );
 
-Map<String, dynamic> _$$InjuryDetailsImplToJson(_$InjuryDetailsImpl instance) =>
+Map<String, dynamic> _$InjuryDetailsToJson(_InjuryDetails instance) =>
     <String, dynamic>{
       'injuryType': instance.injuryType,
       'region': _$InjuryRegionEnumMap[instance.region]!,

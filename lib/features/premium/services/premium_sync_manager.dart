@@ -57,10 +57,12 @@ class PremiumSyncManager {
   
   /// Initialize sync manager
   void _initialize() {
-    // Monitor connectivity
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((result) {
-      _hasConnection = result != ConnectivityResult.none;
-      
+    // Monitor connectivity (connectivity_plus 7.x: List<ConnectivityResult>)
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((results) {
+      _hasConnection =
+          !results.contains(ConnectivityResult.none) && results.isNotEmpty;
+
       // Trigger sync when connection restored
       if (_hasConnection && _shouldSync()) {
         syncNow(reason: SyncReason.connectionRestored);

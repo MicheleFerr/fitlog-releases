@@ -6,9 +6,9 @@ part of 'community_contribution.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CommunityContributionImpl _$$CommunityContributionImplFromJson(
+_CommunityContribution _$CommunityContributionFromJson(
   Map<String, dynamic> json,
-) => _$CommunityContributionImpl(
+) => _CommunityContribution(
   id: json['id'] as String,
   exerciseId: json['exerciseId'] as String,
   exerciseName: json['exerciseName'] as String,
@@ -78,8 +78,8 @@ _$CommunityContributionImpl _$$CommunityContributionImplFromJson(
       const [],
 );
 
-Map<String, dynamic> _$$CommunityContributionImplToJson(
-  _$CommunityContributionImpl instance,
+Map<String, dynamic> _$CommunityContributionToJson(
+  _CommunityContribution instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'exerciseId': instance.exerciseId,
@@ -136,23 +136,24 @@ const _$ContributionStatusEnumMap = {
   ContributionStatus.underReview: 'underReview',
 };
 
-_$ContributionCommentImpl _$$ContributionCommentImplFromJson(
-  Map<String, dynamic> json,
-) => _$ContributionCommentImpl(
-  id: json['id'] as String,
-  userId: json['userId'] as String,
-  userName: json['userName'] as String,
-  userAvatar: json['userAvatar'] as String?,
-  text: json['text'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  likes: (json['likes'] as num?)?.toInt() ?? 0,
-  likedBy:
-      (json['likedBy'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-);
+_ContributionComment _$ContributionCommentFromJson(Map<String, dynamic> json) =>
+    _ContributionComment(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      userAvatar: json['userAvatar'] as String?,
+      text: json['text'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      likes: (json['likes'] as num?)?.toInt() ?? 0,
+      likedBy:
+          (json['likedBy'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
 
-Map<String, dynamic> _$$ContributionCommentImplToJson(
-  _$ContributionCommentImpl instance,
+Map<String, dynamic> _$ContributionCommentToJson(
+  _ContributionComment instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
@@ -164,9 +165,9 @@ Map<String, dynamic> _$$ContributionCommentImplToJson(
   'likedBy': instance.likedBy,
 };
 
-_$UserContributionStatsImpl _$$UserContributionStatsImplFromJson(
+_UserContributionStats _$UserContributionStatsFromJson(
   Map<String, dynamic> json,
-) => _$UserContributionStatsImpl(
+) => _UserContributionStats(
   userId: json['userId'] as String,
   totalContributions: (json['totalContributions'] as num?)?.toInt() ?? 0,
   approvedContributions: (json['approvedContributions'] as num?)?.toInt() ?? 0,
@@ -196,8 +197,8 @@ _$UserContributionStatsImpl _$$UserContributionStatsImplFromJson(
   allTimeRank: (json['allTimeRank'] as num?)?.toInt() ?? 0,
 );
 
-Map<String, dynamic> _$$UserContributionStatsImplToJson(
-  _$UserContributionStatsImpl instance,
+Map<String, dynamic> _$UserContributionStatsToJson(
+  _UserContributionStats instance,
 ) => <String, dynamic>{
   'userId': instance.userId,
   'totalContributions': instance.totalContributions,
@@ -218,26 +219,24 @@ Map<String, dynamic> _$$UserContributionStatsImplToJson(
   'allTimeRank': instance.allTimeRank,
 };
 
-_$ContributorBadgeImpl _$$ContributorBadgeImplFromJson(
-  Map<String, dynamic> json,
-) => _$ContributorBadgeImpl(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String,
-  icon: json['icon'] as String,
-  earnedAt: DateTime.parse(json['earnedAt'] as String),
-  isRare: json['isRare'] as bool? ?? false,
-  category: json['category'] as String?,
-);
+_ContributorBadge _$ContributorBadgeFromJson(Map<String, dynamic> json) =>
+    _ContributorBadge(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      icon: json['icon'] as String,
+      earnedAt: DateTime.parse(json['earnedAt'] as String),
+      isRare: json['isRare'] as bool? ?? false,
+      category: json['category'] as String?,
+    );
 
-Map<String, dynamic> _$$ContributorBadgeImplToJson(
-  _$ContributorBadgeImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'description': instance.description,
-  'icon': instance.icon,
-  'earnedAt': instance.earnedAt.toIso8601String(),
-  'isRare': instance.isRare,
-  'category': instance.category,
-};
+Map<String, dynamic> _$ContributorBadgeToJson(_ContributorBadge instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'description': instance.description,
+      'icon': instance.icon,
+      'earnedAt': instance.earnedAt.toIso8601String(),
+      'isRare': instance.isRare,
+      'category': instance.category,
+    };

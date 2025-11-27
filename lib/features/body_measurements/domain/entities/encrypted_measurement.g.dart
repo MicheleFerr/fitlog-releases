@@ -6,9 +6,9 @@ part of 'encrypted_measurement.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EncryptedMeasurementImpl _$$EncryptedMeasurementImplFromJson(
+_EncryptedMeasurement _$EncryptedMeasurementFromJson(
   Map<String, dynamic> json,
-) => _$EncryptedMeasurementImpl(
+) => _EncryptedMeasurement(
   id: json['id'] as String,
   userId: json['userId'] as String,
   metricType: json['metricType'] as String,
@@ -24,8 +24,8 @@ _$EncryptedMeasurementImpl _$$EncryptedMeasurementImplFromJson(
       : DateTime.parse(json['updatedAt'] as String),
 );
 
-Map<String, dynamic> _$$EncryptedMeasurementImplToJson(
-  _$EncryptedMeasurementImpl instance,
+Map<String, dynamic> _$EncryptedMeasurementToJson(
+  _EncryptedMeasurement instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
@@ -38,28 +38,26 @@ Map<String, dynamic> _$$EncryptedMeasurementImplToJson(
   'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
-_$EncryptionMetadataImpl _$$EncryptionMetadataImplFromJson(
-  Map<String, dynamic> json,
-) => _$EncryptionMetadataImpl(
-  keyVersion: (json['keyVersion'] as num).toInt(),
-  keyGeneratedAt: DateTime.parse(json['keyGeneratedAt'] as String),
-  keyLastRotated: json['keyLastRotated'] == null
-      ? null
-      : DateTime.parse(json['keyLastRotated'] as String),
-  keyRotationScheduled: json['keyRotationScheduled'] == null
-      ? null
-      : DateTime.parse(json['keyRotationScheduled'] as String),
-  algorithm: json['algorithm'] as String? ?? 'AES-256-GCM',
-  keyDerivationFunction: json['keyDerivationFunction'] as String?,
-);
+_EncryptionMetadata _$EncryptionMetadataFromJson(Map<String, dynamic> json) =>
+    _EncryptionMetadata(
+      keyVersion: (json['keyVersion'] as num).toInt(),
+      keyGeneratedAt: DateTime.parse(json['keyGeneratedAt'] as String),
+      keyLastRotated: json['keyLastRotated'] == null
+          ? null
+          : DateTime.parse(json['keyLastRotated'] as String),
+      keyRotationScheduled: json['keyRotationScheduled'] == null
+          ? null
+          : DateTime.parse(json['keyRotationScheduled'] as String),
+      algorithm: json['algorithm'] as String? ?? 'AES-256-GCM',
+      keyDerivationFunction: json['keyDerivationFunction'] as String?,
+    );
 
-Map<String, dynamic> _$$EncryptionMetadataImplToJson(
-  _$EncryptionMetadataImpl instance,
-) => <String, dynamic>{
-  'keyVersion': instance.keyVersion,
-  'keyGeneratedAt': instance.keyGeneratedAt.toIso8601String(),
-  'keyLastRotated': instance.keyLastRotated?.toIso8601String(),
-  'keyRotationScheduled': instance.keyRotationScheduled?.toIso8601String(),
-  'algorithm': instance.algorithm,
-  'keyDerivationFunction': instance.keyDerivationFunction,
-};
+Map<String, dynamic> _$EncryptionMetadataToJson(_EncryptionMetadata instance) =>
+    <String, dynamic>{
+      'keyVersion': instance.keyVersion,
+      'keyGeneratedAt': instance.keyGeneratedAt.toIso8601String(),
+      'keyLastRotated': instance.keyLastRotated?.toIso8601String(),
+      'keyRotationScheduled': instance.keyRotationScheduled?.toIso8601String(),
+      'algorithm': instance.algorithm,
+      'keyDerivationFunction': instance.keyDerivationFunction,
+    };

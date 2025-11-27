@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,194 +9,269 @@ part of 'user_goal.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$UserGoal {
-  GoalType get goalType => throw _privateConstructorUsedError;
-  int get weeklyWorkoutTarget => throw _privateConstructorUsedError;
-  ExperienceLevel get experienceLevel => throw _privateConstructorUsedError;
 
-  /// Create a copy of UserGoal
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $UserGoalCopyWith<UserGoal> get copyWith =>
-      throw _privateConstructorUsedError;
+ GoalType get goalType; int get weeklyWorkoutTarget; ExperienceLevel get experienceLevel;
+/// Create a copy of UserGoal
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UserGoalCopyWith<UserGoal> get copyWith => _$UserGoalCopyWithImpl<UserGoal>(this as UserGoal, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserGoal&&(identical(other.goalType, goalType) || other.goalType == goalType)&&(identical(other.weeklyWorkoutTarget, weeklyWorkoutTarget) || other.weeklyWorkoutTarget == weeklyWorkoutTarget)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,goalType,weeklyWorkoutTarget,experienceLevel);
+
+@override
+String toString() {
+  return 'UserGoal(goalType: $goalType, weeklyWorkoutTarget: $weeklyWorkoutTarget, experienceLevel: $experienceLevel)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $UserGoalCopyWith<$Res> {
-  factory $UserGoalCopyWith(UserGoal value, $Res Function(UserGoal) then) =
-      _$UserGoalCopyWithImpl<$Res, UserGoal>;
-  @useResult
-  $Res call({
-    GoalType goalType,
-    int weeklyWorkoutTarget,
-    ExperienceLevel experienceLevel,
-  });
-}
+abstract mixin class $UserGoalCopyWith<$Res>  {
+  factory $UserGoalCopyWith(UserGoal value, $Res Function(UserGoal) _then) = _$UserGoalCopyWithImpl;
+@useResult
+$Res call({
+ GoalType goalType, int weeklyWorkoutTarget, ExperienceLevel experienceLevel
+});
 
+
+
+
+}
 /// @nodoc
-class _$UserGoalCopyWithImpl<$Res, $Val extends UserGoal>
+class _$UserGoalCopyWithImpl<$Res>
     implements $UserGoalCopyWith<$Res> {
-  _$UserGoalCopyWithImpl(this._value, this._then);
+  _$UserGoalCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final UserGoal _self;
+  final $Res Function(UserGoal) _then;
 
-  /// Create a copy of UserGoal
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? goalType = null,
-    Object? weeklyWorkoutTarget = null,
-    Object? experienceLevel = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            goalType: null == goalType
-                ? _value.goalType
-                : goalType // ignore: cast_nullable_to_non_nullable
-                      as GoalType,
-            weeklyWorkoutTarget: null == weeklyWorkoutTarget
-                ? _value.weeklyWorkoutTarget
-                : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
-                      as int,
-            experienceLevel: null == experienceLevel
-                ? _value.experienceLevel
-                : experienceLevel // ignore: cast_nullable_to_non_nullable
-                      as ExperienceLevel,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of UserGoal
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? goalType = null,Object? weeklyWorkoutTarget = null,Object? experienceLevel = null,}) {
+  return _then(_self.copyWith(
+goalType: null == goalType ? _self.goalType : goalType // ignore: cast_nullable_to_non_nullable
+as GoalType,weeklyWorkoutTarget: null == weeklyWorkoutTarget ? _self.weeklyWorkoutTarget : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
+as int,experienceLevel: null == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
+as ExperienceLevel,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [UserGoal].
+extension UserGoalPatterns on UserGoal {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserGoal value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _UserGoal() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserGoal value)  $default,){
+final _that = this;
+switch (_that) {
+case _UserGoal():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserGoal value)?  $default,){
+final _that = this;
+switch (_that) {
+case _UserGoal() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( GoalType goalType,  int weeklyWorkoutTarget,  ExperienceLevel experienceLevel)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _UserGoal() when $default != null:
+return $default(_that.goalType,_that.weeklyWorkoutTarget,_that.experienceLevel);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( GoalType goalType,  int weeklyWorkoutTarget,  ExperienceLevel experienceLevel)  $default,) {final _that = this;
+switch (_that) {
+case _UserGoal():
+return $default(_that.goalType,_that.weeklyWorkoutTarget,_that.experienceLevel);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( GoalType goalType,  int weeklyWorkoutTarget,  ExperienceLevel experienceLevel)?  $default,) {final _that = this;
+switch (_that) {
+case _UserGoal() when $default != null:
+return $default(_that.goalType,_that.weeklyWorkoutTarget,_that.experienceLevel);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
-abstract class _$$UserGoalImplCopyWith<$Res>
-    implements $UserGoalCopyWith<$Res> {
-  factory _$$UserGoalImplCopyWith(
-    _$UserGoalImpl value,
-    $Res Function(_$UserGoalImpl) then,
-  ) = __$$UserGoalImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    GoalType goalType,
-    int weeklyWorkoutTarget,
-    ExperienceLevel experienceLevel,
-  });
+
+
+class _UserGoal implements UserGoal {
+  const _UserGoal({required this.goalType, required this.weeklyWorkoutTarget, required this.experienceLevel});
+  
+
+@override final  GoalType goalType;
+@override final  int weeklyWorkoutTarget;
+@override final  ExperienceLevel experienceLevel;
+
+/// Create a copy of UserGoal
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UserGoalCopyWith<_UserGoal> get copyWith => __$UserGoalCopyWithImpl<_UserGoal>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserGoal&&(identical(other.goalType, goalType) || other.goalType == goalType)&&(identical(other.weeklyWorkoutTarget, weeklyWorkoutTarget) || other.weeklyWorkoutTarget == weeklyWorkoutTarget)&&(identical(other.experienceLevel, experienceLevel) || other.experienceLevel == experienceLevel));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,goalType,weeklyWorkoutTarget,experienceLevel);
+
+@override
+String toString() {
+  return 'UserGoal(goalType: $goalType, weeklyWorkoutTarget: $weeklyWorkoutTarget, experienceLevel: $experienceLevel)';
+}
+
+
 }
 
 /// @nodoc
-class __$$UserGoalImplCopyWithImpl<$Res>
-    extends _$UserGoalCopyWithImpl<$Res, _$UserGoalImpl>
-    implements _$$UserGoalImplCopyWith<$Res> {
-  __$$UserGoalImplCopyWithImpl(
-    _$UserGoalImpl _value,
-    $Res Function(_$UserGoalImpl) _then,
-  ) : super(_value, _then);
+abstract mixin class _$UserGoalCopyWith<$Res> implements $UserGoalCopyWith<$Res> {
+  factory _$UserGoalCopyWith(_UserGoal value, $Res Function(_UserGoal) _then) = __$UserGoalCopyWithImpl;
+@override @useResult
+$Res call({
+ GoalType goalType, int weeklyWorkoutTarget, ExperienceLevel experienceLevel
+});
 
-  /// Create a copy of UserGoal
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? goalType = null,
-    Object? weeklyWorkoutTarget = null,
-    Object? experienceLevel = null,
-  }) {
-    return _then(
-      _$UserGoalImpl(
-        goalType: null == goalType
-            ? _value.goalType
-            : goalType // ignore: cast_nullable_to_non_nullable
-                  as GoalType,
-        weeklyWorkoutTarget: null == weeklyWorkoutTarget
-            ? _value.weeklyWorkoutTarget
-            : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
-                  as int,
-        experienceLevel: null == experienceLevel
-            ? _value.experienceLevel
-            : experienceLevel // ignore: cast_nullable_to_non_nullable
-                  as ExperienceLevel,
-      ),
-    );
-  }
+
+
+
 }
-
 /// @nodoc
+class __$UserGoalCopyWithImpl<$Res>
+    implements _$UserGoalCopyWith<$Res> {
+  __$UserGoalCopyWithImpl(this._self, this._then);
 
-class _$UserGoalImpl implements _UserGoal {
-  const _$UserGoalImpl({
-    required this.goalType,
-    required this.weeklyWorkoutTarget,
-    required this.experienceLevel,
-  });
+  final _UserGoal _self;
+  final $Res Function(_UserGoal) _then;
 
-  @override
-  final GoalType goalType;
-  @override
-  final int weeklyWorkoutTarget;
-  @override
-  final ExperienceLevel experienceLevel;
-
-  @override
-  String toString() {
-    return 'UserGoal(goalType: $goalType, weeklyWorkoutTarget: $weeklyWorkoutTarget, experienceLevel: $experienceLevel)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$UserGoalImpl &&
-            (identical(other.goalType, goalType) ||
-                other.goalType == goalType) &&
-            (identical(other.weeklyWorkoutTarget, weeklyWorkoutTarget) ||
-                other.weeklyWorkoutTarget == weeklyWorkoutTarget) &&
-            (identical(other.experienceLevel, experienceLevel) ||
-                other.experienceLevel == experienceLevel));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, goalType, weeklyWorkoutTarget, experienceLevel);
-
-  /// Create a copy of UserGoal
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$UserGoalImplCopyWith<_$UserGoalImpl> get copyWith =>
-      __$$UserGoalImplCopyWithImpl<_$UserGoalImpl>(this, _$identity);
+/// Create a copy of UserGoal
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? goalType = null,Object? weeklyWorkoutTarget = null,Object? experienceLevel = null,}) {
+  return _then(_UserGoal(
+goalType: null == goalType ? _self.goalType : goalType // ignore: cast_nullable_to_non_nullable
+as GoalType,weeklyWorkoutTarget: null == weeklyWorkoutTarget ? _self.weeklyWorkoutTarget : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
+as int,experienceLevel: null == experienceLevel ? _self.experienceLevel : experienceLevel // ignore: cast_nullable_to_non_nullable
+as ExperienceLevel,
+  ));
 }
 
-abstract class _UserGoal implements UserGoal {
-  const factory _UserGoal({
-    required final GoalType goalType,
-    required final int weeklyWorkoutTarget,
-    required final ExperienceLevel experienceLevel,
-  }) = _$UserGoalImpl;
 
-  @override
-  GoalType get goalType;
-  @override
-  int get weeklyWorkoutTarget;
-  @override
-  ExperienceLevel get experienceLevel;
-
-  /// Create a copy of UserGoal
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$UserGoalImplCopyWith<_$UserGoalImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
+
+// dart format on

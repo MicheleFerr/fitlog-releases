@@ -6,21 +6,20 @@ part of 'insight_rule.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$InsightRuleImpl _$$InsightRuleImplFromJson(Map<String, dynamic> json) =>
-    _$InsightRuleImpl(
-      insightType: $enumDecode(_$InsightTypeEnumMap, json['insightType']),
-      minWeeks: (json['minWeeks'] as num).toInt(),
-      volumeThreshold: (json['volumeThreshold'] as num).toDouble(),
-      personalizedThresholds:
-          (json['personalizedThresholds'] as Map<String, dynamic>).map(
-            (k, e) => MapEntry(
-              $enumDecode(_$ExperienceLevelEnumMap, k),
-              PersonalizedThreshold.fromJson(e as Map<String, dynamic>),
-            ),
-          ),
-    );
+_InsightRule _$InsightRuleFromJson(Map<String, dynamic> json) => _InsightRule(
+  insightType: $enumDecode(_$InsightTypeEnumMap, json['insightType']),
+  minWeeks: (json['minWeeks'] as num).toInt(),
+  volumeThreshold: (json['volumeThreshold'] as num).toDouble(),
+  personalizedThresholds:
+      (json['personalizedThresholds'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(
+          $enumDecode(_$ExperienceLevelEnumMap, k),
+          PersonalizedThreshold.fromJson(e as Map<String, dynamic>),
+        ),
+      ),
+);
 
-Map<String, dynamic> _$$InsightRuleImplToJson(_$InsightRuleImpl instance) =>
+Map<String, dynamic> _$InsightRuleToJson(_InsightRule instance) =>
     <String, dynamic>{
       'insightType': _$InsightTypeEnumMap[instance.insightType]!,
       'minWeeks': instance.minWeeks,
@@ -50,16 +49,16 @@ const _$ExperienceLevelEnumMap = {
   ExperienceLevel.advanced: 'advanced',
 };
 
-_$PersonalizedThresholdImpl _$$PersonalizedThresholdImplFromJson(
+_PersonalizedThreshold _$PersonalizedThresholdFromJson(
   Map<String, dynamic> json,
-) => _$PersonalizedThresholdImpl(
+) => _PersonalizedThreshold(
   mev: (json['mev'] as num).toDouble(),
   mav: (json['mav'] as num).toDouble(),
   mrv: (json['mrv'] as num).toDouble(),
 );
 
-Map<String, dynamic> _$$PersonalizedThresholdImplToJson(
-  _$PersonalizedThresholdImpl instance,
+Map<String, dynamic> _$PersonalizedThresholdToJson(
+  _PersonalizedThreshold instance,
 ) => <String, dynamic>{
   'mev': instance.mev,
   'mav': instance.mav,

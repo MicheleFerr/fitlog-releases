@@ -6,43 +6,42 @@ part of 'user_consent.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserConsentImpl _$$UserConsentImplFromJson(Map<String, dynamic> json) =>
-    _$UserConsentImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      groupConsents: (json['groupConsents'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-          $enumDecode(_$MetricGroupEnumMap, k),
-          $enumDecode(_$ConsentStateEnumMap, e),
-        ),
-      ),
-      consentVersion: (json['consentVersion'] as num).toInt(),
-      acceptedAt: DateTime.parse(json['acceptedAt'] as String),
-      ipAddress: json['ipAddress'] as String,
-      essentialGrantedAt: json['essentialGrantedAt'] == null
-          ? null
-          : DateTime.parse(json['essentialGrantedAt'] as String),
-      measurementsGrantedAt: json['measurementsGrantedAt'] == null
-          ? null
-          : DateTime.parse(json['measurementsGrantedAt'] as String),
-      vitalsGrantedAt: json['vitalsGrantedAt'] == null
-          ? null
-          : DateTime.parse(json['vitalsGrantedAt'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      isRevoked: json['isRevoked'] as bool? ?? false,
-      revokedAt: json['revokedAt'] == null
-          ? null
-          : DateTime.parse(json['revokedAt'] as String),
-      userAgent: json['userAgent'] as String?,
-    );
+_UserConsent _$UserConsentFromJson(Map<String, dynamic> json) => _UserConsent(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  groupConsents: (json['groupConsents'] as Map<String, dynamic>).map(
+    (k, e) => MapEntry(
+      $enumDecode(_$MetricGroupEnumMap, k),
+      $enumDecode(_$ConsentStateEnumMap, e),
+    ),
+  ),
+  consentVersion: (json['consentVersion'] as num).toInt(),
+  acceptedAt: DateTime.parse(json['acceptedAt'] as String),
+  ipAddress: json['ipAddress'] as String,
+  essentialGrantedAt: json['essentialGrantedAt'] == null
+      ? null
+      : DateTime.parse(json['essentialGrantedAt'] as String),
+  measurementsGrantedAt: json['measurementsGrantedAt'] == null
+      ? null
+      : DateTime.parse(json['measurementsGrantedAt'] as String),
+  vitalsGrantedAt: json['vitalsGrantedAt'] == null
+      ? null
+      : DateTime.parse(json['vitalsGrantedAt'] as String),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  isRevoked: json['isRevoked'] as bool? ?? false,
+  revokedAt: json['revokedAt'] == null
+      ? null
+      : DateTime.parse(json['revokedAt'] as String),
+  userAgent: json['userAgent'] as String?,
+);
 
-Map<String, dynamic> _$$UserConsentImplToJson(
-  _$UserConsentImpl instance,
+Map<String, dynamic> _$UserConsentToJson(
+  _UserConsent instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
@@ -74,41 +73,39 @@ const _$MetricGroupEnumMap = {
   MetricGroup.vitals: 'vitals',
 };
 
-_$AuditLogImpl _$$AuditLogImplFromJson(Map<String, dynamic> json) =>
-    _$AuditLogImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      action: $enumDecode(_$AuditActionEnumMap, json['action']),
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      ipAddress: json['ipAddress'] as String,
-      affectedMetrics: (json['affectedMetrics'] as List<dynamic>?)
-          ?.map((e) => $enumDecode(_$MetricTypeEnumMap, e))
-          .toList(),
-      actionDetails: json['actionDetails'] as String?,
-      previousHash: json['previousHash'] as String?,
-      hash: json['hash'] as String?,
-      userAgent: json['userAgent'] as String?,
-      platform: json['platform'] as String?,
-      appVersion: json['appVersion'] as String?,
-    );
+_AuditLog _$AuditLogFromJson(Map<String, dynamic> json) => _AuditLog(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  action: $enumDecode(_$AuditActionEnumMap, json['action']),
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  ipAddress: json['ipAddress'] as String,
+  affectedMetrics: (json['affectedMetrics'] as List<dynamic>?)
+      ?.map((e) => $enumDecode(_$MetricTypeEnumMap, e))
+      .toList(),
+  actionDetails: json['actionDetails'] as String?,
+  previousHash: json['previousHash'] as String?,
+  hash: json['hash'] as String?,
+  userAgent: json['userAgent'] as String?,
+  platform: json['platform'] as String?,
+  appVersion: json['appVersion'] as String?,
+);
 
-Map<String, dynamic> _$$AuditLogImplToJson(_$AuditLogImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'action': _$AuditActionEnumMap[instance.action]!,
-      'timestamp': instance.timestamp.toIso8601String(),
-      'ipAddress': instance.ipAddress,
-      'affectedMetrics': instance.affectedMetrics
-          ?.map((e) => _$MetricTypeEnumMap[e]!)
-          .toList(),
-      'actionDetails': instance.actionDetails,
-      'previousHash': instance.previousHash,
-      'hash': instance.hash,
-      'userAgent': instance.userAgent,
-      'platform': instance.platform,
-      'appVersion': instance.appVersion,
-    };
+Map<String, dynamic> _$AuditLogToJson(_AuditLog instance) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'action': _$AuditActionEnumMap[instance.action]!,
+  'timestamp': instance.timestamp.toIso8601String(),
+  'ipAddress': instance.ipAddress,
+  'affectedMetrics': instance.affectedMetrics
+      ?.map((e) => _$MetricTypeEnumMap[e]!)
+      .toList(),
+  'actionDetails': instance.actionDetails,
+  'previousHash': instance.previousHash,
+  'hash': instance.hash,
+  'userAgent': instance.userAgent,
+  'platform': instance.platform,
+  'appVersion': instance.appVersion,
+};
 
 const _$AuditActionEnumMap = {
   AuditAction.dataAccess: 'dataAccess',

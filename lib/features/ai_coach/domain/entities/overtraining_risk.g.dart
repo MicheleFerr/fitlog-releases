@@ -6,31 +6,29 @@ part of 'overtraining_risk.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$OvertrainingRiskImpl _$$OvertrainingRiskImplFromJson(
-  Map<String, dynamic> json,
-) => _$OvertrainingRiskImpl(
-  riskLevel: $enumDecode(_$RiskLevelEnumMap, json['riskLevel']),
-  tsbScore: (json['tsbScore'] as num).toDouble(),
-  hrvDeviation: (json['hrvDeviation'] as num).toDouble(),
-  recommendation: json['recommendation'] as String,
-  factors: json['factors'] == null
-      ? null
-      : RiskFactors.fromJson(json['factors'] as Map<String, dynamic>),
-  calculatedAt: json['calculatedAt'] == null
-      ? null
-      : DateTime.parse(json['calculatedAt'] as String),
-);
+_OvertrainingRisk _$OvertrainingRiskFromJson(Map<String, dynamic> json) =>
+    _OvertrainingRisk(
+      riskLevel: $enumDecode(_$RiskLevelEnumMap, json['riskLevel']),
+      tsbScore: (json['tsbScore'] as num).toDouble(),
+      hrvDeviation: (json['hrvDeviation'] as num).toDouble(),
+      recommendation: json['recommendation'] as String,
+      factors: json['factors'] == null
+          ? null
+          : RiskFactors.fromJson(json['factors'] as Map<String, dynamic>),
+      calculatedAt: json['calculatedAt'] == null
+          ? null
+          : DateTime.parse(json['calculatedAt'] as String),
+    );
 
-Map<String, dynamic> _$$OvertrainingRiskImplToJson(
-  _$OvertrainingRiskImpl instance,
-) => <String, dynamic>{
-  'riskLevel': _$RiskLevelEnumMap[instance.riskLevel]!,
-  'tsbScore': instance.tsbScore,
-  'hrvDeviation': instance.hrvDeviation,
-  'recommendation': instance.recommendation,
-  'factors': instance.factors?.toJson(),
-  'calculatedAt': instance.calculatedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$OvertrainingRiskToJson(_OvertrainingRisk instance) =>
+    <String, dynamic>{
+      'riskLevel': _$RiskLevelEnumMap[instance.riskLevel]!,
+      'tsbScore': instance.tsbScore,
+      'hrvDeviation': instance.hrvDeviation,
+      'recommendation': instance.recommendation,
+      'factors': instance.factors?.toJson(),
+      'calculatedAt': instance.calculatedAt?.toIso8601String(),
+    };
 
 const _$RiskLevelEnumMap = {
   RiskLevel.locked: 'locked',
@@ -40,18 +38,17 @@ const _$RiskLevelEnumMap = {
   RiskLevel.veryHigh: 'very_high',
 };
 
-_$RiskFactorsImpl _$$RiskFactorsImplFromJson(Map<String, dynamic> json) =>
-    _$RiskFactorsImpl(
-      acuteTrainingLoad: (json['acuteTrainingLoad'] as num).toInt(),
-      chronicTrainingLoad: (json['chronicTrainingLoad'] as num).toInt(),
-      hrvBaseline: (json['hrvBaseline'] as num).toDouble(),
-      currentHrv: (json['currentHrv'] as num).toDouble(),
-      sleepQualityScore: (json['sleepQualityScore'] as num?)?.toInt(),
-      muscleSorenessScore: (json['muscleSorenessScore'] as num?)?.toInt(),
-      moodEnergyScore: (json['moodEnergyScore'] as num?)?.toInt(),
-    );
+_RiskFactors _$RiskFactorsFromJson(Map<String, dynamic> json) => _RiskFactors(
+  acuteTrainingLoad: (json['acuteTrainingLoad'] as num).toInt(),
+  chronicTrainingLoad: (json['chronicTrainingLoad'] as num).toInt(),
+  hrvBaseline: (json['hrvBaseline'] as num).toDouble(),
+  currentHrv: (json['currentHrv'] as num).toDouble(),
+  sleepQualityScore: (json['sleepQualityScore'] as num?)?.toInt(),
+  muscleSorenessScore: (json['muscleSorenessScore'] as num?)?.toInt(),
+  moodEnergyScore: (json['moodEnergyScore'] as num?)?.toInt(),
+);
 
-Map<String, dynamic> _$$RiskFactorsImplToJson(_$RiskFactorsImpl instance) =>
+Map<String, dynamic> _$RiskFactorsToJson(_RiskFactors instance) =>
     <String, dynamic>{
       'acuteTrainingLoad': instance.acuteTrainingLoad,
       'chronicTrainingLoad': instance.chronicTrainingLoad,

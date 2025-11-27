@@ -6,9 +6,9 @@ part of 'analytics_page_feedback.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AnalyticsPageFeedbackImpl _$$AnalyticsPageFeedbackImplFromJson(
+_AnalyticsPageFeedback _$AnalyticsPageFeedbackFromJson(
   Map<String, dynamic> json,
-) => _$AnalyticsPageFeedbackImpl(
+) => _AnalyticsPageFeedback(
   id: json['id'] as String,
   userId: json['userId'] as String,
   isHelpful: json['isHelpful'] as bool,
@@ -19,8 +19,8 @@ _$AnalyticsPageFeedbackImpl _$$AnalyticsPageFeedbackImplFromJson(
   deviceInfo: json['deviceInfo'] as Map<String, dynamic>?,
 );
 
-Map<String, dynamic> _$$AnalyticsPageFeedbackImplToJson(
-  _$AnalyticsPageFeedbackImpl instance,
+Map<String, dynamic> _$AnalyticsPageFeedbackToJson(
+  _AnalyticsPageFeedback instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,

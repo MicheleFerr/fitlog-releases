@@ -6,9 +6,9 @@ part of 'advanced_exercise_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AdvancedExerciseTemplateImpl _$$AdvancedExerciseTemplateImplFromJson(
+_AdvancedExerciseTemplate _$AdvancedExerciseTemplateFromJson(
   Map<String, dynamic> json,
-) => _$AdvancedExerciseTemplateImpl(
+) => _AdvancedExerciseTemplate(
   id: json['id'] as String,
   userId: json['userId'] as String,
   name: json['name'] as String,
@@ -29,8 +29,8 @@ _$AdvancedExerciseTemplateImpl _$$AdvancedExerciseTemplateImplFromJson(
       : DateTime.parse(json['lastUsedAt'] as String),
 );
 
-Map<String, dynamic> _$$AdvancedExerciseTemplateImplToJson(
-  _$AdvancedExerciseTemplateImpl instance,
+Map<String, dynamic> _$AdvancedExerciseTemplateToJson(
+  _AdvancedExerciseTemplate instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
@@ -52,8 +52,8 @@ const _$AdvancedExerciseTypeEnumMap = {
   AdvancedExerciseType.restPause: 'restPause',
 };
 
-_$SupersetConfigImpl _$$SupersetConfigImplFromJson(Map<String, dynamic> json) =>
-    _$SupersetConfigImpl(
+SupersetConfig _$SupersetConfigFromJson(Map<String, dynamic> json) =>
+    SupersetConfig(
       exerciseNames: (json['exerciseNames'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -67,19 +67,18 @@ _$SupersetConfigImpl _$$SupersetConfigImplFromJson(Map<String, dynamic> json) =>
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$SupersetConfigImplToJson(
-  _$SupersetConfigImpl instance,
-) => <String, dynamic>{
-  'exerciseNames': instance.exerciseNames,
-  'exerciseIds': instance.exerciseIds,
-  'targetSets': instance.targetSets,
-  'restBetweenExercises': instance.restBetweenExercises,
-  'restBetweenRounds': instance.restBetweenRounds,
-  'runtimeType': instance.$type,
-};
+Map<String, dynamic> _$SupersetConfigToJson(SupersetConfig instance) =>
+    <String, dynamic>{
+      'exerciseNames': instance.exerciseNames,
+      'exerciseIds': instance.exerciseIds,
+      'targetSets': instance.targetSets,
+      'restBetweenExercises': instance.restBetweenExercises,
+      'restBetweenRounds': instance.restBetweenRounds,
+      'runtimeType': instance.$type,
+    };
 
-_$DropSetConfigImpl _$$DropSetConfigImplFromJson(Map<String, dynamic> json) =>
-    _$DropSetConfigImpl(
+DropSetConfig _$DropSetConfigFromJson(Map<String, dynamic> json) =>
+    DropSetConfig(
       exerciseName: json['exerciseName'] as String,
       exerciseId: json['exerciseId'] as String,
       drops: (json['drops'] as num).toInt(),
@@ -90,7 +89,7 @@ _$DropSetConfigImpl _$$DropSetConfigImplFromJson(Map<String, dynamic> json) =>
       $type: json['runtimeType'] as String?,
     );
 
-Map<String, dynamic> _$$DropSetConfigImplToJson(_$DropSetConfigImpl instance) =>
+Map<String, dynamic> _$DropSetConfigToJson(DropSetConfig instance) =>
     <String, dynamic>{
       'exerciseName': instance.exerciseName,
       'exerciseId': instance.exerciseId,
@@ -100,24 +99,22 @@ Map<String, dynamic> _$$DropSetConfigImplToJson(_$DropSetConfigImpl instance) =>
       'runtimeType': instance.$type,
     };
 
-_$RestPauseConfigImpl _$$RestPauseConfigImplFromJson(
-  Map<String, dynamic> json,
-) => _$RestPauseConfigImpl(
-  exerciseName: json['exerciseName'] as String,
-  exerciseId: json['exerciseId'] as String,
-  miniSets: (json['miniSets'] as num).toInt(),
-  restDuration: (json['restDuration'] as num?)?.toInt() ?? 15,
-  targetReps: (json['targetReps'] as num?)?.toInt(),
-  $type: json['runtimeType'] as String?,
-);
+RestPauseConfig _$RestPauseConfigFromJson(Map<String, dynamic> json) =>
+    RestPauseConfig(
+      exerciseName: json['exerciseName'] as String,
+      exerciseId: json['exerciseId'] as String,
+      miniSets: (json['miniSets'] as num).toInt(),
+      restDuration: (json['restDuration'] as num?)?.toInt() ?? 15,
+      targetReps: (json['targetReps'] as num?)?.toInt(),
+      $type: json['runtimeType'] as String?,
+    );
 
-Map<String, dynamic> _$$RestPauseConfigImplToJson(
-  _$RestPauseConfigImpl instance,
-) => <String, dynamic>{
-  'exerciseName': instance.exerciseName,
-  'exerciseId': instance.exerciseId,
-  'miniSets': instance.miniSets,
-  'restDuration': instance.restDuration,
-  'targetReps': instance.targetReps,
-  'runtimeType': instance.$type,
-};
+Map<String, dynamic> _$RestPauseConfigToJson(RestPauseConfig instance) =>
+    <String, dynamic>{
+      'exerciseName': instance.exerciseName,
+      'exerciseId': instance.exerciseId,
+      'miniSets': instance.miniSets,
+      'restDuration': instance.restDuration,
+      'targetReps': instance.targetReps,
+      'runtimeType': instance.$type,
+    };

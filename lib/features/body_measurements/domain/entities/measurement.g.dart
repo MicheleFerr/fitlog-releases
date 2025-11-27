@@ -6,29 +6,28 @@ part of 'measurement.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MeasurementImpl _$$MeasurementImplFromJson(Map<String, dynamic> json) =>
-    _$MeasurementImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      metricType: $enumDecode(_$MetricTypeEnumMap, json['metricType']),
-      value: (json['value'] as num).toDouble(),
-      unit: json['unit'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      source: $enumDecode(_$MeasurementSourceEnumMap, json['source']),
-      notes: json['notes'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      isDeleted: json['isDeleted'] as bool? ?? false,
-      deletedAt: json['deletedAt'] == null
-          ? null
-          : DateTime.parse(json['deletedAt'] as String),
-    );
+_Measurement _$MeasurementFromJson(Map<String, dynamic> json) => _Measurement(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  metricType: $enumDecode(_$MetricTypeEnumMap, json['metricType']),
+  value: (json['value'] as num).toDouble(),
+  unit: json['unit'] as String,
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  source: $enumDecode(_$MeasurementSourceEnumMap, json['source']),
+  notes: json['notes'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  isDeleted: json['isDeleted'] as bool? ?? false,
+  deletedAt: json['deletedAt'] == null
+      ? null
+      : DateTime.parse(json['deletedAt'] as String),
+);
 
-Map<String, dynamic> _$$MeasurementImplToJson(_$MeasurementImpl instance) =>
+Map<String, dynamic> _$MeasurementToJson(_Measurement instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
@@ -78,26 +77,25 @@ const _$MeasurementSourceEnumMap = {
   MeasurementSource.calculated: 'calculated',
 };
 
-_$MeasurementMetadataImpl _$$MeasurementMetadataImplFromJson(
-  Map<String, dynamic> json,
-) => _$MeasurementMetadataImpl(
-  deviceInfo: json['deviceInfo'] as String?,
-  appVersion: json['appVersion'] as String?,
-  syncStatus:
-      $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
-      SyncStatus.pending,
-  lastSyncAttempt: json['lastSyncAttempt'] == null
-      ? null
-      : DateTime.parse(json['lastSyncAttempt'] as String),
-  syncError: json['syncError'] as String?,
-  isValidated: json['isValidated'] as bool? ?? false,
-  validationErrors: (json['validationErrors'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-);
+_MeasurementMetadata _$MeasurementMetadataFromJson(Map<String, dynamic> json) =>
+    _MeasurementMetadata(
+      deviceInfo: json['deviceInfo'] as String?,
+      appVersion: json['appVersion'] as String?,
+      syncStatus:
+          $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
+          SyncStatus.pending,
+      lastSyncAttempt: json['lastSyncAttempt'] == null
+          ? null
+          : DateTime.parse(json['lastSyncAttempt'] as String),
+      syncError: json['syncError'] as String?,
+      isValidated: json['isValidated'] as bool? ?? false,
+      validationErrors: (json['validationErrors'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    );
 
-Map<String, dynamic> _$$MeasurementMetadataImplToJson(
-  _$MeasurementMetadataImpl instance,
+Map<String, dynamic> _$MeasurementMetadataToJson(
+  _MeasurementMetadata instance,
 ) => <String, dynamic>{
   'deviceInfo': instance.deviceInfo,
   'appVersion': instance.appVersion,

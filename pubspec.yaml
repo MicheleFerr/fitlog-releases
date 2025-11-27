@@ -48,7 +48,7 @@ dependencies:
   
   # HealthKit & Fitness (Task 4.1: AI Coach health data integration)
   health: ^13.2.1  # Latest version with HealthKit + Health Connect support
-  permission_handler: ^11.0.1
+  permission_handler: ^12.0.1  # Migrated from ^11.0.1 (2025-11-27)
   device_info_plus: ^12.2.0  # For Android API level checks (Task 5.6)
   speech_to_text: ^7.1.0  # Voice input for AI Coach (Phase 3.1)
   
@@ -61,15 +61,15 @@ dependencies:
   # Utils
   intl: ^0.20.2
   package_info_plus: ^9.0.0
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^7.0.0  # Migrated from ^6.0.5 (2025-11-27)
   timeago: ^3.7.0  # Relative time formatting
-  flutter_dotenv: ^5.1.0  # 🔐 SECURITY: Environment variable management
+  flutter_dotenv: ^6.0.0  # 🔐 SECURITY: Migrated from ^5.1.0 (2025-11-27)
 
   # PDF Generation & Sharing
   pdf: ^3.11.0
   printing: ^5.13.0
   equatable: ^2.0.5
-  share_plus: ^10.1.0
+  share_plus: ^12.0.1  # Migrated from ^10.1.0 (2025-11-27)
   csv: ^6.0.0
 
   # Firebase Functions

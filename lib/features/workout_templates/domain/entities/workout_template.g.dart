@@ -6,9 +6,9 @@ part of 'workout_template.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CommunityWorkoutTemplateImpl _$$CommunityWorkoutTemplateImplFromJson(
+_CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
   Map<String, dynamic> json,
-) => _$CommunityWorkoutTemplateImpl(
+) => _CommunityWorkoutTemplate(
   id: json['id'] as String,
   userId: json['userId'] as String,
   name: json['name'] as String,
@@ -45,8 +45,8 @@ _$CommunityWorkoutTemplateImpl _$$CommunityWorkoutTemplateImplFromJson(
       const [],
 );
 
-Map<String, dynamic> _$$CommunityWorkoutTemplateImplToJson(
-  _$CommunityWorkoutTemplateImpl instance,
+Map<String, dynamic> _$CommunityWorkoutTemplateToJson(
+  _CommunityWorkoutTemplate instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
@@ -89,8 +89,8 @@ const _$TemplateVisibilityEnumMap = {
   TemplateVisibility.friends: 'friends',
 };
 
-_$TemplateReviewImpl _$$TemplateReviewImplFromJson(Map<String, dynamic> json) =>
-    _$TemplateReviewImpl(
+_TemplateReview _$TemplateReviewFromJson(Map<String, dynamic> json) =>
+    _TemplateReview(
       id: json['id'] as String,
       templateId: json['templateId'] as String,
       userId: json['userId'] as String,
@@ -107,49 +107,48 @@ _$TemplateReviewImpl _$$TemplateReviewImplFromJson(Map<String, dynamic> json) =>
           const [],
     );
 
-Map<String, dynamic> _$$TemplateReviewImplToJson(
-  _$TemplateReviewImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'templateId': instance.templateId,
-  'userId': instance.userId,
-  'userName': instance.userName,
-  'userPhotoUrl': instance.userPhotoUrl,
-  'rating': instance.rating,
-  'comment': instance.comment,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'helpfulCount': instance.helpfulCount,
-  'helpfulVoters': instance.helpfulVoters,
-};
+Map<String, dynamic> _$TemplateReviewToJson(_TemplateReview instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'templateId': instance.templateId,
+      'userId': instance.userId,
+      'userName': instance.userName,
+      'userPhotoUrl': instance.userPhotoUrl,
+      'rating': instance.rating,
+      'comment': instance.comment,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'helpfulCount': instance.helpfulCount,
+      'helpfulVoters': instance.helpfulVoters,
+    };
 
-_$TemplateCommentImpl _$$TemplateCommentImplFromJson(
-  Map<String, dynamic> json,
-) => _$TemplateCommentImpl(
-  id: json['id'] as String,
-  templateId: json['templateId'] as String,
-  userId: json['userId'] as String,
-  userName: json['userName'] as String,
-  userPhotoUrl: json['userPhotoUrl'] as String?,
-  text: json['text'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-  likedBy:
-      (json['likedBy'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-  replyToId: json['replyToId'] as String?,
-);
+_TemplateComment _$TemplateCommentFromJson(Map<String, dynamic> json) =>
+    _TemplateComment(
+      id: json['id'] as String,
+      templateId: json['templateId'] as String,
+      userId: json['userId'] as String,
+      userName: json['userName'] as String,
+      userPhotoUrl: json['userPhotoUrl'] as String?,
+      text: json['text'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+      likedBy:
+          (json['likedBy'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      replyToId: json['replyToId'] as String?,
+    );
 
-Map<String, dynamic> _$$TemplateCommentImplToJson(
-  _$TemplateCommentImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'templateId': instance.templateId,
-  'userId': instance.userId,
-  'userName': instance.userName,
-  'userPhotoUrl': instance.userPhotoUrl,
-  'text': instance.text,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'likeCount': instance.likeCount,
-  'likedBy': instance.likedBy,
-  'replyToId': instance.replyToId,
-};
+Map<String, dynamic> _$TemplateCommentToJson(_TemplateComment instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'templateId': instance.templateId,
+      'userId': instance.userId,
+      'userName': instance.userName,
+      'userPhotoUrl': instance.userPhotoUrl,
+      'text': instance.text,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'likeCount': instance.likeCount,
+      'likedBy': instance.likedBy,
+      'replyToId': instance.replyToId,
+    };

@@ -6,24 +6,23 @@ part of 'ai_message.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AIMessageImpl _$$AIMessageImplFromJson(Map<String, dynamic> json) =>
-    _$AIMessageImpl(
-      id: json['id'] as String,
-      content: json['content'] as String,
-      role: $enumDecode(_$MessageRoleEnumMap, json['role']),
-      timestamp: DateTime.parse(json['timestamp'] as String),
-      isStreaming: json['isStreaming'] as bool? ?? false,
-      metadata: json['metadata'] as Map<String, dynamic>?,
-      followUpChips:
-          (json['followUpChips'] as List<dynamic>?)
-              ?.map((e) => FollowUpChip.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      conversationDepth: (json['conversationDepth'] as num?)?.toInt() ?? 0,
-      parentIntent: json['parentIntent'] as String?,
-    );
+_AIMessage _$AIMessageFromJson(Map<String, dynamic> json) => _AIMessage(
+  id: json['id'] as String,
+  content: json['content'] as String,
+  role: $enumDecode(_$MessageRoleEnumMap, json['role']),
+  timestamp: DateTime.parse(json['timestamp'] as String),
+  isStreaming: json['isStreaming'] as bool? ?? false,
+  metadata: json['metadata'] as Map<String, dynamic>?,
+  followUpChips:
+      (json['followUpChips'] as List<dynamic>?)
+          ?.map((e) => FollowUpChip.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  conversationDepth: (json['conversationDepth'] as num?)?.toInt() ?? 0,
+  parentIntent: json['parentIntent'] as String?,
+);
 
-Map<String, dynamic> _$$AIMessageImplToJson(_$AIMessageImpl instance) =>
+Map<String, dynamic> _$AIMessageToJson(_AIMessage instance) =>
     <String, dynamic>{
       'id': instance.id,
       'content': instance.content,
@@ -42,15 +41,15 @@ const _$MessageRoleEnumMap = {
   MessageRole.system: 'system',
 };
 
-_$FollowUpChipImpl _$$FollowUpChipImplFromJson(Map<String, dynamic> json) =>
-    _$FollowUpChipImpl(
+_FollowUpChip _$FollowUpChipFromJson(Map<String, dynamic> json) =>
+    _FollowUpChip(
       label: json['label'] as String,
       intent: json['intent'] as String,
       emoji: json['emoji'] as String?,
       context: json['context'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$$FollowUpChipImplToJson(_$FollowUpChipImpl instance) =>
+Map<String, dynamic> _$FollowUpChipToJson(_FollowUpChip instance) =>
     <String, dynamic>{
       'label': instance.label,
       'intent': instance.intent,

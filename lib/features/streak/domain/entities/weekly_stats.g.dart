@@ -6,9 +6,7 @@ part of 'weekly_stats.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$WeeklyStatsImpl _$$WeeklyStatsImplFromJson(
-  Map<String, dynamic> json,
-) => _$WeeklyStatsImpl(
+_WeeklyStats _$WeeklyStatsFromJson(Map<String, dynamic> json) => _WeeklyStats(
   avgWorkoutsPerWeek: (json['avgWorkoutsPerWeek'] as num?)?.toDouble() ?? 0.0,
   avgRestDaysPerWeek: (json['avgRestDaysPerWeek'] as num?)?.toDouble() ?? 0.0,
   totalWorkouts: (json['totalWorkouts'] as num?)?.toInt() ?? 0,
@@ -22,7 +20,7 @@ _$WeeklyStatsImpl _$$WeeklyStatsImplFromJson(
       : DateTime.parse(json['weekEndDate'] as String),
 );
 
-Map<String, dynamic> _$$WeeklyStatsImplToJson(_$WeeklyStatsImpl instance) =>
+Map<String, dynamic> _$WeeklyStatsToJson(_WeeklyStats instance) =>
     <String, dynamic>{
       'avgWorkoutsPerWeek': instance.avgWorkoutsPerWeek,
       'avgRestDaysPerWeek': instance.avgRestDaysPerWeek,

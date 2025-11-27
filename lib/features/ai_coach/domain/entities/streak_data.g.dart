@@ -6,23 +6,22 @@ part of 'streak_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StreakDataImpl _$$StreakDataImplFromJson(Map<String, dynamic> json) =>
-    _$StreakDataImpl(
-      currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
-      longestStreak: (json['longestStreak'] as num?)?.toInt() ?? 0,
-      lastWorkoutDate: json['lastWorkoutDate'] == null
-          ? null
-          : DateTime.parse(json['lastWorkoutDate'] as String),
-      workedOutToday: json['workedOutToday'] as bool? ?? false,
-      milestonesAchieved:
-          (json['milestonesAchieved'] as List<dynamic>?)
-              ?.map((e) => (e as num).toInt())
-              .toList() ??
-          const [],
-      totalWorkouts: (json['totalWorkouts'] as num?)?.toInt() ?? 0,
-    );
+_StreakData _$StreakDataFromJson(Map<String, dynamic> json) => _StreakData(
+  currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
+  longestStreak: (json['longestStreak'] as num?)?.toInt() ?? 0,
+  lastWorkoutDate: json['lastWorkoutDate'] == null
+      ? null
+      : DateTime.parse(json['lastWorkoutDate'] as String),
+  workedOutToday: json['workedOutToday'] as bool? ?? false,
+  milestonesAchieved:
+      (json['milestonesAchieved'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList() ??
+      const [],
+  totalWorkouts: (json['totalWorkouts'] as num?)?.toInt() ?? 0,
+);
 
-Map<String, dynamic> _$$StreakDataImplToJson(_$StreakDataImpl instance) =>
+Map<String, dynamic> _$StreakDataToJson(_StreakData instance) =>
     <String, dynamic>{
       'currentStreak': instance.currentStreak,
       'longestStreak': instance.longestStreak,

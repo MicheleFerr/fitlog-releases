@@ -86,8 +86,10 @@ class ExerciseSyncService {
 
   /// Verifica connettività e esegue sync se necessario
   Future<void> syncIfConnected() async {
-    final connectivity = await Connectivity().checkConnectivity();
-    if (connectivity == ConnectivityResult.none) {
+    final connectivityResults = await Connectivity().checkConnectivity();
+    // connectivity_plus 7.x returns List<ConnectivityResult>
+    if (connectivityResults.contains(ConnectivityResult.none) ||
+        connectivityResults.isEmpty) {
       debugPrint('📵 No internet connection, skipping sync');
       return;
     }
@@ -324,8 +326,10 @@ class ExerciseSyncService {
 
   /// Setup listener per cambiamenti di connettività
   void _setupConnectivityListener() {
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result != ConnectivityResult.none) {
+    // connectivity_plus 7.x: onConnectivityChanged emits List<ConnectivityResult>
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((results) {
+      if (!results.contains(ConnectivityResult.none) && results.isNotEmpty) {
         debugPrint('📶 Connection restored, checking for sync');
         Timer(const Duration(seconds: 2), () => syncIfConnected());
       }

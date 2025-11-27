@@ -6,83 +6,82 @@ part of 'set_execution_timing.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SetExecutionTimingImpl _$$SetExecutionTimingImplFromJson(
-  Map<String, dynamic> json,
-) => _$SetExecutionTimingImpl(
-  id: json['id'] as String,
-  exerciseId: json['exerciseId'] as String,
-  workoutId: json['workoutId'] as String,
-  setNumber: (json['setNumber'] as num).toInt(),
-  executionTimeMs: (json['executionTimeMs'] as num).toInt(),
-  startTime: DateTime.parse(json['startTime'] as String),
-  endTime: DateTime.parse(json['endTime'] as String),
-  reps: (json['reps'] as num?)?.toInt() ?? 0,
-  weight: (json['weight'] as num?)?.toDouble(),
-  rpe: (json['rpe'] as num?)?.toInt() ?? 0,
-  repTimingsMs:
-      (json['repTimingsMs'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList() ??
-      const [],
-  velocityMps:
-      (json['velocityMps'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList() ??
-      const [],
-  pauseTimingsMs:
-      (json['pauseTimingsMs'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList() ??
-      const [],
-  formScore: (json['formScore'] as num?)?.toDouble() ?? 0.0,
-  consistencyScore: (json['consistencyScore'] as num?)?.toDouble() ?? 0.0,
-  fatigueIndex: (json['fatigueIndex'] as num?)?.toDouble() ?? 0.0,
-  restStartedAt: json['restStartedAt'] == null
-      ? null
-      : DateTime.parse(json['restStartedAt'] as String),
-  restDurationMs: (json['restDurationMs'] as num?)?.toInt(),
-  heartRateBpm: (json['heartRateBpm'] as num?)?.toDouble() ?? 0.0,
-  ambientTemperatureC: (json['ambientTemperatureC'] as num?)?.toDouble() ?? 0.0,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  uploadedAt: json['uploadedAt'] == null
-      ? null
-      : DateTime.parse(json['uploadedAt'] as String),
-  synced: json['synced'] as bool? ?? false,
-  metadata: json['metadata'] as Map<String, dynamic>?,
-);
+_SetExecutionTiming _$SetExecutionTimingFromJson(Map<String, dynamic> json) =>
+    _SetExecutionTiming(
+      id: json['id'] as String,
+      exerciseId: json['exerciseId'] as String,
+      workoutId: json['workoutId'] as String,
+      setNumber: (json['setNumber'] as num).toInt(),
+      executionTimeMs: (json['executionTimeMs'] as num).toInt(),
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: DateTime.parse(json['endTime'] as String),
+      reps: (json['reps'] as num?)?.toInt() ?? 0,
+      weight: (json['weight'] as num?)?.toDouble(),
+      rpe: (json['rpe'] as num?)?.toInt() ?? 0,
+      repTimingsMs:
+          (json['repTimingsMs'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          const [],
+      velocityMps:
+          (json['velocityMps'] as List<dynamic>?)
+              ?.map((e) => (e as num).toDouble())
+              .toList() ??
+          const [],
+      pauseTimingsMs:
+          (json['pauseTimingsMs'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          const [],
+      formScore: (json['formScore'] as num?)?.toDouble() ?? 0.0,
+      consistencyScore: (json['consistencyScore'] as num?)?.toDouble() ?? 0.0,
+      fatigueIndex: (json['fatigueIndex'] as num?)?.toDouble() ?? 0.0,
+      restStartedAt: json['restStartedAt'] == null
+          ? null
+          : DateTime.parse(json['restStartedAt'] as String),
+      restDurationMs: (json['restDurationMs'] as num?)?.toInt(),
+      heartRateBpm: (json['heartRateBpm'] as num?)?.toDouble() ?? 0.0,
+      ambientTemperatureC:
+          (json['ambientTemperatureC'] as num?)?.toDouble() ?? 0.0,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      uploadedAt: json['uploadedAt'] == null
+          ? null
+          : DateTime.parse(json['uploadedAt'] as String),
+      synced: json['synced'] as bool? ?? false,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+    );
 
-Map<String, dynamic> _$$SetExecutionTimingImplToJson(
-  _$SetExecutionTimingImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'exerciseId': instance.exerciseId,
-  'workoutId': instance.workoutId,
-  'setNumber': instance.setNumber,
-  'executionTimeMs': instance.executionTimeMs,
-  'startTime': instance.startTime.toIso8601String(),
-  'endTime': instance.endTime.toIso8601String(),
-  'reps': instance.reps,
-  'weight': instance.weight,
-  'rpe': instance.rpe,
-  'repTimingsMs': instance.repTimingsMs,
-  'velocityMps': instance.velocityMps,
-  'pauseTimingsMs': instance.pauseTimingsMs,
-  'formScore': instance.formScore,
-  'consistencyScore': instance.consistencyScore,
-  'fatigueIndex': instance.fatigueIndex,
-  'restStartedAt': instance.restStartedAt?.toIso8601String(),
-  'restDurationMs': instance.restDurationMs,
-  'heartRateBpm': instance.heartRateBpm,
-  'ambientTemperatureC': instance.ambientTemperatureC,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'uploadedAt': instance.uploadedAt?.toIso8601String(),
-  'synced': instance.synced,
-  'metadata': instance.metadata,
-};
+Map<String, dynamic> _$SetExecutionTimingToJson(_SetExecutionTiming instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'exerciseId': instance.exerciseId,
+      'workoutId': instance.workoutId,
+      'setNumber': instance.setNumber,
+      'executionTimeMs': instance.executionTimeMs,
+      'startTime': instance.startTime.toIso8601String(),
+      'endTime': instance.endTime.toIso8601String(),
+      'reps': instance.reps,
+      'weight': instance.weight,
+      'rpe': instance.rpe,
+      'repTimingsMs': instance.repTimingsMs,
+      'velocityMps': instance.velocityMps,
+      'pauseTimingsMs': instance.pauseTimingsMs,
+      'formScore': instance.formScore,
+      'consistencyScore': instance.consistencyScore,
+      'fatigueIndex': instance.fatigueIndex,
+      'restStartedAt': instance.restStartedAt?.toIso8601String(),
+      'restDurationMs': instance.restDurationMs,
+      'heartRateBpm': instance.heartRateBpm,
+      'ambientTemperatureC': instance.ambientTemperatureC,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'uploadedAt': instance.uploadedAt?.toIso8601String(),
+      'synced': instance.synced,
+      'metadata': instance.metadata,
+    };
 
-_$$$SetTimingConfigImplImpl _$$$$SetTimingConfigImplImplFromJson(
+_$$SetTimingConfigImpl _$$$SetTimingConfigImplFromJson(
   Map<String, dynamic> json,
-) => _$$$SetTimingConfigImplImpl(
+) => _$$SetTimingConfigImpl(
   mode: $enumDecode(_$TimingModeEnumMap, json['mode']),
   samplingRateHz: (json['samplingRateHz'] as num?)?.toInt() ?? 10,
   trackVelocity: json['trackVelocity'] as bool? ?? true,
@@ -100,8 +99,8 @@ _$$$SetTimingConfigImplImpl _$$$$SetTimingConfigImplImplFromJson(
   motionThresholdMs: (json['motionThresholdMs'] as num?)?.toInt() ?? 500,
 );
 
-Map<String, dynamic> _$$$$SetTimingConfigImplImplToJson(
-  _$$$SetTimingConfigImplImpl instance,
+Map<String, dynamic> _$$$SetTimingConfigImplToJson(
+  _$$SetTimingConfigImpl instance,
 ) => <String, dynamic>{
   'mode': _$TimingModeEnumMap[instance.mode]!,
   'samplingRateHz': instance.samplingRateHz,
@@ -125,9 +124,9 @@ const _$TimingModeEnumMap = {
   TimingMode.rehabilitation: 'rehabilitation',
 };
 
-_$$$LiveSetMetricsImplImpl _$$$$LiveSetMetricsImplImplFromJson(
+_$$LiveSetMetricsImpl _$$$LiveSetMetricsImplFromJson(
   Map<String, dynamic> json,
-) => _$$$LiveSetMetricsImplImpl(
+) => _$$LiveSetMetricsImpl(
   setId: json['setId'] as String,
   phase: $enumDecode(_$SetPhaseEnumMap, json['phase']),
   elapsedMs: (json['elapsedMs'] as num).toInt(),
@@ -145,8 +144,8 @@ _$$$LiveSetMetricsImplImpl _$$$$LiveSetMetricsImplImplFromJson(
   timestamp: DateTime.parse(json['timestamp'] as String),
 );
 
-Map<String, dynamic> _$$$$LiveSetMetricsImplImplToJson(
-  _$$$LiveSetMetricsImplImpl instance,
+Map<String, dynamic> _$$$LiveSetMetricsImplToJson(
+  _$$LiveSetMetricsImpl instance,
 ) => <String, dynamic>{
   'setId': instance.setId,
   'phase': _$SetPhaseEnumMap[instance.phase]!,

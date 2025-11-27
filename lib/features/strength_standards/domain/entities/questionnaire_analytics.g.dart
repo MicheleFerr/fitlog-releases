@@ -6,9 +6,9 @@ part of 'questionnaire_analytics.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$QuestionnaireAnalyticsImpl _$$QuestionnaireAnalyticsImplFromJson(
+_QuestionnaireAnalytics _$QuestionnaireAnalyticsFromJson(
   Map<String, dynamic> json,
-) => _$QuestionnaireAnalyticsImpl(
+) => _QuestionnaireAnalytics(
   userId: json['userId'] as String,
   startedAt: DateTime.parse(json['startedAt'] as String),
   completedAt: json['completedAt'] == null
@@ -32,8 +32,8 @@ _$QuestionnaireAnalyticsImpl _$$QuestionnaireAnalyticsImplFromJson(
   appVersion: json['appVersion'] as String?,
 );
 
-Map<String, dynamic> _$$QuestionnaireAnalyticsImplToJson(
-  _$QuestionnaireAnalyticsImpl instance,
+Map<String, dynamic> _$QuestionnaireAnalyticsToJson(
+  _QuestionnaireAnalytics instance,
 ) => <String, dynamic>{
   'userId': instance.userId,
   'startedAt': instance.startedAt.toIso8601String(),

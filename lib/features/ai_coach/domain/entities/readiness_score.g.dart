@@ -6,8 +6,8 @@ part of 'readiness_score.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ReadinessScoreImpl _$$ReadinessScoreImplFromJson(Map<String, dynamic> json) =>
-    _$ReadinessScoreImpl(
+_ReadinessScore _$ReadinessScoreFromJson(Map<String, dynamic> json) =>
+    _ReadinessScore(
       score: (json['score'] as num).toInt(),
       category: $enumDecode(_$ReadinessCategoryEnumMap, json['category']),
       recommendation: json['recommendation'] as String,
@@ -19,15 +19,14 @@ _$ReadinessScoreImpl _$$ReadinessScoreImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['calculatedAt'] as String),
     );
 
-Map<String, dynamic> _$$ReadinessScoreImplToJson(
-  _$ReadinessScoreImpl instance,
-) => <String, dynamic>{
-  'score': instance.score,
-  'category': _$ReadinessCategoryEnumMap[instance.category]!,
-  'recommendation': instance.recommendation,
-  'factors': instance.factors?.toJson(),
-  'calculatedAt': instance.calculatedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$ReadinessScoreToJson(_ReadinessScore instance) =>
+    <String, dynamic>{
+      'score': instance.score,
+      'category': _$ReadinessCategoryEnumMap[instance.category]!,
+      'recommendation': instance.recommendation,
+      'factors': instance.factors?.toJson(),
+      'calculatedAt': instance.calculatedAt?.toIso8601String(),
+    };
 
 const _$ReadinessCategoryEnumMap = {
   ReadinessCategory.locked: 'locked',
@@ -38,24 +37,22 @@ const _$ReadinessCategoryEnumMap = {
   ReadinessCategory.optimal: 'optimal',
 };
 
-_$ReadinessFactorsImpl _$$ReadinessFactorsImplFromJson(
-  Map<String, dynamic> json,
-) => _$ReadinessFactorsImpl(
-  workoutFrequencyScore: (json['workoutFrequencyScore'] as num).toInt(),
-  recoveryTimeScore: (json['recoveryTimeScore'] as num).toInt(),
-  consistencyScore: (json['consistencyScore'] as num).toInt(),
-  daysSinceLastWorkout: (json['daysSinceLastWorkout'] as num?)?.toInt(),
-  workoutsLast7Days: (json['workoutsLast7Days'] as num?)?.toInt(),
-  avgWorkoutsPerWeek: (json['avgWorkoutsPerWeek'] as num?)?.toDouble(),
-);
+_ReadinessFactors _$ReadinessFactorsFromJson(Map<String, dynamic> json) =>
+    _ReadinessFactors(
+      workoutFrequencyScore: (json['workoutFrequencyScore'] as num).toInt(),
+      recoveryTimeScore: (json['recoveryTimeScore'] as num).toInt(),
+      consistencyScore: (json['consistencyScore'] as num).toInt(),
+      daysSinceLastWorkout: (json['daysSinceLastWorkout'] as num?)?.toInt(),
+      workoutsLast7Days: (json['workoutsLast7Days'] as num?)?.toInt(),
+      avgWorkoutsPerWeek: (json['avgWorkoutsPerWeek'] as num?)?.toDouble(),
+    );
 
-Map<String, dynamic> _$$ReadinessFactorsImplToJson(
-  _$ReadinessFactorsImpl instance,
-) => <String, dynamic>{
-  'workoutFrequencyScore': instance.workoutFrequencyScore,
-  'recoveryTimeScore': instance.recoveryTimeScore,
-  'consistencyScore': instance.consistencyScore,
-  'daysSinceLastWorkout': instance.daysSinceLastWorkout,
-  'workoutsLast7Days': instance.workoutsLast7Days,
-  'avgWorkoutsPerWeek': instance.avgWorkoutsPerWeek,
-};
+Map<String, dynamic> _$ReadinessFactorsToJson(_ReadinessFactors instance) =>
+    <String, dynamic>{
+      'workoutFrequencyScore': instance.workoutFrequencyScore,
+      'recoveryTimeScore': instance.recoveryTimeScore,
+      'consistencyScore': instance.consistencyScore,
+      'daysSinceLastWorkout': instance.daysSinceLastWorkout,
+      'workoutsLast7Days': instance.workoutsLast7Days,
+      'avgWorkoutsPerWeek': instance.avgWorkoutsPerWeek,
+    };

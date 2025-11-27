@@ -6,8 +6,8 @@ part of 'feedback_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FeedbackDataImpl _$$FeedbackDataImplFromJson(Map<String, dynamic> json) =>
-    _$FeedbackDataImpl(
+_FeedbackData _$FeedbackDataFromJson(Map<String, dynamic> json) =>
+    _FeedbackData(
       id: json['id'] as String,
       userId: json['userId'] as String,
       insightId: json['insightId'] as String,
@@ -23,7 +23,7 @@ _$FeedbackDataImpl _$$FeedbackDataImplFromJson(Map<String, dynamic> json) =>
       viewDurationSeconds: (json['viewDurationSeconds'] as num?)?.toInt() ?? 0,
     );
 
-Map<String, dynamic> _$$FeedbackDataImplToJson(_$FeedbackDataImpl instance) =>
+Map<String, dynamic> _$FeedbackDataToJson(_FeedbackData instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
@@ -54,8 +54,8 @@ const _$DismissReasonEnumMap = {
   DismissReason.other: 'other',
 };
 
-_$FeedbackStatsImpl _$$FeedbackStatsImplFromJson(Map<String, dynamic> json) =>
-    _$FeedbackStatsImpl(
+_FeedbackStats _$FeedbackStatsFromJson(Map<String, dynamic> json) =>
+    _FeedbackStats(
       identifier: json['identifier'] as String,
       totalFeedback: (json['totalFeedback'] as num?)?.toInt() ?? 0,
       helpfulCount: (json['helpfulCount'] as num?)?.toInt() ?? 0,
@@ -68,7 +68,7 @@ _$FeedbackStatsImpl _$$FeedbackStatsImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['lastUpdated'] as String),
     );
 
-Map<String, dynamic> _$$FeedbackStatsImplToJson(_$FeedbackStatsImpl instance) =>
+Map<String, dynamic> _$FeedbackStatsToJson(_FeedbackStats instance) =>
     <String, dynamic>{
       'identifier': instance.identifier,
       'totalFeedback': instance.totalFeedback,
