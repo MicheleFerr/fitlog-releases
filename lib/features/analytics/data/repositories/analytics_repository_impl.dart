@@ -49,7 +49,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_h
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// Analytics repository implementation with Firestore + Hive cache
 class AnalyticsRepositoryImpl implements AnalyticsRepository {

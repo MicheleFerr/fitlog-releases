@@ -33,7 +33,7 @@
  */
 
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 
 class HiveMigrationService {

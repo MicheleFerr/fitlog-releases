@@ -26,7 +26,7 @@
 /// - Watch: Real-time updates via Stream
 library;
 
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/ai_message.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/conversation_tree.dart';
 

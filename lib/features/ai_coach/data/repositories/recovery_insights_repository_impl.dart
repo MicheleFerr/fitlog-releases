@@ -33,7 +33,7 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/usecases/evaluate_ad
 import 'package:gymbro_flutter_new/features/ai_coach/domain/usecases/evaluate_basic_tier_unlock.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/usecases/evaluate_intermediate_tier_unlock.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// Repository implementation for recovery insights
 ///

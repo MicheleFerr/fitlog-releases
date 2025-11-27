@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart' as fpdart show Either, Right, Left;
 import 'package:gymbro_flutter_new/shared/domain/failures/failure.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/insight_engagement_repository.dart';
 import 'package:gymbro_flutter_new/core/services/analytics/hybrid_analytics_service.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// Insight Engagement repository implementation
 ///

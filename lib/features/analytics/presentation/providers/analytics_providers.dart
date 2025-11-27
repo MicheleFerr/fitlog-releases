@@ -35,7 +35,7 @@ import 'package:gymbro_flutter_new/features/analytics/data/services/analytics_mi
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_history.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_session.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/repositories/analytics_repository.dart';
-import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 // ============================================================================
 // INFRASTRUCTURE PROVIDERS

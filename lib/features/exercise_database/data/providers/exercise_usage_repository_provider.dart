@@ -14,7 +14,7 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/repositories/i_exercise_usage_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/repositories/hive_exercise_usage_repository.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_usage_model.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:gymbro_flutter_new/core/security/hive_encryption_manager.dart';
 

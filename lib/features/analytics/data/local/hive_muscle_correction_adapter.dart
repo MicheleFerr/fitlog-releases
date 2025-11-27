@@ -28,7 +28,7 @@
 /// ```
 library;
 
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/muscle_correction.dart';
 
 /// Hive TypeAdapter for MuscleCorrection entity

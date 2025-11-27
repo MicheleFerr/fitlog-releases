@@ -1,4 +1,4 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/encrypted_measurement.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
