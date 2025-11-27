@@ -81,19 +81,21 @@ class WorkoutHistoryState {
 }
 
 /// Notifier for managing workout history state
-class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
+class WorkoutHistoryNotifier extends AsyncNotifier<List<Workout>> {
 
-  WorkoutHistoryNotifier({
-    required HiveWorkoutDataSource dataSource,
-    String? userId,
-  })  : _dataSource = dataSource,
-        _userId = userId,
-        super(const AsyncValue.loading()) {
+  @override
+  Future<List<Workout>> build() async {
     // Auto-load workouts on creation for Smart Workout Suggestion
-    loadWorkouts();
+    await loadWorkouts();
+    return state.valueOrNull ?? [];
   }
-  final HiveWorkoutDataSource _dataSource;
-  final String? _userId;
+
+  HiveWorkoutDataSource get _dataSource {
+    final boxManager = ref.watch(hiveBoxManagerProvider);
+    return HiveWorkoutDataSource(boxManager);
+  }
+
+  String? get _userId => ref.watch(firebaseUserProvider).valueOrNull?.uid;
   
   // Internal state for filtering and pagination
   String _searchQuery = '';
@@ -108,7 +110,8 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 
   /// Load initial workout data
   Future<void> loadWorkouts() async {
-    if (_userId == null) {
+    final userId = _userId;
+    if (userId == null) {
       state = AsyncValue.error('User not authenticated', StackTrace.current);
       return;
     }
@@ -116,10 +119,10 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
     state = const AsyncValue.loading();
     _currentPage = 0;
     _hasMoreData = true;
-    
+
     try {
       // Load all workouts from local storage
-      final allWorkouts = await _dataSource.getWorkouts(_userId);
+      final allWorkouts = await _dataSource.getWorkouts(userId);
       _allWorkouts = allWorkouts.map((model) => _mapWorkoutModelToEntity(model)).toList();
       
       // Sort by date (newest first)
@@ -192,11 +195,12 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 
   /// Update a workout
   Future<void> updateWorkout(Workout updatedWorkout) async {
-    if (_userId == null) return;
+    final userId = _userId;
+    if (userId == null) return;
 
     try {
       final workoutModel = _mapWorkoutEntityToModel(updatedWorkout);
-      await _dataSource.updateWorkout(workoutModel, _userId);
+      await _dataSource.updateWorkout(workoutModel, userId);
       
       // Update local cache
       final index = _allWorkouts.indexWhere((w) => w.id == updatedWorkout.id);
@@ -218,7 +222,8 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 
   /// Duplicate a workout
   Future<void> duplicateWorkout(Workout workout) async {
-    if (_userId == null) return;
+    final userId = _userId;
+    if (userId == null) return;
 
     try {
       final now = DateTime.now();
@@ -231,9 +236,9 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
         createdAt: now,
         updatedAt: now,
       );
-      
+
       final workoutModel = _mapWorkoutEntityToModel(duplicatedWorkout);
-      await _dataSource.saveWorkout(workoutModel, _userId);
+      await _dataSource.saveWorkout(workoutModel, userId);
       
       // Add to local cache
       _allWorkouts.insert(0, duplicatedWorkout); // Add at beginning (newest first)
@@ -252,10 +257,11 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 
   /// Delete a workout
   Future<void> deleteWorkout(Workout workout) async {
-    if (_userId == null) return;
+    final userId = _userId;
+    if (userId == null) return;
 
     try {
-      await _dataSource.deleteWorkout(workout.id, _userId);
+      await _dataSource.deleteWorkout(workout.id, userId);
       
       // Remove from local cache
       _allWorkouts.removeWhere((w) => w.id == workout.id);
@@ -472,16 +478,9 @@ class WorkoutHistoryNotifier extends StateNotifier<AsyncValue<List<Workout>>> {
 }
 
 /// Main provider for workout history
-final workoutHistoryProvider = StateNotifierProvider<WorkoutHistoryNotifier, AsyncValue<List<Workout>>>((ref) {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  final dataSource = HiveWorkoutDataSource(boxManager);
-
-  return WorkoutHistoryNotifier(
-    dataSource: dataSource,
-    userId: user?.uid,
-  );
-});
+final workoutHistoryProvider = AsyncNotifierProvider<WorkoutHistoryNotifier, List<Workout>>(
+  WorkoutHistoryNotifier.new,
+);
 
 /// Provider for workout statistics
 final workoutHistoryStatsProvider = Provider<Map<String, dynamic>>((ref) {
@@ -498,9 +497,9 @@ String? _lastLoggedTodayWorkoutUserId;
 /// Uses configurable cutoff (default 04:00): workout after cutoff counts as "today".
 /// Cutoff can be customized in user preferences (useful for shift workers).
 ///
-/// Note: Not using autoDispose to cache result and avoid repeated Hive reads.
-/// The provider will refresh when user ID changes.
-final todayCompletedWorkoutProvider = FutureProvider<Workout?>((ref) async {
+/// Uses autoDispose to properly clean up resources when not in use.
+/// The provider will refresh when user ID or cutoff changes.
+final todayCompletedWorkoutProvider = FutureProvider.autoDispose<Workout?>((ref) async {
   final userId = ref.watch(firebaseUserProvider).valueOrNull?.uid;
 
   // Only log once per user to reduce log spam

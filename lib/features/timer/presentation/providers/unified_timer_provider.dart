@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -24,16 +24,17 @@ enum BackgroundStrategy {
 
 /// Unified Timer Provider that consolidates all timer functionality
 /// Replaces the 9 overlapping timer systems with a single, clean implementation
-class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with WidgetsBindingObserver {
+class UnifiedTimerProvider extends Notifier<UnifiedTimerState?> with WidgetsBindingObserver {
 
-  UnifiedTimerProvider(this.ref) : super(null) {
+  @override
+  UnifiedTimerState? build() {
     // CRITICAL FIX: Initialize asynchronously with proper completion tracking
     _initCompleter = Completer<void>();
     _initializeAsync();
-    
+
     // Register as lifecycle observer
     WidgetsBinding.instance.addObserver(this);
-    
+
     // CRITICAL FIX: Listen for iOS notification that audio was played
     _unifiedChannel.setMethodCallHandler((call) async {
       // CRITICAL FIX: Check disposal status first to prevent operations after dispose
@@ -81,8 +82,14 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       }
       return null;
     });
+
+    // Setup disposal callback
+    ref.onDispose(() {
+      _disposeResources();
+    });
+
+    return null;
   }
-  final Ref ref;
   
   // Core components
   Timer? _ticker;
@@ -951,8 +958,6 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
         // Android + Desktop/Web: Use Flutter AudioPlayer
         try {
           await _playWithAudioPlayer(soundName);
-          final platform = Platform.isAndroid ? 'Android' : Platform.isWindows ? 'Windows' 
-              : Platform.isLinux ? 'Linux' : Platform.isMacOS ? 'macOS' : 'Unknown';
         } catch (audioError) {
           // Send notification as backup for all non-iOS platforms
           await _sendAudioErrorNotification();
@@ -1273,9 +1278,8 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
     }
 
     try {
-
       // Use the correct channel for Live Activities updates
-      final result = await _unifiedChannel.invokeMethod('updateLiveActivity', {
+      await _unifiedChannel.invokeMethod('updateLiveActivity', {
         'activityId': state!.liveActivityId ?? 'current', // Use saved ID or fallback
         'remainingSeconds': state!.remainingSeconds,
         'totalSeconds': state!.totalDurationSeconds,
@@ -1649,9 +1653,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
   
   
 
-  @override
-  void dispose() {
-
+  void _disposeResources() {
     // CRITICAL: Mark as disposed immediately to prevent async operations
     _isDisposed = true;
 
@@ -1699,7 +1701,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       _completionInProgress = false;
       _audioInProgress = false;
       _stateWriteInProgress = false;
-      
+
       // MEMORY LEAK FIX: Cleanup initialization state
       try {
         _isInitialized = false;
@@ -1710,24 +1712,24 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       } catch (e) {
         _initCompleter = null; // Force null
       }
-      
+
       // 3. Cleanup audio player with comprehensive error handling
       try {
         if (_audioPlayer != null) {
           // Use unawaited for dispose as it must be synchronous
           unawaited(_audioPlayer!.stop().timeout(const Duration(seconds: 1)).catchError((e) {
           }));
-          
+
           unawaited(_audioPlayer!.dispose().timeout(const Duration(seconds: 1)).catchError((e) {
           }));
-          
+
           _audioPlayer = null;
         }
       } catch (e) {
         // Force null to prevent memory leaks even if dispose failed
         _audioPlayer = null;
       }
-      
+
       // 4. MEMORY LEAK FIX: Properly cleanup FlutterLocalNotificationsPlugin
       try {
         if (_notifications != null) {
@@ -1737,7 +1739,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
             onTimeout: () {
             },
           ));
-          
+
           // FlutterLocalNotificationsPlugin doesn't have a dispose method
           // but we should null the reference to prevent memory leaks
           _notifications = null;
@@ -1745,7 +1747,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       } catch (e) {
         _notifications = null; // Force null
       }
-      
+
       // 5. Cleanup iOS specific resources
       if (Platform.isIOS) {
         try {
@@ -1755,7 +1757,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
             onTimeout: () {
             },
           ));
-          
+
           // Cleanup iOS method channel handlers with timeout
           unawaited(_unifiedChannel.invokeMethod('cleanup').timeout(
             const Duration(seconds: 1),
@@ -1763,17 +1765,17 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
             },
           ).catchError((e) {
           }));
-          
+
         } catch (e) {
         }
       }
-      
+
       // 6. MEMORY LEAK FIX: Clear method channel handler safely
       try {
         _unifiedChannel.setMethodCallHandler(null);
       } catch (e) {
       }
-      
+
       // 7. Enhanced Hive box lifecycle management with proper error handling
       try {
         if (_storage != null) {
@@ -1797,7 +1799,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
         // Force null assignment even if close failed to prevent memory leaks
         _storage = null;
       }
-      
+
       // 8. MEMORY LEAK FIX: Cancel any pending async operations
       try {
         // Log pending operations for debugging
@@ -1809,7 +1811,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
         }
       } catch (e) {
       }
-      
+
       // 9. MEMORY LEAK FIX: Clear all references to prevent memory leaks
       try {
         _lastAudioPlayTime = null;
@@ -1818,17 +1820,17 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
         _accuracyErrorCount = 0;
       } catch (e) {
       }
-      
+
       // 10. CRITICAL: Null out state LAST to prevent accessing null state
       try {
         state = null;
       } catch (e) {
       }
-      
-      
+
+
     } catch (e) {
       // CRITICAL: Even if disposal fails, log the error and continue
-      
+
       // Force all critical nullifications to prevent memory leaks
       _ticker = null;
       _audioPlayer = null;
@@ -1839,10 +1841,8 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
       _currentExerciseId = null;
       _lastTick = null;
       state = null;
-      
+
     }
-    
-    super.dispose();
   }
   
   // SIMPLIFIED APP LIFECYCLE: Only handle critical state for iOS
@@ -1860,9 +1860,7 @@ class UnifiedTimerProvider extends StateNotifier<UnifiedTimerState?> with Widget
 }
 
 // Provider instances
-final unifiedTimerProvider = StateNotifierProvider<UnifiedTimerProvider, UnifiedTimerState?>((ref) {
-  return UnifiedTimerProvider(ref);
-});
+final unifiedTimerProvider = NotifierProvider<UnifiedTimerProvider, UnifiedTimerState?>(UnifiedTimerProvider.new);
 
 // Selective providers to reduce rebuilds
 final timerIsActiveProvider = Provider<bool>((ref) {

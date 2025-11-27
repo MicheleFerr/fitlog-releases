@@ -63,10 +63,14 @@ final userFeedbackProvider = FutureProvider.autoDispose<List<UserFeedback>>((ref
 });
 
 /// Notifier for feedback submission
-class FeedbackNotifier extends StateNotifier<AsyncValue<void>> {
+class FeedbackNotifier extends Notifier<AsyncValue<void>> {
+  late final FeedbackRepository _repository;
 
-  FeedbackNotifier(this._repository) : super(const AsyncValue.data(null));
-  final FeedbackRepository _repository;
+  @override
+  AsyncValue<void> build() {
+    _repository = ref.watch(feedbackRepositoryProvider);
+    return const AsyncValue.data(null);
+  }
 
   /// Submit new feedback
   Future<bool> submitFeedback(UserFeedback feedback) async {
@@ -83,8 +87,4 @@ class FeedbackNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 /// Provider for FeedbackNotifier
-final feedbackNotifierProvider =
-    StateNotifierProvider<FeedbackNotifier, AsyncValue<void>>((ref) {
-  final repository = ref.watch(feedbackRepositoryProvider);
-  return FeedbackNotifier(repository);
-});
+final feedbackNotifierProvider = NotifierProvider<FeedbackNotifier, AsyncValue<void>>(FeedbackNotifier.new);

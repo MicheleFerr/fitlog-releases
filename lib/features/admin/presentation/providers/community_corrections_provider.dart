@@ -16,23 +16,21 @@ import 'package:gymbro_flutter_new/features/community/data/repositories/communit
 import 'package:gymbro_flutter_new/features/community/domain/entities/community_contribution.dart';
 
 /// Provider per i contributi della community per admin
-final communityCorrectionsProvider = StateNotifierProvider<CommunityCorrectionsNotifier, AsyncValue<List<CommunityContribution>>>((ref) {
-  return CommunityCorrectionsNotifier(ref);
-});
+final communityCorrectionsProvider = AsyncNotifierProvider<CommunityCorrectionsNotifier, List<CommunityContribution>>(CommunityCorrectionsNotifier.new);
 
 /// Notifier per gestire i contributi della community da admin
-class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<CommunityContribution>>> {
-
-  CommunityCorrectionsNotifier(this._ref) : super(const AsyncValue.loading()) {
-    _loadCorrections();
+class CommunityCorrectionsNotifier extends AsyncNotifier<List<CommunityContribution>> {
+  @override
+  Future<List<CommunityContribution>> build() async {
+    final contributions = await _loadCorrections();
+    return contributions;
   }
-  final Ref _ref;
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Carica tutti i contributi della community
-  Future<void> _loadCorrections() async {
+  Future<List<CommunityContribution>> _loadCorrections() async {
     try {
-      state = const AsyncValue.loading();
       debugPrint('🔍 Loading community contributions...');
 
       final querySnapshot = await _firestore
@@ -104,23 +102,24 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
       }
 
       debugPrint('✅ Successfully loaded ${contributions.length} contributions');
-      state = AsyncValue.data(contributions);
+      return contributions;
     } catch (e, stackTrace) {
       debugPrint('❌ Error loading community contributions: $e');
       debugPrint('🔍 Stack trace: $stackTrace');
-      state = AsyncValue.error(e, stackTrace);
+      rethrow;
     }
   }
 
   /// Ricarica i contributi
   Future<void> refreshCorrections() async {
-    await _loadCorrections();
+    final contributions = await _loadCorrections();
+    state = AsyncValue.data(contributions);
   }
 
   /// Approva una correzione
   Future<void> approveCorrection(String correctionId) async {
     try {
-      final user = await _ref.read(currentUserProvider.future);
+      final user = await ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
       // ========================================
@@ -133,11 +132,12 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
         throw Exception('Unauthorized: Admin only');
       }
 
-      final repository = _ref.read(communityRepositoryProvider);
+      final repository = ref.read(communityRepositoryProvider);
       await repository.approveContribution(correctionId, user.uid);
 
       // Ricarica le correzioni per aggiornare la UI
-      await _loadCorrections();
+      final contributions = await _loadCorrections();
+      state = AsyncValue.data(contributions);
 
       debugPrint('✅ Correction approved: $correctionId');
     } catch (e) {
@@ -149,7 +149,7 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
   /// Rifiuta una correzione
   Future<void> rejectCorrection(String correctionId, String reason) async {
     try {
-      final user = await _ref.read(currentUserProvider.future);
+      final user = await ref.read(currentUserProvider.future);
       if (user == null) throw Exception('User not authenticated');
 
       // ========================================
@@ -162,11 +162,12 @@ class CommunityCorrectionsNotifier extends StateNotifier<AsyncValue<List<Communi
         throw Exception('Unauthorized: Admin only');
       }
 
-      final repository = _ref.read(communityRepositoryProvider);
+      final repository = ref.read(communityRepositoryProvider);
       await repository.rejectContribution(correctionId, user.uid, reason);
 
       // Ricarica le correzioni per aggiornare la UI
-      await _loadCorrections();
+      final contributions = await _loadCorrections();
+      state = AsyncValue.data(contributions);
 
       debugPrint('✅ Correction rejected: $correctionId');
     } catch (e) {

@@ -40,28 +40,29 @@ class FeatureGateState {
 }
 
 /// Feature Gate Notifier
-class FeatureGateNotifier extends StateNotifier<AsyncValue<FeatureGateState>> {
-  FeatureGateNotifier(
-    this._repository,
-    this._experienceLevel,
-    this._workoutCount,
-    this._daysSinceRegistration, {
-    FeatureGatePollingService? pollingService,
-  })  : _pollingService = pollingService ?? FeatureGatePollingService(),
-        super(const AsyncValue.loading()) {
-    _initialize();
-  }
-
-  final FeatureGateRepository _repository;
-  final FeatureGatePollingService _pollingService;
-  final ExperienceLevel _experienceLevel;
-  final int _workoutCount;
-  final int _daysSinceRegistration;
+class FeatureGateNotifier extends AsyncNotifier<FeatureGateState> {
+  late final FeatureGateRepository _repository;
+  late final FeatureGatePollingService _pollingService;
+  late final ExperienceLevel _experienceLevel;
+  late final int _workoutCount;
+  late final int _daysSinceRegistration;
 
   @override
-  void dispose() {
-    _pollingService.dispose();
-    super.dispose();
+  Future<FeatureGateState> build() async {
+    _repository = ref.read(featureGateRepositoryProvider);
+    _pollingService = FeatureGatePollingService();
+
+    // TODO: Get from auth/onboarding providers
+    _experienceLevel = ExperienceLevel.beginner;
+    _workoutCount = 0;
+    _daysSinceRegistration = 0;
+
+    // Dispose polling service when notifier is disposed
+    ref.onDispose(() {
+      _pollingService.dispose();
+    });
+
+    return await _initialize();
   }
 
   /// Initialize feature gate state
@@ -71,35 +72,29 @@ class FeatureGateNotifier extends StateNotifier<AsyncValue<FeatureGateState>> {
   /// - Cache miss = 1 Firestore read
   /// - Polling = 4 reads/day (6h interval, aligned with cache TTL)
   /// - Result: 4 reads/day instead of 40 (90% reduction vs real-time streams)
-  Future<void> _initialize() async {
-    try {
-      // Load user preferences from Firebase (with cache)
-      // TODO: Get userId from auth provider
-      const userId = 'temp-user-id'; // Placeholder until auth integration
-      final userPreferences = await _repository.loadUserPreferences(userId);
+  Future<FeatureGateState> _initialize() async {
+    // Load user preferences from Firebase (with cache)
+    // TODO: Get userId from auth provider
+    const userId = 'temp-user-id'; // Placeholder until auth integration
+    final userPreferences = await _repository.loadUserPreferences(userId);
 
-      final featureStatuses = await _repository.evaluateAllFeatureGates(
-        userExperienceLevel: _experienceLevel,
-        userWorkoutCount: _workoutCount,
-        daysSinceRegistration: _daysSinceRegistration,
-        userPreferences: userPreferences,
-      );
+    final featureStatuses = await _repository.evaluateAllFeatureGates(
+      userExperienceLevel: _experienceLevel,
+      userWorkoutCount: _workoutCount,
+      daysSinceRegistration: _daysSinceRegistration,
+      userPreferences: userPreferences,
+    );
 
-      state = AsyncValue.data(
-        FeatureGateState(
-          featureStatuses: featureStatuses,
-          userPreferences: userPreferences,
-        ),
-      );
+    // Start background polling (Task 2.3)
+    // Polls every 6h to keep cache fresh
+    _pollingService.startPolling(() async {
+      await _refreshSilently();
+    });
 
-      // Start background polling (Task 2.3)
-      // Polls every 6h to keep cache fresh
-      _pollingService.startPolling(() async {
-        await _refreshSilently();
-      });
-    } catch (error, stack) {
-      state = AsyncValue.error(error, stack);
-    }
+    return FeatureGateState(
+      featureStatuses: featureStatuses,
+      userPreferences: userPreferences,
+    );
   }
 
   /// Silent refresh (used by polling service)
@@ -203,26 +198,21 @@ class FeatureGateNotifier extends StateNotifier<AsyncValue<FeatureGateState>> {
     ExperienceLevel? newExperienceLevel,
     int? newWorkoutCount,
   }) async {
-    state = const AsyncValue.loading();
+    // Update user context in Firebase
+    // TODO: Get userId from auth provider
+    const userId = 'temp-user-id'; // Placeholder until auth integration
 
-    try {
-      // Update user context in Firebase
-      // TODO: Get userId from auth provider
-      const userId = 'temp-user-id'; // Placeholder until auth integration
-
-      if (newExperienceLevel != null || newWorkoutCount != null) {
-        await _repository.updateUserContext(
-          userId: userId,
-          experienceLevel: newExperienceLevel?.name,
-          workoutCount: newWorkoutCount,
-        );
-      }
-
-      // Re-initialize (will load from Firebase)
-      await _initialize();
-    } catch (error, stack) {
-      state = AsyncValue.error(error, stack);
+    if (newExperienceLevel != null || newWorkoutCount != null) {
+      await _repository.updateUserContext(
+        userId: userId,
+        experienceLevel: newExperienceLevel?.name,
+        workoutCount: newWorkoutCount,
+      );
     }
+
+    // Re-initialize (will load from Firebase)
+    ref.invalidateSelf();
+    await future;
   }
 
   /// Called when a feature is unlocked (Task 1.4 + Task 2.4 + Task 3.4)
@@ -296,21 +286,9 @@ final featureGateRepositoryProvider = Provider<FeatureGateRepository>((ref) {
 
 /// Provider: Feature Gate Notifier
 final featureGateProvider =
-    StateNotifierProvider<FeatureGateNotifier, AsyncValue<FeatureGateState>>(
-        (ref) {
-  // TODO: Get from auth/onboarding providers
-  const experienceLevel = ExperienceLevel.beginner;
-  const workoutCount = 0;
-  const daysSinceRegistration = 0;
-
-  final repository = ref.watch(featureGateRepositoryProvider);
-  return FeatureGateNotifier(
-    repository,
-    experienceLevel,
-    workoutCount,
-    daysSinceRegistration,
-  );
-});
+    AsyncNotifierProvider<FeatureGateNotifier, FeatureGateState>(
+  FeatureGateNotifier.new,
+);
 
 /// Provider: Is Feature Enabled
 ///

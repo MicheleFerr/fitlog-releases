@@ -114,17 +114,17 @@ final isAchievementUnlockedProvider = FutureProvider.family<bool,
   );
 });
 
-/// StateNotifier for achievement unlock operations
+/// Notifier for achievement unlock operations
 ///
 /// Manages the process of unlocking achievements and updating UI state.
-class AchievementNotifier extends StateNotifier<AsyncValue<List<Achievement>>> {
-  AchievementNotifier({
-    required this.achievementRepository,
-    required this.checkAndUnlockUseCase,
-  }) : super(const AsyncValue.data([]));
+class AchievementNotifier extends Notifier<AsyncValue<List<Achievement>>> {
+  @override
+  AsyncValue<List<Achievement>> build() {
+    return const AsyncValue.data([]);
+  }
 
-  final AchievementRepository achievementRepository;
-  final CheckAndUnlockAchievementsUseCase checkAndUnlockUseCase;
+  AchievementRepository get achievementRepository => ref.read(achievementRepositoryProvider);
+  CheckAndUnlockAchievementsUseCase get checkAndUnlockUseCase => ref.read(checkAndUnlockAchievementsUseCaseProvider);
 
   /// Check for new achievements based on workout metrics
   ///
@@ -199,10 +199,7 @@ class AchievementNotifier extends StateNotifier<AsyncValue<List<Achievement>>> {
 /// Provider for AchievementNotifier
 ///
 /// Usage: ref.read(achievementNotifierProvider.notifier).checkAndUnlockAchievements(...)
-final achievementNotifierProvider = StateNotifierProvider<AchievementNotifier,
-    AsyncValue<List<Achievement>>>((ref) {
-  return AchievementNotifier(
-    achievementRepository: ref.watch(achievementRepositoryProvider),
-    checkAndUnlockUseCase: ref.watch(checkAndUnlockAchievementsUseCaseProvider),
-  );
-});
+final achievementNotifierProvider = NotifierProvider<AchievementNotifier,
+    AsyncValue<List<Achievement>>>(
+  AchievementNotifier.new,
+);

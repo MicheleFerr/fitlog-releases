@@ -43,7 +43,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise_preferences_repository.dart';
 
-/// StateNotifier for managing favorite exercises
+/// Notifier for managing favorite exercises
 ///
 /// State is a `Set<String>` containing exercise names that are marked as favorite.
 /// This provides O(1) lookup time for checking favorite status.
@@ -52,12 +52,24 @@ import 'package:gymbro_flutter_new/features/analytics/data/repositories/exercise
 /// - Reads from Firestore on initialization (1 read)
 /// - Writes to Firestore on toggle (debounced, 1 write per 500ms batch)
 /// - Listens to Firestore stream for real-time sync
-class FavoriteExercisesNotifier extends StateNotifier<Set<String>> {
-  FavoriteExercisesNotifier(this._ref) : super({}) {
-    _loadInitialState();
-  }
+class FavoriteExercisesNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() {
+    // Listen to Firestore stream for real-time sync
+    // This keeps local state in sync with Firestore changes from other devices
+    ref.listen(favoriteExercisesStreamProvider, (previous, next) {
+      next.whenData((prefs) {
+        if (prefs != null) {
+          // Update state from Firestore
+          // Only if different to avoid unnecessary rebuilds
+          updateFromFirestore(prefs.favoritesSet);
+        }
+      });
+    });
 
-  final Ref _ref;
+    _loadInitialState();
+    return {};
+  }
 
   /// Load initial favorites from Firestore
   ///
@@ -66,7 +78,7 @@ class FavoriteExercisesNotifier extends StateNotifier<Set<String>> {
   /// Called automatically on notifier initialization.
   /// Silently fails if user not authenticated or Firestore error.
   Future<void> _loadInitialState() async {
-    final repo = _ref.read(exercisePreferencesRepositoryProvider);
+    final repo = ref.read(exercisePreferencesRepositoryProvider);
     if (repo == null) return; // User not authenticated
 
     try {
@@ -107,7 +119,7 @@ class FavoriteExercisesNotifier extends StateNotifier<Set<String>> {
     state = newState;
 
     // Persist to Firestore (debounced)
-    final repo = _ref.read(exercisePreferencesRepositoryProvider);
+    final repo = ref.read(exercisePreferencesRepositoryProvider);
     if (repo != null) {
       // Fire-and-forget - don't await
       // Repository handles debouncing (500ms) to batch rapid toggles
@@ -172,7 +184,7 @@ class FavoriteExercisesNotifier extends StateNotifier<Set<String>> {
 
 /// Provider for favorite exercises state
 ///
-/// **Type**: `StateNotifierProvider<FavoriteExercisesNotifier, Set<String>>`
+/// **Type**: `NotifierProvider<FavoriteExercisesNotifier, Set<String>>`
 /// **Default**: Empty set (loads from Firestore on init)
 /// **Persistence**: Firestore with debounced writes (500ms)
 ///
@@ -190,24 +202,8 @@ class FavoriteExercisesNotifier extends StateNotifier<Set<String>> {
 /// - Uses favoriteExercisesStreamProvider for real-time sync
 /// - Automatically syncs with other devices/sessions
 final favoriteExercisesNotifierProvider =
-    StateNotifierProvider<FavoriteExercisesNotifier, Set<String>>(
-  (ref) {
-    final notifier = FavoriteExercisesNotifier(ref);
-
-    // Listen to Firestore stream for real-time sync
-    // This keeps local state in sync with Firestore changes from other devices
-    ref.listen(favoriteExercisesStreamProvider, (previous, next) {
-      next.whenData((prefs) {
-        if (prefs != null) {
-          // Update state from Firestore
-          // Only if different to avoid unnecessary rebuilds
-          notifier.updateFromFirestore(prefs.favoritesSet);
-        }
-      });
-    });
-
-    return notifier;
-  },
+    NotifierProvider<FavoriteExercisesNotifier, Set<String>>(
+  FavoriteExercisesNotifier.new,
 );
 
 /// StreamProvider for real-time Firestore sync

@@ -230,9 +230,10 @@ class ExerciseSelectionState {
 // Sentinel value for nullable parameters in copyWith
 const Object _undefined = Object();
 
-/// 🚀 TIER-1: State notifier with optimized updates
-class ExerciseSelectionNotifier extends StateNotifier<ExerciseSelectionState> {
-  ExerciseSelectionNotifier() : super(const ExerciseSelectionState());
+/// 🚀 TIER-1: State notifier with optimized updates (Riverpod 2.0)
+class ExerciseSelectionNotifier extends Notifier<ExerciseSelectionState> {
+  @override
+  ExerciseSelectionState build() => const ExerciseSelectionState();
   
   void updateSearch(String query) {
     // Debounced in UI layer
@@ -305,11 +306,11 @@ class ExerciseSelectionNotifier extends StateNotifier<ExerciseSelectionState> {
   }
 }
 
-// ✅ FIX: Removed .autoDispose to persist filters across navigation
+// ✅ FIX: Removed .autoDispose to persist filters across navigation (Riverpod 2.0)
 final exerciseSelectionProvider =
-    StateNotifierProvider<ExerciseSelectionNotifier, ExerciseSelectionState>((ref) {
-  return ExerciseSelectionNotifier();
-});
+    NotifierProvider<ExerciseSelectionNotifier, ExerciseSelectionState>(
+  ExerciseSelectionNotifier.new,
+);
 
 /// 🚀 TIER-1: Memoized filtered results
 final filteredExercisesProvider = Provider.autoDispose<AsyncValue<List<ExerciseData>>>((ref) {

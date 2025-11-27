@@ -86,29 +86,24 @@ class ExerciseStats {
 // SET PROVIDER - Individual set state management
 // ============================================================================
 
-final setProvider = StateNotifierProvider.family<SetNotifier, ExerciseSet?, (String, String)>(
-  (ref, params) {
-    final exerciseId = params.$1;
-    final setId = params.$2;
-    return SetNotifier(ref, exerciseId, setId);
-  }
+final setProvider = NotifierProvider.family<SetNotifier, ExerciseSet?, (String, String)>(
+  SetNotifier.new,
 );
 
-class SetNotifier extends StateNotifier<ExerciseSet?> {
-  
-  SetNotifier(this.ref, this.exerciseId, this.setId) : super(null) {
-    _loadSet();
-  }
-  final Ref ref;
-  final String exerciseId;
-  final String setId;
-  
-  void _loadSet() {
+class SetNotifier extends FamilyNotifier<ExerciseSet?, (String, String)> {
+  late final String exerciseId;
+  late final String setId;
+
+  @override
+  ExerciseSet? build((String, String) params) {
+    exerciseId = params.$1;
+    setId = params.$2;
+
     final workout = ref.read(currentWorkoutProvider);
     final exercise = workout?.exercises.firstWhereOrNull((e) => e.id == exerciseId);
-    state = exercise?.sets.firstWhereOrNull((s) => s.id == setId);
+    return exercise?.sets.firstWhereOrNull((s) => s.id == setId);
   }
-  
+
   void updateSet({
     double? weight,
     int? reps,
@@ -190,9 +185,7 @@ class WorkoutCache {
 // UNDO/REDO PROVIDER - Command pattern for actions
 // ============================================================================
 
-final undoRedoProvider = StateNotifierProvider<UndoRedoNotifier, UndoRedoState>((ref) {
-  return UndoRedoNotifier(ref);
-});
+final undoRedoProvider = NotifierProvider<UndoRedoNotifier, UndoRedoState>(UndoRedoNotifier.new);
 
 class UndoRedoState {
   
@@ -263,11 +256,11 @@ class UpdateSetCommand extends WorkoutCommand {
   }
 }
 
-class UndoRedoNotifier extends StateNotifier<UndoRedoState> {
-  
-  UndoRedoNotifier(this.ref) : super(UndoRedoState.initial());
-  final Ref ref;
+class UndoRedoNotifier extends Notifier<UndoRedoState> {
   static const _maxStackSize = 20;
+
+  @override
+  UndoRedoState build() => UndoRedoState.initial();
   
   void execute(WorkoutCommand command) {
     command.execute(ref);
@@ -409,9 +402,7 @@ class BatchOperations {
 // OFFLINE SYNC PROVIDER
 // ============================================================================
 
-final offlineSyncProvider = StateNotifierProvider<OfflineSyncNotifier, OfflineSyncState>((ref) {
-  return OfflineSyncNotifier(ref);
-});
+final offlineSyncProvider = NotifierProvider<OfflineSyncNotifier, OfflineSyncState>(OfflineSyncNotifier.new);
 
 class OfflineSyncState {
   
@@ -456,10 +447,9 @@ enum ActionType {
   updateSet,
 }
 
-class OfflineSyncNotifier extends StateNotifier<OfflineSyncState> {
-  
-  OfflineSyncNotifier(this.ref) : super(OfflineSyncState.initial());
-  final Ref ref;
+class OfflineSyncNotifier extends Notifier<OfflineSyncState> {
+  @override
+  OfflineSyncState build() => OfflineSyncState.initial();
   
   void addPendingAction(ActionType type, Map<String, dynamic> data) {
     state = state.copyWith(

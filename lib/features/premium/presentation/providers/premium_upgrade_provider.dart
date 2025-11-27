@@ -58,15 +58,23 @@ enum PremiumPlan {
 }
 
 /// Premium upgrade provider
-class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
-  
-  PremiumUpgradeNotifier(this._ref) : super(const PremiumUpgradeState()) {
-    _initialize();
-  }
-  final Ref _ref;
+class PremiumUpgradeNotifier extends Notifier<PremiumUpgradeState> {
   final InAppPurchase _iap = InAppPurchase.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
   StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
+
+  @override
+  PremiumUpgradeState build() {
+    // Setup cleanup when provider is disposed
+    ref.onDispose(() {
+      _purchaseSubscription?.cancel();
+    });
+
+    // Initialize asynchronously
+    _initialize();
+
+    return const PremiumUpgradeState();
+  }
   
   // Product IDs for App Store and Google Play
   static const Map<PremiumPlan, String> _iosProductIds = {
@@ -354,8 +362,8 @@ class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
       // Check if user is now premium
       // Wait for the stream to update
       await Future.delayed(const Duration(seconds: 1));
-      
-      final userProfileAsync = _ref.read(userProfileProvider);
+
+      final userProfileAsync = ref.read(userProfileProvider);
       final userProfile = userProfileAsync.value;
       
       // Check if the user has premium using UserProfile which has isPremium property
@@ -394,7 +402,7 @@ class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
       case 'cloud_service_network_connection_failed':
         return 'Network connection failed. Please try again.';
       default:
-        return error.message ?? 'Purchase failed. Please try again.';
+        return error.message;
     }
   }
   
@@ -427,18 +435,10 @@ class PremiumUpgradeNotifier extends StateNotifier<PremiumUpgradeState> {
       return null;
     }
   }
-  
-  @override
-  void dispose() {
-    _purchaseSubscription?.cancel();
-    super.dispose();
-  }
 }
 
 /// Premium upgrade provider
-final premiumUpgradeProvider = StateNotifierProvider<PremiumUpgradeNotifier, PremiumUpgradeState>((ref) {
-  return PremiumUpgradeNotifier(ref);
-});
+final premiumUpgradeProvider = NotifierProvider<PremiumUpgradeNotifier, PremiumUpgradeState>(PremiumUpgradeNotifier.new);
 
 /// Check if purchase is in progress
 final isPurchasingProvider = Provider<bool>((ref) {

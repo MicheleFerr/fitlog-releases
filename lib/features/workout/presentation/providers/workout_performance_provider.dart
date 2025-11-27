@@ -253,12 +253,11 @@ final exerciseProgressionProvider = Provider.family<Map<String, ExerciseProgress
 });
 
 // 📊 PERFORMANCE MONITORING PROVIDER
-final performanceMonitorProvider = StateNotifierProvider<PerformanceMonitor, PerformanceMetrics>((ref) {
-  return PerformanceMonitor();
-});
+final performanceMonitorProvider = NotifierProvider<PerformanceMonitor, PerformanceMetrics>(PerformanceMonitor.new);
 
-class PerformanceMonitor extends StateNotifier<PerformanceMetrics> {
-  PerformanceMonitor() : super(PerformanceMetrics());
+class PerformanceMonitor extends Notifier<PerformanceMetrics> {
+  @override
+  PerformanceMetrics build() => PerformanceMetrics();
 
   void recordRebuild(String widgetName) {
     final now = DateTime.now();

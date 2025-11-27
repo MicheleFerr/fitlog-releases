@@ -13,13 +13,14 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:gymbro_flutter_new/features/workout/data/datasources/hive_workout_datasource.dart';
 import 'package:gymbro_flutter_new/features/workout/data/models/workout_model.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// State for recovery operation
 class RecoveryState {
@@ -39,29 +40,53 @@ class RecoveryState {
 }
 
 /// Provider to recover workouts from Firestore
-final workoutRecoveryProvider = StateNotifierProvider<WorkoutRecoveryNotifier, RecoveryState>((ref) {
-  final userProfile = ref.watch(unifiedUserProfileProvider);
-  final userId = userProfile.value?.uid;
-  final boxManager = ref.watch(hiveBoxManagerProvider);
+final workoutRecoveryProvider = NotifierProvider<WorkoutRecoveryNotifier, RecoveryState>(WorkoutRecoveryNotifier.new);
 
-  return WorkoutRecoveryNotifier(userId, boxManager);
-});
+class WorkoutRecoveryNotifier extends Notifier<RecoveryState> {
 
-class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
+  @override
+  RecoveryState build() {
+    // Initialize dependencies
+    final userProfile = ref.watch(unifiedUserProfileProvider);
+    _userId = userProfile.value?.uid;
+    _boxManager = ref.watch(hiveBoxManagerProvider);
 
-  WorkoutRecoveryNotifier(this.userId, this._boxManager) : super(RecoveryState());
-  final String? userId;
-  final HiveBoxManagerEnhanced _boxManager;
+    // Set up cleanup on dispose
+    ref.onDispose(() {
+      // MEMORY LEAK FIX: Close workouts box if opened by this provider
+      if (Hive.isBoxOpen('workouts')) {
+        Hive.box<Map>('workouts').close().then((_) {
+          if (kDebugMode) {
+            debugPrint('✅ WorkoutRecoveryNotifier: Closed workouts box');
+          }
+        }).catchError((e) {
+          if (kDebugMode) {
+            debugPrint('❌ Error closing workouts box: $e');
+          }
+        });
+      }
+
+      if (kDebugMode) {
+        debugPrint('✅ WorkoutRecoveryNotifier disposed');
+      }
+    });
+
+    return RecoveryState();
+  }
+
+  String? _userId;
+  late HiveBoxManagerEnhanced _boxManager;
   final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
+
+  // Getter for userId (used in methods)
+  String? get userId => _userId;
   
   /// Clear all local workouts before recovery
   Future<void> clearLocalWorkouts() async {
     if (userId == null) return;
 
     try {
-      final localDataSource = HiveWorkoutDataSource(_boxManager);
-      final box = await _boxManager.openBox<Map>('workouts');
+      final box = await _boxManager.openBox<Map>(HiveBoxNames.workouts);
       
       // Remove all workouts for this user
       final keysToRemove = box.keys
@@ -291,28 +316,4 @@ class WorkoutRecoveryNotifier extends StateNotifier<RecoveryState> {
     }
   }
 
-  /// MEMORY LEAK FIX: Close workouts box when disposing
-  /// Note: Box is opened in clearLocalWorkouts() method
-  /// Best practice would be to keep reference and close here
-  /// For now, rely on HiveWorkoutDataSource.dispose() for cleanup
-  @override
-  void dispose() {
-    // MEMORY LEAK FIX: Close workouts box if opened by this provider
-    if (Hive.isBoxOpen('workouts')) {
-      Hive.box<Map>('workouts').close().then((_) {
-        if (kDebugMode) {
-          debugPrint('✅ WorkoutRecoveryNotifier: Closed workouts box');
-        }
-      }).catchError((e) {
-        if (kDebugMode) {
-          debugPrint('❌ Error closing workouts box: $e');
-        }
-      });
-    }
-
-    if (kDebugMode) {
-      debugPrint('✅ WorkoutRecoveryNotifier disposed');
-    }
-    super.dispose();
-  }
 }

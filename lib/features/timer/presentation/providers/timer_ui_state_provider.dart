@@ -43,12 +43,14 @@ class TimerUIState {
   }
 }
 
-class TimerUIStateNotifier extends StateNotifier<TimerUIState> {
-  
-  TimerUIStateNotifier(this.ref) : super(const TimerUIState()) {
+class TimerUIStateNotifier extends Notifier<TimerUIState> {
+
+  @override
+  TimerUIState build() {
     _loadPreferences();
+    return const TimerUIState();
   }
-  final Ref ref;
+
   SharedPreferences? _prefs;
   
   Future<void> _loadPreferences() async {
@@ -122,9 +124,7 @@ class TimerUIStateNotifier extends StateNotifier<TimerUIState> {
 }
 
 /// Provider principale per lo stato UI del timer
-final timerUIStateProvider = StateNotifierProvider<TimerUIStateNotifier, TimerUIState>((ref) {
-  return TimerUIStateNotifier(ref);
-});
+final timerUIStateProvider = NotifierProvider<TimerUIStateNotifier, TimerUIState>(TimerUIStateNotifier.new);
 
 /// Provider derivato per visibilità con logica timer attivo
 final shouldShowTimerUIProvider = Provider<bool>((ref) {

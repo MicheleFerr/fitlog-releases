@@ -37,8 +37,11 @@ class ExerciseExpansionState {
 }
 
 /// Notifier for managing exercise expansion
-class ExerciseExpansionNotifier extends StateNotifier<ExerciseExpansionState> {
-  ExerciseExpansionNotifier() : super(const ExerciseExpansionState());
+class ExerciseExpansionNotifier extends FamilyNotifier<ExerciseExpansionState, String> {
+  @override
+  ExerciseExpansionState build(String exerciseId) {
+    return const ExerciseExpansionState();
+  }
 
   /// Expand the exercise
   void expand() {
@@ -78,10 +81,8 @@ class ExerciseExpansionNotifier extends StateNotifier<ExerciseExpansionState> {
 
 /// Provider for exercise expansion state
 /// Family provider indexed by exercise ID
-final exerciseExpansionProvider = StateNotifierProvider.family<
+final exerciseExpansionProvider = NotifierProvider.family<
   ExerciseExpansionNotifier,
   ExerciseExpansionState,
   String
->((ref, exerciseId) {
-  return ExerciseExpansionNotifier();
-});
+>(ExerciseExpansionNotifier.new);

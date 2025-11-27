@@ -5,34 +5,9 @@ import 'package:gymbro_flutter_new/features/home/presentation/providers/home_sta
 import 'package:gymbro_flutter_new/features/home/presentation/providers/performance_logger.dart';
 
 // Main state provider with auto-dispose
-final homeStateProvider = StateNotifierProvider.autoDispose<
+final homeStateProvider = AutoDisposeNotifierProvider<
     HomeStateNotifier,
-    HomeState>((ref) {
-  final logger = ref.watch(performanceLoggerProvider);
-
-  // Keep alive for 30 seconds after last listener disconnects
-  ref.keepAlive();
-  Timer? timer;
-
-  ref.onCancel(() {
-    timer = Timer(const Duration(seconds: 30), () {
-      ref.invalidateSelf();
-    });
-  });
-
-  ref.onResume(() {
-    timer?.cancel();
-  });
-
-  ref.onDispose(() {
-    timer?.cancel();
-  });
-
-  return HomeStateNotifier(
-    ref: ref,
-    logger: logger,
-  );
-});
+    HomeState>(HomeStateNotifier.new);
 
 // Micro-providers for granular rebuilds
 final greetingSectionProvider = Provider.autoDispose<String>((ref) {

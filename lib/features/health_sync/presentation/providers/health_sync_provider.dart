@@ -134,16 +134,15 @@ final bodyMeasurementsProvider =
 /// );
 /// ```
 final healthSyncControllerProvider =
-    StateNotifierProvider<HealthSyncController, AsyncValue<void>>(
-  (ref) => HealthSyncController(
-    ref.watch(healthRepositoryProvider),
-  ),
+    NotifierProvider<HealthSyncController, AsyncValue<void>>(
+  HealthSyncController.new,
 );
 
-class HealthSyncController extends StateNotifier<AsyncValue<void>> {
-  HealthSyncController(this._repository) : super(const AsyncValue.data(null));
+class HealthSyncController extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
 
-  final IHealthRepository _repository;
+  IHealthRepository get _repository => ref.read(healthRepositoryProvider);
 
   /// Syncs workouts from HealthKit/Health Connect (last 30 days).
   ///

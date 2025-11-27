@@ -13,10 +13,12 @@ final pendingContributionsProvider = StreamProvider.autoDispose<List<CommunityCo
 });
 
 // State notifier per gestire moderazione
-class AdminModerationNotifier extends StateNotifier<AsyncValue<void>> {
+class AdminModerationNotifier extends Notifier<AsyncValue<void>> {
 
-  AdminModerationNotifier(this._ref) : super(const AsyncValue.data(null));
-  final Ref _ref;
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Ref get _ref => ref;
 
   /// Approva un contributo
   Future<void> approveContribution(String contributionId) async {
@@ -104,9 +106,7 @@ class AdminModerationNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final adminModerationProvider = StateNotifierProvider<AdminModerationNotifier, AsyncValue<void>>((ref) {
-  return AdminModerationNotifier(ref);
-});
+final adminModerationProvider = NotifierProvider<AdminModerationNotifier, AsyncValue<void>>(AdminModerationNotifier.new);
 
 // ========================================
 // 🔐 SECURITY: isAdminProvider moved to global location

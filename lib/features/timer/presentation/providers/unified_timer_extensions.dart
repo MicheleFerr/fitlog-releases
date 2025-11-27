@@ -6,10 +6,10 @@ import 'package:gymbro_flutter_new/features/timer/domain/models/unified_timer_st
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Extensions per UnifiedTimerProvider con funzionalità tier-1
-/// 
+///
 /// Aggiunge funzionalità avanzate senza creare nuovi provider
 /// Rispetta CLAUDE.md: estende invece di stratificare
-extension Tier1TimerExtensions on StateNotifier<UnifiedTimerState?> {
+extension Tier1TimerExtensions on Notifier<UnifiedTimerState?> {
   
   /// Start rest timer con UI automatica
   Future<void> startRestTimerWithUI({

@@ -51,11 +51,13 @@ class ExerciseUpdateState {
 }
 
 /// Notifier per gestire aggiornamenti esercizi
-class ExerciseUpdateNotifier extends StateNotifier<ExerciseUpdateState> {
+class ExerciseUpdateNotifier extends Notifier<ExerciseUpdateState> {
 
-  ExerciseUpdateNotifier(this._repository, this._ref) : super(const ExerciseUpdateState());
-  final HybridExerciseRepository _repository;
-  final Ref _ref;
+  @override
+  ExerciseUpdateState build() => const ExerciseUpdateState();
+
+  HybridExerciseRepository get _repository => ref.watch(hybridExerciseRepositoryProvider);
+  Ref get _ref => ref;
   Timer? _delayTimer;
 
   /// Controlla aggiornamenti all'avvio app (con delay di 30s)
@@ -179,19 +181,10 @@ class ExerciseUpdateNotifier extends StateNotifier<ExerciseUpdateState> {
     _delayTimer?.cancel();
     _delayTimer = null;
   }
-
-  @override
-  void dispose() {
-    _delayTimer?.cancel();
-    super.dispose();
-  }
 }
 
 /// Provider per Exercise Update
-final exerciseUpdateProvider = StateNotifierProvider<ExerciseUpdateNotifier, ExerciseUpdateState>((ref) {
-  final repository = ref.watch(hybridExerciseRepositoryProvider);
-  return ExerciseUpdateNotifier(repository, ref);
-});
+final exerciseUpdateProvider = NotifierProvider<ExerciseUpdateNotifier, ExerciseUpdateState>(ExerciseUpdateNotifier.new);
 
 /// Provider per il repository (da definire dove appropriato)
 final hybridExerciseRepositoryProvider = Provider<HybridExerciseRepository>((ref) {

@@ -51,11 +51,15 @@ class VoiceInputNotifierState {
 }
 
 /// Voice input notifier
-class VoiceInputNotifier extends StateNotifier<VoiceInputNotifierState> {
+class VoiceInputNotifier extends Notifier<VoiceInputNotifierState> {
 
-  VoiceInputNotifier() : super(const VoiceInputNotifierState());
   final stt.SpeechToText _speechToText = stt.SpeechToText();
   bool _isInitialized = false;
+
+  @override
+  VoiceInputNotifierState build() {
+    return const VoiceInputNotifierState();
+  }
 
   /// Initialize speech recognition
   Future<bool> initialize() async {
@@ -151,16 +155,10 @@ class VoiceInputNotifier extends StateNotifier<VoiceInputNotifierState> {
     }
   }
 
-  /// Dispose
-  @override
-  void dispose() {
-    _speechToText.cancel();
-    super.dispose();
-  }
 }
 
 /// Voice input provider
 final voiceInputProvider =
-    StateNotifierProvider<VoiceInputNotifier, VoiceInputNotifierState>((ref) {
-  return VoiceInputNotifier();
-});
+    NotifierProvider<VoiceInputNotifier, VoiceInputNotifierState>(
+  VoiceInputNotifier.new,
+);

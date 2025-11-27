@@ -53,13 +53,16 @@ enum MetricType {
   weightTimesReps,
 }
 
-/// StateNotifier for landscape metrics selection
+/// Notifier for landscape metrics selection
 ///
 /// **State Management**: Set<MetricType> (immutable set)
 ///
 /// **Default State**: {MetricType.volume} (Volume selected)
-class LandscapeMetricsNotifier extends StateNotifier<Set<MetricType>> {
-  LandscapeMetricsNotifier() : super({MetricType.volume}); // Default: Volume only
+class LandscapeMetricsNotifier extends Notifier<Set<MetricType>> {
+  @override
+  Set<MetricType> build() {
+    return {MetricType.volume}; // Default: Volume only
+  }
 
   /// Toggle metric selection
   ///
@@ -109,6 +112,6 @@ class LandscapeMetricsNotifier extends StateNotifier<Set<MetricType>> {
 ///
 /// **Default**: {MetricType.volume}
 final landscapeMetricsProvider =
-    StateNotifierProvider<LandscapeMetricsNotifier, Set<MetricType>>(
-  (ref) => LandscapeMetricsNotifier(),
+    NotifierProvider<LandscapeMetricsNotifier, Set<MetricType>>(
+  LandscapeMetricsNotifier.new,
 );

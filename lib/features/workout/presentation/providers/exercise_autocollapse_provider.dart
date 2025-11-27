@@ -44,11 +44,25 @@ class AutoCollapseState { // Signal that collapse should be executed
 }
 
 /// Notifier for managing auto-collapse with countdown
-class AutoCollapseNotifier extends StateNotifier<AutoCollapseState> {
-
-  AutoCollapseNotifier() : super(const AutoCollapseState());
+class AutoCollapseNotifier extends FamilyNotifier<AutoCollapseState, String> {
   Timer? _countdownTimer;
   Timer? _autoCollapseTimer;
+  bool _disposed = false;
+
+  @override
+  AutoCollapseState build(String exerciseId) {
+    // Setup disposal on provider cleanup
+    ref.onDispose(() {
+      _disposed = true;
+      _countdownTimer?.cancel();
+      _autoCollapseTimer?.cancel();
+    });
+
+    return const AutoCollapseState();
+  }
+
+  /// Check if notifier is still active
+  bool get mounted => !_disposed;
 
   /// Start auto-collapse with initial delay + countdown
   /// [initialDelay] - delay before countdown starts
@@ -166,20 +180,12 @@ class AutoCollapseNotifier extends StateNotifier<AutoCollapseState> {
     state = state.copyWith(enabled: true);
   }
 
-  @override
-  void dispose() {
-    _countdownTimer?.cancel();
-    _autoCollapseTimer?.cancel();
-    super.dispose();
-  }
 }
 
 /// Provider for exercise auto-collapse state
 /// Family provider indexed by exercise ID
-final exerciseAutoCollapseProvider = StateNotifierProvider.family<
+final exerciseAutoCollapseProvider = NotifierProvider.family<
   AutoCollapseNotifier,
   AutoCollapseState,
   String
->((ref, exerciseId) {
-  return AutoCollapseNotifier();
-});
+>(AutoCollapseNotifier.new);

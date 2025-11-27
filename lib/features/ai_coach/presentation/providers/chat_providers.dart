@@ -32,7 +32,6 @@ import 'package:gymbro_flutter_new/features/exercise_database/presentation/provi
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/analytics_providers.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/ai_coach_analytics.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/domain/services/tone_adapter.dart';
-import 'package:gymbro_flutter_new/features/strength_standards/presentation/providers/strength_standards_providers.dart';
 import 'package:gymbro_flutter_new/features/streak/presentation/providers/streak_provider.dart';
 
 // ============================================================================
@@ -120,7 +119,6 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
   final aiCoachAnalytics = ref.watch(aiCoachAnalyticsProvider);
   final toneAdapter = ref.watch(toneAdapterProvider);
   final toneProfile = ref.watch(toneProfileProvider);
-  final fitnessQuestionnaire = ref.watch(userFitnessQuestionnaireProvider);
   final streakRepository = ref.watch(streakRepositoryProvider);
 
   return ChatBotDatasource(
@@ -134,7 +132,6 @@ final chatBotDatasourceProvider = Provider<ChatBotDatasource>((ref) {
     aiCoachAnalytics: aiCoachAnalytics,
     toneAdapter: toneAdapter,
     toneProfile: toneProfile,
-    fitnessQuestionnaire: fitnessQuestionnaire,
     streakRepository: streakRepository,
   );
 });
@@ -214,22 +211,25 @@ class ChatState {
 }
 
 /// Chat state notifier
-class ChatNotifier extends StateNotifier<ChatState> {
+class ChatNotifier extends FamilyNotifier<ChatState, String> {
 
-  ChatNotifier({
-    required this.sendChatMessageUseCase,
-    required this.getConversationHistoryUseCase,
-    required this.clearConversationHistoryUseCase,
-    required this.chatRepository,
-    required this.userId,
-  }) : super(const ChatState()) {
+  late final SendChatMessage sendChatMessageUseCase;
+  late final GetConversationHistory getConversationHistoryUseCase;
+  late final ClearConversationHistory clearConversationHistoryUseCase;
+  late final ChatRepository chatRepository;
+  late final String userId;
+
+  @override
+  ChatState build(String userId) {
+    this.userId = userId;
+    sendChatMessageUseCase = ref.read(sendChatMessageProvider);
+    getConversationHistoryUseCase = ref.read(getConversationHistoryProvider);
+    clearConversationHistoryUseCase = ref.read(clearConversationHistoryProvider);
+    chatRepository = ref.read(chatRepositoryProvider);
+
     _loadHistory();
+    return const ChatState();
   }
-  final SendChatMessage sendChatMessageUseCase;
-  final GetConversationHistory getConversationHistoryUseCase;
-  final ClearConversationHistory clearConversationHistoryUseCase;
-  final ChatRepository chatRepository;
-  final String userId;
 
   /// Load conversation history on init
   Future<void> _loadHistory() async {
@@ -370,19 +370,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
 }
 
 /// Chat state notifier provider
-final chatNotifierProvider = StateNotifierProvider.family<ChatNotifier, ChatState, String>(
-  (ref, userId) {
-    final sendMessageUseCase = ref.watch(sendChatMessageProvider);
-    final getHistoryUseCase = ref.watch(getConversationHistoryProvider);
-    final clearHistoryUseCase = ref.watch(clearConversationHistoryProvider);
-    final repository = ref.watch(chatRepositoryProvider);
-
-    return ChatNotifier(
-      sendChatMessageUseCase: sendMessageUseCase,
-      getConversationHistoryUseCase: getHistoryUseCase,
-      clearConversationHistoryUseCase: clearHistoryUseCase,
-      chatRepository: repository,
-      userId: userId,
-    );
-  },
+final chatNotifierProvider = NotifierProvider.family<ChatNotifier, ChatState, String>(
+  ChatNotifier.new,
 );

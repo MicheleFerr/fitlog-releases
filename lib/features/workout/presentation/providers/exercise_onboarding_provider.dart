@@ -22,10 +22,10 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Provider per lo stato dell'onboarding degli esercizi
+/// Provider per lo stato dell'onboarding degli esercizi (Riverpod 2.0)
 final exerciseOnboardingProvider =
-    StateNotifierProvider<ExerciseOnboardingNotifier, ExerciseOnboardingState>(
-  (ref) => ExerciseOnboardingNotifier(),
+    NotifierProvider<ExerciseOnboardingNotifier, ExerciseOnboardingState>(
+  ExerciseOnboardingNotifier.new,
 );
 
 /// Stato dell'onboarding degli esercizi
@@ -53,14 +53,17 @@ class ExerciseOnboardingState {
   }
 }
 
-/// Notifier per gestire lo stato dell'onboarding degli esercizi
-class ExerciseOnboardingNotifier extends StateNotifier<ExerciseOnboardingState> {
-  ExerciseOnboardingNotifier() : super(const ExerciseOnboardingState()) {
-    _loadOnboardingState();
-  }
-
+/// Notifier per gestire lo stato dell'onboarding degli esercizi (Riverpod 2.0)
+class ExerciseOnboardingNotifier extends Notifier<ExerciseOnboardingState> {
   static const String _onboardingKey = 'exercise_onboarding_seen';
   static const int totalSteps = 6;
+
+  @override
+  ExerciseOnboardingState build() {
+    // Load initial state asynchronously
+    _loadOnboardingState();
+    return const ExerciseOnboardingState();
+  }
 
   /// Carica lo stato dell'onboarding da SharedPreferences
   Future<void> _loadOnboardingState() async {

@@ -13,12 +13,13 @@ import 'package:gymbro_flutter_new/features/smart_training/domain/services/smart
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 /// Provider for smart training metrics analysis
-final smartTrainingMetricsProvider = StateNotifierProvider<SmartTrainingMetricsNotifier, AsyncValue<List<SmartTrainingMetrics>>>(
-  (ref) => SmartTrainingMetricsNotifier(),
+final smartTrainingMetricsProvider = NotifierProvider<SmartTrainingMetricsNotifier, AsyncValue<List<SmartTrainingMetrics>>>(
+  SmartTrainingMetricsNotifier.new,
 );
 
-class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTrainingMetrics>>> {
-  SmartTrainingMetricsNotifier() : super(const AsyncValue.loading());
+class SmartTrainingMetricsNotifier extends Notifier<AsyncValue<List<SmartTrainingMetrics>>> {
+  @override
+  AsyncValue<List<SmartTrainingMetrics>> build() => const AsyncValue.loading();
 
   /// Analyze workout and generate metrics
   Future<void> analyzeWorkout(Workout workout) async {
@@ -42,7 +43,6 @@ class SmartTrainingMetricsNotifier extends StateNotifier<AsyncValue<List<SmartTr
     double totalVolume = 0.0;
     int totalSets = 0;
     int totalReps = 0;
-    const double totalIntensity = 0.0;
     final exerciseMetrics = <ExerciseMetrics>[];
     final muscleGroupVolume = <String, double>{};
 
@@ -297,8 +297,9 @@ final smartWorkoutTemplatesProvider = Provider<List<SmartWorkoutTemplate>>((ref)
 /// Provider for filtered templates
 final filteredTemplatesProvider = Provider.family<List<SmartWorkoutTemplate>, TemplateFilter>(
   (ref, filter) {
-    final allTemplates = ref.watch(smartWorkoutTemplatesProvider);
-    
+    // Watch templates provider to trigger rebuild when templates change
+    ref.watch(smartWorkoutTemplatesProvider);
+
     return SmartWorkoutTemplatesService.filterTemplates(
       category: filter.category,
       difficulty: filter.difficulty,
@@ -311,14 +312,16 @@ final filteredTemplatesProvider = Provider.family<List<SmartWorkoutTemplate>, Te
 );
 
 /// Provider for smart suggestions
-final smartSuggestionsProvider = StateNotifierProvider<SmartSuggestionsNotifier, List<SmartSuggestion>>(
-  (ref) => SmartSuggestionsNotifier(ref),
+final smartSuggestionsProvider = NotifierProvider<SmartSuggestionsNotifier, List<SmartSuggestion>>(
+  SmartSuggestionsNotifier.new,
 );
 
-class SmartSuggestionsNotifier extends StateNotifier<List<SmartSuggestion>> {
-  
-  SmartSuggestionsNotifier(this._ref) : super([]);
-  final Ref _ref;
+class SmartSuggestionsNotifier extends Notifier<List<SmartSuggestion>> {
+
+  @override
+  List<SmartSuggestion> build() => [];
+
+  Ref get _ref => ref;
 
   /// Generate suggestions for current context
   Future<void> generateSuggestions(SuggestionContext context) async {

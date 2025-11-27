@@ -16,7 +16,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/template_import_export.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/import_parsing_result.dart';
-import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_parsing_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/data/services/exercise_matching_service.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/percentage_conversion_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
@@ -103,19 +102,18 @@ enum ImportPhase {
   completed,
 }
 
-/// Provider for template import functionality
-class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
-  
-  TemplateImportNotifier(
-    this._parsingService,
-    this._exerciseMatchingService,
-    this._percentageService,
-    this._ref,
-  ) : super(const TemplateImportState());
-  final TemplateParsingService _parsingService;
-  final ExerciseMatchingService _exerciseMatchingService;
-  final PercentageConversionService _percentageService;
-  final Ref _ref;
+/// Provider for template import functionality (Riverpod 2.x)
+class TemplateImportNotifier extends Notifier<TemplateImportState> {
+
+  late final ExerciseMatchingService _exerciseMatchingService;
+  late final PercentageConversionService _percentageService;
+
+  @override
+  TemplateImportState build() {
+    _exerciseMatchingService = ExerciseMatchingService.instance;
+    _percentageService = PercentageConversionService();
+    return const TemplateImportState();
+  }
   
   /// Import from natural language text
   Future<void> importFromText(
@@ -273,7 +271,7 @@ class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
     _updateProgress(0.7, 'Converting percentage weights...');
     state = state.copyWith(currentPhase: ImportPhase.percentageConversion);
 
-    final userValue = _ref.read(unifiedUserProvider);
+    final userValue = ref.read(unifiedUserProvider);
     final user = userValue.value; // Extract value from AsyncValue
 
     if (user == null) {
@@ -381,7 +379,7 @@ class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
     state = state.copyWith(currentPhase: ImportPhase.finalizing);
 
     try {
-      final userValue = _ref.read(unifiedUserProvider);
+      final userValue = ref.read(unifiedUserProvider);
       final user = userValue.value;
 
       if (user == null) {
@@ -569,12 +567,7 @@ class TemplateImportNotifier extends StateNotifier<TemplateImportState> {
   }
 }
 
-/// Provider for template import
-final templateImportProvider = StateNotifierProvider<TemplateImportNotifier, TemplateImportState>((ref) {
-  return TemplateImportNotifier(
-    TemplateParsingService(),
-    ExerciseMatchingService.instance, // Use singleton instance
-    PercentageConversionService(), // Use default constructor
-    ref,
-  );
-});
+/// Provider for template import (Riverpod 2.x)
+final templateImportProvider = NotifierProvider<TemplateImportNotifier, TemplateImportState>(
+  TemplateImportNotifier.new,
+);

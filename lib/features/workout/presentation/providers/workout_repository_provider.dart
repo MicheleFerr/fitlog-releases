@@ -75,14 +75,13 @@ final workoutSyncServiceProvider = Provider<WorkoutSyncService>((ref) {
 });
 
 /// Provider for sync status
-final syncStatusProvider = StateNotifierProvider<SyncStatusNotifier, SyncStatusState>((ref) {
-  final syncService = ref.watch(workoutSyncServiceProvider);
-  return SyncStatusNotifier(syncService);
-});
+final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusState>(
+  SyncStatusNotifier.new,
+);
 
 /// State for sync status
 class SyncStatusState {
-  
+
   const SyncStatusState({
     this.isSyncing = false,
     this.lastSyncTime,
@@ -93,7 +92,7 @@ class SyncStatusState {
   final DateTime? lastSyncTime;
   final SyncResult? lastSyncResult;
   final bool isPremiumUser;
-  
+
   SyncStatusState copyWith({
     bool? isSyncing,
     DateTime? lastSyncTime,
@@ -110,10 +109,12 @@ class SyncStatusState {
 }
 
 /// Notifier for sync status
-class SyncStatusNotifier extends StateNotifier<SyncStatusState> {
-  
-  SyncStatusNotifier(this._syncService) : super(const SyncStatusState());
-  final WorkoutSyncService _syncService;
+class SyncStatusNotifier extends Notifier<SyncStatusState> {
+
+  @override
+  SyncStatusState build() => const SyncStatusState();
+
+  WorkoutSyncService get _syncService => ref.watch(workoutSyncServiceProvider);
   
   /// Trigger manual sync
   Future<void> syncNow() async {

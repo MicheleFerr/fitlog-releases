@@ -2,12 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 
 // Exercise sets management for the modal
-class ExerciseSetNotifier extends StateNotifier<List<ExerciseSet>> {
-  ExerciseSetNotifier() : super([
+class ExerciseSetNotifier extends Notifier<List<ExerciseSet>> {
+  @override
+  List<ExerciseSet> build() => [
     ExerciseSet(setNumber: 1, weight: 0, reps: 10),
     ExerciseSet(setNumber: 2, weight: 0, reps: 10),
     ExerciseSet(setNumber: 3, weight: 0, reps: 10),
-  ]);
+  ];
 
   void addSet() {
     final newSetNumber = state.length + 1;
@@ -54,13 +55,12 @@ class ExerciseSetNotifier extends StateNotifier<List<ExerciseSet>> {
 }
 
 // Provider for exercise sets in the modal
-final exerciseSetsProvider = StateNotifierProvider<ExerciseSetNotifier, List<ExerciseSet>>((ref) {
-  return ExerciseSetNotifier();
-});
+final exerciseSetsProvider = NotifierProvider<ExerciseSetNotifier, List<ExerciseSet>>(ExerciseSetNotifier.new);
 
 // Superset exercises management
-class SupersetExercisesNotifier extends StateNotifier<List<Exercise>> {
-  SupersetExercisesNotifier() : super([]);
+class SupersetExercisesNotifier extends Notifier<List<Exercise>> {
+  @override
+  List<Exercise> build() => [];
 
   void addExercise(Exercise exercise) {
     state = [...state, exercise];
@@ -76,6 +76,4 @@ class SupersetExercisesNotifier extends StateNotifier<List<Exercise>> {
 }
 
 // Provider for superset exercises
-final supersetExercisesProvider = StateNotifierProvider<SupersetExercisesNotifier, List<Exercise>>((ref) {
-  return SupersetExercisesNotifier();
-});
+final supersetExercisesProvider = NotifierProvider<SupersetExercisesNotifier, List<Exercise>>(SupersetExercisesNotifier.new);

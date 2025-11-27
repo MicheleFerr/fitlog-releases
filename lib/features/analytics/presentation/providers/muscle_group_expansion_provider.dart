@@ -23,7 +23,7 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// StateNotifier for managing muscle group expansion state in accordion UI
+/// Notifier for managing muscle group expansion state in accordion UI
 ///
 /// **State Structure**:
 /// ```dart
@@ -33,9 +33,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///   // Missing keys = collapsed (default)
 /// }
 /// ```
-class MuscleGroupExpansionNotifier extends StateNotifier<Map<String, bool>> {
+class MuscleGroupExpansionNotifier extends Notifier<Map<String, bool>> {
   /// Initialize with empty map (all groups collapsed by default)
-  MuscleGroupExpansionNotifier() : super({});
+  @override
+  Map<String, bool> build() {
+    return {};
+  }
 
   /// Toggle expansion state for a specific muscle group
   ///
@@ -112,6 +115,6 @@ class MuscleGroupExpansionNotifier extends StateNotifier<Map<String, bool>> {
 /// ref.read(muscleGroupExpansionProvider.notifier).collapseAll();
 /// ```
 final muscleGroupExpansionProvider =
-    StateNotifierProvider<MuscleGroupExpansionNotifier, Map<String, bool>>(
-  (ref) => MuscleGroupExpansionNotifier(),
+    NotifierProvider<MuscleGroupExpansionNotifier, Map<String, bool>>(
+  MuscleGroupExpansionNotifier.new,
 );

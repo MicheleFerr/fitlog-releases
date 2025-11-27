@@ -5,22 +5,32 @@ import 'package:gymbro_flutter_new/features/home/presentation/providers/performa
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 
-class HomeStateNotifier extends StateNotifier<HomeState> {
-
-  HomeStateNotifier({
-    required Ref ref,
-    required PerformanceLogger logger,
-  })  : _ref = ref,
-        _logger = logger,
-        super(HomeState(
-          greeting: '',
-          workoutSection: WorkoutSection.empty(),
-          aiCoachSection: AICoachSection.empty(),
-          streakSection: StreakSection.empty(),
-        ));
-  final Ref _ref;
-  final PerformanceLogger _logger;
+class HomeStateNotifier extends AutoDisposeNotifier<HomeState> {
+  Ref get _ref => ref;
+  late final PerformanceLogger _logger;
   Timer? _refreshTimer;
+  bool _disposed = false;
+
+  /// Replacement for StateNotifier mounted property
+  bool get mounted => !_disposed;
+
+  @override
+  HomeState build() {
+    _logger = ref.watch(performanceLoggerProvider);
+
+    // Cleanup timer and set disposed on dispose
+    ref.onDispose(() {
+      _disposed = true;
+      _refreshTimer?.cancel();
+    });
+
+    return HomeState(
+      greeting: '',
+      workoutSection: WorkoutSection.empty(),
+      aiCoachSection: AICoachSection.empty(),
+      streakSection: StreakSection.empty(),
+    );
+  }
 
   Future<void> loadInitialData() async {
     state = state.copyWith(loadingPhase: LoadingPhase.loadingCritical);
@@ -174,9 +184,4 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
     _logger.logDataFetch('${section}_error', Duration.zero, 0);
   }
 
-  @override
-  void dispose() {
-    _refreshTimer?.cancel();
-    super.dispose();
-  }
 }

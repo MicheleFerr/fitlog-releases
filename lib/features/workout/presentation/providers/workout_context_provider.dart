@@ -13,9 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Provider for workout context (null = not gathered yet)
 final workoutContextProvider =
-    StateNotifierProvider<WorkoutContextNotifier, WorkoutContext?>(
-  (ref) => WorkoutContextNotifier(),
-);
+    NotifierProvider<WorkoutContextNotifier, WorkoutContext?>(WorkoutContextNotifier.new);
 
 /// Notifier for managing workout context state
 ///
@@ -24,9 +22,11 @@ final workoutContextProvider =
 /// - Save/restore context from SharedPreferences (for mid-flow abandonment)
 /// - Clear context after workout completion
 /// - Provide analytics data
-class WorkoutContextNotifier extends StateNotifier<WorkoutContext?> {
-  WorkoutContextNotifier() : super(null) {
+class WorkoutContextNotifier extends Notifier<WorkoutContext?> {
+  @override
+  WorkoutContext? build() {
     _restoreContext();
+    return null;
   }
 
   /// Restore context from SharedPreferences (if user abandoned mid-flow)

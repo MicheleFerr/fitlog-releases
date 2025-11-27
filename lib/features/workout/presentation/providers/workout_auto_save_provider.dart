@@ -13,10 +13,7 @@ final workoutDraftRepositoryProvider = Provider<WorkoutDraftRepository>((ref) {
 });
 
 /// Provider for workout auto-save functionality
-final workoutAutoSaveProvider = StateNotifierProvider<WorkoutAutoSaveNotifier, WorkoutAutoSaveState>((ref) {
-  final repository = ref.watch(workoutDraftRepositoryProvider);
-  return WorkoutAutoSaveNotifier(repository);
-});
+final workoutAutoSaveProvider = NotifierProvider<WorkoutAutoSaveNotifier, WorkoutAutoSaveState>(WorkoutAutoSaveNotifier.new);
 
 /// State for auto-save functionality
 class WorkoutAutoSaveState {
@@ -48,12 +45,8 @@ class WorkoutAutoSaveState {
 }
 
 /// Notifier for managing workout auto-save
-class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with WidgetsBindingObserver {      // Increased from 2 to 5 seconds
-
-  WorkoutAutoSaveNotifier(this._repository) : super(WorkoutAutoSaveState()) {
-    _init();
-  }
-  final WorkoutDraftRepository _repository;
+class WorkoutAutoSaveNotifier extends Notifier<WorkoutAutoSaveState> with WidgetsBindingObserver {
+  late final WorkoutDraftRepository _repository;
   Timer? _autoSaveTimer;
   late final Debouncer _saveDebouncer;
   Workout? _lastSavedWorkout;
@@ -61,6 +54,32 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
   // CPU OPTIMIZATION: Increased intervals to reduce background activity
   static const Duration _autoSaveInterval = Duration(minutes: 10);  // Reduced from 5 to 10 minutes
   static const Duration _debounceDelay = Duration(seconds: 1);      // Optimized for responsive UX
+
+  @override
+  WorkoutAutoSaveState build() {
+    _repository = ref.watch(workoutDraftRepositoryProvider);
+
+    // Setup disposal on provider cleanup
+    ref.onDispose(() {
+      // CRITICAL CPU FIX: Force cancel all timers immediately
+      if (_autoSaveTimer != null) {
+        _autoSaveTimer!.cancel();
+        _autoSaveTimer = null;
+      }
+
+      // Dispose debouncer properly
+      _saveDebouncer.dispose();
+
+      // Remove lifecycle observer
+      WidgetsBinding.instance.removeObserver(this);
+
+      // Clear references to prevent memory leaks
+      _lastSavedWorkout = null;
+    });
+
+    _init();
+    return WorkoutAutoSaveState();
+  }
 
   void _init() {
     // 🔐 SECURITY: Initialize save debouncer with error handling
@@ -212,25 +231,5 @@ class WorkoutAutoSaveNotifier extends StateNotifier<WorkoutAutoSaveState> with W
         emergencySave(_lastSavedWorkout!);
       }
     }
-  }
-
-  @override
-  void dispose() {
-    // CRITICAL CPU FIX: Force cancel all timers immediately
-    if (_autoSaveTimer != null) {
-      _autoSaveTimer!.cancel();
-      _autoSaveTimer = null;
-    }
-
-    // 🔐 SECURITY: Dispose debouncer properly
-    _saveDebouncer.dispose();
-
-    // Remove lifecycle observer
-    WidgetsBinding.instance.removeObserver(this);
-
-    // Clear references to prevent memory leaks
-    _lastSavedWorkout = null;
-
-    super.dispose();
   }
 }

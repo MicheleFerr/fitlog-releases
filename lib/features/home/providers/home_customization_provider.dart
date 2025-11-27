@@ -4,21 +4,21 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_pro
 import 'package:gymbro_flutter_new/features/home/domain/models/home_widget_config.dart';
 
 /// Provider per gestire la personalizzazione della home screen
-final homeCustomizationProvider = StateNotifierProvider<HomeCustomizationNotifier, List<HomeWidgetConfig>>((ref) {
-  return HomeCustomizationNotifier(ref);
-});
+final homeCustomizationProvider = NotifierProvider<HomeCustomizationNotifier, List<HomeWidgetConfig>>(HomeCustomizationNotifier.new);
 
 /// Provider per lo stato di editing
 final isHomeEditingProvider = StateProvider<bool>((ref) => false);
 
-class HomeCustomizationNotifier extends StateNotifier<List<HomeWidgetConfig>> {
-  
-  HomeCustomizationNotifier(this._ref) : super(DefaultHomeWidgets.defaultWidgets) {
-    _loadUserConfiguration();
-  }
-  final Ref _ref;
+class HomeCustomizationNotifier extends Notifier<List<HomeWidgetConfig>> {
+  Ref get _ref => ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
+  @override
+  List<HomeWidgetConfig> build() {
+    _loadUserConfiguration();
+    return DefaultHomeWidgets.defaultWidgets;
+  }
+
   /// Carica la configurazione personalizzata dell'utente
   Future<void> _loadUserConfiguration() async {
     try {

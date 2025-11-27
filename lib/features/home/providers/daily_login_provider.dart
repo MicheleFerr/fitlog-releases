@@ -31,12 +31,15 @@ class DailyLoginState {
   }
 }
 
-class DailyLoginNotifier extends StateNotifier<DailyLoginState> {
-  
-  DailyLoginNotifier(this._prefs) : super(DailyLoginState()) {
+class DailyLoginNotifier extends Notifier<DailyLoginState> {
+  late final SharedPreferences _prefs;
+
+  @override
+  DailyLoginState build() {
+    _prefs = ref.watch(sharedPreferencesProvider);
     _loadState();
+    return DailyLoginState();
   }
-  final SharedPreferences _prefs;
   
   static const String _lastLoginKey = 'last_login_date';
   static const String _consecutiveDaysKey = 'consecutive_login_days';
@@ -166,7 +169,4 @@ class DailyLoginNotifier extends StateNotifier<DailyLoginState> {
   }
 }
 
-final dailyLoginProvider = StateNotifierProvider<DailyLoginNotifier, DailyLoginState>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return DailyLoginNotifier(prefs);
-});
+final dailyLoginProvider = NotifierProvider<DailyLoginNotifier, DailyLoginState>(DailyLoginNotifier.new);

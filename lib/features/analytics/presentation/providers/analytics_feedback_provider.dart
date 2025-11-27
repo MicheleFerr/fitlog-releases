@@ -166,10 +166,11 @@ final userFeedbackHistoryProvider =
 // ========================================
 
 /// Notifier per submit feedback Analytics
-class AnalyticsFeedbackNotifier extends StateNotifier<AsyncValue<void>> {
-  AnalyticsFeedbackNotifier(this.ref) : super(const AsyncValue.data(null));
-
-  final Ref ref;
+class AnalyticsFeedbackNotifier extends AutoDisposeNotifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
   /// Submit feedback utente
   ///
@@ -228,8 +229,8 @@ class AnalyticsFeedbackNotifier extends StateNotifier<AsyncValue<void>> {
 
 /// Provider per feedback notifier
 final analyticsFeedbackNotifierProvider =
-    StateNotifierProvider.autoDispose<AnalyticsFeedbackNotifier, AsyncValue<void>>(
-  (ref) => AnalyticsFeedbackNotifier(ref),
+    NotifierProvider.autoDispose<AnalyticsFeedbackNotifier, AsyncValue<void>>(
+  AnalyticsFeedbackNotifier.new,
 );
 
 // ========================================

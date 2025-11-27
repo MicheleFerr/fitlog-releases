@@ -10,6 +10,7 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/services/patch_manager_service.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
+import 'package:gymbro_flutter_new/core/data/hive_box_names.dart';
 
 /// Provider for PatchManagerService (singleton)
 ///
@@ -17,9 +18,9 @@ import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider
 /// - Submitting patches to local Hive storage
 /// - Syncing with Firestore patches
 /// - Getting local patch count (for badge UI)
-final patchManagerServiceProvider = FutureProvider<PatchManagerService>((ref) async {
+final patchManagerServiceProvider = FutureProvider.autoDispose<PatchManagerService>((ref) async {
   final boxManager = ref.watch(hiveBoxManagerProvider);
-  final exercisesBox = await boxManager.openBox<Map>('exercises_cache');
+  final exercisesBox = await boxManager.openBox<Map>(HiveBoxNames.exercises);
 
   return PatchManagerService(hiveBox: exercisesBox);
 });

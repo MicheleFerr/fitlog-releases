@@ -2,9 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 
 /// Provider for managing workout edit mode state
-final workoutEditModeProvider = StateNotifierProvider<WorkoutEditModeNotifier, WorkoutEditModeState>((ref) {
-  return WorkoutEditModeNotifier();
-});
+final workoutEditModeProvider = NotifierProvider<WorkoutEditModeNotifier, WorkoutEditModeState>(WorkoutEditModeNotifier.new);
 
 class WorkoutEditModeState {
 
@@ -30,20 +28,22 @@ class WorkoutEditModeState {
   }
 }
 
-class WorkoutEditModeNotifier extends StateNotifier<WorkoutEditModeState> {
-
-  WorkoutEditModeNotifier() : super(WorkoutEditModeState()) {
-    _startHintTimer();
-  }
-  Timer? _hintTimer;
-  Timer? _autoExitTimer;
+class WorkoutEditModeNotifier extends Notifier<WorkoutEditModeState> {
 
   @override
-  void dispose() {
-    _hintTimer?.cancel();
-    _autoExitTimer?.cancel();
-    super.dispose();
+  WorkoutEditModeState build() {
+    // Set up cleanup on dispose
+    ref.onDispose(() {
+      _hintTimer?.cancel();
+      _autoExitTimer?.cancel();
+    });
+
+    _startHintTimer();
+    return WorkoutEditModeState();
   }
+
+  Timer? _hintTimer;
+  Timer? _autoExitTimer;
 
   void _startHintTimer() {
     _hintTimer?.cancel();

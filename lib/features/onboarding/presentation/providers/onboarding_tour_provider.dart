@@ -52,11 +52,18 @@ class OnboardingTourState {
 }
 
 /// Notifier for managing onboarding tour state
-class OnboardingTourNotifier extends StateNotifier<OnboardingTourState> {
-  OnboardingTourNotifier(this.ref) : super(const OnboardingTourState());
-
-  final Ref ref;
+class OnboardingTourNotifier extends Notifier<OnboardingTourState> {
   Timer? _autoAdvanceTimer;
+
+  @override
+  OnboardingTourState build() {
+    // Setup cleanup when provider is disposed
+    ref.onDispose(() {
+      _cancelAutoAdvance();
+    });
+
+    return const OnboardingTourState();
+  }
 
   /// Start the tour from the beginning
   void startTour() {
@@ -168,16 +175,8 @@ class OnboardingTourNotifier extends StateNotifier<OnboardingTourState> {
       state = state.copyWith(isAutoAdvancing: false);
     }
   }
-
-  @override
-  void dispose() {
-    _cancelAutoAdvance();
-    super.dispose();
-  }
 }
 
 /// Provider for onboarding tour state
 final onboardingTourProvider =
-    StateNotifierProvider<OnboardingTourNotifier, OnboardingTourState>((ref) {
-  return OnboardingTourNotifier(ref);
-});
+    NotifierProvider<OnboardingTourNotifier, OnboardingTourState>(OnboardingTourNotifier.new);

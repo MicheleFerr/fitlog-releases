@@ -16,9 +16,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Provider per lo stato dell'onboarding del template
-final templateOnboardingProvider = StateNotifierProvider<TemplateOnboardingNotifier, TemplateOnboardingState>((ref) {
-  return TemplateOnboardingNotifier();
-});
+final templateOnboardingProvider = NotifierProvider<TemplateOnboardingNotifier, TemplateOnboardingState>(TemplateOnboardingNotifier.new);
 
 /// Stato dell'onboarding
 class TemplateOnboardingState {
@@ -46,13 +44,15 @@ class TemplateOnboardingState {
 }
 
 /// Notifier per gestire l'onboarding
-class TemplateOnboardingNotifier extends StateNotifier<TemplateOnboardingState> {
-  TemplateOnboardingNotifier() : super(const TemplateOnboardingState()) {
-    _loadOnboardingState();
-  }
-
+class TemplateOnboardingNotifier extends Notifier<TemplateOnboardingState> {
   static const String _onboardingKey = 'template_onboarding_seen';
   static const int totalSteps = 4; // Nome, Descrizione, Tag, Timer
+
+  @override
+  TemplateOnboardingState build() {
+    _loadOnboardingState();
+    return const TemplateOnboardingState();
+  }
 
   /// Carica lo stato salvato
   Future<void> _loadOnboardingState() async {

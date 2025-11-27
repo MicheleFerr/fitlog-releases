@@ -50,34 +50,31 @@ class FeedbackState {
 /// - Tracking user feedback history
 /// - Managing suppressed insight types
 /// - Calculating insight effectiveness
-class FeedbackNotifier extends StateNotifier<AsyncValue<FeedbackState>> {
-  FeedbackNotifier(this._repository, this._userId)
-      : super(const AsyncValue.loading()) {
-    _initialize();
-  }
-
-  final FeedbackRepository _repository;
-  final String _userId;
+class FeedbackNotifier extends AsyncNotifier<FeedbackState> {
+  late final FeedbackRepository _repository;
+  late final String _userId;
   final _uuid = const Uuid();
 
+  @override
+  Future<FeedbackState> build() async {
+    _repository = ref.read(feedbackRepositoryProvider);
+    // TODO: Get user ID from auth provider
+    _userId = 'dev_user'; // Placeholder for development
+    return await _initialize();
+  }
+
   /// Initialize feedback state
-  Future<void> _initialize() async {
-    try {
-      final history = await _repository.getUserFeedbackHistory(_userId);
+  Future<FeedbackState> _initialize() async {
+    final history = await _repository.getUserFeedbackHistory(_userId);
 
-      // Load suppressed insight types
-      final suppressedTypes = <String>{};
-      // TODO: Load from storage or calculate from stats
+    // Load suppressed insight types
+    final suppressedTypes = <String>{};
+    // TODO: Load from storage or calculate from stats
 
-      state = AsyncValue.data(
-        FeedbackState(
-          userFeedbackHistory: history,
-          suppressedInsightTypes: suppressedTypes,
-        ),
-      );
-    } catch (error, stack) {
-      state = AsyncValue.error(error, stack);
-    }
+    return FeedbackState(
+      userFeedbackHistory: history,
+      suppressedInsightTypes: suppressedTypes,
+    );
   }
 
   /// Submit helpful feedback
@@ -250,8 +247,8 @@ class FeedbackNotifier extends StateNotifier<AsyncValue<FeedbackState>> {
 
   /// Refresh feedback state
   Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    await _initialize();
+    ref.invalidateSelf();
+    await future;
   }
 }
 
@@ -266,15 +263,9 @@ final feedbackRepositoryProvider = Provider<FeedbackRepository>((ref) {
 ///
 /// Requires user ID from auth provider
 final feedbackProvider =
-    StateNotifierProvider<FeedbackNotifier, AsyncValue<FeedbackState>>((ref) {
-  // TODO: Get user ID from auth provider
-  // final userId = ref.watch(authProvider).value?.uid ?? '';
-
-  const userId = 'dev_user'; // Placeholder for development
-
-  final repository = ref.watch(feedbackRepositoryProvider);
-  return FeedbackNotifier(repository, userId);
-});
+    AsyncNotifierProvider<FeedbackNotifier, FeedbackState>(
+  FeedbackNotifier.new,
+);
 
 /// Provider: Is Insight Type Suppressed
 ///

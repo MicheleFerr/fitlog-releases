@@ -17,7 +17,6 @@ library;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/paginated_result.dart';
@@ -43,6 +42,14 @@ class WorkoutHistoryPaginatedState {
     this.dateTo,
     this.lastWorkoutId,
   });
+
+  /// Initial state factory
+  factory WorkoutHistoryPaginatedState.initial() =>
+      const WorkoutHistoryPaginatedState();
+
+  /// Loading state factory
+  factory WorkoutHistoryPaginatedState.loading() =>
+      const WorkoutHistoryPaginatedState(isLoading: true);
 
   /// Accumulated workouts across all loaded pages
   final List<Workout> workouts;
@@ -76,14 +83,6 @@ class WorkoutHistoryPaginatedState {
 
   /// Last workout ID for local pagination (Hive fallback)
   final String? lastWorkoutId;
-
-  /// Initial state factory
-  factory WorkoutHistoryPaginatedState.initial() =>
-      const WorkoutHistoryPaginatedState();
-
-  /// Loading state factory
-  factory WorkoutHistoryPaginatedState.loading() =>
-      const WorkoutHistoryPaginatedState(isLoading: true);
 
   /// Creates a copy with optional field overrides
   WorkoutHistoryPaginatedState copyWith({

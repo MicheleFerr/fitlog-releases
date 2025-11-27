@@ -18,10 +18,7 @@ final firebaseInitServiceProvider = Provider<FirebaseInitService>((ref) {
 });
 
 /// Provider per lo stato dell'inizializzazione
-final firebaseInitStateProvider = StateNotifierProvider<FirebaseInitNotifier, FirebaseInitState>((ref) {
-  final service = ref.watch(firebaseInitServiceProvider);
-  return FirebaseInitNotifier(service);
-});
+final firebaseInitStateProvider = NotifierProvider<FirebaseInitNotifier, FirebaseInitState>(FirebaseInitNotifier.new);
 
 /// Provider per le statistiche della collection
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -32,10 +29,14 @@ final collectionStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>>
 });
 
 /// Notifier per gestire lo stato dell'inizializzazione
-class FirebaseInitNotifier extends StateNotifier<FirebaseInitState> {
+class FirebaseInitNotifier extends Notifier<FirebaseInitState> {
+  @override
+  FirebaseInitState build() {
+    _service = ref.watch(firebaseInitServiceProvider);
+    return const FirebaseInitState.idle();
+  }
 
-  FirebaseInitNotifier(this._service) : super(const FirebaseInitState.idle());
-  final FirebaseInitService _service;
+  late final FirebaseInitService _service;
 
   /// Inizializza la collection exercises con i dati dal JSON
   Future<void> initializeExercises({

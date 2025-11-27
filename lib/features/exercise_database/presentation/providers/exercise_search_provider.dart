@@ -116,9 +116,7 @@ final improvedExerciseSearchProvider = FutureProvider.autoDispose<List<ExerciseT
 });
 
 // Exercise search state notifier for complex filtering
-final exerciseSearchStateProvider = StateNotifierProvider<ExerciseSearchNotifier, ExerciseSearchState>((ref) {
-  return ExerciseSearchNotifier(ref);
-});
+final exerciseSearchStateProvider = NotifierProvider<ExerciseSearchNotifier, ExerciseSearchState>(ExerciseSearchNotifier.new);
 
 class ExerciseSearchState {
 
@@ -152,10 +150,9 @@ class ExerciseSearchState {
   }
 }
 
-class ExerciseSearchNotifier extends StateNotifier<ExerciseSearchState> {
-  ExerciseSearchNotifier(this.ref) : super(const ExerciseSearchState());
-
-  final Ref ref;
+class ExerciseSearchNotifier extends Notifier<ExerciseSearchState> {
+  @override
+  ExerciseSearchState build() => const ExerciseSearchState();
 
   void updateQuery(String query) {
     state = state.copyWith(query: query);

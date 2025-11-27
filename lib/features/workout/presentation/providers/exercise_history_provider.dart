@@ -17,7 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/exercise_history_service.dart';
 import 'package:gymbro_flutter_new/features/workout/data/services/workout_history_service.dart';
-import 'package:gymbro_flutter_new/features/workout/data/repositories/exercise_activity_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise_activity.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';

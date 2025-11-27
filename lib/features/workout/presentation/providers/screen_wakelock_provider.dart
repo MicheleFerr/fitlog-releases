@@ -5,9 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// Provider per gestire lo stato dello schermo always on durante l'allenamento
-final screenWakelockProvider = StateNotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>((ref) {
-  return ScreenWakelockNotifier();
-});
+final screenWakelockProvider = NotifierProvider<ScreenWakelockNotifier, ScreenWakelockState>(ScreenWakelockNotifier.new);
 
 class ScreenWakelockState {
 
@@ -29,11 +27,32 @@ class ScreenWakelockState {
   }
 }
 
-class ScreenWakelockNotifier extends StateNotifier<ScreenWakelockState> {
+class ScreenWakelockNotifier extends Notifier<ScreenWakelockState> {
 
-  ScreenWakelockNotifier() : super(const ScreenWakelockState(isEnabled: false, isActive: false)) {
+  @override
+  ScreenWakelockState build() {
     _loadPreference();
+
+    // Set up cleanup on dispose
+    ref.onDispose(() {
+      // CRITICAL: Ensure wakelock is disabled even if dispose is synchronous
+      // Using unawaited to explicitly mark that we don't await the Future
+      if (state.isActive) {
+        unawaited(
+          WakelockPlus.disable().catchError((error) {
+            if (kDebugMode) {
+              debugPrint('⚠️ [Wakelock] Error disabling wakelock in dispose: $error');
+            }
+            // Don't rethrow - we're in dispose, just log the error
+            return null;
+          }),
+        );
+      }
+    });
+
+    return const ScreenWakelockState(isEnabled: false, isActive: false);
   }
+
   static const String _prefsKey = 'workout_screen_always_on';
 
   Future<void> _loadPreference() async {
@@ -75,23 +94,5 @@ class ScreenWakelockNotifier extends StateNotifier<ScreenWakelockState> {
       // Log error but don't crash the app
       debugPrint('⚠️ [Wakelock] Error disabling wakelock: $e');
     }
-  }
-
-  @override
-  void dispose() {
-    // CRITICAL: Ensure wakelock is disabled even if dispose is synchronous
-    // Using unawaited to explicitly mark that we don't await the Future
-    if (state.isActive) {
-      unawaited(
-        WakelockPlus.disable().catchError((error) {
-          if (kDebugMode) {
-            debugPrint('⚠️ [Wakelock] Error disabling wakelock in dispose: $error');
-          }
-          // Don't rethrow - we're in dispose, just log the error
-          return null;
-        }),
-      );
-    }
-    super.dispose();
   }
 }

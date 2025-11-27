@@ -155,18 +155,17 @@ class SystemHealth {
 }
 
 // Provider for sync monitoring
-final syncMonitorProvider = StateNotifierProvider<SyncMonitorNotifier, AsyncValue<SyncDashboardData>>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return SyncMonitorNotifier(ref, boxManager);
-});
+final syncMonitorProvider = AsyncNotifierProvider<SyncMonitorNotifier, SyncDashboardData>(SyncMonitorNotifier.new);
 
-class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
-
-  SyncMonitorNotifier(this._ref, this._boxManager) : super(const AsyncValue.loading()) {
-    _loadDashboardData();
+class SyncMonitorNotifier extends AsyncNotifier<SyncDashboardData> {
+  @override
+  Future<SyncDashboardData> build() async {
+    _boxManager = ref.watch(hiveBoxManagerProvider);
+    await _loadDashboardData();
+    return state.value ?? SyncDashboardData.empty();
   }
-  final Ref _ref;
-  final HiveBoxManagerEnhanced _boxManager;
+
+  late final HiveBoxManagerEnhanced _boxManager;
   Timer? _refreshTimer;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
@@ -189,7 +188,7 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
   Future<void> _loadDashboardData() async {
     try {
       state = const AsyncValue.loading();
-      
+
       // Gather all stats in parallel
       final results = await Future.wait([
         _getUserStats(),
@@ -199,14 +198,14 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         _getRecentActivity(),
         _getSystemHealth(),
       ]);
-      
+
       final userStats = results[0] as Map<String, int>;
       final syncStats = results[1] as Map<String, dynamic>;
       final storageStats = results[2] as Map<String, int>;
       final featureStats = results[3] as Map<String, FeatureSyncStats>;
       final activities = results[4] as List<SyncActivity>;
       final systemHealth = results[5] as SystemHealth;
-      
+
       // Generate mock hourly sync history (in production, get from analytics)
       final syncHistory = List.generate(24, (hour) {
         // Simulate realistic sync pattern
@@ -215,15 +214,15 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         }
         return 10 + hour; // Less at night
       });
-      
-      state = AsyncValue.data(SyncDashboardData(
+
+      final data = SyncDashboardData(
         // User stats
         totalUsers: userStats['total'] ?? 0,
         freeUsers: userStats['free'] ?? 0,
         premiumUsers: userStats['premium'] ?? 0,
         proUsers: userStats['pro'] ?? 0,
         activeSyncUsers: userStats['activeSync'] ?? 0,
-        
+
         // Sync stats
         activeSyncs: syncStats['active'] ?? 0,
         pendingSyncs: syncStats['pending'] ?? 0,
@@ -231,23 +230,25 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
         failedSyncs: syncStats['failed'] ?? 0,
         syncPercentage: syncStats['percentage'] ?? 0.0,
         lastSyncTime: syncStats['lastSync'] ?? 'Never',
-        
+
         // Storage stats
         localDataSize: storageStats['localSize'] ?? 0,
         cloudDataSize: storageStats['cloudSize'] ?? 0,
         localEntities: storageStats['localEntities'] ?? 0,
         cloudEntities: storageStats['cloudEntities'] ?? 0,
-        
+
         // Feature stats
         featureStats: featureStats,
-        
+
         // Activity
         recentActivities: activities,
         syncHistory: syncHistory,
-        
+
         // Health
         systemHealth: systemHealth,
-      ));
+      );
+
+      state = AsyncValue.data(data);
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }
@@ -547,11 +548,5 @@ class SyncMonitorNotifier extends StateNotifier<AsyncValue<SyncDashboardData>> {
     } else {
       return '${difference.inDays}d ago';
     }
-  }
-  
-  @override
-  void dispose() {
-    _refreshTimer?.cancel();
-    super.dispose();
   }
 }

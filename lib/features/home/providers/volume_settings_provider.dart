@@ -74,12 +74,15 @@ class DateRange {
   final DateTime end;
 }
 
-class VolumeSettingsNotifier extends StateNotifier<VolumeSettings> {
-  
-  VolumeSettingsNotifier(this._prefs) : super(VolumeSettings()) {
+class VolumeSettingsNotifier extends Notifier<VolumeSettings> {
+  late final SharedPreferences _prefs;
+
+  @override
+  VolumeSettings build() {
+    _prefs = ref.watch(sharedPreferencesProvider);
     _loadSettings();
+    return VolumeSettings();
   }
-  final SharedPreferences _prefs;
   static const String _unitKey = 'volume_weight_unit';
   static const String _periodKey = 'volume_period';
   
@@ -110,7 +113,4 @@ class VolumeSettingsNotifier extends StateNotifier<VolumeSettings> {
   }
 }
 
-final volumeSettingsProvider = StateNotifierProvider<VolumeSettingsNotifier, VolumeSettings>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return VolumeSettingsNotifier(prefs);
-});
+final volumeSettingsProvider = NotifierProvider<VolumeSettingsNotifier, VolumeSettings>(VolumeSettingsNotifier.new);

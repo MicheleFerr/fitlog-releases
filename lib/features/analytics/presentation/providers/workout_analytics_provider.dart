@@ -16,7 +16,7 @@ library;
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
@@ -120,8 +120,8 @@ final compareWorkoutsUseCaseProvider = Provider<CompareWorkoutsUseCase>((ref) {
 // =============================================================================
 
 /// Main workout analytics state provider
-final workoutAnalyticsProvider = StateNotifierProvider<WorkoutAnalyticsNotifier, WorkoutAnalyticsState>(
-  (ref) => WorkoutAnalyticsNotifier(ref),
+final workoutAnalyticsProvider = NotifierProvider<WorkoutAnalyticsNotifier, WorkoutAnalyticsState>(
+  WorkoutAnalyticsNotifier.new,
 );
 
 /// Workout analytics state
@@ -193,18 +193,25 @@ class WorkoutAnalyticsState {
 }
 
 /// Workout analytics state notifier
-class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
-
-  WorkoutAnalyticsNotifier(this._ref) : super(WorkoutAnalyticsState(lastUpdated: DateTime.now())) {
-    _initializeAnalytics();
-  }
-  final Ref _ref;
+class WorkoutAnalyticsNotifier extends Notifier<WorkoutAnalyticsState> {
   Timer? _updateTimer;
   WorkoutMetrics? _lastMetrics;
 
+  @override
+  WorkoutAnalyticsState build() {
+    _initializeAnalytics();
+
+    // Handle disposal
+    ref.onDispose(() {
+      _stopPeriodicUpdates();
+    });
+
+    return WorkoutAnalyticsState(lastUpdated: DateTime.now());
+  }
+
   void _initializeAnalytics() {
     // Listen to workout changes and update analytics
-    _ref.listen(currentWorkoutProvider, (previous, next) {
+    ref.listen(currentWorkoutProvider, (previous, next) {
       if (next != null) {
         _updateAnalytics(next);
       } else {
@@ -232,10 +239,10 @@ class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
         return;
       }
 
-      final calculateUseCase = _ref.read(calculateWorkoutMetricsUseCaseProvider);
-      final detectPRsUseCase = _ref.read(detectPersonalRecordsUseCaseProvider);
-      final compareUseCase = _ref.read(compareWorkoutsUseCaseProvider);
-      final repository = _ref.read(workoutAnalyticsRepositoryProvider);
+      final calculateUseCase = ref.read(calculateWorkoutMetricsUseCaseProvider);
+      final detectPRsUseCase = ref.read(detectPersonalRecordsUseCaseProvider);
+      final compareUseCase = ref.read(compareWorkoutsUseCaseProvider);
+      final repository = ref.read(workoutAnalyticsRepositoryProvider);
 
       // Calculate current metrics (with incremental optimization)
       final metrics = calculateUseCase.executeIncremental(workout, _lastMetrics);
@@ -287,7 +294,7 @@ class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
 
   /// Force refresh analytics
   Future<void> refreshAnalytics() async {
-    final currentWorkout = _ref.read(currentWorkoutProvider);
+    final currentWorkout = ref.read(currentWorkoutProvider);
     if (currentWorkout != null) {
       _lastMetrics = null; // Force full recalculation
       await _updateAnalytics(currentWorkout);
@@ -305,7 +312,7 @@ class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
   void _startPeriodicUpdates() {
     _updateTimer?.cancel();
     _updateTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      final currentWorkout = _ref.read(currentWorkoutProvider);
+      final currentWorkout = ref.read(currentWorkoutProvider);
       if (currentWorkout?.isActive == true) {
         _updateAnalytics(currentWorkout!);
       }
@@ -325,11 +332,6 @@ class WorkoutAnalyticsNotifier extends StateNotifier<WorkoutAnalyticsState> {
     return now.difference(lastUpdate).inMinutes >= 5; // Update every 5 minutes max
   }
 
-  @override
-  void dispose() {
-    _stopPeriodicUpdates();
-    super.dispose();
-  }
 }
 
 // =============================================================================

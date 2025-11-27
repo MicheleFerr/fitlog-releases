@@ -57,10 +57,9 @@ final userFeedbackListProvider =
 });
 
 /// Notifier for submitting feedback
-class InsightFeedbackNotifier extends StateNotifier<AsyncValue<void>> {
-
-  InsightFeedbackNotifier(this.ref) : super(const AsyncValue.data(null));
-  final Ref ref;
+class InsightFeedbackNotifier extends AutoDisposeNotifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
 
   /// Submit or update feedback for an insight
   Future<void> submitFeedback({
@@ -132,9 +131,7 @@ class InsightFeedbackNotifier extends StateNotifier<AsyncValue<void>> {
 
 /// Provider for the feedback notifier
 final insightFeedbackNotifierProvider =
-    StateNotifierProvider.autoDispose<InsightFeedbackNotifier, AsyncValue<void>>((ref) {
-  return InsightFeedbackNotifier(ref);
-});
+    AutoDisposeNotifierProvider<InsightFeedbackNotifier, AsyncValue<void>>(InsightFeedbackNotifier.new);
 
 /// Provider for feedback statistics of an insight type (for analytics)
 final insightFeedbackStatsProvider =

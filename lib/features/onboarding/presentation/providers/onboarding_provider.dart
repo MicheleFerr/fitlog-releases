@@ -84,10 +84,14 @@ class OnboardingState {
 ///   // Navigate to main app
 /// }
 /// ```
-class OnboardingNotifier extends StateNotifier<OnboardingState> {
-  OnboardingNotifier(this._repository) : super(const OnboardingState());
+class OnboardingNotifier extends Notifier<OnboardingState> {
+  @override
+  OnboardingState build() {
+    // Access repository via ref in build()
+    return const OnboardingState();
+  }
 
-  final LegalConsentRepository _repository;
+  LegalConsentRepository get _repository => ref.read(legalConsentRepositoryProvider);
 
   /// Check onboarding status on app start.
   ///
@@ -208,10 +212,7 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
 
 /// Provider for onboarding flow state management.
 final onboardingProvider =
-    StateNotifierProvider<OnboardingNotifier, OnboardingState>((ref) {
-  final repository = ref.watch(legalConsentRepositoryProvider);
-  return OnboardingNotifier(repository);
-});
+    NotifierProvider<OnboardingNotifier, OnboardingState>(OnboardingNotifier.new);
 
 /// Provider for consent repository (singleton).
 final legalConsentRepositoryProvider = Provider<LegalConsentRepository>((ref) {

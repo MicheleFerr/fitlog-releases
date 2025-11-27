@@ -5,17 +5,15 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/exerc
 import 'package:gymbro_flutter_new/shared/presentation/providers/app_config_provider.dart';
 
 /// Provider ottimizzato per il caricamento lazy degli esercizi
-final optimizedExerciseProviderProvider = StateNotifierProvider<OptimizedExerciseNotifier, AsyncValue<List<ExerciseData>>>((ref) {
-  final config = ref.watch(appConfigProvider);
-  return OptimizedExerciseNotifier(languageCode: config.languageCode);
-});
+final optimizedExerciseProviderProvider = AsyncNotifierProvider<OptimizedExerciseNotifier, List<ExerciseData>>(OptimizedExerciseNotifier.new);
 
 /// Provider per la ricerca degli esercizi
 final exerciseSearchProvider = StateProvider<String>((ref) => '');
 
 /// Provider per i risultati filtrati della ricerca
 final filteredExercisesProvider = Provider<List<ExerciseData>>((ref) {
-  final exercises = ref.watch(optimizedExerciseProviderProvider).valueOrNull ?? [];
+  final exercisesAsync = ref.watch(optimizedExerciseProviderProvider);
+  final exercises = exercisesAsync.valueOrNull ?? [];
   final searchQuery = ref.watch(exerciseSearchProvider).toLowerCase();
   
   if (searchQuery.isEmpty) {
@@ -31,7 +29,8 @@ final filteredExercisesProvider = Provider<List<ExerciseData>>((ref) {
 
 /// Provider per esercizi raggruppati per categoria
 final exercisesByCategoryProvider = Provider<Map<String, List<ExerciseData>>>((ref) {
-  final exercises = ref.watch(optimizedExerciseProviderProvider).valueOrNull ?? [];
+  final exercisesAsync = ref.watch(optimizedExerciseProviderProvider);
+  final exercises = exercisesAsync.valueOrNull ?? [];
   
   final Map<String, List<ExerciseData>> grouped = {};
   
@@ -43,28 +42,30 @@ final exercisesByCategoryProvider = Provider<Map<String, List<ExerciseData>>>((r
   return grouped;
 });
 
-class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseData>>> {
-  OptimizedExerciseNotifier({this.languageCode = 'en'}) : super(const AsyncValue.loading()) {
-    _loadExercises();
-  }
-
-  final String languageCode;
-
+class OptimizedExerciseNotifier extends AsyncNotifier<List<ExerciseData>> {
   // Cache statica per evitare ricaricamenti multipli
   static List<ExerciseData>? _cachedExercises;
   static DateTime? _lastLoadTime;
   static String? _cachedLanguageCode;
   static const Duration _cacheExpiry = Duration(hours: 1);
 
-  Future<void> _loadExercises() async {
+  @override
+  Future<List<ExerciseData>> build() async {
+    // Get language code from app config
+    final config = ref.watch(appConfigProvider);
+    final languageCode = config.languageCode;
+
+    return await _loadExercises(languageCode);
+  }
+
+  Future<List<ExerciseData>> _loadExercises(String languageCode) async {
     try {
       // Controlla cache (invalida se lingua cambiata)
       if (_cachedExercises != null &&
           _lastLoadTime != null &&
           _cachedLanguageCode == languageCode &&
           DateTime.now().difference(_lastLoadTime!) < _cacheExpiry) {
-        state = AsyncValue.data(_cachedExercises!);
-        return;
+        return _cachedExercises!;
       }
 
       // Carica JSON localizzato in modo ottimizzato
@@ -101,9 +102,10 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
       _lastLoadTime = DateTime.now();
       _cachedLanguageCode = languageCode;
 
-      state = AsyncValue.data(exercises);
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      return exercises;
+    } catch (error) {
+      // AsyncNotifier automatically handles errors when thrown
+      rethrow;
     }
   }
   
@@ -111,13 +113,16 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
   Future<void> refresh() async {
     _cachedExercises = null;
     _lastLoadTime = null;
-    state = const AsyncValue.loading();
-    await _loadExercises();
+
+    // Invalidate and rebuild the provider
+    ref.invalidateSelf();
+    await future; // Wait for the new build to complete
   }
   
   /// Cerca esercizi per nome
   List<ExerciseData> searchByName(String query) {
-    final exercises = state.valueOrNull ?? [];
+    final exercisesAsync = state;
+    final exercises = exercisesAsync.valueOrNull ?? [];
     if (query.isEmpty) return exercises;
     
     final lowerQuery = query.toLowerCase();
@@ -128,21 +133,24 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
   
   /// Filtra per categoria
   List<ExerciseData> filterByCategory(String category) {
-    final exercises = state.valueOrNull ?? [];
+    final exercisesAsync = state;
+    final exercises = exercisesAsync.valueOrNull ?? [];
     return exercises.where((e) => e.category == category).toList();
   }
-  
+
   /// Filtra per gruppo muscolare
   List<ExerciseData> filterByMuscleGroup(String muscleGroup) {
-    final exercises = state.valueOrNull ?? [];
-    return exercises.where((e) => 
+    final exercisesAsync = state;
+    final exercises = exercisesAsync.valueOrNull ?? [];
+    return exercises.where((e) =>
       e.muscleGroups.contains(muscleGroup)
     ).toList();
   }
-  
+
   /// Ottieni esercizi popolari (più usati)
   List<ExerciseData> getPopularExercises({int limit = 10}) {
-    final exercises = state.valueOrNull ?? [];
+    final exercisesAsync = state;
+    final exercises = exercisesAsync.valueOrNull ?? [];
     if (exercises.isEmpty) return [];
     
     // Per ora ritorna i primi N esercizi
@@ -153,8 +161,9 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
   /// Ottieni suggerimenti basati su query parziale
   List<ExerciseData> getSuggestions(String partial, {int limit = 5}) {
     if (partial.length < 2) return [];
-    
-    final exercises = state.valueOrNull ?? [];
+
+    final exercisesAsync = state;
+    final exercises = exercisesAsync.valueOrNull ?? [];
     final lowerPartial = partial.toLowerCase();
     
     // Prima cerca match esatti all'inizio del nome
@@ -181,5 +190,6 @@ class OptimizedExerciseNotifier extends StateNotifier<AsyncValue<List<ExerciseDa
 /// Automatically disposes provider instances when widget is disposed
 final exercisePreloadProvider = FutureProvider.autoDispose<void>((ref) async {
   // Forza il caricamento degli esercizi all'avvio
-  await ref.read(optimizedExerciseProviderProvider.notifier)._loadExercises();
+  // Simply watching the provider will trigger the build/load
+  await ref.watch(optimizedExerciseProviderProvider.future);
 });

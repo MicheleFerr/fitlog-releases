@@ -72,19 +72,17 @@ final migrationServiceProvider = Provider<WorkoutMigrationService>((ref) {
   return WorkoutMigrationService();
 });
 
-/// Provider per lo stato della migrazione
-final migrationProvider = StateNotifierProvider<MigrationNotifier, MigrationState>((ref) {
-  final service = ref.watch(migrationServiceProvider);
-  return MigrationNotifier(service);
-});
-
 /// Notifier per gestire lo stato della migrazione
-class MigrationNotifier extends StateNotifier<MigrationState> {
+class MigrationNotifier extends Notifier<MigrationState> {
 
-  MigrationNotifier(this._service) : super(const MigrationState()) {
+  late final WorkoutMigrationService _service;
+
+  @override
+  MigrationState build() {
+    _service = ref.watch(migrationServiceProvider);
     _checkIfHasDataToMigrate();
+    return const MigrationState();
   }
-  final WorkoutMigrationService _service;
 
   /// Verifica se ci sono dati da migrare
   Future<void> _checkIfHasDataToMigrate() async {
@@ -193,6 +191,9 @@ class MigrationNotifier extends StateNotifier<MigrationState> {
     );
   }
 }
+
+/// Provider per lo stato della migrazione
+final migrationProvider = NotifierProvider<MigrationNotifier, MigrationState>(MigrationNotifier.new);
 
 /// Extension per aggiungere copyWith a MigrationOptions
 extension MigrationOptionsExt on MigrationOptions {

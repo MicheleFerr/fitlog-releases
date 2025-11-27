@@ -8,7 +8,7 @@
 /// 📱 Platform: Universal
 /// 
 /// Dependencies:
-/// - Riverpod: StateNotifierProvider
+/// - Riverpod: NotifierProvider (Riverpod 2.x)
 /// - Firebase: Through repository
 /// - Hive: None
 library;
@@ -21,7 +21,7 @@ import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolid
 
 // State class
 class TemplateState {
-  
+
   TemplateState({
     this.userTemplates = const [],
     this.publicTemplates = const [],
@@ -36,7 +36,7 @@ class TemplateState {
   final String? error;
   final Map<String, List<TemplateReview>> templateReviews;
   final Map<String, List<TemplateComment>> templateComments;
-  
+
   TemplateState copyWith({
     List<WorkoutTemplate>? userTemplates,
     List<WorkoutTemplate>? publicTemplates,
@@ -56,14 +56,18 @@ class TemplateState {
   }
 }
 
-// Notifier
-class TemplateNotifier extends StateNotifier<TemplateState> {
+// Notifier (Riverpod 2.x)
+class TemplateNotifier extends Notifier<TemplateState> {
 
-  TemplateNotifier(this._repository, this._ref) : super(TemplateState()) {
-    loadUserTemplates();
+  late final TemplateRepository _repository;
+
+  @override
+  TemplateState build() {
+    _repository = ref.watch(templateRepositoryProvider);
+    // Load user templates on initialization
+    Future.microtask(() => loadUserTemplates());
+    return TemplateState();
   }
-  final TemplateRepository _repository;
-  final Ref _ref;
   
   // Carica template dell'utente
   Future<void> loadUserTemplates() async {
@@ -140,7 +144,7 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
 
     try {
       // ✅ FIXED: Pass premium status to repository
-      final isPremium = _ref.read(isPremiumUserProvider);
+      final isPremium = ref.read(isPremiumUserProvider);
 
       if (kDebugMode) {
         debugPrint('📝 [TemplateProvider] Creating template: ${template.name} (isPremium: $isPremium)');
@@ -376,7 +380,7 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
           .length;
 
       // ✅ FIXED: Use actual premium check from provider
-      final isPremium = _ref.read(isPremiumUserProvider);
+      final isPremium = ref.read(isPremiumUserProvider);
 
       if (visibility == TemplateVisibility.private) {
         final limit = isPremium
@@ -399,8 +403,7 @@ class TemplateNotifier extends StateNotifier<TemplateState> {
   }
 }
 
-// Provider
-final templateProvider = StateNotifierProvider<TemplateNotifier, TemplateState>((ref) {
-  final repository = ref.watch(templateRepositoryProvider);
-  return TemplateNotifier(repository, ref);
-});
+// Provider (Riverpod 2.x)
+final templateProvider = NotifierProvider<TemplateNotifier, TemplateState>(
+  TemplateNotifier.new,
+);

@@ -82,21 +82,20 @@ final healthPermissionStatusProvider =
 /// );
 /// ```
 final healthPermissionControllerProvider =
-    StateNotifierProvider<HealthPermissionController, AsyncValue<HealthPermissionStatus>>(
-  (ref) => HealthPermissionController(
-    ref.watch(healthRepositoryProvider),
-  ),
+    NotifierProvider<HealthPermissionController, AsyncValue<HealthPermissionStatus>>(
+  HealthPermissionController.new,
 );
 
 class HealthPermissionController
-    extends StateNotifier<AsyncValue<HealthPermissionStatus>> {
-  HealthPermissionController(this._repository)
-      : super(const AsyncValue.loading()) {
+    extends Notifier<AsyncValue<HealthPermissionStatus>> {
+  @override
+  AsyncValue<HealthPermissionStatus> build() {
     // Load initial permission status on creation
     _loadPermissionStatus();
+    return const AsyncValue.loading();
   }
 
-  final IHealthRepository _repository;
+  IHealthRepository get _repository => ref.read(healthRepositoryProvider);
 
   /// Loads current runtime permission status from system.
   ///

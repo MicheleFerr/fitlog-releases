@@ -90,10 +90,14 @@ class DatabaseManagerState {
 }
 
 /// Notifier per Database Manager
-class DatabaseManagerNotifier extends StateNotifier<DatabaseManagerState> {
+class DatabaseManagerNotifier extends Notifier<DatabaseManagerState> {
+  @override
+  DatabaseManagerState build() {
+    _service = ref.watch(databaseManagerServiceProvider);
+    return DatabaseManagerState();
+  }
 
-  DatabaseManagerNotifier(this._service) : super(DatabaseManagerState());
-  final DatabaseManagerService _service;
+  late final DatabaseManagerService _service;
 
   /// Carica esercizi
   Future<void> loadExercises({bool forceRefresh = false}) async {
@@ -312,10 +316,7 @@ class DatabaseManagerNotifier extends StateNotifier<DatabaseManagerState> {
 
 /// Provider principale per Database Manager
 final databaseManagerProvider =
-    StateNotifierProvider<DatabaseManagerNotifier, DatabaseManagerState>((ref) {
-  final service = ref.watch(databaseManagerServiceProvider);
-  return DatabaseManagerNotifier(service);
-});
+    NotifierProvider<DatabaseManagerNotifier, DatabaseManagerState>(DatabaseManagerNotifier.new);
 
 /// Provider per dropdown values
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks

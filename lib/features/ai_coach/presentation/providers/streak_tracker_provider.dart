@@ -19,13 +19,14 @@ import 'package:gymbro_flutter_new/features/ai_coach/domain/entities/streak_data
 /// - Milestone detection and celebration
 /// - Streak status (active/at-risk/broken)
 /// - Progress to next milestone
-class StreakTrackerNotifier extends StateNotifier<AsyncValue<StreakData>> {
-  StreakTrackerNotifier(this._repository)
-      : super(const AsyncValue.loading()) {
-    _initialize();
-  }
+class StreakTrackerNotifier extends AsyncNotifier<StreakData> {
+  late final StreakRepository _repository;
 
-  final StreakRepository _repository;
+  @override
+  Future<StreakData> build() async {
+    _repository = ref.read(streakRepositoryProvider);
+    return await _initialize();
+  }
 
   /// Initialize streak data
   ///
@@ -33,23 +34,19 @@ class StreakTrackerNotifier extends StateNotifier<AsyncValue<StreakData>> {
   /// 1. Fetch workout history from WorkoutRepository
   /// 2. Calculate streak from history
   /// 3. Load previous streak data from local storage
-  Future<void> _initialize() async {
-    try {
-      // TODO: Replace with actual workout history from WorkoutRepository
-      // final workoutDates = await _workoutRepository.getWorkoutDates();
+  Future<StreakData> _initialize() async {
+    // TODO: Replace with actual workout history from WorkoutRepository
+    // final workoutDates = await _workoutRepository.getWorkoutDates();
 
-      // For now, use mock data for demonstration
-      final mockWorkoutDates = _getMockWorkoutDates();
+    // For now, use mock data for demonstration
+    final mockWorkoutDates = _getMockWorkoutDates();
 
-      final streakData = _repository.calculateStreak(
-        workoutDates: mockWorkoutDates,
-        previousStreakData: null, // TODO: Load from storage
-      );
+    final streakData = _repository.calculateStreak(
+      workoutDates: mockWorkoutDates,
+      previousStreakData: null, // TODO: Load from storage
+    );
 
-      state = AsyncValue.data(streakData);
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
+    return streakData;
   }
 
   /// Record new workout completion
@@ -92,8 +89,8 @@ class StreakTrackerNotifier extends StateNotifier<AsyncValue<StreakData>> {
 
   /// Refresh streak data (e.g., on app open)
   Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    await _initialize();
+    ref.invalidateSelf();
+    await future;
   }
 
   /// Get motivational message for current streak
@@ -138,10 +135,9 @@ final streakRepositoryProvider = Provider<StreakRepository>((ref) {
 ///
 /// Manages workout consistency streak state
 final streakTrackerProvider =
-    StateNotifierProvider<StreakTrackerNotifier, AsyncValue<StreakData>>((ref) {
-  final repository = ref.watch(streakRepositoryProvider);
-  return StreakTrackerNotifier(repository);
-});
+    AsyncNotifierProvider<StreakTrackerNotifier, StreakData>(
+  StreakTrackerNotifier.new,
+);
 
 /// Provider: Current Streak Count
 ///

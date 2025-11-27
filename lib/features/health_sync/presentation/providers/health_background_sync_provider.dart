@@ -114,19 +114,23 @@ class BackgroundSyncState {
 /// await controller.triggerBackgroundSync();
 /// ```
 final healthBackgroundSyncControllerProvider =
-    StateNotifierProvider<HealthBackgroundSyncController, BackgroundSyncState>(
-  (ref) => HealthBackgroundSyncController(ref),
+    NotifierProvider<HealthBackgroundSyncController, BackgroundSyncState>(
+  HealthBackgroundSyncController.new,
 );
 
-class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> {
-  HealthBackgroundSyncController(this._ref)
-      : super(const BackgroundSyncState()) {
+class HealthBackgroundSyncController extends Notifier<BackgroundSyncState> {
+  @override
+  BackgroundSyncState build() {
     // Defer auto-sync to avoid modifying other providers during initialization
-    // Riverpod doesn't allow providers to modify other providers in constructor
-    Future.microtask(() => _syncOnAppLaunchIfEnabled());
-  }
+    // Riverpod doesn't allow providers to modify other providers in build()
+    ref.onDispose(() {
+      // Cleanup when provider is disposed
+    });
 
-  final Ref _ref;
+    Future.microtask(() => _syncOnAppLaunchIfEnabled());
+
+    return const BackgroundSyncState();
+  }
 
   /// Enables background sync scheduling.
   ///
@@ -141,7 +145,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
   Future<void> enableBackgroundSync() async {
     // Check if user has any authorized permissions
     final permissionStatus =
-        await _ref.read(healthPermissionStatusProvider.future);
+        await ref.read(healthPermissionStatusProvider.future);
 
     if (permissionStatus.hasNoPermissions) {
       throw Exception(
@@ -157,7 +161,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
     }
 
     // Update state
-    final config = _ref.read(backgroundSyncConfigProvider);
+    final config = ref.read(backgroundSyncConfigProvider);
     state = state.copyWith(
       isScheduled: true,
       nextScheduledSync: DateTime.now().add(config.syncInterval),
@@ -205,7 +209,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
     try {
       // Get sync controller
       final syncController =
-          _ref.read(healthSyncControllerProvider.notifier);
+          ref.read(healthSyncControllerProvider.notifier);
 
       // Trigger sync for all authorized data types
       await syncController.syncAll();
@@ -231,10 +235,10 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
   ///
   /// **Auto-called** by background sync task.
   Future<void> retryFailedSyncs() async {
-    final syncController = _ref.read(healthSyncControllerProvider.notifier);
+    final syncController = ref.read(healthSyncControllerProvider.notifier);
 
     // Check workout sync status
-    final workoutStatus = await _ref.read(
+    final workoutStatus = await ref.read(
       healthSyncStatusProvider(HealthDataType.workout).future,
     );
 
@@ -243,7 +247,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
     }
 
     // Check body weight sync status
-    final weightStatus = await _ref.read(
+    final weightStatus = await ref.read(
       healthSyncStatusProvider(HealthDataType.bodyWeight).future,
     );
 
@@ -258,7 +262,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
   ///
   /// **Throttling**: Only syncs if last sync was > 12 hours ago.
   Future<void> _syncOnAppLaunchIfEnabled() async {
-    final config = _ref.read(backgroundSyncConfigProvider);
+    final config = ref.read(backgroundSyncConfigProvider);
 
     if (!config.syncOnAppLaunch) {
       return; // App launch sync disabled
@@ -291,7 +295,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
   /// **Implementation**: Calls platform channel to native iOS code.
   Future<void> _scheduleIOSBackgroundTask() async {
     // TODO: Implement platform channel call to iOS BackgroundTasks API
-    // final config = _ref.read(backgroundSyncConfigProvider);
+    // final config = ref.read(backgroundSyncConfigProvider);
     //
     // await methodChannel.invokeMethod('scheduleBackgroundTask', {
     //   'identifier': 'com.fitlog.healthSync',
@@ -325,7 +329,7 @@ class HealthBackgroundSyncController extends StateNotifier<BackgroundSyncState> 
   /// **Implementation**: Calls platform channel to native Android code.
   Future<void> _scheduleAndroidWorkManager() async {
     // TODO: Implement platform channel call to Android WorkManager
-    // final config = _ref.read(backgroundSyncConfigProvider);
+    // final config = ref.read(backgroundSyncConfigProvider);
     //
     // await methodChannel.invokeMethod('schedulePeriodicWork', {
     //   'tag': 'health_sync',

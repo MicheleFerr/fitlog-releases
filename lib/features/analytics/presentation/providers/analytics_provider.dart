@@ -8,7 +8,6 @@ import 'package:gymbro_flutter_new/features/analytics/domain/services/volume_cal
 import 'package:gymbro_flutter_new/features/analytics/domain/services/trend_analyzer.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/pr_tracker.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/insights_engine.dart';
-import 'package:gymbro_flutter_new/features/analytics/domain/services/one_rm_calculator.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/services/analytics_calculation_service.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/exercise_history_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/workout_analytics_provider.dart';
@@ -90,13 +89,16 @@ class WorkoutSyncStatus {
 }
 
 /// Provider for workout sync status
-final workoutSyncStatusProvider = StateNotifierProvider<WorkoutSyncNotifier, WorkoutSyncStatus>((ref) {
-  return WorkoutSyncNotifier();
-});
+final workoutSyncStatusProvider = NotifierProvider<WorkoutSyncNotifier, WorkoutSyncStatus>(
+  WorkoutSyncNotifier.new,
+);
 
 /// Notifier for managing sync status
-class WorkoutSyncNotifier extends StateNotifier<WorkoutSyncStatus> {
-  WorkoutSyncNotifier() : super(WorkoutSyncStatus.idle());
+class WorkoutSyncNotifier extends Notifier<WorkoutSyncStatus> {
+  @override
+  WorkoutSyncStatus build() {
+    return WorkoutSyncStatus.idle();
+  }
 
   void setChecking() {
     state = WorkoutSyncStatus.checking();
@@ -110,9 +112,7 @@ class WorkoutSyncNotifier extends StateNotifier<WorkoutSyncStatus> {
     state = WorkoutSyncStatus.completed();
     // Reset to idle after a delay
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        state = WorkoutSyncStatus.idle();
-      }
+      state = WorkoutSyncStatus.idle();
     });
   }
 
@@ -250,30 +250,29 @@ class AnalyticsState {
 /// - Volume logic (→ VolumeCalculator)
 /// - Trend analysis (→ TrendAnalyzer)
 /// - PR tracking (→ PRTracker)
-class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
-
-  AnalyticsNotifier({
-    required HybridExerciseActivityRepository activityRepository,
-    required PRTracker prTracker,
-    required AnalyticsCalculationService calculationService,
-    String? userId,
-  })  : _activityRepository = activityRepository,
-        _prTracker = prTracker,
-        _calculationService = calculationService,
-        _userId = userId,
-        super(AnalyticsState.initial()) {
-    if (_userId != null) {
+class AnalyticsNotifier extends Notifier<AnalyticsState> {
+  @override
+  AnalyticsState build() {
+    final userId = _getUserId();
+    if (userId != null) {
       loadAnalytics();
     }
+    return AnalyticsState.initial();
   }
-  final HybridExerciseActivityRepository _activityRepository;
-  final PRTracker _prTracker;
-  final AnalyticsCalculationService _calculationService;
-  final String? _userId;
+
+  HybridExerciseActivityRepository get _activityRepository => ref.read(hybridExerciseActivityRepositoryProvider);
+  PRTracker get _prTracker => PRTracker();
+  AnalyticsCalculationService get _calculationService => ref.read(analyticsCalculationServiceProvider);
+  String? get _userId => _getUserId();
+
+  String? _getUserId() {
+    return ref.watch(firebaseUserProvider).valueOrNull?.email;
+  }
 
   /// Load all analytics data
   Future<void> loadAnalytics({bool forceRefresh = false}) async {
-    if (_userId == null) return;
+    final userId = _userId;
+    if (userId == null) return;
 
     state = state.copyWith(isLoading: true, error: null);
 
@@ -281,28 +280,28 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
       // Load activities with increased limit to ensure we capture recent workouts
       // Use forceRefresh to bypass any caching in the repository
       final activities = await _activityRepository.getUserActivities(
-        userEmail: _userId,
+        userEmail: userId,
         limit: 100, // SYNC FIX: Increased from 50 to capture recent workouts
       );
 
       // DEBUG: Log activity count for troubleshooting
       if (kDebugMode) {
-        debugPrint('📊 Analytics: Loaded ${activities.length} activities for user $_userId');
+        debugPrint('📊 Analytics: Loaded ${activities.length} activities for user $userId');
       }
-      
+
       // Load personal records
-      final personalRecords = await _prTracker.getUserPRs(_userId);
-      final recentPRs = await _prTracker.getRecentPRs(_userId);
+      final personalRecords = await _prTracker.getUserPRs(userId);
+      final recentPRs = await _prTracker.getRecentPRs(userId);
 
       // Calculate analytics
       final volumeProgression = VolumeCalculator.calculateProgression(activities);
       final muscleBalance = InsightsEngine.analyzeMuscleBalance(activities);
-      
+
       // Generate insights
       final insights = InsightsEngine.generateInsights(
         activities: activities,
         recentPRs: recentPRs,
-        userId: _userId,
+        userId: userId,
       );
 
       // Calculate trends for top exercises (delegated to service)
@@ -349,13 +348,16 @@ class AnalyticsNotifier extends StateNotifier<AnalyticsState> {
 
   /// Check for new PRs after workout completion
   Future<List<PersonalRecord>> checkForNewPRs(ExerciseActivity activity) async {
+    final userId = _userId;
+    if (userId == null) return [];
+
     try {
       final newPRs = await _prTracker.checkAndUpdatePRs(activity);
-      
+
       if (newPRs.isNotEmpty) {
         // Reload PRs to update state
-        final personalRecords = await _prTracker.getUserPRs(_userId!);
-        final recentPRs = await _prTracker.getRecentPRs(_userId);
+        final personalRecords = await _prTracker.getUserPRs(userId);
+        final recentPRs = await _prTracker.getRecentPRs(userId);
         
         state = state.copyWith(
           personalRecords: personalRecords,
@@ -402,19 +404,9 @@ final analyticsCalculationServiceProvider = Provider<AnalyticsCalculationService
 });
 
 /// Main analytics provider (THIN PROVIDER PATTERN)
-final analyticsProvider = StateNotifierProvider<AnalyticsNotifier, AnalyticsState>((ref) {
-  final user = ref.watch(firebaseUserProvider).valueOrNull;
-  final activityRepository = ref.read(hybridExerciseActivityRepositoryProvider);
-  final prTracker = PRTracker();
-  final calculationService = ref.read(analyticsCalculationServiceProvider);
-
-  return AnalyticsNotifier(
-    activityRepository: activityRepository,
-    prTracker: prTracker,
-    calculationService: calculationService,
-    userId: user?.email,
-  );
-});
+final analyticsProvider = NotifierProvider<AnalyticsNotifier, AnalyticsState>(
+  AnalyticsNotifier.new,
+);
 
 /// Provider for volume chart data
 // MEMORY FIX: Added autoDispose to free chart data when not displayed

@@ -71,14 +71,15 @@ final authStateProvider = Provider<AuthState>((ref) {
 });
 
 // Auth Controller
-final authControllerProvider = StateNotifierProvider<AuthController, AsyncValue<void>>(
-  (ref) => AuthController(ref.watch(authServiceProvider)),
-);
+final authControllerProvider = NotifierProvider<AuthController, AsyncValue<void>>(AuthController.new);
 
-class AuthController extends StateNotifier<AsyncValue<void>> {
+class AuthController extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() {
+    return const AsyncValue.data(null);
+  }
 
-  AuthController(this._authService) : super(const AsyncValue.data(null));
-  final AuthService _authService;
+  AuthService get _authService => ref.watch(authServiceProvider);
 
   // Register with Email and Password
   Future<void> registerWithEmailAndPassword({

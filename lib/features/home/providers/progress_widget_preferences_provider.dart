@@ -36,12 +36,15 @@ class ProgressWidgetPreferences {
   }
 }
 
-class ProgressWidgetPreferencesNotifier extends StateNotifier<ProgressWidgetPreferences> {
-  
-  ProgressWidgetPreferencesNotifier(this._prefs) : super(ProgressWidgetPreferences()) {
+class ProgressWidgetPreferencesNotifier extends Notifier<ProgressWidgetPreferences> {
+  late final SharedPreferences _prefs;
+
+  @override
+  ProgressWidgetPreferences build() {
+    _prefs = ref.watch(sharedPreferencesProvider);
     _loadPreferences();
+    return ProgressWidgetPreferences();
   }
-  final SharedPreferences _prefs;
   static const String _layoutKey = 'progress_widget_layout';
   static const String _metricsKey = 'progress_widget_metrics';
   
@@ -84,7 +87,4 @@ class ProgressWidgetPreferencesNotifier extends StateNotifier<ProgressWidgetPref
   }
 }
 
-final progressWidgetPreferencesProvider = StateNotifierProvider<ProgressWidgetPreferencesNotifier, ProgressWidgetPreferences>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return ProgressWidgetPreferencesNotifier(prefs);
-});
+final progressWidgetPreferencesProvider = NotifierProvider<ProgressWidgetPreferencesNotifier, ProgressWidgetPreferences>(ProgressWidgetPreferencesNotifier.new);

@@ -3,11 +3,11 @@ import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/wo
 import 'package:gymbro_flutter_new/features/workout_templates/domain/entities/export_format.dart';
 import 'package:gymbro_flutter_new/features/workout_templates/domain/services/template_export_service.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/consolidated_user_provider.dart';
-import 'package:gymbro_flutter_new/core/providers/analytics_provider.dart';
 
 /// Provider for template export service
 final templateExportServiceProvider = Provider<TemplateExportService>((ref) {
-  final analyticsService = ref.watch(analyticsServiceProvider);
+  // analyticsService could be used for tracking export events
+  // final analyticsService = ref.watch(analyticsServiceProvider);
   return TemplateExportService();
 });
 
@@ -36,15 +36,17 @@ class TemplateExportState {
   }
 }
 
-/// Provider for template export state
-final templateExportProvider = StateNotifierProvider<TemplateExportNotifier, TemplateExportState>((ref) {
-  return TemplateExportNotifier(ref);
-});
+/// Provider for template export state (Riverpod 2.x)
+final templateExportProvider = NotifierProvider<TemplateExportNotifier, TemplateExportState>(
+  TemplateExportNotifier.new,
+);
 
-class TemplateExportNotifier extends StateNotifier<TemplateExportState> {
+class TemplateExportNotifier extends Notifier<TemplateExportState> {
 
-  TemplateExportNotifier(this._ref) : super(const TemplateExportState());
-  final Ref _ref;
+  @override
+  TemplateExportState build() {
+    return const TemplateExportState();
+  }
 
   Future<String> exportTemplates(
     List<WorkoutTemplate> templates, {
@@ -54,8 +56,8 @@ class TemplateExportNotifier extends StateNotifier<TemplateExportState> {
     state = state.copyWith(isExporting: true, error: null);
 
     try {
-      final exportService = _ref.read(templateExportServiceProvider);
-      final user = await _ref.read(unifiedUserProvider.future);
+      final exportService = ref.read(templateExportServiceProvider);
+      final user = await ref.read(unifiedUserProvider.future);
 
       if (user == null) {
         throw Exception('User not authenticated');

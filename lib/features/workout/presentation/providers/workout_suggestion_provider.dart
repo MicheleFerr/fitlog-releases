@@ -8,6 +8,7 @@
 /// Combina service + history + templates per generare SuggestionState
 ///
 /// Reference: Design doc 2025-01-25-smart-workout-suggestion-design.md
+library;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,8 +35,8 @@ bool _suggestionLoggedOnce = false;
 /// - Workout history count (INSUFFICIENT_DATA if <3)
 /// - Muscle readiness + antagonist conflicts (READY or WARNING)
 ///
-/// Note: Removed autoDispose to cache result and avoid cascade invalidations.
-final workoutSuggestionProvider = FutureProvider<SuggestionState>((ref) async {
+/// Uses autoDispose to properly clean up resources when not in use.
+final workoutSuggestionProvider = FutureProvider.autoDispose<SuggestionState>((ref) async {
   // Log only once per session to avoid spam
   if (kDebugMode && !_suggestionLoggedOnce) {
     _suggestionLoggedOnce = true;
@@ -99,10 +100,9 @@ final workoutSuggestionProvider = FutureProvider<SuggestionState>((ref) async {
 });
 
 /// Notifier for managing suggestion feedback
-class SuggestionFeedbackNotifier extends StateNotifier<List<SuggestionFeedback>> {
-  SuggestionFeedbackNotifier(this._ref) : super([]);
-
-  final Ref _ref;
+class SuggestionFeedbackNotifier extends Notifier<List<SuggestionFeedback>> {
+  @override
+  List<SuggestionFeedback> build() => [];
 
   /// Record that user accepted a suggestion
   Future<void> recordAcceptance({
@@ -110,7 +110,7 @@ class SuggestionFeedbackNotifier extends StateNotifier<List<SuggestionFeedback>>
     String? muscleGroupAffected,
     double? confidenceAtSuggestion,
   }) async {
-    final userId = _ref.read(firebaseUserProvider).valueOrNull?.uid;
+    final userId = ref.read(firebaseUserProvider).valueOrNull?.uid;
     if (userId == null) return;
 
     final feedback = SuggestionFeedback.accepted(
@@ -139,7 +139,7 @@ class SuggestionFeedbackNotifier extends StateNotifier<List<SuggestionFeedback>>
     String? muscleGroupAffected,
     double? confidenceAtSuggestion,
   }) async {
-    final userId = _ref.read(firebaseUserProvider).valueOrNull?.uid;
+    final userId = ref.read(firebaseUserProvider).valueOrNull?.uid;
     if (userId == null) return;
 
     final feedback = SuggestionFeedback.rejected(
@@ -162,10 +162,10 @@ class SuggestionFeedbackNotifier extends StateNotifier<List<SuggestionFeedback>>
     }
 
     // Clear service cache to force recalculation with penalty
-    _ref.read(workoutSuggestionServiceProvider).clearCache();
+    ref.read(workoutSuggestionServiceProvider).clearCache();
 
     // Invalidate suggestion provider to trigger refresh
-    _ref.invalidate(workoutSuggestionProvider);
+    ref.invalidate(workoutSuggestionProvider);
 
     // TODO: Persist to Firebase/local storage
   }
@@ -184,9 +184,7 @@ class SuggestionFeedbackNotifier extends StateNotifier<List<SuggestionFeedback>>
 
 /// Provider for feedback notifier
 final suggestionFeedbackNotifierProvider =
-    StateNotifierProvider<SuggestionFeedbackNotifier, List<SuggestionFeedback>>((ref) {
-  return SuggestionFeedbackNotifier(ref);
-});
+    NotifierProvider<SuggestionFeedbackNotifier, List<SuggestionFeedback>>(SuggestionFeedbackNotifier.new);
 
 /// Convenience provider for feedback history (read-only)
 final suggestionFeedbackHistoryProvider = Provider<List<SuggestionFeedback>>((ref) {

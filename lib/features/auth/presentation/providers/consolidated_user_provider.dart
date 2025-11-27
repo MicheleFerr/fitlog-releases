@@ -28,7 +28,7 @@
 /// ✅ Backward-compatible aliases for gradual migration
 ///
 /// Dependencies:
-/// - Riverpod: StreamProvider, StateNotifierProvider
+/// - Riverpod: StreamProvider, NotifierProvider
 /// - Firebase: Auth, Firestore
 /// - Entity: UserProfile (stable version)
 library;
@@ -227,24 +227,22 @@ final userProfileProvider = StreamProvider<UserProfile?>((ref) async* {
 });
 
 /// ============================================================================
-/// STATE NOTIFIER (for mutations)
+/// NOTIFIER (for mutations)
 /// ============================================================================
 
-/// State notifier for managing user profile updates
+/// Notifier for managing user profile updates
 /// Handles: template quota, tier upgrades, profile updates
-class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
-  UserProfileNotifier(this._ref) : super(const AsyncValue.loading()) {
-    _init();
-  }
-
-  final Ref _ref;
+class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
   final _firestore = FirebaseFirestore.instance;
 
-  void _init() {
+  @override
+  AsyncValue<UserProfile?> build() {
     // Listen to the userProfileProvider stream
-    _ref.listen(userProfileProvider, (previous, next) {
+    ref.listen(userProfileProvider, (previous, next) {
       state = next;
     });
+
+    return const AsyncValue.loading();
   }
 
   /// Update user profile
@@ -389,9 +387,7 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
 
 /// Provider for user profile notifier (for mutations)
 final userProfileNotifierProvider =
-    StateNotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>((ref) {
-  return UserProfileNotifier(ref);
-});
+    NotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>(UserProfileNotifier.new);
 
 /// ============================================================================
 /// HELPER PROVIDERS (commonly used derived state)

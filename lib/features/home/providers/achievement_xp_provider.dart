@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/auth_provider.dart';
 import 'package:gymbro_flutter_new/features/progress/presentation/providers/progress_provider.dart';
-import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
-import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
 
 // Model per Achievement
 class Achievement {
@@ -134,28 +132,33 @@ class AchievementData {
 }
 
 // Provider per gestire achievement XP
-final achievementXPProvider = StateNotifierProvider<AchievementXPNotifier, AsyncValue<AchievementData>>((ref) {
-  return AchievementXPNotifier(ref);
-});
+final achievementXPProvider = AsyncNotifierProvider<AchievementXPNotifier, AchievementData>(AchievementXPNotifier.new);
 
-class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
-  
-  AchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
-    // Inizializza immediatamente con dati vuoti, poi carica
-    state = AsyncValue.data(AchievementData(
+class AchievementXPNotifier extends AsyncNotifier<AchievementData> {
+  Ref get _ref => ref;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  @override
+  Future<AchievementData> build() async {
+    // Inizializza immediatamente con dati vuoti
+    final initialData = AchievementData(
       totalXP: 0,
       allAchievements: _allAchievements,
       recentAchievements: [],
       xpByType: {},
-    ));
-    
-    // Poi carica i dati reali
-    _loadAchievements();
+    );
+
+    // Setup listeners dopo l'inizializzazione
     _setupListeners();
+
+    // Carica i dati reali
+    try {
+      return await _loadAchievementsData();
+    } catch (e) {
+      return initialData;
+    }
   }
-  final Ref _ref;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Definizione achievement disponibili
   static final List<Achievement> _allAchievements = [
     // Workout achievements
@@ -339,88 +342,82 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
     ),
   ];
   
-  Future<void> _loadAchievements() async {
-    try {
-      final userAsync = await _ref.read(currentUserProvider.future);
-      if (userAsync == null) {
-        state = AsyncValue.data(AchievementData(
-          totalXP: 0,
-          allAchievements: _allAchievements,
-          recentAchievements: [],
-          xpByType: {},
-        ));
-        return;
-      }
-      
-      // Carica achievement sbloccati dall'utente
-      final userAchievementsDoc = await _firestore
-          .collection('user_achievements')
-          .doc(userAsync.uid)
-          .get();
-      
-      final unlockedIds = <String, Map<String, dynamic>>{};
-      if (userAchievementsDoc.exists) {
-        final data = userAchievementsDoc.data() ?? {};
-        final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
-
-        // Safe Map casting (Task 6.1)
-        for (final entry in achievements.entries) {
-          if (entry.value is Map<String, dynamic>) {
-            unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
-          }
-        }
-      }
-      
-      // Aggiorna achievement con stato sbloccato
-      final updatedAchievements = _allAchievements.map((achievement) {
-        if (unlockedIds.containsKey(achievement.id)) {
-          final unlockedData = unlockedIds[achievement.id]!;
-          // Safe Timestamp parsing (Task 6.1)
-          final unlockedAtTimestamp = unlockedData['unlockedAt'];
-          final unlockedAtDate = unlockedAtTimestamp is Timestamp
-              ? unlockedAtTimestamp.toDate()
-              : null;
-
-          return achievement.copyWith(
-            isUnlocked: true,
-            unlockedAt: unlockedAtDate,
-            isNew: _isNew(unlockedAtTimestamp),
-          );
-        }
-        return achievement;
-      }).toList();
-      
-      // Calcola XP totali e per tipo
-      int totalXP = 0;
-      final xpByType = <AchievementType, int>{};
-      final recentAchievements = <Achievement>[];
-      
-      for (final achievement in updatedAchievements) {
-        if (achievement.isUnlocked) {
-          totalXP += achievement.xpReward;
-          xpByType[achievement.type] = (xpByType[achievement.type] ?? 0) + achievement.xpReward;
-          
-          if (achievement.unlockedAt != null) {
-            recentAchievements.add(achievement);
-          }
-        }
-      }
-      
-      // Ordina achievement recenti
-      recentAchievements.sort((a, b) => 
-        b.unlockedAt!.compareTo(a.unlockedAt!)
+  Future<AchievementData> _loadAchievementsData() async {
+    final userAsync = await _ref.read(currentUserProvider.future);
+    if (userAsync == null) {
+      return AchievementData(
+        totalXP: 0,
+        allAchievements: _allAchievements,
+        recentAchievements: [],
+        xpByType: {},
       );
-      
-      state = AsyncValue.data(AchievementData(
-        totalXP: totalXP,
-        allAchievements: updatedAchievements,
-        recentAchievements: recentAchievements,
-        xpByType: xpByType,
-      ));
-      
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
     }
+
+    // Carica achievement sbloccati dall'utente
+    final userAchievementsDoc = await _firestore
+        .collection('user_achievements')
+        .doc(userAsync.uid)
+        .get();
+
+    final unlockedIds = <String, Map<String, dynamic>>{};
+    if (userAchievementsDoc.exists) {
+      final data = userAchievementsDoc.data() ?? {};
+      final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
+
+      // Safe Map casting (Task 6.1)
+      for (final entry in achievements.entries) {
+        if (entry.value is Map<String, dynamic>) {
+          unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+        }
+      }
+    }
+
+    // Aggiorna achievement con stato sbloccato
+    final updatedAchievements = _allAchievements.map((achievement) {
+      if (unlockedIds.containsKey(achievement.id)) {
+        final unlockedData = unlockedIds[achievement.id]!;
+        // Safe Timestamp parsing (Task 6.1)
+        final unlockedAtTimestamp = unlockedData['unlockedAt'];
+        final unlockedAtDate = unlockedAtTimestamp is Timestamp
+            ? unlockedAtTimestamp.toDate()
+            : null;
+
+        return achievement.copyWith(
+          isUnlocked: true,
+          unlockedAt: unlockedAtDate,
+          isNew: _isNew(unlockedAtTimestamp),
+        );
+      }
+      return achievement;
+    }).toList();
+
+    // Calcola XP totali e per tipo
+    int totalXP = 0;
+    final xpByType = <AchievementType, int>{};
+    final recentAchievements = <Achievement>[];
+
+    for (final achievement in updatedAchievements) {
+      if (achievement.isUnlocked) {
+        totalXP += achievement.xpReward;
+        xpByType[achievement.type] = (xpByType[achievement.type] ?? 0) + achievement.xpReward;
+
+        if (achievement.unlockedAt != null) {
+          recentAchievements.add(achievement);
+        }
+      }
+    }
+
+    // Ordina achievement recenti
+    recentAchievements.sort((a, b) =>
+      b.unlockedAt!.compareTo(a.unlockedAt!)
+    );
+
+    return AchievementData(
+      totalXP: totalXP,
+      allAchievements: updatedAchievements,
+      recentAchievements: recentAchievements,
+      xpByType: xpByType,
+    );
   }
   
   void _setupListeners() {
@@ -503,7 +500,7 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
           }, SetOptions(merge: true));
       
       // Aggiorna stato locale
-      await _loadAchievements();
+      ref.invalidateSelf();
       
       // TODO: Mostrare notifica di achievement sbloccato
     } catch (e) {
@@ -529,10 +526,15 @@ class AchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
     // Forza controllo di tutti gli achievement
     final workoutCount = await _ref.read(completedWorkoutsCountProvider.future);
     await _checkWorkoutAchievements(workoutCount);
-    
+
     final streak = await _ref.read(currentStreakProvider.future);
     await _checkStreakAchievements(streak);
-    
+
     // TODO: Aggiungere altri controlli (volume, PR, community)
+  }
+
+  // Helper to reload achievements
+  Future<void> reloadAchievements() async {
+    ref.invalidateSelf();
   }
 }

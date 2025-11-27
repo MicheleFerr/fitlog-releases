@@ -107,14 +107,23 @@ class ZenModeState {
 }
 
 /// Notifier for Zen Mode state management
-class ZenModeNotifier extends StateNotifier<ZenModeState> {
-
-  ZenModeNotifier(Ref ref) : super(const ZenModeState()) {
-    _loadPreferences();
-  }
+class ZenModeNotifier extends Notifier<ZenModeState> {
   static const String _zenModeKey = 'zen_mode_enabled';
   static const String _zenConfigKey = 'zen_mode_config';
   static const String _keepScreenOnKey = 'keep_screen_on';
+
+  @override
+  ZenModeState build() {
+    // Setup disposal for wakelock
+    ref.onDispose(() {
+      if (state.isKeepScreenOnActive) {
+        WakelockPlus.disable();
+      }
+    });
+
+    _loadPreferences();
+    return const ZenModeState();
+  }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -235,21 +244,10 @@ class ZenModeNotifier extends StateNotifier<ZenModeState> {
       default:
         return;
     }
-    
-    await updateConfig(newConfig);
-  }
 
-  @override
-  void dispose() {
-    // Disabilita wakelock quando il provider viene dismesso
-    if (state.isKeepScreenOnActive) {
-      WakelockPlus.disable();
-    }
-    super.dispose();
+    await updateConfig(newConfig);
   }
 }
 
 /// Provider for Zen Mode
-final zenModeProvider = StateNotifierProvider<ZenModeNotifier, ZenModeState>((ref) {
-  return ZenModeNotifier(ref);
-});
+final zenModeProvider = NotifierProvider<ZenModeNotifier, ZenModeState>(ZenModeNotifier.new);

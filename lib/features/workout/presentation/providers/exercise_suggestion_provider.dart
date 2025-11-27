@@ -244,14 +244,12 @@ class SmartSuggestion { // For analytics
   }
 }
 
-/// Notifier for exercise suggestions
-class ExerciseSuggestionsNotifier extends StateNotifier<List<SmartSuggestion>> {
+/// Notifier for exercise suggestions (Riverpod 2.0)
+class ExerciseSuggestionsNotifier extends FamilyNotifier<List<SmartSuggestion>, String> {
+  @override
+  List<SmartSuggestion> build(String exerciseId) => [];
 
-  ExerciseSuggestionsNotifier(this.ref, this.exerciseId) : super([]);
-  final Ref ref;
-  final String exerciseId;
-
-  /// Generate suggestions based on context
+  /// Generate suggestions based on context (uses inherited arg from build)
   Future<void> generateSuggestions(SuggestionContext context) async {
     final suggestions = <SmartSuggestion>[];
 
@@ -633,14 +631,12 @@ class ExerciseSuggestionsNotifier extends StateNotifier<List<SmartSuggestion>> {
   }
 }
 
-/// Provider for exercise suggestions (family indexed by exercise ID)
-final exerciseSuggestionsProvider = StateNotifierProvider.family<
+/// Provider for exercise suggestions (family indexed by exercise ID) (Riverpod 2.0)
+final exerciseSuggestionsProvider = NotifierProvider.family<
   ExerciseSuggestionsNotifier,
   List<SmartSuggestion>,
   String
->((ref, exerciseId) {
-  return ExerciseSuggestionsNotifier(ref, exerciseId);
-});
+>(ExerciseSuggestionsNotifier.new);
 
 /// Helper provider to determine user level based on contribution count
 final userLevelProvider = Provider<UserLevel>((ref) {
@@ -648,7 +644,7 @@ final userLevelProvider = Provider<UserLevel>((ref) {
 
   return stats.when(
     data: (stats) {
-      final count = stats.totalContributions ?? 0;
+      final count = stats.totalContributions;
       if (count >= 201) return UserLevel.master;
       if (count >= 51) return UserLevel.expert;
       if (count >= 11) return UserLevel.contributor;

@@ -74,9 +74,7 @@ final setFatigueIndexProvider = StateProvider<double>((ref) => 0.0);
 final setVelocityDropProvider = StateProvider<double>((ref) => 0.0);
 
 /// Provider for tier-1 set tracking state
-final tier1SetTrackingProvider = StateNotifierProvider<Tier1SetTrackingNotifier, Tier1SetTrackingState>((ref) {
-  return Tier1SetTrackingNotifier();
-});
+final tier1SetTrackingProvider = NotifierProvider<Tier1SetTrackingNotifier, Tier1SetTrackingState>(Tier1SetTrackingNotifier.new);
 
 // ============================================================================
 // MODELS
@@ -131,8 +129,9 @@ class Tier1SetTrackingState {
 }
 
 /// Notifier for tier-1 set tracking
-class Tier1SetTrackingNotifier extends StateNotifier<Tier1SetTrackingState> {
-  Tier1SetTrackingNotifier() : super(const Tier1SetTrackingState());
+class Tier1SetTrackingNotifier extends Notifier<Tier1SetTrackingState> {
+  @override
+  Tier1SetTrackingState build() => const Tier1SetTrackingState();
 
   void startTracking() {
     state = state.copyWith(

@@ -186,7 +186,7 @@ class UserGoalsNotifier extends AsyncNotifier<UserGoals> {
 /// Provider for weekly workout progress
 ///
 /// Calculates how many workouts completed this week vs goal
-final weeklyWorkoutProgressProvider = FutureProvider<WeeklyWorkoutProgress>((ref) async {
+final weeklyWorkoutProgressProvider = FutureProvider.autoDispose<WeeklyWorkoutProgress>((ref) async {
   final goalsAsync = ref.watch(userGoalsProvider);
   final workoutsAsync = ref.watch(workoutHistoryProvider);
 
@@ -220,7 +220,7 @@ final weeklyWorkoutProgressProvider = FutureProvider<WeeklyWorkoutProgress>((ref
 /// Provider for weekly volume progress
 ///
 /// Calculates total volume lifted this week vs target
-final weeklyVolumeProgressProvider = FutureProvider<WeeklyVolumeProgress>((ref) async {
+final weeklyVolumeProgressProvider = FutureProvider.autoDispose<WeeklyVolumeProgress>((ref) async {
   final goalsAsync = ref.watch(userGoalsProvider);
   final workoutsAsync = ref.watch(workoutHistoryProvider);
 
@@ -264,7 +264,7 @@ final weeklyVolumeProgressProvider = FutureProvider<WeeklyVolumeProgress>((ref) 
 /// Provider for streak weeks progress
 ///
 /// Counts consecutive weeks where workout goal was met
-final streakWeeksProgressProvider = FutureProvider<StreakWeeksProgress>((ref) async {
+final streakWeeksProgressProvider = FutureProvider.autoDispose<StreakWeeksProgress>((ref) async {
   final goalsAsync = ref.watch(userGoalsProvider);
   final workoutsAsync = ref.watch(workoutHistoryProvider);
 

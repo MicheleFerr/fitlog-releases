@@ -17,7 +17,7 @@ final streakRepositoryProvider = Provider<StreakRepository>((ref) {
 ///
 /// Fetches current streak data from repository
 /// Auto-invalidates when dependencies change
-final currentStreakProvider = FutureProvider<WorkoutStreak>((ref) async {
+final currentStreakProvider = FutureProvider.autoDispose<WorkoutStreak>((ref) async {
   final repository = ref.watch(streakRepositoryProvider);
   return repository.getCurrentStreak();
 });
@@ -31,7 +31,7 @@ final consistencyScoreCalculatorProvider = Provider<ConsistencyScoreCalculator>(
 ///
 /// Calculates workout adherence quality from last 30 days of workout data
 /// Updates automatically when workouts or streak changes
-final consistencyScoreProvider = FutureProvider<ConsistencyScore>((ref) async {
+final consistencyScoreProvider = FutureProvider.autoDispose<ConsistencyScore>((ref) async {
   // Get dependencies
   final workoutRepository = ref.watch(workoutRepositoryProvider);
   final calculator = ref.watch(consistencyScoreCalculatorProvider);

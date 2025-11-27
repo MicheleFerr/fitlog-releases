@@ -120,12 +120,11 @@ final showDebugSectionsProvider = Provider<bool>((ref) {
 final debugSectionCollapsedProvider = StateProvider<bool>((ref) => true);
 
 /// Provider for individual debug sections collapsed state
-final debugSectionStatesProvider = StateNotifierProvider<DebugSectionStates, Map<String, bool>>((ref) {
-  return DebugSectionStates();
-});
+final debugSectionStatesProvider = NotifierProvider<DebugSectionStates, Map<String, bool>>(DebugSectionStates.new);
 
-class DebugSectionStates extends StateNotifier<Map<String, bool>> {
-  DebugSectionStates() : super({});
+class DebugSectionStates extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
 
   bool isCollapsed(String sectionId) {
     return state[sectionId] ?? true; // Default to collapsed

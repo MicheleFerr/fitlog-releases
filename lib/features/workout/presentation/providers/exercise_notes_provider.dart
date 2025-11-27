@@ -45,18 +45,23 @@ class ExerciseNotesState {
   }
 }
 
-/// Notifier for managing exercise notes
-class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
-
-  ExerciseNotesNotifier({
-    required String initialNotes,
-    this.onSave,
-  }) : super(ExerciseNotesState(notes: initialNotes)) {
-    _initDebouncer();
-  }
-
+/// Notifier for managing exercise notes (Riverpod 2.0)
+class ExerciseNotesNotifier extends FamilyNotifier<ExerciseNotesState, String> {
   late final Debouncer _saveDebouncer;
-  final Function(Exercise)? onSave;
+  Function(Exercise)? onSave;
+
+  @override
+  ExerciseNotesState build(String exerciseId) {
+    // Initialize with empty notes
+    _initDebouncer();
+
+    // Cleanup on dispose
+    ref.onDispose(() {
+      _saveDebouncer.dispose();
+    });
+
+    return const ExerciseNotesState(notes: '');
+  }
 
   void _initDebouncer() {
     // 🔐 SECURITY: Initialize save debouncer (750ms delay for note editing)
@@ -64,9 +69,7 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
       duration: const Duration(milliseconds: 750),
       onError: (error, stackTrace) {
         AppLogger.error('Debouncer error: $error', tag: 'ExerciseNotes', error: error, stackTrace: stackTrace);
-        if (mounted) {
-          state = state.copyWith(isSaving: false);
-        }
+        state = state.copyWith(isSaving: false);
       },
     );
   }
@@ -108,27 +111,17 @@ class ExerciseNotesNotifier extends StateNotifier<ExerciseNotesState> {
     // Simulate save operation (callback will be provided by widget)
     await Future.delayed(const Duration(milliseconds: 300));
 
-    if (mounted) {
-      state = state.copyWith(
-        isSaving: false,
-        lastSaved: DateTime.now(),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _saveDebouncer.dispose();
-    super.dispose();
+    state = state.copyWith(
+      isSaving: false,
+      lastSaved: DateTime.now(),
+    );
   }
 }
 
-/// Provider for exercise notes state
+/// Provider for exercise notes state (Riverpod 2.0)
 /// Family provider indexed by exercise ID
-final exerciseNotesProvider = StateNotifierProvider.family<
+final exerciseNotesProvider = NotifierProvider.family<
   ExerciseNotesNotifier,
   ExerciseNotesState,
   String
->((ref, exerciseId) {
-  return ExerciseNotesNotifier(initialNotes: '');
-});
+>(ExerciseNotesNotifier.new);

@@ -42,9 +42,7 @@ final templateSyncProvider = FutureProvider.autoDispose<void>((ref) async {
 });
 
 /// Notifier per gestione Firebase template con sync intelligente
-final firebaseTemplateNotifierProvider = StateNotifierProvider<FirebaseTemplateNotifier, FirebaseTemplateState>((ref) {
-  return FirebaseTemplateNotifier(ref);
-});
+final firebaseTemplateNotifierProvider = NotifierProvider<FirebaseTemplateNotifier, FirebaseTemplateState>(FirebaseTemplateNotifier.new);
 
 class FirebaseTemplateState {
 
@@ -82,13 +80,14 @@ class FirebaseTemplateState {
   }
 }
 
-class FirebaseTemplateNotifier extends StateNotifier<FirebaseTemplateState> {
-  FirebaseTemplateNotifier(this.ref) : super(const FirebaseTemplateState()) {
-    _initialize();
-  }
-
-  final Ref ref;
+class FirebaseTemplateNotifier extends Notifier<FirebaseTemplateState> {
   late final FirebaseWorkoutTemplateRepository _repository;
+
+  @override
+  FirebaseTemplateState build() {
+    _initialize();
+    return const FirebaseTemplateState();
+  }
 
   void _initialize() async {
     _repository = ref.read(firebaseTemplateRepositoryProvider);

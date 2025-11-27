@@ -130,10 +130,10 @@ final setDurationTrackerProvider = Provider<SetDurationTracker>((ref) {
 });
 
 /// State notifier for managing set durations during workout
-class SetDurationNotifier extends StateNotifier<Map<String, double>> {
-  
-  SetDurationNotifier(this.ref) : super({});
-  final Ref ref;
+class SetDurationNotifier extends Notifier<Map<String, double>> {
+
+  @override
+  Map<String, double> build() => {};
   
   /// Record a set duration
   void recordSetDuration(String exerciseId, int setNumber, double durationMillis) {
@@ -154,6 +154,4 @@ class SetDurationNotifier extends StateNotifier<Map<String, double>> {
 }
 
 /// Provider for managing set durations state
-final setDurationProvider = StateNotifierProvider<SetDurationNotifier, Map<String, double>>((ref) {
-  return SetDurationNotifier(ref);
-});
+final setDurationProvider = NotifierProvider<SetDurationNotifier, Map<String, double>>(SetDurationNotifier.new);

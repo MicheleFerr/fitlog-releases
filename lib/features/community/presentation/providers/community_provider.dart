@@ -102,10 +102,12 @@ final userContributionsProvider = StreamProvider.autoDispose<List<CommunityContr
 });
 
 // State notifier per gestire submission di contributions
-class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
-  
-  ContributionSubmissionNotifier(this._ref) : super(const AsyncValue.data(null));
-  final Ref _ref;
+class ContributionSubmissionNotifier extends Notifier<AsyncValue<void>> {
+
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
+
+  Ref get _ref => ref;
   
   Future<void> submitContribution({
     required String exerciseId,
@@ -132,7 +134,7 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
         exerciseId: exerciseId,
         exerciseName: exerciseName,
         userId: userAsync.uid,
-        userName: userAsync.displayName ?? 'Anonymous',
+        userName: userAsync.displayName,
         type: type,
         status: ContributionStatus.pending,
         title: title,
@@ -195,7 +197,7 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
       final comment = ContributionComment(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userAsync.uid,
-        userName: userAsync.displayName ?? 'Anonymous',
+        userName: userAsync.displayName,
         text: text,
         createdAt: DateTime.now(),
       );
@@ -208,10 +210,8 @@ class ContributionSubmissionNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final contributionSubmissionProvider = 
-    StateNotifierProvider<ContributionSubmissionNotifier, AsyncValue<void>>((ref) {
-  return ContributionSubmissionNotifier(ref);
-});
+final contributionSubmissionProvider =
+    NotifierProvider<ContributionSubmissionNotifier, AsyncValue<void>>(ContributionSubmissionNotifier.new);
 
 // Provider per statistiche exercise-specific
 /// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
@@ -301,10 +301,11 @@ final savedContributionIdsProvider = FutureProvider.autoDispose<List<String>>((r
 });
 
 // Provider 5: Save/Unsave Notifier
-class SaveContributionNotifier extends StateNotifier<AsyncValue<void>> {
-  SaveContributionNotifier(this._ref) : super(const AsyncValue.data(null));
+class SaveContributionNotifier extends Notifier<AsyncValue<void>> {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
 
-  final Ref _ref;
+  Ref get _ref => ref;
 
   Future<void> saveContribution(String contributionId) async {
     state = const AsyncValue.loading();
@@ -346,9 +347,7 @@ class SaveContributionNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 final saveContributionProvider =
-    StateNotifierProvider<SaveContributionNotifier, AsyncValue<void>>((ref) {
-  return SaveContributionNotifier(ref);
-});
+    NotifierProvider<SaveContributionNotifier, AsyncValue<void>>(SaveContributionNotifier.new);
 
 // ============================================================================
 

@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/template_stats.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
+import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/workout_template_repository.dart';
 import 'package:gymbro_flutter_new/features/workout/data/repositories/firebase_workout_template_repository.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_history_provider.dart';
 
 // Repository provider - Firebase se utente autenticato, altrimenti locale
 final workoutTemplateRepositoryProvider = Provider<dynamic>((ref) {
@@ -124,9 +127,7 @@ final filteredTemplatesProvider = FutureProvider.autoDispose<List<WorkoutTemplat
 });
 
 // Notifier per gestione template
-final workoutTemplateNotifierProvider = StateNotifierProvider<WorkoutTemplateNotifier, WorkoutTemplateState>((ref) {
-  return WorkoutTemplateNotifier(ref);
-});
+final workoutTemplateNotifierProvider = NotifierProvider<WorkoutTemplateNotifier, WorkoutTemplateState>(WorkoutTemplateNotifier.new);
 
 class WorkoutTemplateState {
 
@@ -156,12 +157,12 @@ class WorkoutTemplateState {
   }
 }
 
-class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
-  WorkoutTemplateNotifier(this.ref) : super(const WorkoutTemplateState()) {
+class WorkoutTemplateNotifier extends Notifier<WorkoutTemplateState> {
+  @override
+  WorkoutTemplateState build() {
     loadTemplates();
+    return const WorkoutTemplateState();
   }
-
-  final Ref ref;
 
   /// Carica tutti i template
   Future<void> loadTemplates() async {
@@ -293,7 +294,7 @@ class WorkoutTemplateNotifier extends StateNotifier<WorkoutTemplateState> {
         if (kDebugMode) {
           debugPrint('⚠️ PROVIDER: Error refreshing providers after delete: $e');
         }
-        return <List<Object>>[];
+        return [<WorkoutTemplate>[]];
       });
 
       if (kDebugMode) {
@@ -432,3 +433,128 @@ final templateByIdProvider = FutureProvider.autoDispose.family<WorkoutTemplate?,
     return null;
   }
 });
+
+/// Provider for template statistics (average duration, last performed, completions)
+///
+/// Calculates real statistics based on completed workouts that used this template.
+/// Returns TemplateStats with:
+/// - avgDuration: Average duration of completed workouts
+/// - lastPerformed: Date of most recent workout with this template
+/// - totalCompletions: Number of times this template was used
+///
+/// 🔧 MEMORY FIX: Added autoDispose to prevent memory leaks
+final templateStatsProvider = FutureProvider.autoDispose.family<TemplateStats, String>((ref, templateId) async {
+  // Get all workouts from history
+  final workoutsAsync = ref.watch(workoutHistoryProvider);
+
+  return workoutsAsync.when(
+    data: (workouts) {
+      // Filter completed workouts that used this template
+      final templateWorkouts = workouts.where((workout) =>
+        workout.templateId == templateId &&
+        workout.status == WorkoutStatus.completed &&
+        workout.duration != null
+      ).toList();
+
+      if (templateWorkouts.isEmpty) {
+        return TemplateStats.empty();
+      }
+
+      // Sort by date (newest first) to get lastPerformed
+      templateWorkouts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      final lastPerformed = templateWorkouts.first.startTime ?? templateWorkouts.first.createdAt;
+
+      // Calculate average duration
+      final totalMinutes = templateWorkouts
+          .map((w) => w.duration!.inMinutes)
+          .fold<int>(0, (sum, minutes) => sum + minutes);
+      final avgMinutes = totalMinutes ~/ templateWorkouts.length;
+
+      if (kDebugMode) {
+        debugPrint('📊 [templateStatsProvider] Template $templateId: '
+            '${templateWorkouts.length} completions, '
+            'avg ${avgMinutes}min, '
+            'last ${lastPerformed.toIso8601String()}');
+      }
+
+      return TemplateStats(
+        lastPerformed: lastPerformed,
+        totalCompletions: templateWorkouts.length,
+        avgDuration: Duration(minutes: avgMinutes),
+      );
+    },
+    loading: () => TemplateStats.empty(),
+    error: (_, __) => TemplateStats.empty(),
+  );
+});
+
+/// Provider for all template stats at once (batch loading for list view)
+///
+/// More efficient than calling templateStatsProvider for each template
+/// when displaying a list of templates.
+final allTemplateStatsProvider = FutureProvider.autoDispose<Map<String, TemplateStats>>((ref) async {
+  // Get all workouts from history
+  final workoutsAsync = ref.watch(workoutHistoryProvider);
+
+  return workoutsAsync.when(
+    data: (workouts) {
+      final statsMap = <String, TemplateStats>{};
+
+      // Group completed workouts by templateId
+      final workoutsByTemplate = <String, List<_WorkoutData>>{};
+
+      for (final workout in workouts) {
+        if (workout.templateId != null &&
+            workout.status == WorkoutStatus.completed &&
+            workout.duration != null) {
+          workoutsByTemplate
+              .putIfAbsent(workout.templateId!, () => [])
+              .add(_WorkoutData(
+                startTime: workout.startTime ?? workout.createdAt,
+                durationMinutes: workout.duration!.inMinutes,
+              ));
+        }
+      }
+
+      // Calculate stats for each template
+      for (final entry in workoutsByTemplate.entries) {
+        final templateId = entry.key;
+        final templateWorkouts = entry.value;
+
+        // Sort by date (newest first)
+        templateWorkouts.sort((a, b) => b.startTime.compareTo(a.startTime));
+
+        // Calculate average duration
+        final totalMinutes = templateWorkouts
+            .map((w) => w.durationMinutes)
+            .fold<int>(0, (sum, minutes) => sum + minutes);
+        final avgMinutes = totalMinutes ~/ templateWorkouts.length;
+
+        statsMap[templateId] = TemplateStats(
+          lastPerformed: templateWorkouts.first.startTime,
+          totalCompletions: templateWorkouts.length,
+          avgDuration: Duration(minutes: avgMinutes),
+        );
+      }
+
+      if (kDebugMode) {
+        debugPrint('📊 [allTemplateStatsProvider] Calculated stats for ${statsMap.length} templates');
+      }
+
+      return statsMap;
+    },
+    loading: () => {},
+    error: (_, __) => {},
+  );
+});
+
+/// Helper class for workout data aggregation
+class _WorkoutData {
+  const _WorkoutData({
+    required this.startTime,
+    required this.durationMinutes,
+  });
+
+  final DateTime startTime;
+  final int durationMinutes;
+}

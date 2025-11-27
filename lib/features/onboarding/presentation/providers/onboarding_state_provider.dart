@@ -1,27 +1,27 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:gymbro_flutter_new/features/onboarding/domain/entities/onboarding_state.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
-final onboardingStateProvider = StateNotifierProvider<OnboardingStateNotifier, OnboardingState>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return OnboardingStateNotifier(boxManager);
-});
+final onboardingStateProvider = NotifierProvider<OnboardingStateNotifier, OnboardingState>(OnboardingStateNotifier.new);
 
 // Alias for convenience (used in quick_start_screen.dart)
 final onboardingProvider = onboardingStateProvider;
 
-class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
-
-  OnboardingStateNotifier(this._boxManager) : super(const OnboardingState()) {
-    _initializeOnboarding();
-  }
-
-  final HiveBoxManagerEnhanced _boxManager;
+class OnboardingStateNotifier extends Notifier<OnboardingState> {
   static const String _boxName = 'onboarding_state';
   late Box<OnboardingState> _onboardingBox;
+
+  @override
+  OnboardingState build() {
+    // Initialize onboarding asynchronously
+    _initializeOnboarding();
+    return const OnboardingState();
+  }
+
+  HiveBoxManagerEnhanced get _boxManager => ref.read(hiveBoxManagerProvider);
 
   Future<void> _initializeOnboarding() async {
     try {

@@ -330,7 +330,7 @@ final optimizedMonthlyFrequencyProvider = FutureProvider.autoDispose<double>((re
     return 0.0;
   }
 
-  final stats = userProfile.stats ?? {};
+  final stats = userProfile.stats;
   var monthlyWorkouts = stats['monthlyWorkouts'] as int? ?? 0;
 
   // FALLBACK: If no monthly count, count from last 30 days

@@ -8,18 +8,10 @@ import 'dart:async';
 /// OPTIMIZED VERSION - Fixed listener loops and excessive Firebase queries
 
 /// Optimized Achievement XP Provider with debounced listening and caching
-final optimizedAchievementXPProvider = StateNotifierProvider<OptimizedAchievementXPNotifier, AsyncValue<AchievementData>>((ref) {
-  return OptimizedAchievementXPNotifier(ref);
-});
+final optimizedAchievementXPProvider = AsyncNotifierProvider<OptimizedAchievementXPNotifier, AchievementData>(OptimizedAchievementXPNotifier.new);
 
-class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<AchievementData>> {
-
-  OptimizedAchievementXPNotifier(this._ref) : super(const AsyncValue.loading()) {
-    _initializeWithDefaults();
-    _loadAchievements();
-    _setupOptimizedListeners();
-  }
-  final Ref _ref;
+class OptimizedAchievementXPNotifier extends AsyncNotifier<AchievementData> {
+  Ref get _ref => ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Debouncing and caching
@@ -46,90 +38,103 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
       return [];
     }
   }
-  
-  void _initializeWithDefaults() {
-    // Provide immediate default data to prevent loading states
-    state = AsyncValue.data(AchievementData(
-      totalXP: 0,
-      allAchievements: _defaultAchievements,
-      recentAchievements: [],
-      xpByType: {},
-    ));
+
+  @override
+  Future<AchievementData> build() async {
+    // Setup cleanup
+    ref.onDispose(() {
+      _debounceTimer?.cancel();
+      _cacheTimer?.cancel();
+      _workoutListener?.close();
+      _streakListener?.close();
+    });
+
+    // Setup optimized listeners
+    _setupOptimizedListeners();
+
+    // Load achievements
+    return await _loadAchievementsData();
   }
-  
-  Future<void> _loadAchievements() async {
-    try {
-      final userAsync = await _ref.read(currentUserProvider.future);
-      if (userAsync == null) {
-        return;
-      }
-      
-      // Check cache validity
-      if (_lastFetchTime != null && 
-          DateTime.now().difference(_lastFetchTime!) < _cacheValidity) {
-        return; // Use cached data
-      }
-      
-      final userAchievementsDoc = await _firestore
-          .collection('user_achievements')
-          .doc(userAsync.uid)
-          .get();
-      
-      final unlockedIds = <String, Map<String, dynamic>>{};
-      if (userAchievementsDoc.exists) {
-        final data = userAchievementsDoc.data() ?? {};
-        final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
-        
-        for (final entry in achievements.entries) {
-          unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
-        }
-      }
-      
-      final updatedAchievements = _defaultAchievements.map((achievement) {
-        if (unlockedIds.containsKey(achievement.id)) {
-          final unlockedData = unlockedIds[achievement.id]!;
-          return achievement.copyWith(
-            isUnlocked: true,
-            unlockedAt: unlockedData['unlockedAt'] != null
-                ? (unlockedData['unlockedAt'] as Timestamp).toDate()
-                : null,
-            isNew: _isNew(unlockedData['unlockedAt'], unlockedData['viewedAt']),
-          );
-        }
-        return achievement;
-      }).toList();
-      
-      int totalXP = 0;
-      final xpByType = <AchievementType, int>{};
-      final recentAchievements = <Achievement>[];
-      
-      for (final achievement in updatedAchievements) {
-        if (achievement.isUnlocked) {
-          totalXP += achievement.xpReward;
-          xpByType[achievement.type] = (xpByType[achievement.type] ?? 0) + achievement.xpReward;
-          
-          if (achievement.unlockedAt != null) {
-            recentAchievements.add(achievement);
-          }
-        }
-      }
-      
-      recentAchievements.sort((a, b) => 
-        b.unlockedAt!.compareTo(a.unlockedAt!)
+
+  Future<AchievementData> _loadAchievementsData() async {
+    final userAsync = await _ref.read(currentUserProvider.future);
+    if (userAsync == null) {
+      return AchievementData(
+        totalXP: 0,
+        allAchievements: _defaultAchievements,
+        recentAchievements: [],
+        xpByType: {},
       );
-      
-      state = AsyncValue.data(AchievementData(
-        totalXP: totalXP,
-        allAchievements: updatedAchievements,
-        recentAchievements: recentAchievements,
-        xpByType: xpByType,
-      ));
-      
-      _lastFetchTime = DateTime.now();
-      
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
     }
+
+    // Check cache validity
+    if (_lastFetchTime != null &&
+        DateTime.now().difference(_lastFetchTime!) < _cacheValidity) {
+      // Return current state if cached
+      return state.valueOrNull ?? AchievementData(
+        totalXP: 0,
+        allAchievements: _defaultAchievements,
+        recentAchievements: [],
+        xpByType: {},
+      );
+    }
+
+    final userAchievementsDoc = await _firestore
+        .collection('user_achievements')
+        .doc(userAsync.uid)
+        .get();
+
+    final unlockedIds = <String, Map<String, dynamic>>{};
+    if (userAchievementsDoc.exists) {
+      final data = userAchievementsDoc.data() ?? {};
+      final achievements = data['achievements'] as Map<String, dynamic>? ?? {};
+
+      for (final entry in achievements.entries) {
+        unlockedIds[entry.key] = entry.value as Map<String, dynamic>;
+      }
+    }
+
+    final updatedAchievements = _defaultAchievements.map((achievement) {
+      if (unlockedIds.containsKey(achievement.id)) {
+        final unlockedData = unlockedIds[achievement.id]!;
+        return achievement.copyWith(
+          isUnlocked: true,
+          unlockedAt: unlockedData['unlockedAt'] != null
+              ? (unlockedData['unlockedAt'] as Timestamp).toDate()
+              : null,
+          isNew: _isNew(unlockedData['unlockedAt'], unlockedData['viewedAt']),
+        );
+      }
+      return achievement;
+    }).toList();
+
+    int totalXP = 0;
+    final xpByType = <AchievementType, int>{};
+    final recentAchievements = <Achievement>[];
+
+    for (final achievement in updatedAchievements) {
+      if (achievement.isUnlocked) {
+        totalXP += achievement.xpReward;
+        xpByType[achievement.type] = (xpByType[achievement.type] ?? 0) + achievement.xpReward;
+
+        if (achievement.unlockedAt != null) {
+          recentAchievements.add(achievement);
+        }
+      }
+    }
+
+    recentAchievements.sort((a, b) =>
+      b.unlockedAt!.compareTo(a.unlockedAt!)
+    );
+
+    _lastFetchTime = DateTime.now();
+
+    return AchievementData(
+      totalXP: totalXP,
+      allAchievements: updatedAchievements,
+      recentAchievements: recentAchievements,
+      xpByType: xpByType,
+    );
   }
   
   void _setupOptimizedListeners() {
@@ -247,7 +252,7 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
           }, SetOptions(merge: true));
       
       // Update local state immediately for better UX
-      await _loadAchievements();
+      ref.invalidateSelf();
       
     } catch (e) {
       // Silent error handling to prevent disrupting user experience
@@ -297,23 +302,14 @@ class OptimizedAchievementXPNotifier extends StateNotifier<AsyncValue<Achievemen
           .doc(userAsync.uid)
           .update(updates);
       
-      await _loadAchievements();
+      ref.invalidateSelf();
     } catch (e) {
       // Silent error handling
     }
   }
-  
+
   Future<void> forceRefresh() async {
     _lastFetchTime = null; // Invalidate cache
-    await _loadAchievements();
-  }
-  
-  @override
-  void dispose() {
-    _debounceTimer?.cancel();
-    _cacheTimer?.cancel();
-    _workoutListener?.close();
-    _streakListener?.close();
-    super.dispose();
+    ref.invalidateSelf();
   }
 }

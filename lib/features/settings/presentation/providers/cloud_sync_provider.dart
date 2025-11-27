@@ -90,16 +90,19 @@ class SyncSummary {
 }
 
 /// Cloud sync provider
-class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
+class CloudSyncNotifier extends Notifier<CloudSyncState> {
 
-  CloudSyncNotifier(this._ref, this._boxManager) : super(const CloudSyncState()) {
-    _loadLastSyncTime();
-  }
-  final Ref _ref;
-  final HiveBoxManagerEnhanced _boxManager;
+  late final HiveBoxManagerEnhanced _boxManager;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
+  @override
+  CloudSyncState build() {
+    _boxManager = ref.watch(hiveBoxManagerProvider);
+    _loadLastSyncTime();
+    return const CloudSyncState();
+  }
+
   /// Load last sync time from local storage
   Future<void> _loadLastSyncTime() async {
     try {
@@ -478,7 +481,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
   
   /// Check if user can sync (premium or admin)
   bool get canSync {
-    final profileAsync = _ref.read(userProfileProvider);
+    final profileAsync = ref.read(userProfileProvider);
     final profile = profileAsync.valueOrNull;
     if (profile == null) return false;
 
@@ -489,7 +492,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
     // OLD: if (profile.email.contains('michele.cozzolino93@gmail.com') ||
     //          profile.email.contains('admin@'))
     // NEW: Use Firebase Custom Claims (server-validated)
-    final isAdmin = _ref.read(isAdminProvider);
+    final isAdmin = ref.read(isAdminProvider);
 
     if (isAdmin) {
       return true;
@@ -549,10 +552,7 @@ class CloudSyncNotifier extends StateNotifier<CloudSyncState> {
 }
 
 /// Cloud sync provider
-final cloudSyncProvider = StateNotifierProvider<CloudSyncNotifier, CloudSyncState>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return CloudSyncNotifier(ref, boxManager);
-});
+final cloudSyncProvider = NotifierProvider<CloudSyncNotifier, CloudSyncState>(CloudSyncNotifier.new);
 
 /// Check if user can sync
 final canSyncProvider = Provider<bool>((ref) {
