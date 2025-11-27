@@ -12,10 +12,12 @@ part of 'analytics_page_feedback.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AnalyticsPageFeedback _$AnalyticsPageFeedbackFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _AnalyticsPageFeedback.fromJson(json);
 }
 
@@ -36,8 +38,8 @@ mixin _$AnalyticsPageFeedback {
   /// Timestamp quando il feedback è stato dato
   DateTime get timestamp =>
       throw _privateConstructorUsedError; // ========================================
-// METADATA OPZIONALE PER ANALYTICS
-// ========================================
+  // METADATA OPZIONALE PER ANALYTICS
+  // ========================================
   /// Numero totale di workout visualizzati in Analytics
   /// (utile per capire quanto l'utente ha usato la feature)
   int? get totalWorkoutsViewed => throw _privateConstructorUsedError;
@@ -49,32 +51,40 @@ mixin _$AnalyticsPageFeedback {
   /// Device info per analytics (es: "iOS 18.1", "Android 14")
   Map<String, dynamic>? get deviceInfo => throw _privateConstructorUsedError;
 
+  /// Serializes this AnalyticsPageFeedback to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AnalyticsPageFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AnalyticsPageFeedbackCopyWith<AnalyticsPageFeedback> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AnalyticsPageFeedbackCopyWith<$Res> {
-  factory $AnalyticsPageFeedbackCopyWith(AnalyticsPageFeedback value,
-          $Res Function(AnalyticsPageFeedback) then) =
-      _$AnalyticsPageFeedbackCopyWithImpl<$Res, AnalyticsPageFeedback>;
+  factory $AnalyticsPageFeedbackCopyWith(
+    AnalyticsPageFeedback value,
+    $Res Function(AnalyticsPageFeedback) then,
+  ) = _$AnalyticsPageFeedbackCopyWithImpl<$Res, AnalyticsPageFeedback>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      bool isHelpful,
-      String? comment,
-      DateTime timestamp,
-      int? totalWorkoutsViewed,
-      String? lastViewedSection,
-      Map<String, dynamic>? deviceInfo});
+  $Res call({
+    String id,
+    String userId,
+    bool isHelpful,
+    String? comment,
+    DateTime timestamp,
+    int? totalWorkoutsViewed,
+    String? lastViewedSection,
+    Map<String, dynamic>? deviceInfo,
+  });
 }
 
 /// @nodoc
-class _$AnalyticsPageFeedbackCopyWithImpl<$Res,
-        $Val extends AnalyticsPageFeedback>
+class _$AnalyticsPageFeedbackCopyWithImpl<
+  $Res,
+  $Val extends AnalyticsPageFeedback
+>
     implements $AnalyticsPageFeedbackCopyWith<$Res> {
   _$AnalyticsPageFeedbackCopyWithImpl(this._value, this._then);
 
@@ -83,6 +93,8 @@ class _$AnalyticsPageFeedbackCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AnalyticsPageFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -95,40 +107,43 @@ class _$AnalyticsPageFeedbackCopyWithImpl<$Res,
     Object? lastViewedSection = freezed,
     Object? deviceInfo = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isHelpful: null == isHelpful
-          ? _value.isHelpful
-          : isHelpful // ignore: cast_nullable_to_non_nullable
-              as bool,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkoutsViewed: freezed == totalWorkoutsViewed
-          ? _value.totalWorkoutsViewed
-          : totalWorkoutsViewed // ignore: cast_nullable_to_non_nullable
-              as int?,
-      lastViewedSection: freezed == lastViewedSection
-          ? _value.lastViewedSection
-          : lastViewedSection // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deviceInfo: freezed == deviceInfo
-          ? _value.deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            isHelpful: null == isHelpful
+                ? _value.isHelpful
+                : isHelpful // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            comment: freezed == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            totalWorkoutsViewed: freezed == totalWorkoutsViewed
+                ? _value.totalWorkoutsViewed
+                : totalWorkoutsViewed // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            lastViewedSection: freezed == lastViewedSection
+                ? _value.lastViewedSection
+                : lastViewedSection // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            deviceInfo: freezed == deviceInfo
+                ? _value.deviceInfo
+                : deviceInfo // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -136,31 +151,35 @@ class _$AnalyticsPageFeedbackCopyWithImpl<$Res,
 abstract class _$$AnalyticsPageFeedbackImplCopyWith<$Res>
     implements $AnalyticsPageFeedbackCopyWith<$Res> {
   factory _$$AnalyticsPageFeedbackImplCopyWith(
-          _$AnalyticsPageFeedbackImpl value,
-          $Res Function(_$AnalyticsPageFeedbackImpl) then) =
-      __$$AnalyticsPageFeedbackImplCopyWithImpl<$Res>;
+    _$AnalyticsPageFeedbackImpl value,
+    $Res Function(_$AnalyticsPageFeedbackImpl) then,
+  ) = __$$AnalyticsPageFeedbackImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      bool isHelpful,
-      String? comment,
-      DateTime timestamp,
-      int? totalWorkoutsViewed,
-      String? lastViewedSection,
-      Map<String, dynamic>? deviceInfo});
+  $Res call({
+    String id,
+    String userId,
+    bool isHelpful,
+    String? comment,
+    DateTime timestamp,
+    int? totalWorkoutsViewed,
+    String? lastViewedSection,
+    Map<String, dynamic>? deviceInfo,
+  });
 }
 
 /// @nodoc
 class __$$AnalyticsPageFeedbackImplCopyWithImpl<$Res>
-    extends _$AnalyticsPageFeedbackCopyWithImpl<$Res,
-        _$AnalyticsPageFeedbackImpl>
+    extends
+        _$AnalyticsPageFeedbackCopyWithImpl<$Res, _$AnalyticsPageFeedbackImpl>
     implements _$$AnalyticsPageFeedbackImplCopyWith<$Res> {
-  __$$AnalyticsPageFeedbackImplCopyWithImpl(_$AnalyticsPageFeedbackImpl _value,
-      $Res Function(_$AnalyticsPageFeedbackImpl) _then)
-      : super(_value, _then);
+  __$$AnalyticsPageFeedbackImplCopyWithImpl(
+    _$AnalyticsPageFeedbackImpl _value,
+    $Res Function(_$AnalyticsPageFeedbackImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AnalyticsPageFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,56 +192,58 @@ class __$$AnalyticsPageFeedbackImplCopyWithImpl<$Res>
     Object? lastViewedSection = freezed,
     Object? deviceInfo = freezed,
   }) {
-    return _then(_$AnalyticsPageFeedbackImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      isHelpful: null == isHelpful
-          ? _value.isHelpful
-          : isHelpful // ignore: cast_nullable_to_non_nullable
-              as bool,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkoutsViewed: freezed == totalWorkoutsViewed
-          ? _value.totalWorkoutsViewed
-          : totalWorkoutsViewed // ignore: cast_nullable_to_non_nullable
-              as int?,
-      lastViewedSection: freezed == lastViewedSection
-          ? _value.lastViewedSection
-          : lastViewedSection // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deviceInfo: freezed == deviceInfo
-          ? _value._deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ));
+    return _then(
+      _$AnalyticsPageFeedbackImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        isHelpful: null == isHelpful
+            ? _value.isHelpful
+            : isHelpful // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        comment: freezed == comment
+            ? _value.comment
+            : comment // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        totalWorkoutsViewed: freezed == totalWorkoutsViewed
+            ? _value.totalWorkoutsViewed
+            : totalWorkoutsViewed // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        lastViewedSection: freezed == lastViewedSection
+            ? _value.lastViewedSection
+            : lastViewedSection // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        deviceInfo: freezed == deviceInfo
+            ? _value._deviceInfo
+            : deviceInfo // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AnalyticsPageFeedbackImpl implements _AnalyticsPageFeedback {
-  const _$AnalyticsPageFeedbackImpl(
-      {required this.id,
-      required this.userId,
-      required this.isHelpful,
-      this.comment,
-      required this.timestamp,
-      this.totalWorkoutsViewed,
-      this.lastViewedSection,
-      final Map<String, dynamic>? deviceInfo})
-      : _deviceInfo = deviceInfo;
+  const _$AnalyticsPageFeedbackImpl({
+    required this.id,
+    required this.userId,
+    required this.isHelpful,
+    this.comment,
+    required this.timestamp,
+    this.totalWorkoutsViewed,
+    this.lastViewedSection,
+    final Map<String, dynamic>? deviceInfo,
+  }) : _deviceInfo = deviceInfo;
 
   factory _$AnalyticsPageFeedbackImpl.fromJson(Map<String, dynamic> json) =>
       _$$AnalyticsPageFeedbackImplFromJson(json);
@@ -246,9 +267,9 @@ class _$AnalyticsPageFeedbackImpl implements _AnalyticsPageFeedback {
   /// Timestamp quando il feedback è stato dato
   @override
   final DateTime timestamp;
-// ========================================
-// METADATA OPZIONALE PER ANALYTICS
-// ========================================
+  // ========================================
+  // METADATA OPZIONALE PER ANALYTICS
+  // ========================================
   /// Numero totale di workout visualizzati in Analytics
   /// (utile per capire quanto l'utente ha usato la feature)
   @override
@@ -293,89 +314,98 @@ class _$AnalyticsPageFeedbackImpl implements _AnalyticsPageFeedback {
                 other.totalWorkoutsViewed == totalWorkoutsViewed) &&
             (identical(other.lastViewedSection, lastViewedSection) ||
                 other.lastViewedSection == lastViewedSection) &&
-            const DeepCollectionEquality()
-                .equals(other._deviceInfo, _deviceInfo));
+            const DeepCollectionEquality().equals(
+              other._deviceInfo,
+              _deviceInfo,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      isHelpful,
-      comment,
-      timestamp,
-      totalWorkoutsViewed,
-      lastViewedSection,
-      const DeepCollectionEquality().hash(_deviceInfo));
+    runtimeType,
+    id,
+    userId,
+    isHelpful,
+    comment,
+    timestamp,
+    totalWorkoutsViewed,
+    lastViewedSection,
+    const DeepCollectionEquality().hash(_deviceInfo),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyticsPageFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AnalyticsPageFeedbackImplCopyWith<_$AnalyticsPageFeedbackImpl>
-      get copyWith => __$$AnalyticsPageFeedbackImplCopyWithImpl<
-          _$AnalyticsPageFeedbackImpl>(this, _$identity);
+  get copyWith =>
+      __$$AnalyticsPageFeedbackImplCopyWithImpl<_$AnalyticsPageFeedbackImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AnalyticsPageFeedbackImplToJson(
-      this,
-    );
+    return _$$AnalyticsPageFeedbackImplToJson(this);
   }
 }
 
 abstract class _AnalyticsPageFeedback implements AnalyticsPageFeedback {
-  const factory _AnalyticsPageFeedback(
-      {required final String id,
-      required final String userId,
-      required final bool isHelpful,
-      final String? comment,
-      required final DateTime timestamp,
-      final int? totalWorkoutsViewed,
-      final String? lastViewedSection,
-      final Map<String, dynamic>? deviceInfo}) = _$AnalyticsPageFeedbackImpl;
+  const factory _AnalyticsPageFeedback({
+    required final String id,
+    required final String userId,
+    required final bool isHelpful,
+    final String? comment,
+    required final DateTime timestamp,
+    final int? totalWorkoutsViewed,
+    final String? lastViewedSection,
+    final Map<String, dynamic>? deviceInfo,
+  }) = _$AnalyticsPageFeedbackImpl;
 
   factory _AnalyticsPageFeedback.fromJson(Map<String, dynamic> json) =
       _$AnalyticsPageFeedbackImpl.fromJson;
 
-  @override
-
   /// Unique identifier: {userId}_{timestamp}
-  String get id;
   @override
+  String get id;
 
   /// Firebase Auth UID dell'utente
-  String get userId;
   @override
+  String get userId;
 
   /// Feedback positivo (true = 👍) o negativo (false = 👎)
-  bool get isHelpful;
   @override
+  bool get isHelpful;
 
   /// Commento opzionale dell'utente
-  String? get comment;
   @override
+  String? get comment;
 
   /// Timestamp quando il feedback è stato dato
-  DateTime get timestamp;
-  @override // ========================================
-// METADATA OPZIONALE PER ANALYTICS
-// ========================================
+  @override
+  DateTime get timestamp; // ========================================
+  // METADATA OPZIONALE PER ANALYTICS
+  // ========================================
   /// Numero totale di workout visualizzati in Analytics
   /// (utile per capire quanto l'utente ha usato la feature)
-  int? get totalWorkoutsViewed;
   @override
+  int? get totalWorkoutsViewed;
 
   /// Ultima sezione vista prima di dare feedback
   /// Valori: 'overview', 'progress', 'insights', 'routine'
-  String? get lastViewedSection;
   @override
+  String? get lastViewedSection;
 
   /// Device info per analytics (es: "iOS 18.1", "Android 14")
-  Map<String, dynamic>? get deviceInfo;
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic>? get deviceInfo;
+
+  /// Create a copy of AnalyticsPageFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AnalyticsPageFeedbackImplCopyWith<_$AnalyticsPageFeedbackImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

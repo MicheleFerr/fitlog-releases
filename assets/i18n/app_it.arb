@@ -756,8 +756,8 @@
   "markAllAsRead": "Segna Tutto Come Letto",
   "noNotifications": "Nessuna notifica ancora",
   "notificationsDescription": "Ti terremo aggiornato sui tuoi progressi!",
-  "workoutReminderTitle": "Promemoria Allenamento",
-  "workoutReminderBody": "È ora del tuo allenamento {workoutName}! 💪",
+  "workoutReminderTitle": "Promemoria allenamento",
+  "workoutReminderBody": "E ora di \"{name}\"",
   "recoveryAlertTitle": "Recupero Necessario",
   "recoveryAlertBodySingle": "Hai {days} giorno saltato da recuperare! 🔄",
   "recoveryAlertBodyMultiple": "Hai {days} giorni saltati da recuperare! 🔄",
@@ -804,8 +804,8 @@
   "warmupSmart": "SMART",
   "warmupTap": "Tocca",
   "warmupIntelligentProgression": "Progressione Intelligente",
-  "warmupCustomizeTitle": "Personalizza Serie Riscaldamento",
-  "warmupAddSet": "Aggiungi Serie Riscaldamento",
+  "warmupCustomizeTitle": "Personalizza Riscaldamento",
+  "warmupAddSet": "Aggiungi Set",
   "warmupProgressionDescription": "Da {startWeight}kg a {endWeight}kg in {steps} step",
   "workingWeight": "Peso di Lavoro",
   "emptyBarbell": "Bilanciere Vuoto",
@@ -3222,6 +3222,7 @@
   "keepWorkoutActive": "Mantieni Allenamento Attivo?",
   "keepWorkoutActiveMessage": "Vuoi tornare alla Home e mantenere il tuo allenamento attivo in background?\\n\\nPotrai tornare a continuare l'allenamento in qualsiasi momento.",
   "goToHome": "Vai alla Home",
+  "goToWorkout": "Vai all'allenamento",
   "workoutPausedContinue": "Allenamento in pausa - Continua quando vuoi dalla Home",
   "deleteTemplateConfirm": "Sei sicuro di voler eliminare \"{name}\"?",
   "deleteTemplateWarning": "Questa azione non può essere annullata.",
@@ -8884,6 +8885,23 @@
   "settingsResetSettingsDialog": "Ripristina Impostazioni",
   "settingsResetSettingsDialogDesc": "Sei sicuro di voler ripristinare tutte le impostazioni ai valori predefiniti? Questa azione non può essere annullata.",
   "settingsSignOutConfirm": "Sei sicuro di volerti disconnettere?",
+  "settingsTutorialHelp": "Tutorial e Aiuto",
+  "settingsContextualTutorials": "Tutorial Contestuali",
+  "settingsContextualTutorialsDesc": "Mostra suggerimenti utili mentre usi l'app",
+  "settingsTutorialsEnabled": "Tutorial attivati",
+  "settingsTutorialsDisabled": "Tutorial disattivati",
+  "settingsTutorialsSeenCount": "{seen} di {total} tutorial visti",
+  "@settingsTutorialsSeenCount": {
+    "placeholders": {
+      "seen": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "settingsResetTutorials": "Resetta Tutorial",
+  "settingsResetTutorialsDesc": "Rivedi tutti i tutorial dall'inizio",
+  "settingsResetTutorialsConfirmTitle": "Resettare i Tutorial?",
+  "settingsResetTutorialsConfirmBody": "Questo ti permetterà di rivedere tutti i tutorial contestuali. I tuoi dati di allenamento e le impostazioni non saranno modificati.",
+  "settingsTutorialsResetSuccess": "Tutorial resettati con successo! I suggerimenti appariranno nuovamente mentre usi l'app.",
   "settingsApreCalculationMethodUpdated": "Metodo di calcolo APRE aggiornato a {method}",
   "settingsApreCalculationMethodLoading": "Metodo Calcolo APRE",
   "settingsLoadingGeneric": "Caricamento...",
@@ -14903,11 +14921,9 @@
   "@warmupAddAll": {
     "description": "Button text to add all warmup sets"
   },
-  "warmupCustomizeTitle": "Personalizza Riscaldamento",
   "@warmupCustomizeTitle": {
     "description": "Title for warmup customization screen"
   },
-  "warmupAddSet": "Aggiungi Set",
   "@warmupAddSet": {
     "description": "Button text to add a new warmup set"
   },
@@ -14947,5 +14963,231 @@
   "fabViewPreviousWorkouts": "Visualizza workout precedenti",
   "@fabViewPreviousWorkouts": {
     "description": "Description for viewing previous workouts"
+  },
+  "scheduleWorkout": "Programma",
+  "@scheduleWorkout": {
+    "description": "Button to schedule a workout"
+  },
+  "scheduleWorkoutTitle": "Programma \"{name}\"",
+  "@scheduleWorkoutTitle": {
+    "description": "Title for schedule bottom sheet",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tapDaysToSelect": "Tocca i giorni per selezionare/deselezionare",
+  "@tapDaysToSelect": {
+    "description": "Instruction for calendar selection"
+  },
+  "daysSelected": "{count, plural, =0{Nessun giorno selezionato} =1{1 giorno selezionato} other{{count} giorni selezionati}}",
+  "@daysSelected": {
+    "description": "Count of selected days",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderTime": "Orario promemoria",
+  "@reminderTime": {
+    "description": "Label for reminder time picker"
+  },
+  "confirmSchedule": "Conferma programmazione",
+  "@confirmSchedule": {
+    "description": "Button to confirm scheduling"
+  },
+  "cancelSchedule": "Annulla",
+  "@cancelSchedule": {
+    "description": "Button to cancel scheduling"
+  },
+  "workoutScheduledSuccess": "\"{name}\" programmato per {count} giorni",
+  "@workoutScheduledSuccess": {
+    "description": "Success message after scheduling",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduledWorkouts": "Allenamenti programmati",
+  "@scheduledWorkouts": {
+    "description": "Title for scheduled workouts screen"
+  },
+  "noScheduledWorkouts": "Nessun allenamento programmato",
+  "@noScheduledWorkouts": {
+    "description": "Empty state message"
+  },
+  "deleteScheduleConfirm": "Eliminare questo allenamento programmato?",
+  "@deleteScheduleConfirm": {
+    "description": "Confirmation for deleting schedule"
+  },
+  "deleteScheduleMessage": "Questa azione non può essere annullata. Il promemoria programmato verrà annullato.",
+  "@deleteScheduleMessage": {
+    "description": "Message for delete schedule confirmation dialog"
+  },
+  "@workoutReminderTitle": {
+    "description": "Notification title for workout reminder"
+  },
+  "@workoutReminderBody": {
+    "description": "Notification body for workout reminder",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduledForToday": "Programmato per oggi",
+  "@scheduledForToday": {
+    "description": "Label for workout scheduled today"
+  },
+  "scheduledForTomorrow": "Programmato per domani",
+  "@scheduledForTomorrow": {
+    "description": "Label for workout scheduled tomorrow"
+  },
+  "upcomingWorkouts": "Prossimi allenamenti",
+  "@upcomingWorkouts": {
+    "description": "Section title for upcoming workouts"
+  },
+  "skipScheduledWorkout": "Salta",
+  "@skipScheduledWorkout": {
+    "description": "Button to skip a scheduled workout"
+  },
+  "startScheduledWorkout": "Inizia allenamento",
+  "@startScheduledWorkout": {
+    "description": "Button to start a scheduled workout"
+  },
+
+  "tutorialLoggingSetTitle": "Come registrare una serie",
+  "@tutorialLoggingSetTitle": {
+    "description": "Title for the logging set tutorial"
+  },
+  "tutorialLoggingSetDesc": "Tocca qui per inserire peso e ripetizioni. Ogni serie completata sarà salvata automaticamente.",
+  "@tutorialLoggingSetDesc": {
+    "description": "Description for the logging set tutorial"
+  },
+  "tutorialRestTimerTitle": "Timer di recupero",
+  "@tutorialRestTimerTitle": {
+    "description": "Title for the rest timer tutorial"
+  },
+  "tutorialRestTimerDesc": "Il timer di recupero è partito! Puoi regolare il tempo, saltarlo o lasciarlo scorrere. Un suono ti avviserà quando è ora della prossima serie.",
+  "@tutorialRestTimerDesc": {
+    "description": "Description for the rest timer tutorial"
+  },
+  "tutorialExerciseMgmtTitle": "Gestione esercizi",
+  "@tutorialExerciseMgmtTitle": {
+    "description": "Title for the exercise management tutorial"
+  },
+  "tutorialExerciseMgmtDesc": "Premi a lungo su qualsiasi esercizio per riordinare, modificare o eliminare. Puoi anche trascinare gli esercizi per cambiare l'ordine.",
+  "@tutorialExerciseMgmtDesc": {
+    "description": "Description for the exercise management tutorial"
+  },
+  "tutorialWorkoutCompleteTitle": "Ottimo lavoro!",
+  "@tutorialWorkoutCompleteTitle": {
+    "description": "Title for the workout completion tutorial"
+  },
+  "tutorialWorkoutCompleteDesc": "Hai completato il tuo primo allenamento! I tuoi progressi sono stati salvati e puoi vedere le statistiche nella sezione Analisi.",
+  "@tutorialWorkoutCompleteDesc": {
+    "description": "Description for the workout completion tutorial"
+  },
+  "tutorialAnalyticsTitle": "Le tue analisi",
+  "@tutorialAnalyticsTitle": {
+    "description": "Title for the analytics tutorial"
+  },
+  "tutorialAnalyticsDesc": "Dopo 3 allenamenti inizierai a vedere statistiche utili: tendenze del volume, distribuzione muscolare e grafici di progresso.",
+  "@tutorialAnalyticsDesc": {
+    "description": "Description for the analytics tutorial"
+  },
+  "tutorialTemplatesTitle": "Template allenamento",
+  "@tutorialTemplatesTitle": {
+    "description": "Title for the templates tutorial"
+  },
+  "tutorialTemplatesDesc": "Salva le tue routine preferite come template. Inizia gli allenamenti più velocemente caricandoli con un tocco.",
+  "@tutorialTemplatesDesc": {
+    "description": "Description for the templates tutorial"
+  },
+  "tutorialAdvancedTitle": "Tecniche avanzate",
+  "@tutorialAdvancedTitle": {
+    "description": "Title for the advanced techniques tutorial"
+  },
+  "tutorialAdvancedDesc": "Superserie, drop set e rest-pause ti aiutano ad allenarti più efficacemente. Provale quando sei pronto per una sfida!",
+  "@tutorialAdvancedDesc": {
+    "description": "Description for the advanced techniques tutorial"
+  },
+  "tutorialSupersetBuilderTitle": "Costruttore Superserie",
+  "@tutorialSupersetBuilderTitle": {
+    "description": "Title for the superset builder tutorial"
+  },
+  "tutorialSupersetBuilderDesc": "Crea superserie abbinando esercizi. Eseguili uno dopo l'altro senza pausa per massima intensità!",
+  "@tutorialSupersetBuilderDesc": {
+    "description": "Description for the superset builder tutorial"
+  },
+  "tutorialExerciseDbTitle": "Database Esercizi",
+  "@tutorialExerciseDbTitle": {
+    "description": "Title for the exercise database tutorial"
+  },
+  "tutorialExerciseDbDesc": "Cerca tra 800+ esercizi, filtra per gruppo muscolare e salva i preferiti. Puoi anche creare esercizi personalizzati!",
+  "@tutorialExerciseDbDesc": {
+    "description": "Description for the exercise database tutorial"
+  },
+  "tutorialRpeTitle": "Scala RPE",
+  "@tutorialRpeTitle": {
+    "description": "Title for the RPE selector tutorial"
+  },
+  "tutorialRpeDesc": "L'RPE (Sforzo Percepito) aiuta a tracciare l'intensità. 10 = sforzo massimo, 6 = riscaldamento. Tocca per impostare l'RPE per ogni serie.",
+  "@tutorialRpeDesc": {
+    "description": "Description for the RPE selector tutorial"
+  },
+  "tutorialQuickEditTitle": "Modifica Rapida",
+  "@tutorialQuickEditTitle": {
+    "description": "Title for the quick edit tutorial"
+  },
+  "tutorialQuickEditDesc": "Regola rapidamente peso e ripetizioni con i pulsanti incremento. Tieni premuto per salti maggiori!",
+  "@tutorialQuickEditDesc": {
+    "description": "Description for the quick edit tutorial"
+  },
+  "tutorialHistoryTitle": "Storico Allenamenti",
+  "@tutorialHistoryTitle": {
+    "description": "Title for the history tutorial"
+  },
+  "tutorialHistoryDesc": "Visualizza tutti i tuoi allenamenti passati, monitora i progressi nel tempo e confronta le tue performance. Tocca un allenamento per i dettagli!",
+  "@tutorialHistoryDesc": {
+    "description": "Description for the history tutorial"
+  },
+  "tutorialRoutineCenterTitle": "Centro Routine",
+  "@tutorialRoutineCenterTitle": {
+    "description": "Title for the routine center tutorial"
+  },
+  "tutorialRoutineCenterDesc": "Crea e gestisci le tue routine di allenamento. Salva template per avvii rapidi e organizza i tuoi programmi.",
+  "@tutorialRoutineCenterDesc": {
+    "description": "Description for the routine center tutorial"
+  },
+  "tutorialSettingsTitle": "Impostazioni",
+  "@tutorialSettingsTitle": {
+    "description": "Title for the settings tutorial"
+  },
+  "tutorialSettingsDesc": "Personalizza la tua esperienza: durate timer, suoni, tema, unità e altro. Fai funzionare l'app a modo tuo!",
+  "@tutorialSettingsDesc": {
+    "description": "Description for the settings tutorial"
+  },
+  "tutorialExportTitle": "Esporta Dati",
+  "@tutorialExportTitle": {
+    "description": "Title for the export data tutorial"
+  },
+  "tutorialExportDesc": "Esporta i tuoi dati di allenamento in CSV o JSON. Perfetto per backup o analisi in altre app!",
+  "@tutorialExportDesc": {
+    "description": "Description for the export data tutorial"
+  },
+  "tutorialActionGotIt": "Capito!",
+  "@tutorialActionGotIt": {
+    "description": "Action button text to dismiss tutorial"
+  },
+  "tutorialActionLearnMore": "Scopri di più",
+  "@tutorialActionLearnMore": {
+    "description": "Action button text to learn more about feature"
   }
 }

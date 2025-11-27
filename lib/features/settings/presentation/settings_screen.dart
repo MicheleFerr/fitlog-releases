@@ -16,6 +16,8 @@ import 'package:gymbro_flutter_new/features/admin/presentation/screens/database_
 import 'package:gymbro_flutter_new/features/analytics/presentation/widgets/migration_dialog.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/color_scheme_extensions.dart';
+import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/tutorial_state_notifier.dart';
+import 'package:gymbro_flutter_new/features/onboarding/domain/registry/tutorial_registry.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -86,6 +88,10 @@ class SettingsScreen extends ConsumerWidget {
 
             // Units & Language
             _buildUnitsLanguageSection(context, ref, config),
+            const SizedBox(height: 24),
+
+            // Tutorial & Help
+            _buildTutorialHelpSection(context, ref),
             const SizedBox(height: 24),
 
             // Account Actions
@@ -613,6 +619,101 @@ class SettingsScreen extends ConsumerWidget {
   }
 
 
+  Widget _buildTutorialHelpSection(BuildContext context, WidgetRef ref) {
+    final tutorialsEnabled = ref.watch(tutorialsEnabledProvider);
+    final seenCount = ref.watch(seenTutorialsCountProvider);
+    final totalCount = TutorialRegistry.allTutorials.length;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                SemanticIcon(
+                  icon: AppIcons.help,
+                  semanticLabel: context.l10n.settingsTutorialHelp,
+                  size: AppIconSize.medium,
+                  color: context.colors.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.settingsTutorialHelp,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Contextual Tutorials Toggle
+            _buildSwitchTile(
+              context,
+              title: context.l10n.settingsContextualTutorials,
+              subtitle: context.l10n.settingsContextualTutorialsDesc,
+              value: tutorialsEnabled,
+              onChanged: (value) {
+                ref.read(tutorialStateProvider.notifier).setTutorialsEnabled(value);
+                SnackBarService.showSuccess(
+                  context,
+                  value
+                      ? context.l10n.settingsTutorialsEnabled
+                      : context.l10n.settingsTutorialsDisabled,
+                );
+              },
+            ),
+
+            const Divider(),
+
+            // Tutorials Progress Info
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  SemanticIcon(
+                    icon: AppIcons.checkCircle,
+                    semanticLabel: context.l10n.settingsTutorialsSeenCount(seenCount, totalCount),
+                    size: AppIconSize.small,
+                    color: context.colors.success,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      context.l10n.settingsTutorialsSeenCount(seenCount, totalCount),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // Reset Tutorials Button
+            _buildSettingTile(
+              context,
+              title: context.l10n.settingsResetTutorials,
+              subtitle: context.l10n.settingsResetTutorialsDesc,
+              leading: SemanticIcon(
+                icon: AppIcons.refresh,
+                semanticLabel: context.l10n.settingsResetTutorials,
+                size: AppIconSize.medium,
+                color: context.colors.warning,
+              ),
+              onTap: () => _showResetTutorialsDialog(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildAccountSection(BuildContext context, WidgetRef ref) {
     return Card(
       child: Padding(
@@ -1021,6 +1122,38 @@ class SettingsScreen extends ConsumerWidget {
             },
             style: FilledButton.styleFrom(backgroundColor: context.colors.error),
             child: Text(context.l10n.signOutButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showResetTutorialsDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.settingsResetTutorialsConfirmTitle),
+        content: Text(context.l10n.settingsResetTutorialsConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await ref.read(tutorialStateProvider.notifier).resetAllTutorials();
+              if (context.mounted) {
+                SnackBarService.showSuccess(
+                  context,
+                  context.l10n.settingsTutorialsResetSuccess,
+                );
+              }
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: context.colors.warning,
+            ),
+            child: Text(context.l10n.settingsResetTutorials),
           ),
         ],
       ),

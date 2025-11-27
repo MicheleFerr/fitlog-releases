@@ -1,33 +1,30 @@
 import UIKit
 import Flutter
 
+/// SceneDelegate for UIScene lifecycle support
+/// Must extend FlutterSceneDelegate for proper Flutter integration
 @available(iOS 13.0, *)
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: FlutterSceneDelegate {
 
-    var window: UIWindow?
     private var lastActiveTime: Date?
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = scene as? UIWindowScene else { return }
+    // MARK: - Scene Lifecycle
 
-        // Create the Flutter engine
-        let flutterEngine = (UIApplication.shared.delegate as! AppDelegate).flutterEngine
-
-        // Create window with Flutter view controller
-        window = UIWindow(windowScene: windowScene)
-
-        let flutterViewController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil)
-        window?.rootViewController = flutterViewController
-        window?.makeKeyAndVisible()
+    override func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        // Call super to let FlutterSceneDelegate handle Flutter setup
+        super.scene(scene, willConnectTo: session, options: connectionOptions)
 
         Logger.shared.log(.info, "SceneDelegate: Scene connected", category: .general)
     }
 
-    func sceneDidDisconnect(_ scene: UIScene) {
+    override func sceneDidDisconnect(_ scene: UIScene) {
+        super.sceneDidDisconnect(scene)
         Logger.shared.log(.info, "SceneDelegate: Scene disconnected", category: .general)
     }
 
-    func sceneDidBecomeActive(_ scene: UIScene) {
+    override func sceneDidBecomeActive(_ scene: UIScene) {
+        super.sceneDidBecomeActive(scene)
+
         // Prevent duplicate active events within 1 second
         let now = Date()
         if let lastTime = lastActiveTime, now.timeIntervalSince(lastTime) < 1.0 {
@@ -43,11 +40,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func sceneWillResignActive(_ scene: UIScene) {
+    override func sceneWillResignActive(_ scene: UIScene) {
+        super.sceneWillResignActive(scene)
         Logger.shared.log(.info, "SceneDelegate: Scene will resign active", category: .general)
     }
 
-    func sceneWillEnterForeground(_ scene: UIScene) {
+    override func sceneWillEnterForeground(_ scene: UIScene) {
+        super.sceneWillEnterForeground(scene)
         Logger.shared.log(.info, "SceneDelegate: Scene will enter foreground", category: .general)
 
         // Transition audio to foreground
@@ -57,13 +56,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Cancel background tasks
         if FeatureFlags.useNewBackgroundTaskManager {
-            if #available(iOS 13.0, *) {
-                BackgroundTaskManager.shared.cancelAllTasks()
-            }
+            BackgroundTaskManager.shared.cancelAllTasks()
         }
     }
 
-    func sceneDidEnterBackground(_ scene: UIScene) {
+    override func sceneDidEnterBackground(_ scene: UIScene) {
+        super.sceneDidEnterBackground(scene)
         Logger.shared.log(.info, "SceneDelegate: Scene did enter background", category: .general)
 
         // Transition audio to background
@@ -73,10 +71,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Schedule background tasks
         if FeatureFlags.useNewBackgroundTaskManager {
-            if #available(iOS 13.0, *) {
-                BackgroundTaskManager.shared.scheduleAppRefresh()
-                BackgroundTaskManager.shared.scheduleProcessingTask()
-            }
+            BackgroundTaskManager.shared.scheduleAppRefresh()
+            BackgroundTaskManager.shared.scheduleProcessingTask()
         }
     }
 }

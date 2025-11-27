@@ -12,7 +12,8 @@ part of 'analytics_set_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AnalyticsSetModel {
@@ -25,7 +26,9 @@ mixin _$AnalyticsSetModel {
   /// When the set was performed (Firestore Timestamp)
   DateTime get date => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyticsSetModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AnalyticsSetModelCopyWith<AnalyticsSetModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -33,8 +36,9 @@ mixin _$AnalyticsSetModel {
 /// @nodoc
 abstract class $AnalyticsSetModelCopyWith<$Res> {
   factory $AnalyticsSetModelCopyWith(
-          AnalyticsSetModel value, $Res Function(AnalyticsSetModel) then) =
-      _$AnalyticsSetModelCopyWithImpl<$Res, AnalyticsSetModel>;
+    AnalyticsSetModel value,
+    $Res Function(AnalyticsSetModel) then,
+  ) = _$AnalyticsSetModelCopyWithImpl<$Res, AnalyticsSetModel>;
   @useResult
   $Res call({double weight, int reps, DateTime date});
 }
@@ -49,36 +53,38 @@ class _$AnalyticsSetModelCopyWithImpl<$Res, $Val extends AnalyticsSetModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AnalyticsSetModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? weight = null,
-    Object? reps = null,
-    Object? date = null,
-  }) {
-    return _then(_value.copyWith(
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+  $Res call({Object? weight = null, Object? reps = null, Object? date = null}) {
+    return _then(
+      _value.copyWith(
+            weight: null == weight
+                ? _value.weight
+                : weight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            reps: null == reps
+                ? _value.reps
+                : reps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AnalyticsSetModelImplCopyWith<$Res>
     implements $AnalyticsSetModelCopyWith<$Res> {
-  factory _$$AnalyticsSetModelImplCopyWith(_$AnalyticsSetModelImpl value,
-          $Res Function(_$AnalyticsSetModelImpl) then) =
-      __$$AnalyticsSetModelImplCopyWithImpl<$Res>;
+  factory _$$AnalyticsSetModelImplCopyWith(
+    _$AnalyticsSetModelImpl value,
+    $Res Function(_$AnalyticsSetModelImpl) then,
+  ) = __$$AnalyticsSetModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double weight, int reps, DateTime date});
@@ -88,40 +94,43 @@ abstract class _$$AnalyticsSetModelImplCopyWith<$Res>
 class __$$AnalyticsSetModelImplCopyWithImpl<$Res>
     extends _$AnalyticsSetModelCopyWithImpl<$Res, _$AnalyticsSetModelImpl>
     implements _$$AnalyticsSetModelImplCopyWith<$Res> {
-  __$$AnalyticsSetModelImplCopyWithImpl(_$AnalyticsSetModelImpl _value,
-      $Res Function(_$AnalyticsSetModelImpl) _then)
-      : super(_value, _then);
+  __$$AnalyticsSetModelImplCopyWithImpl(
+    _$AnalyticsSetModelImpl _value,
+    $Res Function(_$AnalyticsSetModelImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AnalyticsSetModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? weight = null,
-    Object? reps = null,
-    Object? date = null,
-  }) {
-    return _then(_$AnalyticsSetModelImpl(
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+  $Res call({Object? weight = null, Object? reps = null, Object? date = null}) {
+    return _then(
+      _$AnalyticsSetModelImpl(
+        weight: null == weight
+            ? _value.weight
+            : weight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        reps: null == reps
+            ? _value.reps
+            : reps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$AnalyticsSetModelImpl extends _AnalyticsSetModel {
-  const _$AnalyticsSetModelImpl(
-      {required this.weight, required this.reps, required this.date})
-      : super._();
+  const _$AnalyticsSetModelImpl({
+    required this.weight,
+    required this.reps,
+    required this.date,
+  }) : super._();
 
   /// Weight lifted in kg
   @override
@@ -153,35 +162,42 @@ class _$AnalyticsSetModelImpl extends _AnalyticsSetModel {
   @override
   int get hashCode => Object.hash(runtimeType, weight, reps, date);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyticsSetModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AnalyticsSetModelImplCopyWith<_$AnalyticsSetModelImpl> get copyWith =>
       __$$AnalyticsSetModelImplCopyWithImpl<_$AnalyticsSetModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _AnalyticsSetModel extends AnalyticsSetModel {
-  const factory _AnalyticsSetModel(
-      {required final double weight,
-      required final int reps,
-      required final DateTime date}) = _$AnalyticsSetModelImpl;
+  const factory _AnalyticsSetModel({
+    required final double weight,
+    required final int reps,
+    required final DateTime date,
+  }) = _$AnalyticsSetModelImpl;
   const _AnalyticsSetModel._() : super._();
 
-  @override
-
   /// Weight lifted in kg
-  double get weight;
   @override
+  double get weight;
 
   /// Number of repetitions performed
-  int get reps;
   @override
+  int get reps;
 
   /// When the set was performed (Firestore Timestamp)
-  DateTime get date;
   @override
-  @JsonKey(ignore: true)
+  DateTime get date;
+
+  /// Create a copy of AnalyticsSetModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AnalyticsSetModelImplCopyWith<_$AnalyticsSetModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

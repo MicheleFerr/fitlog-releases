@@ -12,7 +12,8 @@ part of 'feedback_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FeedbackData _$FeedbackDataFromJson(Map<String, dynamic> json) {
   return _FeedbackData.fromJson(json);
@@ -50,8 +51,12 @@ mixin _$FeedbackData {
   /// How long insight was shown before feedback (in seconds)
   int get viewDurationSeconds => throw _privateConstructorUsedError;
 
+  /// Serializes this FeedbackData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FeedbackData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FeedbackDataCopyWith<FeedbackData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,20 +64,22 @@ mixin _$FeedbackData {
 /// @nodoc
 abstract class $FeedbackDataCopyWith<$Res> {
   factory $FeedbackDataCopyWith(
-          FeedbackData value, $Res Function(FeedbackData) then) =
-      _$FeedbackDataCopyWithImpl<$Res, FeedbackData>;
+    FeedbackData value,
+    $Res Function(FeedbackData) then,
+  ) = _$FeedbackDataCopyWithImpl<$Res, FeedbackData>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String insightId,
-      String insightType,
-      String insightCategory,
-      FeedbackType feedbackType,
-      DismissReason? dismissReason,
-      String? comment,
-      DateTime timestamp,
-      int viewDurationSeconds});
+  $Res call({
+    String id,
+    String userId,
+    String insightId,
+    String insightType,
+    String insightCategory,
+    FeedbackType feedbackType,
+    DismissReason? dismissReason,
+    String? comment,
+    DateTime timestamp,
+    int viewDurationSeconds,
+  });
 }
 
 /// @nodoc
@@ -85,6 +92,8 @@ class _$FeedbackDataCopyWithImpl<$Res, $Val extends FeedbackData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FeedbackData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,48 +108,51 @@ class _$FeedbackDataCopyWithImpl<$Res, $Val extends FeedbackData>
     Object? timestamp = null,
     Object? viewDurationSeconds = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightId: null == insightId
-          ? _value.insightId
-          : insightId // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightType: null == insightType
-          ? _value.insightType
-          : insightType // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightCategory: null == insightCategory
-          ? _value.insightCategory
-          : insightCategory // ignore: cast_nullable_to_non_nullable
-              as String,
-      feedbackType: null == feedbackType
-          ? _value.feedbackType
-          : feedbackType // ignore: cast_nullable_to_non_nullable
-              as FeedbackType,
-      dismissReason: freezed == dismissReason
-          ? _value.dismissReason
-          : dismissReason // ignore: cast_nullable_to_non_nullable
-              as DismissReason?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      viewDurationSeconds: null == viewDurationSeconds
-          ? _value.viewDurationSeconds
-          : viewDurationSeconds // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            insightId: null == insightId
+                ? _value.insightId
+                : insightId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            insightType: null == insightType
+                ? _value.insightType
+                : insightType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            insightCategory: null == insightCategory
+                ? _value.insightCategory
+                : insightCategory // ignore: cast_nullable_to_non_nullable
+                      as String,
+            feedbackType: null == feedbackType
+                ? _value.feedbackType
+                : feedbackType // ignore: cast_nullable_to_non_nullable
+                      as FeedbackType,
+            dismissReason: freezed == dismissReason
+                ? _value.dismissReason
+                : dismissReason // ignore: cast_nullable_to_non_nullable
+                      as DismissReason?,
+            comment: freezed == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            viewDurationSeconds: null == viewDurationSeconds
+                ? _value.viewDurationSeconds
+                : viewDurationSeconds // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -148,21 +160,23 @@ class _$FeedbackDataCopyWithImpl<$Res, $Val extends FeedbackData>
 abstract class _$$FeedbackDataImplCopyWith<$Res>
     implements $FeedbackDataCopyWith<$Res> {
   factory _$$FeedbackDataImplCopyWith(
-          _$FeedbackDataImpl value, $Res Function(_$FeedbackDataImpl) then) =
-      __$$FeedbackDataImplCopyWithImpl<$Res>;
+    _$FeedbackDataImpl value,
+    $Res Function(_$FeedbackDataImpl) then,
+  ) = __$$FeedbackDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String insightId,
-      String insightType,
-      String insightCategory,
-      FeedbackType feedbackType,
-      DismissReason? dismissReason,
-      String? comment,
-      DateTime timestamp,
-      int viewDurationSeconds});
+  $Res call({
+    String id,
+    String userId,
+    String insightId,
+    String insightType,
+    String insightCategory,
+    FeedbackType feedbackType,
+    DismissReason? dismissReason,
+    String? comment,
+    DateTime timestamp,
+    int viewDurationSeconds,
+  });
 }
 
 /// @nodoc
@@ -170,9 +184,12 @@ class __$$FeedbackDataImplCopyWithImpl<$Res>
     extends _$FeedbackDataCopyWithImpl<$Res, _$FeedbackDataImpl>
     implements _$$FeedbackDataImplCopyWith<$Res> {
   __$$FeedbackDataImplCopyWithImpl(
-      _$FeedbackDataImpl _value, $Res Function(_$FeedbackDataImpl) _then)
-      : super(_value, _then);
+    _$FeedbackDataImpl _value,
+    $Res Function(_$FeedbackDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FeedbackData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -187,65 +204,68 @@ class __$$FeedbackDataImplCopyWithImpl<$Res>
     Object? timestamp = null,
     Object? viewDurationSeconds = null,
   }) {
-    return _then(_$FeedbackDataImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightId: null == insightId
-          ? _value.insightId
-          : insightId // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightType: null == insightType
-          ? _value.insightType
-          : insightType // ignore: cast_nullable_to_non_nullable
-              as String,
-      insightCategory: null == insightCategory
-          ? _value.insightCategory
-          : insightCategory // ignore: cast_nullable_to_non_nullable
-              as String,
-      feedbackType: null == feedbackType
-          ? _value.feedbackType
-          : feedbackType // ignore: cast_nullable_to_non_nullable
-              as FeedbackType,
-      dismissReason: freezed == dismissReason
-          ? _value.dismissReason
-          : dismissReason // ignore: cast_nullable_to_non_nullable
-              as DismissReason?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      viewDurationSeconds: null == viewDurationSeconds
-          ? _value.viewDurationSeconds
-          : viewDurationSeconds // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$FeedbackDataImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        insightId: null == insightId
+            ? _value.insightId
+            : insightId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        insightType: null == insightType
+            ? _value.insightType
+            : insightType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        insightCategory: null == insightCategory
+            ? _value.insightCategory
+            : insightCategory // ignore: cast_nullable_to_non_nullable
+                  as String,
+        feedbackType: null == feedbackType
+            ? _value.feedbackType
+            : feedbackType // ignore: cast_nullable_to_non_nullable
+                  as FeedbackType,
+        dismissReason: freezed == dismissReason
+            ? _value.dismissReason
+            : dismissReason // ignore: cast_nullable_to_non_nullable
+                  as DismissReason?,
+        comment: freezed == comment
+            ? _value.comment
+            : comment // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        viewDurationSeconds: null == viewDurationSeconds
+            ? _value.viewDurationSeconds
+            : viewDurationSeconds // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FeedbackDataImpl implements _FeedbackData {
-  const _$FeedbackDataImpl(
-      {required this.id,
-      required this.userId,
-      required this.insightId,
-      required this.insightType,
-      required this.insightCategory,
-      required this.feedbackType,
-      this.dismissReason,
-      this.comment,
-      required this.timestamp,
-      this.viewDurationSeconds = 0});
+  const _$FeedbackDataImpl({
+    required this.id,
+    required this.userId,
+    required this.insightId,
+    required this.insightType,
+    required this.insightCategory,
+    required this.feedbackType,
+    this.dismissReason,
+    this.comment,
+    required this.timestamp,
+    this.viewDurationSeconds = 0,
+  });
 
   factory _$FeedbackDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$FeedbackDataImplFromJson(json);
@@ -320,22 +340,25 @@ class _$FeedbackDataImpl implements _FeedbackData {
                 other.viewDurationSeconds == viewDurationSeconds));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      insightId,
-      insightType,
-      insightCategory,
-      feedbackType,
-      dismissReason,
-      comment,
-      timestamp,
-      viewDurationSeconds);
+    runtimeType,
+    id,
+    userId,
+    insightId,
+    insightType,
+    insightCategory,
+    feedbackType,
+    dismissReason,
+    comment,
+    timestamp,
+    viewDurationSeconds,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FeedbackData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FeedbackDataImplCopyWith<_$FeedbackDataImpl> get copyWith =>
@@ -343,70 +366,71 @@ class _$FeedbackDataImpl implements _FeedbackData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FeedbackDataImplToJson(
-      this,
-    );
+    return _$$FeedbackDataImplToJson(this);
   }
 }
 
 abstract class _FeedbackData implements FeedbackData {
-  const factory _FeedbackData(
-      {required final String id,
-      required final String userId,
-      required final String insightId,
-      required final String insightType,
-      required final String insightCategory,
-      required final FeedbackType feedbackType,
-      final DismissReason? dismissReason,
-      final String? comment,
-      required final DateTime timestamp,
-      final int viewDurationSeconds}) = _$FeedbackDataImpl;
+  const factory _FeedbackData({
+    required final String id,
+    required final String userId,
+    required final String insightId,
+    required final String insightType,
+    required final String insightCategory,
+    required final FeedbackType feedbackType,
+    final DismissReason? dismissReason,
+    final String? comment,
+    required final DateTime timestamp,
+    final int viewDurationSeconds,
+  }) = _$FeedbackDataImpl;
 
   factory _FeedbackData.fromJson(Map<String, dynamic> json) =
       _$FeedbackDataImpl.fromJson;
 
-  @override
-
   /// Unique feedback ID
-  String get id;
   @override
+  String get id;
 
   /// User ID who provided feedback
-  String get userId;
   @override
+  String get userId;
 
   /// Insight ID that received feedback
-  String get insightId;
   @override
+  String get insightId;
 
   /// Type of insight that received feedback
-  String get insightType;
   @override
+  String get insightType;
 
   /// Category of insight that received feedback
-  String get insightCategory;
   @override
+  String get insightCategory;
 
   /// Type of feedback provided
-  FeedbackType get feedbackType;
   @override
+  FeedbackType get feedbackType;
 
   /// Reason for dismissing (if feedbackType is notHelpful/dismissed)
-  DismissReason? get dismissReason;
   @override
+  DismissReason? get dismissReason;
 
   /// Optional text comment from user
-  String? get comment;
   @override
+  String? get comment;
 
   /// When feedback was provided
-  DateTime get timestamp;
   @override
+  DateTime get timestamp;
 
   /// How long insight was shown before feedback (in seconds)
-  int get viewDurationSeconds;
   @override
-  @JsonKey(ignore: true)
+  int get viewDurationSeconds;
+
+  /// Create a copy of FeedbackData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FeedbackDataImplCopyWith<_$FeedbackDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -441,8 +465,12 @@ mixin _$FeedbackStats {
   /// When stats were last updated
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
 
+  /// Serializes this FeedbackStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FeedbackStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FeedbackStatsCopyWith<FeedbackStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -450,18 +478,20 @@ mixin _$FeedbackStats {
 /// @nodoc
 abstract class $FeedbackStatsCopyWith<$Res> {
   factory $FeedbackStatsCopyWith(
-          FeedbackStats value, $Res Function(FeedbackStats) then) =
-      _$FeedbackStatsCopyWithImpl<$Res, FeedbackStats>;
+    FeedbackStats value,
+    $Res Function(FeedbackStats) then,
+  ) = _$FeedbackStatsCopyWithImpl<$Res, FeedbackStats>;
   @useResult
-  $Res call(
-      {String identifier,
-      int totalFeedback,
-      int helpfulCount,
-      int notHelpfulCount,
-      int dismissedCount,
-      int actedUponCount,
-      double avgViewDuration,
-      DateTime? lastUpdated});
+  $Res call({
+    String identifier,
+    int totalFeedback,
+    int helpfulCount,
+    int notHelpfulCount,
+    int dismissedCount,
+    int actedUponCount,
+    double avgViewDuration,
+    DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
@@ -474,6 +504,8 @@ class _$FeedbackStatsCopyWithImpl<$Res, $Val extends FeedbackStats>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FeedbackStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -486,40 +518,43 @@ class _$FeedbackStatsCopyWithImpl<$Res, $Val extends FeedbackStats>
     Object? avgViewDuration = null,
     Object? lastUpdated = freezed,
   }) {
-    return _then(_value.copyWith(
-      identifier: null == identifier
-          ? _value.identifier
-          : identifier // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalFeedback: null == totalFeedback
-          ? _value.totalFeedback
-          : totalFeedback // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      notHelpfulCount: null == notHelpfulCount
-          ? _value.notHelpfulCount
-          : notHelpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      dismissedCount: null == dismissedCount
-          ? _value.dismissedCount
-          : dismissedCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      actedUponCount: null == actedUponCount
-          ? _value.actedUponCount
-          : actedUponCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      avgViewDuration: null == avgViewDuration
-          ? _value.avgViewDuration
-          : avgViewDuration // ignore: cast_nullable_to_non_nullable
-              as double,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            identifier: null == identifier
+                ? _value.identifier
+                : identifier // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalFeedback: null == totalFeedback
+                ? _value.totalFeedback
+                : totalFeedback // ignore: cast_nullable_to_non_nullable
+                      as int,
+            helpfulCount: null == helpfulCount
+                ? _value.helpfulCount
+                : helpfulCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            notHelpfulCount: null == notHelpfulCount
+                ? _value.notHelpfulCount
+                : notHelpfulCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            dismissedCount: null == dismissedCount
+                ? _value.dismissedCount
+                : dismissedCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            actedUponCount: null == actedUponCount
+                ? _value.actedUponCount
+                : actedUponCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            avgViewDuration: null == avgViewDuration
+                ? _value.avgViewDuration
+                : avgViewDuration // ignore: cast_nullable_to_non_nullable
+                      as double,
+            lastUpdated: freezed == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -527,19 +562,21 @@ class _$FeedbackStatsCopyWithImpl<$Res, $Val extends FeedbackStats>
 abstract class _$$FeedbackStatsImplCopyWith<$Res>
     implements $FeedbackStatsCopyWith<$Res> {
   factory _$$FeedbackStatsImplCopyWith(
-          _$FeedbackStatsImpl value, $Res Function(_$FeedbackStatsImpl) then) =
-      __$$FeedbackStatsImplCopyWithImpl<$Res>;
+    _$FeedbackStatsImpl value,
+    $Res Function(_$FeedbackStatsImpl) then,
+  ) = __$$FeedbackStatsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String identifier,
-      int totalFeedback,
-      int helpfulCount,
-      int notHelpfulCount,
-      int dismissedCount,
-      int actedUponCount,
-      double avgViewDuration,
-      DateTime? lastUpdated});
+  $Res call({
+    String identifier,
+    int totalFeedback,
+    int helpfulCount,
+    int notHelpfulCount,
+    int dismissedCount,
+    int actedUponCount,
+    double avgViewDuration,
+    DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
@@ -547,9 +584,12 @@ class __$$FeedbackStatsImplCopyWithImpl<$Res>
     extends _$FeedbackStatsCopyWithImpl<$Res, _$FeedbackStatsImpl>
     implements _$$FeedbackStatsImplCopyWith<$Res> {
   __$$FeedbackStatsImplCopyWithImpl(
-      _$FeedbackStatsImpl _value, $Res Function(_$FeedbackStatsImpl) _then)
-      : super(_value, _then);
+    _$FeedbackStatsImpl _value,
+    $Res Function(_$FeedbackStatsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FeedbackStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -562,55 +602,58 @@ class __$$FeedbackStatsImplCopyWithImpl<$Res>
     Object? avgViewDuration = null,
     Object? lastUpdated = freezed,
   }) {
-    return _then(_$FeedbackStatsImpl(
-      identifier: null == identifier
-          ? _value.identifier
-          : identifier // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalFeedback: null == totalFeedback
-          ? _value.totalFeedback
-          : totalFeedback // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      notHelpfulCount: null == notHelpfulCount
-          ? _value.notHelpfulCount
-          : notHelpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      dismissedCount: null == dismissedCount
-          ? _value.dismissedCount
-          : dismissedCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      actedUponCount: null == actedUponCount
-          ? _value.actedUponCount
-          : actedUponCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      avgViewDuration: null == avgViewDuration
-          ? _value.avgViewDuration
-          : avgViewDuration // ignore: cast_nullable_to_non_nullable
-              as double,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$FeedbackStatsImpl(
+        identifier: null == identifier
+            ? _value.identifier
+            : identifier // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalFeedback: null == totalFeedback
+            ? _value.totalFeedback
+            : totalFeedback // ignore: cast_nullable_to_non_nullable
+                  as int,
+        helpfulCount: null == helpfulCount
+            ? _value.helpfulCount
+            : helpfulCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        notHelpfulCount: null == notHelpfulCount
+            ? _value.notHelpfulCount
+            : notHelpfulCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        dismissedCount: null == dismissedCount
+            ? _value.dismissedCount
+            : dismissedCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        actedUponCount: null == actedUponCount
+            ? _value.actedUponCount
+            : actedUponCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        avgViewDuration: null == avgViewDuration
+            ? _value.avgViewDuration
+            : avgViewDuration // ignore: cast_nullable_to_non_nullable
+                  as double,
+        lastUpdated: freezed == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FeedbackStatsImpl implements _FeedbackStats {
-  const _$FeedbackStatsImpl(
-      {required this.identifier,
-      this.totalFeedback = 0,
-      this.helpfulCount = 0,
-      this.notHelpfulCount = 0,
-      this.dismissedCount = 0,
-      this.actedUponCount = 0,
-      this.avgViewDuration = 0.0,
-      this.lastUpdated});
+  const _$FeedbackStatsImpl({
+    required this.identifier,
+    this.totalFeedback = 0,
+    this.helpfulCount = 0,
+    this.notHelpfulCount = 0,
+    this.dismissedCount = 0,
+    this.actedUponCount = 0,
+    this.avgViewDuration = 0.0,
+    this.lastUpdated,
+  });
 
   factory _$FeedbackStatsImpl.fromJson(Map<String, dynamic> json) =>
       _$$FeedbackStatsImplFromJson(json);
@@ -681,20 +724,23 @@ class _$FeedbackStatsImpl implements _FeedbackStats {
                 other.lastUpdated == lastUpdated));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      identifier,
-      totalFeedback,
-      helpfulCount,
-      notHelpfulCount,
-      dismissedCount,
-      actedUponCount,
-      avgViewDuration,
-      lastUpdated);
+    runtimeType,
+    identifier,
+    totalFeedback,
+    helpfulCount,
+    notHelpfulCount,
+    dismissedCount,
+    actedUponCount,
+    avgViewDuration,
+    lastUpdated,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FeedbackStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FeedbackStatsImplCopyWith<_$FeedbackStatsImpl> get copyWith =>
@@ -702,60 +748,61 @@ class _$FeedbackStatsImpl implements _FeedbackStats {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FeedbackStatsImplToJson(
-      this,
-    );
+    return _$$FeedbackStatsImplToJson(this);
   }
 }
 
 abstract class _FeedbackStats implements FeedbackStats {
-  const factory _FeedbackStats(
-      {required final String identifier,
-      final int totalFeedback,
-      final int helpfulCount,
-      final int notHelpfulCount,
-      final int dismissedCount,
-      final int actedUponCount,
-      final double avgViewDuration,
-      final DateTime? lastUpdated}) = _$FeedbackStatsImpl;
+  const factory _FeedbackStats({
+    required final String identifier,
+    final int totalFeedback,
+    final int helpfulCount,
+    final int notHelpfulCount,
+    final int dismissedCount,
+    final int actedUponCount,
+    final double avgViewDuration,
+    final DateTime? lastUpdated,
+  }) = _$FeedbackStatsImpl;
 
   factory _FeedbackStats.fromJson(Map<String, dynamic> json) =
       _$FeedbackStatsImpl.fromJson;
 
-  @override
-
   /// Insight type or category
-  String get identifier;
   @override
+  String get identifier;
 
   /// Total feedback received
-  int get totalFeedback;
   @override
+  int get totalFeedback;
 
   /// Helpful feedback count
-  int get helpfulCount;
   @override
+  int get helpfulCount;
 
   /// Not helpful feedback count
-  int get notHelpfulCount;
   @override
+  int get notHelpfulCount;
 
   /// Dismissed feedback count
-  int get dismissedCount;
   @override
+  int get dismissedCount;
 
   /// Acted upon feedback count
-  int get actedUponCount;
   @override
+  int get actedUponCount;
 
   /// Average view duration in seconds
-  double get avgViewDuration;
   @override
+  double get avgViewDuration;
 
   /// When stats were last updated
-  DateTime? get lastUpdated;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get lastUpdated;
+
+  /// Create a copy of FeedbackStats
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FeedbackStatsImplCopyWith<_$FeedbackStatsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

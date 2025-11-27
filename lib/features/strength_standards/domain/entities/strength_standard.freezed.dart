@@ -12,7 +12,8 @@ part of 'strength_standard.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 StrengthStandard _$StrengthStandardFromJson(Map<String, dynamic> json) {
   return _StrengthStandard.fromJson(json);
@@ -51,8 +52,12 @@ mixin _$StrengthStandard {
   /// Whether this is bodyweight exercise (reps-based instead of weight)
   bool get isBodyweightExercise => throw _privateConstructorUsedError;
 
+  /// Serializes this StrengthStandard to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StrengthStandard
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StrengthStandardCopyWith<StrengthStandard> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,19 +65,21 @@ mixin _$StrengthStandard {
 /// @nodoc
 abstract class $StrengthStandardCopyWith<$Res> {
   factory $StrengthStandardCopyWith(
-          StrengthStandard value, $Res Function(StrengthStandard) then) =
-      _$StrengthStandardCopyWithImpl<$Res, StrengthStandard>;
+    StrengthStandard value,
+    $Res Function(StrengthStandard) then,
+  ) = _$StrengthStandardCopyWithImpl<$Res, StrengthStandard>;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      List<String> keywords,
-      String equipment,
-      List<String> muscleGroups,
-      String dataSource,
-      Map<String, Map<String, double>> bodyweightTable,
-      Map<String, double> bodyweightMultipliers,
-      bool isBodyweightExercise});
+  $Res call({
+    String id,
+    String name,
+    List<String> keywords,
+    String equipment,
+    List<String> muscleGroups,
+    String dataSource,
+    Map<String, Map<String, double>> bodyweightTable,
+    Map<String, double> bodyweightMultipliers,
+    bool isBodyweightExercise,
+  });
 }
 
 /// @nodoc
@@ -85,6 +92,8 @@ class _$StrengthStandardCopyWithImpl<$Res, $Val extends StrengthStandard>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StrengthStandard
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,75 +107,83 @@ class _$StrengthStandardCopyWithImpl<$Res, $Val extends StrengthStandard>
     Object? bodyweightMultipliers = null,
     Object? isBodyweightExercise = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      keywords: null == keywords
-          ? _value.keywords
-          : keywords // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      equipment: null == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroups: null == muscleGroups
-          ? _value.muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      dataSource: null == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String,
-      bodyweightTable: null == bodyweightTable
-          ? _value.bodyweightTable
-          : bodyweightTable // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, double>>,
-      bodyweightMultipliers: null == bodyweightMultipliers
-          ? _value.bodyweightMultipliers
-          : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
-              as Map<String, double>,
-      isBodyweightExercise: null == isBodyweightExercise
-          ? _value.isBodyweightExercise
-          : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            keywords: null == keywords
+                ? _value.keywords
+                : keywords // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            equipment: null == equipment
+                ? _value.equipment
+                : equipment // ignore: cast_nullable_to_non_nullable
+                      as String,
+            muscleGroups: null == muscleGroups
+                ? _value.muscleGroups
+                : muscleGroups // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            dataSource: null == dataSource
+                ? _value.dataSource
+                : dataSource // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bodyweightTable: null == bodyweightTable
+                ? _value.bodyweightTable
+                : bodyweightTable // ignore: cast_nullable_to_non_nullable
+                      as Map<String, Map<String, double>>,
+            bodyweightMultipliers: null == bodyweightMultipliers
+                ? _value.bodyweightMultipliers
+                : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
+                      as Map<String, double>,
+            isBodyweightExercise: null == isBodyweightExercise
+                ? _value.isBodyweightExercise
+                : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$StrengthStandardImplCopyWith<$Res>
     implements $StrengthStandardCopyWith<$Res> {
-  factory _$$StrengthStandardImplCopyWith(_$StrengthStandardImpl value,
-          $Res Function(_$StrengthStandardImpl) then) =
-      __$$StrengthStandardImplCopyWithImpl<$Res>;
+  factory _$$StrengthStandardImplCopyWith(
+    _$StrengthStandardImpl value,
+    $Res Function(_$StrengthStandardImpl) then,
+  ) = __$$StrengthStandardImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      List<String> keywords,
-      String equipment,
-      List<String> muscleGroups,
-      String dataSource,
-      Map<String, Map<String, double>> bodyweightTable,
-      Map<String, double> bodyweightMultipliers,
-      bool isBodyweightExercise});
+  $Res call({
+    String id,
+    String name,
+    List<String> keywords,
+    String equipment,
+    List<String> muscleGroups,
+    String dataSource,
+    Map<String, Map<String, double>> bodyweightTable,
+    Map<String, double> bodyweightMultipliers,
+    bool isBodyweightExercise,
+  });
 }
 
 /// @nodoc
 class __$$StrengthStandardImplCopyWithImpl<$Res>
     extends _$StrengthStandardCopyWithImpl<$Res, _$StrengthStandardImpl>
     implements _$$StrengthStandardImplCopyWith<$Res> {
-  __$$StrengthStandardImplCopyWithImpl(_$StrengthStandardImpl _value,
-      $Res Function(_$StrengthStandardImpl) _then)
-      : super(_value, _then);
+  __$$StrengthStandardImplCopyWithImpl(
+    _$StrengthStandardImpl _value,
+    $Res Function(_$StrengthStandardImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of StrengthStandard
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -180,64 +197,66 @@ class __$$StrengthStandardImplCopyWithImpl<$Res>
     Object? bodyweightMultipliers = null,
     Object? isBodyweightExercise = null,
   }) {
-    return _then(_$StrengthStandardImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      keywords: null == keywords
-          ? _value._keywords
-          : keywords // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      equipment: null == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroups: null == muscleGroups
-          ? _value._muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      dataSource: null == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String,
-      bodyweightTable: null == bodyweightTable
-          ? _value._bodyweightTable
-          : bodyweightTable // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, double>>,
-      bodyweightMultipliers: null == bodyweightMultipliers
-          ? _value._bodyweightMultipliers
-          : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
-              as Map<String, double>,
-      isBodyweightExercise: null == isBodyweightExercise
-          ? _value.isBodyweightExercise
-          : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$StrengthStandardImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        keywords: null == keywords
+            ? _value._keywords
+            : keywords // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        equipment: null == equipment
+            ? _value.equipment
+            : equipment // ignore: cast_nullable_to_non_nullable
+                  as String,
+        muscleGroups: null == muscleGroups
+            ? _value._muscleGroups
+            : muscleGroups // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        dataSource: null == dataSource
+            ? _value.dataSource
+            : dataSource // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bodyweightTable: null == bodyweightTable
+            ? _value._bodyweightTable
+            : bodyweightTable // ignore: cast_nullable_to_non_nullable
+                  as Map<String, Map<String, double>>,
+        bodyweightMultipliers: null == bodyweightMultipliers
+            ? _value._bodyweightMultipliers
+            : bodyweightMultipliers // ignore: cast_nullable_to_non_nullable
+                  as Map<String, double>,
+        isBodyweightExercise: null == isBodyweightExercise
+            ? _value.isBodyweightExercise
+            : isBodyweightExercise // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StrengthStandardImpl implements _StrengthStandard {
-  const _$StrengthStandardImpl(
-      {required this.id,
-      required this.name,
-      required final List<String> keywords,
-      required this.equipment,
-      required final List<String> muscleGroups,
-      required this.dataSource,
-      required final Map<String, Map<String, double>> bodyweightTable,
-      required final Map<String, double> bodyweightMultipliers,
-      this.isBodyweightExercise = false})
-      : _keywords = keywords,
-        _muscleGroups = muscleGroups,
-        _bodyweightTable = bodyweightTable,
-        _bodyweightMultipliers = bodyweightMultipliers;
+  const _$StrengthStandardImpl({
+    required this.id,
+    required this.name,
+    required final List<String> keywords,
+    required this.equipment,
+    required final List<String> muscleGroups,
+    required this.dataSource,
+    required final Map<String, Map<String, double>> bodyweightTable,
+    required final Map<String, double> bodyweightMultipliers,
+    this.isBodyweightExercise = false,
+  }) : _keywords = keywords,
+       _muscleGroups = muscleGroups,
+       _bodyweightTable = bodyweightTable,
+       _bodyweightMultipliers = bodyweightMultipliers;
 
   factory _$StrengthStandardImpl.fromJson(Map<String, dynamic> json) =>
       _$$StrengthStandardImplFromJson(json);
@@ -327,102 +346,114 @@ class _$StrengthStandardImpl implements _StrengthStandard {
             const DeepCollectionEquality().equals(other._keywords, _keywords) &&
             (identical(other.equipment, equipment) ||
                 other.equipment == equipment) &&
-            const DeepCollectionEquality()
-                .equals(other._muscleGroups, _muscleGroups) &&
+            const DeepCollectionEquality().equals(
+              other._muscleGroups,
+              _muscleGroups,
+            ) &&
             (identical(other.dataSource, dataSource) ||
                 other.dataSource == dataSource) &&
-            const DeepCollectionEquality()
-                .equals(other._bodyweightTable, _bodyweightTable) &&
-            const DeepCollectionEquality()
-                .equals(other._bodyweightMultipliers, _bodyweightMultipliers) &&
+            const DeepCollectionEquality().equals(
+              other._bodyweightTable,
+              _bodyweightTable,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._bodyweightMultipliers,
+              _bodyweightMultipliers,
+            ) &&
             (identical(other.isBodyweightExercise, isBodyweightExercise) ||
                 other.isBodyweightExercise == isBodyweightExercise));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      const DeepCollectionEquality().hash(_keywords),
-      equipment,
-      const DeepCollectionEquality().hash(_muscleGroups),
-      dataSource,
-      const DeepCollectionEquality().hash(_bodyweightTable),
-      const DeepCollectionEquality().hash(_bodyweightMultipliers),
-      isBodyweightExercise);
+    runtimeType,
+    id,
+    name,
+    const DeepCollectionEquality().hash(_keywords),
+    equipment,
+    const DeepCollectionEquality().hash(_muscleGroups),
+    dataSource,
+    const DeepCollectionEquality().hash(_bodyweightTable),
+    const DeepCollectionEquality().hash(_bodyweightMultipliers),
+    isBodyweightExercise,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StrengthStandard
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StrengthStandardImplCopyWith<_$StrengthStandardImpl> get copyWith =>
       __$$StrengthStandardImplCopyWithImpl<_$StrengthStandardImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StrengthStandardImplToJson(
-      this,
-    );
+    return _$$StrengthStandardImplToJson(this);
   }
 }
 
 abstract class _StrengthStandard implements StrengthStandard {
-  const factory _StrengthStandard(
-      {required final String id,
-      required final String name,
-      required final List<String> keywords,
-      required final String equipment,
-      required final List<String> muscleGroups,
-      required final String dataSource,
-      required final Map<String, Map<String, double>> bodyweightTable,
-      required final Map<String, double> bodyweightMultipliers,
-      final bool isBodyweightExercise}) = _$StrengthStandardImpl;
+  const factory _StrengthStandard({
+    required final String id,
+    required final String name,
+    required final List<String> keywords,
+    required final String equipment,
+    required final List<String> muscleGroups,
+    required final String dataSource,
+    required final Map<String, Map<String, double>> bodyweightTable,
+    required final Map<String, double> bodyweightMultipliers,
+    final bool isBodyweightExercise,
+  }) = _$StrengthStandardImpl;
 
   factory _StrengthStandard.fromJson(Map<String, dynamic> json) =
       _$StrengthStandardImpl.fromJson;
 
-  @override
-
   /// Unique identifier (e.g., "barbell_bench_press")
-  String get id;
   @override
+  String get id;
 
   /// Display name (e.g., "Barbell Bench Press")
-  String get name;
   @override
+  String get name;
 
   /// Search keywords for semantic matching (Italian + English)
-  List<String> get keywords;
   @override
+  List<String> get keywords;
 
   /// Equipment type (e.g., "Bilanciere", "Manubri")
-  String get equipment;
   @override
+  String get equipment;
 
   /// Target muscle groups (codes + full names, e.g., ["PETT", "Pectorals"])
-  List<String> get muscleGroups;
   @override
+  List<String> get muscleGroups;
 
   /// Data source identifier (e.g., "exrx_net", "estimated_from_benchmarks")
-  String get dataSource;
   @override
+  String get dataSource;
 
   /// Bodyweight table: kg → level → 1RM (kg)
   /// Example: {"60": {"novice": 57.5, "intermediate": 70.0}}
-  Map<String, Map<String, double>> get bodyweightTable;
   @override
+  Map<String, Map<String, double>> get bodyweightTable;
 
   /// Bodyweight multipliers: level → multiplier
   /// Example: {"novice": 0.93, "intermediate": 1.13}
-  Map<String, double> get bodyweightMultipliers;
   @override
+  Map<String, double> get bodyweightMultipliers;
 
   /// Whether this is bodyweight exercise (reps-based instead of weight)
-  bool get isBodyweightExercise;
   @override
-  @JsonKey(ignore: true)
+  bool get isBodyweightExercise;
+
+  /// Create a copy of StrengthStandard
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StrengthStandardImplCopyWith<_$StrengthStandardImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

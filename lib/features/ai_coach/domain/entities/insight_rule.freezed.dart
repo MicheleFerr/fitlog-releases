@@ -12,7 +12,8 @@ part of 'insight_rule.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 InsightRule _$InsightRuleFromJson(Map<String, dynamic> json) {
   return _InsightRule.fromJson(json);
@@ -28,8 +29,12 @@ mixin _$InsightRule {
   Map<ExperienceLevel, PersonalizedThreshold> get personalizedThresholds =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this InsightRule to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of InsightRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InsightRuleCopyWith<InsightRule> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -37,14 +42,16 @@ mixin _$InsightRule {
 /// @nodoc
 abstract class $InsightRuleCopyWith<$Res> {
   factory $InsightRuleCopyWith(
-          InsightRule value, $Res Function(InsightRule) then) =
-      _$InsightRuleCopyWithImpl<$Res, InsightRule>;
+    InsightRule value,
+    $Res Function(InsightRule) then,
+  ) = _$InsightRuleCopyWithImpl<$Res, InsightRule>;
   @useResult
-  $Res call(
-      {InsightType insightType,
-      int minWeeks,
-      double volumeThreshold,
-      Map<ExperienceLevel, PersonalizedThreshold> personalizedThresholds});
+  $Res call({
+    InsightType insightType,
+    int minWeeks,
+    double volumeThreshold,
+    Map<ExperienceLevel, PersonalizedThreshold> personalizedThresholds,
+  });
 }
 
 /// @nodoc
@@ -57,6 +64,8 @@ class _$InsightRuleCopyWithImpl<$Res, $Val extends InsightRule>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of InsightRule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -65,24 +74,27 @@ class _$InsightRuleCopyWithImpl<$Res, $Val extends InsightRule>
     Object? volumeThreshold = null,
     Object? personalizedThresholds = null,
   }) {
-    return _then(_value.copyWith(
-      insightType: null == insightType
-          ? _value.insightType
-          : insightType // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      minWeeks: null == minWeeks
-          ? _value.minWeeks
-          : minWeeks // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeThreshold: null == volumeThreshold
-          ? _value.volumeThreshold
-          : volumeThreshold // ignore: cast_nullable_to_non_nullable
-              as double,
-      personalizedThresholds: null == personalizedThresholds
-          ? _value.personalizedThresholds
-          : personalizedThresholds // ignore: cast_nullable_to_non_nullable
-              as Map<ExperienceLevel, PersonalizedThreshold>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            insightType: null == insightType
+                ? _value.insightType
+                : insightType // ignore: cast_nullable_to_non_nullable
+                      as InsightType,
+            minWeeks: null == minWeeks
+                ? _value.minWeeks
+                : minWeeks // ignore: cast_nullable_to_non_nullable
+                      as int,
+            volumeThreshold: null == volumeThreshold
+                ? _value.volumeThreshold
+                : volumeThreshold // ignore: cast_nullable_to_non_nullable
+                      as double,
+            personalizedThresholds: null == personalizedThresholds
+                ? _value.personalizedThresholds
+                : personalizedThresholds // ignore: cast_nullable_to_non_nullable
+                      as Map<ExperienceLevel, PersonalizedThreshold>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -90,15 +102,17 @@ class _$InsightRuleCopyWithImpl<$Res, $Val extends InsightRule>
 abstract class _$$InsightRuleImplCopyWith<$Res>
     implements $InsightRuleCopyWith<$Res> {
   factory _$$InsightRuleImplCopyWith(
-          _$InsightRuleImpl value, $Res Function(_$InsightRuleImpl) then) =
-      __$$InsightRuleImplCopyWithImpl<$Res>;
+    _$InsightRuleImpl value,
+    $Res Function(_$InsightRuleImpl) then,
+  ) = __$$InsightRuleImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {InsightType insightType,
-      int minWeeks,
-      double volumeThreshold,
-      Map<ExperienceLevel, PersonalizedThreshold> personalizedThresholds});
+  $Res call({
+    InsightType insightType,
+    int minWeeks,
+    double volumeThreshold,
+    Map<ExperienceLevel, PersonalizedThreshold> personalizedThresholds,
+  });
 }
 
 /// @nodoc
@@ -106,9 +120,12 @@ class __$$InsightRuleImplCopyWithImpl<$Res>
     extends _$InsightRuleCopyWithImpl<$Res, _$InsightRuleImpl>
     implements _$$InsightRuleImplCopyWith<$Res> {
   __$$InsightRuleImplCopyWithImpl(
-      _$InsightRuleImpl _value, $Res Function(_$InsightRuleImpl) _then)
-      : super(_value, _then);
+    _$InsightRuleImpl _value,
+    $Res Function(_$InsightRuleImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of InsightRule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,37 +134,39 @@ class __$$InsightRuleImplCopyWithImpl<$Res>
     Object? volumeThreshold = null,
     Object? personalizedThresholds = null,
   }) {
-    return _then(_$InsightRuleImpl(
-      insightType: null == insightType
-          ? _value.insightType
-          : insightType // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      minWeeks: null == minWeeks
-          ? _value.minWeeks
-          : minWeeks // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeThreshold: null == volumeThreshold
-          ? _value.volumeThreshold
-          : volumeThreshold // ignore: cast_nullable_to_non_nullable
-              as double,
-      personalizedThresholds: null == personalizedThresholds
-          ? _value._personalizedThresholds
-          : personalizedThresholds // ignore: cast_nullable_to_non_nullable
-              as Map<ExperienceLevel, PersonalizedThreshold>,
-    ));
+    return _then(
+      _$InsightRuleImpl(
+        insightType: null == insightType
+            ? _value.insightType
+            : insightType // ignore: cast_nullable_to_non_nullable
+                  as InsightType,
+        minWeeks: null == minWeeks
+            ? _value.minWeeks
+            : minWeeks // ignore: cast_nullable_to_non_nullable
+                  as int,
+        volumeThreshold: null == volumeThreshold
+            ? _value.volumeThreshold
+            : volumeThreshold // ignore: cast_nullable_to_non_nullable
+                  as double,
+        personalizedThresholds: null == personalizedThresholds
+            ? _value._personalizedThresholds
+            : personalizedThresholds // ignore: cast_nullable_to_non_nullable
+                  as Map<ExperienceLevel, PersonalizedThreshold>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$InsightRuleImpl implements _InsightRule {
-  const _$InsightRuleImpl(
-      {required this.insightType,
-      required this.minWeeks,
-      required this.volumeThreshold,
-      required final Map<ExperienceLevel, PersonalizedThreshold>
-          personalizedThresholds})
-      : _personalizedThresholds = personalizedThresholds;
+  const _$InsightRuleImpl({
+    required this.insightType,
+    required this.minWeeks,
+    required this.volumeThreshold,
+    required final Map<ExperienceLevel, PersonalizedThreshold>
+    personalizedThresholds,
+  }) : _personalizedThresholds = personalizedThresholds;
 
   factory _$InsightRuleImpl.fromJson(Map<String, dynamic> json) =>
       _$$InsightRuleImplFromJson(json);
@@ -156,12 +175,12 @@ class _$InsightRuleImpl implements _InsightRule {
   final InsightType insightType;
   @override
   final int minWeeks;
-// Minimum weeks of data required
+  // Minimum weeks of data required
   @override
   final double volumeThreshold;
-// ±% volume change to trigger
+  // ±% volume change to trigger
   final Map<ExperienceLevel, PersonalizedThreshold> _personalizedThresholds;
-// ±% volume change to trigger
+  // ±% volume change to trigger
   @override
   Map<ExperienceLevel, PersonalizedThreshold> get personalizedThresholds {
     if (_personalizedThresholds is EqualUnmodifiableMapView)
@@ -187,19 +206,24 @@ class _$InsightRuleImpl implements _InsightRule {
             (identical(other.volumeThreshold, volumeThreshold) ||
                 other.volumeThreshold == volumeThreshold) &&
             const DeepCollectionEquality().equals(
-                other._personalizedThresholds, _personalizedThresholds));
+              other._personalizedThresholds,
+              _personalizedThresholds,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      insightType,
-      minWeeks,
-      volumeThreshold,
-      const DeepCollectionEquality().hash(_personalizedThresholds));
+    runtimeType,
+    insightType,
+    minWeeks,
+    volumeThreshold,
+    const DeepCollectionEquality().hash(_personalizedThresholds),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of InsightRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InsightRuleImplCopyWith<_$InsightRuleImpl> get copyWith =>
@@ -207,19 +231,18 @@ class _$InsightRuleImpl implements _InsightRule {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InsightRuleImplToJson(
-      this,
-    );
+    return _$$InsightRuleImplToJson(this);
   }
 }
 
 abstract class _InsightRule implements InsightRule {
-  const factory _InsightRule(
-      {required final InsightType insightType,
-      required final int minWeeks,
-      required final double volumeThreshold,
-      required final Map<ExperienceLevel, PersonalizedThreshold>
-          personalizedThresholds}) = _$InsightRuleImpl;
+  const factory _InsightRule({
+    required final InsightType insightType,
+    required final int minWeeks,
+    required final double volumeThreshold,
+    required final Map<ExperienceLevel, PersonalizedThreshold>
+    personalizedThresholds,
+  }) = _$InsightRuleImpl;
 
   factory _InsightRule.fromJson(Map<String, dynamic> json) =
       _$InsightRuleImpl.fromJson;
@@ -227,19 +250,23 @@ abstract class _InsightRule implements InsightRule {
   @override
   InsightType get insightType;
   @override
-  int get minWeeks;
-  @override // Minimum weeks of data required
-  double get volumeThreshold;
-  @override // ±% volume change to trigger
-  Map<ExperienceLevel, PersonalizedThreshold> get personalizedThresholds;
+  int get minWeeks; // Minimum weeks of data required
   @override
-  @JsonKey(ignore: true)
+  double get volumeThreshold; // ±% volume change to trigger
+  @override
+  Map<ExperienceLevel, PersonalizedThreshold> get personalizedThresholds;
+
+  /// Create a copy of InsightRule
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InsightRuleImplCopyWith<_$InsightRuleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 PersonalizedThreshold _$PersonalizedThresholdFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _PersonalizedThreshold.fromJson(json);
 }
 
@@ -251,24 +278,31 @@ mixin _$PersonalizedThreshold {
       throw _privateConstructorUsedError; // Maximum Adaptive Volume (sets per week)
   double get mrv => throw _privateConstructorUsedError;
 
+  /// Serializes this PersonalizedThreshold to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PersonalizedThreshold
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PersonalizedThresholdCopyWith<PersonalizedThreshold> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PersonalizedThresholdCopyWith<$Res> {
-  factory $PersonalizedThresholdCopyWith(PersonalizedThreshold value,
-          $Res Function(PersonalizedThreshold) then) =
-      _$PersonalizedThresholdCopyWithImpl<$Res, PersonalizedThreshold>;
+  factory $PersonalizedThresholdCopyWith(
+    PersonalizedThreshold value,
+    $Res Function(PersonalizedThreshold) then,
+  ) = _$PersonalizedThresholdCopyWithImpl<$Res, PersonalizedThreshold>;
   @useResult
   $Res call({double mev, double mav, double mrv});
 }
 
 /// @nodoc
-class _$PersonalizedThresholdCopyWithImpl<$Res,
-        $Val extends PersonalizedThreshold>
+class _$PersonalizedThresholdCopyWithImpl<
+  $Res,
+  $Val extends PersonalizedThreshold
+>
     implements $PersonalizedThresholdCopyWith<$Res> {
   _$PersonalizedThresholdCopyWithImpl(this._value, this._then);
 
@@ -277,27 +311,28 @@ class _$PersonalizedThresholdCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PersonalizedThreshold
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? mev = null,
-    Object? mav = null,
-    Object? mrv = null,
-  }) {
-    return _then(_value.copyWith(
-      mev: null == mev
-          ? _value.mev
-          : mev // ignore: cast_nullable_to_non_nullable
-              as double,
-      mav: null == mav
-          ? _value.mav
-          : mav // ignore: cast_nullable_to_non_nullable
-              as double,
-      mrv: null == mrv
-          ? _value.mrv
-          : mrv // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  $Res call({Object? mev = null, Object? mav = null, Object? mrv = null}) {
+    return _then(
+      _value.copyWith(
+            mev: null == mev
+                ? _value.mev
+                : mev // ignore: cast_nullable_to_non_nullable
+                      as double,
+            mav: null == mav
+                ? _value.mav
+                : mav // ignore: cast_nullable_to_non_nullable
+                      as double,
+            mrv: null == mrv
+                ? _value.mrv
+                : mrv // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -305,9 +340,9 @@ class _$PersonalizedThresholdCopyWithImpl<$Res,
 abstract class _$$PersonalizedThresholdImplCopyWith<$Res>
     implements $PersonalizedThresholdCopyWith<$Res> {
   factory _$$PersonalizedThresholdImplCopyWith(
-          _$PersonalizedThresholdImpl value,
-          $Res Function(_$PersonalizedThresholdImpl) then) =
-      __$$PersonalizedThresholdImplCopyWithImpl<$Res>;
+    _$PersonalizedThresholdImpl value,
+    $Res Function(_$PersonalizedThresholdImpl) then,
+  ) = __$$PersonalizedThresholdImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double mev, double mav, double mrv});
@@ -315,52 +350,56 @@ abstract class _$$PersonalizedThresholdImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PersonalizedThresholdImplCopyWithImpl<$Res>
-    extends _$PersonalizedThresholdCopyWithImpl<$Res,
-        _$PersonalizedThresholdImpl>
+    extends
+        _$PersonalizedThresholdCopyWithImpl<$Res, _$PersonalizedThresholdImpl>
     implements _$$PersonalizedThresholdImplCopyWith<$Res> {
-  __$$PersonalizedThresholdImplCopyWithImpl(_$PersonalizedThresholdImpl _value,
-      $Res Function(_$PersonalizedThresholdImpl) _then)
-      : super(_value, _then);
+  __$$PersonalizedThresholdImplCopyWithImpl(
+    _$PersonalizedThresholdImpl _value,
+    $Res Function(_$PersonalizedThresholdImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PersonalizedThreshold
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? mev = null,
-    Object? mav = null,
-    Object? mrv = null,
-  }) {
-    return _then(_$PersonalizedThresholdImpl(
-      mev: null == mev
-          ? _value.mev
-          : mev // ignore: cast_nullable_to_non_nullable
-              as double,
-      mav: null == mav
-          ? _value.mav
-          : mav // ignore: cast_nullable_to_non_nullable
-              as double,
-      mrv: null == mrv
-          ? _value.mrv
-          : mrv // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? mev = null, Object? mav = null, Object? mrv = null}) {
+    return _then(
+      _$PersonalizedThresholdImpl(
+        mev: null == mev
+            ? _value.mev
+            : mev // ignore: cast_nullable_to_non_nullable
+                  as double,
+        mav: null == mav
+            ? _value.mav
+            : mav // ignore: cast_nullable_to_non_nullable
+                  as double,
+        mrv: null == mrv
+            ? _value.mrv
+            : mrv // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PersonalizedThresholdImpl implements _PersonalizedThreshold {
-  const _$PersonalizedThresholdImpl(
-      {required this.mev, required this.mav, required this.mrv});
+  const _$PersonalizedThresholdImpl({
+    required this.mev,
+    required this.mav,
+    required this.mrv,
+  });
 
   factory _$PersonalizedThresholdImpl.fromJson(Map<String, dynamic> json) =>
       _$$PersonalizedThresholdImplFromJson(json);
 
   @override
   final double mev;
-// Minimum Effective Volume (sets per week)
+  // Minimum Effective Volume (sets per week)
   @override
   final double mav;
-// Maximum Adaptive Volume (sets per week)
+  // Maximum Adaptive Volume (sets per week)
   @override
   final double mrv;
 
@@ -379,42 +418,49 @@ class _$PersonalizedThresholdImpl implements _PersonalizedThreshold {
             (identical(other.mrv, mrv) || other.mrv == mrv));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, mev, mav, mrv);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PersonalizedThreshold
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PersonalizedThresholdImplCopyWith<_$PersonalizedThresholdImpl>
-      get copyWith => __$$PersonalizedThresholdImplCopyWithImpl<
-          _$PersonalizedThresholdImpl>(this, _$identity);
+  get copyWith =>
+      __$$PersonalizedThresholdImplCopyWithImpl<_$PersonalizedThresholdImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PersonalizedThresholdImplToJson(
-      this,
-    );
+    return _$$PersonalizedThresholdImplToJson(this);
   }
 }
 
 abstract class _PersonalizedThreshold implements PersonalizedThreshold {
-  const factory _PersonalizedThreshold(
-      {required final double mev,
-      required final double mav,
-      required final double mrv}) = _$PersonalizedThresholdImpl;
+  const factory _PersonalizedThreshold({
+    required final double mev,
+    required final double mav,
+    required final double mrv,
+  }) = _$PersonalizedThresholdImpl;
 
   factory _PersonalizedThreshold.fromJson(Map<String, dynamic> json) =
       _$PersonalizedThresholdImpl.fromJson;
 
   @override
-  double get mev;
-  @override // Minimum Effective Volume (sets per week)
-  double get mav;
-  @override // Maximum Adaptive Volume (sets per week)
-  double get mrv;
+  double get mev; // Minimum Effective Volume (sets per week)
   @override
-  @JsonKey(ignore: true)
+  double get mav; // Maximum Adaptive Volume (sets per week)
+  @override
+  double get mrv;
+
+  /// Create a copy of PersonalizedThreshold
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PersonalizedThresholdImplCopyWith<_$PersonalizedThresholdImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

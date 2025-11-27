@@ -7,67 +7,68 @@ part of 'workout_template.dart';
 // **************************************************************************
 
 _$CommunityWorkoutTemplateImpl _$$CommunityWorkoutTemplateImplFromJson(
-        Map<String, dynamic> json) =>
-    _$CommunityWorkoutTemplateImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      exercises: (json['exercises'] as List<dynamic>)
-          .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      category: $enumDecode(_$TemplateCategoryEnumMap, json['category']),
-      visibility: $enumDecode(_$TemplateVisibilityEnumMap, json['visibility']),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      downloadCount: (json['downloadCount'] as num?)?.toInt() ?? 0,
-      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
-      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
-      authorName: json['authorName'] as String?,
-      authorPhotoUrl: json['authorPhotoUrl'] as String?,
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
-      estimatedDurationMinutes:
-          (json['estimatedDurationMinutes'] as num?)?.toInt(),
-      difficultyLevel: json['difficultyLevel'] as String?,
-      requiredEquipment: (json['requiredEquipment'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      targetMuscles: (json['targetMuscles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-    );
+  Map<String, dynamic> json,
+) => _$CommunityWorkoutTemplateImpl(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  name: json['name'] as String,
+  description: json['description'] as String?,
+  exercises: (json['exercises'] as List<dynamic>)
+      .map((e) => Exercise.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  category: $enumDecode(_$TemplateCategoryEnumMap, json['category']),
+  visibility: $enumDecode(_$TemplateVisibilityEnumMap, json['visibility']),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  downloadCount: (json['downloadCount'] as num?)?.toInt() ?? 0,
+  likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+  reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
+  averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+  authorName: json['authorName'] as String?,
+  authorPhotoUrl: json['authorPhotoUrl'] as String?,
+  tags:
+      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  estimatedDurationMinutes: (json['estimatedDurationMinutes'] as num?)?.toInt(),
+  difficultyLevel: json['difficultyLevel'] as String?,
+  requiredEquipment:
+      (json['requiredEquipment'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  targetMuscles:
+      (json['targetMuscles'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+);
 
 Map<String, dynamic> _$$CommunityWorkoutTemplateImplToJson(
-        _$CommunityWorkoutTemplateImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'name': instance.name,
-      'description': instance.description,
-      'exercises': instance.exercises.map((e) => e.toJson()).toList(),
-      'category': _$TemplateCategoryEnumMap[instance.category]!,
-      'visibility': _$TemplateVisibilityEnumMap[instance.visibility]!,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-      'downloadCount': instance.downloadCount,
-      'likeCount': instance.likeCount,
-      'reviewCount': instance.reviewCount,
-      'averageRating': instance.averageRating,
-      'authorName': instance.authorName,
-      'authorPhotoUrl': instance.authorPhotoUrl,
-      'tags': instance.tags,
-      'estimatedDurationMinutes': instance.estimatedDurationMinutes,
-      'difficultyLevel': instance.difficultyLevel,
-      'requiredEquipment': instance.requiredEquipment,
-      'targetMuscles': instance.targetMuscles,
-    };
+  _$CommunityWorkoutTemplateImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'name': instance.name,
+  'description': instance.description,
+  'exercises': instance.exercises.map((e) => e.toJson()).toList(),
+  'category': _$TemplateCategoryEnumMap[instance.category]!,
+  'visibility': _$TemplateVisibilityEnumMap[instance.visibility]!,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'downloadCount': instance.downloadCount,
+  'likeCount': instance.likeCount,
+  'reviewCount': instance.reviewCount,
+  'averageRating': instance.averageRating,
+  'authorName': instance.authorName,
+  'authorPhotoUrl': instance.authorPhotoUrl,
+  'tags': instance.tags,
+  'estimatedDurationMinutes': instance.estimatedDurationMinutes,
+  'difficultyLevel': instance.difficultyLevel,
+  'requiredEquipment': instance.requiredEquipment,
+  'targetMuscles': instance.targetMuscles,
+};
 
 const _$TemplateCategoryEnumMap = {
   TemplateCategory.strength: 'strength',
@@ -99,56 +100,56 @@ _$TemplateReviewImpl _$$TemplateReviewImplFromJson(Map<String, dynamic> json) =>
       comment: json['comment'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       helpfulCount: (json['helpfulCount'] as num?)?.toInt() ?? 0,
-      helpfulVoters: (json['helpfulVoters'] as List<dynamic>?)
+      helpfulVoters:
+          (json['helpfulVoters'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
     );
 
 Map<String, dynamic> _$$TemplateReviewImplToJson(
-        _$TemplateReviewImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'templateId': instance.templateId,
-      'userId': instance.userId,
-      'userName': instance.userName,
-      'userPhotoUrl': instance.userPhotoUrl,
-      'rating': instance.rating,
-      'comment': instance.comment,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'helpfulCount': instance.helpfulCount,
-      'helpfulVoters': instance.helpfulVoters,
-    };
+  _$TemplateReviewImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'templateId': instance.templateId,
+  'userId': instance.userId,
+  'userName': instance.userName,
+  'userPhotoUrl': instance.userPhotoUrl,
+  'rating': instance.rating,
+  'comment': instance.comment,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'helpfulCount': instance.helpfulCount,
+  'helpfulVoters': instance.helpfulVoters,
+};
 
 _$TemplateCommentImpl _$$TemplateCommentImplFromJson(
-        Map<String, dynamic> json) =>
-    _$TemplateCommentImpl(
-      id: json['id'] as String,
-      templateId: json['templateId'] as String,
-      userId: json['userId'] as String,
-      userName: json['userName'] as String,
-      userPhotoUrl: json['userPhotoUrl'] as String?,
-      text: json['text'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      likedBy: (json['likedBy'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      replyToId: json['replyToId'] as String?,
-    );
+  Map<String, dynamic> json,
+) => _$TemplateCommentImpl(
+  id: json['id'] as String,
+  templateId: json['templateId'] as String,
+  userId: json['userId'] as String,
+  userName: json['userName'] as String,
+  userPhotoUrl: json['userPhotoUrl'] as String?,
+  text: json['text'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+  likedBy:
+      (json['likedBy'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  replyToId: json['replyToId'] as String?,
+);
 
 Map<String, dynamic> _$$TemplateCommentImplToJson(
-        _$TemplateCommentImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'templateId': instance.templateId,
-      'userId': instance.userId,
-      'userName': instance.userName,
-      'userPhotoUrl': instance.userPhotoUrl,
-      'text': instance.text,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'likeCount': instance.likeCount,
-      'likedBy': instance.likedBy,
-      'replyToId': instance.replyToId,
-    };
+  _$TemplateCommentImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'templateId': instance.templateId,
+  'userId': instance.userId,
+  'userName': instance.userName,
+  'userPhotoUrl': instance.userPhotoUrl,
+  'text': instance.text,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'likeCount': instance.likeCount,
+  'likedBy': instance.likedBy,
+  'replyToId': instance.replyToId,
+};

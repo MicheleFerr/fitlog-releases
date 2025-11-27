@@ -12,7 +12,8 @@ part of 'workout_streak.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$WorkoutStreak {
@@ -22,7 +23,9 @@ mixin _$WorkoutStreak {
   DateTime? get lastWorkoutDate => throw _privateConstructorUsedError;
   int get totalWorkoutDays => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutStreak
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WorkoutStreakCopyWith<WorkoutStreak> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -30,15 +33,17 @@ mixin _$WorkoutStreak {
 /// @nodoc
 abstract class $WorkoutStreakCopyWith<$Res> {
   factory $WorkoutStreakCopyWith(
-          WorkoutStreak value, $Res Function(WorkoutStreak) then) =
-      _$WorkoutStreakCopyWithImpl<$Res, WorkoutStreak>;
+    WorkoutStreak value,
+    $Res Function(WorkoutStreak) then,
+  ) = _$WorkoutStreakCopyWithImpl<$Res, WorkoutStreak>;
   @useResult
-  $Res call(
-      {int currentStreak,
-      int longestStreak,
-      bool isActive,
-      DateTime? lastWorkoutDate,
-      int totalWorkoutDays});
+  $Res call({
+    int currentStreak,
+    int longestStreak,
+    bool isActive,
+    DateTime? lastWorkoutDate,
+    int totalWorkoutDays,
+  });
 }
 
 /// @nodoc
@@ -51,6 +56,8 @@ class _$WorkoutStreakCopyWithImpl<$Res, $Val extends WorkoutStreak>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WorkoutStreak
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -60,28 +67,31 @@ class _$WorkoutStreakCopyWithImpl<$Res, $Val extends WorkoutStreak>
     Object? lastWorkoutDate = freezed,
     Object? totalWorkoutDays = null,
   }) {
-    return _then(_value.copyWith(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      totalWorkoutDays: null == totalWorkoutDays
-          ? _value.totalWorkoutDays
-          : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            currentStreak: null == currentStreak
+                ? _value.currentStreak
+                : currentStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            longestStreak: null == longestStreak
+                ? _value.longestStreak
+                : longestStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            lastWorkoutDate: freezed == lastWorkoutDate
+                ? _value.lastWorkoutDate
+                : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            totalWorkoutDays: null == totalWorkoutDays
+                ? _value.totalWorkoutDays
+                : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -89,16 +99,18 @@ class _$WorkoutStreakCopyWithImpl<$Res, $Val extends WorkoutStreak>
 abstract class _$$WorkoutStreakImplCopyWith<$Res>
     implements $WorkoutStreakCopyWith<$Res> {
   factory _$$WorkoutStreakImplCopyWith(
-          _$WorkoutStreakImpl value, $Res Function(_$WorkoutStreakImpl) then) =
-      __$$WorkoutStreakImplCopyWithImpl<$Res>;
+    _$WorkoutStreakImpl value,
+    $Res Function(_$WorkoutStreakImpl) then,
+  ) = __$$WorkoutStreakImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int currentStreak,
-      int longestStreak,
-      bool isActive,
-      DateTime? lastWorkoutDate,
-      int totalWorkoutDays});
+  $Res call({
+    int currentStreak,
+    int longestStreak,
+    bool isActive,
+    DateTime? lastWorkoutDate,
+    int totalWorkoutDays,
+  });
 }
 
 /// @nodoc
@@ -106,9 +118,12 @@ class __$$WorkoutStreakImplCopyWithImpl<$Res>
     extends _$WorkoutStreakCopyWithImpl<$Res, _$WorkoutStreakImpl>
     implements _$$WorkoutStreakImplCopyWith<$Res> {
   __$$WorkoutStreakImplCopyWithImpl(
-      _$WorkoutStreakImpl _value, $Res Function(_$WorkoutStreakImpl) _then)
-      : super(_value, _then);
+    _$WorkoutStreakImpl _value,
+    $Res Function(_$WorkoutStreakImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of WorkoutStreak
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -118,41 +133,43 @@ class __$$WorkoutStreakImplCopyWithImpl<$Res>
     Object? lastWorkoutDate = freezed,
     Object? totalWorkoutDays = null,
   }) {
-    return _then(_$WorkoutStreakImpl(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      totalWorkoutDays: null == totalWorkoutDays
-          ? _value.totalWorkoutDays
-          : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$WorkoutStreakImpl(
+        currentStreak: null == currentStreak
+            ? _value.currentStreak
+            : currentStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        longestStreak: null == longestStreak
+            ? _value.longestStreak
+            : longestStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        lastWorkoutDate: freezed == lastWorkoutDate
+            ? _value.lastWorkoutDate
+            : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        totalWorkoutDays: null == totalWorkoutDays
+            ? _value.totalWorkoutDays
+            : totalWorkoutDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$WorkoutStreakImpl extends _WorkoutStreak {
-  const _$WorkoutStreakImpl(
-      {required this.currentStreak,
-      required this.longestStreak,
-      required this.isActive,
-      required this.lastWorkoutDate,
-      required this.totalWorkoutDays})
-      : super._();
+  const _$WorkoutStreakImpl({
+    required this.currentStreak,
+    required this.longestStreak,
+    required this.isActive,
+    required this.lastWorkoutDate,
+    required this.totalWorkoutDays,
+  }) : super._();
 
   @override
   final int currentStreak;
@@ -188,10 +205,18 @@ class _$WorkoutStreakImpl extends _WorkoutStreak {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentStreak, longestStreak,
-      isActive, lastWorkoutDate, totalWorkoutDays);
+  int get hashCode => Object.hash(
+    runtimeType,
+    currentStreak,
+    longestStreak,
+    isActive,
+    lastWorkoutDate,
+    totalWorkoutDays,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutStreak
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutStreakImplCopyWith<_$WorkoutStreakImpl> get copyWith =>
@@ -199,12 +224,13 @@ class _$WorkoutStreakImpl extends _WorkoutStreak {
 }
 
 abstract class _WorkoutStreak extends WorkoutStreak {
-  const factory _WorkoutStreak(
-      {required final int currentStreak,
-      required final int longestStreak,
-      required final bool isActive,
-      required final DateTime? lastWorkoutDate,
-      required final int totalWorkoutDays}) = _$WorkoutStreakImpl;
+  const factory _WorkoutStreak({
+    required final int currentStreak,
+    required final int longestStreak,
+    required final bool isActive,
+    required final DateTime? lastWorkoutDate,
+    required final int totalWorkoutDays,
+  }) = _$WorkoutStreakImpl;
   const _WorkoutStreak._() : super._();
 
   @override
@@ -217,8 +243,11 @@ abstract class _WorkoutStreak extends WorkoutStreak {
   DateTime? get lastWorkoutDate;
   @override
   int get totalWorkoutDays;
+
+  /// Create a copy of WorkoutStreak
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutStreakImplCopyWith<_$WorkoutStreakImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

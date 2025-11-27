@@ -12,7 +12,8 @@ part of 'muscle_recovery_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MuscleRecoveryData _$MuscleRecoveryDataFromJson(Map<String, dynamic> json) {
   return _MuscleRecoveryData.fromJson(json);
@@ -40,8 +41,12 @@ mixin _$MuscleRecoveryData {
   /// Timestamp when data was calculated
   DateTime? get calculatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this MuscleRecoveryData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MuscleRecoveryData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MuscleRecoveryDataCopyWith<MuscleRecoveryData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,13 +54,15 @@ mixin _$MuscleRecoveryData {
 /// @nodoc
 abstract class $MuscleRecoveryDataCopyWith<$Res> {
   factory $MuscleRecoveryDataCopyWith(
-          MuscleRecoveryData value, $Res Function(MuscleRecoveryData) then) =
-      _$MuscleRecoveryDataCopyWithImpl<$Res, MuscleRecoveryData>;
+    MuscleRecoveryData value,
+    $Res Function(MuscleRecoveryData) then,
+  ) = _$MuscleRecoveryDataCopyWithImpl<$Res, MuscleRecoveryData>;
   @useResult
-  $Res call(
-      {Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
-      int overallRecoveryScore,
-      DateTime? calculatedAt});
+  $Res call({
+    Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
+    int overallRecoveryScore,
+    DateTime? calculatedAt,
+  });
 }
 
 /// @nodoc
@@ -68,6 +75,8 @@ class _$MuscleRecoveryDataCopyWithImpl<$Res, $Val extends MuscleRecoveryData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MuscleRecoveryData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -75,45 +84,53 @@ class _$MuscleRecoveryDataCopyWithImpl<$Res, $Val extends MuscleRecoveryData>
     Object? overallRecoveryScore = null,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      muscleGroups: null == muscleGroups
-          ? _value.muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, MuscleRecoveryStatus>,
-      overallRecoveryScore: null == overallRecoveryScore
-          ? _value.overallRecoveryScore
-          : overallRecoveryScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            muscleGroups: null == muscleGroups
+                ? _value.muscleGroups
+                : muscleGroups // ignore: cast_nullable_to_non_nullable
+                      as Map<MuscleGroup, MuscleRecoveryStatus>,
+            overallRecoveryScore: null == overallRecoveryScore
+                ? _value.overallRecoveryScore
+                : overallRecoveryScore // ignore: cast_nullable_to_non_nullable
+                      as int,
+            calculatedAt: freezed == calculatedAt
+                ? _value.calculatedAt
+                : calculatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MuscleRecoveryDataImplCopyWith<$Res>
     implements $MuscleRecoveryDataCopyWith<$Res> {
-  factory _$$MuscleRecoveryDataImplCopyWith(_$MuscleRecoveryDataImpl value,
-          $Res Function(_$MuscleRecoveryDataImpl) then) =
-      __$$MuscleRecoveryDataImplCopyWithImpl<$Res>;
+  factory _$$MuscleRecoveryDataImplCopyWith(
+    _$MuscleRecoveryDataImpl value,
+    $Res Function(_$MuscleRecoveryDataImpl) then,
+  ) = __$$MuscleRecoveryDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
-      int overallRecoveryScore,
-      DateTime? calculatedAt});
+  $Res call({
+    Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
+    int overallRecoveryScore,
+    DateTime? calculatedAt,
+  });
 }
 
 /// @nodoc
 class __$$MuscleRecoveryDataImplCopyWithImpl<$Res>
     extends _$MuscleRecoveryDataCopyWithImpl<$Res, _$MuscleRecoveryDataImpl>
     implements _$$MuscleRecoveryDataImplCopyWith<$Res> {
-  __$$MuscleRecoveryDataImplCopyWithImpl(_$MuscleRecoveryDataImpl _value,
-      $Res Function(_$MuscleRecoveryDataImpl) _then)
-      : super(_value, _then);
+  __$$MuscleRecoveryDataImplCopyWithImpl(
+    _$MuscleRecoveryDataImpl _value,
+    $Res Function(_$MuscleRecoveryDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MuscleRecoveryData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,32 +138,34 @@ class __$$MuscleRecoveryDataImplCopyWithImpl<$Res>
     Object? overallRecoveryScore = null,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_$MuscleRecoveryDataImpl(
-      muscleGroups: null == muscleGroups
-          ? _value._muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, MuscleRecoveryStatus>,
-      overallRecoveryScore: null == overallRecoveryScore
-          ? _value.overallRecoveryScore
-          : overallRecoveryScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$MuscleRecoveryDataImpl(
+        muscleGroups: null == muscleGroups
+            ? _value._muscleGroups
+            : muscleGroups // ignore: cast_nullable_to_non_nullable
+                  as Map<MuscleGroup, MuscleRecoveryStatus>,
+        overallRecoveryScore: null == overallRecoveryScore
+            ? _value.overallRecoveryScore
+            : overallRecoveryScore // ignore: cast_nullable_to_non_nullable
+                  as int,
+        calculatedAt: freezed == calculatedAt
+            ? _value.calculatedAt
+            : calculatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MuscleRecoveryDataImpl extends _MuscleRecoveryData {
-  const _$MuscleRecoveryDataImpl(
-      {required final Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
-      required this.overallRecoveryScore,
-      this.calculatedAt = null})
-      : _muscleGroups = muscleGroups,
-        super._();
+  const _$MuscleRecoveryDataImpl({
+    required final Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
+    required this.overallRecoveryScore,
+    this.calculatedAt = null,
+  }) : _muscleGroups = muscleGroups,
+       super._();
 
   factory _$MuscleRecoveryDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$MuscleRecoveryDataImplFromJson(json);
@@ -194,55 +213,59 @@ class _$MuscleRecoveryDataImpl extends _MuscleRecoveryData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MuscleRecoveryDataImpl &&
-            const DeepCollectionEquality()
-                .equals(other._muscleGroups, _muscleGroups) &&
+            const DeepCollectionEquality().equals(
+              other._muscleGroups,
+              _muscleGroups,
+            ) &&
             (identical(other.overallRecoveryScore, overallRecoveryScore) ||
                 other.overallRecoveryScore == overallRecoveryScore) &&
             (identical(other.calculatedAt, calculatedAt) ||
                 other.calculatedAt == calculatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_muscleGroups),
-      overallRecoveryScore,
-      calculatedAt);
+    runtimeType,
+    const DeepCollectionEquality().hash(_muscleGroups),
+    overallRecoveryScore,
+    calculatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MuscleRecoveryData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MuscleRecoveryDataImplCopyWith<_$MuscleRecoveryDataImpl> get copyWith =>
       __$$MuscleRecoveryDataImplCopyWithImpl<_$MuscleRecoveryDataImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MuscleRecoveryDataImplToJson(
-      this,
-    );
+    return _$$MuscleRecoveryDataImplToJson(this);
   }
 }
 
 abstract class _MuscleRecoveryData extends MuscleRecoveryData {
-  const factory _MuscleRecoveryData(
-      {required final Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
-      required final int overallRecoveryScore,
-      final DateTime? calculatedAt}) = _$MuscleRecoveryDataImpl;
+  const factory _MuscleRecoveryData({
+    required final Map<MuscleGroup, MuscleRecoveryStatus> muscleGroups,
+    required final int overallRecoveryScore,
+    final DateTime? calculatedAt,
+  }) = _$MuscleRecoveryDataImpl;
   const _MuscleRecoveryData._() : super._();
 
   factory _MuscleRecoveryData.fromJson(Map<String, dynamic> json) =
       _$MuscleRecoveryDataImpl.fromJson;
 
-  @override
-
   /// Map of muscle group to recovery status
   ///
   /// **Keys**: MuscleGroup enum (chest, back, legs, etc.)
   /// **Values**: MuscleRecoveryStatus with detailed metrics
-  Map<MuscleGroup, MuscleRecoveryStatus> get muscleGroups;
   @override
+  Map<MuscleGroup, MuscleRecoveryStatus> get muscleGroups;
 
   /// Overall recovery score (0-100)
   ///
@@ -252,13 +275,17 @@ abstract class _MuscleRecoveryData extends MuscleRecoveryData {
   /// - 60-74: Mixed recovery status
   /// - 40-59: Multiple muscles fatigued
   /// - 0-39: Significant fatigue across muscles
-  int get overallRecoveryScore;
   @override
+  int get overallRecoveryScore;
 
   /// Timestamp when data was calculated
-  DateTime? get calculatedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get calculatedAt;
+
+  /// Create a copy of MuscleRecoveryData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MuscleRecoveryDataImplCopyWith<_$MuscleRecoveryDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -300,30 +327,38 @@ mixin _$MuscleRecoveryStatus {
   /// - 48h+: 0h (fully recovered)
   int? get hoursUntilFullyRecovered => throw _privateConstructorUsedError;
 
+  /// Serializes this MuscleRecoveryStatus to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MuscleRecoveryStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MuscleRecoveryStatusCopyWith<MuscleRecoveryStatus> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MuscleRecoveryStatusCopyWith<$Res> {
-  factory $MuscleRecoveryStatusCopyWith(MuscleRecoveryStatus value,
-          $Res Function(MuscleRecoveryStatus) then) =
-      _$MuscleRecoveryStatusCopyWithImpl<$Res, MuscleRecoveryStatus>;
+  factory $MuscleRecoveryStatusCopyWith(
+    MuscleRecoveryStatus value,
+    $Res Function(MuscleRecoveryStatus) then,
+  ) = _$MuscleRecoveryStatusCopyWithImpl<$Res, MuscleRecoveryStatus>;
   @useResult
-  $Res call(
-      {MuscleGroup group,
-      RecoveryStatus status,
-      int daysSinceLastWorkout,
-      int volumeLoad,
-      String recommendedAction,
-      int? hoursUntilFullyRecovered});
+  $Res call({
+    MuscleGroup group,
+    RecoveryStatus status,
+    int daysSinceLastWorkout,
+    int volumeLoad,
+    String recommendedAction,
+    int? hoursUntilFullyRecovered,
+  });
 }
 
 /// @nodoc
-class _$MuscleRecoveryStatusCopyWithImpl<$Res,
-        $Val extends MuscleRecoveryStatus>
+class _$MuscleRecoveryStatusCopyWithImpl<
+  $Res,
+  $Val extends MuscleRecoveryStatus
+>
     implements $MuscleRecoveryStatusCopyWith<$Res> {
   _$MuscleRecoveryStatusCopyWithImpl(this._value, this._then);
 
@@ -332,6 +367,8 @@ class _$MuscleRecoveryStatusCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MuscleRecoveryStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -342,60 +379,68 @@ class _$MuscleRecoveryStatusCopyWithImpl<$Res,
     Object? recommendedAction = null,
     Object? hoursUntilFullyRecovered = freezed,
   }) {
-    return _then(_value.copyWith(
-      group: null == group
-          ? _value.group
-          : group // ignore: cast_nullable_to_non_nullable
-              as MuscleGroup,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as RecoveryStatus,
-      daysSinceLastWorkout: null == daysSinceLastWorkout
-          ? _value.daysSinceLastWorkout
-          : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeLoad: null == volumeLoad
-          ? _value.volumeLoad
-          : volumeLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      recommendedAction: null == recommendedAction
-          ? _value.recommendedAction
-          : recommendedAction // ignore: cast_nullable_to_non_nullable
-              as String,
-      hoursUntilFullyRecovered: freezed == hoursUntilFullyRecovered
-          ? _value.hoursUntilFullyRecovered
-          : hoursUntilFullyRecovered // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            group: null == group
+                ? _value.group
+                : group // ignore: cast_nullable_to_non_nullable
+                      as MuscleGroup,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as RecoveryStatus,
+            daysSinceLastWorkout: null == daysSinceLastWorkout
+                ? _value.daysSinceLastWorkout
+                : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
+                      as int,
+            volumeLoad: null == volumeLoad
+                ? _value.volumeLoad
+                : volumeLoad // ignore: cast_nullable_to_non_nullable
+                      as int,
+            recommendedAction: null == recommendedAction
+                ? _value.recommendedAction
+                : recommendedAction // ignore: cast_nullable_to_non_nullable
+                      as String,
+            hoursUntilFullyRecovered: freezed == hoursUntilFullyRecovered
+                ? _value.hoursUntilFullyRecovered
+                : hoursUntilFullyRecovered // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MuscleRecoveryStatusImplCopyWith<$Res>
     implements $MuscleRecoveryStatusCopyWith<$Res> {
-  factory _$$MuscleRecoveryStatusImplCopyWith(_$MuscleRecoveryStatusImpl value,
-          $Res Function(_$MuscleRecoveryStatusImpl) then) =
-      __$$MuscleRecoveryStatusImplCopyWithImpl<$Res>;
+  factory _$$MuscleRecoveryStatusImplCopyWith(
+    _$MuscleRecoveryStatusImpl value,
+    $Res Function(_$MuscleRecoveryStatusImpl) then,
+  ) = __$$MuscleRecoveryStatusImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {MuscleGroup group,
-      RecoveryStatus status,
-      int daysSinceLastWorkout,
-      int volumeLoad,
-      String recommendedAction,
-      int? hoursUntilFullyRecovered});
+  $Res call({
+    MuscleGroup group,
+    RecoveryStatus status,
+    int daysSinceLastWorkout,
+    int volumeLoad,
+    String recommendedAction,
+    int? hoursUntilFullyRecovered,
+  });
 }
 
 /// @nodoc
 class __$$MuscleRecoveryStatusImplCopyWithImpl<$Res>
     extends _$MuscleRecoveryStatusCopyWithImpl<$Res, _$MuscleRecoveryStatusImpl>
     implements _$$MuscleRecoveryStatusImplCopyWith<$Res> {
-  __$$MuscleRecoveryStatusImplCopyWithImpl(_$MuscleRecoveryStatusImpl _value,
-      $Res Function(_$MuscleRecoveryStatusImpl) _then)
-      : super(_value, _then);
+  __$$MuscleRecoveryStatusImplCopyWithImpl(
+    _$MuscleRecoveryStatusImpl _value,
+    $Res Function(_$MuscleRecoveryStatusImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MuscleRecoveryStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -406,46 +451,48 @@ class __$$MuscleRecoveryStatusImplCopyWithImpl<$Res>
     Object? recommendedAction = null,
     Object? hoursUntilFullyRecovered = freezed,
   }) {
-    return _then(_$MuscleRecoveryStatusImpl(
-      group: null == group
-          ? _value.group
-          : group // ignore: cast_nullable_to_non_nullable
-              as MuscleGroup,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as RecoveryStatus,
-      daysSinceLastWorkout: null == daysSinceLastWorkout
-          ? _value.daysSinceLastWorkout
-          : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
-              as int,
-      volumeLoad: null == volumeLoad
-          ? _value.volumeLoad
-          : volumeLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      recommendedAction: null == recommendedAction
-          ? _value.recommendedAction
-          : recommendedAction // ignore: cast_nullable_to_non_nullable
-              as String,
-      hoursUntilFullyRecovered: freezed == hoursUntilFullyRecovered
-          ? _value.hoursUntilFullyRecovered
-          : hoursUntilFullyRecovered // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$MuscleRecoveryStatusImpl(
+        group: null == group
+            ? _value.group
+            : group // ignore: cast_nullable_to_non_nullable
+                  as MuscleGroup,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as RecoveryStatus,
+        daysSinceLastWorkout: null == daysSinceLastWorkout
+            ? _value.daysSinceLastWorkout
+            : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
+                  as int,
+        volumeLoad: null == volumeLoad
+            ? _value.volumeLoad
+            : volumeLoad // ignore: cast_nullable_to_non_nullable
+                  as int,
+        recommendedAction: null == recommendedAction
+            ? _value.recommendedAction
+            : recommendedAction // ignore: cast_nullable_to_non_nullable
+                  as String,
+        hoursUntilFullyRecovered: freezed == hoursUntilFullyRecovered
+            ? _value.hoursUntilFullyRecovered
+            : hoursUntilFullyRecovered // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MuscleRecoveryStatusImpl extends _MuscleRecoveryStatus {
-  const _$MuscleRecoveryStatusImpl(
-      {required this.group,
-      required this.status,
-      required this.daysSinceLastWorkout,
-      required this.volumeLoad,
-      required this.recommendedAction,
-      this.hoursUntilFullyRecovered})
-      : super._();
+  const _$MuscleRecoveryStatusImpl({
+    required this.group,
+    required this.status,
+    required this.daysSinceLastWorkout,
+    required this.volumeLoad,
+    required this.recommendedAction,
+    this.hoursUntilFullyRecovered,
+  }) : super._();
 
   factory _$MuscleRecoveryStatusImpl.fromJson(Map<String, dynamic> json) =>
       _$$MuscleRecoveryStatusImplFromJson(json);
@@ -506,69 +553,73 @@ class _$MuscleRecoveryStatusImpl extends _MuscleRecoveryStatus {
             (identical(other.recommendedAction, recommendedAction) ||
                 other.recommendedAction == recommendedAction) &&
             (identical(
-                    other.hoursUntilFullyRecovered, hoursUntilFullyRecovered) ||
+                  other.hoursUntilFullyRecovered,
+                  hoursUntilFullyRecovered,
+                ) ||
                 other.hoursUntilFullyRecovered == hoursUntilFullyRecovered));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      group,
-      status,
-      daysSinceLastWorkout,
-      volumeLoad,
-      recommendedAction,
-      hoursUntilFullyRecovered);
+    runtimeType,
+    group,
+    status,
+    daysSinceLastWorkout,
+    volumeLoad,
+    recommendedAction,
+    hoursUntilFullyRecovered,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MuscleRecoveryStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MuscleRecoveryStatusImplCopyWith<_$MuscleRecoveryStatusImpl>
-      get copyWith =>
-          __$$MuscleRecoveryStatusImplCopyWithImpl<_$MuscleRecoveryStatusImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$MuscleRecoveryStatusImplCopyWithImpl<_$MuscleRecoveryStatusImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MuscleRecoveryStatusImplToJson(
-      this,
-    );
+    return _$$MuscleRecoveryStatusImplToJson(this);
   }
 }
 
 abstract class _MuscleRecoveryStatus extends MuscleRecoveryStatus {
-  const factory _MuscleRecoveryStatus(
-      {required final MuscleGroup group,
-      required final RecoveryStatus status,
-      required final int daysSinceLastWorkout,
-      required final int volumeLoad,
-      required final String recommendedAction,
-      final int? hoursUntilFullyRecovered}) = _$MuscleRecoveryStatusImpl;
+  const factory _MuscleRecoveryStatus({
+    required final MuscleGroup group,
+    required final RecoveryStatus status,
+    required final int daysSinceLastWorkout,
+    required final int volumeLoad,
+    required final String recommendedAction,
+    final int? hoursUntilFullyRecovered,
+  }) = _$MuscleRecoveryStatusImpl;
   const _MuscleRecoveryStatus._() : super._();
 
   factory _MuscleRecoveryStatus.fromJson(Map<String, dynamic> json) =
       _$MuscleRecoveryStatusImpl.fromJson;
 
-  @override
-
   /// Muscle group this status applies to
-  MuscleGroup get group;
   @override
+  MuscleGroup get group;
 
   /// Current recovery status
-  RecoveryStatus get status;
   @override
+  RecoveryStatus get status;
 
   /// Days since last workout for this muscle
-  int get daysSinceLastWorkout;
   @override
+  int get daysSinceLastWorkout;
 
   /// Total volume load in last 7 days (sets × reps × weight)
   ///
   /// Used to assess training intensity per muscle
-  int get volumeLoad;
   @override
+  int get volumeLoad;
 
   /// Human-readable recommendation
   ///
@@ -577,8 +628,8 @@ abstract class _MuscleRecoveryStatus extends MuscleRecoveryStatus {
   /// - "Ready for normal training" (Recovered)
   /// - "Light training recommended" (Partially Recovered)
   /// - "Rest or alternative muscle groups" (Fatigued)
-  String get recommendedAction;
   @override
+  String get recommendedAction;
 
   /// Optional: Estimated hours until fully recovered
   ///
@@ -586,9 +637,13 @@ abstract class _MuscleRecoveryStatus extends MuscleRecoveryStatus {
   /// - <24h: 24-48h remaining
   /// - 24-48h: 0-24h remaining
   /// - 48h+: 0h (fully recovered)
-  int? get hoursUntilFullyRecovered;
   @override
-  @JsonKey(ignore: true)
+  int? get hoursUntilFullyRecovered;
+
+  /// Create a copy of MuscleRecoveryStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MuscleRecoveryStatusImplCopyWith<_$MuscleRecoveryStatusImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

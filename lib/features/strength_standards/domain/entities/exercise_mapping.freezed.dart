@@ -12,7 +12,8 @@ part of 'exercise_mapping.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExerciseMapping _$ExerciseMappingFromJson(Map<String, dynamic> json) {
   return _ExerciseMapping.fromJson(json);
@@ -53,8 +54,12 @@ mixin _$ExerciseMapping {
   /// Fallback reason (only for fallback status)
   String? get fallbackReason => throw _privateConstructorUsedError;
 
+  /// Serializes this ExerciseMapping to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExerciseMapping
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseMappingCopyWith<ExerciseMapping> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,21 +67,23 @@ mixin _$ExerciseMapping {
 /// @nodoc
 abstract class $ExerciseMappingCopyWith<$Res> {
   factory $ExerciseMappingCopyWith(
-          ExerciseMapping value, $Res Function(ExerciseMapping) then) =
-      _$ExerciseMappingCopyWithImpl<$Res, ExerciseMapping>;
+    ExerciseMapping value,
+    $Res Function(ExerciseMapping) then,
+  ) = _$ExerciseMappingCopyWithImpl<$Res, ExerciseMapping>;
   @useResult
-  $Res call(
-      {String gymbroId,
-      String gymbroName,
-      String gymbroEquipment,
-      String? gymbroFocus,
-      double confidence,
-      MappingStatus status,
-      String? standardId,
-      String? standardName,
-      String? standardEquipment,
-      String? dataSource,
-      String? fallbackReason});
+  $Res call({
+    String gymbroId,
+    String gymbroName,
+    String gymbroEquipment,
+    String? gymbroFocus,
+    double confidence,
+    MappingStatus status,
+    String? standardId,
+    String? standardName,
+    String? standardEquipment,
+    String? dataSource,
+    String? fallbackReason,
+  });
 }
 
 /// @nodoc
@@ -89,6 +96,8 @@ class _$ExerciseMappingCopyWithImpl<$Res, $Val extends ExerciseMapping>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseMapping
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,75 +113,80 @@ class _$ExerciseMappingCopyWithImpl<$Res, $Val extends ExerciseMapping>
     Object? dataSource = freezed,
     Object? fallbackReason = freezed,
   }) {
-    return _then(_value.copyWith(
-      gymbroId: null == gymbroId
-          ? _value.gymbroId
-          : gymbroId // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroName: null == gymbroName
-          ? _value.gymbroName
-          : gymbroName // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroEquipment: null == gymbroEquipment
-          ? _value.gymbroEquipment
-          : gymbroEquipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroFocus: freezed == gymbroFocus
-          ? _value.gymbroFocus
-          : gymbroFocus // ignore: cast_nullable_to_non_nullable
-              as String?,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as MappingStatus,
-      standardId: freezed == standardId
-          ? _value.standardId
-          : standardId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardName: freezed == standardName
-          ? _value.standardName
-          : standardName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardEquipment: freezed == standardEquipment
-          ? _value.standardEquipment
-          : standardEquipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dataSource: freezed == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String?,
-      fallbackReason: freezed == fallbackReason
-          ? _value.fallbackReason
-          : fallbackReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            gymbroId: null == gymbroId
+                ? _value.gymbroId
+                : gymbroId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            gymbroName: null == gymbroName
+                ? _value.gymbroName
+                : gymbroName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            gymbroEquipment: null == gymbroEquipment
+                ? _value.gymbroEquipment
+                : gymbroEquipment // ignore: cast_nullable_to_non_nullable
+                      as String,
+            gymbroFocus: freezed == gymbroFocus
+                ? _value.gymbroFocus
+                : gymbroFocus // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            confidence: null == confidence
+                ? _value.confidence
+                : confidence // ignore: cast_nullable_to_non_nullable
+                      as double,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as MappingStatus,
+            standardId: freezed == standardId
+                ? _value.standardId
+                : standardId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            standardName: freezed == standardName
+                ? _value.standardName
+                : standardName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            standardEquipment: freezed == standardEquipment
+                ? _value.standardEquipment
+                : standardEquipment // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            dataSource: freezed == dataSource
+                ? _value.dataSource
+                : dataSource // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            fallbackReason: freezed == fallbackReason
+                ? _value.fallbackReason
+                : fallbackReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseMappingImplCopyWith<$Res>
     implements $ExerciseMappingCopyWith<$Res> {
-  factory _$$ExerciseMappingImplCopyWith(_$ExerciseMappingImpl value,
-          $Res Function(_$ExerciseMappingImpl) then) =
-      __$$ExerciseMappingImplCopyWithImpl<$Res>;
+  factory _$$ExerciseMappingImplCopyWith(
+    _$ExerciseMappingImpl value,
+    $Res Function(_$ExerciseMappingImpl) then,
+  ) = __$$ExerciseMappingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String gymbroId,
-      String gymbroName,
-      String gymbroEquipment,
-      String? gymbroFocus,
-      double confidence,
-      MappingStatus status,
-      String? standardId,
-      String? standardName,
-      String? standardEquipment,
-      String? dataSource,
-      String? fallbackReason});
+  $Res call({
+    String gymbroId,
+    String gymbroName,
+    String gymbroEquipment,
+    String? gymbroFocus,
+    double confidence,
+    MappingStatus status,
+    String? standardId,
+    String? standardName,
+    String? standardEquipment,
+    String? dataSource,
+    String? fallbackReason,
+  });
 }
 
 /// @nodoc
@@ -180,9 +194,12 @@ class __$$ExerciseMappingImplCopyWithImpl<$Res>
     extends _$ExerciseMappingCopyWithImpl<$Res, _$ExerciseMappingImpl>
     implements _$$ExerciseMappingImplCopyWith<$Res> {
   __$$ExerciseMappingImplCopyWithImpl(
-      _$ExerciseMappingImpl _value, $Res Function(_$ExerciseMappingImpl) _then)
-      : super(_value, _then);
+    _$ExerciseMappingImpl _value,
+    $Res Function(_$ExerciseMappingImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseMapping
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -198,70 +215,73 @@ class __$$ExerciseMappingImplCopyWithImpl<$Res>
     Object? dataSource = freezed,
     Object? fallbackReason = freezed,
   }) {
-    return _then(_$ExerciseMappingImpl(
-      gymbroId: null == gymbroId
-          ? _value.gymbroId
-          : gymbroId // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroName: null == gymbroName
-          ? _value.gymbroName
-          : gymbroName // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroEquipment: null == gymbroEquipment
-          ? _value.gymbroEquipment
-          : gymbroEquipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      gymbroFocus: freezed == gymbroFocus
-          ? _value.gymbroFocus
-          : gymbroFocus // ignore: cast_nullable_to_non_nullable
-              as String?,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as MappingStatus,
-      standardId: freezed == standardId
-          ? _value.standardId
-          : standardId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardName: freezed == standardName
-          ? _value.standardName
-          : standardName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      standardEquipment: freezed == standardEquipment
-          ? _value.standardEquipment
-          : standardEquipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dataSource: freezed == dataSource
-          ? _value.dataSource
-          : dataSource // ignore: cast_nullable_to_non_nullable
-              as String?,
-      fallbackReason: freezed == fallbackReason
-          ? _value.fallbackReason
-          : fallbackReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ExerciseMappingImpl(
+        gymbroId: null == gymbroId
+            ? _value.gymbroId
+            : gymbroId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        gymbroName: null == gymbroName
+            ? _value.gymbroName
+            : gymbroName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        gymbroEquipment: null == gymbroEquipment
+            ? _value.gymbroEquipment
+            : gymbroEquipment // ignore: cast_nullable_to_non_nullable
+                  as String,
+        gymbroFocus: freezed == gymbroFocus
+            ? _value.gymbroFocus
+            : gymbroFocus // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        confidence: null == confidence
+            ? _value.confidence
+            : confidence // ignore: cast_nullable_to_non_nullable
+                  as double,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as MappingStatus,
+        standardId: freezed == standardId
+            ? _value.standardId
+            : standardId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        standardName: freezed == standardName
+            ? _value.standardName
+            : standardName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        standardEquipment: freezed == standardEquipment
+            ? _value.standardEquipment
+            : standardEquipment // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        dataSource: freezed == dataSource
+            ? _value.dataSource
+            : dataSource // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        fallbackReason: freezed == fallbackReason
+            ? _value.fallbackReason
+            : fallbackReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExerciseMappingImpl implements _ExerciseMapping {
-  const _$ExerciseMappingImpl(
-      {required this.gymbroId,
-      required this.gymbroName,
-      required this.gymbroEquipment,
-      this.gymbroFocus,
-      required this.confidence,
-      required this.status,
-      this.standardId,
-      this.standardName,
-      this.standardEquipment,
-      this.dataSource,
-      this.fallbackReason});
+  const _$ExerciseMappingImpl({
+    required this.gymbroId,
+    required this.gymbroName,
+    required this.gymbroEquipment,
+    this.gymbroFocus,
+    required this.confidence,
+    required this.status,
+    this.standardId,
+    this.standardName,
+    this.standardEquipment,
+    this.dataSource,
+    this.fallbackReason,
+  });
 
   factory _$ExerciseMappingImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseMappingImplFromJson(json);
@@ -343,100 +363,106 @@ class _$ExerciseMappingImpl implements _ExerciseMapping {
                 other.fallbackReason == fallbackReason));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      gymbroId,
-      gymbroName,
-      gymbroEquipment,
-      gymbroFocus,
-      confidence,
-      status,
-      standardId,
-      standardName,
-      standardEquipment,
-      dataSource,
-      fallbackReason);
+    runtimeType,
+    gymbroId,
+    gymbroName,
+    gymbroEquipment,
+    gymbroFocus,
+    confidence,
+    status,
+    standardId,
+    standardName,
+    standardEquipment,
+    dataSource,
+    fallbackReason,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseMapping
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseMappingImplCopyWith<_$ExerciseMappingImpl> get copyWith =>
       __$$ExerciseMappingImplCopyWithImpl<_$ExerciseMappingImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseMappingImplToJson(
-      this,
-    );
+    return _$$ExerciseMappingImplToJson(this);
   }
 }
 
 abstract class _ExerciseMapping implements ExerciseMapping {
-  const factory _ExerciseMapping(
-      {required final String gymbroId,
-      required final String gymbroName,
-      required final String gymbroEquipment,
-      final String? gymbroFocus,
-      required final double confidence,
-      required final MappingStatus status,
-      final String? standardId,
-      final String? standardName,
-      final String? standardEquipment,
-      final String? dataSource,
-      final String? fallbackReason}) = _$ExerciseMappingImpl;
+  const factory _ExerciseMapping({
+    required final String gymbroId,
+    required final String gymbroName,
+    required final String gymbroEquipment,
+    final String? gymbroFocus,
+    required final double confidence,
+    required final MappingStatus status,
+    final String? standardId,
+    final String? standardName,
+    final String? standardEquipment,
+    final String? dataSource,
+    final String? fallbackReason,
+  }) = _$ExerciseMappingImpl;
 
   factory _ExerciseMapping.fromJson(Map<String, dynamic> json) =
       _$ExerciseMappingImpl.fromJson;
 
-  @override
-
   /// GymBro exercise ID
-  String get gymbroId;
   @override
+  String get gymbroId;
 
   /// GymBro exercise name
-  String get gymbroName;
   @override
+  String get gymbroName;
 
   /// GymBro equipment type
-  String get gymbroEquipment;
   @override
+  String get gymbroEquipment;
 
   /// GymBro muscle focus (e.g., "PETT, TRIC") - nullable for exercises without defined focus
-  String? get gymbroFocus;
   @override
+  String? get gymbroFocus;
 
   /// Semantic similarity confidence (0.0-1.0)
-  double get confidence;
   @override
+  double get confidence;
 
   /// Mapping status: "auto", "review", or "fallback"
-  MappingStatus get status;
   @override
+  MappingStatus get status;
 
   /// Strength standard ID (null if fallback)
-  String? get standardId;
   @override
+  String? get standardId;
 
   /// Strength standard name (null if fallback)
-  String? get standardName;
   @override
+  String? get standardName;
 
   /// Strength standard equipment (null if fallback)
-  String? get standardEquipment;
   @override
+  String? get standardEquipment;
 
   /// Data source (null if fallback)
-  String? get dataSource;
   @override
+  String? get dataSource;
 
   /// Fallback reason (only for fallback status)
-  String? get fallbackReason;
   @override
-  @JsonKey(ignore: true)
+  String? get fallbackReason;
+
+  /// Create a copy of ExerciseMapping
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseMappingImplCopyWith<_$ExerciseMappingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'contribution_filters.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ContributionFilters _$ContributionFiltersFromJson(Map<String, dynamic> json) {
   return _ContributionFilters.fromJson(json);
@@ -31,8 +32,12 @@ mixin _$ContributionFilters {
   DateTime? get dateTo => throw _privateConstructorUsedError;
   String get sortBy => throw _privateConstructorUsedError;
 
+  /// Serializes this ContributionFilters to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ContributionFilters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ContributionFiltersCopyWith<ContributionFilters> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -40,17 +45,19 @@ mixin _$ContributionFilters {
 /// @nodoc
 abstract class $ContributionFiltersCopyWith<$Res> {
   factory $ContributionFiltersCopyWith(
-          ContributionFilters value, $Res Function(ContributionFilters) then) =
-      _$ContributionFiltersCopyWithImpl<$Res, ContributionFilters>;
+    ContributionFilters value,
+    $Res Function(ContributionFilters) then,
+  ) = _$ContributionFiltersCopyWithImpl<$Res, ContributionFilters>;
   @useResult
-  $Res call(
-      {List<String> exerciseIds,
-      String? type,
-      String? difficulty,
-      String? authorTier,
-      DateTime? dateFrom,
-      DateTime? dateTo,
-      String sortBy});
+  $Res call({
+    List<String> exerciseIds,
+    String? type,
+    String? difficulty,
+    String? authorTier,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String sortBy,
+  });
 }
 
 /// @nodoc
@@ -63,6 +70,8 @@ class _$ContributionFiltersCopyWithImpl<$Res, $Val extends ContributionFilters>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ContributionFilters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -74,65 +83,73 @@ class _$ContributionFiltersCopyWithImpl<$Res, $Val extends ContributionFilters>
     Object? dateTo = freezed,
     Object? sortBy = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseIds: null == exerciseIds
-          ? _value.exerciseIds
-          : exerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorTier: freezed == authorTier
-          ? _value.authorTier
-          : authorTier // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dateFrom: freezed == dateFrom
-          ? _value.dateFrom
-          : dateFrom // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      dateTo: freezed == dateTo
-          ? _value.dateTo
-          : dateTo // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      sortBy: null == sortBy
-          ? _value.sortBy
-          : sortBy // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseIds: null == exerciseIds
+                ? _value.exerciseIds
+                : exerciseIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            difficulty: freezed == difficulty
+                ? _value.difficulty
+                : difficulty // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            authorTier: freezed == authorTier
+                ? _value.authorTier
+                : authorTier // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            dateFrom: freezed == dateFrom
+                ? _value.dateFrom
+                : dateFrom // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            dateTo: freezed == dateTo
+                ? _value.dateTo
+                : dateTo // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            sortBy: null == sortBy
+                ? _value.sortBy
+                : sortBy // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ContributionFiltersImplCopyWith<$Res>
     implements $ContributionFiltersCopyWith<$Res> {
-  factory _$$ContributionFiltersImplCopyWith(_$ContributionFiltersImpl value,
-          $Res Function(_$ContributionFiltersImpl) then) =
-      __$$ContributionFiltersImplCopyWithImpl<$Res>;
+  factory _$$ContributionFiltersImplCopyWith(
+    _$ContributionFiltersImpl value,
+    $Res Function(_$ContributionFiltersImpl) then,
+  ) = __$$ContributionFiltersImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<String> exerciseIds,
-      String? type,
-      String? difficulty,
-      String? authorTier,
-      DateTime? dateFrom,
-      DateTime? dateTo,
-      String sortBy});
+  $Res call({
+    List<String> exerciseIds,
+    String? type,
+    String? difficulty,
+    String? authorTier,
+    DateTime? dateFrom,
+    DateTime? dateTo,
+    String sortBy,
+  });
 }
 
 /// @nodoc
 class __$$ContributionFiltersImplCopyWithImpl<$Res>
     extends _$ContributionFiltersCopyWithImpl<$Res, _$ContributionFiltersImpl>
     implements _$$ContributionFiltersImplCopyWith<$Res> {
-  __$$ContributionFiltersImplCopyWithImpl(_$ContributionFiltersImpl _value,
-      $Res Function(_$ContributionFiltersImpl) _then)
-      : super(_value, _then);
+  __$$ContributionFiltersImplCopyWithImpl(
+    _$ContributionFiltersImpl _value,
+    $Res Function(_$ContributionFiltersImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ContributionFilters
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,51 +161,53 @@ class __$$ContributionFiltersImplCopyWithImpl<$Res>
     Object? dateTo = freezed,
     Object? sortBy = null,
   }) {
-    return _then(_$ContributionFiltersImpl(
-      exerciseIds: null == exerciseIds
-          ? _value._exerciseIds
-          : exerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorTier: freezed == authorTier
-          ? _value.authorTier
-          : authorTier // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dateFrom: freezed == dateFrom
-          ? _value.dateFrom
-          : dateFrom // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      dateTo: freezed == dateTo
-          ? _value.dateTo
-          : dateTo // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      sortBy: null == sortBy
-          ? _value.sortBy
-          : sortBy // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$ContributionFiltersImpl(
+        exerciseIds: null == exerciseIds
+            ? _value._exerciseIds
+            : exerciseIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        difficulty: freezed == difficulty
+            ? _value.difficulty
+            : difficulty // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        authorTier: freezed == authorTier
+            ? _value.authorTier
+            : authorTier // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        dateFrom: freezed == dateFrom
+            ? _value.dateFrom
+            : dateFrom // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        dateTo: freezed == dateTo
+            ? _value.dateTo
+            : dateTo // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        sortBy: null == sortBy
+            ? _value.sortBy
+            : sortBy // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ContributionFiltersImpl implements _ContributionFilters {
-  const _$ContributionFiltersImpl(
-      {final List<String> exerciseIds = const [],
-      this.type,
-      this.difficulty,
-      this.authorTier,
-      this.dateFrom,
-      this.dateTo,
-      this.sortBy = 'helpful'})
-      : _exerciseIds = exerciseIds;
+  const _$ContributionFiltersImpl({
+    final List<String> exerciseIds = const [],
+    this.type,
+    this.difficulty,
+    this.authorTier,
+    this.dateFrom,
+    this.dateTo,
+    this.sortBy = 'helpful',
+  }) : _exerciseIds = exerciseIds;
 
   factory _$ContributionFiltersImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContributionFiltersImplFromJson(json);
@@ -204,13 +223,13 @@ class _$ContributionFiltersImpl implements _ContributionFilters {
 
   @override
   final String? type;
-// correction, tip, warning, variant, translation, technique
+  // correction, tip, warning, variant, translation, technique
   @override
   final String? difficulty;
-// beginner, intermediate, advanced
+  // beginner, intermediate, advanced
   @override
   final String? authorTier;
-// community, expert, admin
+  // community, expert, admin
   @override
   final DateTime? dateFrom;
   @override
@@ -229,8 +248,10 @@ class _$ContributionFiltersImpl implements _ContributionFilters {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ContributionFiltersImpl &&
-            const DeepCollectionEquality()
-                .equals(other._exerciseIds, _exerciseIds) &&
+            const DeepCollectionEquality().equals(
+              other._exerciseIds,
+              _exerciseIds,
+            ) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.difficulty, difficulty) ||
                 other.difficulty == difficulty) &&
@@ -242,42 +263,46 @@ class _$ContributionFiltersImpl implements _ContributionFilters {
             (identical(other.sortBy, sortBy) || other.sortBy == sortBy));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_exerciseIds),
-      type,
-      difficulty,
-      authorTier,
-      dateFrom,
-      dateTo,
-      sortBy);
+    runtimeType,
+    const DeepCollectionEquality().hash(_exerciseIds),
+    type,
+    difficulty,
+    authorTier,
+    dateFrom,
+    dateTo,
+    sortBy,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ContributionFilters
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ContributionFiltersImplCopyWith<_$ContributionFiltersImpl> get copyWith =>
       __$$ContributionFiltersImplCopyWithImpl<_$ContributionFiltersImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContributionFiltersImplToJson(
-      this,
-    );
+    return _$$ContributionFiltersImplToJson(this);
   }
 }
 
 abstract class _ContributionFilters implements ContributionFilters {
-  const factory _ContributionFilters(
-      {final List<String> exerciseIds,
-      final String? type,
-      final String? difficulty,
-      final String? authorTier,
-      final DateTime? dateFrom,
-      final DateTime? dateTo,
-      final String sortBy}) = _$ContributionFiltersImpl;
+  const factory _ContributionFilters({
+    final List<String> exerciseIds,
+    final String? type,
+    final String? difficulty,
+    final String? authorTier,
+    final DateTime? dateFrom,
+    final DateTime? dateTo,
+    final String sortBy,
+  }) = _$ContributionFiltersImpl;
 
   factory _ContributionFilters.fromJson(Map<String, dynamic> json) =
       _$ContributionFiltersImpl.fromJson;
@@ -285,19 +310,22 @@ abstract class _ContributionFilters implements ContributionFilters {
   @override
   List<String> get exerciseIds;
   @override
-  String? get type;
-  @override // correction, tip, warning, variant, translation, technique
-  String? get difficulty;
-  @override // beginner, intermediate, advanced
-  String? get authorTier;
-  @override // community, expert, admin
+  String? get type; // correction, tip, warning, variant, translation, technique
+  @override
+  String? get difficulty; // beginner, intermediate, advanced
+  @override
+  String? get authorTier; // community, expert, admin
+  @override
   DateTime? get dateFrom;
   @override
   DateTime? get dateTo;
   @override
   String get sortBy;
+
+  /// Create a copy of ContributionFilters
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ContributionFiltersImplCopyWith<_$ContributionFiltersImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

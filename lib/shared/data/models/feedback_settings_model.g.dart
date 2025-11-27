@@ -8,7 +8,7 @@ part of 'feedback_settings_model.dart';
 
 class FeedbackSettingsModelAdapter extends TypeAdapter<FeedbackSettingsModel> {
   @override
-  final int typeId = 52;
+  final typeId = 52;
 
   @override
   FeedbackSettingsModel read(BinaryReader reader) {
@@ -45,7 +45,7 @@ class FeedbackSettingsModelAdapter extends TypeAdapter<FeedbackSettingsModel> {
 
 class HapticIntensityModelAdapter extends TypeAdapter<HapticIntensityModel> {
   @override
-  final int typeId = 53;
+  final typeId = 53;
 
   @override
   HapticIntensityModel read(BinaryReader reader) {
@@ -66,13 +66,10 @@ class HapticIntensityModelAdapter extends TypeAdapter<HapticIntensityModel> {
     switch (obj) {
       case HapticIntensityModel.light:
         writer.writeByte(0);
-        break;
       case HapticIntensityModel.medium:
         writer.writeByte(1);
-        break;
       case HapticIntensityModel.heavy:
         writer.writeByte(2);
-        break;
     }
   }
 

@@ -9,7 +9,7 @@ part of 'history_view_settings_model.dart';
 class HistoryViewSettingsModelAdapter
     extends TypeAdapter<HistoryViewSettingsModel> {
   @override
-  final int typeId = 55;
+  final typeId = 55;
 
   @override
   HistoryViewSettingsModel read(BinaryReader reader) {
@@ -52,7 +52,7 @@ class HistoryViewSettingsModelAdapter
 
 class HistoryViewModeModelAdapter extends TypeAdapter<HistoryViewModeModel> {
   @override
-  final int typeId = 54;
+  final typeId = 54;
 
   @override
   HistoryViewModeModel read(BinaryReader reader) {
@@ -75,16 +75,12 @@ class HistoryViewModeModelAdapter extends TypeAdapter<HistoryViewModeModel> {
     switch (obj) {
       case HistoryViewModeModel.list:
         writer.writeByte(0);
-        break;
       case HistoryViewModeModel.compact:
         writer.writeByte(1);
-        break;
       case HistoryViewModeModel.calendar:
         writer.writeByte(2);
-        break;
       case HistoryViewModeModel.stats:
         writer.writeByte(3);
-        break;
     }
   }
 

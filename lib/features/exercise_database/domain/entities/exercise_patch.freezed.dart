@@ -12,7 +12,8 @@ part of 'exercise_patch.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExercisePatch _$ExercisePatchFromJson(Map<String, dynamic> json) {
   return _ExercisePatch.fromJson(json);
@@ -85,8 +86,12 @@ mixin _$ExercisePatch {
   /// User display name (for admin UI)
   String? get userDisplayName => throw _privateConstructorUsedError;
 
+  /// Serializes this ExercisePatch to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExercisePatch
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExercisePatchCopyWith<ExercisePatch> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -94,31 +99,33 @@ mixin _$ExercisePatch {
 /// @nodoc
 abstract class $ExercisePatchCopyWith<$Res> {
   factory $ExercisePatchCopyWith(
-          ExercisePatch value, $Res Function(ExercisePatch) then) =
-      _$ExercisePatchCopyWithImpl<$Res, ExercisePatch>;
+    ExercisePatch value,
+    $Res Function(ExercisePatch) then,
+  ) = _$ExercisePatchCopyWithImpl<$Res, ExercisePatch>;
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String userId,
-      String fieldName,
-      dynamic oldValue,
-      dynamic newValue,
-      dynamic originalValue,
-      String reason,
-      PatchStatus status,
-      String language,
-      DateTime createdAt,
-      DateTime expiresAt,
-      int version,
-      DateTime? approvedAt,
-      String? approvedBy,
-      DateTime? rejectedAt,
-      String? rejectReason,
-      String? adminNote,
-      bool autoExpired,
-      String? userEmail,
-      String? userDisplayName});
+  $Res call({
+    String id,
+    String exerciseId,
+    String userId,
+    String fieldName,
+    dynamic oldValue,
+    dynamic newValue,
+    dynamic originalValue,
+    String reason,
+    PatchStatus status,
+    String language,
+    DateTime createdAt,
+    DateTime expiresAt,
+    int version,
+    DateTime? approvedAt,
+    String? approvedBy,
+    DateTime? rejectedAt,
+    String? rejectReason,
+    String? adminNote,
+    bool autoExpired,
+    String? userEmail,
+    String? userDisplayName,
+  });
 }
 
 /// @nodoc
@@ -131,6 +138,8 @@ class _$ExercisePatchCopyWithImpl<$Res, $Val extends ExercisePatch>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExercisePatch
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,92 +165,95 @@ class _$ExercisePatchCopyWithImpl<$Res, $Val extends ExercisePatch>
     Object? userEmail = freezed,
     Object? userDisplayName = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      fieldName: null == fieldName
-          ? _value.fieldName
-          : fieldName // ignore: cast_nullable_to_non_nullable
-              as String,
-      oldValue: freezed == oldValue
-          ? _value.oldValue
-          : oldValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      newValue: freezed == newValue
-          ? _value.newValue
-          : newValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      originalValue: freezed == originalValue
-          ? _value.originalValue
-          : originalValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as PatchStatus,
-      language: null == language
-          ? _value.language
-          : language // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expiresAt: null == expiresAt
-          ? _value.expiresAt
-          : expiresAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as int,
-      approvedAt: freezed == approvedAt
-          ? _value.approvedAt
-          : approvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      approvedBy: freezed == approvedBy
-          ? _value.approvedBy
-          : approvedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rejectedAt: freezed == rejectedAt
-          ? _value.rejectedAt
-          : rejectedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      rejectReason: freezed == rejectReason
-          ? _value.rejectReason
-          : rejectReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNote: freezed == adminNote
-          ? _value.adminNote
-          : adminNote // ignore: cast_nullable_to_non_nullable
-              as String?,
-      autoExpired: null == autoExpired
-          ? _value.autoExpired
-          : autoExpired // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exerciseId: null == exerciseId
+                ? _value.exerciseId
+                : exerciseId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            fieldName: null == fieldName
+                ? _value.fieldName
+                : fieldName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            oldValue: freezed == oldValue
+                ? _value.oldValue
+                : oldValue // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+            newValue: freezed == newValue
+                ? _value.newValue
+                : newValue // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+            originalValue: freezed == originalValue
+                ? _value.originalValue
+                : originalValue // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+            reason: null == reason
+                ? _value.reason
+                : reason // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as PatchStatus,
+            language: null == language
+                ? _value.language
+                : language // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expiresAt: null == expiresAt
+                ? _value.expiresAt
+                : expiresAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            version: null == version
+                ? _value.version
+                : version // ignore: cast_nullable_to_non_nullable
+                      as int,
+            approvedAt: freezed == approvedAt
+                ? _value.approvedAt
+                : approvedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            approvedBy: freezed == approvedBy
+                ? _value.approvedBy
+                : approvedBy // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            rejectedAt: freezed == rejectedAt
+                ? _value.rejectedAt
+                : rejectedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            rejectReason: freezed == rejectReason
+                ? _value.rejectReason
+                : rejectReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminNote: freezed == adminNote
+                ? _value.adminNote
+                : adminNote // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            autoExpired: null == autoExpired
+                ? _value.autoExpired
+                : autoExpired // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            userEmail: freezed == userEmail
+                ? _value.userEmail
+                : userEmail // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userDisplayName: freezed == userDisplayName
+                ? _value.userDisplayName
+                : userDisplayName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -249,32 +261,34 @@ class _$ExercisePatchCopyWithImpl<$Res, $Val extends ExercisePatch>
 abstract class _$$ExercisePatchImplCopyWith<$Res>
     implements $ExercisePatchCopyWith<$Res> {
   factory _$$ExercisePatchImplCopyWith(
-          _$ExercisePatchImpl value, $Res Function(_$ExercisePatchImpl) then) =
-      __$$ExercisePatchImplCopyWithImpl<$Res>;
+    _$ExercisePatchImpl value,
+    $Res Function(_$ExercisePatchImpl) then,
+  ) = __$$ExercisePatchImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String userId,
-      String fieldName,
-      dynamic oldValue,
-      dynamic newValue,
-      dynamic originalValue,
-      String reason,
-      PatchStatus status,
-      String language,
-      DateTime createdAt,
-      DateTime expiresAt,
-      int version,
-      DateTime? approvedAt,
-      String? approvedBy,
-      DateTime? rejectedAt,
-      String? rejectReason,
-      String? adminNote,
-      bool autoExpired,
-      String? userEmail,
-      String? userDisplayName});
+  $Res call({
+    String id,
+    String exerciseId,
+    String userId,
+    String fieldName,
+    dynamic oldValue,
+    dynamic newValue,
+    dynamic originalValue,
+    String reason,
+    PatchStatus status,
+    String language,
+    DateTime createdAt,
+    DateTime expiresAt,
+    int version,
+    DateTime? approvedAt,
+    String? approvedBy,
+    DateTime? rejectedAt,
+    String? rejectReason,
+    String? adminNote,
+    bool autoExpired,
+    String? userEmail,
+    String? userDisplayName,
+  });
 }
 
 /// @nodoc
@@ -282,9 +296,12 @@ class __$$ExercisePatchImplCopyWithImpl<$Res>
     extends _$ExercisePatchCopyWithImpl<$Res, _$ExercisePatchImpl>
     implements _$$ExercisePatchImplCopyWith<$Res> {
   __$$ExercisePatchImplCopyWithImpl(
-      _$ExercisePatchImpl _value, $Res Function(_$ExercisePatchImpl) _then)
-      : super(_value, _then);
+    _$ExercisePatchImpl _value,
+    $Res Function(_$ExercisePatchImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExercisePatch
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -310,120 +327,123 @@ class __$$ExercisePatchImplCopyWithImpl<$Res>
     Object? userEmail = freezed,
     Object? userDisplayName = freezed,
   }) {
-    return _then(_$ExercisePatchImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      fieldName: null == fieldName
-          ? _value.fieldName
-          : fieldName // ignore: cast_nullable_to_non_nullable
-              as String,
-      oldValue: freezed == oldValue
-          ? _value.oldValue
-          : oldValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      newValue: freezed == newValue
-          ? _value.newValue
-          : newValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      originalValue: freezed == originalValue
-          ? _value.originalValue
-          : originalValue // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as PatchStatus,
-      language: null == language
-          ? _value.language
-          : language // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expiresAt: null == expiresAt
-          ? _value.expiresAt
-          : expiresAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as int,
-      approvedAt: freezed == approvedAt
-          ? _value.approvedAt
-          : approvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      approvedBy: freezed == approvedBy
-          ? _value.approvedBy
-          : approvedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rejectedAt: freezed == rejectedAt
-          ? _value.rejectedAt
-          : rejectedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      rejectReason: freezed == rejectReason
-          ? _value.rejectReason
-          : rejectReason // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNote: freezed == adminNote
-          ? _value.adminNote
-          : adminNote // ignore: cast_nullable_to_non_nullable
-              as String?,
-      autoExpired: null == autoExpired
-          ? _value.autoExpired
-          : autoExpired // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ExercisePatchImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        fieldName: null == fieldName
+            ? _value.fieldName
+            : fieldName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        oldValue: freezed == oldValue
+            ? _value.oldValue
+            : oldValue // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+        newValue: freezed == newValue
+            ? _value.newValue
+            : newValue // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+        originalValue: freezed == originalValue
+            ? _value.originalValue
+            : originalValue // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+        reason: null == reason
+            ? _value.reason
+            : reason // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as PatchStatus,
+        language: null == language
+            ? _value.language
+            : language // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expiresAt: null == expiresAt
+            ? _value.expiresAt
+            : expiresAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        version: null == version
+            ? _value.version
+            : version // ignore: cast_nullable_to_non_nullable
+                  as int,
+        approvedAt: freezed == approvedAt
+            ? _value.approvedAt
+            : approvedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        approvedBy: freezed == approvedBy
+            ? _value.approvedBy
+            : approvedBy // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        rejectedAt: freezed == rejectedAt
+            ? _value.rejectedAt
+            : rejectedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        rejectReason: freezed == rejectReason
+            ? _value.rejectReason
+            : rejectReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminNote: freezed == adminNote
+            ? _value.adminNote
+            : adminNote // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        autoExpired: null == autoExpired
+            ? _value.autoExpired
+            : autoExpired // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        userEmail: freezed == userEmail
+            ? _value.userEmail
+            : userEmail // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userDisplayName: freezed == userDisplayName
+            ? _value.userDisplayName
+            : userDisplayName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExercisePatchImpl implements _ExercisePatch {
-  const _$ExercisePatchImpl(
-      {required this.id,
-      required this.exerciseId,
-      required this.userId,
-      required this.fieldName,
-      required this.oldValue,
-      required this.newValue,
-      required this.originalValue,
-      required this.reason,
-      required this.status,
-      required this.language,
-      required this.createdAt,
-      required this.expiresAt,
-      required this.version,
-      this.approvedAt,
-      this.approvedBy,
-      this.rejectedAt,
-      this.rejectReason,
-      this.adminNote,
-      this.autoExpired = false,
-      this.userEmail,
-      this.userDisplayName});
+  const _$ExercisePatchImpl({
+    required this.id,
+    required this.exerciseId,
+    required this.userId,
+    required this.fieldName,
+    required this.oldValue,
+    required this.newValue,
+    required this.originalValue,
+    required this.reason,
+    required this.status,
+    required this.language,
+    required this.createdAt,
+    required this.expiresAt,
+    required this.version,
+    this.approvedAt,
+    this.approvedBy,
+    this.rejectedAt,
+    this.rejectReason,
+    this.adminNote,
+    this.autoExpired = false,
+    this.userEmail,
+    this.userDisplayName,
+  });
 
   factory _$ExercisePatchImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExercisePatchImplFromJson(json);
@@ -533,8 +553,10 @@ class _$ExercisePatchImpl implements _ExercisePatch {
                 other.fieldName == fieldName) &&
             const DeepCollectionEquality().equals(other.oldValue, oldValue) &&
             const DeepCollectionEquality().equals(other.newValue, newValue) &&
-            const DeepCollectionEquality()
-                .equals(other.originalValue, originalValue) &&
+            const DeepCollectionEquality().equals(
+              other.originalValue,
+              originalValue,
+            ) &&
             (identical(other.reason, reason) || other.reason == reason) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.language, language) ||
@@ -562,34 +584,36 @@ class _$ExercisePatchImpl implements _ExercisePatch {
                 other.userDisplayName == userDisplayName));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        exerciseId,
-        userId,
-        fieldName,
-        const DeepCollectionEquality().hash(oldValue),
-        const DeepCollectionEquality().hash(newValue),
-        const DeepCollectionEquality().hash(originalValue),
-        reason,
-        status,
-        language,
-        createdAt,
-        expiresAt,
-        version,
-        approvedAt,
-        approvedBy,
-        rejectedAt,
-        rejectReason,
-        adminNote,
-        autoExpired,
-        userEmail,
-        userDisplayName
-      ]);
+    runtimeType,
+    id,
+    exerciseId,
+    userId,
+    fieldName,
+    const DeepCollectionEquality().hash(oldValue),
+    const DeepCollectionEquality().hash(newValue),
+    const DeepCollectionEquality().hash(originalValue),
+    reason,
+    status,
+    language,
+    createdAt,
+    expiresAt,
+    version,
+    approvedAt,
+    approvedBy,
+    rejectedAt,
+    rejectReason,
+    adminNote,
+    autoExpired,
+    userEmail,
+    userDisplayName,
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExercisePatch
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExercisePatchImplCopyWith<_$ExercisePatchImpl> get copyWith =>
@@ -597,127 +621,128 @@ class _$ExercisePatchImpl implements _ExercisePatch {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExercisePatchImplToJson(
-      this,
-    );
+    return _$$ExercisePatchImplToJson(this);
   }
 }
 
 abstract class _ExercisePatch implements ExercisePatch {
-  const factory _ExercisePatch(
-      {required final String id,
-      required final String exerciseId,
-      required final String userId,
-      required final String fieldName,
-      required final dynamic oldValue,
-      required final dynamic newValue,
-      required final dynamic originalValue,
-      required final String reason,
-      required final PatchStatus status,
-      required final String language,
-      required final DateTime createdAt,
-      required final DateTime expiresAt,
-      required final int version,
-      final DateTime? approvedAt,
-      final String? approvedBy,
-      final DateTime? rejectedAt,
-      final String? rejectReason,
-      final String? adminNote,
-      final bool autoExpired,
-      final String? userEmail,
-      final String? userDisplayName}) = _$ExercisePatchImpl;
+  const factory _ExercisePatch({
+    required final String id,
+    required final String exerciseId,
+    required final String userId,
+    required final String fieldName,
+    required final dynamic oldValue,
+    required final dynamic newValue,
+    required final dynamic originalValue,
+    required final String reason,
+    required final PatchStatus status,
+    required final String language,
+    required final DateTime createdAt,
+    required final DateTime expiresAt,
+    required final int version,
+    final DateTime? approvedAt,
+    final String? approvedBy,
+    final DateTime? rejectedAt,
+    final String? rejectReason,
+    final String? adminNote,
+    final bool autoExpired,
+    final String? userEmail,
+    final String? userDisplayName,
+  }) = _$ExercisePatchImpl;
 
   factory _ExercisePatch.fromJson(Map<String, dynamic> json) =
       _$ExercisePatchImpl.fromJson;
 
-  @override
-
   /// Unique patch ID (Firestore document ID)
-  String get id;
   @override
+  String get id;
 
   /// ID of the exercise being patched
-  String get exerciseId;
   @override
+  String get exerciseId;
 
   /// User ID who submitted the patch
-  String get userId;
   @override
+  String get userId;
 
   /// Name of the field being modified (e.g., "nome", "difficolta", "noteTecniche")
-  String get fieldName;
   @override
+  String get fieldName;
 
   /// Original value before user's modification (from Firestore)
-  dynamic get oldValue;
   @override
+  dynamic get oldValue;
 
   /// New value proposed by user
-  dynamic get newValue;
   @override
+  dynamic get newValue;
 
   /// Server value at time of patch creation (for conflict detection)
   /// If this differs from current Firestore value, patch is stale
-  dynamic get originalValue;
   @override
+  dynamic get originalValue;
 
   /// User's explanation for the change (required, min 10 chars)
-  String get reason;
   @override
+  String get reason;
 
   /// Current status of the patch
-  PatchStatus get status;
   @override
+  PatchStatus get status;
 
   /// Language version ('it' or 'en')
-  String get language;
   @override
+  String get language;
 
   /// When patch was created
-  DateTime get createdAt;
   @override
+  DateTime get createdAt;
 
   /// When patch will expire (createdAt + 30 days)
-  DateTime get expiresAt;
   @override
+  DateTime get expiresAt;
 
   /// Exercise version at time of patch creation
   /// Used to detect if exercise was updated before patch approval
-  int get version;
   @override
+  int get version;
 
   /// When patch was approved (null if not approved)
-  DateTime? get approvedAt;
   @override
+  DateTime? get approvedAt;
 
   /// Admin user ID who approved the patch
-  String? get approvedBy;
   @override
+  String? get approvedBy;
 
   /// When patch was rejected (null if not rejected)
-  DateTime? get rejectedAt;
   @override
+  DateTime? get rejectedAt;
 
   /// Reason for rejection (null if approved or pending)
-  String? get rejectReason;
   @override
+  String? get rejectReason;
 
   /// Additional notes from admin
-  String? get adminNote;
   @override
+  String? get adminNote;
 
   /// Whether patch was auto-expired by TTL cleanup (Cloud Function)
-  bool get autoExpired;
   @override
+  bool get autoExpired;
 
   /// User email (for admin notification)
-  String? get userEmail;
   @override
+  String? get userEmail;
 
   /// User display name (for admin UI)
-  String? get userDisplayName;
   @override
-  @JsonKey(ignore: true)
+  String? get userDisplayName;
+
+  /// Create a copy of ExercisePatch
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExercisePatchImplCopyWith<_$ExercisePatchImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

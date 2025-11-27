@@ -11,8 +11,10 @@ _$UserConsentImpl _$$UserConsentImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       userId: json['userId'] as String,
       groupConsents: (json['groupConsents'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry($enumDecode(_$MetricGroupEnumMap, k),
-            $enumDecode(_$ConsentStateEnumMap, e)),
+        (k, e) => MapEntry(
+          $enumDecode(_$MetricGroupEnumMap, k),
+          $enumDecode(_$ConsentStateEnumMap, e),
+        ),
       ),
       consentVersion: (json['consentVersion'] as num).toInt(),
       acceptedAt: DateTime.parse(json['acceptedAt'] as String),
@@ -39,25 +41,26 @@ _$UserConsentImpl _$$UserConsentImplFromJson(Map<String, dynamic> json) =>
       userAgent: json['userAgent'] as String?,
     );
 
-Map<String, dynamic> _$$UserConsentImplToJson(_$UserConsentImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'groupConsents': instance.groupConsents.map((k, e) =>
-          MapEntry(_$MetricGroupEnumMap[k]!, _$ConsentStateEnumMap[e]!)),
-      'consentVersion': instance.consentVersion,
-      'acceptedAt': instance.acceptedAt.toIso8601String(),
-      'ipAddress': instance.ipAddress,
-      'essentialGrantedAt': instance.essentialGrantedAt?.toIso8601String(),
-      'measurementsGrantedAt':
-          instance.measurementsGrantedAt?.toIso8601String(),
-      'vitalsGrantedAt': instance.vitalsGrantedAt?.toIso8601String(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-      'isRevoked': instance.isRevoked,
-      'revokedAt': instance.revokedAt?.toIso8601String(),
-      'userAgent': instance.userAgent,
-    };
+Map<String, dynamic> _$$UserConsentImplToJson(
+  _$UserConsentImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'groupConsents': instance.groupConsents.map(
+    (k, e) => MapEntry(_$MetricGroupEnumMap[k]!, _$ConsentStateEnumMap[e]!),
+  ),
+  'consentVersion': instance.consentVersion,
+  'acceptedAt': instance.acceptedAt.toIso8601String(),
+  'ipAddress': instance.ipAddress,
+  'essentialGrantedAt': instance.essentialGrantedAt?.toIso8601String(),
+  'measurementsGrantedAt': instance.measurementsGrantedAt?.toIso8601String(),
+  'vitalsGrantedAt': instance.vitalsGrantedAt?.toIso8601String(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'isRevoked': instance.isRevoked,
+  'revokedAt': instance.revokedAt?.toIso8601String(),
+  'userAgent': instance.userAgent,
+};
 
 const _$ConsentStateEnumMap = {
   ConsentState.notAsked: 'notAsked',

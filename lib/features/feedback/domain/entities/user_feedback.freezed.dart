@@ -12,7 +12,8 @@ part of 'user_feedback.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserFeedback _$UserFeedbackFromJson(Map<String, dynamic> json) {
   return _UserFeedback.fromJson(json);
@@ -37,8 +38,12 @@ mixin _$UserFeedback {
   String? get reviewedBy => throw _privateConstructorUsedError; // Admin user ID
   String? get adminNotes => throw _privateConstructorUsedError;
 
+  /// Serializes this UserFeedback to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserFeedbackCopyWith<UserFeedback> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -46,25 +51,27 @@ mixin _$UserFeedback {
 /// @nodoc
 abstract class $UserFeedbackCopyWith<$Res> {
   factory $UserFeedbackCopyWith(
-          UserFeedback value, $Res Function(UserFeedback) then) =
-      _$UserFeedbackCopyWithImpl<$Res, UserFeedback>;
+    UserFeedback value,
+    $Res Function(UserFeedback) then,
+  ) = _$UserFeedbackCopyWithImpl<$Res, UserFeedback>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String message,
-      FeedbackCategory category,
-      FeedbackStatus status,
-      DateTime createdAt,
-      int? rating,
-      String? userEmail,
-      String? userDisplayName,
-      String? deviceInfo,
-      String? appVersion,
-      String? screenshotUrl,
-      DateTime? reviewedAt,
-      String? reviewedBy,
-      String? adminNotes});
+  $Res call({
+    String id,
+    String userId,
+    String message,
+    FeedbackCategory category,
+    FeedbackStatus status,
+    DateTime createdAt,
+    int? rating,
+    String? userEmail,
+    String? userDisplayName,
+    String? deviceInfo,
+    String? appVersion,
+    String? screenshotUrl,
+    DateTime? reviewedAt,
+    String? reviewedBy,
+    String? adminNotes,
+  });
 }
 
 /// @nodoc
@@ -77,6 +84,8 @@ class _$UserFeedbackCopyWithImpl<$Res, $Val extends UserFeedback>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -96,68 +105,71 @@ class _$UserFeedbackCopyWithImpl<$Res, $Val extends UserFeedback>
     Object? reviewedBy = freezed,
     Object? adminNotes = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as FeedbackCategory,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as FeedbackStatus,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      rating: freezed == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as int?,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deviceInfo: freezed == deviceInfo
-          ? _value.deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      screenshotUrl: freezed == screenshotUrl
-          ? _value.screenshotUrl
-          : screenshotUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedAt: freezed == reviewedAt
-          ? _value.reviewedAt
-          : reviewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNotes: freezed == adminNotes
-          ? _value.adminNotes
-          : adminNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as FeedbackCategory,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as FeedbackStatus,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            rating: freezed == rating
+                ? _value.rating
+                : rating // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            userEmail: freezed == userEmail
+                ? _value.userEmail
+                : userEmail // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userDisplayName: freezed == userDisplayName
+                ? _value.userDisplayName
+                : userDisplayName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            deviceInfo: freezed == deviceInfo
+                ? _value.deviceInfo
+                : deviceInfo // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            appVersion: freezed == appVersion
+                ? _value.appVersion
+                : appVersion // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            screenshotUrl: freezed == screenshotUrl
+                ? _value.screenshotUrl
+                : screenshotUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            reviewedAt: freezed == reviewedAt
+                ? _value.reviewedAt
+                : reviewedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            reviewedBy: freezed == reviewedBy
+                ? _value.reviewedBy
+                : reviewedBy // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminNotes: freezed == adminNotes
+                ? _value.adminNotes
+                : adminNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -165,26 +177,28 @@ class _$UserFeedbackCopyWithImpl<$Res, $Val extends UserFeedback>
 abstract class _$$UserFeedbackImplCopyWith<$Res>
     implements $UserFeedbackCopyWith<$Res> {
   factory _$$UserFeedbackImplCopyWith(
-          _$UserFeedbackImpl value, $Res Function(_$UserFeedbackImpl) then) =
-      __$$UserFeedbackImplCopyWithImpl<$Res>;
+    _$UserFeedbackImpl value,
+    $Res Function(_$UserFeedbackImpl) then,
+  ) = __$$UserFeedbackImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String message,
-      FeedbackCategory category,
-      FeedbackStatus status,
-      DateTime createdAt,
-      int? rating,
-      String? userEmail,
-      String? userDisplayName,
-      String? deviceInfo,
-      String? appVersion,
-      String? screenshotUrl,
-      DateTime? reviewedAt,
-      String? reviewedBy,
-      String? adminNotes});
+  $Res call({
+    String id,
+    String userId,
+    String message,
+    FeedbackCategory category,
+    FeedbackStatus status,
+    DateTime createdAt,
+    int? rating,
+    String? userEmail,
+    String? userDisplayName,
+    String? deviceInfo,
+    String? appVersion,
+    String? screenshotUrl,
+    DateTime? reviewedAt,
+    String? reviewedBy,
+    String? adminNotes,
+  });
 }
 
 /// @nodoc
@@ -192,9 +206,12 @@ class __$$UserFeedbackImplCopyWithImpl<$Res>
     extends _$UserFeedbackCopyWithImpl<$Res, _$UserFeedbackImpl>
     implements _$$UserFeedbackImplCopyWith<$Res> {
   __$$UserFeedbackImplCopyWithImpl(
-      _$UserFeedbackImpl _value, $Res Function(_$UserFeedbackImpl) _then)
-      : super(_value, _then);
+    _$UserFeedbackImpl _value,
+    $Res Function(_$UserFeedbackImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -214,90 +231,93 @@ class __$$UserFeedbackImplCopyWithImpl<$Res>
     Object? reviewedBy = freezed,
     Object? adminNotes = freezed,
   }) {
-    return _then(_$UserFeedbackImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as FeedbackCategory,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as FeedbackStatus,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      rating: freezed == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as int?,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deviceInfo: freezed == deviceInfo
-          ? _value.deviceInfo
-          : deviceInfo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      screenshotUrl: freezed == screenshotUrl
-          ? _value.screenshotUrl
-          : screenshotUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedAt: freezed == reviewedAt
-          ? _value.reviewedAt
-          : reviewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNotes: freezed == adminNotes
-          ? _value.adminNotes
-          : adminNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$UserFeedbackImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as FeedbackCategory,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as FeedbackStatus,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        rating: freezed == rating
+            ? _value.rating
+            : rating // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        userEmail: freezed == userEmail
+            ? _value.userEmail
+            : userEmail // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userDisplayName: freezed == userDisplayName
+            ? _value.userDisplayName
+            : userDisplayName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        deviceInfo: freezed == deviceInfo
+            ? _value.deviceInfo
+            : deviceInfo // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        appVersion: freezed == appVersion
+            ? _value.appVersion
+            : appVersion // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        screenshotUrl: freezed == screenshotUrl
+            ? _value.screenshotUrl
+            : screenshotUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        reviewedAt: freezed == reviewedAt
+            ? _value.reviewedAt
+            : reviewedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        reviewedBy: freezed == reviewedBy
+            ? _value.reviewedBy
+            : reviewedBy // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminNotes: freezed == adminNotes
+            ? _value.adminNotes
+            : adminNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserFeedbackImpl implements _UserFeedback {
-  const _$UserFeedbackImpl(
-      {required this.id,
-      required this.userId,
-      required this.message,
-      required this.category,
-      required this.status,
-      required this.createdAt,
-      this.rating,
-      this.userEmail,
-      this.userDisplayName,
-      this.deviceInfo,
-      this.appVersion,
-      this.screenshotUrl,
-      this.reviewedAt,
-      this.reviewedBy,
-      this.adminNotes});
+  const _$UserFeedbackImpl({
+    required this.id,
+    required this.userId,
+    required this.message,
+    required this.category,
+    required this.status,
+    required this.createdAt,
+    this.rating,
+    this.userEmail,
+    this.userDisplayName,
+    this.deviceInfo,
+    this.appVersion,
+    this.screenshotUrl,
+    this.reviewedAt,
+    this.reviewedBy,
+    this.adminNotes,
+  });
 
   factory _$UserFeedbackImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserFeedbackImplFromJson(json);
@@ -316,7 +336,7 @@ class _$UserFeedbackImpl implements _UserFeedback {
   final DateTime createdAt;
   @override
   final int? rating;
-// 1-5 stars (optional)
+  // 1-5 stars (optional)
   @override
   final String? userEmail;
   @override
@@ -327,12 +347,12 @@ class _$UserFeedbackImpl implements _UserFeedback {
   final String? appVersion;
   @override
   final String? screenshotUrl;
-// Firebase Storage URL (future)
+  // Firebase Storage URL (future)
   @override
   final DateTime? reviewedAt;
   @override
   final String? reviewedBy;
-// Admin user ID
+  // Admin user ID
   @override
   final String? adminNotes;
 
@@ -373,27 +393,30 @@ class _$UserFeedbackImpl implements _UserFeedback {
                 other.adminNotes == adminNotes));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      message,
-      category,
-      status,
-      createdAt,
-      rating,
-      userEmail,
-      userDisplayName,
-      deviceInfo,
-      appVersion,
-      screenshotUrl,
-      reviewedAt,
-      reviewedBy,
-      adminNotes);
+    runtimeType,
+    id,
+    userId,
+    message,
+    category,
+    status,
+    createdAt,
+    rating,
+    userEmail,
+    userDisplayName,
+    deviceInfo,
+    appVersion,
+    screenshotUrl,
+    reviewedAt,
+    reviewedBy,
+    adminNotes,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserFeedbackImplCopyWith<_$UserFeedbackImpl> get copyWith =>
@@ -401,29 +424,28 @@ class _$UserFeedbackImpl implements _UserFeedback {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserFeedbackImplToJson(
-      this,
-    );
+    return _$$UserFeedbackImplToJson(this);
   }
 }
 
 abstract class _UserFeedback implements UserFeedback {
-  const factory _UserFeedback(
-      {required final String id,
-      required final String userId,
-      required final String message,
-      required final FeedbackCategory category,
-      required final FeedbackStatus status,
-      required final DateTime createdAt,
-      final int? rating,
-      final String? userEmail,
-      final String? userDisplayName,
-      final String? deviceInfo,
-      final String? appVersion,
-      final String? screenshotUrl,
-      final DateTime? reviewedAt,
-      final String? reviewedBy,
-      final String? adminNotes}) = _$UserFeedbackImpl;
+  const factory _UserFeedback({
+    required final String id,
+    required final String userId,
+    required final String message,
+    required final FeedbackCategory category,
+    required final FeedbackStatus status,
+    required final DateTime createdAt,
+    final int? rating,
+    final String? userEmail,
+    final String? userDisplayName,
+    final String? deviceInfo,
+    final String? appVersion,
+    final String? screenshotUrl,
+    final DateTime? reviewedAt,
+    final String? reviewedBy,
+    final String? adminNotes,
+  }) = _$UserFeedbackImpl;
 
   factory _UserFeedback.fromJson(Map<String, dynamic> json) =
       _$UserFeedbackImpl.fromJson;
@@ -441,8 +463,8 @@ abstract class _UserFeedback implements UserFeedback {
   @override
   DateTime get createdAt;
   @override
-  int? get rating;
-  @override // 1-5 stars (optional)
+  int? get rating; // 1-5 stars (optional)
+  @override
   String? get userEmail;
   @override
   String? get userDisplayName;
@@ -451,15 +473,18 @@ abstract class _UserFeedback implements UserFeedback {
   @override
   String? get appVersion;
   @override
-  String? get screenshotUrl;
-  @override // Firebase Storage URL (future)
+  String? get screenshotUrl; // Firebase Storage URL (future)
+  @override
   DateTime? get reviewedAt;
   @override
-  String? get reviewedBy;
-  @override // Admin user ID
-  String? get adminNotes;
+  String? get reviewedBy; // Admin user ID
   @override
-  @JsonKey(ignore: true)
+  String? get adminNotes;
+
+  /// Create a copy of UserFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserFeedbackImplCopyWith<_$UserFeedbackImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

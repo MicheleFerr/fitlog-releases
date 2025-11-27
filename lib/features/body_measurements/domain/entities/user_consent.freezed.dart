@@ -12,7 +12,8 @@ part of 'user_consent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserConsent _$UserConsentFromJson(Map<String, dynamic> json) {
   return _UserConsent.fromJson(json);
@@ -87,8 +88,12 @@ mixin _$UserConsent {
   /// Example: "FitLog Pro/1.0.0 iOS/17.2 (iPhone 14 Pro)"
   String? get userAgent => throw _privateConstructorUsedError;
 
+  /// Serializes this UserConsent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserConsent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserConsentCopyWith<UserConsent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -96,24 +101,26 @@ mixin _$UserConsent {
 /// @nodoc
 abstract class $UserConsentCopyWith<$Res> {
   factory $UserConsentCopyWith(
-          UserConsent value, $Res Function(UserConsent) then) =
-      _$UserConsentCopyWithImpl<$Res, UserConsent>;
+    UserConsent value,
+    $Res Function(UserConsent) then,
+  ) = _$UserConsentCopyWithImpl<$Res, UserConsent>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      Map<MetricGroup, ConsentState> groupConsents,
-      int consentVersion,
-      DateTime acceptedAt,
-      String ipAddress,
-      DateTime? essentialGrantedAt,
-      DateTime? measurementsGrantedAt,
-      DateTime? vitalsGrantedAt,
-      DateTime? createdAt,
-      DateTime? updatedAt,
-      bool isRevoked,
-      DateTime? revokedAt,
-      String? userAgent});
+  $Res call({
+    String id,
+    String userId,
+    Map<MetricGroup, ConsentState> groupConsents,
+    int consentVersion,
+    DateTime acceptedAt,
+    String ipAddress,
+    DateTime? essentialGrantedAt,
+    DateTime? measurementsGrantedAt,
+    DateTime? vitalsGrantedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool isRevoked,
+    DateTime? revokedAt,
+    String? userAgent,
+  });
 }
 
 /// @nodoc
@@ -126,6 +133,8 @@ class _$UserConsentCopyWithImpl<$Res, $Val extends UserConsent>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserConsent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,64 +153,67 @@ class _$UserConsentCopyWithImpl<$Res, $Val extends UserConsent>
     Object? revokedAt = freezed,
     Object? userAgent = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      groupConsents: null == groupConsents
-          ? _value.groupConsents
-          : groupConsents // ignore: cast_nullable_to_non_nullable
-              as Map<MetricGroup, ConsentState>,
-      consentVersion: null == consentVersion
-          ? _value.consentVersion
-          : consentVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      acceptedAt: null == acceptedAt
-          ? _value.acceptedAt
-          : acceptedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      ipAddress: null == ipAddress
-          ? _value.ipAddress
-          : ipAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      essentialGrantedAt: freezed == essentialGrantedAt
-          ? _value.essentialGrantedAt
-          : essentialGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      measurementsGrantedAt: freezed == measurementsGrantedAt
-          ? _value.measurementsGrantedAt
-          : measurementsGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      vitalsGrantedAt: freezed == vitalsGrantedAt
-          ? _value.vitalsGrantedAt
-          : vitalsGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isRevoked: null == isRevoked
-          ? _value.isRevoked
-          : isRevoked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      revokedAt: freezed == revokedAt
-          ? _value.revokedAt
-          : revokedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      userAgent: freezed == userAgent
-          ? _value.userAgent
-          : userAgent // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            groupConsents: null == groupConsents
+                ? _value.groupConsents
+                : groupConsents // ignore: cast_nullable_to_non_nullable
+                      as Map<MetricGroup, ConsentState>,
+            consentVersion: null == consentVersion
+                ? _value.consentVersion
+                : consentVersion // ignore: cast_nullable_to_non_nullable
+                      as int,
+            acceptedAt: null == acceptedAt
+                ? _value.acceptedAt
+                : acceptedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            essentialGrantedAt: freezed == essentialGrantedAt
+                ? _value.essentialGrantedAt
+                : essentialGrantedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            measurementsGrantedAt: freezed == measurementsGrantedAt
+                ? _value.measurementsGrantedAt
+                : measurementsGrantedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            vitalsGrantedAt: freezed == vitalsGrantedAt
+                ? _value.vitalsGrantedAt
+                : vitalsGrantedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            isRevoked: null == isRevoked
+                ? _value.isRevoked
+                : isRevoked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            revokedAt: freezed == revokedAt
+                ? _value.revokedAt
+                : revokedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            userAgent: freezed == userAgent
+                ? _value.userAgent
+                : userAgent // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -209,25 +221,27 @@ class _$UserConsentCopyWithImpl<$Res, $Val extends UserConsent>
 abstract class _$$UserConsentImplCopyWith<$Res>
     implements $UserConsentCopyWith<$Res> {
   factory _$$UserConsentImplCopyWith(
-          _$UserConsentImpl value, $Res Function(_$UserConsentImpl) then) =
-      __$$UserConsentImplCopyWithImpl<$Res>;
+    _$UserConsentImpl value,
+    $Res Function(_$UserConsentImpl) then,
+  ) = __$$UserConsentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      Map<MetricGroup, ConsentState> groupConsents,
-      int consentVersion,
-      DateTime acceptedAt,
-      String ipAddress,
-      DateTime? essentialGrantedAt,
-      DateTime? measurementsGrantedAt,
-      DateTime? vitalsGrantedAt,
-      DateTime? createdAt,
-      DateTime? updatedAt,
-      bool isRevoked,
-      DateTime? revokedAt,
-      String? userAgent});
+  $Res call({
+    String id,
+    String userId,
+    Map<MetricGroup, ConsentState> groupConsents,
+    int consentVersion,
+    DateTime acceptedAt,
+    String ipAddress,
+    DateTime? essentialGrantedAt,
+    DateTime? measurementsGrantedAt,
+    DateTime? vitalsGrantedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool isRevoked,
+    DateTime? revokedAt,
+    String? userAgent,
+  });
 }
 
 /// @nodoc
@@ -235,9 +249,12 @@ class __$$UserConsentImplCopyWithImpl<$Res>
     extends _$UserConsentCopyWithImpl<$Res, _$UserConsentImpl>
     implements _$$UserConsentImplCopyWith<$Res> {
   __$$UserConsentImplCopyWithImpl(
-      _$UserConsentImpl _value, $Res Function(_$UserConsentImpl) _then)
-      : super(_value, _then);
+    _$UserConsentImpl _value,
+    $Res Function(_$UserConsentImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserConsent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -256,86 +273,88 @@ class __$$UserConsentImplCopyWithImpl<$Res>
     Object? revokedAt = freezed,
     Object? userAgent = freezed,
   }) {
-    return _then(_$UserConsentImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      groupConsents: null == groupConsents
-          ? _value._groupConsents
-          : groupConsents // ignore: cast_nullable_to_non_nullable
-              as Map<MetricGroup, ConsentState>,
-      consentVersion: null == consentVersion
-          ? _value.consentVersion
-          : consentVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      acceptedAt: null == acceptedAt
-          ? _value.acceptedAt
-          : acceptedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      ipAddress: null == ipAddress
-          ? _value.ipAddress
-          : ipAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      essentialGrantedAt: freezed == essentialGrantedAt
-          ? _value.essentialGrantedAt
-          : essentialGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      measurementsGrantedAt: freezed == measurementsGrantedAt
-          ? _value.measurementsGrantedAt
-          : measurementsGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      vitalsGrantedAt: freezed == vitalsGrantedAt
-          ? _value.vitalsGrantedAt
-          : vitalsGrantedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isRevoked: null == isRevoked
-          ? _value.isRevoked
-          : isRevoked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      revokedAt: freezed == revokedAt
-          ? _value.revokedAt
-          : revokedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      userAgent: freezed == userAgent
-          ? _value.userAgent
-          : userAgent // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$UserConsentImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        groupConsents: null == groupConsents
+            ? _value._groupConsents
+            : groupConsents // ignore: cast_nullable_to_non_nullable
+                  as Map<MetricGroup, ConsentState>,
+        consentVersion: null == consentVersion
+            ? _value.consentVersion
+            : consentVersion // ignore: cast_nullable_to_non_nullable
+                  as int,
+        acceptedAt: null == acceptedAt
+            ? _value.acceptedAt
+            : acceptedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        essentialGrantedAt: freezed == essentialGrantedAt
+            ? _value.essentialGrantedAt
+            : essentialGrantedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        measurementsGrantedAt: freezed == measurementsGrantedAt
+            ? _value.measurementsGrantedAt
+            : measurementsGrantedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        vitalsGrantedAt: freezed == vitalsGrantedAt
+            ? _value.vitalsGrantedAt
+            : vitalsGrantedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        isRevoked: null == isRevoked
+            ? _value.isRevoked
+            : isRevoked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        revokedAt: freezed == revokedAt
+            ? _value.revokedAt
+            : revokedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        userAgent: freezed == userAgent
+            ? _value.userAgent
+            : userAgent // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserConsentImpl implements _UserConsent {
-  const _$UserConsentImpl(
-      {required this.id,
-      required this.userId,
-      required final Map<MetricGroup, ConsentState> groupConsents,
-      required this.consentVersion,
-      required this.acceptedAt,
-      required this.ipAddress,
-      this.essentialGrantedAt,
-      this.measurementsGrantedAt,
-      this.vitalsGrantedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.isRevoked = false,
-      this.revokedAt,
-      this.userAgent})
-      : _groupConsents = groupConsents;
+  const _$UserConsentImpl({
+    required this.id,
+    required this.userId,
+    required final Map<MetricGroup, ConsentState> groupConsents,
+    required this.consentVersion,
+    required this.acceptedAt,
+    required this.ipAddress,
+    this.essentialGrantedAt,
+    this.measurementsGrantedAt,
+    this.vitalsGrantedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.isRevoked = false,
+    this.revokedAt,
+    this.userAgent,
+  }) : _groupConsents = groupConsents;
 
   factory _$UserConsentImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserConsentImplFromJson(json);
@@ -450,8 +469,10 @@ class _$UserConsentImpl implements _UserConsent {
             other is _$UserConsentImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            const DeepCollectionEquality()
-                .equals(other._groupConsents, _groupConsents) &&
+            const DeepCollectionEquality().equals(
+              other._groupConsents,
+              _groupConsents,
+            ) &&
             (identical(other.consentVersion, consentVersion) ||
                 other.consentVersion == consentVersion) &&
             (identical(other.acceptedAt, acceptedAt) ||
@@ -476,26 +497,29 @@ class _$UserConsentImpl implements _UserConsent {
                 other.userAgent == userAgent));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      const DeepCollectionEquality().hash(_groupConsents),
-      consentVersion,
-      acceptedAt,
-      ipAddress,
-      essentialGrantedAt,
-      measurementsGrantedAt,
-      vitalsGrantedAt,
-      createdAt,
-      updatedAt,
-      isRevoked,
-      revokedAt,
-      userAgent);
+    runtimeType,
+    id,
+    userId,
+    const DeepCollectionEquality().hash(_groupConsents),
+    consentVersion,
+    acceptedAt,
+    ipAddress,
+    essentialGrantedAt,
+    measurementsGrantedAt,
+    vitalsGrantedAt,
+    createdAt,
+    updatedAt,
+    isRevoked,
+    revokedAt,
+    userAgent,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserConsent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserConsentImplCopyWith<_$UserConsentImpl> get copyWith =>
@@ -503,41 +527,38 @@ class _$UserConsentImpl implements _UserConsent {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserConsentImplToJson(
-      this,
-    );
+    return _$$UserConsentImplToJson(this);
   }
 }
 
 abstract class _UserConsent implements UserConsent {
-  const factory _UserConsent(
-      {required final String id,
-      required final String userId,
-      required final Map<MetricGroup, ConsentState> groupConsents,
-      required final int consentVersion,
-      required final DateTime acceptedAt,
-      required final String ipAddress,
-      final DateTime? essentialGrantedAt,
-      final DateTime? measurementsGrantedAt,
-      final DateTime? vitalsGrantedAt,
-      final DateTime? createdAt,
-      final DateTime? updatedAt,
-      final bool isRevoked,
-      final DateTime? revokedAt,
-      final String? userAgent}) = _$UserConsentImpl;
+  const factory _UserConsent({
+    required final String id,
+    required final String userId,
+    required final Map<MetricGroup, ConsentState> groupConsents,
+    required final int consentVersion,
+    required final DateTime acceptedAt,
+    required final String ipAddress,
+    final DateTime? essentialGrantedAt,
+    final DateTime? measurementsGrantedAt,
+    final DateTime? vitalsGrantedAt,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
+    final bool isRevoked,
+    final DateTime? revokedAt,
+    final String? userAgent,
+  }) = _$UserConsentImpl;
 
   factory _UserConsent.fromJson(Map<String, dynamic> json) =
       _$UserConsentImpl.fromJson;
 
-  @override
-
   /// Unique consent record ID (UUID v4)
-  String get id;
   @override
+  String get id;
 
   /// User ID (Firebase Auth UID)
-  String get userId;
   @override
+  String get userId;
 
   /// Consent state per metric group (Essential, Measurements, Vitals)
   ///
@@ -550,8 +571,8 @@ abstract class _UserConsent implements UserConsent {
   /// - Default state: ConsentState.notAsked
   /// - User explicitly grants or denies each group
   /// - No implicit consent (asking = not granted)
-  Map<MetricGroup, ConsentState> get groupConsents;
   @override
+  Map<MetricGroup, ConsentState> get groupConsents;
 
   /// Privacy policy version accepted by user
   ///
@@ -561,56 +582,60 @@ abstract class _UserConsent implements UserConsent {
   /// Version history:
   /// - v1: Initial GDPR-compliant policy (2025-01-24)
   /// - v2: Future updates (prompt user to review and re-accept)
-  int get consentVersion;
   @override
+  int get consentVersion;
 
   /// When consent was granted (user's local time)
-  DateTime get acceptedAt;
   @override
+  DateTime get acceptedAt;
 
   /// IP address when consent was granted
   ///
   /// **GDPR Article 30**: Required for audit trail and compliance proof.
   /// Stored masked for privacy (last octet redacted: "192.168.1.***")
-  String get ipAddress;
   @override
+  String get ipAddress;
 
   /// When Essential metrics consent was granted
   /// (Separate timestamp for Just-in-Time consent tracking)
-  DateTime? get essentialGrantedAt;
   @override
+  DateTime? get essentialGrantedAt;
 
   /// When Measurements group consent was granted
-  DateTime? get measurementsGrantedAt;
   @override
+  DateTime? get measurementsGrantedAt;
 
   /// When Vitals group consent was granted
-  DateTime? get vitalsGrantedAt;
   @override
+  DateTime? get vitalsGrantedAt;
 
   /// When this consent record was created
-  DateTime? get createdAt;
   @override
+  DateTime? get createdAt;
 
   /// When this consent record was last updated
   /// (e.g., user revoked consent for Vitals group)
-  DateTime? get updatedAt;
   @override
+  DateTime? get updatedAt;
 
   /// Whether this consent has been revoked
   /// (Soft-delete: keep record for audit trail)
-  bool get isRevoked;
   @override
+  bool get isRevoked;
 
   /// When consent was revoked (if isRevoked = true)
-  DateTime? get revokedAt;
   @override
+  DateTime? get revokedAt;
 
   /// User agent string (browser/app version)
   /// Example: "FitLog Pro/1.0.0 iOS/17.2 (iPhone 14 Pro)"
-  String? get userAgent;
   @override
-  @JsonKey(ignore: true)
+  String? get userAgent;
+
+  /// Create a copy of UserConsent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserConsentImplCopyWith<_$UserConsentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -665,8 +690,12 @@ mixin _$AuditLog {
   /// App version when action occurred
   String? get appVersion => throw _privateConstructorUsedError;
 
+  /// Serializes this AuditLog to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AuditLog
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuditLogCopyWith<AuditLog> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -676,19 +705,20 @@ abstract class $AuditLogCopyWith<$Res> {
   factory $AuditLogCopyWith(AuditLog value, $Res Function(AuditLog) then) =
       _$AuditLogCopyWithImpl<$Res, AuditLog>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      AuditAction action,
-      DateTime timestamp,
-      String ipAddress,
-      List<MetricType>? affectedMetrics,
-      String? actionDetails,
-      String? previousHash,
-      String? hash,
-      String? userAgent,
-      String? platform,
-      String? appVersion});
+  $Res call({
+    String id,
+    String userId,
+    AuditAction action,
+    DateTime timestamp,
+    String ipAddress,
+    List<MetricType>? affectedMetrics,
+    String? actionDetails,
+    String? previousHash,
+    String? hash,
+    String? userAgent,
+    String? platform,
+    String? appVersion,
+  });
 }
 
 /// @nodoc
@@ -701,6 +731,8 @@ class _$AuditLogCopyWithImpl<$Res, $Val extends AuditLog>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuditLog
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -717,56 +749,59 @@ class _$AuditLogCopyWithImpl<$Res, $Val extends AuditLog>
     Object? platform = freezed,
     Object? appVersion = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as AuditAction,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      ipAddress: null == ipAddress
-          ? _value.ipAddress
-          : ipAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      affectedMetrics: freezed == affectedMetrics
-          ? _value.affectedMetrics
-          : affectedMetrics // ignore: cast_nullable_to_non_nullable
-              as List<MetricType>?,
-      actionDetails: freezed == actionDetails
-          ? _value.actionDetails
-          : actionDetails // ignore: cast_nullable_to_non_nullable
-              as String?,
-      previousHash: freezed == previousHash
-          ? _value.previousHash
-          : previousHash // ignore: cast_nullable_to_non_nullable
-              as String?,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userAgent: freezed == userAgent
-          ? _value.userAgent
-          : userAgent // ignore: cast_nullable_to_non_nullable
-              as String?,
-      platform: freezed == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            action: null == action
+                ? _value.action
+                : action // ignore: cast_nullable_to_non_nullable
+                      as AuditAction,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            ipAddress: null == ipAddress
+                ? _value.ipAddress
+                : ipAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            affectedMetrics: freezed == affectedMetrics
+                ? _value.affectedMetrics
+                : affectedMetrics // ignore: cast_nullable_to_non_nullable
+                      as List<MetricType>?,
+            actionDetails: freezed == actionDetails
+                ? _value.actionDetails
+                : actionDetails // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            previousHash: freezed == previousHash
+                ? _value.previousHash
+                : previousHash // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hash: freezed == hash
+                ? _value.hash
+                : hash // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userAgent: freezed == userAgent
+                ? _value.userAgent
+                : userAgent // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            platform: freezed == platform
+                ? _value.platform
+                : platform // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            appVersion: freezed == appVersion
+                ? _value.appVersion
+                : appVersion // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -774,23 +809,25 @@ class _$AuditLogCopyWithImpl<$Res, $Val extends AuditLog>
 abstract class _$$AuditLogImplCopyWith<$Res>
     implements $AuditLogCopyWith<$Res> {
   factory _$$AuditLogImplCopyWith(
-          _$AuditLogImpl value, $Res Function(_$AuditLogImpl) then) =
-      __$$AuditLogImplCopyWithImpl<$Res>;
+    _$AuditLogImpl value,
+    $Res Function(_$AuditLogImpl) then,
+  ) = __$$AuditLogImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      AuditAction action,
-      DateTime timestamp,
-      String ipAddress,
-      List<MetricType>? affectedMetrics,
-      String? actionDetails,
-      String? previousHash,
-      String? hash,
-      String? userAgent,
-      String? platform,
-      String? appVersion});
+  $Res call({
+    String id,
+    String userId,
+    AuditAction action,
+    DateTime timestamp,
+    String ipAddress,
+    List<MetricType>? affectedMetrics,
+    String? actionDetails,
+    String? previousHash,
+    String? hash,
+    String? userAgent,
+    String? platform,
+    String? appVersion,
+  });
 }
 
 /// @nodoc
@@ -798,9 +835,12 @@ class __$$AuditLogImplCopyWithImpl<$Res>
     extends _$AuditLogCopyWithImpl<$Res, _$AuditLogImpl>
     implements _$$AuditLogImplCopyWith<$Res> {
   __$$AuditLogImplCopyWithImpl(
-      _$AuditLogImpl _value, $Res Function(_$AuditLogImpl) _then)
-      : super(_value, _then);
+    _$AuditLogImpl _value,
+    $Res Function(_$AuditLogImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AuditLog
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -817,76 +857,78 @@ class __$$AuditLogImplCopyWithImpl<$Res>
     Object? platform = freezed,
     Object? appVersion = freezed,
   }) {
-    return _then(_$AuditLogImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as AuditAction,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      ipAddress: null == ipAddress
-          ? _value.ipAddress
-          : ipAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      affectedMetrics: freezed == affectedMetrics
-          ? _value._affectedMetrics
-          : affectedMetrics // ignore: cast_nullable_to_non_nullable
-              as List<MetricType>?,
-      actionDetails: freezed == actionDetails
-          ? _value.actionDetails
-          : actionDetails // ignore: cast_nullable_to_non_nullable
-              as String?,
-      previousHash: freezed == previousHash
-          ? _value.previousHash
-          : previousHash // ignore: cast_nullable_to_non_nullable
-              as String?,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userAgent: freezed == userAgent
-          ? _value.userAgent
-          : userAgent // ignore: cast_nullable_to_non_nullable
-              as String?,
-      platform: freezed == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$AuditLogImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        action: null == action
+            ? _value.action
+            : action // ignore: cast_nullable_to_non_nullable
+                  as AuditAction,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        ipAddress: null == ipAddress
+            ? _value.ipAddress
+            : ipAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        affectedMetrics: freezed == affectedMetrics
+            ? _value._affectedMetrics
+            : affectedMetrics // ignore: cast_nullable_to_non_nullable
+                  as List<MetricType>?,
+        actionDetails: freezed == actionDetails
+            ? _value.actionDetails
+            : actionDetails // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        previousHash: freezed == previousHash
+            ? _value.previousHash
+            : previousHash // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hash: freezed == hash
+            ? _value.hash
+            : hash // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userAgent: freezed == userAgent
+            ? _value.userAgent
+            : userAgent // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        platform: freezed == platform
+            ? _value.platform
+            : platform // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        appVersion: freezed == appVersion
+            ? _value.appVersion
+            : appVersion // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AuditLogImpl implements _AuditLog {
-  const _$AuditLogImpl(
-      {required this.id,
-      required this.userId,
-      required this.action,
-      required this.timestamp,
-      required this.ipAddress,
-      final List<MetricType>? affectedMetrics,
-      this.actionDetails,
-      this.previousHash,
-      this.hash,
-      this.userAgent,
-      this.platform,
-      this.appVersion})
-      : _affectedMetrics = affectedMetrics;
+  const _$AuditLogImpl({
+    required this.id,
+    required this.userId,
+    required this.action,
+    required this.timestamp,
+    required this.ipAddress,
+    final List<MetricType>? affectedMetrics,
+    this.actionDetails,
+    this.previousHash,
+    this.hash,
+    this.userAgent,
+    this.platform,
+    this.appVersion,
+  }) : _affectedMetrics = affectedMetrics;
 
   factory _$AuditLogImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuditLogImplFromJson(json);
@@ -974,8 +1016,10 @@ class _$AuditLogImpl implements _AuditLog {
                 other.timestamp == timestamp) &&
             (identical(other.ipAddress, ipAddress) ||
                 other.ipAddress == ipAddress) &&
-            const DeepCollectionEquality()
-                .equals(other._affectedMetrics, _affectedMetrics) &&
+            const DeepCollectionEquality().equals(
+              other._affectedMetrics,
+              _affectedMetrics,
+            ) &&
             (identical(other.actionDetails, actionDetails) ||
                 other.actionDetails == actionDetails) &&
             (identical(other.previousHash, previousHash) ||
@@ -989,24 +1033,27 @@ class _$AuditLogImpl implements _AuditLog {
                 other.appVersion == appVersion));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      action,
-      timestamp,
-      ipAddress,
-      const DeepCollectionEquality().hash(_affectedMetrics),
-      actionDetails,
-      previousHash,
-      hash,
-      userAgent,
-      platform,
-      appVersion);
+    runtimeType,
+    id,
+    userId,
+    action,
+    timestamp,
+    ipAddress,
+    const DeepCollectionEquality().hash(_affectedMetrics),
+    actionDetails,
+    previousHash,
+    hash,
+    userAgent,
+    platform,
+    appVersion,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuditLog
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuditLogImplCopyWith<_$AuditLogImpl> get copyWith =>
@@ -1014,61 +1061,58 @@ class _$AuditLogImpl implements _AuditLog {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AuditLogImplToJson(
-      this,
-    );
+    return _$$AuditLogImplToJson(this);
   }
 }
 
 abstract class _AuditLog implements AuditLog {
-  const factory _AuditLog(
-      {required final String id,
-      required final String userId,
-      required final AuditAction action,
-      required final DateTime timestamp,
-      required final String ipAddress,
-      final List<MetricType>? affectedMetrics,
-      final String? actionDetails,
-      final String? previousHash,
-      final String? hash,
-      final String? userAgent,
-      final String? platform,
-      final String? appVersion}) = _$AuditLogImpl;
+  const factory _AuditLog({
+    required final String id,
+    required final String userId,
+    required final AuditAction action,
+    required final DateTime timestamp,
+    required final String ipAddress,
+    final List<MetricType>? affectedMetrics,
+    final String? actionDetails,
+    final String? previousHash,
+    final String? hash,
+    final String? userAgent,
+    final String? platform,
+    final String? appVersion,
+  }) = _$AuditLogImpl;
 
   factory _AuditLog.fromJson(Map<String, dynamic> json) =
       _$AuditLogImpl.fromJson;
 
-  @override
-
   /// Unique audit log ID (UUID v4)
-  String get id;
   @override
+  String get id;
 
   /// User ID (Firebase Auth UID)
-  String get userId;
   @override
+  String get userId;
 
   /// Action that was performed
-  AuditAction get action;
   @override
+  AuditAction get action;
 
   /// When action occurred (UTC timestamp)
-  DateTime get timestamp;
   @override
+  DateTime get timestamp;
 
   /// IP address where action originated
   /// (Masked for privacy: "192.168.1.***")
-  String get ipAddress;
   @override
+  String get ipAddress;
 
   /// List of metrics affected by this action
   /// (e.g., [MetricType.weight] for "dataAccess" action)
-  List<MetricType>? get affectedMetrics;
   @override
+  List<MetricType>? get affectedMetrics;
 
   /// Action details (e.g., "Exported 150 measurements to JSON")
-  String? get actionDetails;
   @override
+  String? get actionDetails;
 
   /// Previous log entry hash (for tamper-evidence chain)
   ///
@@ -1076,26 +1120,30 @@ abstract class _AuditLog implements AuditLog {
   /// - Each log has hash = SHA256(previousHash + userId + action + timestamp)
   /// - First log has previousHash = "GENESIS"
   /// - Chain verification detects tampered/deleted logs
-  String? get previousHash;
   @override
+  String? get previousHash;
 
   /// Hash of this log entry (SHA256)
   /// Computed as: SHA256(previousHash + userId + action + timestamp)
-  String? get hash;
   @override
+  String? get hash;
 
   /// User agent (browser/app version)
-  String? get userAgent;
   @override
+  String? get userAgent;
 
   /// Platform (iOS, Android, Web)
-  String? get platform;
   @override
+  String? get platform;
 
   /// App version when action occurred
-  String? get appVersion;
   @override
-  @JsonKey(ignore: true)
+  String? get appVersion;
+
+  /// Create a copy of AuditLog
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuditLogImplCopyWith<_$AuditLogImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

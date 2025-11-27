@@ -12,7 +12,8 @@ part of 'readiness_score.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ReadinessScore _$ReadinessScoreFromJson(Map<String, dynamic> json) {
   return _ReadinessScore.fromJson(json);
@@ -47,8 +48,12 @@ mixin _$ReadinessScore {
   /// Timestamp when score was calculated
   DateTime? get calculatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this ReadinessScore to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ReadinessScoreCopyWith<ReadinessScore> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,15 +61,17 @@ mixin _$ReadinessScore {
 /// @nodoc
 abstract class $ReadinessScoreCopyWith<$Res> {
   factory $ReadinessScoreCopyWith(
-          ReadinessScore value, $Res Function(ReadinessScore) then) =
-      _$ReadinessScoreCopyWithImpl<$Res, ReadinessScore>;
+    ReadinessScore value,
+    $Res Function(ReadinessScore) then,
+  ) = _$ReadinessScoreCopyWithImpl<$Res, ReadinessScore>;
   @useResult
-  $Res call(
-      {int score,
-      ReadinessCategory category,
-      String recommendation,
-      ReadinessFactors? factors,
-      DateTime? calculatedAt});
+  $Res call({
+    int score,
+    ReadinessCategory category,
+    String recommendation,
+    ReadinessFactors? factors,
+    DateTime? calculatedAt,
+  });
 
   $ReadinessFactorsCopyWith<$Res>? get factors;
 }
@@ -79,6 +86,8 @@ class _$ReadinessScoreCopyWithImpl<$Res, $Val extends ReadinessScore>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -88,30 +97,35 @@ class _$ReadinessScoreCopyWithImpl<$Res, $Val extends ReadinessScore>
     Object? factors = freezed,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      score: null == score
-          ? _value.score
-          : score // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as ReadinessCategory,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      factors: freezed == factors
-          ? _value.factors
-          : factors // ignore: cast_nullable_to_non_nullable
-              as ReadinessFactors?,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            score: null == score
+                ? _value.score
+                : score // ignore: cast_nullable_to_non_nullable
+                      as int,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as ReadinessCategory,
+            recommendation: null == recommendation
+                ? _value.recommendation
+                : recommendation // ignore: cast_nullable_to_non_nullable
+                      as String,
+            factors: freezed == factors
+                ? _value.factors
+                : factors // ignore: cast_nullable_to_non_nullable
+                      as ReadinessFactors?,
+            calculatedAt: freezed == calculatedAt
+                ? _value.calculatedAt
+                : calculatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReadinessFactorsCopyWith<$Res>? get factors {
@@ -128,17 +142,19 @@ class _$ReadinessScoreCopyWithImpl<$Res, $Val extends ReadinessScore>
 /// @nodoc
 abstract class _$$ReadinessScoreImplCopyWith<$Res>
     implements $ReadinessScoreCopyWith<$Res> {
-  factory _$$ReadinessScoreImplCopyWith(_$ReadinessScoreImpl value,
-          $Res Function(_$ReadinessScoreImpl) then) =
-      __$$ReadinessScoreImplCopyWithImpl<$Res>;
+  factory _$$ReadinessScoreImplCopyWith(
+    _$ReadinessScoreImpl value,
+    $Res Function(_$ReadinessScoreImpl) then,
+  ) = __$$ReadinessScoreImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int score,
-      ReadinessCategory category,
-      String recommendation,
-      ReadinessFactors? factors,
-      DateTime? calculatedAt});
+  $Res call({
+    int score,
+    ReadinessCategory category,
+    String recommendation,
+    ReadinessFactors? factors,
+    DateTime? calculatedAt,
+  });
 
   @override
   $ReadinessFactorsCopyWith<$Res>? get factors;
@@ -149,9 +165,12 @@ class __$$ReadinessScoreImplCopyWithImpl<$Res>
     extends _$ReadinessScoreCopyWithImpl<$Res, _$ReadinessScoreImpl>
     implements _$$ReadinessScoreImplCopyWith<$Res> {
   __$$ReadinessScoreImplCopyWithImpl(
-      _$ReadinessScoreImpl _value, $Res Function(_$ReadinessScoreImpl) _then)
-      : super(_value, _then);
+    _$ReadinessScoreImpl _value,
+    $Res Function(_$ReadinessScoreImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,41 +180,43 @@ class __$$ReadinessScoreImplCopyWithImpl<$Res>
     Object? factors = freezed,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_$ReadinessScoreImpl(
-      score: null == score
-          ? _value.score
-          : score // ignore: cast_nullable_to_non_nullable
-              as int,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as ReadinessCategory,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      factors: freezed == factors
-          ? _value.factors
-          : factors // ignore: cast_nullable_to_non_nullable
-              as ReadinessFactors?,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$ReadinessScoreImpl(
+        score: null == score
+            ? _value.score
+            : score // ignore: cast_nullable_to_non_nullable
+                  as int,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as ReadinessCategory,
+        recommendation: null == recommendation
+            ? _value.recommendation
+            : recommendation // ignore: cast_nullable_to_non_nullable
+                  as String,
+        factors: freezed == factors
+            ? _value.factors
+            : factors // ignore: cast_nullable_to_non_nullable
+                  as ReadinessFactors?,
+        calculatedAt: freezed == calculatedAt
+            ? _value.calculatedAt
+            : calculatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ReadinessScoreImpl extends _ReadinessScore {
-  const _$ReadinessScoreImpl(
-      {required this.score,
-      required this.category,
-      required this.recommendation,
-      this.factors,
-      this.calculatedAt = null})
-      : super._();
+  const _$ReadinessScoreImpl({
+    required this.score,
+    required this.category,
+    required this.recommendation,
+    this.factors,
+    this.calculatedAt = null,
+  }) : super._();
 
   factory _$ReadinessScoreImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReadinessScoreImplFromJson(json);
@@ -253,39 +274,46 @@ class _$ReadinessScoreImpl extends _ReadinessScore {
                 other.calculatedAt == calculatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, score, category, recommendation, factors, calculatedAt);
+    runtimeType,
+    score,
+    category,
+    recommendation,
+    factors,
+    calculatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ReadinessScoreImplCopyWith<_$ReadinessScoreImpl> get copyWith =>
       __$$ReadinessScoreImplCopyWithImpl<_$ReadinessScoreImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ReadinessScoreImplToJson(
-      this,
-    );
+    return _$$ReadinessScoreImplToJson(this);
   }
 }
 
 abstract class _ReadinessScore extends ReadinessScore {
-  const factory _ReadinessScore(
-      {required final int score,
-      required final ReadinessCategory category,
-      required final String recommendation,
-      final ReadinessFactors? factors,
-      final DateTime? calculatedAt}) = _$ReadinessScoreImpl;
+  const factory _ReadinessScore({
+    required final int score,
+    required final ReadinessCategory category,
+    required final String recommendation,
+    final ReadinessFactors? factors,
+    final DateTime? calculatedAt,
+  }) = _$ReadinessScoreImpl;
   const _ReadinessScore._() : super._();
 
   factory _ReadinessScore.fromJson(Map<String, dynamic> json) =
       _$ReadinessScoreImpl.fromJson;
-
-  @override
 
   /// Readiness score (0-100)
   ///
@@ -295,12 +323,12 @@ abstract class _ReadinessScore extends ReadinessScore {
   /// - 60-74: Moderate (😐)
   /// - 40-59: Low (😴)
   /// - 0-39: Very Low (🚫)
-  int get score;
   @override
+  int get score;
 
   /// Category derived from score
-  ReadinessCategory get category;
   @override
+  ReadinessCategory get category;
 
   /// Human-readable recommendation
   ///
@@ -308,17 +336,21 @@ abstract class _ReadinessScore extends ReadinessScore {
   /// - "Great! Ready for a challenging workout."
   /// - "Moderate energy. Consider a light workout."
   /// - "Low readiness. Active recovery or rest recommended."
-  String get recommendation;
   @override
+  String get recommendation;
 
   /// Optional: Factors contributing to score
-  ReadinessFactors? get factors;
   @override
+  ReadinessFactors? get factors;
 
   /// Timestamp when score was calculated
-  DateTime? get calculatedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get calculatedAt;
+
+  /// Create a copy of ReadinessScore
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ReadinessScoreImplCopyWith<_$ReadinessScoreImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -353,8 +385,12 @@ mixin _$ReadinessFactors {
   /// Optional: Average workouts per week
   double? get avgWorkoutsPerWeek => throw _privateConstructorUsedError;
 
+  /// Serializes this ReadinessFactors to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ReadinessFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ReadinessFactorsCopyWith<ReadinessFactors> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -362,16 +398,18 @@ mixin _$ReadinessFactors {
 /// @nodoc
 abstract class $ReadinessFactorsCopyWith<$Res> {
   factory $ReadinessFactorsCopyWith(
-          ReadinessFactors value, $Res Function(ReadinessFactors) then) =
-      _$ReadinessFactorsCopyWithImpl<$Res, ReadinessFactors>;
+    ReadinessFactors value,
+    $Res Function(ReadinessFactors) then,
+  ) = _$ReadinessFactorsCopyWithImpl<$Res, ReadinessFactors>;
   @useResult
-  $Res call(
-      {int workoutFrequencyScore,
-      int recoveryTimeScore,
-      int consistencyScore,
-      int? daysSinceLastWorkout,
-      int? workoutsLast7Days,
-      double? avgWorkoutsPerWeek});
+  $Res call({
+    int workoutFrequencyScore,
+    int recoveryTimeScore,
+    int consistencyScore,
+    int? daysSinceLastWorkout,
+    int? workoutsLast7Days,
+    double? avgWorkoutsPerWeek,
+  });
 }
 
 /// @nodoc
@@ -384,6 +422,8 @@ class _$ReadinessFactorsCopyWithImpl<$Res, $Val extends ReadinessFactors>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ReadinessFactors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -394,60 +434,68 @@ class _$ReadinessFactorsCopyWithImpl<$Res, $Val extends ReadinessFactors>
     Object? workoutsLast7Days = freezed,
     Object? avgWorkoutsPerWeek = freezed,
   }) {
-    return _then(_value.copyWith(
-      workoutFrequencyScore: null == workoutFrequencyScore
-          ? _value.workoutFrequencyScore
-          : workoutFrequencyScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      recoveryTimeScore: null == recoveryTimeScore
-          ? _value.recoveryTimeScore
-          : recoveryTimeScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      daysSinceLastWorkout: freezed == daysSinceLastWorkout
-          ? _value.daysSinceLastWorkout
-          : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
-              as int?,
-      workoutsLast7Days: freezed == workoutsLast7Days
-          ? _value.workoutsLast7Days
-          : workoutsLast7Days // ignore: cast_nullable_to_non_nullable
-              as int?,
-      avgWorkoutsPerWeek: freezed == avgWorkoutsPerWeek
-          ? _value.avgWorkoutsPerWeek
-          : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            workoutFrequencyScore: null == workoutFrequencyScore
+                ? _value.workoutFrequencyScore
+                : workoutFrequencyScore // ignore: cast_nullable_to_non_nullable
+                      as int,
+            recoveryTimeScore: null == recoveryTimeScore
+                ? _value.recoveryTimeScore
+                : recoveryTimeScore // ignore: cast_nullable_to_non_nullable
+                      as int,
+            consistencyScore: null == consistencyScore
+                ? _value.consistencyScore
+                : consistencyScore // ignore: cast_nullable_to_non_nullable
+                      as int,
+            daysSinceLastWorkout: freezed == daysSinceLastWorkout
+                ? _value.daysSinceLastWorkout
+                : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            workoutsLast7Days: freezed == workoutsLast7Days
+                ? _value.workoutsLast7Days
+                : workoutsLast7Days // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            avgWorkoutsPerWeek: freezed == avgWorkoutsPerWeek
+                ? _value.avgWorkoutsPerWeek
+                : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
+                      as double?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ReadinessFactorsImplCopyWith<$Res>
     implements $ReadinessFactorsCopyWith<$Res> {
-  factory _$$ReadinessFactorsImplCopyWith(_$ReadinessFactorsImpl value,
-          $Res Function(_$ReadinessFactorsImpl) then) =
-      __$$ReadinessFactorsImplCopyWithImpl<$Res>;
+  factory _$$ReadinessFactorsImplCopyWith(
+    _$ReadinessFactorsImpl value,
+    $Res Function(_$ReadinessFactorsImpl) then,
+  ) = __$$ReadinessFactorsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int workoutFrequencyScore,
-      int recoveryTimeScore,
-      int consistencyScore,
-      int? daysSinceLastWorkout,
-      int? workoutsLast7Days,
-      double? avgWorkoutsPerWeek});
+  $Res call({
+    int workoutFrequencyScore,
+    int recoveryTimeScore,
+    int consistencyScore,
+    int? daysSinceLastWorkout,
+    int? workoutsLast7Days,
+    double? avgWorkoutsPerWeek,
+  });
 }
 
 /// @nodoc
 class __$$ReadinessFactorsImplCopyWithImpl<$Res>
     extends _$ReadinessFactorsCopyWithImpl<$Res, _$ReadinessFactorsImpl>
     implements _$$ReadinessFactorsImplCopyWith<$Res> {
-  __$$ReadinessFactorsImplCopyWithImpl(_$ReadinessFactorsImpl _value,
-      $Res Function(_$ReadinessFactorsImpl) _then)
-      : super(_value, _then);
+  __$$ReadinessFactorsImplCopyWithImpl(
+    _$ReadinessFactorsImpl _value,
+    $Res Function(_$ReadinessFactorsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ReadinessFactors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -458,45 +506,48 @@ class __$$ReadinessFactorsImplCopyWithImpl<$Res>
     Object? workoutsLast7Days = freezed,
     Object? avgWorkoutsPerWeek = freezed,
   }) {
-    return _then(_$ReadinessFactorsImpl(
-      workoutFrequencyScore: null == workoutFrequencyScore
-          ? _value.workoutFrequencyScore
-          : workoutFrequencyScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      recoveryTimeScore: null == recoveryTimeScore
-          ? _value.recoveryTimeScore
-          : recoveryTimeScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      daysSinceLastWorkout: freezed == daysSinceLastWorkout
-          ? _value.daysSinceLastWorkout
-          : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
-              as int?,
-      workoutsLast7Days: freezed == workoutsLast7Days
-          ? _value.workoutsLast7Days
-          : workoutsLast7Days // ignore: cast_nullable_to_non_nullable
-              as int?,
-      avgWorkoutsPerWeek: freezed == avgWorkoutsPerWeek
-          ? _value.avgWorkoutsPerWeek
-          : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
+    return _then(
+      _$ReadinessFactorsImpl(
+        workoutFrequencyScore: null == workoutFrequencyScore
+            ? _value.workoutFrequencyScore
+            : workoutFrequencyScore // ignore: cast_nullable_to_non_nullable
+                  as int,
+        recoveryTimeScore: null == recoveryTimeScore
+            ? _value.recoveryTimeScore
+            : recoveryTimeScore // ignore: cast_nullable_to_non_nullable
+                  as int,
+        consistencyScore: null == consistencyScore
+            ? _value.consistencyScore
+            : consistencyScore // ignore: cast_nullable_to_non_nullable
+                  as int,
+        daysSinceLastWorkout: freezed == daysSinceLastWorkout
+            ? _value.daysSinceLastWorkout
+            : daysSinceLastWorkout // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        workoutsLast7Days: freezed == workoutsLast7Days
+            ? _value.workoutsLast7Days
+            : workoutsLast7Days // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        avgWorkoutsPerWeek: freezed == avgWorkoutsPerWeek
+            ? _value.avgWorkoutsPerWeek
+            : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
+                  as double?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ReadinessFactorsImpl implements _ReadinessFactors {
-  const _$ReadinessFactorsImpl(
-      {required this.workoutFrequencyScore,
-      required this.recoveryTimeScore,
-      required this.consistencyScore,
-      this.daysSinceLastWorkout,
-      this.workoutsLast7Days,
-      this.avgWorkoutsPerWeek});
+  const _$ReadinessFactorsImpl({
+    required this.workoutFrequencyScore,
+    required this.recoveryTimeScore,
+    required this.consistencyScore,
+    this.daysSinceLastWorkout,
+    this.workoutsLast7Days,
+    this.avgWorkoutsPerWeek,
+  });
 
   factory _$ReadinessFactorsImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReadinessFactorsImplFromJson(json);
@@ -555,76 +606,82 @@ class _$ReadinessFactorsImpl implements _ReadinessFactors {
                 other.avgWorkoutsPerWeek == avgWorkoutsPerWeek));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      workoutFrequencyScore,
-      recoveryTimeScore,
-      consistencyScore,
-      daysSinceLastWorkout,
-      workoutsLast7Days,
-      avgWorkoutsPerWeek);
+    runtimeType,
+    workoutFrequencyScore,
+    recoveryTimeScore,
+    consistencyScore,
+    daysSinceLastWorkout,
+    workoutsLast7Days,
+    avgWorkoutsPerWeek,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ReadinessFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ReadinessFactorsImplCopyWith<_$ReadinessFactorsImpl> get copyWith =>
       __$$ReadinessFactorsImplCopyWithImpl<_$ReadinessFactorsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ReadinessFactorsImplToJson(
-      this,
-    );
+    return _$$ReadinessFactorsImplToJson(this);
   }
 }
 
 abstract class _ReadinessFactors implements ReadinessFactors {
-  const factory _ReadinessFactors(
-      {required final int workoutFrequencyScore,
-      required final int recoveryTimeScore,
-      required final int consistencyScore,
-      final int? daysSinceLastWorkout,
-      final int? workoutsLast7Days,
-      final double? avgWorkoutsPerWeek}) = _$ReadinessFactorsImpl;
+  const factory _ReadinessFactors({
+    required final int workoutFrequencyScore,
+    required final int recoveryTimeScore,
+    required final int consistencyScore,
+    final int? daysSinceLastWorkout,
+    final int? workoutsLast7Days,
+    final double? avgWorkoutsPerWeek,
+  }) = _$ReadinessFactorsImpl;
 
   factory _ReadinessFactors.fromJson(Map<String, dynamic> json) =
       _$ReadinessFactorsImpl.fromJson;
 
-  @override
-
   /// Workout frequency score (0-100)
   ///
   /// **Calculation**: Recent training volume vs baseline (40% weight)
-  int get workoutFrequencyScore;
   @override
+  int get workoutFrequencyScore;
 
   /// Recovery time score (0-100)
   ///
   /// **Calculation**: Days since last workout (30% weight)
-  int get recoveryTimeScore;
   @override
+  int get recoveryTimeScore;
 
   /// Training consistency score (0-100)
   ///
   /// **Calculation**: Adherence to workout schedule (30% weight)
-  int get consistencyScore;
   @override
+  int get consistencyScore;
 
   /// Optional: Days since last workout
-  int? get daysSinceLastWorkout;
   @override
+  int? get daysSinceLastWorkout;
 
   /// Optional: Workouts in last 7 days
-  int? get workoutsLast7Days;
   @override
+  int? get workoutsLast7Days;
 
   /// Optional: Average workouts per week
-  double? get avgWorkoutsPerWeek;
   @override
-  @JsonKey(ignore: true)
+  double? get avgWorkoutsPerWeek;
+
+  /// Create a copy of ReadinessFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ReadinessFactorsImplCopyWith<_$ReadinessFactorsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

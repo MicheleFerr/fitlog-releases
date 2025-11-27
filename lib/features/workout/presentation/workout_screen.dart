@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_tutorial_overlay.dart';
-import 'package:gymbro_flutter_new/shared/presentation/widgets/expandable_fab.dart';
+import 'package:gymbro_flutter_new/shared/presentation/widgets/draggable_action_button.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
@@ -18,6 +18,7 @@ import 'package:gymbro_flutter_new/features/workout/presentation/widgets/add_exe
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/pdf_export_options_dialog.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/create_template_modal.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/widgets/quick_start/context_gathering_bottom_sheet.dart';
+import 'package:gymbro_flutter_new/features/scheduling/presentation/widgets/schedule_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/helpers/save_template_helper.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/edit_template_screen.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/screens/workout_templates_screen.dart';
@@ -207,6 +208,10 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
               tutorialKey: 'workout_fab',
               child: SizedBox.shrink(),
             ),
+
+          // FAB for adding exercises (only in active workout, outside Scaffold)
+          if (isActive && !controllerState.isReorderMode)
+            _buildDraggableFAB(),
         ],
       ),
     );
@@ -222,6 +227,7 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       onEditTemplate: (template) => _editTemplateFromQuickStart(context, template),
       onDeleteTemplate: (template) => _deleteTemplateFromQuickStart(context, template),
       onCreateTemplate: () => _showCreateTemplateModal(context),
+      onScheduleTemplate: (template) => _scheduleTemplate(context, template),
     );
   }
 
@@ -333,8 +339,8 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
     );
   }
 
-  /// Build floating action button based on state
-  Widget _buildFAB(WorkoutScreenState state) {
+  /// Build floating action button based on state (only used for reorder mode)
+  Widget? _buildFAB(WorkoutScreenState state) {
     final l10n = AppLocalizations.of(context);
 
     if (state.isReorderMode) {
@@ -353,18 +359,24 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
       );
     }
 
-    // Normal mode: Expandable FAB with actions
-    return ExpandableFAB(
+    // Normal mode: FAB is handled by _buildDraggableFAB() in the main Stack
+    return null;
+  }
+
+  /// Build draggable FAB for adding exercises (PiP-style with hide/show)
+  Widget _buildDraggableFAB() {
+    final l10n = AppLocalizations.of(context);
+
+    return DraggableActionButton(
       key: _addExerciseFABKey,
+      onPressed: () => _showAddExercise(context),
       icon: AppIcons.add,
       label: l10n.addExercise,
-      options: [
-        ExpandableFabOption(
-          icon: AppIcons.add,
-          label: l10n.addExercise,
-          onTap: () => _showAddExercise(context),
-        ),
-      ],
+      positionKey: 'workout_screen_fab',
+      onShowHistory: () {
+        // Navigate to workout history
+        context.pushNamed('workoutHistory');
+      },
     );
   }
 
@@ -659,6 +671,15 @@ class _WorkoutScreenState extends ConsumerState<WorkoutScreen>
           ),
         ],
       ),
+    );
+  }
+
+  /// Schedule template - opens the schedule bottom sheet
+  void _scheduleTemplate(BuildContext context, wt.WorkoutTemplate template) {
+    ScheduleBottomSheet.show(
+      context,
+      templateId: template.id,
+      templateName: template.name,
     );
   }
 

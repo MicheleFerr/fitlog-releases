@@ -12,7 +12,8 @@ part of 'overtraining_risk.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 OvertrainingRisk _$OvertrainingRiskFromJson(Map<String, dynamic> json) {
   return _OvertrainingRisk.fromJson(json);
@@ -61,8 +62,12 @@ mixin _$OvertrainingRisk {
   /// Timestamp when risk was calculated
   DateTime? get calculatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this OvertrainingRisk to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $OvertrainingRiskCopyWith<OvertrainingRisk> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,16 +75,18 @@ mixin _$OvertrainingRisk {
 /// @nodoc
 abstract class $OvertrainingRiskCopyWith<$Res> {
   factory $OvertrainingRiskCopyWith(
-          OvertrainingRisk value, $Res Function(OvertrainingRisk) then) =
-      _$OvertrainingRiskCopyWithImpl<$Res, OvertrainingRisk>;
+    OvertrainingRisk value,
+    $Res Function(OvertrainingRisk) then,
+  ) = _$OvertrainingRiskCopyWithImpl<$Res, OvertrainingRisk>;
   @useResult
-  $Res call(
-      {RiskLevel riskLevel,
-      double tsbScore,
-      double hrvDeviation,
-      String recommendation,
-      RiskFactors? factors,
-      DateTime? calculatedAt});
+  $Res call({
+    RiskLevel riskLevel,
+    double tsbScore,
+    double hrvDeviation,
+    String recommendation,
+    RiskFactors? factors,
+    DateTime? calculatedAt,
+  });
 
   $RiskFactorsCopyWith<$Res>? get factors;
 }
@@ -94,6 +101,8 @@ class _$OvertrainingRiskCopyWithImpl<$Res, $Val extends OvertrainingRisk>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,34 +113,39 @@ class _$OvertrainingRiskCopyWithImpl<$Res, $Val extends OvertrainingRisk>
     Object? factors = freezed,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      riskLevel: null == riskLevel
-          ? _value.riskLevel
-          : riskLevel // ignore: cast_nullable_to_non_nullable
-              as RiskLevel,
-      tsbScore: null == tsbScore
-          ? _value.tsbScore
-          : tsbScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      hrvDeviation: null == hrvDeviation
-          ? _value.hrvDeviation
-          : hrvDeviation // ignore: cast_nullable_to_non_nullable
-              as double,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      factors: freezed == factors
-          ? _value.factors
-          : factors // ignore: cast_nullable_to_non_nullable
-              as RiskFactors?,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            riskLevel: null == riskLevel
+                ? _value.riskLevel
+                : riskLevel // ignore: cast_nullable_to_non_nullable
+                      as RiskLevel,
+            tsbScore: null == tsbScore
+                ? _value.tsbScore
+                : tsbScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            hrvDeviation: null == hrvDeviation
+                ? _value.hrvDeviation
+                : hrvDeviation // ignore: cast_nullable_to_non_nullable
+                      as double,
+            recommendation: null == recommendation
+                ? _value.recommendation
+                : recommendation // ignore: cast_nullable_to_non_nullable
+                      as String,
+            factors: freezed == factors
+                ? _value.factors
+                : factors // ignore: cast_nullable_to_non_nullable
+                      as RiskFactors?,
+            calculatedAt: freezed == calculatedAt
+                ? _value.calculatedAt
+                : calculatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RiskFactorsCopyWith<$Res>? get factors {
@@ -148,18 +162,20 @@ class _$OvertrainingRiskCopyWithImpl<$Res, $Val extends OvertrainingRisk>
 /// @nodoc
 abstract class _$$OvertrainingRiskImplCopyWith<$Res>
     implements $OvertrainingRiskCopyWith<$Res> {
-  factory _$$OvertrainingRiskImplCopyWith(_$OvertrainingRiskImpl value,
-          $Res Function(_$OvertrainingRiskImpl) then) =
-      __$$OvertrainingRiskImplCopyWithImpl<$Res>;
+  factory _$$OvertrainingRiskImplCopyWith(
+    _$OvertrainingRiskImpl value,
+    $Res Function(_$OvertrainingRiskImpl) then,
+  ) = __$$OvertrainingRiskImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {RiskLevel riskLevel,
-      double tsbScore,
-      double hrvDeviation,
-      String recommendation,
-      RiskFactors? factors,
-      DateTime? calculatedAt});
+  $Res call({
+    RiskLevel riskLevel,
+    double tsbScore,
+    double hrvDeviation,
+    String recommendation,
+    RiskFactors? factors,
+    DateTime? calculatedAt,
+  });
 
   @override
   $RiskFactorsCopyWith<$Res>? get factors;
@@ -169,10 +185,13 @@ abstract class _$$OvertrainingRiskImplCopyWith<$Res>
 class __$$OvertrainingRiskImplCopyWithImpl<$Res>
     extends _$OvertrainingRiskCopyWithImpl<$Res, _$OvertrainingRiskImpl>
     implements _$$OvertrainingRiskImplCopyWith<$Res> {
-  __$$OvertrainingRiskImplCopyWithImpl(_$OvertrainingRiskImpl _value,
-      $Res Function(_$OvertrainingRiskImpl) _then)
-      : super(_value, _then);
+  __$$OvertrainingRiskImplCopyWithImpl(
+    _$OvertrainingRiskImpl _value,
+    $Res Function(_$OvertrainingRiskImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -183,46 +202,48 @@ class __$$OvertrainingRiskImplCopyWithImpl<$Res>
     Object? factors = freezed,
     Object? calculatedAt = freezed,
   }) {
-    return _then(_$OvertrainingRiskImpl(
-      riskLevel: null == riskLevel
-          ? _value.riskLevel
-          : riskLevel // ignore: cast_nullable_to_non_nullable
-              as RiskLevel,
-      tsbScore: null == tsbScore
-          ? _value.tsbScore
-          : tsbScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      hrvDeviation: null == hrvDeviation
-          ? _value.hrvDeviation
-          : hrvDeviation // ignore: cast_nullable_to_non_nullable
-              as double,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      factors: freezed == factors
-          ? _value.factors
-          : factors // ignore: cast_nullable_to_non_nullable
-              as RiskFactors?,
-      calculatedAt: freezed == calculatedAt
-          ? _value.calculatedAt
-          : calculatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$OvertrainingRiskImpl(
+        riskLevel: null == riskLevel
+            ? _value.riskLevel
+            : riskLevel // ignore: cast_nullable_to_non_nullable
+                  as RiskLevel,
+        tsbScore: null == tsbScore
+            ? _value.tsbScore
+            : tsbScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        hrvDeviation: null == hrvDeviation
+            ? _value.hrvDeviation
+            : hrvDeviation // ignore: cast_nullable_to_non_nullable
+                  as double,
+        recommendation: null == recommendation
+            ? _value.recommendation
+            : recommendation // ignore: cast_nullable_to_non_nullable
+                  as String,
+        factors: freezed == factors
+            ? _value.factors
+            : factors // ignore: cast_nullable_to_non_nullable
+                  as RiskFactors?,
+        calculatedAt: freezed == calculatedAt
+            ? _value.calculatedAt
+            : calculatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$OvertrainingRiskImpl extends _OvertrainingRisk {
-  const _$OvertrainingRiskImpl(
-      {required this.riskLevel,
-      required this.tsbScore,
-      required this.hrvDeviation,
-      required this.recommendation,
-      this.factors,
-      this.calculatedAt = null})
-      : super._();
+  const _$OvertrainingRiskImpl({
+    required this.riskLevel,
+    required this.tsbScore,
+    required this.hrvDeviation,
+    required this.recommendation,
+    this.factors,
+    this.calculatedAt = null,
+  }) : super._();
 
   factory _$OvertrainingRiskImpl.fromJson(Map<String, dynamic> json) =>
       _$$OvertrainingRiskImplFromJson(json);
@@ -298,44 +319,52 @@ class _$OvertrainingRiskImpl extends _OvertrainingRisk {
                 other.calculatedAt == calculatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, riskLevel, tsbScore,
-      hrvDeviation, recommendation, factors, calculatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    riskLevel,
+    tsbScore,
+    hrvDeviation,
+    recommendation,
+    factors,
+    calculatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$OvertrainingRiskImplCopyWith<_$OvertrainingRiskImpl> get copyWith =>
       __$$OvertrainingRiskImplCopyWithImpl<_$OvertrainingRiskImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$OvertrainingRiskImplToJson(
-      this,
-    );
+    return _$$OvertrainingRiskImplToJson(this);
   }
 }
 
 abstract class _OvertrainingRisk extends OvertrainingRisk {
-  const factory _OvertrainingRisk(
-      {required final RiskLevel riskLevel,
-      required final double tsbScore,
-      required final double hrvDeviation,
-      required final String recommendation,
-      final RiskFactors? factors,
-      final DateTime? calculatedAt}) = _$OvertrainingRiskImpl;
+  const factory _OvertrainingRisk({
+    required final RiskLevel riskLevel,
+    required final double tsbScore,
+    required final double hrvDeviation,
+    required final String recommendation,
+    final RiskFactors? factors,
+    final DateTime? calculatedAt,
+  }) = _$OvertrainingRiskImpl;
   const _OvertrainingRisk._() : super._();
 
   factory _OvertrainingRisk.fromJson(Map<String, dynamic> json) =
       _$OvertrainingRiskImpl.fromJson;
 
-  @override
-
   /// Overall risk level for overtraining
-  RiskLevel get riskLevel;
   @override
+  RiskLevel get riskLevel;
 
   /// TSB (Training Stress Balance) score
   ///
@@ -346,8 +375,8 @@ abstract class _OvertrainingRisk extends OvertrainingRisk {
   /// - TSB < -20: Overtraining risk (deload needed)
   ///
   /// **Formula**: TSB = Chronic Training Load - Acute Training Load
-  double get tsbScore;
   @override
+  double get tsbScore;
 
   /// HRV (Heart Rate Variability) deviation from baseline (%)
   ///
@@ -359,8 +388,8 @@ abstract class _OvertrainingRisk extends OvertrainingRisk {
   /// - HRV deviation < -10%: Very low recovery (rest needed)
   ///
   /// **Note**: Negative values indicate HRV below personal baseline
-  double get hrvDeviation;
   @override
+  double get hrvDeviation;
 
   /// Human-readable recommendation based on risk assessment
   ///
@@ -369,17 +398,21 @@ abstract class _OvertrainingRisk extends OvertrainingRisk {
   /// - "Monitor recovery. Consider reducing volume next week."
   /// - "High overtraining risk. Deload week recommended."
   /// - "Very high risk. Take 3-5 days complete rest."
-  String get recommendation;
   @override
+  String get recommendation;
 
   /// Optional: Detailed breakdown of risk factors
-  RiskFactors? get factors;
   @override
+  RiskFactors? get factors;
 
   /// Timestamp when risk was calculated
-  DateTime? get calculatedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get calculatedAt;
+
+  /// Create a copy of OvertrainingRisk
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$OvertrainingRiskImplCopyWith<_$OvertrainingRiskImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -439,8 +472,12 @@ mixin _$RiskFactors {
   /// - 1-3: Fatigue, depression symptoms
   int? get moodEnergyScore => throw _privateConstructorUsedError;
 
+  /// Serializes this RiskFactors to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RiskFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RiskFactorsCopyWith<RiskFactors> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -448,17 +485,19 @@ mixin _$RiskFactors {
 /// @nodoc
 abstract class $RiskFactorsCopyWith<$Res> {
   factory $RiskFactorsCopyWith(
-          RiskFactors value, $Res Function(RiskFactors) then) =
-      _$RiskFactorsCopyWithImpl<$Res, RiskFactors>;
+    RiskFactors value,
+    $Res Function(RiskFactors) then,
+  ) = _$RiskFactorsCopyWithImpl<$Res, RiskFactors>;
   @useResult
-  $Res call(
-      {int acuteTrainingLoad,
-      int chronicTrainingLoad,
-      double hrvBaseline,
-      double currentHrv,
-      int? sleepQualityScore,
-      int? muscleSorenessScore,
-      int? moodEnergyScore});
+  $Res call({
+    int acuteTrainingLoad,
+    int chronicTrainingLoad,
+    double hrvBaseline,
+    double currentHrv,
+    int? sleepQualityScore,
+    int? muscleSorenessScore,
+    int? moodEnergyScore,
+  });
 }
 
 /// @nodoc
@@ -471,6 +510,8 @@ class _$RiskFactorsCopyWithImpl<$Res, $Val extends RiskFactors>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RiskFactors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -482,36 +523,39 @@ class _$RiskFactorsCopyWithImpl<$Res, $Val extends RiskFactors>
     Object? muscleSorenessScore = freezed,
     Object? moodEnergyScore = freezed,
   }) {
-    return _then(_value.copyWith(
-      acuteTrainingLoad: null == acuteTrainingLoad
-          ? _value.acuteTrainingLoad
-          : acuteTrainingLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      chronicTrainingLoad: null == chronicTrainingLoad
-          ? _value.chronicTrainingLoad
-          : chronicTrainingLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      hrvBaseline: null == hrvBaseline
-          ? _value.hrvBaseline
-          : hrvBaseline // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentHrv: null == currentHrv
-          ? _value.currentHrv
-          : currentHrv // ignore: cast_nullable_to_non_nullable
-              as double,
-      sleepQualityScore: freezed == sleepQualityScore
-          ? _value.sleepQualityScore
-          : sleepQualityScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-      muscleSorenessScore: freezed == muscleSorenessScore
-          ? _value.muscleSorenessScore
-          : muscleSorenessScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-      moodEnergyScore: freezed == moodEnergyScore
-          ? _value.moodEnergyScore
-          : moodEnergyScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            acuteTrainingLoad: null == acuteTrainingLoad
+                ? _value.acuteTrainingLoad
+                : acuteTrainingLoad // ignore: cast_nullable_to_non_nullable
+                      as int,
+            chronicTrainingLoad: null == chronicTrainingLoad
+                ? _value.chronicTrainingLoad
+                : chronicTrainingLoad // ignore: cast_nullable_to_non_nullable
+                      as int,
+            hrvBaseline: null == hrvBaseline
+                ? _value.hrvBaseline
+                : hrvBaseline // ignore: cast_nullable_to_non_nullable
+                      as double,
+            currentHrv: null == currentHrv
+                ? _value.currentHrv
+                : currentHrv // ignore: cast_nullable_to_non_nullable
+                      as double,
+            sleepQualityScore: freezed == sleepQualityScore
+                ? _value.sleepQualityScore
+                : sleepQualityScore // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            muscleSorenessScore: freezed == muscleSorenessScore
+                ? _value.muscleSorenessScore
+                : muscleSorenessScore // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            moodEnergyScore: freezed == moodEnergyScore
+                ? _value.moodEnergyScore
+                : moodEnergyScore // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -519,18 +563,20 @@ class _$RiskFactorsCopyWithImpl<$Res, $Val extends RiskFactors>
 abstract class _$$RiskFactorsImplCopyWith<$Res>
     implements $RiskFactorsCopyWith<$Res> {
   factory _$$RiskFactorsImplCopyWith(
-          _$RiskFactorsImpl value, $Res Function(_$RiskFactorsImpl) then) =
-      __$$RiskFactorsImplCopyWithImpl<$Res>;
+    _$RiskFactorsImpl value,
+    $Res Function(_$RiskFactorsImpl) then,
+  ) = __$$RiskFactorsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int acuteTrainingLoad,
-      int chronicTrainingLoad,
-      double hrvBaseline,
-      double currentHrv,
-      int? sleepQualityScore,
-      int? muscleSorenessScore,
-      int? moodEnergyScore});
+  $Res call({
+    int acuteTrainingLoad,
+    int chronicTrainingLoad,
+    double hrvBaseline,
+    double currentHrv,
+    int? sleepQualityScore,
+    int? muscleSorenessScore,
+    int? moodEnergyScore,
+  });
 }
 
 /// @nodoc
@@ -538,9 +584,12 @@ class __$$RiskFactorsImplCopyWithImpl<$Res>
     extends _$RiskFactorsCopyWithImpl<$Res, _$RiskFactorsImpl>
     implements _$$RiskFactorsImplCopyWith<$Res> {
   __$$RiskFactorsImplCopyWithImpl(
-      _$RiskFactorsImpl _value, $Res Function(_$RiskFactorsImpl) _then)
-      : super(_value, _then);
+    _$RiskFactorsImpl _value,
+    $Res Function(_$RiskFactorsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of RiskFactors
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -552,50 +601,53 @@ class __$$RiskFactorsImplCopyWithImpl<$Res>
     Object? muscleSorenessScore = freezed,
     Object? moodEnergyScore = freezed,
   }) {
-    return _then(_$RiskFactorsImpl(
-      acuteTrainingLoad: null == acuteTrainingLoad
-          ? _value.acuteTrainingLoad
-          : acuteTrainingLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      chronicTrainingLoad: null == chronicTrainingLoad
-          ? _value.chronicTrainingLoad
-          : chronicTrainingLoad // ignore: cast_nullable_to_non_nullable
-              as int,
-      hrvBaseline: null == hrvBaseline
-          ? _value.hrvBaseline
-          : hrvBaseline // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentHrv: null == currentHrv
-          ? _value.currentHrv
-          : currentHrv // ignore: cast_nullable_to_non_nullable
-              as double,
-      sleepQualityScore: freezed == sleepQualityScore
-          ? _value.sleepQualityScore
-          : sleepQualityScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-      muscleSorenessScore: freezed == muscleSorenessScore
-          ? _value.muscleSorenessScore
-          : muscleSorenessScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-      moodEnergyScore: freezed == moodEnergyScore
-          ? _value.moodEnergyScore
-          : moodEnergyScore // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$RiskFactorsImpl(
+        acuteTrainingLoad: null == acuteTrainingLoad
+            ? _value.acuteTrainingLoad
+            : acuteTrainingLoad // ignore: cast_nullable_to_non_nullable
+                  as int,
+        chronicTrainingLoad: null == chronicTrainingLoad
+            ? _value.chronicTrainingLoad
+            : chronicTrainingLoad // ignore: cast_nullable_to_non_nullable
+                  as int,
+        hrvBaseline: null == hrvBaseline
+            ? _value.hrvBaseline
+            : hrvBaseline // ignore: cast_nullable_to_non_nullable
+                  as double,
+        currentHrv: null == currentHrv
+            ? _value.currentHrv
+            : currentHrv // ignore: cast_nullable_to_non_nullable
+                  as double,
+        sleepQualityScore: freezed == sleepQualityScore
+            ? _value.sleepQualityScore
+            : sleepQualityScore // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        muscleSorenessScore: freezed == muscleSorenessScore
+            ? _value.muscleSorenessScore
+            : muscleSorenessScore // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        moodEnergyScore: freezed == moodEnergyScore
+            ? _value.moodEnergyScore
+            : moodEnergyScore // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RiskFactorsImpl implements _RiskFactors {
-  const _$RiskFactorsImpl(
-      {required this.acuteTrainingLoad,
-      required this.chronicTrainingLoad,
-      required this.hrvBaseline,
-      required this.currentHrv,
-      this.sleepQualityScore,
-      this.muscleSorenessScore,
-      this.moodEnergyScore});
+  const _$RiskFactorsImpl({
+    required this.acuteTrainingLoad,
+    required this.chronicTrainingLoad,
+    required this.hrvBaseline,
+    required this.currentHrv,
+    this.sleepQualityScore,
+    this.muscleSorenessScore,
+    this.moodEnergyScore,
+  });
 
   factory _$RiskFactorsImpl.fromJson(Map<String, dynamic> json) =>
       _$$RiskFactorsImplFromJson(json);
@@ -682,19 +734,22 @@ class _$RiskFactorsImpl implements _RiskFactors {
                 other.moodEnergyScore == moodEnergyScore));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      acuteTrainingLoad,
-      chronicTrainingLoad,
-      hrvBaseline,
-      currentHrv,
-      sleepQualityScore,
-      muscleSorenessScore,
-      moodEnergyScore);
+    runtimeType,
+    acuteTrainingLoad,
+    chronicTrainingLoad,
+    hrvBaseline,
+    currentHrv,
+    sleepQualityScore,
+    muscleSorenessScore,
+    moodEnergyScore,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RiskFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RiskFactorsImplCopyWith<_$RiskFactorsImpl> get copyWith =>
@@ -702,52 +757,49 @@ class _$RiskFactorsImpl implements _RiskFactors {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RiskFactorsImplToJson(
-      this,
-    );
+    return _$$RiskFactorsImplToJson(this);
   }
 }
 
 abstract class _RiskFactors implements RiskFactors {
-  const factory _RiskFactors(
-      {required final int acuteTrainingLoad,
-      required final int chronicTrainingLoad,
-      required final double hrvBaseline,
-      required final double currentHrv,
-      final int? sleepQualityScore,
-      final int? muscleSorenessScore,
-      final int? moodEnergyScore}) = _$RiskFactorsImpl;
+  const factory _RiskFactors({
+    required final int acuteTrainingLoad,
+    required final int chronicTrainingLoad,
+    required final double hrvBaseline,
+    required final double currentHrv,
+    final int? sleepQualityScore,
+    final int? muscleSorenessScore,
+    final int? moodEnergyScore,
+  }) = _$RiskFactorsImpl;
 
   factory _RiskFactors.fromJson(Map<String, dynamic> json) =
       _$RiskFactorsImpl.fromJson;
 
-  @override
-
   /// Acute Training Load (7-day average)
   ///
   /// **Calculation**: Sum of daily training stress scores (last 7 days)
-  int get acuteTrainingLoad;
   @override
+  int get acuteTrainingLoad;
 
   /// Chronic Training Load (28-day average)
   ///
   /// **Calculation**: Sum of daily training stress scores (last 28 days)
-  int get chronicTrainingLoad;
   @override
+  int get chronicTrainingLoad;
 
   /// HRV baseline (personal average from 20+ days)
   ///
   /// **Unit**: Milliseconds (ms)
   /// **Typical Range**: 40-90 ms (varies by individual)
-  double get hrvBaseline;
   @override
+  double get hrvBaseline;
 
   /// Current HRV (7-day average)
   ///
   /// **Unit**: Milliseconds (ms)
   /// **Comparison**: Compare to hrvBaseline for deviation %
-  double get currentHrv;
   @override
+  double get currentHrv;
 
   /// Optional: Sleep quality score (1-10)
   ///
@@ -756,8 +808,8 @@ abstract class _RiskFactors implements RiskFactors {
   /// - 6-7: Good sleep
   /// - 4-5: Poor sleep
   /// - 1-3: Very poor sleep
-  int? get sleepQualityScore;
   @override
+  int? get sleepQualityScore;
 
   /// Optional: Muscle soreness score (1-10)
   ///
@@ -766,8 +818,8 @@ abstract class _RiskFactors implements RiskFactors {
   /// - 4-6: Moderate soreness
   /// - 7-8: Significant soreness
   /// - 9-10: Severe soreness (DOMS)
-  int? get muscleSorenessScore;
   @override
+  int? get muscleSorenessScore;
 
   /// Optional: Mood/energy score (1-10)
   ///
@@ -776,9 +828,13 @@ abstract class _RiskFactors implements RiskFactors {
   /// - 6-7: Normal energy
   /// - 4-5: Low energy, irritability
   /// - 1-3: Fatigue, depression symptoms
-  int? get moodEnergyScore;
   @override
-  @JsonKey(ignore: true)
+  int? get moodEnergyScore;
+
+  /// Create a copy of RiskFactors
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RiskFactorsImplCopyWith<_$RiskFactorsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

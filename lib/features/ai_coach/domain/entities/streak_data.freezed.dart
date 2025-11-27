@@ -12,7 +12,8 @@ part of 'streak_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 StreakData _$StreakDataFromJson(Map<String, dynamic> json) {
   return _StreakData.fromJson(json);
@@ -38,8 +39,12 @@ mixin _$StreakData {
   /// Total workouts completed (all-time)
   int get totalWorkouts => throw _privateConstructorUsedError;
 
+  /// Serializes this StreakData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of StreakData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StreakDataCopyWith<StreakData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,16 +52,18 @@ mixin _$StreakData {
 /// @nodoc
 abstract class $StreakDataCopyWith<$Res> {
   factory $StreakDataCopyWith(
-          StreakData value, $Res Function(StreakData) then) =
-      _$StreakDataCopyWithImpl<$Res, StreakData>;
+    StreakData value,
+    $Res Function(StreakData) then,
+  ) = _$StreakDataCopyWithImpl<$Res, StreakData>;
   @useResult
-  $Res call(
-      {int currentStreak,
-      int longestStreak,
-      DateTime? lastWorkoutDate,
-      bool workedOutToday,
-      List<int> milestonesAchieved,
-      int totalWorkouts});
+  $Res call({
+    int currentStreak,
+    int longestStreak,
+    DateTime? lastWorkoutDate,
+    bool workedOutToday,
+    List<int> milestonesAchieved,
+    int totalWorkouts,
+  });
 }
 
 /// @nodoc
@@ -69,6 +76,8 @@ class _$StreakDataCopyWithImpl<$Res, $Val extends StreakData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StreakData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -79,32 +88,35 @@ class _$StreakDataCopyWithImpl<$Res, $Val extends StreakData>
     Object? milestonesAchieved = null,
     Object? totalWorkouts = null,
   }) {
-    return _then(_value.copyWith(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      workedOutToday: null == workedOutToday
-          ? _value.workedOutToday
-          : workedOutToday // ignore: cast_nullable_to_non_nullable
-              as bool,
-      milestonesAchieved: null == milestonesAchieved
-          ? _value.milestonesAchieved
-          : milestonesAchieved // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            currentStreak: null == currentStreak
+                ? _value.currentStreak
+                : currentStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            longestStreak: null == longestStreak
+                ? _value.longestStreak
+                : longestStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastWorkoutDate: freezed == lastWorkoutDate
+                ? _value.lastWorkoutDate
+                : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            workedOutToday: null == workedOutToday
+                ? _value.workedOutToday
+                : workedOutToday // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            milestonesAchieved: null == milestonesAchieved
+                ? _value.milestonesAchieved
+                : milestonesAchieved // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            totalWorkouts: null == totalWorkouts
+                ? _value.totalWorkouts
+                : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -112,17 +124,19 @@ class _$StreakDataCopyWithImpl<$Res, $Val extends StreakData>
 abstract class _$$StreakDataImplCopyWith<$Res>
     implements $StreakDataCopyWith<$Res> {
   factory _$$StreakDataImplCopyWith(
-          _$StreakDataImpl value, $Res Function(_$StreakDataImpl) then) =
-      __$$StreakDataImplCopyWithImpl<$Res>;
+    _$StreakDataImpl value,
+    $Res Function(_$StreakDataImpl) then,
+  ) = __$$StreakDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int currentStreak,
-      int longestStreak,
-      DateTime? lastWorkoutDate,
-      bool workedOutToday,
-      List<int> milestonesAchieved,
-      int totalWorkouts});
+  $Res call({
+    int currentStreak,
+    int longestStreak,
+    DateTime? lastWorkoutDate,
+    bool workedOutToday,
+    List<int> milestonesAchieved,
+    int totalWorkouts,
+  });
 }
 
 /// @nodoc
@@ -130,9 +144,12 @@ class __$$StreakDataImplCopyWithImpl<$Res>
     extends _$StreakDataCopyWithImpl<$Res, _$StreakDataImpl>
     implements _$$StreakDataImplCopyWith<$Res> {
   __$$StreakDataImplCopyWithImpl(
-      _$StreakDataImpl _value, $Res Function(_$StreakDataImpl) _then)
-      : super(_value, _then);
+    _$StreakDataImpl _value,
+    $Res Function(_$StreakDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of StreakData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,46 +160,48 @@ class __$$StreakDataImplCopyWithImpl<$Res>
     Object? milestonesAchieved = null,
     Object? totalWorkouts = null,
   }) {
-    return _then(_$StreakDataImpl(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      workedOutToday: null == workedOutToday
-          ? _value.workedOutToday
-          : workedOutToday // ignore: cast_nullable_to_non_nullable
-              as bool,
-      milestonesAchieved: null == milestonesAchieved
-          ? _value._milestonesAchieved
-          : milestonesAchieved // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$StreakDataImpl(
+        currentStreak: null == currentStreak
+            ? _value.currentStreak
+            : currentStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        longestStreak: null == longestStreak
+            ? _value.longestStreak
+            : longestStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastWorkoutDate: freezed == lastWorkoutDate
+            ? _value.lastWorkoutDate
+            : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        workedOutToday: null == workedOutToday
+            ? _value.workedOutToday
+            : workedOutToday // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        milestonesAchieved: null == milestonesAchieved
+            ? _value._milestonesAchieved
+            : milestonesAchieved // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        totalWorkouts: null == totalWorkouts
+            ? _value.totalWorkouts
+            : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StreakDataImpl implements _StreakData {
-  const _$StreakDataImpl(
-      {this.currentStreak = 0,
-      this.longestStreak = 0,
-      this.lastWorkoutDate,
-      this.workedOutToday = false,
-      final List<int> milestonesAchieved = const [],
-      this.totalWorkouts = 0})
-      : _milestonesAchieved = milestonesAchieved;
+  const _$StreakDataImpl({
+    this.currentStreak = 0,
+    this.longestStreak = 0,
+    this.lastWorkoutDate,
+    this.workedOutToday = false,
+    final List<int> milestonesAchieved = const [],
+    this.totalWorkouts = 0,
+  }) : _milestonesAchieved = milestonesAchieved;
 
   factory _$StreakDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$StreakDataImplFromJson(json);
@@ -242,24 +261,29 @@ class _$StreakDataImpl implements _StreakData {
                 other.lastWorkoutDate == lastWorkoutDate) &&
             (identical(other.workedOutToday, workedOutToday) ||
                 other.workedOutToday == workedOutToday) &&
-            const DeepCollectionEquality()
-                .equals(other._milestonesAchieved, _milestonesAchieved) &&
+            const DeepCollectionEquality().equals(
+              other._milestonesAchieved,
+              _milestonesAchieved,
+            ) &&
             (identical(other.totalWorkouts, totalWorkouts) ||
                 other.totalWorkouts == totalWorkouts));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      currentStreak,
-      longestStreak,
-      lastWorkoutDate,
-      workedOutToday,
-      const DeepCollectionEquality().hash(_milestonesAchieved),
-      totalWorkouts);
+    runtimeType,
+    currentStreak,
+    longestStreak,
+    lastWorkoutDate,
+    workedOutToday,
+    const DeepCollectionEquality().hash(_milestonesAchieved),
+    totalWorkouts,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StreakData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StreakDataImplCopyWith<_$StreakDataImpl> get copyWith =>
@@ -267,50 +291,51 @@ class _$StreakDataImpl implements _StreakData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StreakDataImplToJson(
-      this,
-    );
+    return _$$StreakDataImplToJson(this);
   }
 }
 
 abstract class _StreakData implements StreakData {
-  const factory _StreakData(
-      {final int currentStreak,
-      final int longestStreak,
-      final DateTime? lastWorkoutDate,
-      final bool workedOutToday,
-      final List<int> milestonesAchieved,
-      final int totalWorkouts}) = _$StreakDataImpl;
+  const factory _StreakData({
+    final int currentStreak,
+    final int longestStreak,
+    final DateTime? lastWorkoutDate,
+    final bool workedOutToday,
+    final List<int> milestonesAchieved,
+    final int totalWorkouts,
+  }) = _$StreakDataImpl;
 
   factory _StreakData.fromJson(Map<String, dynamic> json) =
       _$StreakDataImpl.fromJson;
 
-  @override
-
   /// Current consecutive workout days
-  int get currentStreak;
   @override
+  int get currentStreak;
 
   /// Longest streak ever achieved (all-time best)
-  int get longestStreak;
   @override
+  int get longestStreak;
 
   /// Last workout timestamp (null if never worked out)
-  DateTime? get lastWorkoutDate;
   @override
+  DateTime? get lastWorkoutDate;
 
   /// Whether user worked out today
-  bool get workedOutToday;
   @override
+  bool get workedOutToday;
 
   /// Streak milestones achieved (7, 14, 30, etc.)
-  List<int> get milestonesAchieved;
   @override
+  List<int> get milestonesAchieved;
 
   /// Total workouts completed (all-time)
-  int get totalWorkouts;
   @override
-  @JsonKey(ignore: true)
+  int get totalWorkouts;
+
+  /// Create a copy of StreakData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StreakDataImplCopyWith<_$StreakDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

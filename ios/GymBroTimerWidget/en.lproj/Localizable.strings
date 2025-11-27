@@ -1,0 +1,37 @@
+/*
+  Localizable.strings (English)
+  GymBroTimerWidget
+
+  Live Activity localization strings
+*/
+
+// MARK: - Timer Live Activity
+"timer.rest" = "REST";
+"timer.reps" = "reps";
+"timer.setCompleted" = "Set Completed!";
+"timer.rateSet" = "Rate this set";
+"timer.rpe" = "RPE";
+
+// MARK: - RPE Live Activity
+"rpe.confirmed" = "Confirmed";
+"rpe.waiting" = "Waiting";
+"rpe.selectRpe" = "Select RPE";
+
+// MARK: - Schedule Live Activity
+"schedule.go" = "GO!";
+"schedule.start" = "START!";
+"schedule.left" = "LEFT";
+"schedule.remaining" = "remaining";
+"schedule.tapToStart" = "Tap to start workout";
+"schedule.scheduledFor" = "Scheduled";
+"schedule.startingSoon" = "Starting soon";
+"schedule.timeToWorkout" = "Time to workout!";
+"schedule.inMinutes" = "in %d min";
+"schedule.inHours" = "in %dh %dm";
+"schedule.getReady" = "Get ready!";
+"schedule.prepare" = "Prepare yourself";
+"schedule.comingUp" = "Coming up";
+
+// MARK: - Common
+"common.set" = "Set";
+"common.at" = "@";

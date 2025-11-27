@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
@@ -304,8 +305,9 @@ class _TemplateCard extends ConsumerWidget {
 
   void _startWorkoutFromTemplate(BuildContext context, WidgetRef ref) {
     HapticFeedback.mediumImpact();
-    // Navigate to templates screen where user can start the workout
-    context.push('/templates');
+    // Start workout directly from this template
+    ref.read(currentWorkoutProvider.notifier).startFromTemplate(template);
+    context.push('/workout');
   }
 }
 

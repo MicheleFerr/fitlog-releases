@@ -116,6 +116,7 @@ dependencies:
 
   # 🔍 Unified logging + HTTP inspector (debug builds)
   voo_logging: ^0.4.7
+  calendar_date_picker2: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

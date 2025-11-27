@@ -12,7 +12,8 @@ part of 'training_pattern.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$TrainingPattern {
@@ -44,7 +45,9 @@ mixin _$TrainingPattern {
   /// Raw metrics that triggered this pattern
   Map<String, double> get triggerMetrics => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TrainingPattern
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TrainingPatternCopyWith<TrainingPattern> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,19 +55,21 @@ mixin _$TrainingPattern {
 /// @nodoc
 abstract class $TrainingPatternCopyWith<$Res> {
   factory $TrainingPatternCopyWith(
-          TrainingPattern value, $Res Function(TrainingPattern) then) =
-      _$TrainingPatternCopyWithImpl<$Res, TrainingPattern>;
+    TrainingPattern value,
+    $Res Function(TrainingPattern) then,
+  ) = _$TrainingPatternCopyWithImpl<$Res, TrainingPattern>;
   @useResult
-  $Res call(
-      {PatternType type,
-      PatternSeverity severity,
-      double confidence,
-      String titleKey,
-      String descriptionKey,
-      String recommendationKey,
-      String? scienceKey,
-      int sessionsAnalyzed,
-      Map<String, double> triggerMetrics});
+  $Res call({
+    PatternType type,
+    PatternSeverity severity,
+    double confidence,
+    String titleKey,
+    String descriptionKey,
+    String recommendationKey,
+    String? scienceKey,
+    int sessionsAnalyzed,
+    Map<String, double> triggerMetrics,
+  });
 }
 
 /// @nodoc
@@ -77,6 +82,8 @@ class _$TrainingPatternCopyWithImpl<$Res, $Val extends TrainingPattern>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TrainingPattern
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -90,65 +97,70 @@ class _$TrainingPatternCopyWithImpl<$Res, $Val extends TrainingPattern>
     Object? sessionsAnalyzed = null,
     Object? triggerMetrics = null,
   }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as PatternType,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as PatternSeverity,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      titleKey: null == titleKey
-          ? _value.titleKey
-          : titleKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      descriptionKey: null == descriptionKey
-          ? _value.descriptionKey
-          : descriptionKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendationKey: null == recommendationKey
-          ? _value.recommendationKey
-          : recommendationKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      scienceKey: freezed == scienceKey
-          ? _value.scienceKey
-          : scienceKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-      sessionsAnalyzed: null == sessionsAnalyzed
-          ? _value.sessionsAnalyzed
-          : sessionsAnalyzed // ignore: cast_nullable_to_non_nullable
-              as int,
-      triggerMetrics: null == triggerMetrics
-          ? _value.triggerMetrics
-          : triggerMetrics // ignore: cast_nullable_to_non_nullable
-              as Map<String, double>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as PatternType,
+            severity: null == severity
+                ? _value.severity
+                : severity // ignore: cast_nullable_to_non_nullable
+                      as PatternSeverity,
+            confidence: null == confidence
+                ? _value.confidence
+                : confidence // ignore: cast_nullable_to_non_nullable
+                      as double,
+            titleKey: null == titleKey
+                ? _value.titleKey
+                : titleKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            descriptionKey: null == descriptionKey
+                ? _value.descriptionKey
+                : descriptionKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            recommendationKey: null == recommendationKey
+                ? _value.recommendationKey
+                : recommendationKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            scienceKey: freezed == scienceKey
+                ? _value.scienceKey
+                : scienceKey // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            sessionsAnalyzed: null == sessionsAnalyzed
+                ? _value.sessionsAnalyzed
+                : sessionsAnalyzed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            triggerMetrics: null == triggerMetrics
+                ? _value.triggerMetrics
+                : triggerMetrics // ignore: cast_nullable_to_non_nullable
+                      as Map<String, double>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TrainingPatternImplCopyWith<$Res>
     implements $TrainingPatternCopyWith<$Res> {
-  factory _$$TrainingPatternImplCopyWith(_$TrainingPatternImpl value,
-          $Res Function(_$TrainingPatternImpl) then) =
-      __$$TrainingPatternImplCopyWithImpl<$Res>;
+  factory _$$TrainingPatternImplCopyWith(
+    _$TrainingPatternImpl value,
+    $Res Function(_$TrainingPatternImpl) then,
+  ) = __$$TrainingPatternImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PatternType type,
-      PatternSeverity severity,
-      double confidence,
-      String titleKey,
-      String descriptionKey,
-      String recommendationKey,
-      String? scienceKey,
-      int sessionsAnalyzed,
-      Map<String, double> triggerMetrics});
+  $Res call({
+    PatternType type,
+    PatternSeverity severity,
+    double confidence,
+    String titleKey,
+    String descriptionKey,
+    String recommendationKey,
+    String? scienceKey,
+    int sessionsAnalyzed,
+    Map<String, double> triggerMetrics,
+  });
 }
 
 /// @nodoc
@@ -156,9 +168,12 @@ class __$$TrainingPatternImplCopyWithImpl<$Res>
     extends _$TrainingPatternCopyWithImpl<$Res, _$TrainingPatternImpl>
     implements _$$TrainingPatternImplCopyWith<$Res> {
   __$$TrainingPatternImplCopyWithImpl(
-      _$TrainingPatternImpl _value, $Res Function(_$TrainingPatternImpl) _then)
-      : super(_value, _then);
+    _$TrainingPatternImpl _value,
+    $Res Function(_$TrainingPatternImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of TrainingPattern
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,62 +187,64 @@ class __$$TrainingPatternImplCopyWithImpl<$Res>
     Object? sessionsAnalyzed = null,
     Object? triggerMetrics = null,
   }) {
-    return _then(_$TrainingPatternImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as PatternType,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as PatternSeverity,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      titleKey: null == titleKey
-          ? _value.titleKey
-          : titleKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      descriptionKey: null == descriptionKey
-          ? _value.descriptionKey
-          : descriptionKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendationKey: null == recommendationKey
-          ? _value.recommendationKey
-          : recommendationKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      scienceKey: freezed == scienceKey
-          ? _value.scienceKey
-          : scienceKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-      sessionsAnalyzed: null == sessionsAnalyzed
-          ? _value.sessionsAnalyzed
-          : sessionsAnalyzed // ignore: cast_nullable_to_non_nullable
-              as int,
-      triggerMetrics: null == triggerMetrics
-          ? _value._triggerMetrics
-          : triggerMetrics // ignore: cast_nullable_to_non_nullable
-              as Map<String, double>,
-    ));
+    return _then(
+      _$TrainingPatternImpl(
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as PatternType,
+        severity: null == severity
+            ? _value.severity
+            : severity // ignore: cast_nullable_to_non_nullable
+                  as PatternSeverity,
+        confidence: null == confidence
+            ? _value.confidence
+            : confidence // ignore: cast_nullable_to_non_nullable
+                  as double,
+        titleKey: null == titleKey
+            ? _value.titleKey
+            : titleKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        descriptionKey: null == descriptionKey
+            ? _value.descriptionKey
+            : descriptionKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        recommendationKey: null == recommendationKey
+            ? _value.recommendationKey
+            : recommendationKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        scienceKey: freezed == scienceKey
+            ? _value.scienceKey
+            : scienceKey // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        sessionsAnalyzed: null == sessionsAnalyzed
+            ? _value.sessionsAnalyzed
+            : sessionsAnalyzed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        triggerMetrics: null == triggerMetrics
+            ? _value._triggerMetrics
+            : triggerMetrics // ignore: cast_nullable_to_non_nullable
+                  as Map<String, double>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$TrainingPatternImpl extends _TrainingPattern {
-  const _$TrainingPatternImpl(
-      {required this.type,
-      required this.severity,
-      required this.confidence,
-      required this.titleKey,
-      required this.descriptionKey,
-      required this.recommendationKey,
-      this.scienceKey,
-      this.sessionsAnalyzed = 0,
-      final Map<String, double> triggerMetrics = const {}})
-      : _triggerMetrics = triggerMetrics,
-        super._();
+  const _$TrainingPatternImpl({
+    required this.type,
+    required this.severity,
+    required this.confidence,
+    required this.titleKey,
+    required this.descriptionKey,
+    required this.recommendationKey,
+    this.scienceKey,
+    this.sessionsAnalyzed = 0,
+    final Map<String, double> triggerMetrics = const {},
+  }) : _triggerMetrics = triggerMetrics,
+       super._();
 
   /// Type of pattern detected
   @override
@@ -300,83 +317,93 @@ class _$TrainingPatternImpl extends _TrainingPattern {
                 other.scienceKey == scienceKey) &&
             (identical(other.sessionsAnalyzed, sessionsAnalyzed) ||
                 other.sessionsAnalyzed == sessionsAnalyzed) &&
-            const DeepCollectionEquality()
-                .equals(other._triggerMetrics, _triggerMetrics));
+            const DeepCollectionEquality().equals(
+              other._triggerMetrics,
+              _triggerMetrics,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      type,
-      severity,
-      confidence,
-      titleKey,
-      descriptionKey,
-      recommendationKey,
-      scienceKey,
-      sessionsAnalyzed,
-      const DeepCollectionEquality().hash(_triggerMetrics));
+    runtimeType,
+    type,
+    severity,
+    confidence,
+    titleKey,
+    descriptionKey,
+    recommendationKey,
+    scienceKey,
+    sessionsAnalyzed,
+    const DeepCollectionEquality().hash(_triggerMetrics),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TrainingPattern
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TrainingPatternImplCopyWith<_$TrainingPatternImpl> get copyWith =>
       __$$TrainingPatternImplCopyWithImpl<_$TrainingPatternImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _TrainingPattern extends TrainingPattern {
-  const factory _TrainingPattern(
-      {required final PatternType type,
-      required final PatternSeverity severity,
-      required final double confidence,
-      required final String titleKey,
-      required final String descriptionKey,
-      required final String recommendationKey,
-      final String? scienceKey,
-      final int sessionsAnalyzed,
-      final Map<String, double> triggerMetrics}) = _$TrainingPatternImpl;
+  const factory _TrainingPattern({
+    required final PatternType type,
+    required final PatternSeverity severity,
+    required final double confidence,
+    required final String titleKey,
+    required final String descriptionKey,
+    required final String recommendationKey,
+    final String? scienceKey,
+    final int sessionsAnalyzed,
+    final Map<String, double> triggerMetrics,
+  }) = _$TrainingPatternImpl;
   const _TrainingPattern._() : super._();
 
-  @override
-
   /// Type of pattern detected
-  PatternType get type;
   @override
+  PatternType get type;
 
   /// Severity level
-  PatternSeverity get severity;
   @override
+  PatternSeverity get severity;
 
   /// Confidence score (0.0 to 1.0)
   /// Based on correlation strength and data points
-  double get confidence;
   @override
+  double get confidence;
 
   /// Localization key for title
-  String get titleKey;
   @override
+  String get titleKey;
 
   /// Localization key for description
-  String get descriptionKey;
   @override
+  String get descriptionKey;
 
   /// Localization key for recommendation
-  String get recommendationKey;
   @override
+  String get recommendationKey;
 
   /// Scientific explanation key (for expanded view)
-  String? get scienceKey;
   @override
+  String? get scienceKey;
 
   /// Number of sessions analyzed for this pattern
-  int get sessionsAnalyzed;
   @override
+  int get sessionsAnalyzed;
 
   /// Raw metrics that triggered this pattern
-  Map<String, double> get triggerMetrics;
   @override
-  @JsonKey(ignore: true)
+  Map<String, double> get triggerMetrics;
+
+  /// Create a copy of TrainingPattern
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TrainingPatternImplCopyWith<_$TrainingPatternImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -398,30 +425,36 @@ mixin _$TrainingPatternResults {
   /// Number of data points used
   int get dataPointsUsed => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TrainingPatternResultsCopyWith<TrainingPatternResults> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $TrainingPatternResultsCopyWith<$Res> {
-  factory $TrainingPatternResultsCopyWith(TrainingPatternResults value,
-          $Res Function(TrainingPatternResults) then) =
-      _$TrainingPatternResultsCopyWithImpl<$Res, TrainingPatternResults>;
+  factory $TrainingPatternResultsCopyWith(
+    TrainingPatternResults value,
+    $Res Function(TrainingPatternResults) then,
+  ) = _$TrainingPatternResultsCopyWithImpl<$Res, TrainingPatternResults>;
   @useResult
-  $Res call(
-      {List<TrainingPattern> patterns,
-      TrainingPattern? primaryPattern,
-      TrainingStatus overallStatus,
-      DateTime analyzedAt,
-      int dataPointsUsed});
+  $Res call({
+    List<TrainingPattern> patterns,
+    TrainingPattern? primaryPattern,
+    TrainingStatus overallStatus,
+    DateTime analyzedAt,
+    int dataPointsUsed,
+  });
 
   $TrainingPatternCopyWith<$Res>? get primaryPattern;
 }
 
 /// @nodoc
-class _$TrainingPatternResultsCopyWithImpl<$Res,
-        $Val extends TrainingPatternResults>
+class _$TrainingPatternResultsCopyWithImpl<
+  $Res,
+  $Val extends TrainingPatternResults
+>
     implements $TrainingPatternResultsCopyWith<$Res> {
   _$TrainingPatternResultsCopyWithImpl(this._value, this._then);
 
@@ -430,6 +463,8 @@ class _$TrainingPatternResultsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -439,30 +474,35 @@ class _$TrainingPatternResultsCopyWithImpl<$Res,
     Object? analyzedAt = null,
     Object? dataPointsUsed = null,
   }) {
-    return _then(_value.copyWith(
-      patterns: null == patterns
-          ? _value.patterns
-          : patterns // ignore: cast_nullable_to_non_nullable
-              as List<TrainingPattern>,
-      primaryPattern: freezed == primaryPattern
-          ? _value.primaryPattern
-          : primaryPattern // ignore: cast_nullable_to_non_nullable
-              as TrainingPattern?,
-      overallStatus: null == overallStatus
-          ? _value.overallStatus
-          : overallStatus // ignore: cast_nullable_to_non_nullable
-              as TrainingStatus,
-      analyzedAt: null == analyzedAt
-          ? _value.analyzedAt
-          : analyzedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dataPointsUsed: null == dataPointsUsed
-          ? _value.dataPointsUsed
-          : dataPointsUsed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            patterns: null == patterns
+                ? _value.patterns
+                : patterns // ignore: cast_nullable_to_non_nullable
+                      as List<TrainingPattern>,
+            primaryPattern: freezed == primaryPattern
+                ? _value.primaryPattern
+                : primaryPattern // ignore: cast_nullable_to_non_nullable
+                      as TrainingPattern?,
+            overallStatus: null == overallStatus
+                ? _value.overallStatus
+                : overallStatus // ignore: cast_nullable_to_non_nullable
+                      as TrainingStatus,
+            analyzedAt: null == analyzedAt
+                ? _value.analyzedAt
+                : analyzedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            dataPointsUsed: null == dataPointsUsed
+                ? _value.dataPointsUsed
+                : dataPointsUsed // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $TrainingPatternCopyWith<$Res>? get primaryPattern {
@@ -480,17 +520,18 @@ class _$TrainingPatternResultsCopyWithImpl<$Res,
 abstract class _$$TrainingPatternResultsImplCopyWith<$Res>
     implements $TrainingPatternResultsCopyWith<$Res> {
   factory _$$TrainingPatternResultsImplCopyWith(
-          _$TrainingPatternResultsImpl value,
-          $Res Function(_$TrainingPatternResultsImpl) then) =
-      __$$TrainingPatternResultsImplCopyWithImpl<$Res>;
+    _$TrainingPatternResultsImpl value,
+    $Res Function(_$TrainingPatternResultsImpl) then,
+  ) = __$$TrainingPatternResultsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<TrainingPattern> patterns,
-      TrainingPattern? primaryPattern,
-      TrainingStatus overallStatus,
-      DateTime analyzedAt,
-      int dataPointsUsed});
+  $Res call({
+    List<TrainingPattern> patterns,
+    TrainingPattern? primaryPattern,
+    TrainingStatus overallStatus,
+    DateTime analyzedAt,
+    int dataPointsUsed,
+  });
 
   @override
   $TrainingPatternCopyWith<$Res>? get primaryPattern;
@@ -498,14 +539,16 @@ abstract class _$$TrainingPatternResultsImplCopyWith<$Res>
 
 /// @nodoc
 class __$$TrainingPatternResultsImplCopyWithImpl<$Res>
-    extends _$TrainingPatternResultsCopyWithImpl<$Res,
-        _$TrainingPatternResultsImpl>
+    extends
+        _$TrainingPatternResultsCopyWithImpl<$Res, _$TrainingPatternResultsImpl>
     implements _$$TrainingPatternResultsImplCopyWith<$Res> {
   __$$TrainingPatternResultsImplCopyWithImpl(
-      _$TrainingPatternResultsImpl _value,
-      $Res Function(_$TrainingPatternResultsImpl) _then)
-      : super(_value, _then);
+    _$TrainingPatternResultsImpl _value,
+    $Res Function(_$TrainingPatternResultsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -515,42 +558,44 @@ class __$$TrainingPatternResultsImplCopyWithImpl<$Res>
     Object? analyzedAt = null,
     Object? dataPointsUsed = null,
   }) {
-    return _then(_$TrainingPatternResultsImpl(
-      patterns: null == patterns
-          ? _value._patterns
-          : patterns // ignore: cast_nullable_to_non_nullable
-              as List<TrainingPattern>,
-      primaryPattern: freezed == primaryPattern
-          ? _value.primaryPattern
-          : primaryPattern // ignore: cast_nullable_to_non_nullable
-              as TrainingPattern?,
-      overallStatus: null == overallStatus
-          ? _value.overallStatus
-          : overallStatus // ignore: cast_nullable_to_non_nullable
-              as TrainingStatus,
-      analyzedAt: null == analyzedAt
-          ? _value.analyzedAt
-          : analyzedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      dataPointsUsed: null == dataPointsUsed
-          ? _value.dataPointsUsed
-          : dataPointsUsed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$TrainingPatternResultsImpl(
+        patterns: null == patterns
+            ? _value._patterns
+            : patterns // ignore: cast_nullable_to_non_nullable
+                  as List<TrainingPattern>,
+        primaryPattern: freezed == primaryPattern
+            ? _value.primaryPattern
+            : primaryPattern // ignore: cast_nullable_to_non_nullable
+                  as TrainingPattern?,
+        overallStatus: null == overallStatus
+            ? _value.overallStatus
+            : overallStatus // ignore: cast_nullable_to_non_nullable
+                  as TrainingStatus,
+        analyzedAt: null == analyzedAt
+            ? _value.analyzedAt
+            : analyzedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        dataPointsUsed: null == dataPointsUsed
+            ? _value.dataPointsUsed
+            : dataPointsUsed // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$TrainingPatternResultsImpl extends _TrainingPatternResults {
-  const _$TrainingPatternResultsImpl(
-      {required final List<TrainingPattern> patterns,
-      this.primaryPattern,
-      required this.overallStatus,
-      required this.analyzedAt,
-      this.dataPointsUsed = 0})
-      : _patterns = patterns,
-        super._();
+  const _$TrainingPatternResultsImpl({
+    required final List<TrainingPattern> patterns,
+    this.primaryPattern,
+    required this.overallStatus,
+    required this.analyzedAt,
+    this.dataPointsUsed = 0,
+  }) : _patterns = patterns,
+       super._();
 
   /// All detected patterns, sorted by priority
   final List<TrainingPattern> _patterns;
@@ -603,52 +648,61 @@ class _$TrainingPatternResultsImpl extends _TrainingPatternResults {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_patterns),
-      primaryPattern,
-      overallStatus,
-      analyzedAt,
-      dataPointsUsed);
+    runtimeType,
+    const DeepCollectionEquality().hash(_patterns),
+    primaryPattern,
+    overallStatus,
+    analyzedAt,
+    dataPointsUsed,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TrainingPatternResultsImplCopyWith<_$TrainingPatternResultsImpl>
-      get copyWith => __$$TrainingPatternResultsImplCopyWithImpl<
-          _$TrainingPatternResultsImpl>(this, _$identity);
+  get copyWith =>
+      __$$TrainingPatternResultsImplCopyWithImpl<_$TrainingPatternResultsImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _TrainingPatternResults extends TrainingPatternResults {
-  const factory _TrainingPatternResults(
-      {required final List<TrainingPattern> patterns,
-      final TrainingPattern? primaryPattern,
-      required final TrainingStatus overallStatus,
-      required final DateTime analyzedAt,
-      final int dataPointsUsed}) = _$TrainingPatternResultsImpl;
+  const factory _TrainingPatternResults({
+    required final List<TrainingPattern> patterns,
+    final TrainingPattern? primaryPattern,
+    required final TrainingStatus overallStatus,
+    required final DateTime analyzedAt,
+    final int dataPointsUsed,
+  }) = _$TrainingPatternResultsImpl;
   const _TrainingPatternResults._() : super._();
 
-  @override
-
   /// All detected patterns, sorted by priority
-  List<TrainingPattern> get patterns;
   @override
+  List<TrainingPattern> get patterns;
 
   /// The most significant pattern (highest priority)
-  TrainingPattern? get primaryPattern;
   @override
+  TrainingPattern? get primaryPattern;
 
   /// Overall training status summary
-  TrainingStatus get overallStatus;
   @override
+  TrainingStatus get overallStatus;
 
   /// Timestamp when patterns were analyzed
-  DateTime get analyzedAt;
   @override
+  DateTime get analyzedAt;
 
   /// Number of data points used
-  int get dataPointsUsed;
   @override
-  @JsonKey(ignore: true)
+  int get dataPointsUsed;
+
+  /// Create a copy of TrainingPatternResults
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TrainingPatternResultsImplCopyWith<_$TrainingPatternResultsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

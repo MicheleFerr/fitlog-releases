@@ -12,7 +12,8 @@ part of 'ai_insight.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AIInsight _$AIInsightFromJson(Map<String, dynamic> json) {
   return _AIInsight.fromJson(json);
@@ -33,8 +34,12 @@ mixin _$AIInsight {
   Map<String, dynamic>? get dataPoints => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
 
+  /// Serializes this AIInsight to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AIInsight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AIInsightCopyWith<AIInsight> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,19 +49,20 @@ abstract class $AIInsightCopyWith<$Res> {
   factory $AIInsightCopyWith(AIInsight value, $Res Function(AIInsight) then) =
       _$AIInsightCopyWithImpl<$Res, AIInsight>;
   @useResult
-  $Res call(
-      {String id,
-      InsightType type,
-      InsightSeverity severity,
-      String title,
-      String description,
-      String recommendation,
-      int priority,
-      String? affectedExercise,
-      List<String>? affectedTemplates,
-      List<String>? scientificStrategies,
-      Map<String, dynamic>? dataPoints,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    InsightType type,
+    InsightSeverity severity,
+    String title,
+    String description,
+    String recommendation,
+    int priority,
+    String? affectedExercise,
+    List<String>? affectedTemplates,
+    List<String>? scientificStrategies,
+    Map<String, dynamic>? dataPoints,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -69,6 +75,8 @@ class _$AIInsightCopyWithImpl<$Res, $Val extends AIInsight>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AIInsight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,56 +93,59 @@ class _$AIInsightCopyWithImpl<$Res, $Val extends AIInsight>
     Object? dataPoints = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as InsightSeverity,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      priority: null == priority
-          ? _value.priority
-          : priority // ignore: cast_nullable_to_non_nullable
-              as int,
-      affectedExercise: freezed == affectedExercise
-          ? _value.affectedExercise
-          : affectedExercise // ignore: cast_nullable_to_non_nullable
-              as String?,
-      affectedTemplates: freezed == affectedTemplates
-          ? _value.affectedTemplates
-          : affectedTemplates // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      scientificStrategies: freezed == scientificStrategies
-          ? _value.scientificStrategies
-          : scientificStrategies // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      dataPoints: freezed == dataPoints
-          ? _value.dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as InsightType,
+            severity: null == severity
+                ? _value.severity
+                : severity // ignore: cast_nullable_to_non_nullable
+                      as InsightSeverity,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            recommendation: null == recommendation
+                ? _value.recommendation
+                : recommendation // ignore: cast_nullable_to_non_nullable
+                      as String,
+            priority: null == priority
+                ? _value.priority
+                : priority // ignore: cast_nullable_to_non_nullable
+                      as int,
+            affectedExercise: freezed == affectedExercise
+                ? _value.affectedExercise
+                : affectedExercise // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            affectedTemplates: freezed == affectedTemplates
+                ? _value.affectedTemplates
+                : affectedTemplates // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            scientificStrategies: freezed == scientificStrategies
+                ? _value.scientificStrategies
+                : scientificStrategies // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            dataPoints: freezed == dataPoints
+                ? _value.dataPoints
+                : dataPoints // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -142,23 +153,25 @@ class _$AIInsightCopyWithImpl<$Res, $Val extends AIInsight>
 abstract class _$$AIInsightImplCopyWith<$Res>
     implements $AIInsightCopyWith<$Res> {
   factory _$$AIInsightImplCopyWith(
-          _$AIInsightImpl value, $Res Function(_$AIInsightImpl) then) =
-      __$$AIInsightImplCopyWithImpl<$Res>;
+    _$AIInsightImpl value,
+    $Res Function(_$AIInsightImpl) then,
+  ) = __$$AIInsightImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      InsightType type,
-      InsightSeverity severity,
-      String title,
-      String description,
-      String recommendation,
-      int priority,
-      String? affectedExercise,
-      List<String>? affectedTemplates,
-      List<String>? scientificStrategies,
-      Map<String, dynamic>? dataPoints,
-      DateTime timestamp});
+  $Res call({
+    String id,
+    InsightType type,
+    InsightSeverity severity,
+    String title,
+    String description,
+    String recommendation,
+    int priority,
+    String? affectedExercise,
+    List<String>? affectedTemplates,
+    List<String>? scientificStrategies,
+    Map<String, dynamic>? dataPoints,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -166,9 +179,12 @@ class __$$AIInsightImplCopyWithImpl<$Res>
     extends _$AIInsightCopyWithImpl<$Res, _$AIInsightImpl>
     implements _$$AIInsightImplCopyWith<$Res> {
   __$$AIInsightImplCopyWithImpl(
-      _$AIInsightImpl _value, $Res Function(_$AIInsightImpl) _then)
-      : super(_value, _then);
+    _$AIInsightImpl _value,
+    $Res Function(_$AIInsightImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AIInsight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -185,78 +201,80 @@ class __$$AIInsightImplCopyWithImpl<$Res>
     Object? dataPoints = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_$AIInsightImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as InsightSeverity,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      priority: null == priority
-          ? _value.priority
-          : priority // ignore: cast_nullable_to_non_nullable
-              as int,
-      affectedExercise: freezed == affectedExercise
-          ? _value.affectedExercise
-          : affectedExercise // ignore: cast_nullable_to_non_nullable
-              as String?,
-      affectedTemplates: freezed == affectedTemplates
-          ? _value._affectedTemplates
-          : affectedTemplates // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      scientificStrategies: freezed == scientificStrategies
-          ? _value._scientificStrategies
-          : scientificStrategies // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      dataPoints: freezed == dataPoints
-          ? _value._dataPoints
-          : dataPoints // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$AIInsightImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as InsightType,
+        severity: null == severity
+            ? _value.severity
+            : severity // ignore: cast_nullable_to_non_nullable
+                  as InsightSeverity,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        recommendation: null == recommendation
+            ? _value.recommendation
+            : recommendation // ignore: cast_nullable_to_non_nullable
+                  as String,
+        priority: null == priority
+            ? _value.priority
+            : priority // ignore: cast_nullable_to_non_nullable
+                  as int,
+        affectedExercise: freezed == affectedExercise
+            ? _value.affectedExercise
+            : affectedExercise // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        affectedTemplates: freezed == affectedTemplates
+            ? _value._affectedTemplates
+            : affectedTemplates // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        scientificStrategies: freezed == scientificStrategies
+            ? _value._scientificStrategies
+            : scientificStrategies // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        dataPoints: freezed == dataPoints
+            ? _value._dataPoints
+            : dataPoints // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AIInsightImpl implements _AIInsight {
-  const _$AIInsightImpl(
-      {required this.id,
-      required this.type,
-      required this.severity,
-      required this.title,
-      required this.description,
-      required this.recommendation,
-      required this.priority,
-      this.affectedExercise,
-      final List<String>? affectedTemplates,
-      final List<String>? scientificStrategies,
-      final Map<String, dynamic>? dataPoints,
-      required this.timestamp})
-      : _affectedTemplates = affectedTemplates,
-        _scientificStrategies = scientificStrategies,
-        _dataPoints = dataPoints;
+  const _$AIInsightImpl({
+    required this.id,
+    required this.type,
+    required this.severity,
+    required this.title,
+    required this.description,
+    required this.recommendation,
+    required this.priority,
+    this.affectedExercise,
+    final List<String>? affectedTemplates,
+    final List<String>? scientificStrategies,
+    final Map<String, dynamic>? dataPoints,
+    required this.timestamp,
+  }) : _affectedTemplates = affectedTemplates,
+       _scientificStrategies = scientificStrategies,
+       _dataPoints = dataPoints;
 
   factory _$AIInsightImpl.fromJson(Map<String, dynamic> json) =>
       _$$AIInsightImplFromJson(json);
@@ -335,34 +353,43 @@ class _$AIInsightImpl implements _AIInsight {
                 other.priority == priority) &&
             (identical(other.affectedExercise, affectedExercise) ||
                 other.affectedExercise == affectedExercise) &&
-            const DeepCollectionEquality()
-                .equals(other._affectedTemplates, _affectedTemplates) &&
-            const DeepCollectionEquality()
-                .equals(other._scientificStrategies, _scientificStrategies) &&
-            const DeepCollectionEquality()
-                .equals(other._dataPoints, _dataPoints) &&
+            const DeepCollectionEquality().equals(
+              other._affectedTemplates,
+              _affectedTemplates,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._scientificStrategies,
+              _scientificStrategies,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._dataPoints,
+              _dataPoints,
+            ) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      type,
-      severity,
-      title,
-      description,
-      recommendation,
-      priority,
-      affectedExercise,
-      const DeepCollectionEquality().hash(_affectedTemplates),
-      const DeepCollectionEquality().hash(_scientificStrategies),
-      const DeepCollectionEquality().hash(_dataPoints),
-      timestamp);
+    runtimeType,
+    id,
+    type,
+    severity,
+    title,
+    description,
+    recommendation,
+    priority,
+    affectedExercise,
+    const DeepCollectionEquality().hash(_affectedTemplates),
+    const DeepCollectionEquality().hash(_scientificStrategies),
+    const DeepCollectionEquality().hash(_dataPoints),
+    timestamp,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AIInsight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AIInsightImplCopyWith<_$AIInsightImpl> get copyWith =>
@@ -370,26 +397,25 @@ class _$AIInsightImpl implements _AIInsight {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AIInsightImplToJson(
-      this,
-    );
+    return _$$AIInsightImplToJson(this);
   }
 }
 
 abstract class _AIInsight implements AIInsight {
-  const factory _AIInsight(
-      {required final String id,
-      required final InsightType type,
-      required final InsightSeverity severity,
-      required final String title,
-      required final String description,
-      required final String recommendation,
-      required final int priority,
-      final String? affectedExercise,
-      final List<String>? affectedTemplates,
-      final List<String>? scientificStrategies,
-      final Map<String, dynamic>? dataPoints,
-      required final DateTime timestamp}) = _$AIInsightImpl;
+  const factory _AIInsight({
+    required final String id,
+    required final InsightType type,
+    required final InsightSeverity severity,
+    required final String title,
+    required final String description,
+    required final String recommendation,
+    required final int priority,
+    final String? affectedExercise,
+    final List<String>? affectedTemplates,
+    final List<String>? scientificStrategies,
+    final Map<String, dynamic>? dataPoints,
+    required final DateTime timestamp,
+  }) = _$AIInsightImpl;
 
   factory _AIInsight.fromJson(Map<String, dynamic> json) =
       _$AIInsightImpl.fromJson;
@@ -418,8 +444,11 @@ abstract class _AIInsight implements AIInsight {
   Map<String, dynamic>? get dataPoints;
   @override
   DateTime get timestamp;
+
+  /// Create a copy of AIInsight
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AIInsightImplCopyWith<_$AIInsightImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

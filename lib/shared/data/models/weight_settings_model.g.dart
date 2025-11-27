@@ -8,7 +8,7 @@ part of 'weight_settings_model.dart';
 
 class WeightSettingsModelAdapter extends TypeAdapter<WeightSettingsModel> {
   @override
-  final int typeId = 50;
+  final typeId = 50;
 
   @override
   WeightSettingsModel read(BinaryReader reader) {
@@ -51,7 +51,7 @@ class WeightSettingsModelAdapter extends TypeAdapter<WeightSettingsModel> {
 
 class PlateOptionModelAdapter extends TypeAdapter<PlateOptionModel> {
   @override
-  final int typeId = 51;
+  final typeId = 51;
 
   @override
   PlateOptionModel read(BinaryReader reader) {

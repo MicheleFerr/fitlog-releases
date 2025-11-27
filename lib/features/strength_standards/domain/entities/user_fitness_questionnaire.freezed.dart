@@ -12,16 +12,18 @@ part of 'user_fitness_questionnaire.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserFitnessQuestionnaire _$UserFitnessQuestionnaireFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _UserFitnessQuestionnaire.fromJson(json);
 }
 
 /// @nodoc
 mixin _$UserFitnessQuestionnaire {
-// Step 1: Demographics
+  // Step 1: Demographics
   /// User's bodyweight in kg
   double get bodyweightKg => throw _privateConstructorUsedError;
 
@@ -75,43 +77,51 @@ mixin _$UserFitnessQuestionnaire {
   SelfReportCalibration get selfReportCalibration =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this UserFitnessQuestionnaire to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserFitnessQuestionnaireCopyWith<UserFitnessQuestionnaire> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $UserFitnessQuestionnaireCopyWith<$Res> {
-  factory $UserFitnessQuestionnaireCopyWith(UserFitnessQuestionnaire value,
-          $Res Function(UserFitnessQuestionnaire) then) =
-      _$UserFitnessQuestionnaireCopyWithImpl<$Res, UserFitnessQuestionnaire>;
+  factory $UserFitnessQuestionnaireCopyWith(
+    UserFitnessQuestionnaire value,
+    $Res Function(UserFitnessQuestionnaire) then,
+  ) = _$UserFitnessQuestionnaireCopyWithImpl<$Res, UserFitnessQuestionnaire>;
   @useResult
-  $Res call(
-      {double bodyweightKg,
-      int age,
-      BiologicalSex sex,
-      ExperienceLevel experienceLevel,
-      int? monthsOfTraining,
-      double? benchPressMax,
-      double? squatMax,
-      double? deadliftMax,
-      double? overheadPressMax,
-      TrainingGoal trainingGoal,
-      bool hasInjuryHistory,
-      InjuryDetails? injuryDetails,
-      int currentPainLevel,
-      SuggestionStyle suggestionStyle,
-      DateTime? completedAt,
-      bool allowPeriodicUpdates,
-      SelfReportCalibration selfReportCalibration});
+  $Res call({
+    double bodyweightKg,
+    int age,
+    BiologicalSex sex,
+    ExperienceLevel experienceLevel,
+    int? monthsOfTraining,
+    double? benchPressMax,
+    double? squatMax,
+    double? deadliftMax,
+    double? overheadPressMax,
+    TrainingGoal trainingGoal,
+    bool hasInjuryHistory,
+    InjuryDetails? injuryDetails,
+    int currentPainLevel,
+    SuggestionStyle suggestionStyle,
+    DateTime? completedAt,
+    bool allowPeriodicUpdates,
+    SelfReportCalibration selfReportCalibration,
+  });
 
   $InjuryDetailsCopyWith<$Res>? get injuryDetails;
 }
 
 /// @nodoc
-class _$UserFitnessQuestionnaireCopyWithImpl<$Res,
-        $Val extends UserFitnessQuestionnaire>
+class _$UserFitnessQuestionnaireCopyWithImpl<
+  $Res,
+  $Val extends UserFitnessQuestionnaire
+>
     implements $UserFitnessQuestionnaireCopyWith<$Res> {
   _$UserFitnessQuestionnaireCopyWithImpl(this._value, this._then);
 
@@ -120,6 +130,8 @@ class _$UserFitnessQuestionnaireCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -141,78 +153,83 @@ class _$UserFitnessQuestionnaireCopyWithImpl<$Res,
     Object? allowPeriodicUpdates = null,
     Object? selfReportCalibration = null,
   }) {
-    return _then(_value.copyWith(
-      bodyweightKg: null == bodyweightKg
-          ? _value.bodyweightKg
-          : bodyweightKg // ignore: cast_nullable_to_non_nullable
-              as double,
-      age: null == age
-          ? _value.age
-          : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      sex: null == sex
-          ? _value.sex
-          : sex // ignore: cast_nullable_to_non_nullable
-              as BiologicalSex,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-      monthsOfTraining: freezed == monthsOfTraining
-          ? _value.monthsOfTraining
-          : monthsOfTraining // ignore: cast_nullable_to_non_nullable
-              as int?,
-      benchPressMax: freezed == benchPressMax
-          ? _value.benchPressMax
-          : benchPressMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      squatMax: freezed == squatMax
-          ? _value.squatMax
-          : squatMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      deadliftMax: freezed == deadliftMax
-          ? _value.deadliftMax
-          : deadliftMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      overheadPressMax: freezed == overheadPressMax
-          ? _value.overheadPressMax
-          : overheadPressMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      trainingGoal: null == trainingGoal
-          ? _value.trainingGoal
-          : trainingGoal // ignore: cast_nullable_to_non_nullable
-              as TrainingGoal,
-      hasInjuryHistory: null == hasInjuryHistory
-          ? _value.hasInjuryHistory
-          : hasInjuryHistory // ignore: cast_nullable_to_non_nullable
-              as bool,
-      injuryDetails: freezed == injuryDetails
-          ? _value.injuryDetails
-          : injuryDetails // ignore: cast_nullable_to_non_nullable
-              as InjuryDetails?,
-      currentPainLevel: null == currentPainLevel
-          ? _value.currentPainLevel
-          : currentPainLevel // ignore: cast_nullable_to_non_nullable
-              as int,
-      suggestionStyle: null == suggestionStyle
-          ? _value.suggestionStyle
-          : suggestionStyle // ignore: cast_nullable_to_non_nullable
-              as SuggestionStyle,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      allowPeriodicUpdates: null == allowPeriodicUpdates
-          ? _value.allowPeriodicUpdates
-          : allowPeriodicUpdates // ignore: cast_nullable_to_non_nullable
-              as bool,
-      selfReportCalibration: null == selfReportCalibration
-          ? _value.selfReportCalibration
-          : selfReportCalibration // ignore: cast_nullable_to_non_nullable
-              as SelfReportCalibration,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            bodyweightKg: null == bodyweightKg
+                ? _value.bodyweightKg
+                : bodyweightKg // ignore: cast_nullable_to_non_nullable
+                      as double,
+            age: null == age
+                ? _value.age
+                : age // ignore: cast_nullable_to_non_nullable
+                      as int,
+            sex: null == sex
+                ? _value.sex
+                : sex // ignore: cast_nullable_to_non_nullable
+                      as BiologicalSex,
+            experienceLevel: null == experienceLevel
+                ? _value.experienceLevel
+                : experienceLevel // ignore: cast_nullable_to_non_nullable
+                      as ExperienceLevel,
+            monthsOfTraining: freezed == monthsOfTraining
+                ? _value.monthsOfTraining
+                : monthsOfTraining // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            benchPressMax: freezed == benchPressMax
+                ? _value.benchPressMax
+                : benchPressMax // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            squatMax: freezed == squatMax
+                ? _value.squatMax
+                : squatMax // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            deadliftMax: freezed == deadliftMax
+                ? _value.deadliftMax
+                : deadliftMax // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            overheadPressMax: freezed == overheadPressMax
+                ? _value.overheadPressMax
+                : overheadPressMax // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            trainingGoal: null == trainingGoal
+                ? _value.trainingGoal
+                : trainingGoal // ignore: cast_nullable_to_non_nullable
+                      as TrainingGoal,
+            hasInjuryHistory: null == hasInjuryHistory
+                ? _value.hasInjuryHistory
+                : hasInjuryHistory // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            injuryDetails: freezed == injuryDetails
+                ? _value.injuryDetails
+                : injuryDetails // ignore: cast_nullable_to_non_nullable
+                      as InjuryDetails?,
+            currentPainLevel: null == currentPainLevel
+                ? _value.currentPainLevel
+                : currentPainLevel // ignore: cast_nullable_to_non_nullable
+                      as int,
+            suggestionStyle: null == suggestionStyle
+                ? _value.suggestionStyle
+                : suggestionStyle // ignore: cast_nullable_to_non_nullable
+                      as SuggestionStyle,
+            completedAt: freezed == completedAt
+                ? _value.completedAt
+                : completedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            allowPeriodicUpdates: null == allowPeriodicUpdates
+                ? _value.allowPeriodicUpdates
+                : allowPeriodicUpdates // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            selfReportCalibration: null == selfReportCalibration
+                ? _value.selfReportCalibration
+                : selfReportCalibration // ignore: cast_nullable_to_non_nullable
+                      as SelfReportCalibration,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $InjuryDetailsCopyWith<$Res>? get injuryDetails {
@@ -230,29 +247,30 @@ class _$UserFitnessQuestionnaireCopyWithImpl<$Res,
 abstract class _$$UserFitnessQuestionnaireImplCopyWith<$Res>
     implements $UserFitnessQuestionnaireCopyWith<$Res> {
   factory _$$UserFitnessQuestionnaireImplCopyWith(
-          _$UserFitnessQuestionnaireImpl value,
-          $Res Function(_$UserFitnessQuestionnaireImpl) then) =
-      __$$UserFitnessQuestionnaireImplCopyWithImpl<$Res>;
+    _$UserFitnessQuestionnaireImpl value,
+    $Res Function(_$UserFitnessQuestionnaireImpl) then,
+  ) = __$$UserFitnessQuestionnaireImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double bodyweightKg,
-      int age,
-      BiologicalSex sex,
-      ExperienceLevel experienceLevel,
-      int? monthsOfTraining,
-      double? benchPressMax,
-      double? squatMax,
-      double? deadliftMax,
-      double? overheadPressMax,
-      TrainingGoal trainingGoal,
-      bool hasInjuryHistory,
-      InjuryDetails? injuryDetails,
-      int currentPainLevel,
-      SuggestionStyle suggestionStyle,
-      DateTime? completedAt,
-      bool allowPeriodicUpdates,
-      SelfReportCalibration selfReportCalibration});
+  $Res call({
+    double bodyweightKg,
+    int age,
+    BiologicalSex sex,
+    ExperienceLevel experienceLevel,
+    int? monthsOfTraining,
+    double? benchPressMax,
+    double? squatMax,
+    double? deadliftMax,
+    double? overheadPressMax,
+    TrainingGoal trainingGoal,
+    bool hasInjuryHistory,
+    InjuryDetails? injuryDetails,
+    int currentPainLevel,
+    SuggestionStyle suggestionStyle,
+    DateTime? completedAt,
+    bool allowPeriodicUpdates,
+    SelfReportCalibration selfReportCalibration,
+  });
 
   @override
   $InjuryDetailsCopyWith<$Res>? get injuryDetails;
@@ -260,14 +278,19 @@ abstract class _$$UserFitnessQuestionnaireImplCopyWith<$Res>
 
 /// @nodoc
 class __$$UserFitnessQuestionnaireImplCopyWithImpl<$Res>
-    extends _$UserFitnessQuestionnaireCopyWithImpl<$Res,
-        _$UserFitnessQuestionnaireImpl>
+    extends
+        _$UserFitnessQuestionnaireCopyWithImpl<
+          $Res,
+          _$UserFitnessQuestionnaireImpl
+        >
     implements _$$UserFitnessQuestionnaireImplCopyWith<$Res> {
   __$$UserFitnessQuestionnaireImplCopyWithImpl(
-      _$UserFitnessQuestionnaireImpl _value,
-      $Res Function(_$UserFitnessQuestionnaireImpl) _then)
-      : super(_value, _then);
+    _$UserFitnessQuestionnaireImpl _value,
+    $Res Function(_$UserFitnessQuestionnaireImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -289,105 +312,108 @@ class __$$UserFitnessQuestionnaireImplCopyWithImpl<$Res>
     Object? allowPeriodicUpdates = null,
     Object? selfReportCalibration = null,
   }) {
-    return _then(_$UserFitnessQuestionnaireImpl(
-      bodyweightKg: null == bodyweightKg
-          ? _value.bodyweightKg
-          : bodyweightKg // ignore: cast_nullable_to_non_nullable
-              as double,
-      age: null == age
-          ? _value.age
-          : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      sex: null == sex
-          ? _value.sex
-          : sex // ignore: cast_nullable_to_non_nullable
-              as BiologicalSex,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-      monthsOfTraining: freezed == monthsOfTraining
-          ? _value.monthsOfTraining
-          : monthsOfTraining // ignore: cast_nullable_to_non_nullable
-              as int?,
-      benchPressMax: freezed == benchPressMax
-          ? _value.benchPressMax
-          : benchPressMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      squatMax: freezed == squatMax
-          ? _value.squatMax
-          : squatMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      deadliftMax: freezed == deadliftMax
-          ? _value.deadliftMax
-          : deadliftMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      overheadPressMax: freezed == overheadPressMax
-          ? _value.overheadPressMax
-          : overheadPressMax // ignore: cast_nullable_to_non_nullable
-              as double?,
-      trainingGoal: null == trainingGoal
-          ? _value.trainingGoal
-          : trainingGoal // ignore: cast_nullable_to_non_nullable
-              as TrainingGoal,
-      hasInjuryHistory: null == hasInjuryHistory
-          ? _value.hasInjuryHistory
-          : hasInjuryHistory // ignore: cast_nullable_to_non_nullable
-              as bool,
-      injuryDetails: freezed == injuryDetails
-          ? _value.injuryDetails
-          : injuryDetails // ignore: cast_nullable_to_non_nullable
-              as InjuryDetails?,
-      currentPainLevel: null == currentPainLevel
-          ? _value.currentPainLevel
-          : currentPainLevel // ignore: cast_nullable_to_non_nullable
-              as int,
-      suggestionStyle: null == suggestionStyle
-          ? _value.suggestionStyle
-          : suggestionStyle // ignore: cast_nullable_to_non_nullable
-              as SuggestionStyle,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      allowPeriodicUpdates: null == allowPeriodicUpdates
-          ? _value.allowPeriodicUpdates
-          : allowPeriodicUpdates // ignore: cast_nullable_to_non_nullable
-              as bool,
-      selfReportCalibration: null == selfReportCalibration
-          ? _value.selfReportCalibration
-          : selfReportCalibration // ignore: cast_nullable_to_non_nullable
-              as SelfReportCalibration,
-    ));
+    return _then(
+      _$UserFitnessQuestionnaireImpl(
+        bodyweightKg: null == bodyweightKg
+            ? _value.bodyweightKg
+            : bodyweightKg // ignore: cast_nullable_to_non_nullable
+                  as double,
+        age: null == age
+            ? _value.age
+            : age // ignore: cast_nullable_to_non_nullable
+                  as int,
+        sex: null == sex
+            ? _value.sex
+            : sex // ignore: cast_nullable_to_non_nullable
+                  as BiologicalSex,
+        experienceLevel: null == experienceLevel
+            ? _value.experienceLevel
+            : experienceLevel // ignore: cast_nullable_to_non_nullable
+                  as ExperienceLevel,
+        monthsOfTraining: freezed == monthsOfTraining
+            ? _value.monthsOfTraining
+            : monthsOfTraining // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        benchPressMax: freezed == benchPressMax
+            ? _value.benchPressMax
+            : benchPressMax // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        squatMax: freezed == squatMax
+            ? _value.squatMax
+            : squatMax // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        deadliftMax: freezed == deadliftMax
+            ? _value.deadliftMax
+            : deadliftMax // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        overheadPressMax: freezed == overheadPressMax
+            ? _value.overheadPressMax
+            : overheadPressMax // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        trainingGoal: null == trainingGoal
+            ? _value.trainingGoal
+            : trainingGoal // ignore: cast_nullable_to_non_nullable
+                  as TrainingGoal,
+        hasInjuryHistory: null == hasInjuryHistory
+            ? _value.hasInjuryHistory
+            : hasInjuryHistory // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        injuryDetails: freezed == injuryDetails
+            ? _value.injuryDetails
+            : injuryDetails // ignore: cast_nullable_to_non_nullable
+                  as InjuryDetails?,
+        currentPainLevel: null == currentPainLevel
+            ? _value.currentPainLevel
+            : currentPainLevel // ignore: cast_nullable_to_non_nullable
+                  as int,
+        suggestionStyle: null == suggestionStyle
+            ? _value.suggestionStyle
+            : suggestionStyle // ignore: cast_nullable_to_non_nullable
+                  as SuggestionStyle,
+        completedAt: freezed == completedAt
+            ? _value.completedAt
+            : completedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        allowPeriodicUpdates: null == allowPeriodicUpdates
+            ? _value.allowPeriodicUpdates
+            : allowPeriodicUpdates // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        selfReportCalibration: null == selfReportCalibration
+            ? _value.selfReportCalibration
+            : selfReportCalibration // ignore: cast_nullable_to_non_nullable
+                  as SelfReportCalibration,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
-  const _$UserFitnessQuestionnaireImpl(
-      {required this.bodyweightKg,
-      required this.age,
-      required this.sex,
-      required this.experienceLevel,
-      this.monthsOfTraining,
-      this.benchPressMax,
-      this.squatMax,
-      this.deadliftMax,
-      this.overheadPressMax,
-      this.trainingGoal = TrainingGoal.hypertrophy,
-      this.hasInjuryHistory = false,
-      this.injuryDetails,
-      this.currentPainLevel = 0,
-      this.suggestionStyle = SuggestionStyle.balanced,
-      this.completedAt,
-      this.allowPeriodicUpdates = true,
-      this.selfReportCalibration = SelfReportCalibration.realistic});
+  const _$UserFitnessQuestionnaireImpl({
+    required this.bodyweightKg,
+    required this.age,
+    required this.sex,
+    required this.experienceLevel,
+    this.monthsOfTraining,
+    this.benchPressMax,
+    this.squatMax,
+    this.deadliftMax,
+    this.overheadPressMax,
+    this.trainingGoal = TrainingGoal.hypertrophy,
+    this.hasInjuryHistory = false,
+    this.injuryDetails,
+    this.currentPainLevel = 0,
+    this.suggestionStyle = SuggestionStyle.balanced,
+    this.completedAt,
+    this.allowPeriodicUpdates = true,
+    this.selfReportCalibration = SelfReportCalibration.realistic,
+  });
 
   factory _$UserFitnessQuestionnaireImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserFitnessQuestionnaireImplFromJson(json);
 
-// Step 1: Demographics
+  // Step 1: Demographics
   /// User's bodyweight in kg
   @override
   final double bodyweightKg;
@@ -399,7 +425,7 @@ class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
   /// User's biological sex (affects strength standards)
   @override
   final BiologicalSex sex;
-// Step 2: Experience Level
+  // Step 2: Experience Level
   /// Self-reported experience level
   @override
   final ExperienceLevel experienceLevel;
@@ -407,7 +433,7 @@ class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
   /// Months of consistent training (optional, helps validate experience level)
   @override
   final int? monthsOfTraining;
-// Step 3: Max Lifts (Optional - improves accuracy)
+  // Step 3: Max Lifts (Optional - improves accuracy)
   /// Bench press 1RM or estimated from reps (kg)
   @override
   final double? benchPressMax;
@@ -423,7 +449,7 @@ class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
   /// Overhead press 1RM or estimated from reps (kg)
   @override
   final double? overheadPressMax;
-// Step 4: Lifestyle Factors
+  // Step 4: Lifestyle Factors
   /// Training goal affects weight suggestion (hypertrophy, strength, endurance)
   @override
   @JsonKey()
@@ -442,7 +468,7 @@ class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
   @override
   @JsonKey()
   final int currentPainLevel;
-// Step 5: Preferences
+  // Step 5: Preferences
   /// Prefer conservative or aggressive weight suggestions
   @override
   @JsonKey()
@@ -507,135 +533,142 @@ class _$UserFitnessQuestionnaireImpl implements _UserFitnessQuestionnaire {
                 other.selfReportCalibration == selfReportCalibration));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      bodyweightKg,
-      age,
-      sex,
-      experienceLevel,
-      monthsOfTraining,
-      benchPressMax,
-      squatMax,
-      deadliftMax,
-      overheadPressMax,
-      trainingGoal,
-      hasInjuryHistory,
-      injuryDetails,
-      currentPainLevel,
-      suggestionStyle,
-      completedAt,
-      allowPeriodicUpdates,
-      selfReportCalibration);
+    runtimeType,
+    bodyweightKg,
+    age,
+    sex,
+    experienceLevel,
+    monthsOfTraining,
+    benchPressMax,
+    squatMax,
+    deadliftMax,
+    overheadPressMax,
+    trainingGoal,
+    hasInjuryHistory,
+    injuryDetails,
+    currentPainLevel,
+    suggestionStyle,
+    completedAt,
+    allowPeriodicUpdates,
+    selfReportCalibration,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserFitnessQuestionnaireImplCopyWith<_$UserFitnessQuestionnaireImpl>
-      get copyWith => __$$UserFitnessQuestionnaireImplCopyWithImpl<
-          _$UserFitnessQuestionnaireImpl>(this, _$identity);
+  get copyWith =>
+      __$$UserFitnessQuestionnaireImplCopyWithImpl<
+        _$UserFitnessQuestionnaireImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserFitnessQuestionnaireImplToJson(
-      this,
-    );
+    return _$$UserFitnessQuestionnaireImplToJson(this);
   }
 }
 
 abstract class _UserFitnessQuestionnaire implements UserFitnessQuestionnaire {
-  const factory _UserFitnessQuestionnaire(
-          {required final double bodyweightKg,
-          required final int age,
-          required final BiologicalSex sex,
-          required final ExperienceLevel experienceLevel,
-          final int? monthsOfTraining,
-          final double? benchPressMax,
-          final double? squatMax,
-          final double? deadliftMax,
-          final double? overheadPressMax,
-          final TrainingGoal trainingGoal,
-          final bool hasInjuryHistory,
-          final InjuryDetails? injuryDetails,
-          final int currentPainLevel,
-          final SuggestionStyle suggestionStyle,
-          final DateTime? completedAt,
-          final bool allowPeriodicUpdates,
-          final SelfReportCalibration selfReportCalibration}) =
-      _$UserFitnessQuestionnaireImpl;
+  const factory _UserFitnessQuestionnaire({
+    required final double bodyweightKg,
+    required final int age,
+    required final BiologicalSex sex,
+    required final ExperienceLevel experienceLevel,
+    final int? monthsOfTraining,
+    final double? benchPressMax,
+    final double? squatMax,
+    final double? deadliftMax,
+    final double? overheadPressMax,
+    final TrainingGoal trainingGoal,
+    final bool hasInjuryHistory,
+    final InjuryDetails? injuryDetails,
+    final int currentPainLevel,
+    final SuggestionStyle suggestionStyle,
+    final DateTime? completedAt,
+    final bool allowPeriodicUpdates,
+    final SelfReportCalibration selfReportCalibration,
+  }) = _$UserFitnessQuestionnaireImpl;
 
   factory _UserFitnessQuestionnaire.fromJson(Map<String, dynamic> json) =
       _$UserFitnessQuestionnaireImpl.fromJson;
 
-  @override // Step 1: Demographics
+  // Step 1: Demographics
   /// User's bodyweight in kg
-  double get bodyweightKg;
   @override
+  double get bodyweightKg;
 
   /// User's age
-  int get age;
   @override
+  int get age;
 
   /// User's biological sex (affects strength standards)
-  BiologicalSex get sex;
-  @override // Step 2: Experience Level
-  /// Self-reported experience level
-  ExperienceLevel get experienceLevel;
   @override
+  BiologicalSex get sex; // Step 2: Experience Level
+  /// Self-reported experience level
+  @override
+  ExperienceLevel get experienceLevel;
 
   /// Months of consistent training (optional, helps validate experience level)
-  int? get monthsOfTraining;
-  @override // Step 3: Max Lifts (Optional - improves accuracy)
-  /// Bench press 1RM or estimated from reps (kg)
-  double? get benchPressMax;
   @override
+  int? get monthsOfTraining; // Step 3: Max Lifts (Optional - improves accuracy)
+  /// Bench press 1RM or estimated from reps (kg)
+  @override
+  double? get benchPressMax;
 
   /// Squat 1RM or estimated from reps (kg)
-  double? get squatMax;
   @override
+  double? get squatMax;
 
   /// Deadlift 1RM or estimated from reps (kg)
-  double? get deadliftMax;
   @override
+  double? get deadliftMax;
 
   /// Overhead press 1RM or estimated from reps (kg)
-  double? get overheadPressMax;
-  @override // Step 4: Lifestyle Factors
-  /// Training goal affects weight suggestion (hypertrophy, strength, endurance)
-  TrainingGoal get trainingGoal;
   @override
+  double? get overheadPressMax; // Step 4: Lifestyle Factors
+  /// Training goal affects weight suggestion (hypertrophy, strength, endurance)
+  @override
+  TrainingGoal get trainingGoal;
 
   /// Injury history or limitations (affects conservative suggestions)
-  bool get hasInjuryHistory;
   @override
+  bool get hasInjuryHistory;
 
   /// Specific injury details (Sciascia 2015: detailed screening recommended)
-  InjuryDetails? get injuryDetails;
   @override
+  InjuryDetails? get injuryDetails;
 
   /// Current pain or discomfort during training (0-10 scale)
-  int get currentPainLevel;
-  @override // Step 5: Preferences
-  /// Prefer conservative or aggressive weight suggestions
-  SuggestionStyle get suggestionStyle;
   @override
+  int get currentPainLevel; // Step 5: Preferences
+  /// Prefer conservative or aggressive weight suggestions
+  @override
+  SuggestionStyle get suggestionStyle;
 
   /// Timestamp when questionnaire was completed
-  DateTime? get completedAt;
   @override
+  DateTime? get completedAt;
 
   /// Whether user wants to update suggestions periodically
-  bool get allowPeriodicUpdates;
   @override
+  bool get allowPeriodicUpdates;
 
   /// Self-reported accuracy calibration (Aandstad 2023: over-reporting bias)
   /// User's honesty about their actual performance vs perceived
-  SelfReportCalibration get selfReportCalibration;
   @override
-  @JsonKey(ignore: true)
+  SelfReportCalibration get selfReportCalibration;
+
+  /// Create a copy of UserFitnessQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserFitnessQuestionnaireImplCopyWith<_$UserFitnessQuestionnaireImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 InjuryDetails _$InjuryDetailsFromJson(Map<String, dynamic> json) {
@@ -662,8 +695,12 @@ mixin _$InjuryDetails {
   /// Activities that aggravate the injury
   List<String> get aggravatingActivities => throw _privateConstructorUsedError;
 
+  /// Serializes this InjuryDetails to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of InjuryDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InjuryDetailsCopyWith<InjuryDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -671,16 +708,18 @@ mixin _$InjuryDetails {
 /// @nodoc
 abstract class $InjuryDetailsCopyWith<$Res> {
   factory $InjuryDetailsCopyWith(
-          InjuryDetails value, $Res Function(InjuryDetails) then) =
-      _$InjuryDetailsCopyWithImpl<$Res, InjuryDetails>;
+    InjuryDetails value,
+    $Res Function(InjuryDetails) then,
+  ) = _$InjuryDetailsCopyWithImpl<$Res, InjuryDetails>;
   @useResult
-  $Res call(
-      {String injuryType,
-      InjuryRegion region,
-      int monthsSinceInjury,
-      bool fullyRecovered,
-      bool inRehabilitation,
-      List<String> aggravatingActivities});
+  $Res call({
+    String injuryType,
+    InjuryRegion region,
+    int monthsSinceInjury,
+    bool fullyRecovered,
+    bool inRehabilitation,
+    List<String> aggravatingActivities,
+  });
 }
 
 /// @nodoc
@@ -693,6 +732,8 @@ class _$InjuryDetailsCopyWithImpl<$Res, $Val extends InjuryDetails>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of InjuryDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -703,32 +744,35 @@ class _$InjuryDetailsCopyWithImpl<$Res, $Val extends InjuryDetails>
     Object? inRehabilitation = null,
     Object? aggravatingActivities = null,
   }) {
-    return _then(_value.copyWith(
-      injuryType: null == injuryType
-          ? _value.injuryType
-          : injuryType // ignore: cast_nullable_to_non_nullable
-              as String,
-      region: null == region
-          ? _value.region
-          : region // ignore: cast_nullable_to_non_nullable
-              as InjuryRegion,
-      monthsSinceInjury: null == monthsSinceInjury
-          ? _value.monthsSinceInjury
-          : monthsSinceInjury // ignore: cast_nullable_to_non_nullable
-              as int,
-      fullyRecovered: null == fullyRecovered
-          ? _value.fullyRecovered
-          : fullyRecovered // ignore: cast_nullable_to_non_nullable
-              as bool,
-      inRehabilitation: null == inRehabilitation
-          ? _value.inRehabilitation
-          : inRehabilitation // ignore: cast_nullable_to_non_nullable
-              as bool,
-      aggravatingActivities: null == aggravatingActivities
-          ? _value.aggravatingActivities
-          : aggravatingActivities // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            injuryType: null == injuryType
+                ? _value.injuryType
+                : injuryType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            region: null == region
+                ? _value.region
+                : region // ignore: cast_nullable_to_non_nullable
+                      as InjuryRegion,
+            monthsSinceInjury: null == monthsSinceInjury
+                ? _value.monthsSinceInjury
+                : monthsSinceInjury // ignore: cast_nullable_to_non_nullable
+                      as int,
+            fullyRecovered: null == fullyRecovered
+                ? _value.fullyRecovered
+                : fullyRecovered // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            inRehabilitation: null == inRehabilitation
+                ? _value.inRehabilitation
+                : inRehabilitation // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            aggravatingActivities: null == aggravatingActivities
+                ? _value.aggravatingActivities
+                : aggravatingActivities // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -736,17 +780,19 @@ class _$InjuryDetailsCopyWithImpl<$Res, $Val extends InjuryDetails>
 abstract class _$$InjuryDetailsImplCopyWith<$Res>
     implements $InjuryDetailsCopyWith<$Res> {
   factory _$$InjuryDetailsImplCopyWith(
-          _$InjuryDetailsImpl value, $Res Function(_$InjuryDetailsImpl) then) =
-      __$$InjuryDetailsImplCopyWithImpl<$Res>;
+    _$InjuryDetailsImpl value,
+    $Res Function(_$InjuryDetailsImpl) then,
+  ) = __$$InjuryDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String injuryType,
-      InjuryRegion region,
-      int monthsSinceInjury,
-      bool fullyRecovered,
-      bool inRehabilitation,
-      List<String> aggravatingActivities});
+  $Res call({
+    String injuryType,
+    InjuryRegion region,
+    int monthsSinceInjury,
+    bool fullyRecovered,
+    bool inRehabilitation,
+    List<String> aggravatingActivities,
+  });
 }
 
 /// @nodoc
@@ -754,9 +800,12 @@ class __$$InjuryDetailsImplCopyWithImpl<$Res>
     extends _$InjuryDetailsCopyWithImpl<$Res, _$InjuryDetailsImpl>
     implements _$$InjuryDetailsImplCopyWith<$Res> {
   __$$InjuryDetailsImplCopyWithImpl(
-      _$InjuryDetailsImpl _value, $Res Function(_$InjuryDetailsImpl) _then)
-      : super(_value, _then);
+    _$InjuryDetailsImpl _value,
+    $Res Function(_$InjuryDetailsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of InjuryDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -767,46 +816,48 @@ class __$$InjuryDetailsImplCopyWithImpl<$Res>
     Object? inRehabilitation = null,
     Object? aggravatingActivities = null,
   }) {
-    return _then(_$InjuryDetailsImpl(
-      injuryType: null == injuryType
-          ? _value.injuryType
-          : injuryType // ignore: cast_nullable_to_non_nullable
-              as String,
-      region: null == region
-          ? _value.region
-          : region // ignore: cast_nullable_to_non_nullable
-              as InjuryRegion,
-      monthsSinceInjury: null == monthsSinceInjury
-          ? _value.monthsSinceInjury
-          : monthsSinceInjury // ignore: cast_nullable_to_non_nullable
-              as int,
-      fullyRecovered: null == fullyRecovered
-          ? _value.fullyRecovered
-          : fullyRecovered // ignore: cast_nullable_to_non_nullable
-              as bool,
-      inRehabilitation: null == inRehabilitation
-          ? _value.inRehabilitation
-          : inRehabilitation // ignore: cast_nullable_to_non_nullable
-              as bool,
-      aggravatingActivities: null == aggravatingActivities
-          ? _value._aggravatingActivities
-          : aggravatingActivities // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$InjuryDetailsImpl(
+        injuryType: null == injuryType
+            ? _value.injuryType
+            : injuryType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        region: null == region
+            ? _value.region
+            : region // ignore: cast_nullable_to_non_nullable
+                  as InjuryRegion,
+        monthsSinceInjury: null == monthsSinceInjury
+            ? _value.monthsSinceInjury
+            : monthsSinceInjury // ignore: cast_nullable_to_non_nullable
+                  as int,
+        fullyRecovered: null == fullyRecovered
+            ? _value.fullyRecovered
+            : fullyRecovered // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        inRehabilitation: null == inRehabilitation
+            ? _value.inRehabilitation
+            : inRehabilitation // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        aggravatingActivities: null == aggravatingActivities
+            ? _value._aggravatingActivities
+            : aggravatingActivities // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$InjuryDetailsImpl implements _InjuryDetails {
-  const _$InjuryDetailsImpl(
-      {required this.injuryType,
-      required this.region,
-      required this.monthsSinceInjury,
-      this.fullyRecovered = false,
-      this.inRehabilitation = false,
-      final List<String> aggravatingActivities = const []})
-      : _aggravatingActivities = aggravatingActivities;
+  const _$InjuryDetailsImpl({
+    required this.injuryType,
+    required this.region,
+    required this.monthsSinceInjury,
+    this.fullyRecovered = false,
+    this.inRehabilitation = false,
+    final List<String> aggravatingActivities = const [],
+  }) : _aggravatingActivities = aggravatingActivities;
 
   factory _$InjuryDetailsImpl.fromJson(Map<String, dynamic> json) =>
       _$$InjuryDetailsImplFromJson(json);
@@ -865,22 +916,27 @@ class _$InjuryDetailsImpl implements _InjuryDetails {
                 other.fullyRecovered == fullyRecovered) &&
             (identical(other.inRehabilitation, inRehabilitation) ||
                 other.inRehabilitation == inRehabilitation) &&
-            const DeepCollectionEquality()
-                .equals(other._aggravatingActivities, _aggravatingActivities));
+            const DeepCollectionEquality().equals(
+              other._aggravatingActivities,
+              _aggravatingActivities,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      injuryType,
-      region,
-      monthsSinceInjury,
-      fullyRecovered,
-      inRehabilitation,
-      const DeepCollectionEquality().hash(_aggravatingActivities));
+    runtimeType,
+    injuryType,
+    region,
+    monthsSinceInjury,
+    fullyRecovered,
+    inRehabilitation,
+    const DeepCollectionEquality().hash(_aggravatingActivities),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of InjuryDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InjuryDetailsImplCopyWith<_$InjuryDetailsImpl> get copyWith =>
@@ -888,50 +944,51 @@ class _$InjuryDetailsImpl implements _InjuryDetails {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InjuryDetailsImplToJson(
-      this,
-    );
+    return _$$InjuryDetailsImplToJson(this);
   }
 }
 
 abstract class _InjuryDetails implements InjuryDetails {
-  const factory _InjuryDetails(
-      {required final String injuryType,
-      required final InjuryRegion region,
-      required final int monthsSinceInjury,
-      final bool fullyRecovered,
-      final bool inRehabilitation,
-      final List<String> aggravatingActivities}) = _$InjuryDetailsImpl;
+  const factory _InjuryDetails({
+    required final String injuryType,
+    required final InjuryRegion region,
+    required final int monthsSinceInjury,
+    final bool fullyRecovered,
+    final bool inRehabilitation,
+    final List<String> aggravatingActivities,
+  }) = _$InjuryDetailsImpl;
 
   factory _InjuryDetails.fromJson(Map<String, dynamic> json) =
       _$InjuryDetailsImpl.fromJson;
 
-  @override
-
   /// Type of injury (e.g., "Lower back strain", "Shoulder impingement")
-  String get injuryType;
   @override
+  String get injuryType;
 
   /// Body region affected
-  InjuryRegion get region;
   @override
+  InjuryRegion get region;
 
   /// How long ago injury occurred (months)
-  int get monthsSinceInjury;
   @override
+  int get monthsSinceInjury;
 
   /// Whether fully recovered
-  bool get fullyRecovered;
   @override
+  bool get fullyRecovered;
 
   /// Whether currently in rehabilitation
-  bool get inRehabilitation;
   @override
+  bool get inRehabilitation;
 
   /// Activities that aggravate the injury
-  List<String> get aggravatingActivities;
   @override
-  @JsonKey(ignore: true)
+  List<String> get aggravatingActivities;
+
+  /// Create a copy of InjuryDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InjuryDetailsImplCopyWith<_$InjuryDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

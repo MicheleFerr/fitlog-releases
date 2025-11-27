@@ -14,7 +14,8 @@ _$StreakDataImpl _$$StreakDataImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['lastWorkoutDate'] as String),
       workedOutToday: json['workedOutToday'] as bool? ?? false,
-      milestonesAchieved: (json['milestonesAchieved'] as List<dynamic>?)
+      milestonesAchieved:
+          (json['milestonesAchieved'] as List<dynamic>?)
               ?.map((e) => (e as num).toInt())
               .toList() ??
           const [],

@@ -12,7 +12,8 @@ part of 'achievement.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Achievement _$AchievementFromJson(Map<String, dynamic> json) {
   return _Achievement.fromJson(json);
@@ -39,8 +40,12 @@ mixin _$Achievement {
   /// - VolumeLegend: {"totalVolume": 50000, "unit": "kg"}
   Map<String, dynamic> get evidence => throw _privateConstructorUsedError;
 
+  /// Serializes this Achievement to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Achievement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AchievementCopyWith<Achievement> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,15 +53,17 @@ mixin _$Achievement {
 /// @nodoc
 abstract class $AchievementCopyWith<$Res> {
   factory $AchievementCopyWith(
-          Achievement value, $Res Function(Achievement) then) =
-      _$AchievementCopyWithImpl<$Res, Achievement>;
+    Achievement value,
+    $Res Function(Achievement) then,
+  ) = _$AchievementCopyWithImpl<$Res, Achievement>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      BadgeType badgeType,
-      DateTime unlockedAt,
-      Map<String, dynamic> evidence});
+  $Res call({
+    String id,
+    String userId,
+    BadgeType badgeType,
+    DateTime unlockedAt,
+    Map<String, dynamic> evidence,
+  });
 }
 
 /// @nodoc
@@ -69,6 +76,8 @@ class _$AchievementCopyWithImpl<$Res, $Val extends Achievement>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Achievement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -78,28 +87,31 @@ class _$AchievementCopyWithImpl<$Res, $Val extends Achievement>
     Object? unlockedAt = null,
     Object? evidence = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      badgeType: null == badgeType
-          ? _value.badgeType
-          : badgeType // ignore: cast_nullable_to_non_nullable
-              as BadgeType,
-      unlockedAt: null == unlockedAt
-          ? _value.unlockedAt
-          : unlockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      evidence: null == evidence
-          ? _value.evidence
-          : evidence // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            badgeType: null == badgeType
+                ? _value.badgeType
+                : badgeType // ignore: cast_nullable_to_non_nullable
+                      as BadgeType,
+            unlockedAt: null == unlockedAt
+                ? _value.unlockedAt
+                : unlockedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            evidence: null == evidence
+                ? _value.evidence
+                : evidence // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -107,16 +119,18 @@ class _$AchievementCopyWithImpl<$Res, $Val extends Achievement>
 abstract class _$$AchievementImplCopyWith<$Res>
     implements $AchievementCopyWith<$Res> {
   factory _$$AchievementImplCopyWith(
-          _$AchievementImpl value, $Res Function(_$AchievementImpl) then) =
-      __$$AchievementImplCopyWithImpl<$Res>;
+    _$AchievementImpl value,
+    $Res Function(_$AchievementImpl) then,
+  ) = __$$AchievementImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      BadgeType badgeType,
-      DateTime unlockedAt,
-      Map<String, dynamic> evidence});
+  $Res call({
+    String id,
+    String userId,
+    BadgeType badgeType,
+    DateTime unlockedAt,
+    Map<String, dynamic> evidence,
+  });
 }
 
 /// @nodoc
@@ -124,9 +138,12 @@ class __$$AchievementImplCopyWithImpl<$Res>
     extends _$AchievementCopyWithImpl<$Res, _$AchievementImpl>
     implements _$$AchievementImplCopyWith<$Res> {
   __$$AchievementImplCopyWithImpl(
-      _$AchievementImpl _value, $Res Function(_$AchievementImpl) _then)
-      : super(_value, _then);
+    _$AchievementImpl _value,
+    $Res Function(_$AchievementImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of Achievement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -136,41 +153,43 @@ class __$$AchievementImplCopyWithImpl<$Res>
     Object? unlockedAt = null,
     Object? evidence = null,
   }) {
-    return _then(_$AchievementImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      badgeType: null == badgeType
-          ? _value.badgeType
-          : badgeType // ignore: cast_nullable_to_non_nullable
-              as BadgeType,
-      unlockedAt: null == unlockedAt
-          ? _value.unlockedAt
-          : unlockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      evidence: null == evidence
-          ? _value._evidence
-          : evidence // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-    ));
+    return _then(
+      _$AchievementImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        badgeType: null == badgeType
+            ? _value.badgeType
+            : badgeType // ignore: cast_nullable_to_non_nullable
+                  as BadgeType,
+        unlockedAt: null == unlockedAt
+            ? _value.unlockedAt
+            : unlockedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        evidence: null == evidence
+            ? _value._evidence
+            : evidence // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AchievementImpl implements _Achievement {
-  const _$AchievementImpl(
-      {required this.id,
-      required this.userId,
-      required this.badgeType,
-      required this.unlockedAt,
-      required final Map<String, dynamic> evidence})
-      : _evidence = evidence;
+  const _$AchievementImpl({
+    required this.id,
+    required this.userId,
+    required this.badgeType,
+    required this.unlockedAt,
+    required final Map<String, dynamic> evidence,
+  }) : _evidence = evidence;
 
   factory _$AchievementImpl.fromJson(Map<String, dynamic> json) =>
       _$$AchievementImplFromJson(json);
@@ -229,12 +248,20 @@ class _$AchievementImpl implements _Achievement {
             const DeepCollectionEquality().equals(other._evidence, _evidence));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, badgeType,
-      unlockedAt, const DeepCollectionEquality().hash(_evidence));
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    badgeType,
+    unlockedAt,
+    const DeepCollectionEquality().hash(_evidence),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Achievement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AchievementImplCopyWith<_$AchievementImpl> get copyWith =>
@@ -242,49 +269,50 @@ class _$AchievementImpl implements _Achievement {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AchievementImplToJson(
-      this,
-    );
+    return _$$AchievementImplToJson(this);
   }
 }
 
 abstract class _Achievement implements Achievement {
-  const factory _Achievement(
-      {required final String id,
-      required final String userId,
-      required final BadgeType badgeType,
-      required final DateTime unlockedAt,
-      required final Map<String, dynamic> evidence}) = _$AchievementImpl;
+  const factory _Achievement({
+    required final String id,
+    required final String userId,
+    required final BadgeType badgeType,
+    required final DateTime unlockedAt,
+    required final Map<String, dynamic> evidence,
+  }) = _$AchievementImpl;
 
   factory _Achievement.fromJson(Map<String, dynamic> json) =
       _$AchievementImpl.fromJson;
 
-  @override
-
   /// Unique achievement identifier
-  String get id;
   @override
+  String get id;
 
   /// User who unlocked this achievement
-  String get userId;
   @override
+  String get userId;
 
   /// Type of badge/achievement
-  BadgeType get badgeType;
   @override
+  BadgeType get badgeType;
 
   /// When the achievement was unlocked
-  DateTime get unlockedAt;
   @override
+  DateTime get unlockedAt;
 
   /// Evidence/context for the achievement
   /// Examples:
   /// - FirstPR: {"prType": "weight", "exercise": "Bench Press", "value": 100}
   /// - StreakMaster: {"streakDays": 14, "startDate": "2025-01-01"}
   /// - VolumeLegend: {"totalVolume": 50000, "unit": "kg"}
-  Map<String, dynamic> get evidence;
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic> get evidence;
+
+  /// Create a copy of Achievement
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AchievementImplCopyWith<_$AchievementImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

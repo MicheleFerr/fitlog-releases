@@ -12,7 +12,8 @@ part of 'template_import_provider.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$TemplateImportState {
@@ -30,7 +31,9 @@ mixin _$TemplateImportState {
   List<WorkoutTemplateImportData> get finalTemplates =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TemplateImportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TemplateImportStateCopyWith<TemplateImportState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -38,19 +41,21 @@ mixin _$TemplateImportState {
 /// @nodoc
 abstract class $TemplateImportStateCopyWith<$Res> {
   factory $TemplateImportStateCopyWith(
-          TemplateImportState value, $Res Function(TemplateImportState) then) =
-      _$TemplateImportStateCopyWithImpl<$Res, TemplateImportState>;
+    TemplateImportState value,
+    $Res Function(TemplateImportState) then,
+  ) = _$TemplateImportStateCopyWithImpl<$Res, TemplateImportState>;
   @useResult
-  $Res call(
-      {List<ImportParsingResult> parsingResults,
-      List<ExerciseDisambiguation> exerciseDisambiguations,
-      List<PercentageConversion> percentageConversions,
-      List<ImportWarning> warnings,
-      List<ImportError> errors,
-      double progress,
-      String? currentStep,
-      ImportPhase? currentPhase,
-      List<WorkoutTemplateImportData> finalTemplates});
+  $Res call({
+    List<ImportParsingResult> parsingResults,
+    List<ExerciseDisambiguation> exerciseDisambiguations,
+    List<PercentageConversion> percentageConversions,
+    List<ImportWarning> warnings,
+    List<ImportError> errors,
+    double progress,
+    String? currentStep,
+    ImportPhase? currentPhase,
+    List<WorkoutTemplateImportData> finalTemplates,
+  });
 }
 
 /// @nodoc
@@ -63,6 +68,8 @@ class _$TemplateImportStateCopyWithImpl<$Res, $Val extends TemplateImportState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TemplateImportState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -76,75 +83,83 @@ class _$TemplateImportStateCopyWithImpl<$Res, $Val extends TemplateImportState>
     Object? currentPhase = freezed,
     Object? finalTemplates = null,
   }) {
-    return _then(_value.copyWith(
-      parsingResults: null == parsingResults
-          ? _value.parsingResults
-          : parsingResults // ignore: cast_nullable_to_non_nullable
-              as List<ImportParsingResult>,
-      exerciseDisambiguations: null == exerciseDisambiguations
-          ? _value.exerciseDisambiguations
-          : exerciseDisambiguations // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseDisambiguation>,
-      percentageConversions: null == percentageConversions
-          ? _value.percentageConversions
-          : percentageConversions // ignore: cast_nullable_to_non_nullable
-              as List<PercentageConversion>,
-      warnings: null == warnings
-          ? _value.warnings
-          : warnings // ignore: cast_nullable_to_non_nullable
-              as List<ImportWarning>,
-      errors: null == errors
-          ? _value.errors
-          : errors // ignore: cast_nullable_to_non_nullable
-              as List<ImportError>,
-      progress: null == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentStep: freezed == currentStep
-          ? _value.currentStep
-          : currentStep // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentPhase: freezed == currentPhase
-          ? _value.currentPhase
-          : currentPhase // ignore: cast_nullable_to_non_nullable
-              as ImportPhase?,
-      finalTemplates: null == finalTemplates
-          ? _value.finalTemplates
-          : finalTemplates // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutTemplateImportData>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            parsingResults: null == parsingResults
+                ? _value.parsingResults
+                : parsingResults // ignore: cast_nullable_to_non_nullable
+                      as List<ImportParsingResult>,
+            exerciseDisambiguations: null == exerciseDisambiguations
+                ? _value.exerciseDisambiguations
+                : exerciseDisambiguations // ignore: cast_nullable_to_non_nullable
+                      as List<ExerciseDisambiguation>,
+            percentageConversions: null == percentageConversions
+                ? _value.percentageConversions
+                : percentageConversions // ignore: cast_nullable_to_non_nullable
+                      as List<PercentageConversion>,
+            warnings: null == warnings
+                ? _value.warnings
+                : warnings // ignore: cast_nullable_to_non_nullable
+                      as List<ImportWarning>,
+            errors: null == errors
+                ? _value.errors
+                : errors // ignore: cast_nullable_to_non_nullable
+                      as List<ImportError>,
+            progress: null == progress
+                ? _value.progress
+                : progress // ignore: cast_nullable_to_non_nullable
+                      as double,
+            currentStep: freezed == currentStep
+                ? _value.currentStep
+                : currentStep // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            currentPhase: freezed == currentPhase
+                ? _value.currentPhase
+                : currentPhase // ignore: cast_nullable_to_non_nullable
+                      as ImportPhase?,
+            finalTemplates: null == finalTemplates
+                ? _value.finalTemplates
+                : finalTemplates // ignore: cast_nullable_to_non_nullable
+                      as List<WorkoutTemplateImportData>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TemplateImportStateImplCopyWith<$Res>
     implements $TemplateImportStateCopyWith<$Res> {
-  factory _$$TemplateImportStateImplCopyWith(_$TemplateImportStateImpl value,
-          $Res Function(_$TemplateImportStateImpl) then) =
-      __$$TemplateImportStateImplCopyWithImpl<$Res>;
+  factory _$$TemplateImportStateImplCopyWith(
+    _$TemplateImportStateImpl value,
+    $Res Function(_$TemplateImportStateImpl) then,
+  ) = __$$TemplateImportStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<ImportParsingResult> parsingResults,
-      List<ExerciseDisambiguation> exerciseDisambiguations,
-      List<PercentageConversion> percentageConversions,
-      List<ImportWarning> warnings,
-      List<ImportError> errors,
-      double progress,
-      String? currentStep,
-      ImportPhase? currentPhase,
-      List<WorkoutTemplateImportData> finalTemplates});
+  $Res call({
+    List<ImportParsingResult> parsingResults,
+    List<ExerciseDisambiguation> exerciseDisambiguations,
+    List<PercentageConversion> percentageConversions,
+    List<ImportWarning> warnings,
+    List<ImportError> errors,
+    double progress,
+    String? currentStep,
+    ImportPhase? currentPhase,
+    List<WorkoutTemplateImportData> finalTemplates,
+  });
 }
 
 /// @nodoc
 class __$$TemplateImportStateImplCopyWithImpl<$Res>
     extends _$TemplateImportStateCopyWithImpl<$Res, _$TemplateImportStateImpl>
     implements _$$TemplateImportStateImplCopyWith<$Res> {
-  __$$TemplateImportStateImplCopyWithImpl(_$TemplateImportStateImpl _value,
-      $Res Function(_$TemplateImportStateImpl) _then)
-      : super(_value, _then);
+  __$$TemplateImportStateImplCopyWithImpl(
+    _$TemplateImportStateImpl _value,
+    $Res Function(_$TemplateImportStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of TemplateImportState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -158,66 +173,68 @@ class __$$TemplateImportStateImplCopyWithImpl<$Res>
     Object? currentPhase = freezed,
     Object? finalTemplates = null,
   }) {
-    return _then(_$TemplateImportStateImpl(
-      parsingResults: null == parsingResults
-          ? _value._parsingResults
-          : parsingResults // ignore: cast_nullable_to_non_nullable
-              as List<ImportParsingResult>,
-      exerciseDisambiguations: null == exerciseDisambiguations
-          ? _value._exerciseDisambiguations
-          : exerciseDisambiguations // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseDisambiguation>,
-      percentageConversions: null == percentageConversions
-          ? _value._percentageConversions
-          : percentageConversions // ignore: cast_nullable_to_non_nullable
-              as List<PercentageConversion>,
-      warnings: null == warnings
-          ? _value._warnings
-          : warnings // ignore: cast_nullable_to_non_nullable
-              as List<ImportWarning>,
-      errors: null == errors
-          ? _value._errors
-          : errors // ignore: cast_nullable_to_non_nullable
-              as List<ImportError>,
-      progress: null == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentStep: freezed == currentStep
-          ? _value.currentStep
-          : currentStep // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentPhase: freezed == currentPhase
-          ? _value.currentPhase
-          : currentPhase // ignore: cast_nullable_to_non_nullable
-              as ImportPhase?,
-      finalTemplates: null == finalTemplates
-          ? _value._finalTemplates
-          : finalTemplates // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutTemplateImportData>,
-    ));
+    return _then(
+      _$TemplateImportStateImpl(
+        parsingResults: null == parsingResults
+            ? _value._parsingResults
+            : parsingResults // ignore: cast_nullable_to_non_nullable
+                  as List<ImportParsingResult>,
+        exerciseDisambiguations: null == exerciseDisambiguations
+            ? _value._exerciseDisambiguations
+            : exerciseDisambiguations // ignore: cast_nullable_to_non_nullable
+                  as List<ExerciseDisambiguation>,
+        percentageConversions: null == percentageConversions
+            ? _value._percentageConversions
+            : percentageConversions // ignore: cast_nullable_to_non_nullable
+                  as List<PercentageConversion>,
+        warnings: null == warnings
+            ? _value._warnings
+            : warnings // ignore: cast_nullable_to_non_nullable
+                  as List<ImportWarning>,
+        errors: null == errors
+            ? _value._errors
+            : errors // ignore: cast_nullable_to_non_nullable
+                  as List<ImportError>,
+        progress: null == progress
+            ? _value.progress
+            : progress // ignore: cast_nullable_to_non_nullable
+                  as double,
+        currentStep: freezed == currentStep
+            ? _value.currentStep
+            : currentStep // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        currentPhase: freezed == currentPhase
+            ? _value.currentPhase
+            : currentPhase // ignore: cast_nullable_to_non_nullable
+                  as ImportPhase?,
+        finalTemplates: null == finalTemplates
+            ? _value._finalTemplates
+            : finalTemplates // ignore: cast_nullable_to_non_nullable
+                  as List<WorkoutTemplateImportData>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$TemplateImportStateImpl implements _TemplateImportState {
-  const _$TemplateImportStateImpl(
-      {final List<ImportParsingResult> parsingResults = const [],
-      final List<ExerciseDisambiguation> exerciseDisambiguations = const [],
-      final List<PercentageConversion> percentageConversions = const [],
-      final List<ImportWarning> warnings = const [],
-      final List<ImportError> errors = const [],
-      this.progress = 0.0,
-      this.currentStep,
-      this.currentPhase,
-      final List<WorkoutTemplateImportData> finalTemplates = const []})
-      : _parsingResults = parsingResults,
-        _exerciseDisambiguations = exerciseDisambiguations,
-        _percentageConversions = percentageConversions,
-        _warnings = warnings,
-        _errors = errors,
-        _finalTemplates = finalTemplates;
+  const _$TemplateImportStateImpl({
+    final List<ImportParsingResult> parsingResults = const [],
+    final List<ExerciseDisambiguation> exerciseDisambiguations = const [],
+    final List<PercentageConversion> percentageConversions = const [],
+    final List<ImportWarning> warnings = const [],
+    final List<ImportError> errors = const [],
+    this.progress = 0.0,
+    this.currentStep,
+    this.currentPhase,
+    final List<WorkoutTemplateImportData> finalTemplates = const [],
+  }) : _parsingResults = parsingResults,
+       _exerciseDisambiguations = exerciseDisambiguations,
+       _percentageConversions = percentageConversions,
+       _warnings = warnings,
+       _errors = errors,
+       _finalTemplates = finalTemplates;
 
   final List<ImportParsingResult> _parsingResults;
   @override
@@ -292,12 +309,18 @@ class _$TemplateImportStateImpl implements _TemplateImportState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TemplateImportStateImpl &&
-            const DeepCollectionEquality()
-                .equals(other._parsingResults, _parsingResults) &&
             const DeepCollectionEquality().equals(
-                other._exerciseDisambiguations, _exerciseDisambiguations) &&
-            const DeepCollectionEquality()
-                .equals(other._percentageConversions, _percentageConversions) &&
+              other._parsingResults,
+              _parsingResults,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._exerciseDisambiguations,
+              _exerciseDisambiguations,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._percentageConversions,
+              _percentageConversions,
+            ) &&
             const DeepCollectionEquality().equals(other._warnings, _warnings) &&
             const DeepCollectionEquality().equals(other._errors, _errors) &&
             (identical(other.progress, progress) ||
@@ -306,43 +329,50 @@ class _$TemplateImportStateImpl implements _TemplateImportState {
                 other.currentStep == currentStep) &&
             (identical(other.currentPhase, currentPhase) ||
                 other.currentPhase == currentPhase) &&
-            const DeepCollectionEquality()
-                .equals(other._finalTemplates, _finalTemplates));
+            const DeepCollectionEquality().equals(
+              other._finalTemplates,
+              _finalTemplates,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_parsingResults),
-      const DeepCollectionEquality().hash(_exerciseDisambiguations),
-      const DeepCollectionEquality().hash(_percentageConversions),
-      const DeepCollectionEquality().hash(_warnings),
-      const DeepCollectionEquality().hash(_errors),
-      progress,
-      currentStep,
-      currentPhase,
-      const DeepCollectionEquality().hash(_finalTemplates));
+    runtimeType,
+    const DeepCollectionEquality().hash(_parsingResults),
+    const DeepCollectionEquality().hash(_exerciseDisambiguations),
+    const DeepCollectionEquality().hash(_percentageConversions),
+    const DeepCollectionEquality().hash(_warnings),
+    const DeepCollectionEquality().hash(_errors),
+    progress,
+    currentStep,
+    currentPhase,
+    const DeepCollectionEquality().hash(_finalTemplates),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TemplateImportState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateImportStateImplCopyWith<_$TemplateImportStateImpl> get copyWith =>
       __$$TemplateImportStateImplCopyWithImpl<_$TemplateImportStateImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _TemplateImportState implements TemplateImportState {
-  const factory _TemplateImportState(
-          {final List<ImportParsingResult> parsingResults,
-          final List<ExerciseDisambiguation> exerciseDisambiguations,
-          final List<PercentageConversion> percentageConversions,
-          final List<ImportWarning> warnings,
-          final List<ImportError> errors,
-          final double progress,
-          final String? currentStep,
-          final ImportPhase? currentPhase,
-          final List<WorkoutTemplateImportData> finalTemplates}) =
-      _$TemplateImportStateImpl;
+  const factory _TemplateImportState({
+    final List<ImportParsingResult> parsingResults,
+    final List<ExerciseDisambiguation> exerciseDisambiguations,
+    final List<PercentageConversion> percentageConversions,
+    final List<ImportWarning> warnings,
+    final List<ImportError> errors,
+    final double progress,
+    final String? currentStep,
+    final ImportPhase? currentPhase,
+    final List<WorkoutTemplateImportData> finalTemplates,
+  }) = _$TemplateImportStateImpl;
 
   @override
   List<ImportParsingResult> get parsingResults;
@@ -362,8 +392,11 @@ abstract class _TemplateImportState implements TemplateImportState {
   ImportPhase? get currentPhase;
   @override
   List<WorkoutTemplateImportData> get finalTemplates;
+
+  /// Create a copy of TemplateImportState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TemplateImportStateImplCopyWith<_$TemplateImportStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

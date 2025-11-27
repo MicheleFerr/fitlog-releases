@@ -12,7 +12,8 @@ part of 'conversation_node.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ConversationNode _$ConversationNodeFromJson(Map<String, dynamic> json) {
   return _ConversationNode.fromJson(json);
@@ -38,8 +39,12 @@ mixin _$ConversationNode {
   /// Whether this node is the current active node
   bool get isCurrent => throw _privateConstructorUsedError;
 
+  /// Serializes this ConversationNode to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ConversationNodeCopyWith<ConversationNode> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,16 +52,18 @@ mixin _$ConversationNode {
 /// @nodoc
 abstract class $ConversationNodeCopyWith<$Res> {
   factory $ConversationNodeCopyWith(
-          ConversationNode value, $Res Function(ConversationNode) then) =
-      _$ConversationNodeCopyWithImpl<$Res, ConversationNode>;
+    ConversationNode value,
+    $Res Function(ConversationNode) then,
+  ) = _$ConversationNodeCopyWithImpl<$Res, ConversationNode>;
   @useResult
-  $Res call(
-      {String id,
-      String? parentId,
-      List<String> childrenIds,
-      AIMessage message,
-      DateTime timestamp,
-      bool isCurrent});
+  $Res call({
+    String id,
+    String? parentId,
+    List<String> childrenIds,
+    AIMessage message,
+    DateTime timestamp,
+    bool isCurrent,
+  });
 
   $AIMessageCopyWith<$Res> get message;
 }
@@ -71,6 +78,8 @@ class _$ConversationNodeCopyWithImpl<$Res, $Val extends ConversationNode>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,34 +90,39 @@ class _$ConversationNodeCopyWithImpl<$Res, $Val extends ConversationNode>
     Object? timestamp = null,
     Object? isCurrent = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      parentId: freezed == parentId
-          ? _value.parentId
-          : parentId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      childrenIds: null == childrenIds
-          ? _value.childrenIds
-          : childrenIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as AIMessage,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isCurrent: null == isCurrent
-          ? _value.isCurrent
-          : isCurrent // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            parentId: freezed == parentId
+                ? _value.parentId
+                : parentId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            childrenIds: null == childrenIds
+                ? _value.childrenIds
+                : childrenIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as AIMessage,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            isCurrent: null == isCurrent
+                ? _value.isCurrent
+                : isCurrent // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AIMessageCopyWith<$Res> get message {
@@ -121,18 +135,20 @@ class _$ConversationNodeCopyWithImpl<$Res, $Val extends ConversationNode>
 /// @nodoc
 abstract class _$$ConversationNodeImplCopyWith<$Res>
     implements $ConversationNodeCopyWith<$Res> {
-  factory _$$ConversationNodeImplCopyWith(_$ConversationNodeImpl value,
-          $Res Function(_$ConversationNodeImpl) then) =
-      __$$ConversationNodeImplCopyWithImpl<$Res>;
+  factory _$$ConversationNodeImplCopyWith(
+    _$ConversationNodeImpl value,
+    $Res Function(_$ConversationNodeImpl) then,
+  ) = __$$ConversationNodeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String? parentId,
-      List<String> childrenIds,
-      AIMessage message,
-      DateTime timestamp,
-      bool isCurrent});
+  $Res call({
+    String id,
+    String? parentId,
+    List<String> childrenIds,
+    AIMessage message,
+    DateTime timestamp,
+    bool isCurrent,
+  });
 
   @override
   $AIMessageCopyWith<$Res> get message;
@@ -142,10 +158,13 @@ abstract class _$$ConversationNodeImplCopyWith<$Res>
 class __$$ConversationNodeImplCopyWithImpl<$Res>
     extends _$ConversationNodeCopyWithImpl<$Res, _$ConversationNodeImpl>
     implements _$$ConversationNodeImplCopyWith<$Res> {
-  __$$ConversationNodeImplCopyWithImpl(_$ConversationNodeImpl _value,
-      $Res Function(_$ConversationNodeImpl) _then)
-      : super(_value, _then);
+  __$$ConversationNodeImplCopyWithImpl(
+    _$ConversationNodeImpl _value,
+    $Res Function(_$ConversationNodeImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,47 +175,49 @@ class __$$ConversationNodeImplCopyWithImpl<$Res>
     Object? timestamp = null,
     Object? isCurrent = null,
   }) {
-    return _then(_$ConversationNodeImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      parentId: freezed == parentId
-          ? _value.parentId
-          : parentId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      childrenIds: null == childrenIds
-          ? _value._childrenIds
-          : childrenIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as AIMessage,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isCurrent: null == isCurrent
-          ? _value.isCurrent
-          : isCurrent // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$ConversationNodeImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        parentId: freezed == parentId
+            ? _value.parentId
+            : parentId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        childrenIds: null == childrenIds
+            ? _value._childrenIds
+            : childrenIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as AIMessage,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        isCurrent: null == isCurrent
+            ? _value.isCurrent
+            : isCurrent // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ConversationNodeImpl extends _ConversationNode {
-  const _$ConversationNodeImpl(
-      {required this.id,
-      this.parentId,
-      final List<String> childrenIds = const [],
-      required this.message,
-      required this.timestamp,
-      this.isCurrent = false})
-      : _childrenIds = childrenIds,
-        super._();
+  const _$ConversationNodeImpl({
+    required this.id,
+    this.parentId,
+    final List<String> childrenIds = const [],
+    required this.message,
+    required this.timestamp,
+    this.isCurrent = false,
+  }) : _childrenIds = childrenIds,
+       super._();
 
   factory _$ConversationNodeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConversationNodeImplFromJson(json);
@@ -247,8 +268,10 @@ class _$ConversationNodeImpl extends _ConversationNode {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.parentId, parentId) ||
                 other.parentId == parentId) &&
-            const DeepCollectionEquality()
-                .equals(other._childrenIds, _childrenIds) &&
+            const DeepCollectionEquality().equals(
+              other._childrenIds,
+              _childrenIds,
+            ) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp) &&
@@ -256,71 +279,77 @@ class _$ConversationNodeImpl extends _ConversationNode {
                 other.isCurrent == isCurrent));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      parentId,
-      const DeepCollectionEquality().hash(_childrenIds),
-      message,
-      timestamp,
-      isCurrent);
+    runtimeType,
+    id,
+    parentId,
+    const DeepCollectionEquality().hash(_childrenIds),
+    message,
+    timestamp,
+    isCurrent,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ConversationNodeImplCopyWith<_$ConversationNodeImpl> get copyWith =>
       __$$ConversationNodeImplCopyWithImpl<_$ConversationNodeImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConversationNodeImplToJson(
-      this,
-    );
+    return _$$ConversationNodeImplToJson(this);
   }
 }
 
 abstract class _ConversationNode extends ConversationNode {
-  const factory _ConversationNode(
-      {required final String id,
-      final String? parentId,
-      final List<String> childrenIds,
-      required final AIMessage message,
-      required final DateTime timestamp,
-      final bool isCurrent}) = _$ConversationNodeImpl;
+  const factory _ConversationNode({
+    required final String id,
+    final String? parentId,
+    final List<String> childrenIds,
+    required final AIMessage message,
+    required final DateTime timestamp,
+    final bool isCurrent,
+  }) = _$ConversationNodeImpl;
   const _ConversationNode._() : super._();
 
   factory _ConversationNode.fromJson(Map<String, dynamic> json) =
       _$ConversationNodeImpl.fromJson;
 
-  @override
-
   /// Unique node ID (UUID)
-  String get id;
   @override
+  String get id;
 
   /// Parent node ID (null for root)
-  String? get parentId;
   @override
+  String? get parentId;
 
   /// Child node IDs (branches)
-  List<String> get childrenIds;
   @override
+  List<String> get childrenIds;
 
   /// Message at this node
-  AIMessage get message;
   @override
+  AIMessage get message;
 
   /// Node creation timestamp
-  DateTime get timestamp;
   @override
+  DateTime get timestamp;
 
   /// Whether this node is the current active node
-  bool get isCurrent;
   @override
-  @JsonKey(ignore: true)
+  bool get isCurrent;
+
+  /// Create a copy of ConversationNode
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ConversationNodeImplCopyWith<_$ConversationNodeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'ai_message.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AIMessage _$AIMessageFromJson(Map<String, dynamic> json) {
   return _AIMessage.fromJson(json);
@@ -33,8 +34,12 @@ mixin _$AIMessage {
       throw _privateConstructorUsedError; // Branching depth (0 = root, max 3)
   String? get parentIntent => throw _privateConstructorUsedError;
 
+  /// Serializes this AIMessage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AIMessage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AIMessageCopyWith<AIMessage> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,16 +49,17 @@ abstract class $AIMessageCopyWith<$Res> {
   factory $AIMessageCopyWith(AIMessage value, $Res Function(AIMessage) then) =
       _$AIMessageCopyWithImpl<$Res, AIMessage>;
   @useResult
-  $Res call(
-      {String id,
-      String content,
-      MessageRole role,
-      DateTime timestamp,
-      bool isStreaming,
-      Map<String, dynamic>? metadata,
-      List<FollowUpChip> followUpChips,
-      int conversationDepth,
-      String? parentIntent});
+  $Res call({
+    String id,
+    String content,
+    MessageRole role,
+    DateTime timestamp,
+    bool isStreaming,
+    Map<String, dynamic>? metadata,
+    List<FollowUpChip> followUpChips,
+    int conversationDepth,
+    String? parentIntent,
+  });
 }
 
 /// @nodoc
@@ -66,6 +72,8 @@ class _$AIMessageCopyWithImpl<$Res, $Val extends AIMessage>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AIMessage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -79,44 +87,47 @@ class _$AIMessageCopyWithImpl<$Res, $Val extends AIMessage>
     Object? conversationDepth = null,
     Object? parentIntent = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      content: null == content
-          ? _value.content
-          : content // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as MessageRole,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isStreaming: null == isStreaming
-          ? _value.isStreaming
-          : isStreaming // ignore: cast_nullable_to_non_nullable
-              as bool,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      followUpChips: null == followUpChips
-          ? _value.followUpChips
-          : followUpChips // ignore: cast_nullable_to_non_nullable
-              as List<FollowUpChip>,
-      conversationDepth: null == conversationDepth
-          ? _value.conversationDepth
-          : conversationDepth // ignore: cast_nullable_to_non_nullable
-              as int,
-      parentIntent: freezed == parentIntent
-          ? _value.parentIntent
-          : parentIntent // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            content: null == content
+                ? _value.content
+                : content // ignore: cast_nullable_to_non_nullable
+                      as String,
+            role: null == role
+                ? _value.role
+                : role // ignore: cast_nullable_to_non_nullable
+                      as MessageRole,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            isStreaming: null == isStreaming
+                ? _value.isStreaming
+                : isStreaming // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            metadata: freezed == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            followUpChips: null == followUpChips
+                ? _value.followUpChips
+                : followUpChips // ignore: cast_nullable_to_non_nullable
+                      as List<FollowUpChip>,
+            conversationDepth: null == conversationDepth
+                ? _value.conversationDepth
+                : conversationDepth // ignore: cast_nullable_to_non_nullable
+                      as int,
+            parentIntent: freezed == parentIntent
+                ? _value.parentIntent
+                : parentIntent // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -124,20 +135,22 @@ class _$AIMessageCopyWithImpl<$Res, $Val extends AIMessage>
 abstract class _$$AIMessageImplCopyWith<$Res>
     implements $AIMessageCopyWith<$Res> {
   factory _$$AIMessageImplCopyWith(
-          _$AIMessageImpl value, $Res Function(_$AIMessageImpl) then) =
-      __$$AIMessageImplCopyWithImpl<$Res>;
+    _$AIMessageImpl value,
+    $Res Function(_$AIMessageImpl) then,
+  ) = __$$AIMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String content,
-      MessageRole role,
-      DateTime timestamp,
-      bool isStreaming,
-      Map<String, dynamic>? metadata,
-      List<FollowUpChip> followUpChips,
-      int conversationDepth,
-      String? parentIntent});
+  $Res call({
+    String id,
+    String content,
+    MessageRole role,
+    DateTime timestamp,
+    bool isStreaming,
+    Map<String, dynamic>? metadata,
+    List<FollowUpChip> followUpChips,
+    int conversationDepth,
+    String? parentIntent,
+  });
 }
 
 /// @nodoc
@@ -145,9 +158,12 @@ class __$$AIMessageImplCopyWithImpl<$Res>
     extends _$AIMessageCopyWithImpl<$Res, _$AIMessageImpl>
     implements _$$AIMessageImplCopyWith<$Res> {
   __$$AIMessageImplCopyWithImpl(
-      _$AIMessageImpl _value, $Res Function(_$AIMessageImpl) _then)
-      : super(_value, _then);
+    _$AIMessageImpl _value,
+    $Res Function(_$AIMessageImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AIMessage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,62 +177,64 @@ class __$$AIMessageImplCopyWithImpl<$Res>
     Object? conversationDepth = null,
     Object? parentIntent = freezed,
   }) {
-    return _then(_$AIMessageImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      content: null == content
-          ? _value.content
-          : content // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as MessageRole,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isStreaming: null == isStreaming
-          ? _value.isStreaming
-          : isStreaming // ignore: cast_nullable_to_non_nullable
-              as bool,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      followUpChips: null == followUpChips
-          ? _value._followUpChips
-          : followUpChips // ignore: cast_nullable_to_non_nullable
-              as List<FollowUpChip>,
-      conversationDepth: null == conversationDepth
-          ? _value.conversationDepth
-          : conversationDepth // ignore: cast_nullable_to_non_nullable
-              as int,
-      parentIntent: freezed == parentIntent
-          ? _value.parentIntent
-          : parentIntent // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$AIMessageImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        content: null == content
+            ? _value.content
+            : content // ignore: cast_nullable_to_non_nullable
+                  as String,
+        role: null == role
+            ? _value.role
+            : role // ignore: cast_nullable_to_non_nullable
+                  as MessageRole,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        isStreaming: null == isStreaming
+            ? _value.isStreaming
+            : isStreaming // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        metadata: freezed == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        followUpChips: null == followUpChips
+            ? _value._followUpChips
+            : followUpChips // ignore: cast_nullable_to_non_nullable
+                  as List<FollowUpChip>,
+        conversationDepth: null == conversationDepth
+            ? _value.conversationDepth
+            : conversationDepth // ignore: cast_nullable_to_non_nullable
+                  as int,
+        parentIntent: freezed == parentIntent
+            ? _value.parentIntent
+            : parentIntent // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AIMessageImpl implements _AIMessage {
-  const _$AIMessageImpl(
-      {required this.id,
-      required this.content,
-      required this.role,
-      required this.timestamp,
-      this.isStreaming = false,
-      final Map<String, dynamic>? metadata,
-      final List<FollowUpChip> followUpChips = const [],
-      this.conversationDepth = 0,
-      this.parentIntent})
-      : _metadata = metadata,
-        _followUpChips = followUpChips;
+  const _$AIMessageImpl({
+    required this.id,
+    required this.content,
+    required this.role,
+    required this.timestamp,
+    this.isStreaming = false,
+    final Map<String, dynamic>? metadata,
+    final List<FollowUpChip> followUpChips = const [],
+    this.conversationDepth = 0,
+    this.parentIntent,
+  }) : _metadata = metadata,
+       _followUpChips = followUpChips;
 
   factory _$AIMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$AIMessageImplFromJson(json);
@@ -242,9 +260,9 @@ class _$AIMessageImpl implements _AIMessage {
     return EqualUnmodifiableMapView(value);
   }
 
-// Branching conversation support
+  // Branching conversation support
   final List<FollowUpChip> _followUpChips;
-// Branching conversation support
+  // Branching conversation support
   @override
   @JsonKey()
   List<FollowUpChip> get followUpChips {
@@ -253,11 +271,11 @@ class _$AIMessageImpl implements _AIMessage {
     return EqualUnmodifiableListView(_followUpChips);
   }
 
-// Suggested follow-up questions
+  // Suggested follow-up questions
   @override
   @JsonKey()
   final int conversationDepth;
-// Branching depth (0 = root, max 3)
+  // Branching depth (0 = root, max 3)
   @override
   final String? parentIntent;
 
@@ -279,29 +297,34 @@ class _$AIMessageImpl implements _AIMessage {
             (identical(other.isStreaming, isStreaming) ||
                 other.isStreaming == isStreaming) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata) &&
-            const DeepCollectionEquality()
-                .equals(other._followUpChips, _followUpChips) &&
+            const DeepCollectionEquality().equals(
+              other._followUpChips,
+              _followUpChips,
+            ) &&
             (identical(other.conversationDepth, conversationDepth) ||
                 other.conversationDepth == conversationDepth) &&
             (identical(other.parentIntent, parentIntent) ||
                 other.parentIntent == parentIntent));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      content,
-      role,
-      timestamp,
-      isStreaming,
-      const DeepCollectionEquality().hash(_metadata),
-      const DeepCollectionEquality().hash(_followUpChips),
-      conversationDepth,
-      parentIntent);
+    runtimeType,
+    id,
+    content,
+    role,
+    timestamp,
+    isStreaming,
+    const DeepCollectionEquality().hash(_metadata),
+    const DeepCollectionEquality().hash(_followUpChips),
+    conversationDepth,
+    parentIntent,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AIMessage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AIMessageImplCopyWith<_$AIMessageImpl> get copyWith =>
@@ -309,23 +332,22 @@ class _$AIMessageImpl implements _AIMessage {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AIMessageImplToJson(
-      this,
-    );
+    return _$$AIMessageImplToJson(this);
   }
 }
 
 abstract class _AIMessage implements AIMessage {
-  const factory _AIMessage(
-      {required final String id,
-      required final String content,
-      required final MessageRole role,
-      required final DateTime timestamp,
-      final bool isStreaming,
-      final Map<String, dynamic>? metadata,
-      final List<FollowUpChip> followUpChips,
-      final int conversationDepth,
-      final String? parentIntent}) = _$AIMessageImpl;
+  const factory _AIMessage({
+    required final String id,
+    required final String content,
+    required final MessageRole role,
+    required final DateTime timestamp,
+    final bool isStreaming,
+    final Map<String, dynamic>? metadata,
+    final List<FollowUpChip> followUpChips,
+    final int conversationDepth,
+    final String? parentIntent,
+  }) = _$AIMessageImpl;
 
   factory _AIMessage.fromJson(Map<String, dynamic> json) =
       _$AIMessageImpl.fromJson;
@@ -341,15 +363,18 @@ abstract class _AIMessage implements AIMessage {
   @override
   bool get isStreaming;
   @override
-  Map<String, dynamic>? get metadata;
-  @override // Branching conversation support
-  List<FollowUpChip> get followUpChips;
-  @override // Suggested follow-up questions
-  int get conversationDepth;
-  @override // Branching depth (0 = root, max 3)
-  String? get parentIntent;
+  Map<String, dynamic>? get metadata; // Branching conversation support
   @override
-  @JsonKey(ignore: true)
+  List<FollowUpChip> get followUpChips; // Suggested follow-up questions
+  @override
+  int get conversationDepth; // Branching depth (0 = root, max 3)
+  @override
+  String? get parentIntent;
+
+  /// Create a copy of AIMessage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AIMessageImplCopyWith<_$AIMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -368,8 +393,12 @@ mixin _$FollowUpChip {
       throw _privateConstructorUsedError; // Optional emoji prefix
   Map<String, dynamic>? get context => throw _privateConstructorUsedError;
 
+  /// Serializes this FollowUpChip to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FollowUpChip
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FollowUpChipCopyWith<FollowUpChip> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -377,14 +406,16 @@ mixin _$FollowUpChip {
 /// @nodoc
 abstract class $FollowUpChipCopyWith<$Res> {
   factory $FollowUpChipCopyWith(
-          FollowUpChip value, $Res Function(FollowUpChip) then) =
-      _$FollowUpChipCopyWithImpl<$Res, FollowUpChip>;
+    FollowUpChip value,
+    $Res Function(FollowUpChip) then,
+  ) = _$FollowUpChipCopyWithImpl<$Res, FollowUpChip>;
   @useResult
-  $Res call(
-      {String label,
-      String intent,
-      String? emoji,
-      Map<String, dynamic>? context});
+  $Res call({
+    String label,
+    String intent,
+    String? emoji,
+    Map<String, dynamic>? context,
+  });
 }
 
 /// @nodoc
@@ -397,6 +428,8 @@ class _$FollowUpChipCopyWithImpl<$Res, $Val extends FollowUpChip>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FollowUpChip
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -405,24 +438,27 @@ class _$FollowUpChipCopyWithImpl<$Res, $Val extends FollowUpChip>
     Object? emoji = freezed,
     Object? context = freezed,
   }) {
-    return _then(_value.copyWith(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      intent: null == intent
-          ? _value.intent
-          : intent // ignore: cast_nullable_to_non_nullable
-              as String,
-      emoji: freezed == emoji
-          ? _value.emoji
-          : emoji // ignore: cast_nullable_to_non_nullable
-              as String?,
-      context: freezed == context
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            label: null == label
+                ? _value.label
+                : label // ignore: cast_nullable_to_non_nullable
+                      as String,
+            intent: null == intent
+                ? _value.intent
+                : intent // ignore: cast_nullable_to_non_nullable
+                      as String,
+            emoji: freezed == emoji
+                ? _value.emoji
+                : emoji // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            context: freezed == context
+                ? _value.context
+                : context // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -430,15 +466,17 @@ class _$FollowUpChipCopyWithImpl<$Res, $Val extends FollowUpChip>
 abstract class _$$FollowUpChipImplCopyWith<$Res>
     implements $FollowUpChipCopyWith<$Res> {
   factory _$$FollowUpChipImplCopyWith(
-          _$FollowUpChipImpl value, $Res Function(_$FollowUpChipImpl) then) =
-      __$$FollowUpChipImplCopyWithImpl<$Res>;
+    _$FollowUpChipImpl value,
+    $Res Function(_$FollowUpChipImpl) then,
+  ) = __$$FollowUpChipImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String label,
-      String intent,
-      String? emoji,
-      Map<String, dynamic>? context});
+  $Res call({
+    String label,
+    String intent,
+    String? emoji,
+    Map<String, dynamic>? context,
+  });
 }
 
 /// @nodoc
@@ -446,9 +484,12 @@ class __$$FollowUpChipImplCopyWithImpl<$Res>
     extends _$FollowUpChipCopyWithImpl<$Res, _$FollowUpChipImpl>
     implements _$$FollowUpChipImplCopyWith<$Res> {
   __$$FollowUpChipImplCopyWithImpl(
-      _$FollowUpChipImpl _value, $Res Function(_$FollowUpChipImpl) _then)
-      : super(_value, _then);
+    _$FollowUpChipImpl _value,
+    $Res Function(_$FollowUpChipImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FollowUpChip
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -457,51 +498,53 @@ class __$$FollowUpChipImplCopyWithImpl<$Res>
     Object? emoji = freezed,
     Object? context = freezed,
   }) {
-    return _then(_$FollowUpChipImpl(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      intent: null == intent
-          ? _value.intent
-          : intent // ignore: cast_nullable_to_non_nullable
-              as String,
-      emoji: freezed == emoji
-          ? _value.emoji
-          : emoji // ignore: cast_nullable_to_non_nullable
-              as String?,
-      context: freezed == context
-          ? _value._context
-          : context // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ));
+    return _then(
+      _$FollowUpChipImpl(
+        label: null == label
+            ? _value.label
+            : label // ignore: cast_nullable_to_non_nullable
+                  as String,
+        intent: null == intent
+            ? _value.intent
+            : intent // ignore: cast_nullable_to_non_nullable
+                  as String,
+        emoji: freezed == emoji
+            ? _value.emoji
+            : emoji // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        context: freezed == context
+            ? _value._context
+            : context // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FollowUpChipImpl implements _FollowUpChip {
-  const _$FollowUpChipImpl(
-      {required this.label,
-      required this.intent,
-      this.emoji,
-      final Map<String, dynamic>? context})
-      : _context = context;
+  const _$FollowUpChipImpl({
+    required this.label,
+    required this.intent,
+    this.emoji,
+    final Map<String, dynamic>? context,
+  }) : _context = context;
 
   factory _$FollowUpChipImpl.fromJson(Map<String, dynamic> json) =>
       _$$FollowUpChipImplFromJson(json);
 
   @override
   final String label;
-// Display text (e.g., "📊 Dettagli numeri")
+  // Display text (e.g., "📊 Dettagli numeri")
   @override
   final String intent;
-// Sub-intent (e.g., "progression.details")
+  // Sub-intent (e.g., "progression.details")
   @override
   final String? emoji;
-// Optional emoji prefix
+  // Optional emoji prefix
   final Map<String, dynamic>? _context;
-// Optional emoji prefix
+  // Optional emoji prefix
   @override
   Map<String, dynamic>? get context {
     final value = _context;
@@ -527,12 +570,19 @@ class _$FollowUpChipImpl implements _FollowUpChip {
             const DeepCollectionEquality().equals(other._context, _context));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, label, intent, emoji,
-      const DeepCollectionEquality().hash(_context));
+  int get hashCode => Object.hash(
+    runtimeType,
+    label,
+    intent,
+    emoji,
+    const DeepCollectionEquality().hash(_context),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FollowUpChip
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FollowUpChipImplCopyWith<_$FollowUpChipImpl> get copyWith =>
@@ -540,32 +590,34 @@ class _$FollowUpChipImpl implements _FollowUpChip {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FollowUpChipImplToJson(
-      this,
-    );
+    return _$$FollowUpChipImplToJson(this);
   }
 }
 
 abstract class _FollowUpChip implements FollowUpChip {
-  const factory _FollowUpChip(
-      {required final String label,
-      required final String intent,
-      final String? emoji,
-      final Map<String, dynamic>? context}) = _$FollowUpChipImpl;
+  const factory _FollowUpChip({
+    required final String label,
+    required final String intent,
+    final String? emoji,
+    final Map<String, dynamic>? context,
+  }) = _$FollowUpChipImpl;
 
   factory _FollowUpChip.fromJson(Map<String, dynamic> json) =
       _$FollowUpChipImpl.fromJson;
 
   @override
-  String get label;
-  @override // Display text (e.g., "📊 Dettagli numeri")
-  String get intent;
-  @override // Sub-intent (e.g., "progression.details")
-  String? get emoji;
-  @override // Optional emoji prefix
-  Map<String, dynamic>? get context;
+  String get label; // Display text (e.g., "📊 Dettagli numeri")
   @override
-  @JsonKey(ignore: true)
+  String get intent; // Sub-intent (e.g., "progression.details")
+  @override
+  String? get emoji; // Optional emoji prefix
+  @override
+  Map<String, dynamic>? get context;
+
+  /// Create a copy of FollowUpChip
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FollowUpChipImplCopyWith<_$FollowUpChipImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

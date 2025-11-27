@@ -413,7 +413,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   children: [
                     Text(
                       _getRpeEmoji(rpe),
-                      style: const TextStyle(fontSize: 22),
+                      style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -519,11 +519,10 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SemanticIcon(
-  icon: AppIcons.swipe,
-  semanticLabel: 'Swipe',
-  size: AppIconSize.tiny,
-  color: colorScheme.primary.withValues(alpha: 0.7,
-),
+                icon: AppIcons.swipe,
+                semanticLabel: 'Swipe',
+                size: AppIconSize.tiny,
+                color: colorScheme.primary.withValues(alpha: 0.7),
               ),
               const SizedBox(width: 4),
               Text(
@@ -748,7 +747,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(6),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: colorScheme.primary.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
@@ -832,7 +831,7 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                   ),
                   child: Text(
                     _originallyCompleted ? l10n.cancel : l10n.skipRpe,
-                    style: TextStyle(
+                    style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -921,14 +920,13 @@ class _RpeSelectorBottomSheetState extends ConsumerState<RpeSelectorBottomSheet>
                           const SizedBox(width: 8),
                         ],
                         Text(
-                          widget.isPartOfSuperset 
-                              ? (_allExercisesCompleted() 
-                                  ? l10n.completeSet 
+                          widget.isPartOfSuperset
+                              ? (_allExercisesCompleted()
+                                  ? l10n.completeSet
                                   : '${l10n.save} (${_supersetCompleteData.length}/${widget.supersetExercises?.length ?? 0})')
                               : l10n.confirmSet,
-                          style: const TextStyle(
+                          style: theme.textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            fontSize: 15,
                           ),
                         ),
                       ],

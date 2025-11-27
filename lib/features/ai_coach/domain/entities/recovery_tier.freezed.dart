@@ -12,7 +12,8 @@ part of 'recovery_tier.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 RecoveryTierConfig _$RecoveryTierConfigFromJson(Map<String, dynamic> json) {
   return _RecoveryTierConfig.fromJson(json);
@@ -39,8 +40,12 @@ mixin _$RecoveryTierConfig {
   /// - Advanced: 42 days
   int get minDays => throw _privateConstructorUsedError;
 
+  /// Serializes this RecoveryTierConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RecoveryTierConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RecoveryTierConfigCopyWith<RecoveryTierConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,8 +53,9 @@ mixin _$RecoveryTierConfig {
 /// @nodoc
 abstract class $RecoveryTierConfigCopyWith<$Res> {
   factory $RecoveryTierConfigCopyWith(
-          RecoveryTierConfig value, $Res Function(RecoveryTierConfig) then) =
-      _$RecoveryTierConfigCopyWithImpl<$Res, RecoveryTierConfig>;
+    RecoveryTierConfig value,
+    $Res Function(RecoveryTierConfig) then,
+  ) = _$RecoveryTierConfigCopyWithImpl<$Res, RecoveryTierConfig>;
   @useResult
   $Res call({RecoveryTier tier, int minWorkouts, int minDays});
 }
@@ -64,6 +70,8 @@ class _$RecoveryTierConfigCopyWithImpl<$Res, $Val extends RecoveryTierConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RecoveryTierConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -71,29 +79,33 @@ class _$RecoveryTierConfigCopyWithImpl<$Res, $Val extends RecoveryTierConfig>
     Object? minWorkouts = null,
     Object? minDays = null,
   }) {
-    return _then(_value.copyWith(
-      tier: null == tier
-          ? _value.tier
-          : tier // ignore: cast_nullable_to_non_nullable
-              as RecoveryTier,
-      minWorkouts: null == minWorkouts
-          ? _value.minWorkouts
-          : minWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      minDays: null == minDays
-          ? _value.minDays
-          : minDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            tier: null == tier
+                ? _value.tier
+                : tier // ignore: cast_nullable_to_non_nullable
+                      as RecoveryTier,
+            minWorkouts: null == minWorkouts
+                ? _value.minWorkouts
+                : minWorkouts // ignore: cast_nullable_to_non_nullable
+                      as int,
+            minDays: null == minDays
+                ? _value.minDays
+                : minDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$RecoveryTierConfigImplCopyWith<$Res>
     implements $RecoveryTierConfigCopyWith<$Res> {
-  factory _$$RecoveryTierConfigImplCopyWith(_$RecoveryTierConfigImpl value,
-          $Res Function(_$RecoveryTierConfigImpl) then) =
-      __$$RecoveryTierConfigImplCopyWithImpl<$Res>;
+  factory _$$RecoveryTierConfigImplCopyWith(
+    _$RecoveryTierConfigImpl value,
+    $Res Function(_$RecoveryTierConfigImpl) then,
+  ) = __$$RecoveryTierConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({RecoveryTier tier, int minWorkouts, int minDays});
@@ -103,10 +115,13 @@ abstract class _$$RecoveryTierConfigImplCopyWith<$Res>
 class __$$RecoveryTierConfigImplCopyWithImpl<$Res>
     extends _$RecoveryTierConfigCopyWithImpl<$Res, _$RecoveryTierConfigImpl>
     implements _$$RecoveryTierConfigImplCopyWith<$Res> {
-  __$$RecoveryTierConfigImplCopyWithImpl(_$RecoveryTierConfigImpl _value,
-      $Res Function(_$RecoveryTierConfigImpl) _then)
-      : super(_value, _then);
+  __$$RecoveryTierConfigImplCopyWithImpl(
+    _$RecoveryTierConfigImpl _value,
+    $Res Function(_$RecoveryTierConfigImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of RecoveryTierConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -114,28 +129,33 @@ class __$$RecoveryTierConfigImplCopyWithImpl<$Res>
     Object? minWorkouts = null,
     Object? minDays = null,
   }) {
-    return _then(_$RecoveryTierConfigImpl(
-      tier: null == tier
-          ? _value.tier
-          : tier // ignore: cast_nullable_to_non_nullable
-              as RecoveryTier,
-      minWorkouts: null == minWorkouts
-          ? _value.minWorkouts
-          : minWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      minDays: null == minDays
-          ? _value.minDays
-          : minDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$RecoveryTierConfigImpl(
+        tier: null == tier
+            ? _value.tier
+            : tier // ignore: cast_nullable_to_non_nullable
+                  as RecoveryTier,
+        minWorkouts: null == minWorkouts
+            ? _value.minWorkouts
+            : minWorkouts // ignore: cast_nullable_to_non_nullable
+                  as int,
+        minDays: null == minDays
+            ? _value.minDays
+            : minDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RecoveryTierConfigImpl implements _RecoveryTierConfig {
-  const _$RecoveryTierConfigImpl(
-      {required this.tier, required this.minWorkouts, required this.minDays});
+  const _$RecoveryTierConfigImpl({
+    required this.tier,
+    required this.minWorkouts,
+    required this.minDays,
+  });
 
   factory _$RecoveryTierConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$RecoveryTierConfigImplFromJson(json);
@@ -178,39 +198,40 @@ class _$RecoveryTierConfigImpl implements _RecoveryTierConfig {
             (identical(other.minDays, minDays) || other.minDays == minDays));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, tier, minWorkouts, minDays);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecoveryTierConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RecoveryTierConfigImplCopyWith<_$RecoveryTierConfigImpl> get copyWith =>
       __$$RecoveryTierConfigImplCopyWithImpl<_$RecoveryTierConfigImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RecoveryTierConfigImplToJson(
-      this,
-    );
+    return _$$RecoveryTierConfigImplToJson(this);
   }
 }
 
 abstract class _RecoveryTierConfig implements RecoveryTierConfig {
-  const factory _RecoveryTierConfig(
-      {required final RecoveryTier tier,
-      required final int minWorkouts,
-      required final int minDays}) = _$RecoveryTierConfigImpl;
+  const factory _RecoveryTierConfig({
+    required final RecoveryTier tier,
+    required final int minWorkouts,
+    required final int minDays,
+  }) = _$RecoveryTierConfigImpl;
 
   factory _RecoveryTierConfig.fromJson(Map<String, dynamic> json) =
       _$RecoveryTierConfigImpl.fromJson;
 
-  @override
-
   /// The tier this configuration applies to
-  RecoveryTier get tier;
   @override
+  RecoveryTier get tier;
 
   /// Minimum number of workouts required to unlock
   ///
@@ -218,8 +239,8 @@ abstract class _RecoveryTierConfig implements RecoveryTierConfig {
   /// - Basic: 6 workouts
   /// - Intermediate: 12 workouts
   /// - Advanced: 20 workouts
-  int get minWorkouts;
   @override
+  int get minWorkouts;
 
   /// Minimum days of data required to unlock
   ///
@@ -227,9 +248,13 @@ abstract class _RecoveryTierConfig implements RecoveryTierConfig {
   /// - Basic: 14 days
   /// - Intermediate: 28 days
   /// - Advanced: 42 days
-  int get minDays;
   @override
-  @JsonKey(ignore: true)
+  int get minDays;
+
+  /// Create a copy of RecoveryTierConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecoveryTierConfigImplCopyWith<_$RecoveryTierConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -258,8 +283,12 @@ mixin _$RecoveryTierStatus {
   /// Optional: Timestamp when tier was unlocked
   DateTime? get unlockedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this RecoveryTierStatus to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RecoveryTierStatusCopyWith<RecoveryTierStatus> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -267,16 +296,18 @@ mixin _$RecoveryTierStatus {
 /// @nodoc
 abstract class $RecoveryTierStatusCopyWith<$Res> {
   factory $RecoveryTierStatusCopyWith(
-          RecoveryTierStatus value, $Res Function(RecoveryTierStatus) then) =
-      _$RecoveryTierStatusCopyWithImpl<$Res, RecoveryTierStatus>;
+    RecoveryTierStatus value,
+    $Res Function(RecoveryTierStatus) then,
+  ) = _$RecoveryTierStatusCopyWithImpl<$Res, RecoveryTierStatus>;
   @useResult
-  $Res call(
-      {RecoveryTier tier,
-      bool isUnlocked,
-      int currentWorkouts,
-      int currentDays,
-      RecoveryTierConfig config,
-      DateTime? unlockedAt});
+  $Res call({
+    RecoveryTier tier,
+    bool isUnlocked,
+    int currentWorkouts,
+    int currentDays,
+    RecoveryTierConfig config,
+    DateTime? unlockedAt,
+  });
 
   $RecoveryTierConfigCopyWith<$Res> get config;
 }
@@ -291,6 +322,8 @@ class _$RecoveryTierStatusCopyWithImpl<$Res, $Val extends RecoveryTierStatus>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -301,34 +334,39 @@ class _$RecoveryTierStatusCopyWithImpl<$Res, $Val extends RecoveryTierStatus>
     Object? config = null,
     Object? unlockedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      tier: null == tier
-          ? _value.tier
-          : tier // ignore: cast_nullable_to_non_nullable
-              as RecoveryTier,
-      isUnlocked: null == isUnlocked
-          ? _value.isUnlocked
-          : isUnlocked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      currentWorkouts: null == currentWorkouts
-          ? _value.currentWorkouts
-          : currentWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentDays: null == currentDays
-          ? _value.currentDays
-          : currentDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as RecoveryTierConfig,
-      unlockedAt: freezed == unlockedAt
-          ? _value.unlockedAt
-          : unlockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            tier: null == tier
+                ? _value.tier
+                : tier // ignore: cast_nullable_to_non_nullable
+                      as RecoveryTier,
+            isUnlocked: null == isUnlocked
+                ? _value.isUnlocked
+                : isUnlocked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            currentWorkouts: null == currentWorkouts
+                ? _value.currentWorkouts
+                : currentWorkouts // ignore: cast_nullable_to_non_nullable
+                      as int,
+            currentDays: null == currentDays
+                ? _value.currentDays
+                : currentDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+            config: null == config
+                ? _value.config
+                : config // ignore: cast_nullable_to_non_nullable
+                      as RecoveryTierConfig,
+            unlockedAt: freezed == unlockedAt
+                ? _value.unlockedAt
+                : unlockedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $RecoveryTierConfigCopyWith<$Res> get config {
@@ -341,18 +379,20 @@ class _$RecoveryTierStatusCopyWithImpl<$Res, $Val extends RecoveryTierStatus>
 /// @nodoc
 abstract class _$$RecoveryTierStatusImplCopyWith<$Res>
     implements $RecoveryTierStatusCopyWith<$Res> {
-  factory _$$RecoveryTierStatusImplCopyWith(_$RecoveryTierStatusImpl value,
-          $Res Function(_$RecoveryTierStatusImpl) then) =
-      __$$RecoveryTierStatusImplCopyWithImpl<$Res>;
+  factory _$$RecoveryTierStatusImplCopyWith(
+    _$RecoveryTierStatusImpl value,
+    $Res Function(_$RecoveryTierStatusImpl) then,
+  ) = __$$RecoveryTierStatusImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {RecoveryTier tier,
-      bool isUnlocked,
-      int currentWorkouts,
-      int currentDays,
-      RecoveryTierConfig config,
-      DateTime? unlockedAt});
+  $Res call({
+    RecoveryTier tier,
+    bool isUnlocked,
+    int currentWorkouts,
+    int currentDays,
+    RecoveryTierConfig config,
+    DateTime? unlockedAt,
+  });
 
   @override
   $RecoveryTierConfigCopyWith<$Res> get config;
@@ -362,10 +402,13 @@ abstract class _$$RecoveryTierStatusImplCopyWith<$Res>
 class __$$RecoveryTierStatusImplCopyWithImpl<$Res>
     extends _$RecoveryTierStatusCopyWithImpl<$Res, _$RecoveryTierStatusImpl>
     implements _$$RecoveryTierStatusImplCopyWith<$Res> {
-  __$$RecoveryTierStatusImplCopyWithImpl(_$RecoveryTierStatusImpl _value,
-      $Res Function(_$RecoveryTierStatusImpl) _then)
-      : super(_value, _then);
+  __$$RecoveryTierStatusImplCopyWithImpl(
+    _$RecoveryTierStatusImpl _value,
+    $Res Function(_$RecoveryTierStatusImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -376,46 +419,48 @@ class __$$RecoveryTierStatusImplCopyWithImpl<$Res>
     Object? config = null,
     Object? unlockedAt = freezed,
   }) {
-    return _then(_$RecoveryTierStatusImpl(
-      tier: null == tier
-          ? _value.tier
-          : tier // ignore: cast_nullable_to_non_nullable
-              as RecoveryTier,
-      isUnlocked: null == isUnlocked
-          ? _value.isUnlocked
-          : isUnlocked // ignore: cast_nullable_to_non_nullable
-              as bool,
-      currentWorkouts: null == currentWorkouts
-          ? _value.currentWorkouts
-          : currentWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentDays: null == currentDays
-          ? _value.currentDays
-          : currentDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as RecoveryTierConfig,
-      unlockedAt: freezed == unlockedAt
-          ? _value.unlockedAt
-          : unlockedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$RecoveryTierStatusImpl(
+        tier: null == tier
+            ? _value.tier
+            : tier // ignore: cast_nullable_to_non_nullable
+                  as RecoveryTier,
+        isUnlocked: null == isUnlocked
+            ? _value.isUnlocked
+            : isUnlocked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        currentWorkouts: null == currentWorkouts
+            ? _value.currentWorkouts
+            : currentWorkouts // ignore: cast_nullable_to_non_nullable
+                  as int,
+        currentDays: null == currentDays
+            ? _value.currentDays
+            : currentDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+        config: null == config
+            ? _value.config
+            : config // ignore: cast_nullable_to_non_nullable
+                  as RecoveryTierConfig,
+        unlockedAt: freezed == unlockedAt
+            ? _value.unlockedAt
+            : unlockedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RecoveryTierStatusImpl extends _RecoveryTierStatus {
-  const _$RecoveryTierStatusImpl(
-      {required this.tier,
-      required this.isUnlocked,
-      required this.currentWorkouts,
-      required this.currentDays,
-      required this.config,
-      this.unlockedAt})
-      : super._();
+  const _$RecoveryTierStatusImpl({
+    required this.tier,
+    required this.isUnlocked,
+    required this.currentWorkouts,
+    required this.currentDays,
+    required this.config,
+    this.unlockedAt,
+  }) : super._();
 
   factory _$RecoveryTierStatusImpl.fromJson(Map<String, dynamic> json) =>
       _$$RecoveryTierStatusImplFromJson(json);
@@ -466,65 +511,77 @@ class _$RecoveryTierStatusImpl extends _RecoveryTierStatus {
                 other.unlockedAt == unlockedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, tier, isUnlocked,
-      currentWorkouts, currentDays, config, unlockedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    tier,
+    isUnlocked,
+    currentWorkouts,
+    currentDays,
+    config,
+    unlockedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RecoveryTierStatusImplCopyWith<_$RecoveryTierStatusImpl> get copyWith =>
       __$$RecoveryTierStatusImplCopyWithImpl<_$RecoveryTierStatusImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RecoveryTierStatusImplToJson(
-      this,
-    );
+    return _$$RecoveryTierStatusImplToJson(this);
   }
 }
 
 abstract class _RecoveryTierStatus extends RecoveryTierStatus {
-  const factory _RecoveryTierStatus(
-      {required final RecoveryTier tier,
-      required final bool isUnlocked,
-      required final int currentWorkouts,
-      required final int currentDays,
-      required final RecoveryTierConfig config,
-      final DateTime? unlockedAt}) = _$RecoveryTierStatusImpl;
+  const factory _RecoveryTierStatus({
+    required final RecoveryTier tier,
+    required final bool isUnlocked,
+    required final int currentWorkouts,
+    required final int currentDays,
+    required final RecoveryTierConfig config,
+    final DateTime? unlockedAt,
+  }) = _$RecoveryTierStatusImpl;
   const _RecoveryTierStatus._() : super._();
 
   factory _RecoveryTierStatus.fromJson(Map<String, dynamic> json) =
       _$RecoveryTierStatusImpl.fromJson;
 
-  @override
-
   /// The tier this status applies to
-  RecoveryTier get tier;
   @override
+  RecoveryTier get tier;
 
   /// Whether the tier is currently unlocked
-  bool get isUnlocked;
   @override
+  bool get isUnlocked;
 
   /// Current number of workouts user has logged
-  int get currentWorkouts;
   @override
+  int get currentWorkouts;
 
   /// Current number of days since user started tracking
-  int get currentDays;
   @override
+  int get currentDays;
 
   /// Configuration defining unlock requirements
-  RecoveryTierConfig get config;
   @override
+  RecoveryTierConfig get config;
 
   /// Optional: Timestamp when tier was unlocked
-  DateTime? get unlockedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get unlockedAt;
+
+  /// Create a copy of RecoveryTierStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RecoveryTierStatusImplCopyWith<_$RecoveryTierStatusImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

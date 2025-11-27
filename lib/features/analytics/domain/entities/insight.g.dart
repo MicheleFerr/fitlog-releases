@@ -17,8 +17,10 @@ _$InsightImpl _$$InsightImplFromJson(Map<String, dynamic> json) =>
       recommendation: json['recommendation'] as String,
       generatedAt: DateTime.parse(json['generatedAt'] as String),
       metadata: json['metadata'] as Map<String, dynamic>? ?? const {},
-      engagement:
-          $enumDecodeNullable(_$InsightEngagementEnumMap, json['engagement']),
+      engagement: $enumDecodeNullable(
+        _$InsightEngagementEnumMap,
+        json['engagement'],
+      ),
       actionTaken: json['actionTaken'] as String?,
       dismissedAt: json['dismissedAt'] == null
           ? null

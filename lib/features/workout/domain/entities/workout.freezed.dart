@@ -12,7 +12,8 @@ part of 'workout.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Workout _$WorkoutFromJson(Map<String, dynamic> json) {
   return _Workout.fromJson(json);
@@ -37,8 +38,12 @@ mixin _$Workout {
       throw _privateConstructorUsedError; // 🆕 Analytics tracking
   String? get sessionId => throw _privateConstructorUsedError;
 
+  /// Serializes this Workout to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Workout
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WorkoutCopyWith<Workout> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -47,21 +52,22 @@ abstract class $WorkoutCopyWith<$Res> {
   factory $WorkoutCopyWith(Workout value, $Res Function(Workout) then) =
       _$WorkoutCopyWithImpl<$Res, Workout>;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      List<Exercise> exercises,
-      WorkoutStatus status,
-      DateTime? startTime,
-      DateTime? endTime,
-      String? notes,
-      DateTime createdAt,
-      DateTime updatedAt,
-      String? templateId,
-      bool isPreloaded,
-      DateTime? preloadExpiry,
-      bool? exercisesModified,
-      String? sessionId});
+  $Res call({
+    String id,
+    String name,
+    List<Exercise> exercises,
+    WorkoutStatus status,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? notes,
+    DateTime createdAt,
+    DateTime updatedAt,
+    String? templateId,
+    bool isPreloaded,
+    DateTime? preloadExpiry,
+    bool? exercisesModified,
+    String? sessionId,
+  });
 }
 
 /// @nodoc
@@ -74,6 +80,8 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Workout
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,89 +100,94 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
     Object? exercisesModified = freezed,
     Object? sessionId = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      exercises: null == exercises
-          ? _value.exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as WorkoutStatus,
-      startTime: freezed == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      endTime: freezed == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPreloaded: null == isPreloaded
-          ? _value.isPreloaded
-          : isPreloaded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      preloadExpiry: freezed == preloadExpiry
-          ? _value.preloadExpiry
-          : preloadExpiry // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      exercisesModified: freezed == exercisesModified
-          ? _value.exercisesModified
-          : exercisesModified // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      sessionId: freezed == sessionId
-          ? _value.sessionId
-          : sessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exercises: null == exercises
+                ? _value.exercises
+                : exercises // ignore: cast_nullable_to_non_nullable
+                      as List<Exercise>,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as WorkoutStatus,
+            startTime: freezed == startTime
+                ? _value.startTime
+                : startTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            endTime: freezed == endTime
+                ? _value.endTime
+                : endTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            notes: freezed == notes
+                ? _value.notes
+                : notes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            templateId: freezed == templateId
+                ? _value.templateId
+                : templateId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isPreloaded: null == isPreloaded
+                ? _value.isPreloaded
+                : isPreloaded // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            preloadExpiry: freezed == preloadExpiry
+                ? _value.preloadExpiry
+                : preloadExpiry // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            exercisesModified: freezed == exercisesModified
+                ? _value.exercisesModified
+                : exercisesModified // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            sessionId: freezed == sessionId
+                ? _value.sessionId
+                : sessionId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
   factory _$$WorkoutImplCopyWith(
-          _$WorkoutImpl value, $Res Function(_$WorkoutImpl) then) =
-      __$$WorkoutImplCopyWithImpl<$Res>;
+    _$WorkoutImpl value,
+    $Res Function(_$WorkoutImpl) then,
+  ) = __$$WorkoutImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      List<Exercise> exercises,
-      WorkoutStatus status,
-      DateTime? startTime,
-      DateTime? endTime,
-      String? notes,
-      DateTime createdAt,
-      DateTime updatedAt,
-      String? templateId,
-      bool isPreloaded,
-      DateTime? preloadExpiry,
-      bool? exercisesModified,
-      String? sessionId});
+  $Res call({
+    String id,
+    String name,
+    List<Exercise> exercises,
+    WorkoutStatus status,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? notes,
+    DateTime createdAt,
+    DateTime updatedAt,
+    String? templateId,
+    bool isPreloaded,
+    DateTime? preloadExpiry,
+    bool? exercisesModified,
+    String? sessionId,
+  });
 }
 
 /// @nodoc
@@ -182,9 +195,12 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     extends _$WorkoutCopyWithImpl<$Res, _$WorkoutImpl>
     implements _$$WorkoutImplCopyWith<$Res> {
   __$$WorkoutImplCopyWithImpl(
-      _$WorkoutImpl _value, $Res Function(_$WorkoutImpl) _then)
-      : super(_value, _then);
+    _$WorkoutImpl _value,
+    $Res Function(_$WorkoutImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of Workout
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -203,87 +219,89 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     Object? exercisesModified = freezed,
     Object? sessionId = freezed,
   }) {
-    return _then(_$WorkoutImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      exercises: null == exercises
-          ? _value._exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as WorkoutStatus,
-      startTime: freezed == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      endTime: freezed == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      templateId: freezed == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPreloaded: null == isPreloaded
-          ? _value.isPreloaded
-          : isPreloaded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      preloadExpiry: freezed == preloadExpiry
-          ? _value.preloadExpiry
-          : preloadExpiry // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      exercisesModified: freezed == exercisesModified
-          ? _value.exercisesModified
-          : exercisesModified // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      sessionId: freezed == sessionId
-          ? _value.sessionId
-          : sessionId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$WorkoutImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exercises: null == exercises
+            ? _value._exercises
+            : exercises // ignore: cast_nullable_to_non_nullable
+                  as List<Exercise>,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as WorkoutStatus,
+        startTime: freezed == startTime
+            ? _value.startTime
+            : startTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        endTime: freezed == endTime
+            ? _value.endTime
+            : endTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        notes: freezed == notes
+            ? _value.notes
+            : notes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        templateId: freezed == templateId
+            ? _value.templateId
+            : templateId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isPreloaded: null == isPreloaded
+            ? _value.isPreloaded
+            : isPreloaded // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        preloadExpiry: freezed == preloadExpiry
+            ? _value.preloadExpiry
+            : preloadExpiry // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        exercisesModified: freezed == exercisesModified
+            ? _value.exercisesModified
+            : exercisesModified // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        sessionId: freezed == sessionId
+            ? _value.sessionId
+            : sessionId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$WorkoutImpl extends _Workout {
-  const _$WorkoutImpl(
-      {required this.id,
-      required this.name,
-      final List<Exercise> exercises = const [],
-      this.status = WorkoutStatus.planned,
-      this.startTime,
-      this.endTime,
-      this.notes,
-      required this.createdAt,
-      required this.updatedAt,
-      this.templateId,
-      this.isPreloaded = false,
-      this.preloadExpiry,
-      this.exercisesModified,
-      this.sessionId})
-      : _exercises = exercises,
-        super._();
+  const _$WorkoutImpl({
+    required this.id,
+    required this.name,
+    final List<Exercise> exercises = const [],
+    this.status = WorkoutStatus.planned,
+    this.startTime,
+    this.endTime,
+    this.notes,
+    required this.createdAt,
+    required this.updatedAt,
+    this.templateId,
+    this.isPreloaded = false,
+    this.preloadExpiry,
+    this.exercisesModified,
+    this.sessionId,
+  }) : _exercises = exercises,
+       super._();
 
   factory _$WorkoutImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutImplFromJson(json);
@@ -316,7 +334,7 @@ class _$WorkoutImpl extends _Workout {
   final DateTime updatedAt;
   @override
   final String? templateId;
-// 🆕 Pre-load management
+  // 🆕 Pre-load management
   @override
   @JsonKey()
   final bool isPreloaded;
@@ -324,7 +342,7 @@ class _$WorkoutImpl extends _Workout {
   final DateTime? preloadExpiry;
   @override
   final bool? exercisesModified;
-// 🆕 Analytics tracking
+  // 🆕 Analytics tracking
   @override
   final String? sessionId;
 
@@ -340,8 +358,10 @@ class _$WorkoutImpl extends _Workout {
             other is _$WorkoutImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other._exercises, _exercises) &&
+            const DeepCollectionEquality().equals(
+              other._exercises,
+              _exercises,
+            ) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
@@ -363,26 +383,29 @@ class _$WorkoutImpl extends _Workout {
                 other.sessionId == sessionId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      const DeepCollectionEquality().hash(_exercises),
-      status,
-      startTime,
-      endTime,
-      notes,
-      createdAt,
-      updatedAt,
-      templateId,
-      isPreloaded,
-      preloadExpiry,
-      exercisesModified,
-      sessionId);
+    runtimeType,
+    id,
+    name,
+    const DeepCollectionEquality().hash(_exercises),
+    status,
+    startTime,
+    endTime,
+    notes,
+    createdAt,
+    updatedAt,
+    templateId,
+    isPreloaded,
+    preloadExpiry,
+    exercisesModified,
+    sessionId,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Workout
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutImplCopyWith<_$WorkoutImpl> get copyWith =>
@@ -390,28 +413,27 @@ class _$WorkoutImpl extends _Workout {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WorkoutImplToJson(
-      this,
-    );
+    return _$$WorkoutImplToJson(this);
   }
 }
 
 abstract class _Workout extends Workout {
-  const factory _Workout(
-      {required final String id,
-      required final String name,
-      final List<Exercise> exercises,
-      final WorkoutStatus status,
-      final DateTime? startTime,
-      final DateTime? endTime,
-      final String? notes,
-      required final DateTime createdAt,
-      required final DateTime updatedAt,
-      final String? templateId,
-      final bool isPreloaded,
-      final DateTime? preloadExpiry,
-      final bool? exercisesModified,
-      final String? sessionId}) = _$WorkoutImpl;
+  const factory _Workout({
+    required final String id,
+    required final String name,
+    final List<Exercise> exercises,
+    final WorkoutStatus status,
+    final DateTime? startTime,
+    final DateTime? endTime,
+    final String? notes,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+    final String? templateId,
+    final bool isPreloaded,
+    final DateTime? preloadExpiry,
+    final bool? exercisesModified,
+    final String? sessionId,
+  }) = _$WorkoutImpl;
   const _Workout._() : super._();
 
   factory _Workout.fromJson(Map<String, dynamic> json) = _$WorkoutImpl.fromJson;
@@ -435,17 +457,20 @@ abstract class _Workout extends Workout {
   @override
   DateTime get updatedAt;
   @override
-  String? get templateId;
-  @override // 🆕 Pre-load management
+  String? get templateId; // 🆕 Pre-load management
+  @override
   bool get isPreloaded;
   @override
   DateTime? get preloadExpiry;
   @override
-  bool? get exercisesModified;
-  @override // 🆕 Analytics tracking
-  String? get sessionId;
+  bool? get exercisesModified; // 🆕 Analytics tracking
   @override
-  @JsonKey(ignore: true)
+  String? get sessionId;
+
+  /// Create a copy of Workout
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutImplCopyWith<_$WorkoutImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

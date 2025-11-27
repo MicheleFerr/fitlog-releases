@@ -12,7 +12,8 @@ part of 'health_permission_status.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$HealthPermissionStatus {
@@ -27,25 +28,31 @@ mixin _$HealthPermissionStatus {
   /// - Android 14+: True if Health Connect app installed
   bool get healthConnectAvailable => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of HealthPermissionStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $HealthPermissionStatusCopyWith<HealthPermissionStatus> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $HealthPermissionStatusCopyWith<$Res> {
-  factory $HealthPermissionStatusCopyWith(HealthPermissionStatus value,
-          $Res Function(HealthPermissionStatus) then) =
-      _$HealthPermissionStatusCopyWithImpl<$Res, HealthPermissionStatus>;
+  factory $HealthPermissionStatusCopyWith(
+    HealthPermissionStatus value,
+    $Res Function(HealthPermissionStatus) then,
+  ) = _$HealthPermissionStatusCopyWithImpl<$Res, HealthPermissionStatus>;
   @useResult
-  $Res call(
-      {Map<HealthDataType, PermissionState> permissions,
-      bool healthConnectAvailable});
+  $Res call({
+    Map<HealthDataType, PermissionState> permissions,
+    bool healthConnectAvailable,
+  });
 }
 
 /// @nodoc
-class _$HealthPermissionStatusCopyWithImpl<$Res,
-        $Val extends HealthPermissionStatus>
+class _$HealthPermissionStatusCopyWithImpl<
+  $Res,
+  $Val extends HealthPermissionStatus
+>
     implements $HealthPermissionStatusCopyWith<$Res> {
   _$HealthPermissionStatusCopyWithImpl(this._value, this._then);
 
@@ -54,22 +61,27 @@ class _$HealthPermissionStatusCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of HealthPermissionStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? permissions = null,
     Object? healthConnectAvailable = null,
   }) {
-    return _then(_value.copyWith(
-      permissions: null == permissions
-          ? _value.permissions
-          : permissions // ignore: cast_nullable_to_non_nullable
-              as Map<HealthDataType, PermissionState>,
-      healthConnectAvailable: null == healthConnectAvailable
-          ? _value.healthConnectAvailable
-          : healthConnectAvailable // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            permissions: null == permissions
+                ? _value.permissions
+                : permissions // ignore: cast_nullable_to_non_nullable
+                      as Map<HealthDataType, PermissionState>,
+            healthConnectAvailable: null == healthConnectAvailable
+                ? _value.healthConnectAvailable
+                : healthConnectAvailable // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -77,52 +89,57 @@ class _$HealthPermissionStatusCopyWithImpl<$Res,
 abstract class _$$HealthPermissionStatusImplCopyWith<$Res>
     implements $HealthPermissionStatusCopyWith<$Res> {
   factory _$$HealthPermissionStatusImplCopyWith(
-          _$HealthPermissionStatusImpl value,
-          $Res Function(_$HealthPermissionStatusImpl) then) =
-      __$$HealthPermissionStatusImplCopyWithImpl<$Res>;
+    _$HealthPermissionStatusImpl value,
+    $Res Function(_$HealthPermissionStatusImpl) then,
+  ) = __$$HealthPermissionStatusImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Map<HealthDataType, PermissionState> permissions,
-      bool healthConnectAvailable});
+  $Res call({
+    Map<HealthDataType, PermissionState> permissions,
+    bool healthConnectAvailable,
+  });
 }
 
 /// @nodoc
 class __$$HealthPermissionStatusImplCopyWithImpl<$Res>
-    extends _$HealthPermissionStatusCopyWithImpl<$Res,
-        _$HealthPermissionStatusImpl>
+    extends
+        _$HealthPermissionStatusCopyWithImpl<$Res, _$HealthPermissionStatusImpl>
     implements _$$HealthPermissionStatusImplCopyWith<$Res> {
   __$$HealthPermissionStatusImplCopyWithImpl(
-      _$HealthPermissionStatusImpl _value,
-      $Res Function(_$HealthPermissionStatusImpl) _then)
-      : super(_value, _then);
+    _$HealthPermissionStatusImpl _value,
+    $Res Function(_$HealthPermissionStatusImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of HealthPermissionStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? permissions = null,
     Object? healthConnectAvailable = null,
   }) {
-    return _then(_$HealthPermissionStatusImpl(
-      permissions: null == permissions
-          ? _value._permissions
-          : permissions // ignore: cast_nullable_to_non_nullable
-              as Map<HealthDataType, PermissionState>,
-      healthConnectAvailable: null == healthConnectAvailable
-          ? _value.healthConnectAvailable
-          : healthConnectAvailable // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$HealthPermissionStatusImpl(
+        permissions: null == permissions
+            ? _value._permissions
+            : permissions // ignore: cast_nullable_to_non_nullable
+                  as Map<HealthDataType, PermissionState>,
+        healthConnectAvailable: null == healthConnectAvailable
+            ? _value.healthConnectAvailable
+            : healthConnectAvailable // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$HealthPermissionStatusImpl implements _HealthPermissionStatus {
-  const _$HealthPermissionStatusImpl(
-      {required final Map<HealthDataType, PermissionState> permissions,
-      this.healthConnectAvailable = false})
-      : _permissions = permissions;
+  const _$HealthPermissionStatusImpl({
+    required final Map<HealthDataType, PermissionState> permissions,
+    this.healthConnectAvailable = false,
+  }) : _permissions = permissions;
 
   /// Map of permission states per data type
   /// Key: HealthDataType (workout, bodyWeight, etc.)
@@ -156,45 +173,56 @@ class _$HealthPermissionStatusImpl implements _HealthPermissionStatus {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HealthPermissionStatusImpl &&
-            const DeepCollectionEquality()
-                .equals(other._permissions, _permissions) &&
+            const DeepCollectionEquality().equals(
+              other._permissions,
+              _permissions,
+            ) &&
             (identical(other.healthConnectAvailable, healthConnectAvailable) ||
                 other.healthConnectAvailable == healthConnectAvailable));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_permissions),
-      healthConnectAvailable);
+    runtimeType,
+    const DeepCollectionEquality().hash(_permissions),
+    healthConnectAvailable,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of HealthPermissionStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$HealthPermissionStatusImplCopyWith<_$HealthPermissionStatusImpl>
-      get copyWith => __$$HealthPermissionStatusImplCopyWithImpl<
-          _$HealthPermissionStatusImpl>(this, _$identity);
+  get copyWith =>
+      __$$HealthPermissionStatusImplCopyWithImpl<_$HealthPermissionStatusImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _HealthPermissionStatus implements HealthPermissionStatus {
-  const factory _HealthPermissionStatus(
-      {required final Map<HealthDataType, PermissionState> permissions,
-      final bool healthConnectAvailable}) = _$HealthPermissionStatusImpl;
-
-  @override
+  const factory _HealthPermissionStatus({
+    required final Map<HealthDataType, PermissionState> permissions,
+    final bool healthConnectAvailable,
+  }) = _$HealthPermissionStatusImpl;
 
   /// Map of permission states per data type
   /// Key: HealthDataType (workout, bodyWeight, etc.)
   /// Value: PermissionState (authorized, denied, etc.)
-  Map<HealthDataType, PermissionState> get permissions;
   @override
+  Map<HealthDataType, PermissionState> get permissions;
 
   /// Android-only: Whether Health Connect is installed and available
   /// - iOS: Always false (uses HealthKit natively)
   /// - Android 14+: True if Health Connect app installed
-  bool get healthConnectAvailable;
   @override
-  @JsonKey(ignore: true)
+  bool get healthConnectAvailable;
+
+  /// Create a copy of HealthPermissionStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$HealthPermissionStatusImplCopyWith<_$HealthPermissionStatusImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'notification_record.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 NotificationRecord _$NotificationRecordFromJson(Map<String, dynamic> json) {
   return _NotificationRecord.fromJson(json);
@@ -44,8 +45,12 @@ mixin _$NotificationRecord {
   /// Whether this notification was canceled before delivery
   bool get wasCanceled => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRecord to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRecordCopyWith<NotificationRecord> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,18 +58,20 @@ mixin _$NotificationRecord {
 /// @nodoc
 abstract class $NotificationRecordCopyWith<$Res> {
   factory $NotificationRecordCopyWith(
-          NotificationRecord value, $Res Function(NotificationRecord) then) =
-      _$NotificationRecordCopyWithImpl<$Res, NotificationRecord>;
+    NotificationRecord value,
+    $Res Function(NotificationRecord) then,
+  ) = _$NotificationRecordCopyWithImpl<$Res, NotificationRecord>;
   @useResult
-  $Res call(
-      {String id,
-      NotificationType type,
-      DateTime sentAt,
-      DateTime? openedAt,
-      String messageKey,
-      String? context,
-      int? inactivityDay,
-      bool wasCanceled});
+  $Res call({
+    String id,
+    NotificationType type,
+    DateTime sentAt,
+    DateTime? openedAt,
+    String messageKey,
+    String? context,
+    int? inactivityDay,
+    bool wasCanceled,
+  });
 }
 
 /// @nodoc
@@ -77,6 +84,8 @@ class _$NotificationRecordCopyWithImpl<$Res, $Val extends NotificationRecord>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRecord
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -89,70 +98,78 @@ class _$NotificationRecordCopyWithImpl<$Res, $Val extends NotificationRecord>
     Object? inactivityDay = freezed,
     Object? wasCanceled = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as NotificationType,
-      sentAt: null == sentAt
-          ? _value.sentAt
-          : sentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      openedAt: freezed == openedAt
-          ? _value.openedAt
-          : openedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      messageKey: null == messageKey
-          ? _value.messageKey
-          : messageKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      context: freezed == context
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as String?,
-      inactivityDay: freezed == inactivityDay
-          ? _value.inactivityDay
-          : inactivityDay // ignore: cast_nullable_to_non_nullable
-              as int?,
-      wasCanceled: null == wasCanceled
-          ? _value.wasCanceled
-          : wasCanceled // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as NotificationType,
+            sentAt: null == sentAt
+                ? _value.sentAt
+                : sentAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            openedAt: freezed == openedAt
+                ? _value.openedAt
+                : openedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            messageKey: null == messageKey
+                ? _value.messageKey
+                : messageKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            context: freezed == context
+                ? _value.context
+                : context // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            inactivityDay: freezed == inactivityDay
+                ? _value.inactivityDay
+                : inactivityDay // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            wasCanceled: null == wasCanceled
+                ? _value.wasCanceled
+                : wasCanceled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$NotificationRecordImplCopyWith<$Res>
     implements $NotificationRecordCopyWith<$Res> {
-  factory _$$NotificationRecordImplCopyWith(_$NotificationRecordImpl value,
-          $Res Function(_$NotificationRecordImpl) then) =
-      __$$NotificationRecordImplCopyWithImpl<$Res>;
+  factory _$$NotificationRecordImplCopyWith(
+    _$NotificationRecordImpl value,
+    $Res Function(_$NotificationRecordImpl) then,
+  ) = __$$NotificationRecordImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      NotificationType type,
-      DateTime sentAt,
-      DateTime? openedAt,
-      String messageKey,
-      String? context,
-      int? inactivityDay,
-      bool wasCanceled});
+  $Res call({
+    String id,
+    NotificationType type,
+    DateTime sentAt,
+    DateTime? openedAt,
+    String messageKey,
+    String? context,
+    int? inactivityDay,
+    bool wasCanceled,
+  });
 }
 
 /// @nodoc
 class __$$NotificationRecordImplCopyWithImpl<$Res>
     extends _$NotificationRecordCopyWithImpl<$Res, _$NotificationRecordImpl>
     implements _$$NotificationRecordImplCopyWith<$Res> {
-  __$$NotificationRecordImplCopyWithImpl(_$NotificationRecordImpl _value,
-      $Res Function(_$NotificationRecordImpl) _then)
-      : super(_value, _then);
+  __$$NotificationRecordImplCopyWithImpl(
+    _$NotificationRecordImpl _value,
+    $Res Function(_$NotificationRecordImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of NotificationRecord
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -165,56 +182,58 @@ class __$$NotificationRecordImplCopyWithImpl<$Res>
     Object? inactivityDay = freezed,
     Object? wasCanceled = null,
   }) {
-    return _then(_$NotificationRecordImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as NotificationType,
-      sentAt: null == sentAt
-          ? _value.sentAt
-          : sentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      openedAt: freezed == openedAt
-          ? _value.openedAt
-          : openedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      messageKey: null == messageKey
-          ? _value.messageKey
-          : messageKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      context: freezed == context
-          ? _value.context
-          : context // ignore: cast_nullable_to_non_nullable
-              as String?,
-      inactivityDay: freezed == inactivityDay
-          ? _value.inactivityDay
-          : inactivityDay // ignore: cast_nullable_to_non_nullable
-              as int?,
-      wasCanceled: null == wasCanceled
-          ? _value.wasCanceled
-          : wasCanceled // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$NotificationRecordImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as NotificationType,
+        sentAt: null == sentAt
+            ? _value.sentAt
+            : sentAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        openedAt: freezed == openedAt
+            ? _value.openedAt
+            : openedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        messageKey: null == messageKey
+            ? _value.messageKey
+            : messageKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        context: freezed == context
+            ? _value.context
+            : context // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        inactivityDay: freezed == inactivityDay
+            ? _value.inactivityDay
+            : inactivityDay // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        wasCanceled: null == wasCanceled
+            ? _value.wasCanceled
+            : wasCanceled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$NotificationRecordImpl extends _NotificationRecord {
-  const _$NotificationRecordImpl(
-      {required this.id,
-      required this.type,
-      required this.sentAt,
-      this.openedAt,
-      required this.messageKey,
-      this.context,
-      this.inactivityDay,
-      this.wasCanceled = false})
-      : super._();
+  const _$NotificationRecordImpl({
+    required this.id,
+    required this.type,
+    required this.sentAt,
+    this.openedAt,
+    required this.messageKey,
+    this.context,
+    this.inactivityDay,
+    this.wasCanceled = false,
+  }) : super._();
 
   factory _$NotificationRecordImpl.fromJson(Map<String, dynamic> json) =>
       _$$NotificationRecordImplFromJson(json);
@@ -276,75 +295,89 @@ class _$NotificationRecordImpl extends _NotificationRecord {
                 other.wasCanceled == wasCanceled));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, type, sentAt, openedAt,
-      messageKey, context, inactivityDay, wasCanceled);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    type,
+    sentAt,
+    openedAt,
+    messageKey,
+    context,
+    inactivityDay,
+    wasCanceled,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRecordImplCopyWith<_$NotificationRecordImpl> get copyWith =>
       __$$NotificationRecordImplCopyWithImpl<_$NotificationRecordImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationRecordImplToJson(
-      this,
-    );
+    return _$$NotificationRecordImplToJson(this);
   }
 }
 
 abstract class _NotificationRecord extends NotificationRecord {
-  const factory _NotificationRecord(
-      {required final String id,
-      required final NotificationType type,
-      required final DateTime sentAt,
-      final DateTime? openedAt,
-      required final String messageKey,
-      final String? context,
-      final int? inactivityDay,
-      final bool wasCanceled}) = _$NotificationRecordImpl;
+  const factory _NotificationRecord({
+    required final String id,
+    required final NotificationType type,
+    required final DateTime sentAt,
+    final DateTime? openedAt,
+    required final String messageKey,
+    final String? context,
+    final int? inactivityDay,
+    final bool wasCanceled,
+  }) = _$NotificationRecordImpl;
   const _NotificationRecord._() : super._();
 
   factory _NotificationRecord.fromJson(Map<String, dynamic> json) =
       _$NotificationRecordImpl.fromJson;
 
-  @override
-
   /// Unique identifier
-  String get id;
   @override
+  String get id;
 
   /// Type of notification sent
-  NotificationType get type;
   @override
+  NotificationType get type;
 
   /// When the notification was scheduled/sent
-  DateTime get sentAt;
   @override
+  DateTime get sentAt;
 
   /// When the notification was opened (null if not opened)
-  DateTime? get openedAt;
   @override
+  DateTime? get openedAt;
 
   /// The message that was sent (for rotation tracking)
-  String get messageKey;
   @override
+  String get messageKey;
 
   /// Additional context (e.g., exercise name for PR)
-  String? get context;
   @override
+  String? get context;
 
   /// For inactivity: which day in sequence (3, 7, or 14)
-  int? get inactivityDay;
   @override
+  int? get inactivityDay;
 
   /// Whether this notification was canceled before delivery
-  bool get wasCanceled;
   @override
-  @JsonKey(ignore: true)
+  bool get wasCanceled;
+
+  /// Create a copy of NotificationRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRecordImplCopyWith<_$NotificationRecordImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -370,8 +403,12 @@ mixin _$NotificationStats {
   /// Last message key used (for rotation)
   String? get lastMessageKey => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationStatsCopyWith<NotificationStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -379,15 +416,17 @@ mixin _$NotificationStats {
 /// @nodoc
 abstract class $NotificationStatsCopyWith<$Res> {
   factory $NotificationStatsCopyWith(
-          NotificationStats value, $Res Function(NotificationStats) then) =
-      _$NotificationStatsCopyWithImpl<$Res, NotificationStats>;
+    NotificationStats value,
+    $Res Function(NotificationStats) then,
+  ) = _$NotificationStatsCopyWithImpl<$Res, NotificationStats>;
   @useResult
-  $Res call(
-      {int totalSent,
-      int totalOpened,
-      int consecutiveIgnores,
-      DateTime? lastSentAt,
-      String? lastMessageKey});
+  $Res call({
+    int totalSent,
+    int totalOpened,
+    int consecutiveIgnores,
+    DateTime? lastSentAt,
+    String? lastMessageKey,
+  });
 }
 
 /// @nodoc
@@ -400,6 +439,8 @@ class _$NotificationStatsCopyWithImpl<$Res, $Val extends NotificationStats>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -409,55 +450,63 @@ class _$NotificationStatsCopyWithImpl<$Res, $Val extends NotificationStats>
     Object? lastSentAt = freezed,
     Object? lastMessageKey = freezed,
   }) {
-    return _then(_value.copyWith(
-      totalSent: null == totalSent
-          ? _value.totalSent
-          : totalSent // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalOpened: null == totalOpened
-          ? _value.totalOpened
-          : totalOpened // ignore: cast_nullable_to_non_nullable
-              as int,
-      consecutiveIgnores: null == consecutiveIgnores
-          ? _value.consecutiveIgnores
-          : consecutiveIgnores // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastSentAt: freezed == lastSentAt
-          ? _value.lastSentAt
-          : lastSentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastMessageKey: freezed == lastMessageKey
-          ? _value.lastMessageKey
-          : lastMessageKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            totalSent: null == totalSent
+                ? _value.totalSent
+                : totalSent // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalOpened: null == totalOpened
+                ? _value.totalOpened
+                : totalOpened // ignore: cast_nullable_to_non_nullable
+                      as int,
+            consecutiveIgnores: null == consecutiveIgnores
+                ? _value.consecutiveIgnores
+                : consecutiveIgnores // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastSentAt: freezed == lastSentAt
+                ? _value.lastSentAt
+                : lastSentAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            lastMessageKey: freezed == lastMessageKey
+                ? _value.lastMessageKey
+                : lastMessageKey // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$NotificationStatsImplCopyWith<$Res>
     implements $NotificationStatsCopyWith<$Res> {
-  factory _$$NotificationStatsImplCopyWith(_$NotificationStatsImpl value,
-          $Res Function(_$NotificationStatsImpl) then) =
-      __$$NotificationStatsImplCopyWithImpl<$Res>;
+  factory _$$NotificationStatsImplCopyWith(
+    _$NotificationStatsImpl value,
+    $Res Function(_$NotificationStatsImpl) then,
+  ) = __$$NotificationStatsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int totalSent,
-      int totalOpened,
-      int consecutiveIgnores,
-      DateTime? lastSentAt,
-      String? lastMessageKey});
+  $Res call({
+    int totalSent,
+    int totalOpened,
+    int consecutiveIgnores,
+    DateTime? lastSentAt,
+    String? lastMessageKey,
+  });
 }
 
 /// @nodoc
 class __$$NotificationStatsImplCopyWithImpl<$Res>
     extends _$NotificationStatsCopyWithImpl<$Res, _$NotificationStatsImpl>
     implements _$$NotificationStatsImplCopyWith<$Res> {
-  __$$NotificationStatsImplCopyWithImpl(_$NotificationStatsImpl _value,
-      $Res Function(_$NotificationStatsImpl) _then)
-      : super(_value, _then);
+  __$$NotificationStatsImplCopyWithImpl(
+    _$NotificationStatsImpl _value,
+    $Res Function(_$NotificationStatsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of NotificationStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -467,41 +516,43 @@ class __$$NotificationStatsImplCopyWithImpl<$Res>
     Object? lastSentAt = freezed,
     Object? lastMessageKey = freezed,
   }) {
-    return _then(_$NotificationStatsImpl(
-      totalSent: null == totalSent
-          ? _value.totalSent
-          : totalSent // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalOpened: null == totalOpened
-          ? _value.totalOpened
-          : totalOpened // ignore: cast_nullable_to_non_nullable
-              as int,
-      consecutiveIgnores: null == consecutiveIgnores
-          ? _value.consecutiveIgnores
-          : consecutiveIgnores // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastSentAt: freezed == lastSentAt
-          ? _value.lastSentAt
-          : lastSentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastMessageKey: freezed == lastMessageKey
-          ? _value.lastMessageKey
-          : lastMessageKey // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$NotificationStatsImpl(
+        totalSent: null == totalSent
+            ? _value.totalSent
+            : totalSent // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalOpened: null == totalOpened
+            ? _value.totalOpened
+            : totalOpened // ignore: cast_nullable_to_non_nullable
+                  as int,
+        consecutiveIgnores: null == consecutiveIgnores
+            ? _value.consecutiveIgnores
+            : consecutiveIgnores // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastSentAt: freezed == lastSentAt
+            ? _value.lastSentAt
+            : lastSentAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        lastMessageKey: freezed == lastMessageKey
+            ? _value.lastMessageKey
+            : lastMessageKey // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$NotificationStatsImpl extends _NotificationStats {
-  const _$NotificationStatsImpl(
-      {required this.totalSent,
-      required this.totalOpened,
-      required this.consecutiveIgnores,
-      this.lastSentAt,
-      this.lastMessageKey})
-      : super._();
+  const _$NotificationStatsImpl({
+    required this.totalSent,
+    required this.totalOpened,
+    required this.consecutiveIgnores,
+    this.lastSentAt,
+    this.lastMessageKey,
+  }) : super._();
 
   factory _$NotificationStatsImpl.fromJson(Map<String, dynamic> json) =>
       _$$NotificationStatsImplFromJson(json);
@@ -548,60 +599,71 @@ class _$NotificationStatsImpl extends _NotificationStats {
                 other.lastMessageKey == lastMessageKey));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, totalSent, totalOpened,
-      consecutiveIgnores, lastSentAt, lastMessageKey);
+  int get hashCode => Object.hash(
+    runtimeType,
+    totalSent,
+    totalOpened,
+    consecutiveIgnores,
+    lastSentAt,
+    lastMessageKey,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationStatsImplCopyWith<_$NotificationStatsImpl> get copyWith =>
       __$$NotificationStatsImplCopyWithImpl<_$NotificationStatsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationStatsImplToJson(
-      this,
-    );
+    return _$$NotificationStatsImplToJson(this);
   }
 }
 
 abstract class _NotificationStats extends NotificationStats {
-  const factory _NotificationStats(
-      {required final int totalSent,
-      required final int totalOpened,
-      required final int consecutiveIgnores,
-      final DateTime? lastSentAt,
-      final String? lastMessageKey}) = _$NotificationStatsImpl;
+  const factory _NotificationStats({
+    required final int totalSent,
+    required final int totalOpened,
+    required final int consecutiveIgnores,
+    final DateTime? lastSentAt,
+    final String? lastMessageKey,
+  }) = _$NotificationStatsImpl;
   const _NotificationStats._() : super._();
 
   factory _NotificationStats.fromJson(Map<String, dynamic> json) =
       _$NotificationStatsImpl.fromJson;
 
-  @override
-
   /// Total notifications sent
-  int get totalSent;
   @override
+  int get totalSent;
 
   /// How many were opened
-  int get totalOpened;
   @override
+  int get totalOpened;
 
   /// How many consecutive ignores (for stop-after-ignore logic)
-  int get consecutiveIgnores;
   @override
+  int get consecutiveIgnores;
 
   /// Last notification sent timestamp
-  DateTime? get lastSentAt;
   @override
+  DateTime? get lastSentAt;
 
   /// Last message key used (for rotation)
-  String? get lastMessageKey;
   @override
-  @JsonKey(ignore: true)
+  String? get lastMessageKey;
+
+  /// Create a copy of NotificationStats
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationStatsImplCopyWith<_$NotificationStatsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

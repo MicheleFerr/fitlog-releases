@@ -12,10 +12,12 @@ part of 'questionnaire_analytics.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 QuestionnaireAnalytics _$QuestionnaireAnalyticsFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _QuestionnaireAnalytics.fromJson(json);
 }
 
@@ -54,35 +56,43 @@ mixin _$QuestionnaireAnalytics {
   /// App version
   String? get appVersion => throw _privateConstructorUsedError;
 
+  /// Serializes this QuestionnaireAnalytics to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of QuestionnaireAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $QuestionnaireAnalyticsCopyWith<QuestionnaireAnalytics> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $QuestionnaireAnalyticsCopyWith<$Res> {
-  factory $QuestionnaireAnalyticsCopyWith(QuestionnaireAnalytics value,
-          $Res Function(QuestionnaireAnalytics) then) =
-      _$QuestionnaireAnalyticsCopyWithImpl<$Res, QuestionnaireAnalytics>;
+  factory $QuestionnaireAnalyticsCopyWith(
+    QuestionnaireAnalytics value,
+    $Res Function(QuestionnaireAnalytics) then,
+  ) = _$QuestionnaireAnalyticsCopyWithImpl<$Res, QuestionnaireAnalytics>;
   @useResult
-  $Res call(
-      {String userId,
-      DateTime startedAt,
-      DateTime? completedAt,
-      int lastStepReached,
-      int totalSteps,
-      Map<int, int> stepDurations,
-      bool? wasAbandoned,
-      Map<int, int?> stepFeedback,
-      int? totalDurationSeconds,
-      String? platform,
-      String? appVersion});
+  $Res call({
+    String userId,
+    DateTime startedAt,
+    DateTime? completedAt,
+    int lastStepReached,
+    int totalSteps,
+    Map<int, int> stepDurations,
+    bool? wasAbandoned,
+    Map<int, int?> stepFeedback,
+    int? totalDurationSeconds,
+    String? platform,
+    String? appVersion,
+  });
 }
 
 /// @nodoc
-class _$QuestionnaireAnalyticsCopyWithImpl<$Res,
-        $Val extends QuestionnaireAnalytics>
+class _$QuestionnaireAnalyticsCopyWithImpl<
+  $Res,
+  $Val extends QuestionnaireAnalytics
+>
     implements $QuestionnaireAnalyticsCopyWith<$Res> {
   _$QuestionnaireAnalyticsCopyWithImpl(this._value, this._then);
 
@@ -91,6 +101,8 @@ class _$QuestionnaireAnalyticsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of QuestionnaireAnalytics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,52 +118,55 @@ class _$QuestionnaireAnalyticsCopyWithImpl<$Res,
     Object? platform = freezed,
     Object? appVersion = freezed,
   }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      startedAt: null == startedAt
-          ? _value.startedAt
-          : startedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastStepReached: null == lastStepReached
-          ? _value.lastStepReached
-          : lastStepReached // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalSteps: null == totalSteps
-          ? _value.totalSteps
-          : totalSteps // ignore: cast_nullable_to_non_nullable
-              as int,
-      stepDurations: null == stepDurations
-          ? _value.stepDurations
-          : stepDurations // ignore: cast_nullable_to_non_nullable
-              as Map<int, int>,
-      wasAbandoned: freezed == wasAbandoned
-          ? _value.wasAbandoned
-          : wasAbandoned // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      stepFeedback: null == stepFeedback
-          ? _value.stepFeedback
-          : stepFeedback // ignore: cast_nullable_to_non_nullable
-              as Map<int, int?>,
-      totalDurationSeconds: freezed == totalDurationSeconds
-          ? _value.totalDurationSeconds
-          : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
-      platform: freezed == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            startedAt: null == startedAt
+                ? _value.startedAt
+                : startedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            completedAt: freezed == completedAt
+                ? _value.completedAt
+                : completedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            lastStepReached: null == lastStepReached
+                ? _value.lastStepReached
+                : lastStepReached // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalSteps: null == totalSteps
+                ? _value.totalSteps
+                : totalSteps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            stepDurations: null == stepDurations
+                ? _value.stepDurations
+                : stepDurations // ignore: cast_nullable_to_non_nullable
+                      as Map<int, int>,
+            wasAbandoned: freezed == wasAbandoned
+                ? _value.wasAbandoned
+                : wasAbandoned // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            stepFeedback: null == stepFeedback
+                ? _value.stepFeedback
+                : stepFeedback // ignore: cast_nullable_to_non_nullable
+                      as Map<int, int?>,
+            totalDurationSeconds: freezed == totalDurationSeconds
+                ? _value.totalDurationSeconds
+                : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            platform: freezed == platform
+                ? _value.platform
+                : platform // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            appVersion: freezed == appVersion
+                ? _value.appVersion
+                : appVersion // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -159,35 +174,38 @@ class _$QuestionnaireAnalyticsCopyWithImpl<$Res,
 abstract class _$$QuestionnaireAnalyticsImplCopyWith<$Res>
     implements $QuestionnaireAnalyticsCopyWith<$Res> {
   factory _$$QuestionnaireAnalyticsImplCopyWith(
-          _$QuestionnaireAnalyticsImpl value,
-          $Res Function(_$QuestionnaireAnalyticsImpl) then) =
-      __$$QuestionnaireAnalyticsImplCopyWithImpl<$Res>;
+    _$QuestionnaireAnalyticsImpl value,
+    $Res Function(_$QuestionnaireAnalyticsImpl) then,
+  ) = __$$QuestionnaireAnalyticsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String userId,
-      DateTime startedAt,
-      DateTime? completedAt,
-      int lastStepReached,
-      int totalSteps,
-      Map<int, int> stepDurations,
-      bool? wasAbandoned,
-      Map<int, int?> stepFeedback,
-      int? totalDurationSeconds,
-      String? platform,
-      String? appVersion});
+  $Res call({
+    String userId,
+    DateTime startedAt,
+    DateTime? completedAt,
+    int lastStepReached,
+    int totalSteps,
+    Map<int, int> stepDurations,
+    bool? wasAbandoned,
+    Map<int, int?> stepFeedback,
+    int? totalDurationSeconds,
+    String? platform,
+    String? appVersion,
+  });
 }
 
 /// @nodoc
 class __$$QuestionnaireAnalyticsImplCopyWithImpl<$Res>
-    extends _$QuestionnaireAnalyticsCopyWithImpl<$Res,
-        _$QuestionnaireAnalyticsImpl>
+    extends
+        _$QuestionnaireAnalyticsCopyWithImpl<$Res, _$QuestionnaireAnalyticsImpl>
     implements _$$QuestionnaireAnalyticsImplCopyWith<$Res> {
   __$$QuestionnaireAnalyticsImplCopyWithImpl(
-      _$QuestionnaireAnalyticsImpl _value,
-      $Res Function(_$QuestionnaireAnalyticsImpl) _then)
-      : super(_value, _then);
+    _$QuestionnaireAnalyticsImpl _value,
+    $Res Function(_$QuestionnaireAnalyticsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of QuestionnaireAnalytics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -203,72 +221,74 @@ class __$$QuestionnaireAnalyticsImplCopyWithImpl<$Res>
     Object? platform = freezed,
     Object? appVersion = freezed,
   }) {
-    return _then(_$QuestionnaireAnalyticsImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      startedAt: null == startedAt
-          ? _value.startedAt
-          : startedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastStepReached: null == lastStepReached
-          ? _value.lastStepReached
-          : lastStepReached // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalSteps: null == totalSteps
-          ? _value.totalSteps
-          : totalSteps // ignore: cast_nullable_to_non_nullable
-              as int,
-      stepDurations: null == stepDurations
-          ? _value._stepDurations
-          : stepDurations // ignore: cast_nullable_to_non_nullable
-              as Map<int, int>,
-      wasAbandoned: freezed == wasAbandoned
-          ? _value.wasAbandoned
-          : wasAbandoned // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      stepFeedback: null == stepFeedback
-          ? _value._stepFeedback
-          : stepFeedback // ignore: cast_nullable_to_non_nullable
-              as Map<int, int?>,
-      totalDurationSeconds: freezed == totalDurationSeconds
-          ? _value.totalDurationSeconds
-          : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
-      platform: freezed == platform
-          ? _value.platform
-          : platform // ignore: cast_nullable_to_non_nullable
-              as String?,
-      appVersion: freezed == appVersion
-          ? _value.appVersion
-          : appVersion // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$QuestionnaireAnalyticsImpl(
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        startedAt: null == startedAt
+            ? _value.startedAt
+            : startedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        completedAt: freezed == completedAt
+            ? _value.completedAt
+            : completedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        lastStepReached: null == lastStepReached
+            ? _value.lastStepReached
+            : lastStepReached // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalSteps: null == totalSteps
+            ? _value.totalSteps
+            : totalSteps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        stepDurations: null == stepDurations
+            ? _value._stepDurations
+            : stepDurations // ignore: cast_nullable_to_non_nullable
+                  as Map<int, int>,
+        wasAbandoned: freezed == wasAbandoned
+            ? _value.wasAbandoned
+            : wasAbandoned // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        stepFeedback: null == stepFeedback
+            ? _value._stepFeedback
+            : stepFeedback // ignore: cast_nullable_to_non_nullable
+                  as Map<int, int?>,
+        totalDurationSeconds: freezed == totalDurationSeconds
+            ? _value.totalDurationSeconds
+            : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        platform: freezed == platform
+            ? _value.platform
+            : platform // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        appVersion: freezed == appVersion
+            ? _value.appVersion
+            : appVersion // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$QuestionnaireAnalyticsImpl implements _QuestionnaireAnalytics {
-  const _$QuestionnaireAnalyticsImpl(
-      {required this.userId,
-      required this.startedAt,
-      this.completedAt,
-      this.lastStepReached = 0,
-      this.totalSteps = 7,
-      final Map<int, int> stepDurations = const {},
-      this.wasAbandoned,
-      final Map<int, int?> stepFeedback = const {},
-      this.totalDurationSeconds,
-      this.platform,
-      this.appVersion})
-      : _stepDurations = stepDurations,
-        _stepFeedback = stepFeedback;
+  const _$QuestionnaireAnalyticsImpl({
+    required this.userId,
+    required this.startedAt,
+    this.completedAt,
+    this.lastStepReached = 0,
+    this.totalSteps = 7,
+    final Map<int, int> stepDurations = const {},
+    this.wasAbandoned,
+    final Map<int, int?> stepFeedback = const {},
+    this.totalDurationSeconds,
+    this.platform,
+    this.appVersion,
+  }) : _stepDurations = stepDurations,
+       _stepFeedback = stepFeedback;
 
   factory _$QuestionnaireAnalyticsImpl.fromJson(Map<String, dynamic> json) =>
       _$$QuestionnaireAnalyticsImplFromJson(json);
@@ -354,12 +374,16 @@ class _$QuestionnaireAnalyticsImpl implements _QuestionnaireAnalytics {
                 other.lastStepReached == lastStepReached) &&
             (identical(other.totalSteps, totalSteps) ||
                 other.totalSteps == totalSteps) &&
-            const DeepCollectionEquality()
-                .equals(other._stepDurations, _stepDurations) &&
+            const DeepCollectionEquality().equals(
+              other._stepDurations,
+              _stepDurations,
+            ) &&
             (identical(other.wasAbandoned, wasAbandoned) ||
                 other.wasAbandoned == wasAbandoned) &&
-            const DeepCollectionEquality()
-                .equals(other._stepFeedback, _stepFeedback) &&
+            const DeepCollectionEquality().equals(
+              other._stepFeedback,
+              _stepFeedback,
+            ) &&
             (identical(other.totalDurationSeconds, totalDurationSeconds) ||
                 other.totalDurationSeconds == totalDurationSeconds) &&
             (identical(other.platform, platform) ||
@@ -368,100 +392,107 @@ class _$QuestionnaireAnalyticsImpl implements _QuestionnaireAnalytics {
                 other.appVersion == appVersion));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      startedAt,
-      completedAt,
-      lastStepReached,
-      totalSteps,
-      const DeepCollectionEquality().hash(_stepDurations),
-      wasAbandoned,
-      const DeepCollectionEquality().hash(_stepFeedback),
-      totalDurationSeconds,
-      platform,
-      appVersion);
+    runtimeType,
+    userId,
+    startedAt,
+    completedAt,
+    lastStepReached,
+    totalSteps,
+    const DeepCollectionEquality().hash(_stepDurations),
+    wasAbandoned,
+    const DeepCollectionEquality().hash(_stepFeedback),
+    totalDurationSeconds,
+    platform,
+    appVersion,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of QuestionnaireAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$QuestionnaireAnalyticsImplCopyWith<_$QuestionnaireAnalyticsImpl>
-      get copyWith => __$$QuestionnaireAnalyticsImplCopyWithImpl<
-          _$QuestionnaireAnalyticsImpl>(this, _$identity);
+  get copyWith =>
+      __$$QuestionnaireAnalyticsImplCopyWithImpl<_$QuestionnaireAnalyticsImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$QuestionnaireAnalyticsImplToJson(
-      this,
-    );
+    return _$$QuestionnaireAnalyticsImplToJson(this);
   }
 }
 
 abstract class _QuestionnaireAnalytics implements QuestionnaireAnalytics {
-  const factory _QuestionnaireAnalytics(
-      {required final String userId,
-      required final DateTime startedAt,
-      final DateTime? completedAt,
-      final int lastStepReached,
-      final int totalSteps,
-      final Map<int, int> stepDurations,
-      final bool? wasAbandoned,
-      final Map<int, int?> stepFeedback,
-      final int? totalDurationSeconds,
-      final String? platform,
-      final String? appVersion}) = _$QuestionnaireAnalyticsImpl;
+  const factory _QuestionnaireAnalytics({
+    required final String userId,
+    required final DateTime startedAt,
+    final DateTime? completedAt,
+    final int lastStepReached,
+    final int totalSteps,
+    final Map<int, int> stepDurations,
+    final bool? wasAbandoned,
+    final Map<int, int?> stepFeedback,
+    final int? totalDurationSeconds,
+    final String? platform,
+    final String? appVersion,
+  }) = _$QuestionnaireAnalyticsImpl;
 
   factory _QuestionnaireAnalytics.fromJson(Map<String, dynamic> json) =
       _$QuestionnaireAnalyticsImpl.fromJson;
 
-  @override
-
   /// User ID for aggregation
-  String get userId;
   @override
+  String get userId;
 
   /// Timestamp when questionnaire was started
-  DateTime get startedAt;
   @override
+  DateTime get startedAt;
 
   /// Timestamp when completed (null if abandoned)
-  DateTime? get completedAt;
   @override
+  DateTime? get completedAt;
 
   /// Last step user reached before abandoning/completing
-  int get lastStepReached;
   @override
+  int get lastStepReached;
 
   /// Total steps in questionnaire (usually 7: 0-6)
-  int get totalSteps;
   @override
+  int get totalSteps;
 
   /// Time spent on each step (step index → seconds)
-  Map<int, int> get stepDurations;
   @override
+  Map<int, int> get stepDurations;
 
   /// Whether user abandoned (true) or completed (false)
-  bool? get wasAbandoned;
   @override
+  bool? get wasAbandoned;
 
   /// Feedback ratings for each step (1-5 scale, null if not rated)
-  Map<int, int?> get stepFeedback;
   @override
+  Map<int, int?> get stepFeedback;
 
   /// Total time from start to completion/abandon (seconds)
-  int? get totalDurationSeconds;
   @override
+  int? get totalDurationSeconds;
 
   /// Device/platform info for analytics
-  String? get platform;
   @override
+  String? get platform;
 
   /// App version
-  String? get appVersion;
   @override
-  @JsonKey(ignore: true)
+  String? get appVersion;
+
+  /// Create a copy of QuestionnaireAnalytics
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$QuestionnaireAnalyticsImplCopyWith<_$QuestionnaireAnalyticsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'unified_feedback.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UnifiedFeedback _$UnifiedFeedbackFromJson(Map<String, dynamic> json) {
   return _UnifiedFeedback.fromJson(json);
@@ -47,16 +48,16 @@ mixin _$UnifiedFeedback {
   /// When feedback was marked resolved/dismissed (if applicable)
   DateTime? get resolvedAt =>
       throw _privateConstructorUsedError; // ========================================
-// ADMIN REVIEW FIELDS
-// ========================================
+  // ADMIN REVIEW FIELDS
+  // ========================================
   /// Admin user ID who reviewed this feedback
   String? get reviewedBy => throw _privateConstructorUsedError;
 
   /// Admin notes/comments (visible to user if status is resolved)
   String? get adminNotes =>
       throw _privateConstructorUsedError; // ========================================
-// TYPE-SPECIFIC METADATA
-// ========================================
+  // TYPE-SPECIFIC METADATA
+  // ========================================
   /// Type-specific data stored as Map
   ///
   /// **Exercise Feedback**:
@@ -91,16 +92,20 @@ mixin _$UnifiedFeedback {
   /// - screenshotUrl: String? (Firebase Storage URL, future)
   Map<String, dynamic> get metadata =>
       throw _privateConstructorUsedError; // ========================================
-// USER INFO (OPTIONAL - FOR ADMIN)
-// ========================================
+  // USER INFO (OPTIONAL - FOR ADMIN)
+  // ========================================
   /// User email (for admin contact)
   String? get userEmail => throw _privateConstructorUsedError;
 
   /// User display name (for admin reference)
   String? get userDisplayName => throw _privateConstructorUsedError;
 
+  /// Serializes this UnifiedFeedback to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UnifiedFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UnifiedFeedbackCopyWith<UnifiedFeedback> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -108,24 +113,26 @@ mixin _$UnifiedFeedback {
 /// @nodoc
 abstract class $UnifiedFeedbackCopyWith<$Res> {
   factory $UnifiedFeedbackCopyWith(
-          UnifiedFeedback value, $Res Function(UnifiedFeedback) then) =
-      _$UnifiedFeedbackCopyWithImpl<$Res, UnifiedFeedback>;
+    UnifiedFeedback value,
+    $Res Function(UnifiedFeedback) then,
+  ) = _$UnifiedFeedbackCopyWithImpl<$Res, UnifiedFeedback>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      UnifiedFeedbackType type,
-      UnifiedFeedbackStatus status,
-      FeedbackSeverity severity,
-      String message,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      DateTime? resolvedAt,
-      String? reviewedBy,
-      String? adminNotes,
-      Map<String, dynamic> metadata,
-      String? userEmail,
-      String? userDisplayName});
+  $Res call({
+    String id,
+    String userId,
+    UnifiedFeedbackType type,
+    UnifiedFeedbackStatus status,
+    FeedbackSeverity severity,
+    String message,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? resolvedAt,
+    String? reviewedBy,
+    String? adminNotes,
+    Map<String, dynamic> metadata,
+    String? userEmail,
+    String? userDisplayName,
+  });
 }
 
 /// @nodoc
@@ -138,6 +145,8 @@ class _$UnifiedFeedbackCopyWithImpl<$Res, $Val extends UnifiedFeedback>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UnifiedFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,90 +165,95 @@ class _$UnifiedFeedbackCopyWithImpl<$Res, $Val extends UnifiedFeedback>
     Object? userEmail = freezed,
     Object? userDisplayName = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as UnifiedFeedbackType,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as UnifiedFeedbackStatus,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as FeedbackSeverity,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      resolvedAt: freezed == resolvedAt
-          ? _value.resolvedAt
-          : resolvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNotes: freezed == adminNotes
-          ? _value.adminNotes
-          : adminNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metadata: null == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as UnifiedFeedbackType,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as UnifiedFeedbackStatus,
+            severity: null == severity
+                ? _value.severity
+                : severity // ignore: cast_nullable_to_non_nullable
+                      as FeedbackSeverity,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            resolvedAt: freezed == resolvedAt
+                ? _value.resolvedAt
+                : resolvedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            reviewedBy: freezed == reviewedBy
+                ? _value.reviewedBy
+                : reviewedBy // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            adminNotes: freezed == adminNotes
+                ? _value.adminNotes
+                : adminNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            metadata: null == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+            userEmail: freezed == userEmail
+                ? _value.userEmail
+                : userEmail // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            userDisplayName: freezed == userDisplayName
+                ? _value.userDisplayName
+                : userDisplayName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UnifiedFeedbackImplCopyWith<$Res>
     implements $UnifiedFeedbackCopyWith<$Res> {
-  factory _$$UnifiedFeedbackImplCopyWith(_$UnifiedFeedbackImpl value,
-          $Res Function(_$UnifiedFeedbackImpl) then) =
-      __$$UnifiedFeedbackImplCopyWithImpl<$Res>;
+  factory _$$UnifiedFeedbackImplCopyWith(
+    _$UnifiedFeedbackImpl value,
+    $Res Function(_$UnifiedFeedbackImpl) then,
+  ) = __$$UnifiedFeedbackImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      UnifiedFeedbackType type,
-      UnifiedFeedbackStatus status,
-      FeedbackSeverity severity,
-      String message,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      DateTime? resolvedAt,
-      String? reviewedBy,
-      String? adminNotes,
-      Map<String, dynamic> metadata,
-      String? userEmail,
-      String? userDisplayName});
+  $Res call({
+    String id,
+    String userId,
+    UnifiedFeedbackType type,
+    UnifiedFeedbackStatus status,
+    FeedbackSeverity severity,
+    String message,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? resolvedAt,
+    String? reviewedBy,
+    String? adminNotes,
+    Map<String, dynamic> metadata,
+    String? userEmail,
+    String? userDisplayName,
+  });
 }
 
 /// @nodoc
@@ -247,9 +261,12 @@ class __$$UnifiedFeedbackImplCopyWithImpl<$Res>
     extends _$UnifiedFeedbackCopyWithImpl<$Res, _$UnifiedFeedbackImpl>
     implements _$$UnifiedFeedbackImplCopyWith<$Res> {
   __$$UnifiedFeedbackImplCopyWithImpl(
-      _$UnifiedFeedbackImpl _value, $Res Function(_$UnifiedFeedbackImpl) _then)
-      : super(_value, _then);
+    _$UnifiedFeedbackImpl _value,
+    $Res Function(_$UnifiedFeedbackImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UnifiedFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -268,86 +285,88 @@ class __$$UnifiedFeedbackImplCopyWithImpl<$Res>
     Object? userEmail = freezed,
     Object? userDisplayName = freezed,
   }) {
-    return _then(_$UnifiedFeedbackImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as UnifiedFeedbackType,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as UnifiedFeedbackStatus,
-      severity: null == severity
-          ? _value.severity
-          : severity // ignore: cast_nullable_to_non_nullable
-              as FeedbackSeverity,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      resolvedAt: freezed == resolvedAt
-          ? _value.resolvedAt
-          : resolvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      adminNotes: freezed == adminNotes
-          ? _value.adminNotes
-          : adminNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metadata: null == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      userEmail: freezed == userEmail
-          ? _value.userEmail
-          : userEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userDisplayName: freezed == userDisplayName
-          ? _value.userDisplayName
-          : userDisplayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$UnifiedFeedbackImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as UnifiedFeedbackType,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as UnifiedFeedbackStatus,
+        severity: null == severity
+            ? _value.severity
+            : severity // ignore: cast_nullable_to_non_nullable
+                  as FeedbackSeverity,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        resolvedAt: freezed == resolvedAt
+            ? _value.resolvedAt
+            : resolvedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        reviewedBy: freezed == reviewedBy
+            ? _value.reviewedBy
+            : reviewedBy // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        adminNotes: freezed == adminNotes
+            ? _value.adminNotes
+            : adminNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        metadata: null == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+        userEmail: freezed == userEmail
+            ? _value.userEmail
+            : userEmail // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        userDisplayName: freezed == userDisplayName
+            ? _value.userDisplayName
+            : userDisplayName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
-  const _$UnifiedFeedbackImpl(
-      {required this.id,
-      required this.userId,
-      required this.type,
-      required this.status,
-      required this.severity,
-      required this.message,
-      required this.createdAt,
-      this.updatedAt,
-      this.resolvedAt,
-      this.reviewedBy,
-      this.adminNotes,
-      final Map<String, dynamic> metadata = const {},
-      this.userEmail,
-      this.userDisplayName})
-      : _metadata = metadata;
+  const _$UnifiedFeedbackImpl({
+    required this.id,
+    required this.userId,
+    required this.type,
+    required this.status,
+    required this.severity,
+    required this.message,
+    required this.createdAt,
+    this.updatedAt,
+    this.resolvedAt,
+    this.reviewedBy,
+    this.adminNotes,
+    final Map<String, dynamic> metadata = const {},
+    this.userEmail,
+    this.userDisplayName,
+  }) : _metadata = metadata;
 
   factory _$UnifiedFeedbackImpl.fromJson(Map<String, dynamic> json) =>
       _$$UnifiedFeedbackImplFromJson(json);
@@ -387,9 +406,9 @@ class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
   /// When feedback was marked resolved/dismissed (if applicable)
   @override
   final DateTime? resolvedAt;
-// ========================================
-// ADMIN REVIEW FIELDS
-// ========================================
+  // ========================================
+  // ADMIN REVIEW FIELDS
+  // ========================================
   /// Admin user ID who reviewed this feedback
   @override
   final String? reviewedBy;
@@ -397,9 +416,9 @@ class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
   /// Admin notes/comments (visible to user if status is resolved)
   @override
   final String? adminNotes;
-// ========================================
-// TYPE-SPECIFIC METADATA
-// ========================================
+  // ========================================
+  // TYPE-SPECIFIC METADATA
+  // ========================================
   /// Type-specific data stored as Map
   ///
   /// **Exercise Feedback**:
@@ -433,9 +452,9 @@ class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
   /// - appVersion: String? (e.g., "1.2.3")
   /// - screenshotUrl: String? (Firebase Storage URL, future)
   final Map<String, dynamic> _metadata;
-// ========================================
-// TYPE-SPECIFIC METADATA
-// ========================================
+  // ========================================
+  // TYPE-SPECIFIC METADATA
+  // ========================================
   /// Type-specific data stored as Map
   ///
   /// **Exercise Feedback**:
@@ -476,9 +495,9 @@ class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
     return EqualUnmodifiableMapView(_metadata);
   }
 
-// ========================================
-// USER INFO (OPTIONAL - FOR ADMIN)
-// ========================================
+  // ========================================
+  // USER INFO (OPTIONAL - FOR ADMIN)
+  // ========================================
   /// User email (for admin contact)
   @override
   final String? userEmail;
@@ -521,108 +540,110 @@ class _$UnifiedFeedbackImpl implements _UnifiedFeedback {
                 other.userDisplayName == userDisplayName));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      type,
-      status,
-      severity,
-      message,
-      createdAt,
-      updatedAt,
-      resolvedAt,
-      reviewedBy,
-      adminNotes,
-      const DeepCollectionEquality().hash(_metadata),
-      userEmail,
-      userDisplayName);
+    runtimeType,
+    id,
+    userId,
+    type,
+    status,
+    severity,
+    message,
+    createdAt,
+    updatedAt,
+    resolvedAt,
+    reviewedBy,
+    adminNotes,
+    const DeepCollectionEquality().hash(_metadata),
+    userEmail,
+    userDisplayName,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UnifiedFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnifiedFeedbackImplCopyWith<_$UnifiedFeedbackImpl> get copyWith =>
       __$$UnifiedFeedbackImplCopyWithImpl<_$UnifiedFeedbackImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UnifiedFeedbackImplToJson(
-      this,
-    );
+    return _$$UnifiedFeedbackImplToJson(this);
   }
 }
 
 abstract class _UnifiedFeedback implements UnifiedFeedback {
-  const factory _UnifiedFeedback(
-      {required final String id,
-      required final String userId,
-      required final UnifiedFeedbackType type,
-      required final UnifiedFeedbackStatus status,
-      required final FeedbackSeverity severity,
-      required final String message,
-      required final DateTime createdAt,
-      final DateTime? updatedAt,
-      final DateTime? resolvedAt,
-      final String? reviewedBy,
-      final String? adminNotes,
-      final Map<String, dynamic> metadata,
-      final String? userEmail,
-      final String? userDisplayName}) = _$UnifiedFeedbackImpl;
+  const factory _UnifiedFeedback({
+    required final String id,
+    required final String userId,
+    required final UnifiedFeedbackType type,
+    required final UnifiedFeedbackStatus status,
+    required final FeedbackSeverity severity,
+    required final String message,
+    required final DateTime createdAt,
+    final DateTime? updatedAt,
+    final DateTime? resolvedAt,
+    final String? reviewedBy,
+    final String? adminNotes,
+    final Map<String, dynamic> metadata,
+    final String? userEmail,
+    final String? userDisplayName,
+  }) = _$UnifiedFeedbackImpl;
 
   factory _UnifiedFeedback.fromJson(Map<String, dynamic> json) =
       _$UnifiedFeedbackImpl.fromJson;
 
-  @override
-
   /// Unique feedback ID (Firestore document ID)
-  String get id;
   @override
+  String get id;
 
   /// User who submitted feedback (Firebase Auth UID)
-  String get userId;
   @override
+  String get userId;
 
   /// Type of feedback (discriminator)
-  UnifiedFeedbackType get type;
   @override
+  UnifiedFeedbackType get type;
 
   /// Current status in review workflow
-  UnifiedFeedbackStatus get status;
   @override
+  UnifiedFeedbackStatus get status;
 
   /// Severity level (for prioritization)
-  FeedbackSeverity get severity;
   @override
+  FeedbackSeverity get severity;
 
   /// Main feedback message/description
-  String get message;
   @override
+  String get message;
 
   /// When feedback was submitted
-  DateTime get createdAt;
   @override
+  DateTime get createdAt;
 
   /// Last update timestamp (status change, admin note, etc.)
-  DateTime? get updatedAt;
   @override
+  DateTime? get updatedAt;
 
   /// When feedback was marked resolved/dismissed (if applicable)
-  DateTime? get resolvedAt;
-  @override // ========================================
-// ADMIN REVIEW FIELDS
-// ========================================
-  /// Admin user ID who reviewed this feedback
-  String? get reviewedBy;
   @override
+  DateTime? get resolvedAt; // ========================================
+  // ADMIN REVIEW FIELDS
+  // ========================================
+  /// Admin user ID who reviewed this feedback
+  @override
+  String? get reviewedBy;
 
   /// Admin notes/comments (visible to user if status is resolved)
-  String? get adminNotes;
-  @override // ========================================
-// TYPE-SPECIFIC METADATA
-// ========================================
+  @override
+  String? get adminNotes; // ========================================
+  // TYPE-SPECIFIC METADATA
+  // ========================================
   /// Type-specific data stored as Map
   ///
   /// **Exercise Feedback**:
@@ -655,18 +676,22 @@ abstract class _UnifiedFeedback implements UnifiedFeedback {
   /// - deviceInfo: String? (e.g., "iPhone 15 Pro - iOS 17.2")
   /// - appVersion: String? (e.g., "1.2.3")
   /// - screenshotUrl: String? (Firebase Storage URL, future)
-  Map<String, dynamic> get metadata;
-  @override // ========================================
-// USER INFO (OPTIONAL - FOR ADMIN)
-// ========================================
-  /// User email (for admin contact)
-  String? get userEmail;
   @override
+  Map<String, dynamic> get metadata; // ========================================
+  // USER INFO (OPTIONAL - FOR ADMIN)
+  // ========================================
+  /// User email (for admin contact)
+  @override
+  String? get userEmail;
 
   /// User display name (for admin reference)
-  String? get userDisplayName;
   @override
-  @JsonKey(ignore: true)
+  String? get userDisplayName;
+
+  /// Create a copy of UnifiedFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnifiedFeedbackImplCopyWith<_$UnifiedFeedbackImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

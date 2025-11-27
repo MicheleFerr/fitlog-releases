@@ -12,7 +12,8 @@ part of 'analytics_set.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AnalyticsSet _$AnalyticsSetFromJson(Map<String, dynamic> json) {
   return _AnalyticsSet.fromJson(json);
@@ -29,8 +30,12 @@ mixin _$AnalyticsSet {
   /// When the set was performed
   DateTime get date => throw _privateConstructorUsedError;
 
+  /// Serializes this AnalyticsSet to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AnalyticsSet
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AnalyticsSetCopyWith<AnalyticsSet> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -38,8 +43,9 @@ mixin _$AnalyticsSet {
 /// @nodoc
 abstract class $AnalyticsSetCopyWith<$Res> {
   factory $AnalyticsSetCopyWith(
-          AnalyticsSet value, $Res Function(AnalyticsSet) then) =
-      _$AnalyticsSetCopyWithImpl<$Res, AnalyticsSet>;
+    AnalyticsSet value,
+    $Res Function(AnalyticsSet) then,
+  ) = _$AnalyticsSetCopyWithImpl<$Res, AnalyticsSet>;
   @useResult
   $Res call({double weight, int reps, DateTime date});
 }
@@ -54,27 +60,28 @@ class _$AnalyticsSetCopyWithImpl<$Res, $Val extends AnalyticsSet>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AnalyticsSet
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? weight = null,
-    Object? reps = null,
-    Object? date = null,
-  }) {
-    return _then(_value.copyWith(
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+  $Res call({Object? weight = null, Object? reps = null, Object? date = null}) {
+    return _then(
+      _value.copyWith(
+            weight: null == weight
+                ? _value.weight
+                : weight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            reps: null == reps
+                ? _value.reps
+                : reps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -82,8 +89,9 @@ class _$AnalyticsSetCopyWithImpl<$Res, $Val extends AnalyticsSet>
 abstract class _$$AnalyticsSetImplCopyWith<$Res>
     implements $AnalyticsSetCopyWith<$Res> {
   factory _$$AnalyticsSetImplCopyWith(
-          _$AnalyticsSetImpl value, $Res Function(_$AnalyticsSetImpl) then) =
-      __$$AnalyticsSetImplCopyWithImpl<$Res>;
+    _$AnalyticsSetImpl value,
+    $Res Function(_$AnalyticsSetImpl) then,
+  ) = __$$AnalyticsSetImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double weight, int reps, DateTime date});
@@ -94,39 +102,42 @@ class __$$AnalyticsSetImplCopyWithImpl<$Res>
     extends _$AnalyticsSetCopyWithImpl<$Res, _$AnalyticsSetImpl>
     implements _$$AnalyticsSetImplCopyWith<$Res> {
   __$$AnalyticsSetImplCopyWithImpl(
-      _$AnalyticsSetImpl _value, $Res Function(_$AnalyticsSetImpl) _then)
-      : super(_value, _then);
+    _$AnalyticsSetImpl _value,
+    $Res Function(_$AnalyticsSetImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AnalyticsSet
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? weight = null,
-    Object? reps = null,
-    Object? date = null,
-  }) {
-    return _then(_$AnalyticsSetImpl(
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+  $Res call({Object? weight = null, Object? reps = null, Object? date = null}) {
+    return _then(
+      _$AnalyticsSetImpl(
+        weight: null == weight
+            ? _value.weight
+            : weight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        reps: null == reps
+            ? _value.reps
+            : reps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AnalyticsSetImpl extends _AnalyticsSet {
-  const _$AnalyticsSetImpl(
-      {required this.weight, required this.reps, required this.date})
-      : super._();
+  const _$AnalyticsSetImpl({
+    required this.weight,
+    required this.reps,
+    required this.date,
+  }) : super._();
 
   factory _$AnalyticsSetImpl.fromJson(Map<String, dynamic> json) =>
       _$$AnalyticsSetImplFromJson(json);
@@ -158,11 +169,13 @@ class _$AnalyticsSetImpl extends _AnalyticsSet {
             (identical(other.date, date) || other.date == date));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, weight, reps, date);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyticsSet
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AnalyticsSetImplCopyWith<_$AnalyticsSetImpl> get copyWith =>
@@ -170,36 +183,37 @@ class _$AnalyticsSetImpl extends _AnalyticsSet {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AnalyticsSetImplToJson(
-      this,
-    );
+    return _$$AnalyticsSetImplToJson(this);
   }
 }
 
 abstract class _AnalyticsSet extends AnalyticsSet {
-  const factory _AnalyticsSet(
-      {required final double weight,
-      required final int reps,
-      required final DateTime date}) = _$AnalyticsSetImpl;
+  const factory _AnalyticsSet({
+    required final double weight,
+    required final int reps,
+    required final DateTime date,
+  }) = _$AnalyticsSetImpl;
   const _AnalyticsSet._() : super._();
 
   factory _AnalyticsSet.fromJson(Map<String, dynamic> json) =
       _$AnalyticsSetImpl.fromJson;
 
-  @override
-
   /// Weight lifted in kg (must be > 0)
-  double get weight;
   @override
+  double get weight;
 
   /// Number of repetitions performed (must be > 0)
-  int get reps;
   @override
+  int get reps;
 
   /// When the set was performed
-  DateTime get date;
   @override
-  @JsonKey(ignore: true)
+  DateTime get date;
+
+  /// Create a copy of AnalyticsSet
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AnalyticsSetImplCopyWith<_$AnalyticsSetImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

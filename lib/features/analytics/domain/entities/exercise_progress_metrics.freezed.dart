@@ -12,7 +12,8 @@ part of 'exercise_progress_metrics.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ExerciseProgressMetrics {
@@ -28,34 +29,40 @@ mixin _$ExerciseProgressMetrics {
   TrendDirection get volumeTrend => throw _privateConstructorUsedError;
   List<ExerciseSetData> get allSets => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseProgressMetrics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseProgressMetricsCopyWith<ExerciseProgressMetrics> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExerciseProgressMetricsCopyWith<$Res> {
-  factory $ExerciseProgressMetricsCopyWith(ExerciseProgressMetrics value,
-          $Res Function(ExerciseProgressMetrics) then) =
-      _$ExerciseProgressMetricsCopyWithImpl<$Res, ExerciseProgressMetrics>;
+  factory $ExerciseProgressMetricsCopyWith(
+    ExerciseProgressMetrics value,
+    $Res Function(ExerciseProgressMetrics) then,
+  ) = _$ExerciseProgressMetricsCopyWithImpl<$Res, ExerciseProgressMetrics>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      int totalSessions,
-      double maxWeight,
-      double averageWeight,
-      double averageReps,
-      double averageRPE,
-      double totalVolume,
-      DateTime lastWorkoutDate,
-      TrendDirection weightTrend,
-      TrendDirection volumeTrend,
-      List<ExerciseSetData> allSets});
+  $Res call({
+    String exerciseName,
+    int totalSessions,
+    double maxWeight,
+    double averageWeight,
+    double averageReps,
+    double averageRPE,
+    double totalVolume,
+    DateTime lastWorkoutDate,
+    TrendDirection weightTrend,
+    TrendDirection volumeTrend,
+    List<ExerciseSetData> allSets,
+  });
 }
 
 /// @nodoc
-class _$ExerciseProgressMetricsCopyWithImpl<$Res,
-        $Val extends ExerciseProgressMetrics>
+class _$ExerciseProgressMetricsCopyWithImpl<
+  $Res,
+  $Val extends ExerciseProgressMetrics
+>
     implements $ExerciseProgressMetricsCopyWith<$Res> {
   _$ExerciseProgressMetricsCopyWithImpl(this._value, this._then);
 
@@ -64,6 +71,8 @@ class _$ExerciseProgressMetricsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseProgressMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -79,52 +88,55 @@ class _$ExerciseProgressMetricsCopyWithImpl<$Res,
     Object? volumeTrend = null,
     Object? allSets = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalSessions: null == totalSessions
-          ? _value.totalSessions
-          : totalSessions // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxWeight: null == maxWeight
-          ? _value.maxWeight
-          : maxWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageWeight: null == averageWeight
-          ? _value.averageWeight
-          : averageWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageReps: null == averageReps
-          ? _value.averageReps
-          : averageReps // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageRPE: null == averageRPE
-          ? _value.averageRPE
-          : averageRPE // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolume: null == totalVolume
-          ? _value.totalVolume
-          : totalVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weightTrend: null == weightTrend
-          ? _value.weightTrend
-          : weightTrend // ignore: cast_nullable_to_non_nullable
-              as TrendDirection,
-      volumeTrend: null == volumeTrend
-          ? _value.volumeTrend
-          : volumeTrend // ignore: cast_nullable_to_non_nullable
-              as TrendDirection,
-      allSets: null == allSets
-          ? _value.allSets
-          : allSets // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSetData>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalSessions: null == totalSessions
+                ? _value.totalSessions
+                : totalSessions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            maxWeight: null == maxWeight
+                ? _value.maxWeight
+                : maxWeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            averageWeight: null == averageWeight
+                ? _value.averageWeight
+                : averageWeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            averageReps: null == averageReps
+                ? _value.averageReps
+                : averageReps // ignore: cast_nullable_to_non_nullable
+                      as double,
+            averageRPE: null == averageRPE
+                ? _value.averageRPE
+                : averageRPE // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalVolume: null == totalVolume
+                ? _value.totalVolume
+                : totalVolume // ignore: cast_nullable_to_non_nullable
+                      as double,
+            lastWorkoutDate: null == lastWorkoutDate
+                ? _value.lastWorkoutDate
+                : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            weightTrend: null == weightTrend
+                ? _value.weightTrend
+                : weightTrend // ignore: cast_nullable_to_non_nullable
+                      as TrendDirection,
+            volumeTrend: null == volumeTrend
+                ? _value.volumeTrend
+                : volumeTrend // ignore: cast_nullable_to_non_nullable
+                      as TrendDirection,
+            allSets: null == allSets
+                ? _value.allSets
+                : allSets // ignore: cast_nullable_to_non_nullable
+                      as List<ExerciseSetData>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -132,35 +144,41 @@ class _$ExerciseProgressMetricsCopyWithImpl<$Res,
 abstract class _$$ExerciseProgressMetricsImplCopyWith<$Res>
     implements $ExerciseProgressMetricsCopyWith<$Res> {
   factory _$$ExerciseProgressMetricsImplCopyWith(
-          _$ExerciseProgressMetricsImpl value,
-          $Res Function(_$ExerciseProgressMetricsImpl) then) =
-      __$$ExerciseProgressMetricsImplCopyWithImpl<$Res>;
+    _$ExerciseProgressMetricsImpl value,
+    $Res Function(_$ExerciseProgressMetricsImpl) then,
+  ) = __$$ExerciseProgressMetricsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      int totalSessions,
-      double maxWeight,
-      double averageWeight,
-      double averageReps,
-      double averageRPE,
-      double totalVolume,
-      DateTime lastWorkoutDate,
-      TrendDirection weightTrend,
-      TrendDirection volumeTrend,
-      List<ExerciseSetData> allSets});
+  $Res call({
+    String exerciseName,
+    int totalSessions,
+    double maxWeight,
+    double averageWeight,
+    double averageReps,
+    double averageRPE,
+    double totalVolume,
+    DateTime lastWorkoutDate,
+    TrendDirection weightTrend,
+    TrendDirection volumeTrend,
+    List<ExerciseSetData> allSets,
+  });
 }
 
 /// @nodoc
 class __$$ExerciseProgressMetricsImplCopyWithImpl<$Res>
-    extends _$ExerciseProgressMetricsCopyWithImpl<$Res,
-        _$ExerciseProgressMetricsImpl>
+    extends
+        _$ExerciseProgressMetricsCopyWithImpl<
+          $Res,
+          _$ExerciseProgressMetricsImpl
+        >
     implements _$$ExerciseProgressMetricsImplCopyWith<$Res> {
   __$$ExerciseProgressMetricsImplCopyWithImpl(
-      _$ExerciseProgressMetricsImpl _value,
-      $Res Function(_$ExerciseProgressMetricsImpl) _then)
-      : super(_value, _then);
+    _$ExerciseProgressMetricsImpl _value,
+    $Res Function(_$ExerciseProgressMetricsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseProgressMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -176,72 +194,74 @@ class __$$ExerciseProgressMetricsImplCopyWithImpl<$Res>
     Object? volumeTrend = null,
     Object? allSets = null,
   }) {
-    return _then(_$ExerciseProgressMetricsImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalSessions: null == totalSessions
-          ? _value.totalSessions
-          : totalSessions // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxWeight: null == maxWeight
-          ? _value.maxWeight
-          : maxWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageWeight: null == averageWeight
-          ? _value.averageWeight
-          : averageWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageReps: null == averageReps
-          ? _value.averageReps
-          : averageReps // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageRPE: null == averageRPE
-          ? _value.averageRPE
-          : averageRPE // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolume: null == totalVolume
-          ? _value.totalVolume
-          : totalVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weightTrend: null == weightTrend
-          ? _value.weightTrend
-          : weightTrend // ignore: cast_nullable_to_non_nullable
-              as TrendDirection,
-      volumeTrend: null == volumeTrend
-          ? _value.volumeTrend
-          : volumeTrend // ignore: cast_nullable_to_non_nullable
-              as TrendDirection,
-      allSets: null == allSets
-          ? _value._allSets
-          : allSets // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSetData>,
-    ));
+    return _then(
+      _$ExerciseProgressMetricsImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalSessions: null == totalSessions
+            ? _value.totalSessions
+            : totalSessions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        maxWeight: null == maxWeight
+            ? _value.maxWeight
+            : maxWeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        averageWeight: null == averageWeight
+            ? _value.averageWeight
+            : averageWeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        averageReps: null == averageReps
+            ? _value.averageReps
+            : averageReps // ignore: cast_nullable_to_non_nullable
+                  as double,
+        averageRPE: null == averageRPE
+            ? _value.averageRPE
+            : averageRPE // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalVolume: null == totalVolume
+            ? _value.totalVolume
+            : totalVolume // ignore: cast_nullable_to_non_nullable
+                  as double,
+        lastWorkoutDate: null == lastWorkoutDate
+            ? _value.lastWorkoutDate
+            : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        weightTrend: null == weightTrend
+            ? _value.weightTrend
+            : weightTrend // ignore: cast_nullable_to_non_nullable
+                  as TrendDirection,
+        volumeTrend: null == volumeTrend
+            ? _value.volumeTrend
+            : volumeTrend // ignore: cast_nullable_to_non_nullable
+                  as TrendDirection,
+        allSets: null == allSets
+            ? _value._allSets
+            : allSets // ignore: cast_nullable_to_non_nullable
+                  as List<ExerciseSetData>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExerciseProgressMetricsImpl extends _ExerciseProgressMetrics {
-  const _$ExerciseProgressMetricsImpl(
-      {required this.exerciseName,
-      required this.totalSessions,
-      required this.maxWeight,
-      required this.averageWeight,
-      required this.averageReps,
-      required this.averageRPE,
-      required this.totalVolume,
-      required this.lastWorkoutDate,
-      required this.weightTrend,
-      required this.volumeTrend,
-      required final List<ExerciseSetData> allSets})
-      : _allSets = allSets,
-        super._();
+  const _$ExerciseProgressMetricsImpl({
+    required this.exerciseName,
+    required this.totalSessions,
+    required this.maxWeight,
+    required this.averageWeight,
+    required this.averageReps,
+    required this.averageRPE,
+    required this.totalVolume,
+    required this.lastWorkoutDate,
+    required this.weightTrend,
+    required this.volumeTrend,
+    required final List<ExerciseSetData> allSets,
+  }) : _allSets = allSets,
+       super._();
 
   @override
   final String exerciseName;
@@ -306,41 +326,46 @@ class _$ExerciseProgressMetricsImpl extends _ExerciseProgressMetrics {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      exerciseName,
-      totalSessions,
-      maxWeight,
-      averageWeight,
-      averageReps,
-      averageRPE,
-      totalVolume,
-      lastWorkoutDate,
-      weightTrend,
-      volumeTrend,
-      const DeepCollectionEquality().hash(_allSets));
+    runtimeType,
+    exerciseName,
+    totalSessions,
+    maxWeight,
+    averageWeight,
+    averageReps,
+    averageRPE,
+    totalVolume,
+    lastWorkoutDate,
+    weightTrend,
+    volumeTrend,
+    const DeepCollectionEquality().hash(_allSets),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseProgressMetrics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseProgressMetricsImplCopyWith<_$ExerciseProgressMetricsImpl>
-      get copyWith => __$$ExerciseProgressMetricsImplCopyWithImpl<
-          _$ExerciseProgressMetricsImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExerciseProgressMetricsImplCopyWithImpl<
+        _$ExerciseProgressMetricsImpl
+      >(this, _$identity);
 }
 
 abstract class _ExerciseProgressMetrics extends ExerciseProgressMetrics {
-  const factory _ExerciseProgressMetrics(
-          {required final String exerciseName,
-          required final int totalSessions,
-          required final double maxWeight,
-          required final double averageWeight,
-          required final double averageReps,
-          required final double averageRPE,
-          required final double totalVolume,
-          required final DateTime lastWorkoutDate,
-          required final TrendDirection weightTrend,
-          required final TrendDirection volumeTrend,
-          required final List<ExerciseSetData> allSets}) =
-      _$ExerciseProgressMetricsImpl;
+  const factory _ExerciseProgressMetrics({
+    required final String exerciseName,
+    required final int totalSessions,
+    required final double maxWeight,
+    required final double averageWeight,
+    required final double averageReps,
+    required final double averageRPE,
+    required final double totalVolume,
+    required final DateTime lastWorkoutDate,
+    required final TrendDirection weightTrend,
+    required final TrendDirection volumeTrend,
+    required final List<ExerciseSetData> allSets,
+  }) = _$ExerciseProgressMetricsImpl;
   const _ExerciseProgressMetrics._() : super._();
 
   @override
@@ -365,10 +390,13 @@ abstract class _ExerciseProgressMetrics extends ExerciseProgressMetrics {
   TrendDirection get volumeTrend;
   @override
   List<ExerciseSetData> get allSets;
+
+  /// Create a copy of ExerciseProgressMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseProgressMetricsImplCopyWith<_$ExerciseProgressMetricsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -380,7 +408,9 @@ mixin _$ExerciseSetData {
   double get volume => throw _privateConstructorUsedError;
   String get workoutName => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseSetData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseSetDataCopyWith<ExerciseSetData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -388,16 +418,18 @@ mixin _$ExerciseSetData {
 /// @nodoc
 abstract class $ExerciseSetDataCopyWith<$Res> {
   factory $ExerciseSetDataCopyWith(
-          ExerciseSetData value, $Res Function(ExerciseSetData) then) =
-      _$ExerciseSetDataCopyWithImpl<$Res, ExerciseSetData>;
+    ExerciseSetData value,
+    $Res Function(ExerciseSetData) then,
+  ) = _$ExerciseSetDataCopyWithImpl<$Res, ExerciseSetData>;
   @useResult
-  $Res call(
-      {DateTime date,
-      double weight,
-      int reps,
-      int? rpe,
-      double volume,
-      String workoutName});
+  $Res call({
+    DateTime date,
+    double weight,
+    int reps,
+    int? rpe,
+    double volume,
+    String workoutName,
+  });
 }
 
 /// @nodoc
@@ -410,6 +442,8 @@ class _$ExerciseSetDataCopyWithImpl<$Res, $Val extends ExerciseSetData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseSetData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -420,50 +454,55 @@ class _$ExerciseSetDataCopyWithImpl<$Res, $Val extends ExerciseSetData>
     Object? volume = null,
     Object? workoutName = null,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      rpe: freezed == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int?,
-      volume: null == volume
-          ? _value.volume
-          : volume // ignore: cast_nullable_to_non_nullable
-              as double,
-      workoutName: null == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            weight: null == weight
+                ? _value.weight
+                : weight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            reps: null == reps
+                ? _value.reps
+                : reps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            rpe: freezed == rpe
+                ? _value.rpe
+                : rpe // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            volume: null == volume
+                ? _value.volume
+                : volume // ignore: cast_nullable_to_non_nullable
+                      as double,
+            workoutName: null == workoutName
+                ? _value.workoutName
+                : workoutName // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseSetDataImplCopyWith<$Res>
     implements $ExerciseSetDataCopyWith<$Res> {
-  factory _$$ExerciseSetDataImplCopyWith(_$ExerciseSetDataImpl value,
-          $Res Function(_$ExerciseSetDataImpl) then) =
-      __$$ExerciseSetDataImplCopyWithImpl<$Res>;
+  factory _$$ExerciseSetDataImplCopyWith(
+    _$ExerciseSetDataImpl value,
+    $Res Function(_$ExerciseSetDataImpl) then,
+  ) = __$$ExerciseSetDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date,
-      double weight,
-      int reps,
-      int? rpe,
-      double volume,
-      String workoutName});
+  $Res call({
+    DateTime date,
+    double weight,
+    int reps,
+    int? rpe,
+    double volume,
+    String workoutName,
+  });
 }
 
 /// @nodoc
@@ -471,9 +510,12 @@ class __$$ExerciseSetDataImplCopyWithImpl<$Res>
     extends _$ExerciseSetDataCopyWithImpl<$Res, _$ExerciseSetDataImpl>
     implements _$$ExerciseSetDataImplCopyWith<$Res> {
   __$$ExerciseSetDataImplCopyWithImpl(
-      _$ExerciseSetDataImpl _value, $Res Function(_$ExerciseSetDataImpl) _then)
-      : super(_value, _then);
+    _$ExerciseSetDataImpl _value,
+    $Res Function(_$ExerciseSetDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseSetData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -484,45 +526,48 @@ class __$$ExerciseSetDataImplCopyWithImpl<$Res>
     Object? volume = null,
     Object? workoutName = null,
   }) {
-    return _then(_$ExerciseSetDataImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weight: null == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      rpe: freezed == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int?,
-      volume: null == volume
-          ? _value.volume
-          : volume // ignore: cast_nullable_to_non_nullable
-              as double,
-      workoutName: null == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$ExerciseSetDataImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        weight: null == weight
+            ? _value.weight
+            : weight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        reps: null == reps
+            ? _value.reps
+            : reps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        rpe: freezed == rpe
+            ? _value.rpe
+            : rpe // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        volume: null == volume
+            ? _value.volume
+            : volume // ignore: cast_nullable_to_non_nullable
+                  as double,
+        workoutName: null == workoutName
+            ? _value.workoutName
+            : workoutName // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExerciseSetDataImpl implements _ExerciseSetData {
-  const _$ExerciseSetDataImpl(
-      {required this.date,
-      required this.weight,
-      required this.reps,
-      required this.rpe,
-      required this.volume,
-      required this.workoutName});
+  const _$ExerciseSetDataImpl({
+    required this.date,
+    required this.weight,
+    required this.reps,
+    required this.rpe,
+    required this.volume,
+    required this.workoutName,
+  });
 
   @override
   final DateTime date;
@@ -560,22 +605,27 @@ class _$ExerciseSetDataImpl implements _ExerciseSetData {
   int get hashCode =>
       Object.hash(runtimeType, date, weight, reps, rpe, volume, workoutName);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseSetData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseSetDataImplCopyWith<_$ExerciseSetDataImpl> get copyWith =>
       __$$ExerciseSetDataImplCopyWithImpl<_$ExerciseSetDataImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ExerciseSetData implements ExerciseSetData {
-  const factory _ExerciseSetData(
-      {required final DateTime date,
-      required final double weight,
-      required final int reps,
-      required final int? rpe,
-      required final double volume,
-      required final String workoutName}) = _$ExerciseSetDataImpl;
+  const factory _ExerciseSetData({
+    required final DateTime date,
+    required final double weight,
+    required final int reps,
+    required final int? rpe,
+    required final double volume,
+    required final String workoutName,
+  }) = _$ExerciseSetDataImpl;
 
   @override
   DateTime get date;
@@ -589,8 +639,11 @@ abstract class _ExerciseSetData implements ExerciseSetData {
   double get volume;
   @override
   String get workoutName;
+
+  /// Create a copy of ExerciseSetData
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseSetDataImplCopyWith<_$ExerciseSetDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

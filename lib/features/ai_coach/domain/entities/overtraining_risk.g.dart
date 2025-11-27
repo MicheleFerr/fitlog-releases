@@ -7,30 +7,30 @@ part of 'overtraining_risk.dart';
 // **************************************************************************
 
 _$OvertrainingRiskImpl _$$OvertrainingRiskImplFromJson(
-        Map<String, dynamic> json) =>
-    _$OvertrainingRiskImpl(
-      riskLevel: $enumDecode(_$RiskLevelEnumMap, json['riskLevel']),
-      tsbScore: (json['tsbScore'] as num).toDouble(),
-      hrvDeviation: (json['hrvDeviation'] as num).toDouble(),
-      recommendation: json['recommendation'] as String,
-      factors: json['factors'] == null
-          ? null
-          : RiskFactors.fromJson(json['factors'] as Map<String, dynamic>),
-      calculatedAt: json['calculatedAt'] == null
-          ? null
-          : DateTime.parse(json['calculatedAt'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$OvertrainingRiskImpl(
+  riskLevel: $enumDecode(_$RiskLevelEnumMap, json['riskLevel']),
+  tsbScore: (json['tsbScore'] as num).toDouble(),
+  hrvDeviation: (json['hrvDeviation'] as num).toDouble(),
+  recommendation: json['recommendation'] as String,
+  factors: json['factors'] == null
+      ? null
+      : RiskFactors.fromJson(json['factors'] as Map<String, dynamic>),
+  calculatedAt: json['calculatedAt'] == null
+      ? null
+      : DateTime.parse(json['calculatedAt'] as String),
+);
 
 Map<String, dynamic> _$$OvertrainingRiskImplToJson(
-        _$OvertrainingRiskImpl instance) =>
-    <String, dynamic>{
-      'riskLevel': _$RiskLevelEnumMap[instance.riskLevel]!,
-      'tsbScore': instance.tsbScore,
-      'hrvDeviation': instance.hrvDeviation,
-      'recommendation': instance.recommendation,
-      'factors': instance.factors?.toJson(),
-      'calculatedAt': instance.calculatedAt?.toIso8601String(),
-    };
+  _$OvertrainingRiskImpl instance,
+) => <String, dynamic>{
+  'riskLevel': _$RiskLevelEnumMap[instance.riskLevel]!,
+  'tsbScore': instance.tsbScore,
+  'hrvDeviation': instance.hrvDeviation,
+  'recommendation': instance.recommendation,
+  'factors': instance.factors?.toJson(),
+  'calculatedAt': instance.calculatedAt?.toIso8601String(),
+};
 
 const _$RiskLevelEnumMap = {
   RiskLevel.locked: 'locked',

@@ -13,8 +13,10 @@ _$PRCelebrationImpl _$$PRCelebrationImplFromJson(Map<String, dynamic> json) =>
       prId: json['prId'] as String,
       prType: $enumDecode(_$PRTypeEnumMap, json['prType']),
       celebratedAt: DateTime.parse(json['celebratedAt'] as String),
-      engagement:
-          $enumDecode(_$CelebrationEngagementEnumMap, json['engagement']),
+      engagement: $enumDecode(
+        _$CelebrationEngagementEnumMap,
+        json['engagement'],
+      ),
       previousValue: (json['previousValue'] as num).toDouble(),
       newValue: (json['newValue'] as num).toDouble(),
       exerciseName: json['exerciseName'] as String?,

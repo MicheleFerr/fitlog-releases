@@ -14,8 +14,10 @@ _$FeedbackDataImpl _$$FeedbackDataImplFromJson(Map<String, dynamic> json) =>
       insightType: json['insightType'] as String,
       insightCategory: json['insightCategory'] as String,
       feedbackType: $enumDecode(_$FeedbackTypeEnumMap, json['feedbackType']),
-      dismissReason:
-          $enumDecodeNullable(_$DismissReasonEnumMap, json['dismissReason']),
+      dismissReason: $enumDecodeNullable(
+        _$DismissReasonEnumMap,
+        json['dismissReason'],
+      ),
       comment: json['comment'] as String?,
       timestamp: DateTime.parse(json['timestamp'] as String),
       viewDurationSeconds: (json['viewDurationSeconds'] as num?)?.toInt() ?? 0,

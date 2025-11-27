@@ -12,7 +12,8 @@ part of 'home_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$HomeState {
@@ -27,7 +28,9 @@ mixin _$HomeState {
   bool get hasError => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $HomeStateCopyWith<HomeState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -37,16 +40,17 @@ abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res, HomeState>;
   @useResult
-  $Res call(
-      {String greeting,
-      WorkoutSection workoutSection,
-      AICoachSection aiCoachSection,
-      StreakSection streakSection,
-      LoadingPhase loadingPhase,
-      Map<String, Duration> sectionLoadTimes,
-      DateTime? lastRefresh,
-      bool hasError,
-      String? errorMessage});
+  $Res call({
+    String greeting,
+    WorkoutSection workoutSection,
+    AICoachSection aiCoachSection,
+    StreakSection streakSection,
+    LoadingPhase loadingPhase,
+    Map<String, Duration> sectionLoadTimes,
+    DateTime? lastRefresh,
+    bool hasError,
+    String? errorMessage,
+  });
 
   $WorkoutSectionCopyWith<$Res> get workoutSection;
   $AICoachSectionCopyWith<$Res> get aiCoachSection;
@@ -63,6 +67,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -76,46 +82,51 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? hasError = null,
     Object? errorMessage = freezed,
   }) {
-    return _then(_value.copyWith(
-      greeting: null == greeting
-          ? _value.greeting
-          : greeting // ignore: cast_nullable_to_non_nullable
-              as String,
-      workoutSection: null == workoutSection
-          ? _value.workoutSection
-          : workoutSection // ignore: cast_nullable_to_non_nullable
-              as WorkoutSection,
-      aiCoachSection: null == aiCoachSection
-          ? _value.aiCoachSection
-          : aiCoachSection // ignore: cast_nullable_to_non_nullable
-              as AICoachSection,
-      streakSection: null == streakSection
-          ? _value.streakSection
-          : streakSection // ignore: cast_nullable_to_non_nullable
-              as StreakSection,
-      loadingPhase: null == loadingPhase
-          ? _value.loadingPhase
-          : loadingPhase // ignore: cast_nullable_to_non_nullable
-              as LoadingPhase,
-      sectionLoadTimes: null == sectionLoadTimes
-          ? _value.sectionLoadTimes
-          : sectionLoadTimes // ignore: cast_nullable_to_non_nullable
-              as Map<String, Duration>,
-      lastRefresh: freezed == lastRefresh
-          ? _value.lastRefresh
-          : lastRefresh // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      hasError: null == hasError
-          ? _value.hasError
-          : hasError // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            greeting: null == greeting
+                ? _value.greeting
+                : greeting // ignore: cast_nullable_to_non_nullable
+                      as String,
+            workoutSection: null == workoutSection
+                ? _value.workoutSection
+                : workoutSection // ignore: cast_nullable_to_non_nullable
+                      as WorkoutSection,
+            aiCoachSection: null == aiCoachSection
+                ? _value.aiCoachSection
+                : aiCoachSection // ignore: cast_nullable_to_non_nullable
+                      as AICoachSection,
+            streakSection: null == streakSection
+                ? _value.streakSection
+                : streakSection // ignore: cast_nullable_to_non_nullable
+                      as StreakSection,
+            loadingPhase: null == loadingPhase
+                ? _value.loadingPhase
+                : loadingPhase // ignore: cast_nullable_to_non_nullable
+                      as LoadingPhase,
+            sectionLoadTimes: null == sectionLoadTimes
+                ? _value.sectionLoadTimes
+                : sectionLoadTimes // ignore: cast_nullable_to_non_nullable
+                      as Map<String, Duration>,
+            lastRefresh: freezed == lastRefresh
+                ? _value.lastRefresh
+                : lastRefresh // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            hasError: null == hasError
+                ? _value.hasError
+                : hasError // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            errorMessage: freezed == errorMessage
+                ? _value.errorMessage
+                : errorMessage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $WorkoutSectionCopyWith<$Res> get workoutSection {
@@ -124,6 +135,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     });
   }
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AICoachSectionCopyWith<$Res> get aiCoachSection {
@@ -132,6 +145,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     });
   }
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $StreakSectionCopyWith<$Res> get streakSection {
@@ -145,20 +160,22 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
 abstract class _$$HomeStateImplCopyWith<$Res>
     implements $HomeStateCopyWith<$Res> {
   factory _$$HomeStateImplCopyWith(
-          _$HomeStateImpl value, $Res Function(_$HomeStateImpl) then) =
-      __$$HomeStateImplCopyWithImpl<$Res>;
+    _$HomeStateImpl value,
+    $Res Function(_$HomeStateImpl) then,
+  ) = __$$HomeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String greeting,
-      WorkoutSection workoutSection,
-      AICoachSection aiCoachSection,
-      StreakSection streakSection,
-      LoadingPhase loadingPhase,
-      Map<String, Duration> sectionLoadTimes,
-      DateTime? lastRefresh,
-      bool hasError,
-      String? errorMessage});
+  $Res call({
+    String greeting,
+    WorkoutSection workoutSection,
+    AICoachSection aiCoachSection,
+    StreakSection streakSection,
+    LoadingPhase loadingPhase,
+    Map<String, Duration> sectionLoadTimes,
+    DateTime? lastRefresh,
+    bool hasError,
+    String? errorMessage,
+  });
 
   @override
   $WorkoutSectionCopyWith<$Res> get workoutSection;
@@ -173,9 +190,12 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     extends _$HomeStateCopyWithImpl<$Res, _$HomeStateImpl>
     implements _$$HomeStateImplCopyWith<$Res> {
   __$$HomeStateImplCopyWithImpl(
-      _$HomeStateImpl _value, $Res Function(_$HomeStateImpl) _then)
-      : super(_value, _then);
+    _$HomeStateImpl _value,
+    $Res Function(_$HomeStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -189,61 +209,63 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? hasError = null,
     Object? errorMessage = freezed,
   }) {
-    return _then(_$HomeStateImpl(
-      greeting: null == greeting
-          ? _value.greeting
-          : greeting // ignore: cast_nullable_to_non_nullable
-              as String,
-      workoutSection: null == workoutSection
-          ? _value.workoutSection
-          : workoutSection // ignore: cast_nullable_to_non_nullable
-              as WorkoutSection,
-      aiCoachSection: null == aiCoachSection
-          ? _value.aiCoachSection
-          : aiCoachSection // ignore: cast_nullable_to_non_nullable
-              as AICoachSection,
-      streakSection: null == streakSection
-          ? _value.streakSection
-          : streakSection // ignore: cast_nullable_to_non_nullable
-              as StreakSection,
-      loadingPhase: null == loadingPhase
-          ? _value.loadingPhase
-          : loadingPhase // ignore: cast_nullable_to_non_nullable
-              as LoadingPhase,
-      sectionLoadTimes: null == sectionLoadTimes
-          ? _value._sectionLoadTimes
-          : sectionLoadTimes // ignore: cast_nullable_to_non_nullable
-              as Map<String, Duration>,
-      lastRefresh: freezed == lastRefresh
-          ? _value.lastRefresh
-          : lastRefresh // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      hasError: null == hasError
-          ? _value.hasError
-          : hasError // ignore: cast_nullable_to_non_nullable
-              as bool,
-      errorMessage: freezed == errorMessage
-          ? _value.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$HomeStateImpl(
+        greeting: null == greeting
+            ? _value.greeting
+            : greeting // ignore: cast_nullable_to_non_nullable
+                  as String,
+        workoutSection: null == workoutSection
+            ? _value.workoutSection
+            : workoutSection // ignore: cast_nullable_to_non_nullable
+                  as WorkoutSection,
+        aiCoachSection: null == aiCoachSection
+            ? _value.aiCoachSection
+            : aiCoachSection // ignore: cast_nullable_to_non_nullable
+                  as AICoachSection,
+        streakSection: null == streakSection
+            ? _value.streakSection
+            : streakSection // ignore: cast_nullable_to_non_nullable
+                  as StreakSection,
+        loadingPhase: null == loadingPhase
+            ? _value.loadingPhase
+            : loadingPhase // ignore: cast_nullable_to_non_nullable
+                  as LoadingPhase,
+        sectionLoadTimes: null == sectionLoadTimes
+            ? _value._sectionLoadTimes
+            : sectionLoadTimes // ignore: cast_nullable_to_non_nullable
+                  as Map<String, Duration>,
+        lastRefresh: freezed == lastRefresh
+            ? _value.lastRefresh
+            : lastRefresh // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        hasError: null == hasError
+            ? _value.hasError
+            : hasError // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        errorMessage: freezed == errorMessage
+            ? _value.errorMessage
+            : errorMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$HomeStateImpl implements _HomeState {
-  const _$HomeStateImpl(
-      {required this.greeting,
-      required this.workoutSection,
-      required this.aiCoachSection,
-      required this.streakSection,
-      this.loadingPhase = LoadingPhase.initial,
-      final Map<String, Duration> sectionLoadTimes = const {},
-      this.lastRefresh,
-      this.hasError = false,
-      this.errorMessage})
-      : _sectionLoadTimes = sectionLoadTimes;
+  const _$HomeStateImpl({
+    required this.greeting,
+    required this.workoutSection,
+    required this.aiCoachSection,
+    required this.streakSection,
+    this.loadingPhase = LoadingPhase.initial,
+    final Map<String, Duration> sectionLoadTimes = const {},
+    this.lastRefresh,
+    this.hasError = false,
+    this.errorMessage,
+  }) : _sectionLoadTimes = sectionLoadTimes;
 
   @override
   final String greeting;
@@ -293,8 +315,10 @@ class _$HomeStateImpl implements _HomeState {
                 other.streakSection == streakSection) &&
             (identical(other.loadingPhase, loadingPhase) ||
                 other.loadingPhase == loadingPhase) &&
-            const DeepCollectionEquality()
-                .equals(other._sectionLoadTimes, _sectionLoadTimes) &&
+            const DeepCollectionEquality().equals(
+              other._sectionLoadTimes,
+              _sectionLoadTimes,
+            ) &&
             (identical(other.lastRefresh, lastRefresh) ||
                 other.lastRefresh == lastRefresh) &&
             (identical(other.hasError, hasError) ||
@@ -305,18 +329,21 @@ class _$HomeStateImpl implements _HomeState {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      greeting,
-      workoutSection,
-      aiCoachSection,
-      streakSection,
-      loadingPhase,
-      const DeepCollectionEquality().hash(_sectionLoadTimes),
-      lastRefresh,
-      hasError,
-      errorMessage);
+    runtimeType,
+    greeting,
+    workoutSection,
+    aiCoachSection,
+    streakSection,
+    loadingPhase,
+    const DeepCollectionEquality().hash(_sectionLoadTimes),
+    lastRefresh,
+    hasError,
+    errorMessage,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
@@ -324,16 +351,17 @@ class _$HomeStateImpl implements _HomeState {
 }
 
 abstract class _HomeState implements HomeState {
-  const factory _HomeState(
-      {required final String greeting,
-      required final WorkoutSection workoutSection,
-      required final AICoachSection aiCoachSection,
-      required final StreakSection streakSection,
-      final LoadingPhase loadingPhase,
-      final Map<String, Duration> sectionLoadTimes,
-      final DateTime? lastRefresh,
-      final bool hasError,
-      final String? errorMessage}) = _$HomeStateImpl;
+  const factory _HomeState({
+    required final String greeting,
+    required final WorkoutSection workoutSection,
+    required final AICoachSection aiCoachSection,
+    required final StreakSection streakSection,
+    final LoadingPhase loadingPhase,
+    final Map<String, Duration> sectionLoadTimes,
+    final DateTime? lastRefresh,
+    final bool hasError,
+    final String? errorMessage,
+  }) = _$HomeStateImpl;
 
   @override
   String get greeting;
@@ -353,8 +381,11 @@ abstract class _HomeState implements HomeState {
   bool get hasError;
   @override
   String? get errorMessage;
+
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -367,7 +398,9 @@ mixin _$WorkoutSection {
   int? get exercisesCompleted => throw _privateConstructorUsedError;
   int? get totalExercises => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WorkoutSectionCopyWith<WorkoutSection> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -375,15 +408,17 @@ mixin _$WorkoutSection {
 /// @nodoc
 abstract class $WorkoutSectionCopyWith<$Res> {
   factory $WorkoutSectionCopyWith(
-          WorkoutSection value, $Res Function(WorkoutSection) then) =
-      _$WorkoutSectionCopyWithImpl<$Res, WorkoutSection>;
+    WorkoutSection value,
+    $Res Function(WorkoutSection) then,
+  ) = _$WorkoutSectionCopyWithImpl<$Res, WorkoutSection>;
   @useResult
-  $Res call(
-      {bool hasActiveWorkout,
-      String? workoutName,
-      double? progress,
-      int? exercisesCompleted,
-      int? totalExercises});
+  $Res call({
+    bool hasActiveWorkout,
+    String? workoutName,
+    double? progress,
+    int? exercisesCompleted,
+    int? totalExercises,
+  });
 }
 
 /// @nodoc
@@ -396,6 +431,8 @@ class _$WorkoutSectionCopyWithImpl<$Res, $Val extends WorkoutSection>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WorkoutSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -405,45 +442,50 @@ class _$WorkoutSectionCopyWithImpl<$Res, $Val extends WorkoutSection>
     Object? exercisesCompleted = freezed,
     Object? totalExercises = freezed,
   }) {
-    return _then(_value.copyWith(
-      hasActiveWorkout: null == hasActiveWorkout
-          ? _value.hasActiveWorkout
-          : hasActiveWorkout // ignore: cast_nullable_to_non_nullable
-              as bool,
-      workoutName: freezed == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      progress: freezed == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as double?,
-      exercisesCompleted: freezed == exercisesCompleted
-          ? _value.exercisesCompleted
-          : exercisesCompleted // ignore: cast_nullable_to_non_nullable
-              as int?,
-      totalExercises: freezed == totalExercises
-          ? _value.totalExercises
-          : totalExercises // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            hasActiveWorkout: null == hasActiveWorkout
+                ? _value.hasActiveWorkout
+                : hasActiveWorkout // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            workoutName: freezed == workoutName
+                ? _value.workoutName
+                : workoutName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            progress: freezed == progress
+                ? _value.progress
+                : progress // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            exercisesCompleted: freezed == exercisesCompleted
+                ? _value.exercisesCompleted
+                : exercisesCompleted // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            totalExercises: freezed == totalExercises
+                ? _value.totalExercises
+                : totalExercises // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$WorkoutSectionImplCopyWith<$Res>
     implements $WorkoutSectionCopyWith<$Res> {
-  factory _$$WorkoutSectionImplCopyWith(_$WorkoutSectionImpl value,
-          $Res Function(_$WorkoutSectionImpl) then) =
-      __$$WorkoutSectionImplCopyWithImpl<$Res>;
+  factory _$$WorkoutSectionImplCopyWith(
+    _$WorkoutSectionImpl value,
+    $Res Function(_$WorkoutSectionImpl) then,
+  ) = __$$WorkoutSectionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool hasActiveWorkout,
-      String? workoutName,
-      double? progress,
-      int? exercisesCompleted,
-      int? totalExercises});
+  $Res call({
+    bool hasActiveWorkout,
+    String? workoutName,
+    double? progress,
+    int? exercisesCompleted,
+    int? totalExercises,
+  });
 }
 
 /// @nodoc
@@ -451,9 +493,12 @@ class __$$WorkoutSectionImplCopyWithImpl<$Res>
     extends _$WorkoutSectionCopyWithImpl<$Res, _$WorkoutSectionImpl>
     implements _$$WorkoutSectionImplCopyWith<$Res> {
   __$$WorkoutSectionImplCopyWithImpl(
-      _$WorkoutSectionImpl _value, $Res Function(_$WorkoutSectionImpl) _then)
-      : super(_value, _then);
+    _$WorkoutSectionImpl _value,
+    $Res Function(_$WorkoutSectionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of WorkoutSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -463,41 +508,43 @@ class __$$WorkoutSectionImplCopyWithImpl<$Res>
     Object? exercisesCompleted = freezed,
     Object? totalExercises = freezed,
   }) {
-    return _then(_$WorkoutSectionImpl(
-      hasActiveWorkout: null == hasActiveWorkout
-          ? _value.hasActiveWorkout
-          : hasActiveWorkout // ignore: cast_nullable_to_non_nullable
-              as bool,
-      workoutName: freezed == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      progress: freezed == progress
-          ? _value.progress
-          : progress // ignore: cast_nullable_to_non_nullable
-              as double?,
-      exercisesCompleted: freezed == exercisesCompleted
-          ? _value.exercisesCompleted
-          : exercisesCompleted // ignore: cast_nullable_to_non_nullable
-              as int?,
-      totalExercises: freezed == totalExercises
-          ? _value.totalExercises
-          : totalExercises // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$WorkoutSectionImpl(
+        hasActiveWorkout: null == hasActiveWorkout
+            ? _value.hasActiveWorkout
+            : hasActiveWorkout // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        workoutName: freezed == workoutName
+            ? _value.workoutName
+            : workoutName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        progress: freezed == progress
+            ? _value.progress
+            : progress // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        exercisesCompleted: freezed == exercisesCompleted
+            ? _value.exercisesCompleted
+            : exercisesCompleted // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        totalExercises: freezed == totalExercises
+            ? _value.totalExercises
+            : totalExercises // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$WorkoutSectionImpl extends _WorkoutSection {
-  const _$WorkoutSectionImpl(
-      {required this.hasActiveWorkout,
-      this.workoutName,
-      this.progress,
-      this.exercisesCompleted,
-      this.totalExercises})
-      : super._();
+  const _$WorkoutSectionImpl({
+    required this.hasActiveWorkout,
+    this.workoutName,
+    this.progress,
+    this.exercisesCompleted,
+    this.totalExercises,
+  }) : super._();
 
   @override
   final bool hasActiveWorkout;
@@ -533,24 +580,35 @@ class _$WorkoutSectionImpl extends _WorkoutSection {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, hasActiveWorkout, workoutName,
-      progress, exercisesCompleted, totalExercises);
+  int get hashCode => Object.hash(
+    runtimeType,
+    hasActiveWorkout,
+    workoutName,
+    progress,
+    exercisesCompleted,
+    totalExercises,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutSectionImplCopyWith<_$WorkoutSectionImpl> get copyWith =>
       __$$WorkoutSectionImplCopyWithImpl<_$WorkoutSectionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _WorkoutSection extends WorkoutSection {
-  const factory _WorkoutSection(
-      {required final bool hasActiveWorkout,
-      final String? workoutName,
-      final double? progress,
-      final int? exercisesCompleted,
-      final int? totalExercises}) = _$WorkoutSectionImpl;
+  const factory _WorkoutSection({
+    required final bool hasActiveWorkout,
+    final String? workoutName,
+    final double? progress,
+    final int? exercisesCompleted,
+    final int? totalExercises,
+  }) = _$WorkoutSectionImpl;
   const _WorkoutSection._() : super._();
 
   @override
@@ -563,8 +621,11 @@ abstract class _WorkoutSection extends WorkoutSection {
   int? get exercisesCompleted;
   @override
   int? get totalExercises;
+
+  /// Create a copy of WorkoutSection
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutSectionImplCopyWith<_$WorkoutSectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -575,7 +636,9 @@ mixin _$AICoachSection {
   String? get suggestion => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AICoachSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AICoachSectionCopyWith<AICoachSection> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -583,8 +646,9 @@ mixin _$AICoachSection {
 /// @nodoc
 abstract class $AICoachSectionCopyWith<$Res> {
   factory $AICoachSectionCopyWith(
-          AICoachSection value, $Res Function(AICoachSection) then) =
-      _$AICoachSectionCopyWithImpl<$Res, AICoachSection>;
+    AICoachSection value,
+    $Res Function(AICoachSection) then,
+  ) = _$AICoachSectionCopyWithImpl<$Res, AICoachSection>;
   @useResult
   $Res call({String message, String? suggestion, String? imageUrl});
 }
@@ -599,6 +663,8 @@ class _$AICoachSectionCopyWithImpl<$Res, $Val extends AICoachSection>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AICoachSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -606,29 +672,33 @@ class _$AICoachSectionCopyWithImpl<$Res, $Val extends AICoachSection>
     Object? suggestion = freezed,
     Object? imageUrl = freezed,
   }) {
-    return _then(_value.copyWith(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      suggestion: freezed == suggestion
-          ? _value.suggestion
-          : suggestion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+            suggestion: freezed == suggestion
+                ? _value.suggestion
+                : suggestion // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AICoachSectionImplCopyWith<$Res>
     implements $AICoachSectionCopyWith<$Res> {
-  factory _$$AICoachSectionImplCopyWith(_$AICoachSectionImpl value,
-          $Res Function(_$AICoachSectionImpl) then) =
-      __$$AICoachSectionImplCopyWithImpl<$Res>;
+  factory _$$AICoachSectionImplCopyWith(
+    _$AICoachSectionImpl value,
+    $Res Function(_$AICoachSectionImpl) then,
+  ) = __$$AICoachSectionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String message, String? suggestion, String? imageUrl});
@@ -639,9 +709,12 @@ class __$$AICoachSectionImplCopyWithImpl<$Res>
     extends _$AICoachSectionCopyWithImpl<$Res, _$AICoachSectionImpl>
     implements _$$AICoachSectionImplCopyWith<$Res> {
   __$$AICoachSectionImplCopyWithImpl(
-      _$AICoachSectionImpl _value, $Res Function(_$AICoachSectionImpl) _then)
-      : super(_value, _then);
+    _$AICoachSectionImpl _value,
+    $Res Function(_$AICoachSectionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AICoachSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -649,29 +722,33 @@ class __$$AICoachSectionImplCopyWithImpl<$Res>
     Object? suggestion = freezed,
     Object? imageUrl = freezed,
   }) {
-    return _then(_$AICoachSectionImpl(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      suggestion: freezed == suggestion
-          ? _value.suggestion
-          : suggestion // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$AICoachSectionImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        suggestion: freezed == suggestion
+            ? _value.suggestion
+            : suggestion // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$AICoachSectionImpl extends _AICoachSection {
-  const _$AICoachSectionImpl(
-      {required this.message, this.suggestion, this.imageUrl})
-      : super._();
+  const _$AICoachSectionImpl({
+    required this.message,
+    this.suggestion,
+    this.imageUrl,
+  }) : super._();
 
   @override
   final String message;
@@ -700,19 +777,24 @@ class _$AICoachSectionImpl extends _AICoachSection {
   @override
   int get hashCode => Object.hash(runtimeType, message, suggestion, imageUrl);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AICoachSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AICoachSectionImplCopyWith<_$AICoachSectionImpl> get copyWith =>
       __$$AICoachSectionImplCopyWithImpl<_$AICoachSectionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _AICoachSection extends AICoachSection {
-  const factory _AICoachSection(
-      {required final String message,
-      final String? suggestion,
-      final String? imageUrl}) = _$AICoachSectionImpl;
+  const factory _AICoachSection({
+    required final String message,
+    final String? suggestion,
+    final String? imageUrl,
+  }) = _$AICoachSectionImpl;
   const _AICoachSection._() : super._();
 
   @override
@@ -721,8 +803,11 @@ abstract class _AICoachSection extends AICoachSection {
   String? get suggestion;
   @override
   String? get imageUrl;
+
+  /// Create a copy of AICoachSection
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AICoachSectionImplCopyWith<_$AICoachSectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -733,7 +818,9 @@ mixin _$StreakSection {
   int get bestStreak => throw _privateConstructorUsedError;
   DateTime? get lastWorkoutDate => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StreakSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $StreakSectionCopyWith<StreakSection> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -741,8 +828,9 @@ mixin _$StreakSection {
 /// @nodoc
 abstract class $StreakSectionCopyWith<$Res> {
   factory $StreakSectionCopyWith(
-          StreakSection value, $Res Function(StreakSection) then) =
-      _$StreakSectionCopyWithImpl<$Res, StreakSection>;
+    StreakSection value,
+    $Res Function(StreakSection) then,
+  ) = _$StreakSectionCopyWithImpl<$Res, StreakSection>;
   @useResult
   $Res call({int currentStreak, int bestStreak, DateTime? lastWorkoutDate});
 }
@@ -757,6 +845,8 @@ class _$StreakSectionCopyWithImpl<$Res, $Val extends StreakSection>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of StreakSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -764,20 +854,23 @@ class _$StreakSectionCopyWithImpl<$Res, $Val extends StreakSection>
     Object? bestStreak = null,
     Object? lastWorkoutDate = freezed,
   }) {
-    return _then(_value.copyWith(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      bestStreak: null == bestStreak
-          ? _value.bestStreak
-          : bestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            currentStreak: null == currentStreak
+                ? _value.currentStreak
+                : currentStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bestStreak: null == bestStreak
+                ? _value.bestStreak
+                : bestStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastWorkoutDate: freezed == lastWorkoutDate
+                ? _value.lastWorkoutDate
+                : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -785,8 +878,9 @@ class _$StreakSectionCopyWithImpl<$Res, $Val extends StreakSection>
 abstract class _$$StreakSectionImplCopyWith<$Res>
     implements $StreakSectionCopyWith<$Res> {
   factory _$$StreakSectionImplCopyWith(
-          _$StreakSectionImpl value, $Res Function(_$StreakSectionImpl) then) =
-      __$$StreakSectionImplCopyWithImpl<$Res>;
+    _$StreakSectionImpl value,
+    $Res Function(_$StreakSectionImpl) then,
+  ) = __$$StreakSectionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int currentStreak, int bestStreak, DateTime? lastWorkoutDate});
@@ -797,9 +891,12 @@ class __$$StreakSectionImplCopyWithImpl<$Res>
     extends _$StreakSectionCopyWithImpl<$Res, _$StreakSectionImpl>
     implements _$$StreakSectionImplCopyWith<$Res> {
   __$$StreakSectionImplCopyWithImpl(
-      _$StreakSectionImpl _value, $Res Function(_$StreakSectionImpl) _then)
-      : super(_value, _then);
+    _$StreakSectionImpl _value,
+    $Res Function(_$StreakSectionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of StreakSection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -807,31 +904,33 @@ class __$$StreakSectionImplCopyWithImpl<$Res>
     Object? bestStreak = null,
     Object? lastWorkoutDate = freezed,
   }) {
-    return _then(_$StreakSectionImpl(
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      bestStreak: null == bestStreak
-          ? _value.bestStreak
-          : bestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: freezed == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$StreakSectionImpl(
+        currentStreak: null == currentStreak
+            ? _value.currentStreak
+            : currentStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bestStreak: null == bestStreak
+            ? _value.bestStreak
+            : bestStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastWorkoutDate: freezed == lastWorkoutDate
+            ? _value.lastWorkoutDate
+            : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$StreakSectionImpl extends _StreakSection {
-  const _$StreakSectionImpl(
-      {required this.currentStreak,
-      required this.bestStreak,
-      this.lastWorkoutDate})
-      : super._();
+  const _$StreakSectionImpl({
+    required this.currentStreak,
+    required this.bestStreak,
+    this.lastWorkoutDate,
+  }) : super._();
 
   @override
   final int currentStreak;
@@ -862,7 +961,9 @@ class _$StreakSectionImpl extends _StreakSection {
   int get hashCode =>
       Object.hash(runtimeType, currentStreak, bestStreak, lastWorkoutDate);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of StreakSection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$StreakSectionImplCopyWith<_$StreakSectionImpl> get copyWith =>
@@ -870,10 +971,11 @@ class _$StreakSectionImpl extends _StreakSection {
 }
 
 abstract class _StreakSection extends StreakSection {
-  const factory _StreakSection(
-      {required final int currentStreak,
-      required final int bestStreak,
-      final DateTime? lastWorkoutDate}) = _$StreakSectionImpl;
+  const factory _StreakSection({
+    required final int currentStreak,
+    required final int bestStreak,
+    final DateTime? lastWorkoutDate,
+  }) = _$StreakSectionImpl;
   const _StreakSection._() : super._();
 
   @override
@@ -882,8 +984,11 @@ abstract class _StreakSection extends StreakSection {
   int get bestStreak;
   @override
   DateTime? get lastWorkoutDate;
+
+  /// Create a copy of StreakSection
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$StreakSectionImplCopyWith<_$StreakSectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

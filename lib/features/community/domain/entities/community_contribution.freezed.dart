@@ -12,10 +12,12 @@ part of 'community_contribution.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 CommunityContribution _$CommunityContributionFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _CommunityContribution.fromJson(json);
 }
 
@@ -69,61 +71,69 @@ mixin _$CommunityContribution {
       throw _privateConstructorUsedError; // exerciseDb, userSubmitted
   List<String> get relatedExerciseIds => throw _privateConstructorUsedError;
 
+  /// Serializes this CommunityContribution to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CommunityContribution
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CommunityContributionCopyWith<CommunityContribution> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CommunityContributionCopyWith<$Res> {
-  factory $CommunityContributionCopyWith(CommunityContribution value,
-          $Res Function(CommunityContribution) then) =
-      _$CommunityContributionCopyWithImpl<$Res, CommunityContribution>;
+  factory $CommunityContributionCopyWith(
+    CommunityContribution value,
+    $Res Function(CommunityContribution) then,
+  ) = _$CommunityContributionCopyWithImpl<$Res, CommunityContribution>;
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String exerciseName,
-      String userId,
-      String userName,
-      String? userAvatar,
-      ContributionType type,
-      ContributionStatus status,
-      String title,
-      String description,
-      String? originalValue,
-      String? suggestedValue,
-      int upvotes,
-      int downvotes,
-      List<String> upvotedBy,
-      List<String> downvotedBy,
-      List<ContributionComment> comments,
-      String? reviewNote,
-      String? reviewedBy,
-      DateTime? reviewedAt,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      bool isFeatured,
-      int trustScore,
-      Map<String, dynamic>? metadata,
-      List<String> exerciseIds,
-      String difficulty,
-      List<String> tags,
-      List<String> applicableTo,
-      String? authorTier,
-      double authorTrustScore,
-      double qualityScore,
-      int saves,
-      int viewCount,
-      DateTime? lastActivityAt,
-      String? sourceType,
-      List<String> relatedExerciseIds});
+  $Res call({
+    String id,
+    String exerciseId,
+    String exerciseName,
+    String userId,
+    String userName,
+    String? userAvatar,
+    ContributionType type,
+    ContributionStatus status,
+    String title,
+    String description,
+    String? originalValue,
+    String? suggestedValue,
+    int upvotes,
+    int downvotes,
+    List<String> upvotedBy,
+    List<String> downvotedBy,
+    List<ContributionComment> comments,
+    String? reviewNote,
+    String? reviewedBy,
+    DateTime? reviewedAt,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    bool isFeatured,
+    int trustScore,
+    Map<String, dynamic>? metadata,
+    List<String> exerciseIds,
+    String difficulty,
+    List<String> tags,
+    List<String> applicableTo,
+    String? authorTier,
+    double authorTrustScore,
+    double qualityScore,
+    int saves,
+    int viewCount,
+    DateTime? lastActivityAt,
+    String? sourceType,
+    List<String> relatedExerciseIds,
+  });
 }
 
 /// @nodoc
-class _$CommunityContributionCopyWithImpl<$Res,
-        $Val extends CommunityContribution>
+class _$CommunityContributionCopyWithImpl<
+  $Res,
+  $Val extends CommunityContribution
+>
     implements $CommunityContributionCopyWith<$Res> {
   _$CommunityContributionCopyWithImpl(this._value, this._then);
 
@@ -132,6 +142,8 @@ class _$CommunityContributionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CommunityContribution
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,156 +185,159 @@ class _$CommunityContributionCopyWithImpl<$Res,
     Object? sourceType = freezed,
     Object? relatedExerciseIds = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userAvatar: freezed == userAvatar
-          ? _value.userAvatar
-          : userAvatar // ignore: cast_nullable_to_non_nullable
-              as String?,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ContributionType,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as ContributionStatus,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      originalValue: freezed == originalValue
-          ? _value.originalValue
-          : originalValue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      suggestedValue: freezed == suggestedValue
-          ? _value.suggestedValue
-          : suggestedValue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      upvotes: null == upvotes
-          ? _value.upvotes
-          : upvotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      downvotes: null == downvotes
-          ? _value.downvotes
-          : downvotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      upvotedBy: null == upvotedBy
-          ? _value.upvotedBy
-          : upvotedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      downvotedBy: null == downvotedBy
-          ? _value.downvotedBy
-          : downvotedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      comments: null == comments
-          ? _value.comments
-          : comments // ignore: cast_nullable_to_non_nullable
-              as List<ContributionComment>,
-      reviewNote: freezed == reviewNote
-          ? _value.reviewNote
-          : reviewNote // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedAt: freezed == reviewedAt
-          ? _value.reviewedAt
-          : reviewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isFeatured: null == isFeatured
-          ? _value.isFeatured
-          : isFeatured // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trustScore: null == trustScore
-          ? _value.trustScore
-          : trustScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      exerciseIds: null == exerciseIds
-          ? _value.exerciseIds
-          : exerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      difficulty: null == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String,
-      tags: null == tags
-          ? _value.tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      applicableTo: null == applicableTo
-          ? _value.applicableTo
-          : applicableTo // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      authorTier: freezed == authorTier
-          ? _value.authorTier
-          : authorTier // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorTrustScore: null == authorTrustScore
-          ? _value.authorTrustScore
-          : authorTrustScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      qualityScore: null == qualityScore
-          ? _value.qualityScore
-          : qualityScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      saves: null == saves
-          ? _value.saves
-          : saves // ignore: cast_nullable_to_non_nullable
-              as int,
-      viewCount: null == viewCount
-          ? _value.viewCount
-          : viewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastActivityAt: freezed == lastActivityAt
-          ? _value.lastActivityAt
-          : lastActivityAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      sourceType: freezed == sourceType
-          ? _value.sourceType
-          : sourceType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      relatedExerciseIds: null == relatedExerciseIds
-          ? _value.relatedExerciseIds
-          : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exerciseId: null == exerciseId
+                ? _value.exerciseId
+                : exerciseId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userAvatar: freezed == userAvatar
+                ? _value.userAvatar
+                : userAvatar // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as ContributionType,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as ContributionStatus,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            originalValue: freezed == originalValue
+                ? _value.originalValue
+                : originalValue // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            suggestedValue: freezed == suggestedValue
+                ? _value.suggestedValue
+                : suggestedValue // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            upvotes: null == upvotes
+                ? _value.upvotes
+                : upvotes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            downvotes: null == downvotes
+                ? _value.downvotes
+                : downvotes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            upvotedBy: null == upvotedBy
+                ? _value.upvotedBy
+                : upvotedBy // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            downvotedBy: null == downvotedBy
+                ? _value.downvotedBy
+                : downvotedBy // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            comments: null == comments
+                ? _value.comments
+                : comments // ignore: cast_nullable_to_non_nullable
+                      as List<ContributionComment>,
+            reviewNote: freezed == reviewNote
+                ? _value.reviewNote
+                : reviewNote // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            reviewedBy: freezed == reviewedBy
+                ? _value.reviewedBy
+                : reviewedBy // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            reviewedAt: freezed == reviewedAt
+                ? _value.reviewedAt
+                : reviewedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            isFeatured: null == isFeatured
+                ? _value.isFeatured
+                : isFeatured // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            trustScore: null == trustScore
+                ? _value.trustScore
+                : trustScore // ignore: cast_nullable_to_non_nullable
+                      as int,
+            metadata: freezed == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            exerciseIds: null == exerciseIds
+                ? _value.exerciseIds
+                : exerciseIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            difficulty: null == difficulty
+                ? _value.difficulty
+                : difficulty // ignore: cast_nullable_to_non_nullable
+                      as String,
+            tags: null == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            applicableTo: null == applicableTo
+                ? _value.applicableTo
+                : applicableTo // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            authorTier: freezed == authorTier
+                ? _value.authorTier
+                : authorTier // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            authorTrustScore: null == authorTrustScore
+                ? _value.authorTrustScore
+                : authorTrustScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            qualityScore: null == qualityScore
+                ? _value.qualityScore
+                : qualityScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            saves: null == saves
+                ? _value.saves
+                : saves // ignore: cast_nullable_to_non_nullable
+                      as int,
+            viewCount: null == viewCount
+                ? _value.viewCount
+                : viewCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastActivityAt: freezed == lastActivityAt
+                ? _value.lastActivityAt
+                : lastActivityAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            sourceType: freezed == sourceType
+                ? _value.sourceType
+                : sourceType // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            relatedExerciseIds: null == relatedExerciseIds
+                ? _value.relatedExerciseIds
+                : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -330,60 +345,64 @@ class _$CommunityContributionCopyWithImpl<$Res,
 abstract class _$$CommunityContributionImplCopyWith<$Res>
     implements $CommunityContributionCopyWith<$Res> {
   factory _$$CommunityContributionImplCopyWith(
-          _$CommunityContributionImpl value,
-          $Res Function(_$CommunityContributionImpl) then) =
-      __$$CommunityContributionImplCopyWithImpl<$Res>;
+    _$CommunityContributionImpl value,
+    $Res Function(_$CommunityContributionImpl) then,
+  ) = __$$CommunityContributionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String exerciseName,
-      String userId,
-      String userName,
-      String? userAvatar,
-      ContributionType type,
-      ContributionStatus status,
-      String title,
-      String description,
-      String? originalValue,
-      String? suggestedValue,
-      int upvotes,
-      int downvotes,
-      List<String> upvotedBy,
-      List<String> downvotedBy,
-      List<ContributionComment> comments,
-      String? reviewNote,
-      String? reviewedBy,
-      DateTime? reviewedAt,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      bool isFeatured,
-      int trustScore,
-      Map<String, dynamic>? metadata,
-      List<String> exerciseIds,
-      String difficulty,
-      List<String> tags,
-      List<String> applicableTo,
-      String? authorTier,
-      double authorTrustScore,
-      double qualityScore,
-      int saves,
-      int viewCount,
-      DateTime? lastActivityAt,
-      String? sourceType,
-      List<String> relatedExerciseIds});
+  $Res call({
+    String id,
+    String exerciseId,
+    String exerciseName,
+    String userId,
+    String userName,
+    String? userAvatar,
+    ContributionType type,
+    ContributionStatus status,
+    String title,
+    String description,
+    String? originalValue,
+    String? suggestedValue,
+    int upvotes,
+    int downvotes,
+    List<String> upvotedBy,
+    List<String> downvotedBy,
+    List<ContributionComment> comments,
+    String? reviewNote,
+    String? reviewedBy,
+    DateTime? reviewedAt,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    bool isFeatured,
+    int trustScore,
+    Map<String, dynamic>? metadata,
+    List<String> exerciseIds,
+    String difficulty,
+    List<String> tags,
+    List<String> applicableTo,
+    String? authorTier,
+    double authorTrustScore,
+    double qualityScore,
+    int saves,
+    int viewCount,
+    DateTime? lastActivityAt,
+    String? sourceType,
+    List<String> relatedExerciseIds,
+  });
 }
 
 /// @nodoc
 class __$$CommunityContributionImplCopyWithImpl<$Res>
-    extends _$CommunityContributionCopyWithImpl<$Res,
-        _$CommunityContributionImpl>
+    extends
+        _$CommunityContributionCopyWithImpl<$Res, _$CommunityContributionImpl>
     implements _$$CommunityContributionImplCopyWith<$Res> {
-  __$$CommunityContributionImplCopyWithImpl(_$CommunityContributionImpl _value,
-      $Res Function(_$CommunityContributionImpl) _then)
-      : super(_value, _then);
+  __$$CommunityContributionImplCopyWithImpl(
+    _$CommunityContributionImpl _value,
+    $Res Function(_$CommunityContributionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CommunityContribution
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -425,208 +444,210 @@ class __$$CommunityContributionImplCopyWithImpl<$Res>
     Object? sourceType = freezed,
     Object? relatedExerciseIds = null,
   }) {
-    return _then(_$CommunityContributionImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userAvatar: freezed == userAvatar
-          ? _value.userAvatar
-          : userAvatar // ignore: cast_nullable_to_non_nullable
-              as String?,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ContributionType,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as ContributionStatus,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      originalValue: freezed == originalValue
-          ? _value.originalValue
-          : originalValue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      suggestedValue: freezed == suggestedValue
-          ? _value.suggestedValue
-          : suggestedValue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      upvotes: null == upvotes
-          ? _value.upvotes
-          : upvotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      downvotes: null == downvotes
-          ? _value.downvotes
-          : downvotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      upvotedBy: null == upvotedBy
-          ? _value._upvotedBy
-          : upvotedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      downvotedBy: null == downvotedBy
-          ? _value._downvotedBy
-          : downvotedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      comments: null == comments
-          ? _value._comments
-          : comments // ignore: cast_nullable_to_non_nullable
-              as List<ContributionComment>,
-      reviewNote: freezed == reviewNote
-          ? _value.reviewNote
-          : reviewNote // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedBy: freezed == reviewedBy
-          ? _value.reviewedBy
-          : reviewedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      reviewedAt: freezed == reviewedAt
-          ? _value.reviewedAt
-          : reviewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isFeatured: null == isFeatured
-          ? _value.isFeatured
-          : isFeatured // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trustScore: null == trustScore
-          ? _value.trustScore
-          : trustScore // ignore: cast_nullable_to_non_nullable
-              as int,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      exerciseIds: null == exerciseIds
-          ? _value._exerciseIds
-          : exerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      difficulty: null == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String,
-      tags: null == tags
-          ? _value._tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      applicableTo: null == applicableTo
-          ? _value._applicableTo
-          : applicableTo // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      authorTier: freezed == authorTier
-          ? _value.authorTier
-          : authorTier // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorTrustScore: null == authorTrustScore
-          ? _value.authorTrustScore
-          : authorTrustScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      qualityScore: null == qualityScore
-          ? _value.qualityScore
-          : qualityScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      saves: null == saves
-          ? _value.saves
-          : saves // ignore: cast_nullable_to_non_nullable
-              as int,
-      viewCount: null == viewCount
-          ? _value.viewCount
-          : viewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastActivityAt: freezed == lastActivityAt
-          ? _value.lastActivityAt
-          : lastActivityAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      sourceType: freezed == sourceType
-          ? _value.sourceType
-          : sourceType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      relatedExerciseIds: null == relatedExerciseIds
-          ? _value._relatedExerciseIds
-          : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$CommunityContributionImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userAvatar: freezed == userAvatar
+            ? _value.userAvatar
+            : userAvatar // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as ContributionType,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as ContributionStatus,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        originalValue: freezed == originalValue
+            ? _value.originalValue
+            : originalValue // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        suggestedValue: freezed == suggestedValue
+            ? _value.suggestedValue
+            : suggestedValue // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        upvotes: null == upvotes
+            ? _value.upvotes
+            : upvotes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        downvotes: null == downvotes
+            ? _value.downvotes
+            : downvotes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        upvotedBy: null == upvotedBy
+            ? _value._upvotedBy
+            : upvotedBy // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        downvotedBy: null == downvotedBy
+            ? _value._downvotedBy
+            : downvotedBy // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        comments: null == comments
+            ? _value._comments
+            : comments // ignore: cast_nullable_to_non_nullable
+                  as List<ContributionComment>,
+        reviewNote: freezed == reviewNote
+            ? _value.reviewNote
+            : reviewNote // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        reviewedBy: freezed == reviewedBy
+            ? _value.reviewedBy
+            : reviewedBy // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        reviewedAt: freezed == reviewedAt
+            ? _value.reviewedAt
+            : reviewedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        isFeatured: null == isFeatured
+            ? _value.isFeatured
+            : isFeatured // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        trustScore: null == trustScore
+            ? _value.trustScore
+            : trustScore // ignore: cast_nullable_to_non_nullable
+                  as int,
+        metadata: freezed == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        exerciseIds: null == exerciseIds
+            ? _value._exerciseIds
+            : exerciseIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        difficulty: null == difficulty
+            ? _value.difficulty
+            : difficulty // ignore: cast_nullable_to_non_nullable
+                  as String,
+        tags: null == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        applicableTo: null == applicableTo
+            ? _value._applicableTo
+            : applicableTo // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        authorTier: freezed == authorTier
+            ? _value.authorTier
+            : authorTier // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        authorTrustScore: null == authorTrustScore
+            ? _value.authorTrustScore
+            : authorTrustScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        qualityScore: null == qualityScore
+            ? _value.qualityScore
+            : qualityScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        saves: null == saves
+            ? _value.saves
+            : saves // ignore: cast_nullable_to_non_nullable
+                  as int,
+        viewCount: null == viewCount
+            ? _value.viewCount
+            : viewCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastActivityAt: freezed == lastActivityAt
+            ? _value.lastActivityAt
+            : lastActivityAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        sourceType: freezed == sourceType
+            ? _value.sourceType
+            : sourceType // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        relatedExerciseIds: null == relatedExerciseIds
+            ? _value._relatedExerciseIds
+            : relatedExerciseIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CommunityContributionImpl implements _CommunityContribution {
-  const _$CommunityContributionImpl(
-      {required this.id,
-      required this.exerciseId,
-      required this.exerciseName,
-      required this.userId,
-      required this.userName,
-      this.userAvatar,
-      required this.type,
-      required this.status,
-      required this.title,
-      required this.description,
-      this.originalValue,
-      this.suggestedValue,
-      this.upvotes = 0,
-      this.downvotes = 0,
-      final List<String> upvotedBy = const [],
-      final List<String> downvotedBy = const [],
-      final List<ContributionComment> comments = const [],
-      this.reviewNote,
-      this.reviewedBy,
-      this.reviewedAt,
-      required this.createdAt,
-      this.updatedAt,
-      this.isFeatured = false,
-      this.trustScore = 0,
-      final Map<String, dynamic>? metadata,
-      final List<String> exerciseIds = const [],
-      this.difficulty = 'beginner',
-      final List<String> tags = const [],
-      final List<String> applicableTo = const [],
-      this.authorTier,
-      this.authorTrustScore = 0.5,
-      this.qualityScore = 0.5,
-      this.saves = 0,
-      this.viewCount = 0,
-      this.lastActivityAt,
-      this.sourceType,
-      final List<String> relatedExerciseIds = const []})
-      : _upvotedBy = upvotedBy,
-        _downvotedBy = downvotedBy,
-        _comments = comments,
-        _metadata = metadata,
-        _exerciseIds = exerciseIds,
-        _tags = tags,
-        _applicableTo = applicableTo,
-        _relatedExerciseIds = relatedExerciseIds;
+  const _$CommunityContributionImpl({
+    required this.id,
+    required this.exerciseId,
+    required this.exerciseName,
+    required this.userId,
+    required this.userName,
+    this.userAvatar,
+    required this.type,
+    required this.status,
+    required this.title,
+    required this.description,
+    this.originalValue,
+    this.suggestedValue,
+    this.upvotes = 0,
+    this.downvotes = 0,
+    final List<String> upvotedBy = const [],
+    final List<String> downvotedBy = const [],
+    final List<ContributionComment> comments = const [],
+    this.reviewNote,
+    this.reviewedBy,
+    this.reviewedAt,
+    required this.createdAt,
+    this.updatedAt,
+    this.isFeatured = false,
+    this.trustScore = 0,
+    final Map<String, dynamic>? metadata,
+    final List<String> exerciseIds = const [],
+    this.difficulty = 'beginner',
+    final List<String> tags = const [],
+    final List<String> applicableTo = const [],
+    this.authorTier,
+    this.authorTrustScore = 0.5,
+    this.qualityScore = 0.5,
+    this.saves = 0,
+    this.viewCount = 0,
+    this.lastActivityAt,
+    this.sourceType,
+    final List<String> relatedExerciseIds = const [],
+  }) : _upvotedBy = upvotedBy,
+       _downvotedBy = downvotedBy,
+       _comments = comments,
+       _metadata = metadata,
+       _exerciseIds = exerciseIds,
+       _tags = tags,
+       _applicableTo = applicableTo,
+       _relatedExerciseIds = relatedExerciseIds;
 
   factory _$CommunityContributionImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityContributionImplFromJson(json);
@@ -704,9 +725,9 @@ class _$CommunityContributionImpl implements _CommunityContribution {
   @override
   @JsonKey()
   final int trustScore;
-// 0-100 basato su track record utente
+  // 0-100 basato su track record utente
   final Map<String, dynamic>? _metadata;
-// 0-100 basato su track record utente
+  // 0-100 basato su track record utente
   @override
   Map<String, dynamic>? get metadata {
     final value = _metadata;
@@ -716,9 +737,9 @@ class _$CommunityContributionImpl implements _CommunityContribution {
     return EqualUnmodifiableMapView(value);
   }
 
-// NEW: Discovery & Search fields
+  // NEW: Discovery & Search fields
   final List<String> _exerciseIds;
-// NEW: Discovery & Search fields
+  // NEW: Discovery & Search fields
   @override
   @JsonKey()
   List<String> get exerciseIds {
@@ -727,13 +748,13 @@ class _$CommunityContributionImpl implements _CommunityContribution {
     return EqualUnmodifiableListView(_exerciseIds);
   }
 
-// Multiple exercises (was single exerciseId)
+  // Multiple exercises (was single exerciseId)
   @override
   @JsonKey()
   final String difficulty;
-// beginner, intermediate, advanced
+  // beginner, intermediate, advanced
   final List<String> _tags;
-// beginner, intermediate, advanced
+  // beginner, intermediate, advanced
   @override
   @JsonKey()
   List<String> get tags {
@@ -742,9 +763,9 @@ class _$CommunityContributionImpl implements _CommunityContribution {
     return EqualUnmodifiableListView(_tags);
   }
 
-// User-added tags (lowercase, max 5)
+  // User-added tags (lowercase, max 5)
   final List<String> _applicableTo;
-// User-added tags (lowercase, max 5)
+  // User-added tags (lowercase, max 5)
   @override
   @JsonKey()
   List<String> get applicableTo {
@@ -753,34 +774,34 @@ class _$CommunityContributionImpl implements _CommunityContribution {
     return EqualUnmodifiableListView(_applicableTo);
   }
 
-// Goals: hypertrophy, strength, mobility
+  // Goals: hypertrophy, strength, mobility
   @override
   final String? authorTier;
-// community, expert, admin (nullable for backward compat)
+  // community, expert, admin (nullable for backward compat)
   @override
   @JsonKey()
   final double authorTrustScore;
-// 0-1
+  // 0-1
   @override
   @JsonKey()
   final double qualityScore;
-// 0-1 (aggregate score)
+  // 0-1 (aggregate score)
   @override
   @JsonKey()
   final int saves;
-// How many users saved
+  // How many users saved
   @override
   @JsonKey()
   final int viewCount;
-// Track popularity
+  // Track popularity
   @override
   final DateTime? lastActivityAt;
-// For trending
+  // For trending
   @override
   final String? sourceType;
-// exerciseDb, userSubmitted
+  // exerciseDb, userSubmitted
   final List<String> _relatedExerciseIds;
-// exerciseDb, userSubmitted
+  // exerciseDb, userSubmitted
   @override
   @JsonKey()
   List<String> get relatedExerciseIds {
@@ -822,10 +843,14 @@ class _$CommunityContributionImpl implements _CommunityContribution {
             (identical(other.upvotes, upvotes) || other.upvotes == upvotes) &&
             (identical(other.downvotes, downvotes) ||
                 other.downvotes == downvotes) &&
-            const DeepCollectionEquality()
-                .equals(other._upvotedBy, _upvotedBy) &&
-            const DeepCollectionEquality()
-                .equals(other._downvotedBy, _downvotedBy) &&
+            const DeepCollectionEquality().equals(
+              other._upvotedBy,
+              _upvotedBy,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._downvotedBy,
+              _downvotedBy,
+            ) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
             (identical(other.reviewNote, reviewNote) ||
                 other.reviewNote == reviewNote) &&
@@ -842,13 +867,17 @@ class _$CommunityContributionImpl implements _CommunityContribution {
             (identical(other.trustScore, trustScore) ||
                 other.trustScore == trustScore) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata) &&
-            const DeepCollectionEquality()
-                .equals(other._exerciseIds, _exerciseIds) &&
+            const DeepCollectionEquality().equals(
+              other._exerciseIds,
+              _exerciseIds,
+            ) &&
             (identical(other.difficulty, difficulty) ||
                 other.difficulty == difficulty) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
-            const DeepCollectionEquality()
-                .equals(other._applicableTo, _applicableTo) &&
+            const DeepCollectionEquality().equals(
+              other._applicableTo,
+              _applicableTo,
+            ) &&
             (identical(other.authorTier, authorTier) ||
                 other.authorTier == authorTier) &&
             (identical(other.authorTrustScore, authorTrustScore) ||
@@ -862,107 +891,113 @@ class _$CommunityContributionImpl implements _CommunityContribution {
                 other.lastActivityAt == lastActivityAt) &&
             (identical(other.sourceType, sourceType) ||
                 other.sourceType == sourceType) &&
-            const DeepCollectionEquality()
-                .equals(other._relatedExerciseIds, _relatedExerciseIds));
+            const DeepCollectionEquality().equals(
+              other._relatedExerciseIds,
+              _relatedExerciseIds,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        exerciseId,
-        exerciseName,
-        userId,
-        userName,
-        userAvatar,
-        type,
-        status,
-        title,
-        description,
-        originalValue,
-        suggestedValue,
-        upvotes,
-        downvotes,
-        const DeepCollectionEquality().hash(_upvotedBy),
-        const DeepCollectionEquality().hash(_downvotedBy),
-        const DeepCollectionEquality().hash(_comments),
-        reviewNote,
-        reviewedBy,
-        reviewedAt,
-        createdAt,
-        updatedAt,
-        isFeatured,
-        trustScore,
-        const DeepCollectionEquality().hash(_metadata),
-        const DeepCollectionEquality().hash(_exerciseIds),
-        difficulty,
-        const DeepCollectionEquality().hash(_tags),
-        const DeepCollectionEquality().hash(_applicableTo),
-        authorTier,
-        authorTrustScore,
-        qualityScore,
-        saves,
-        viewCount,
-        lastActivityAt,
-        sourceType,
-        const DeepCollectionEquality().hash(_relatedExerciseIds)
-      ]);
+    runtimeType,
+    id,
+    exerciseId,
+    exerciseName,
+    userId,
+    userName,
+    userAvatar,
+    type,
+    status,
+    title,
+    description,
+    originalValue,
+    suggestedValue,
+    upvotes,
+    downvotes,
+    const DeepCollectionEquality().hash(_upvotedBy),
+    const DeepCollectionEquality().hash(_downvotedBy),
+    const DeepCollectionEquality().hash(_comments),
+    reviewNote,
+    reviewedBy,
+    reviewedAt,
+    createdAt,
+    updatedAt,
+    isFeatured,
+    trustScore,
+    const DeepCollectionEquality().hash(_metadata),
+    const DeepCollectionEquality().hash(_exerciseIds),
+    difficulty,
+    const DeepCollectionEquality().hash(_tags),
+    const DeepCollectionEquality().hash(_applicableTo),
+    authorTier,
+    authorTrustScore,
+    qualityScore,
+    saves,
+    viewCount,
+    lastActivityAt,
+    sourceType,
+    const DeepCollectionEquality().hash(_relatedExerciseIds),
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CommunityContribution
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CommunityContributionImplCopyWith<_$CommunityContributionImpl>
-      get copyWith => __$$CommunityContributionImplCopyWithImpl<
-          _$CommunityContributionImpl>(this, _$identity);
+  get copyWith =>
+      __$$CommunityContributionImplCopyWithImpl<_$CommunityContributionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CommunityContributionImplToJson(
-      this,
-    );
+    return _$$CommunityContributionImplToJson(this);
   }
 }
 
 abstract class _CommunityContribution implements CommunityContribution {
-  const factory _CommunityContribution(
-      {required final String id,
-      required final String exerciseId,
-      required final String exerciseName,
-      required final String userId,
-      required final String userName,
-      final String? userAvatar,
-      required final ContributionType type,
-      required final ContributionStatus status,
-      required final String title,
-      required final String description,
-      final String? originalValue,
-      final String? suggestedValue,
-      final int upvotes,
-      final int downvotes,
-      final List<String> upvotedBy,
-      final List<String> downvotedBy,
-      final List<ContributionComment> comments,
-      final String? reviewNote,
-      final String? reviewedBy,
-      final DateTime? reviewedAt,
-      required final DateTime createdAt,
-      final DateTime? updatedAt,
-      final bool isFeatured,
-      final int trustScore,
-      final Map<String, dynamic>? metadata,
-      final List<String> exerciseIds,
-      final String difficulty,
-      final List<String> tags,
-      final List<String> applicableTo,
-      final String? authorTier,
-      final double authorTrustScore,
-      final double qualityScore,
-      final int saves,
-      final int viewCount,
-      final DateTime? lastActivityAt,
-      final String? sourceType,
-      final List<String> relatedExerciseIds}) = _$CommunityContributionImpl;
+  const factory _CommunityContribution({
+    required final String id,
+    required final String exerciseId,
+    required final String exerciseName,
+    required final String userId,
+    required final String userName,
+    final String? userAvatar,
+    required final ContributionType type,
+    required final ContributionStatus status,
+    required final String title,
+    required final String description,
+    final String? originalValue,
+    final String? suggestedValue,
+    final int upvotes,
+    final int downvotes,
+    final List<String> upvotedBy,
+    final List<String> downvotedBy,
+    final List<ContributionComment> comments,
+    final String? reviewNote,
+    final String? reviewedBy,
+    final DateTime? reviewedAt,
+    required final DateTime createdAt,
+    final DateTime? updatedAt,
+    final bool isFeatured,
+    final int trustScore,
+    final Map<String, dynamic>? metadata,
+    final List<String> exerciseIds,
+    final String difficulty,
+    final List<String> tags,
+    final List<String> applicableTo,
+    final String? authorTier,
+    final double authorTrustScore,
+    final double qualityScore,
+    final int saves,
+    final int viewCount,
+    final DateTime? lastActivityAt,
+    final String? sourceType,
+    final List<String> relatedExerciseIds,
+  }) = _$CommunityContributionImpl;
 
   factory _CommunityContribution.fromJson(Map<String, dynamic> json) =
       _$CommunityContributionImpl.fromJson;
@@ -1014,37 +1049,40 @@ abstract class _CommunityContribution implements CommunityContribution {
   @override
   bool get isFeatured;
   @override
-  int get trustScore;
-  @override // 0-100 basato su track record utente
-  Map<String, dynamic>? get metadata;
-  @override // NEW: Discovery & Search fields
-  List<String> get exerciseIds;
-  @override // Multiple exercises (was single exerciseId)
-  String get difficulty;
-  @override // beginner, intermediate, advanced
-  List<String> get tags;
-  @override // User-added tags (lowercase, max 5)
-  List<String> get applicableTo;
-  @override // Goals: hypertrophy, strength, mobility
-  String? get authorTier;
-  @override // community, expert, admin (nullable for backward compat)
-  double get authorTrustScore;
-  @override // 0-1
-  double get qualityScore;
-  @override // 0-1 (aggregate score)
-  int get saves;
-  @override // How many users saved
-  int get viewCount;
-  @override // Track popularity
-  DateTime? get lastActivityAt;
-  @override // For trending
-  String? get sourceType;
-  @override // exerciseDb, userSubmitted
-  List<String> get relatedExerciseIds;
+  int get trustScore; // 0-100 basato su track record utente
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic>? get metadata; // NEW: Discovery & Search fields
+  @override
+  List<String> get exerciseIds; // Multiple exercises (was single exerciseId)
+  @override
+  String get difficulty; // beginner, intermediate, advanced
+  @override
+  List<String> get tags; // User-added tags (lowercase, max 5)
+  @override
+  List<String> get applicableTo; // Goals: hypertrophy, strength, mobility
+  @override
+  String? get authorTier; // community, expert, admin (nullable for backward compat)
+  @override
+  double get authorTrustScore; // 0-1
+  @override
+  double get qualityScore; // 0-1 (aggregate score)
+  @override
+  int get saves; // How many users saved
+  @override
+  int get viewCount; // Track popularity
+  @override
+  DateTime? get lastActivityAt; // For trending
+  @override
+  String? get sourceType; // exerciseDb, userSubmitted
+  @override
+  List<String> get relatedExerciseIds;
+
+  /// Create a copy of CommunityContribution
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommunityContributionImplCopyWith<_$CommunityContributionImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 ContributionComment _$ContributionCommentFromJson(Map<String, dynamic> json) {
@@ -1062,8 +1100,12 @@ mixin _$ContributionComment {
   int get likes => throw _privateConstructorUsedError;
   List<String> get likedBy => throw _privateConstructorUsedError;
 
+  /// Serializes this ContributionComment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ContributionComment
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ContributionCommentCopyWith<ContributionComment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1071,18 +1113,20 @@ mixin _$ContributionComment {
 /// @nodoc
 abstract class $ContributionCommentCopyWith<$Res> {
   factory $ContributionCommentCopyWith(
-          ContributionComment value, $Res Function(ContributionComment) then) =
-      _$ContributionCommentCopyWithImpl<$Res, ContributionComment>;
+    ContributionComment value,
+    $Res Function(ContributionComment) then,
+  ) = _$ContributionCommentCopyWithImpl<$Res, ContributionComment>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String userName,
-      String? userAvatar,
-      String text,
-      DateTime createdAt,
-      int likes,
-      List<String> likedBy});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    String? userAvatar,
+    String text,
+    DateTime createdAt,
+    int likes,
+    List<String> likedBy,
+  });
 }
 
 /// @nodoc
@@ -1095,6 +1139,8 @@ class _$ContributionCommentCopyWithImpl<$Res, $Val extends ContributionComment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ContributionComment
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1107,70 +1153,78 @@ class _$ContributionCommentCopyWithImpl<$Res, $Val extends ContributionComment>
     Object? likes = null,
     Object? likedBy = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userAvatar: freezed == userAvatar
-          ? _value.userAvatar
-          : userAvatar // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likes: null == likes
-          ? _value.likes
-          : likes // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value.likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userAvatar: freezed == userAvatar
+                ? _value.userAvatar
+                : userAvatar // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            text: null == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            likes: null == likes
+                ? _value.likes
+                : likes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            likedBy: null == likedBy
+                ? _value.likedBy
+                : likedBy // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ContributionCommentImplCopyWith<$Res>
     implements $ContributionCommentCopyWith<$Res> {
-  factory _$$ContributionCommentImplCopyWith(_$ContributionCommentImpl value,
-          $Res Function(_$ContributionCommentImpl) then) =
-      __$$ContributionCommentImplCopyWithImpl<$Res>;
+  factory _$$ContributionCommentImplCopyWith(
+    _$ContributionCommentImpl value,
+    $Res Function(_$ContributionCommentImpl) then,
+  ) = __$$ContributionCommentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String userName,
-      String? userAvatar,
-      String text,
-      DateTime createdAt,
-      int likes,
-      List<String> likedBy});
+  $Res call({
+    String id,
+    String userId,
+    String userName,
+    String? userAvatar,
+    String text,
+    DateTime createdAt,
+    int likes,
+    List<String> likedBy,
+  });
 }
 
 /// @nodoc
 class __$$ContributionCommentImplCopyWithImpl<$Res>
     extends _$ContributionCommentCopyWithImpl<$Res, _$ContributionCommentImpl>
     implements _$$ContributionCommentImplCopyWith<$Res> {
-  __$$ContributionCommentImplCopyWithImpl(_$ContributionCommentImpl _value,
-      $Res Function(_$ContributionCommentImpl) _then)
-      : super(_value, _then);
+  __$$ContributionCommentImplCopyWithImpl(
+    _$ContributionCommentImpl _value,
+    $Res Function(_$ContributionCommentImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ContributionComment
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1183,56 +1237,58 @@ class __$$ContributionCommentImplCopyWithImpl<$Res>
     Object? likes = null,
     Object? likedBy = null,
   }) {
-    return _then(_$ContributionCommentImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userAvatar: freezed == userAvatar
-          ? _value.userAvatar
-          : userAvatar // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likes: null == likes
-          ? _value.likes
-          : likes // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value._likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$ContributionCommentImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userAvatar: freezed == userAvatar
+            ? _value.userAvatar
+            : userAvatar // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        text: null == text
+            ? _value.text
+            : text // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        likes: null == likes
+            ? _value.likes
+            : likes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        likedBy: null == likedBy
+            ? _value._likedBy
+            : likedBy // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ContributionCommentImpl implements _ContributionComment {
-  const _$ContributionCommentImpl(
-      {required this.id,
-      required this.userId,
-      required this.userName,
-      this.userAvatar,
-      required this.text,
-      required this.createdAt,
-      this.likes = 0,
-      final List<String> likedBy = const []})
-      : _likedBy = likedBy;
+  const _$ContributionCommentImpl({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    this.userAvatar,
+    required this.text,
+    required this.createdAt,
+    this.likes = 0,
+    final List<String> likedBy = const [],
+  }) : _likedBy = likedBy;
 
   factory _$ContributionCommentImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContributionCommentImplFromJson(json);
@@ -1284,36 +1340,48 @@ class _$ContributionCommentImpl implements _ContributionComment {
             const DeepCollectionEquality().equals(other._likedBy, _likedBy));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, userName, userAvatar,
-      text, createdAt, likes, const DeepCollectionEquality().hash(_likedBy));
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    userName,
+    userAvatar,
+    text,
+    createdAt,
+    likes,
+    const DeepCollectionEquality().hash(_likedBy),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ContributionComment
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ContributionCommentImplCopyWith<_$ContributionCommentImpl> get copyWith =>
       __$$ContributionCommentImplCopyWithImpl<_$ContributionCommentImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContributionCommentImplToJson(
-      this,
-    );
+    return _$$ContributionCommentImplToJson(this);
   }
 }
 
 abstract class _ContributionComment implements ContributionComment {
-  const factory _ContributionComment(
-      {required final String id,
-      required final String userId,
-      required final String userName,
-      final String? userAvatar,
-      required final String text,
-      required final DateTime createdAt,
-      final int likes,
-      final List<String> likedBy}) = _$ContributionCommentImpl;
+  const factory _ContributionComment({
+    required final String id,
+    required final String userId,
+    required final String userName,
+    final String? userAvatar,
+    required final String text,
+    required final DateTime createdAt,
+    final int likes,
+    final List<String> likedBy,
+  }) = _$ContributionCommentImpl;
 
   factory _ContributionComment.fromJson(Map<String, dynamic> json) =
       _$ContributionCommentImpl.fromJson;
@@ -1334,14 +1402,18 @@ abstract class _ContributionComment implements ContributionComment {
   int get likes;
   @override
   List<String> get likedBy;
+
+  /// Create a copy of ContributionComment
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ContributionCommentImplCopyWith<_$ContributionCommentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 UserContributionStats _$UserContributionStatsFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _UserContributionStats.fromJson(json);
 }
 
@@ -1366,41 +1438,49 @@ mixin _$UserContributionStats {
   int get monthlyRank => throw _privateConstructorUsedError;
   int get allTimeRank => throw _privateConstructorUsedError;
 
+  /// Serializes this UserContributionStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserContributionStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserContributionStatsCopyWith<UserContributionStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $UserContributionStatsCopyWith<$Res> {
-  factory $UserContributionStatsCopyWith(UserContributionStats value,
-          $Res Function(UserContributionStats) then) =
-      _$UserContributionStatsCopyWithImpl<$Res, UserContributionStats>;
+  factory $UserContributionStatsCopyWith(
+    UserContributionStats value,
+    $Res Function(UserContributionStats) then,
+  ) = _$UserContributionStatsCopyWithImpl<$Res, UserContributionStats>;
   @useResult
-  $Res call(
-      {String userId,
-      int totalContributions,
-      int approvedContributions,
-      int rejectedContributions,
-      int pendingContributions,
-      int totalVotes,
-      int totalPoints,
-      int currentStreak,
-      int longestStreak,
-      String level,
-      List<ContributorBadge> badges,
-      DateTime? lastContributionDate,
-      Map<String, int> contributionsByType,
-      double approvalRate,
-      int weeklyRank,
-      int monthlyRank,
-      int allTimeRank});
+  $Res call({
+    String userId,
+    int totalContributions,
+    int approvedContributions,
+    int rejectedContributions,
+    int pendingContributions,
+    int totalVotes,
+    int totalPoints,
+    int currentStreak,
+    int longestStreak,
+    String level,
+    List<ContributorBadge> badges,
+    DateTime? lastContributionDate,
+    Map<String, int> contributionsByType,
+    double approvalRate,
+    int weeklyRank,
+    int monthlyRank,
+    int allTimeRank,
+  });
 }
 
 /// @nodoc
-class _$UserContributionStatsCopyWithImpl<$Res,
-        $Val extends UserContributionStats>
+class _$UserContributionStatsCopyWithImpl<
+  $Res,
+  $Val extends UserContributionStats
+>
     implements $UserContributionStatsCopyWith<$Res> {
   _$UserContributionStatsCopyWithImpl(this._value, this._then);
 
@@ -1409,6 +1489,8 @@ class _$UserContributionStatsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserContributionStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1430,76 +1512,79 @@ class _$UserContributionStatsCopyWithImpl<$Res,
     Object? monthlyRank = null,
     Object? allTimeRank = null,
   }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalContributions: null == totalContributions
-          ? _value.totalContributions
-          : totalContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      approvedContributions: null == approvedContributions
-          ? _value.approvedContributions
-          : approvedContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      rejectedContributions: null == rejectedContributions
-          ? _value.rejectedContributions
-          : rejectedContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      pendingContributions: null == pendingContributions
-          ? _value.pendingContributions
-          : pendingContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalVotes: null == totalVotes
-          ? _value.totalVotes
-          : totalVotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalPoints: null == totalPoints
-          ? _value.totalPoints
-          : totalPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as String,
-      badges: null == badges
-          ? _value.badges
-          : badges // ignore: cast_nullable_to_non_nullable
-              as List<ContributorBadge>,
-      lastContributionDate: freezed == lastContributionDate
-          ? _value.lastContributionDate
-          : lastContributionDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      contributionsByType: null == contributionsByType
-          ? _value.contributionsByType
-          : contributionsByType // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      approvalRate: null == approvalRate
-          ? _value.approvalRate
-          : approvalRate // ignore: cast_nullable_to_non_nullable
-              as double,
-      weeklyRank: null == weeklyRank
-          ? _value.weeklyRank
-          : weeklyRank // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyRank: null == monthlyRank
-          ? _value.monthlyRank
-          : monthlyRank // ignore: cast_nullable_to_non_nullable
-              as int,
-      allTimeRank: null == allTimeRank
-          ? _value.allTimeRank
-          : allTimeRank // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalContributions: null == totalContributions
+                ? _value.totalContributions
+                : totalContributions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            approvedContributions: null == approvedContributions
+                ? _value.approvedContributions
+                : approvedContributions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            rejectedContributions: null == rejectedContributions
+                ? _value.rejectedContributions
+                : rejectedContributions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            pendingContributions: null == pendingContributions
+                ? _value.pendingContributions
+                : pendingContributions // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalVotes: null == totalVotes
+                ? _value.totalVotes
+                : totalVotes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalPoints: null == totalPoints
+                ? _value.totalPoints
+                : totalPoints // ignore: cast_nullable_to_non_nullable
+                      as int,
+            currentStreak: null == currentStreak
+                ? _value.currentStreak
+                : currentStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            longestStreak: null == longestStreak
+                ? _value.longestStreak
+                : longestStreak // ignore: cast_nullable_to_non_nullable
+                      as int,
+            level: null == level
+                ? _value.level
+                : level // ignore: cast_nullable_to_non_nullable
+                      as String,
+            badges: null == badges
+                ? _value.badges
+                : badges // ignore: cast_nullable_to_non_nullable
+                      as List<ContributorBadge>,
+            lastContributionDate: freezed == lastContributionDate
+                ? _value.lastContributionDate
+                : lastContributionDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            contributionsByType: null == contributionsByType
+                ? _value.contributionsByType
+                : contributionsByType // ignore: cast_nullable_to_non_nullable
+                      as Map<String, int>,
+            approvalRate: null == approvalRate
+                ? _value.approvalRate
+                : approvalRate // ignore: cast_nullable_to_non_nullable
+                      as double,
+            weeklyRank: null == weeklyRank
+                ? _value.weeklyRank
+                : weeklyRank // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyRank: null == monthlyRank
+                ? _value.monthlyRank
+                : monthlyRank // ignore: cast_nullable_to_non_nullable
+                      as int,
+            allTimeRank: null == allTimeRank
+                ? _value.allTimeRank
+                : allTimeRank // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1507,40 +1592,44 @@ class _$UserContributionStatsCopyWithImpl<$Res,
 abstract class _$$UserContributionStatsImplCopyWith<$Res>
     implements $UserContributionStatsCopyWith<$Res> {
   factory _$$UserContributionStatsImplCopyWith(
-          _$UserContributionStatsImpl value,
-          $Res Function(_$UserContributionStatsImpl) then) =
-      __$$UserContributionStatsImplCopyWithImpl<$Res>;
+    _$UserContributionStatsImpl value,
+    $Res Function(_$UserContributionStatsImpl) then,
+  ) = __$$UserContributionStatsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String userId,
-      int totalContributions,
-      int approvedContributions,
-      int rejectedContributions,
-      int pendingContributions,
-      int totalVotes,
-      int totalPoints,
-      int currentStreak,
-      int longestStreak,
-      String level,
-      List<ContributorBadge> badges,
-      DateTime? lastContributionDate,
-      Map<String, int> contributionsByType,
-      double approvalRate,
-      int weeklyRank,
-      int monthlyRank,
-      int allTimeRank});
+  $Res call({
+    String userId,
+    int totalContributions,
+    int approvedContributions,
+    int rejectedContributions,
+    int pendingContributions,
+    int totalVotes,
+    int totalPoints,
+    int currentStreak,
+    int longestStreak,
+    String level,
+    List<ContributorBadge> badges,
+    DateTime? lastContributionDate,
+    Map<String, int> contributionsByType,
+    double approvalRate,
+    int weeklyRank,
+    int monthlyRank,
+    int allTimeRank,
+  });
 }
 
 /// @nodoc
 class __$$UserContributionStatsImplCopyWithImpl<$Res>
-    extends _$UserContributionStatsCopyWithImpl<$Res,
-        _$UserContributionStatsImpl>
+    extends
+        _$UserContributionStatsCopyWithImpl<$Res, _$UserContributionStatsImpl>
     implements _$$UserContributionStatsImplCopyWith<$Res> {
-  __$$UserContributionStatsImplCopyWithImpl(_$UserContributionStatsImpl _value,
-      $Res Function(_$UserContributionStatsImpl) _then)
-      : super(_value, _then);
+  __$$UserContributionStatsImplCopyWithImpl(
+    _$UserContributionStatsImpl _value,
+    $Res Function(_$UserContributionStatsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserContributionStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1562,102 +1651,104 @@ class __$$UserContributionStatsImplCopyWithImpl<$Res>
     Object? monthlyRank = null,
     Object? allTimeRank = null,
   }) {
-    return _then(_$UserContributionStatsImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalContributions: null == totalContributions
-          ? _value.totalContributions
-          : totalContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      approvedContributions: null == approvedContributions
-          ? _value.approvedContributions
-          : approvedContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      rejectedContributions: null == rejectedContributions
-          ? _value.rejectedContributions
-          : rejectedContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      pendingContributions: null == pendingContributions
-          ? _value.pendingContributions
-          : pendingContributions // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalVotes: null == totalVotes
-          ? _value.totalVotes
-          : totalVotes // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalPoints: null == totalPoints
-          ? _value.totalPoints
-          : totalPoints // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentStreak: null == currentStreak
-          ? _value.currentStreak
-          : currentStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      longestStreak: null == longestStreak
-          ? _value.longestStreak
-          : longestStreak // ignore: cast_nullable_to_non_nullable
-              as int,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as String,
-      badges: null == badges
-          ? _value._badges
-          : badges // ignore: cast_nullable_to_non_nullable
-              as List<ContributorBadge>,
-      lastContributionDate: freezed == lastContributionDate
-          ? _value.lastContributionDate
-          : lastContributionDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      contributionsByType: null == contributionsByType
-          ? _value._contributionsByType
-          : contributionsByType // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      approvalRate: null == approvalRate
-          ? _value.approvalRate
-          : approvalRate // ignore: cast_nullable_to_non_nullable
-              as double,
-      weeklyRank: null == weeklyRank
-          ? _value.weeklyRank
-          : weeklyRank // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyRank: null == monthlyRank
-          ? _value.monthlyRank
-          : monthlyRank // ignore: cast_nullable_to_non_nullable
-              as int,
-      allTimeRank: null == allTimeRank
-          ? _value.allTimeRank
-          : allTimeRank // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$UserContributionStatsImpl(
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalContributions: null == totalContributions
+            ? _value.totalContributions
+            : totalContributions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        approvedContributions: null == approvedContributions
+            ? _value.approvedContributions
+            : approvedContributions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        rejectedContributions: null == rejectedContributions
+            ? _value.rejectedContributions
+            : rejectedContributions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        pendingContributions: null == pendingContributions
+            ? _value.pendingContributions
+            : pendingContributions // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalVotes: null == totalVotes
+            ? _value.totalVotes
+            : totalVotes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalPoints: null == totalPoints
+            ? _value.totalPoints
+            : totalPoints // ignore: cast_nullable_to_non_nullable
+                  as int,
+        currentStreak: null == currentStreak
+            ? _value.currentStreak
+            : currentStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        longestStreak: null == longestStreak
+            ? _value.longestStreak
+            : longestStreak // ignore: cast_nullable_to_non_nullable
+                  as int,
+        level: null == level
+            ? _value.level
+            : level // ignore: cast_nullable_to_non_nullable
+                  as String,
+        badges: null == badges
+            ? _value._badges
+            : badges // ignore: cast_nullable_to_non_nullable
+                  as List<ContributorBadge>,
+        lastContributionDate: freezed == lastContributionDate
+            ? _value.lastContributionDate
+            : lastContributionDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        contributionsByType: null == contributionsByType
+            ? _value._contributionsByType
+            : contributionsByType // ignore: cast_nullable_to_non_nullable
+                  as Map<String, int>,
+        approvalRate: null == approvalRate
+            ? _value.approvalRate
+            : approvalRate // ignore: cast_nullable_to_non_nullable
+                  as double,
+        weeklyRank: null == weeklyRank
+            ? _value.weeklyRank
+            : weeklyRank // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyRank: null == monthlyRank
+            ? _value.monthlyRank
+            : monthlyRank // ignore: cast_nullable_to_non_nullable
+                  as int,
+        allTimeRank: null == allTimeRank
+            ? _value.allTimeRank
+            : allTimeRank // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserContributionStatsImpl implements _UserContributionStats {
-  const _$UserContributionStatsImpl(
-      {required this.userId,
-      this.totalContributions = 0,
-      this.approvedContributions = 0,
-      this.rejectedContributions = 0,
-      this.pendingContributions = 0,
-      this.totalVotes = 0,
-      this.totalPoints = 0,
-      this.currentStreak = 0,
-      this.longestStreak = 0,
-      this.level = 'Rookie',
-      final List<ContributorBadge> badges = const [],
-      this.lastContributionDate,
-      final Map<String, int> contributionsByType = const {},
-      this.approvalRate = 0.0,
-      this.weeklyRank = 0,
-      this.monthlyRank = 0,
-      this.allTimeRank = 0})
-      : _badges = badges,
-        _contributionsByType = contributionsByType;
+  const _$UserContributionStatsImpl({
+    required this.userId,
+    this.totalContributions = 0,
+    this.approvedContributions = 0,
+    this.rejectedContributions = 0,
+    this.pendingContributions = 0,
+    this.totalVotes = 0,
+    this.totalPoints = 0,
+    this.currentStreak = 0,
+    this.longestStreak = 0,
+    this.level = 'Rookie',
+    final List<ContributorBadge> badges = const [],
+    this.lastContributionDate,
+    final Map<String, int> contributionsByType = const {},
+    this.approvalRate = 0.0,
+    this.weeklyRank = 0,
+    this.monthlyRank = 0,
+    this.allTimeRank = 0,
+  }) : _badges = badges,
+       _contributionsByType = contributionsByType;
 
   factory _$UserContributionStatsImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserContributionStatsImplFromJson(json);
@@ -1756,8 +1847,10 @@ class _$UserContributionStatsImpl implements _UserContributionStats {
             const DeepCollectionEquality().equals(other._badges, _badges) &&
             (identical(other.lastContributionDate, lastContributionDate) ||
                 other.lastContributionDate == lastContributionDate) &&
-            const DeepCollectionEquality()
-                .equals(other._contributionsByType, _contributionsByType) &&
+            const DeepCollectionEquality().equals(
+              other._contributionsByType,
+              _contributionsByType,
+            ) &&
             (identical(other.approvalRate, approvalRate) ||
                 other.approvalRate == approvalRate) &&
             (identical(other.weeklyRank, weeklyRank) ||
@@ -1768,62 +1861,67 @@ class _$UserContributionStatsImpl implements _UserContributionStats {
                 other.allTimeRank == allTimeRank));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      totalContributions,
-      approvedContributions,
-      rejectedContributions,
-      pendingContributions,
-      totalVotes,
-      totalPoints,
-      currentStreak,
-      longestStreak,
-      level,
-      const DeepCollectionEquality().hash(_badges),
-      lastContributionDate,
-      const DeepCollectionEquality().hash(_contributionsByType),
-      approvalRate,
-      weeklyRank,
-      monthlyRank,
-      allTimeRank);
+    runtimeType,
+    userId,
+    totalContributions,
+    approvedContributions,
+    rejectedContributions,
+    pendingContributions,
+    totalVotes,
+    totalPoints,
+    currentStreak,
+    longestStreak,
+    level,
+    const DeepCollectionEquality().hash(_badges),
+    lastContributionDate,
+    const DeepCollectionEquality().hash(_contributionsByType),
+    approvalRate,
+    weeklyRank,
+    monthlyRank,
+    allTimeRank,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserContributionStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserContributionStatsImplCopyWith<_$UserContributionStatsImpl>
-      get copyWith => __$$UserContributionStatsImplCopyWithImpl<
-          _$UserContributionStatsImpl>(this, _$identity);
+  get copyWith =>
+      __$$UserContributionStatsImplCopyWithImpl<_$UserContributionStatsImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserContributionStatsImplToJson(
-      this,
-    );
+    return _$$UserContributionStatsImplToJson(this);
   }
 }
 
 abstract class _UserContributionStats implements UserContributionStats {
-  const factory _UserContributionStats(
-      {required final String userId,
-      final int totalContributions,
-      final int approvedContributions,
-      final int rejectedContributions,
-      final int pendingContributions,
-      final int totalVotes,
-      final int totalPoints,
-      final int currentStreak,
-      final int longestStreak,
-      final String level,
-      final List<ContributorBadge> badges,
-      final DateTime? lastContributionDate,
-      final Map<String, int> contributionsByType,
-      final double approvalRate,
-      final int weeklyRank,
-      final int monthlyRank,
-      final int allTimeRank}) = _$UserContributionStatsImpl;
+  const factory _UserContributionStats({
+    required final String userId,
+    final int totalContributions,
+    final int approvedContributions,
+    final int rejectedContributions,
+    final int pendingContributions,
+    final int totalVotes,
+    final int totalPoints,
+    final int currentStreak,
+    final int longestStreak,
+    final String level,
+    final List<ContributorBadge> badges,
+    final DateTime? lastContributionDate,
+    final Map<String, int> contributionsByType,
+    final double approvalRate,
+    final int weeklyRank,
+    final int monthlyRank,
+    final int allTimeRank,
+  }) = _$UserContributionStatsImpl;
 
   factory _UserContributionStats.fromJson(Map<String, dynamic> json) =
       _$UserContributionStatsImpl.fromJson;
@@ -1862,10 +1960,13 @@ abstract class _UserContributionStats implements UserContributionStats {
   int get monthlyRank;
   @override
   int get allTimeRank;
+
+  /// Create a copy of UserContributionStats
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserContributionStatsImplCopyWith<_$UserContributionStatsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 ContributorBadge _$ContributorBadgeFromJson(Map<String, dynamic> json) {
@@ -1882,8 +1983,12 @@ mixin _$ContributorBadge {
   bool get isRare => throw _privateConstructorUsedError;
   String? get category => throw _privateConstructorUsedError;
 
+  /// Serializes this ContributorBadge to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ContributorBadge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ContributorBadgeCopyWith<ContributorBadge> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1891,17 +1996,19 @@ mixin _$ContributorBadge {
 /// @nodoc
 abstract class $ContributorBadgeCopyWith<$Res> {
   factory $ContributorBadgeCopyWith(
-          ContributorBadge value, $Res Function(ContributorBadge) then) =
-      _$ContributorBadgeCopyWithImpl<$Res, ContributorBadge>;
+    ContributorBadge value,
+    $Res Function(ContributorBadge) then,
+  ) = _$ContributorBadgeCopyWithImpl<$Res, ContributorBadge>;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String description,
-      String icon,
-      DateTime earnedAt,
-      bool isRare,
-      String? category});
+  $Res call({
+    String id,
+    String name,
+    String description,
+    String icon,
+    DateTime earnedAt,
+    bool isRare,
+    String? category,
+  });
 }
 
 /// @nodoc
@@ -1914,6 +2021,8 @@ class _$ContributorBadgeCopyWithImpl<$Res, $Val extends ContributorBadge>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ContributorBadge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1925,65 +2034,73 @@ class _$ContributorBadgeCopyWithImpl<$Res, $Val extends ContributorBadge>
     Object? isRare = null,
     Object? category = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      icon: null == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String,
-      earnedAt: null == earnedAt
-          ? _value.earnedAt
-          : earnedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isRare: null == isRare
-          ? _value.isRare
-          : isRare // ignore: cast_nullable_to_non_nullable
-              as bool,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            icon: null == icon
+                ? _value.icon
+                : icon // ignore: cast_nullable_to_non_nullable
+                      as String,
+            earnedAt: null == earnedAt
+                ? _value.earnedAt
+                : earnedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            isRare: null == isRare
+                ? _value.isRare
+                : isRare // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ContributorBadgeImplCopyWith<$Res>
     implements $ContributorBadgeCopyWith<$Res> {
-  factory _$$ContributorBadgeImplCopyWith(_$ContributorBadgeImpl value,
-          $Res Function(_$ContributorBadgeImpl) then) =
-      __$$ContributorBadgeImplCopyWithImpl<$Res>;
+  factory _$$ContributorBadgeImplCopyWith(
+    _$ContributorBadgeImpl value,
+    $Res Function(_$ContributorBadgeImpl) then,
+  ) = __$$ContributorBadgeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String description,
-      String icon,
-      DateTime earnedAt,
-      bool isRare,
-      String? category});
+  $Res call({
+    String id,
+    String name,
+    String description,
+    String icon,
+    DateTime earnedAt,
+    bool isRare,
+    String? category,
+  });
 }
 
 /// @nodoc
 class __$$ContributorBadgeImplCopyWithImpl<$Res>
     extends _$ContributorBadgeCopyWithImpl<$Res, _$ContributorBadgeImpl>
     implements _$$ContributorBadgeImplCopyWith<$Res> {
-  __$$ContributorBadgeImplCopyWithImpl(_$ContributorBadgeImpl _value,
-      $Res Function(_$ContributorBadgeImpl) _then)
-      : super(_value, _then);
+  __$$ContributorBadgeImplCopyWithImpl(
+    _$ContributorBadgeImpl _value,
+    $Res Function(_$ContributorBadgeImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ContributorBadge
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1995,50 +2112,53 @@ class __$$ContributorBadgeImplCopyWithImpl<$Res>
     Object? isRare = null,
     Object? category = freezed,
   }) {
-    return _then(_$ContributorBadgeImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      icon: null == icon
-          ? _value.icon
-          : icon // ignore: cast_nullable_to_non_nullable
-              as String,
-      earnedAt: null == earnedAt
-          ? _value.earnedAt
-          : earnedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isRare: null == isRare
-          ? _value.isRare
-          : isRare // ignore: cast_nullable_to_non_nullable
-              as bool,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ContributorBadgeImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        icon: null == icon
+            ? _value.icon
+            : icon // ignore: cast_nullable_to_non_nullable
+                  as String,
+        earnedAt: null == earnedAt
+            ? _value.earnedAt
+            : earnedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        isRare: null == isRare
+            ? _value.isRare
+            : isRare // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ContributorBadgeImpl implements _ContributorBadge {
-  const _$ContributorBadgeImpl(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.icon,
-      required this.earnedAt,
-      this.isRare = false,
-      this.category});
+  const _$ContributorBadgeImpl({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.icon,
+    required this.earnedAt,
+    this.isRare = false,
+    this.category,
+  });
 
   factory _$ContributorBadgeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ContributorBadgeImplFromJson(json);
@@ -2081,35 +2201,46 @@ class _$ContributorBadgeImpl implements _ContributorBadge {
                 other.category == category));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, name, description, icon, earnedAt, isRare, category);
+    runtimeType,
+    id,
+    name,
+    description,
+    icon,
+    earnedAt,
+    isRare,
+    category,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ContributorBadge
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ContributorBadgeImplCopyWith<_$ContributorBadgeImpl> get copyWith =>
       __$$ContributorBadgeImplCopyWithImpl<_$ContributorBadgeImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContributorBadgeImplToJson(
-      this,
-    );
+    return _$$ContributorBadgeImplToJson(this);
   }
 }
 
 abstract class _ContributorBadge implements ContributorBadge {
-  const factory _ContributorBadge(
-      {required final String id,
-      required final String name,
-      required final String description,
-      required final String icon,
-      required final DateTime earnedAt,
-      final bool isRare,
-      final String? category}) = _$ContributorBadgeImpl;
+  const factory _ContributorBadge({
+    required final String id,
+    required final String name,
+    required final String description,
+    required final String icon,
+    required final DateTime earnedAt,
+    final bool isRare,
+    final String? category,
+  }) = _$ContributorBadgeImpl;
 
   factory _ContributorBadge.fromJson(Map<String, dynamic> json) =
       _$ContributorBadgeImpl.fromJson;
@@ -2128,8 +2259,11 @@ abstract class _ContributorBadge implements ContributorBadge {
   bool get isRare;
   @override
   String? get category;
+
+  /// Create a copy of ContributorBadge
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ContributorBadgeImplCopyWith<_$ContributorBadgeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

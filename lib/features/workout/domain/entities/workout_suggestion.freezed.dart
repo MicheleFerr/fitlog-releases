@@ -12,7 +12,8 @@ part of 'workout_suggestion.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 WorkoutSuggestion _$WorkoutSuggestionFromJson(Map<String, dynamic> json) {
   return _WorkoutSuggestion.fromJson(json);
@@ -76,8 +77,12 @@ mixin _$WorkoutSuggestion {
   /// ✅ NEW: Date of the missed workout being recovered
   DateTime? get recoveryDate => throw _privateConstructorUsedError;
 
+  /// Serializes this WorkoutSuggestion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of WorkoutSuggestion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WorkoutSuggestionCopyWith<WorkoutSuggestion> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -85,21 +90,23 @@ mixin _$WorkoutSuggestion {
 /// @nodoc
 abstract class $WorkoutSuggestionCopyWith<$Res> {
   factory $WorkoutSuggestionCopyWith(
-          WorkoutSuggestion value, $Res Function(WorkoutSuggestion) then) =
-      _$WorkoutSuggestionCopyWithImpl<$Res, WorkoutSuggestion>;
+    WorkoutSuggestion value,
+    $Res Function(WorkoutSuggestion) then,
+  ) = _$WorkoutSuggestionCopyWithImpl<$Res, WorkoutSuggestion>;
   @useResult
-  $Res call(
-      {SuggestionLevel level,
-      String workoutName,
-      double confidence,
-      String reason,
-      String? patternInfo,
-      String? routineTemplateId,
-      String? frequencyData,
-      DateTime? scheduledDate,
-      DateTime? generatedAt,
-      bool isRecovery,
-      DateTime? recoveryDate});
+  $Res call({
+    SuggestionLevel level,
+    String workoutName,
+    double confidence,
+    String reason,
+    String? patternInfo,
+    String? routineTemplateId,
+    String? frequencyData,
+    DateTime? scheduledDate,
+    DateTime? generatedAt,
+    bool isRecovery,
+    DateTime? recoveryDate,
+  });
 }
 
 /// @nodoc
@@ -112,6 +119,8 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WorkoutSuggestion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -127,85 +136,93 @@ class _$WorkoutSuggestionCopyWithImpl<$Res, $Val extends WorkoutSuggestion>
     Object? isRecovery = null,
     Object? recoveryDate = freezed,
   }) {
-    return _then(_value.copyWith(
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as SuggestionLevel,
-      workoutName: null == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      patternInfo: freezed == patternInfo
-          ? _value.patternInfo
-          : patternInfo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      routineTemplateId: freezed == routineTemplateId
-          ? _value.routineTemplateId
-          : routineTemplateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      frequencyData: freezed == frequencyData
-          ? _value.frequencyData
-          : frequencyData // ignore: cast_nullable_to_non_nullable
-              as String?,
-      scheduledDate: freezed == scheduledDate
-          ? _value.scheduledDate
-          : scheduledDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      generatedAt: freezed == generatedAt
-          ? _value.generatedAt
-          : generatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isRecovery: null == isRecovery
-          ? _value.isRecovery
-          : isRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      recoveryDate: freezed == recoveryDate
-          ? _value.recoveryDate
-          : recoveryDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            level: null == level
+                ? _value.level
+                : level // ignore: cast_nullable_to_non_nullable
+                      as SuggestionLevel,
+            workoutName: null == workoutName
+                ? _value.workoutName
+                : workoutName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            confidence: null == confidence
+                ? _value.confidence
+                : confidence // ignore: cast_nullable_to_non_nullable
+                      as double,
+            reason: null == reason
+                ? _value.reason
+                : reason // ignore: cast_nullable_to_non_nullable
+                      as String,
+            patternInfo: freezed == patternInfo
+                ? _value.patternInfo
+                : patternInfo // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            routineTemplateId: freezed == routineTemplateId
+                ? _value.routineTemplateId
+                : routineTemplateId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            frequencyData: freezed == frequencyData
+                ? _value.frequencyData
+                : frequencyData // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            scheduledDate: freezed == scheduledDate
+                ? _value.scheduledDate
+                : scheduledDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            generatedAt: freezed == generatedAt
+                ? _value.generatedAt
+                : generatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            isRecovery: null == isRecovery
+                ? _value.isRecovery
+                : isRecovery // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            recoveryDate: freezed == recoveryDate
+                ? _value.recoveryDate
+                : recoveryDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$WorkoutSuggestionImplCopyWith<$Res>
     implements $WorkoutSuggestionCopyWith<$Res> {
-  factory _$$WorkoutSuggestionImplCopyWith(_$WorkoutSuggestionImpl value,
-          $Res Function(_$WorkoutSuggestionImpl) then) =
-      __$$WorkoutSuggestionImplCopyWithImpl<$Res>;
+  factory _$$WorkoutSuggestionImplCopyWith(
+    _$WorkoutSuggestionImpl value,
+    $Res Function(_$WorkoutSuggestionImpl) then,
+  ) = __$$WorkoutSuggestionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {SuggestionLevel level,
-      String workoutName,
-      double confidence,
-      String reason,
-      String? patternInfo,
-      String? routineTemplateId,
-      String? frequencyData,
-      DateTime? scheduledDate,
-      DateTime? generatedAt,
-      bool isRecovery,
-      DateTime? recoveryDate});
+  $Res call({
+    SuggestionLevel level,
+    String workoutName,
+    double confidence,
+    String reason,
+    String? patternInfo,
+    String? routineTemplateId,
+    String? frequencyData,
+    DateTime? scheduledDate,
+    DateTime? generatedAt,
+    bool isRecovery,
+    DateTime? recoveryDate,
+  });
 }
 
 /// @nodoc
 class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
     extends _$WorkoutSuggestionCopyWithImpl<$Res, _$WorkoutSuggestionImpl>
     implements _$$WorkoutSuggestionImplCopyWith<$Res> {
-  __$$WorkoutSuggestionImplCopyWithImpl(_$WorkoutSuggestionImpl _value,
-      $Res Function(_$WorkoutSuggestionImpl) _then)
-      : super(_value, _then);
+  __$$WorkoutSuggestionImplCopyWithImpl(
+    _$WorkoutSuggestionImpl _value,
+    $Res Function(_$WorkoutSuggestionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of WorkoutSuggestion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -221,71 +238,73 @@ class __$$WorkoutSuggestionImplCopyWithImpl<$Res>
     Object? isRecovery = null,
     Object? recoveryDate = freezed,
   }) {
-    return _then(_$WorkoutSuggestionImpl(
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as SuggestionLevel,
-      workoutName: null == workoutName
-          ? _value.workoutName
-          : workoutName // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      patternInfo: freezed == patternInfo
-          ? _value.patternInfo
-          : patternInfo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      routineTemplateId: freezed == routineTemplateId
-          ? _value.routineTemplateId
-          : routineTemplateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      frequencyData: freezed == frequencyData
-          ? _value.frequencyData
-          : frequencyData // ignore: cast_nullable_to_non_nullable
-              as String?,
-      scheduledDate: freezed == scheduledDate
-          ? _value.scheduledDate
-          : scheduledDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      generatedAt: freezed == generatedAt
-          ? _value.generatedAt
-          : generatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      isRecovery: null == isRecovery
-          ? _value.isRecovery
-          : isRecovery // ignore: cast_nullable_to_non_nullable
-              as bool,
-      recoveryDate: freezed == recoveryDate
-          ? _value.recoveryDate
-          : recoveryDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$WorkoutSuggestionImpl(
+        level: null == level
+            ? _value.level
+            : level // ignore: cast_nullable_to_non_nullable
+                  as SuggestionLevel,
+        workoutName: null == workoutName
+            ? _value.workoutName
+            : workoutName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        confidence: null == confidence
+            ? _value.confidence
+            : confidence // ignore: cast_nullable_to_non_nullable
+                  as double,
+        reason: null == reason
+            ? _value.reason
+            : reason // ignore: cast_nullable_to_non_nullable
+                  as String,
+        patternInfo: freezed == patternInfo
+            ? _value.patternInfo
+            : patternInfo // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        routineTemplateId: freezed == routineTemplateId
+            ? _value.routineTemplateId
+            : routineTemplateId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        frequencyData: freezed == frequencyData
+            ? _value.frequencyData
+            : frequencyData // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        scheduledDate: freezed == scheduledDate
+            ? _value.scheduledDate
+            : scheduledDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        generatedAt: freezed == generatedAt
+            ? _value.generatedAt
+            : generatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        isRecovery: null == isRecovery
+            ? _value.isRecovery
+            : isRecovery // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        recoveryDate: freezed == recoveryDate
+            ? _value.recoveryDate
+            : recoveryDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
-  const _$WorkoutSuggestionImpl(
-      {required this.level,
-      required this.workoutName,
-      required this.confidence,
-      required this.reason,
-      this.patternInfo,
-      this.routineTemplateId,
-      this.frequencyData,
-      this.scheduledDate,
-      this.generatedAt = null,
-      this.isRecovery = false,
-      this.recoveryDate})
-      : super._();
+  const _$WorkoutSuggestionImpl({
+    required this.level,
+    required this.workoutName,
+    required this.confidence,
+    required this.reason,
+    this.patternInfo,
+    this.routineTemplateId,
+    this.frequencyData,
+    this.scheduledDate,
+    this.generatedAt = null,
+    this.isRecovery = false,
+    this.recoveryDate,
+  }) : super._();
 
   factory _$WorkoutSuggestionImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSuggestionImplFromJson(json);
@@ -391,66 +410,68 @@ class _$WorkoutSuggestionImpl extends _WorkoutSuggestion {
                 other.recoveryDate == recoveryDate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      level,
-      workoutName,
-      confidence,
-      reason,
-      patternInfo,
-      routineTemplateId,
-      frequencyData,
-      scheduledDate,
-      generatedAt,
-      isRecovery,
-      recoveryDate);
+    runtimeType,
+    level,
+    workoutName,
+    confidence,
+    reason,
+    patternInfo,
+    routineTemplateId,
+    frequencyData,
+    scheduledDate,
+    generatedAt,
+    isRecovery,
+    recoveryDate,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutSuggestion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutSuggestionImplCopyWith<_$WorkoutSuggestionImpl> get copyWith =>
       __$$WorkoutSuggestionImplCopyWithImpl<_$WorkoutSuggestionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WorkoutSuggestionImplToJson(
-      this,
-    );
+    return _$$WorkoutSuggestionImplToJson(this);
   }
 }
 
 abstract class _WorkoutSuggestion extends WorkoutSuggestion {
-  const factory _WorkoutSuggestion(
-      {required final SuggestionLevel level,
-      required final String workoutName,
-      required final double confidence,
-      required final String reason,
-      final String? patternInfo,
-      final String? routineTemplateId,
-      final String? frequencyData,
-      final DateTime? scheduledDate,
-      final DateTime? generatedAt,
-      final bool isRecovery,
-      final DateTime? recoveryDate}) = _$WorkoutSuggestionImpl;
+  const factory _WorkoutSuggestion({
+    required final SuggestionLevel level,
+    required final String workoutName,
+    required final double confidence,
+    required final String reason,
+    final String? patternInfo,
+    final String? routineTemplateId,
+    final String? frequencyData,
+    final DateTime? scheduledDate,
+    final DateTime? generatedAt,
+    final bool isRecovery,
+    final DateTime? recoveryDate,
+  }) = _$WorkoutSuggestionImpl;
   const _WorkoutSuggestion._() : super._();
 
   factory _WorkoutSuggestion.fromJson(Map<String, dynamic> json) =
       _$WorkoutSuggestionImpl.fromJson;
 
-  @override
-
   /// Suggestion level (pattern/routine/frequency/dayBased)
-  SuggestionLevel get level;
   @override
+  SuggestionLevel get level;
 
   /// Predicted workout name
   ///
   /// Examples: "Push", "Pull", "Legs", "franco", "ciccio", "paolo"
-  String get workoutName;
   @override
+  String get workoutName;
 
   /// Confidence score (0.0 - 1.0)
   ///
@@ -458,8 +479,8 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
   /// - Routine: 0.80 - 0.90 (active routine exists)
   /// - Frequency: 0.50 - 0.70 (based on frequency)
   /// - DayBased: 0.30 - 0.50 (fallback default)
-  double get confidence;
   @override
+  double get confidence;
 
   /// Human-readable reason for this suggestion
   ///
@@ -468,24 +489,24 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
   /// - "Your routine schedule says: Upper Body"
   /// - "You do Push most often (5 times last month)"
   /// - "It's Monday - you usually do Franco"
-  String get reason;
   @override
+  String get reason;
 
   /// Optional pattern information (only for pattern-based suggestions)
   ///
   /// Example: "You completed Push yesterday"
-  String? get patternInfo;
   @override
+  String? get patternInfo;
 
   /// Optional template ID (only for routine-based suggestions)
-  String? get routineTemplateId;
   @override
+  String? get routineTemplateId;
 
   /// Optional frequency data (only for frequency-based suggestions)
   ///
   /// Example: "5 times in last 30 days"
-  String? get frequencyData;
   @override
+  String? get frequencyData;
 
   /// Optional scheduled date for routine-based suggestions
   ///
@@ -494,21 +515,25 @@ abstract class _WorkoutSuggestion extends WorkoutSuggestion {
   /// do on dd/mm/yyyy" in the UI.
   ///
   /// Example: DateTime(2025, 11, 8) → "08/11/2025"
-  DateTime? get scheduledDate;
   @override
+  DateTime? get scheduledDate;
 
   /// Timestamp when this suggestion was generated
-  DateTime? get generatedAt;
   @override
+  DateTime? get generatedAt;
 
   /// ✅ NEW: Is this a recovery suggestion for a missed workout?
-  bool get isRecovery;
   @override
+  bool get isRecovery;
 
   /// ✅ NEW: Date of the missed workout being recovered
-  DateTime? get recoveryDate;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get recoveryDate;
+
+  /// Create a copy of WorkoutSuggestion
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutSuggestionImplCopyWith<_$WorkoutSuggestionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

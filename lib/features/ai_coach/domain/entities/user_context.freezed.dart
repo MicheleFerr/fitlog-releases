@@ -12,7 +12,8 @@ part of 'user_context.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserContext _$UserContextFromJson(Map<String, dynamic> json) {
   return _UserContext.fromJson(json);
@@ -28,8 +29,12 @@ mixin _$UserContext {
   List<String>? get injuryHistory => throw _privateConstructorUsedError;
   List<String>? get preferredExercises => throw _privateConstructorUsedError;
 
+  /// Serializes this UserContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UserContext
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserContextCopyWith<UserContext> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -37,16 +42,18 @@ mixin _$UserContext {
 /// @nodoc
 abstract class $UserContextCopyWith<$Res> {
   factory $UserContextCopyWith(
-          UserContext value, $Res Function(UserContext) then) =
-      _$UserContextCopyWithImpl<$Res, UserContext>;
+    UserContext value,
+    $Res Function(UserContext) then,
+  ) = _$UserContextCopyWithImpl<$Res, UserContext>;
   @useResult
-  $Res call(
-      {String userId,
-      ExperienceLevel experienceLevel,
-      TrainingGoal primaryGoal,
-      int weeklyAvailability,
-      List<String>? injuryHistory,
-      List<String>? preferredExercises});
+  $Res call({
+    String userId,
+    ExperienceLevel experienceLevel,
+    TrainingGoal primaryGoal,
+    int weeklyAvailability,
+    List<String>? injuryHistory,
+    List<String>? preferredExercises,
+  });
 }
 
 /// @nodoc
@@ -59,6 +66,8 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserContext
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,32 +78,35 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
     Object? injuryHistory = freezed,
     Object? preferredExercises = freezed,
   }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-      primaryGoal: null == primaryGoal
-          ? _value.primaryGoal
-          : primaryGoal // ignore: cast_nullable_to_non_nullable
-              as TrainingGoal,
-      weeklyAvailability: null == weeklyAvailability
-          ? _value.weeklyAvailability
-          : weeklyAvailability // ignore: cast_nullable_to_non_nullable
-              as int,
-      injuryHistory: freezed == injuryHistory
-          ? _value.injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      preferredExercises: freezed == preferredExercises
-          ? _value.preferredExercises
-          : preferredExercises // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            experienceLevel: null == experienceLevel
+                ? _value.experienceLevel
+                : experienceLevel // ignore: cast_nullable_to_non_nullable
+                      as ExperienceLevel,
+            primaryGoal: null == primaryGoal
+                ? _value.primaryGoal
+                : primaryGoal // ignore: cast_nullable_to_non_nullable
+                      as TrainingGoal,
+            weeklyAvailability: null == weeklyAvailability
+                ? _value.weeklyAvailability
+                : weeklyAvailability // ignore: cast_nullable_to_non_nullable
+                      as int,
+            injuryHistory: freezed == injuryHistory
+                ? _value.injuryHistory
+                : injuryHistory // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            preferredExercises: freezed == preferredExercises
+                ? _value.preferredExercises
+                : preferredExercises // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -102,17 +114,19 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
 abstract class _$$UserContextImplCopyWith<$Res>
     implements $UserContextCopyWith<$Res> {
   factory _$$UserContextImplCopyWith(
-          _$UserContextImpl value, $Res Function(_$UserContextImpl) then) =
-      __$$UserContextImplCopyWithImpl<$Res>;
+    _$UserContextImpl value,
+    $Res Function(_$UserContextImpl) then,
+  ) = __$$UserContextImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String userId,
-      ExperienceLevel experienceLevel,
-      TrainingGoal primaryGoal,
-      int weeklyAvailability,
-      List<String>? injuryHistory,
-      List<String>? preferredExercises});
+  $Res call({
+    String userId,
+    ExperienceLevel experienceLevel,
+    TrainingGoal primaryGoal,
+    int weeklyAvailability,
+    List<String>? injuryHistory,
+    List<String>? preferredExercises,
+  });
 }
 
 /// @nodoc
@@ -120,9 +134,12 @@ class __$$UserContextImplCopyWithImpl<$Res>
     extends _$UserContextCopyWithImpl<$Res, _$UserContextImpl>
     implements _$$UserContextImplCopyWith<$Res> {
   __$$UserContextImplCopyWithImpl(
-      _$UserContextImpl _value, $Res Function(_$UserContextImpl) _then)
-      : super(_value, _then);
+    _$UserContextImpl _value,
+    $Res Function(_$UserContextImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserContext
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -133,47 +150,49 @@ class __$$UserContextImplCopyWithImpl<$Res>
     Object? injuryHistory = freezed,
     Object? preferredExercises = freezed,
   }) {
-    return _then(_$UserContextImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-      primaryGoal: null == primaryGoal
-          ? _value.primaryGoal
-          : primaryGoal // ignore: cast_nullable_to_non_nullable
-              as TrainingGoal,
-      weeklyAvailability: null == weeklyAvailability
-          ? _value.weeklyAvailability
-          : weeklyAvailability // ignore: cast_nullable_to_non_nullable
-              as int,
-      injuryHistory: freezed == injuryHistory
-          ? _value._injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      preferredExercises: freezed == preferredExercises
-          ? _value._preferredExercises
-          : preferredExercises // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-    ));
+    return _then(
+      _$UserContextImpl(
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        experienceLevel: null == experienceLevel
+            ? _value.experienceLevel
+            : experienceLevel // ignore: cast_nullable_to_non_nullable
+                  as ExperienceLevel,
+        primaryGoal: null == primaryGoal
+            ? _value.primaryGoal
+            : primaryGoal // ignore: cast_nullable_to_non_nullable
+                  as TrainingGoal,
+        weeklyAvailability: null == weeklyAvailability
+            ? _value.weeklyAvailability
+            : weeklyAvailability // ignore: cast_nullable_to_non_nullable
+                  as int,
+        injuryHistory: freezed == injuryHistory
+            ? _value._injuryHistory
+            : injuryHistory // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        preferredExercises: freezed == preferredExercises
+            ? _value._preferredExercises
+            : preferredExercises // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserContextImpl implements _UserContext {
-  const _$UserContextImpl(
-      {required this.userId,
-      required this.experienceLevel,
-      required this.primaryGoal,
-      required this.weeklyAvailability,
-      final List<String>? injuryHistory,
-      final List<String>? preferredExercises})
-      : _injuryHistory = injuryHistory,
-        _preferredExercises = preferredExercises;
+  const _$UserContextImpl({
+    required this.userId,
+    required this.experienceLevel,
+    required this.primaryGoal,
+    required this.weeklyAvailability,
+    final List<String>? injuryHistory,
+    final List<String>? preferredExercises,
+  }) : _injuryHistory = injuryHistory,
+       _preferredExercises = preferredExercises;
 
   factory _$UserContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserContextImplFromJson(json);
@@ -186,9 +205,9 @@ class _$UserContextImpl implements _UserContext {
   final TrainingGoal primaryGoal;
   @override
   final int weeklyAvailability;
-// Number of workout days per week
+  // Number of workout days per week
   final List<String>? _injuryHistory;
-// Number of workout days per week
+  // Number of workout days per week
   @override
   List<String>? get injuryHistory {
     final value = _injuryHistory;
@@ -226,24 +245,31 @@ class _$UserContextImpl implements _UserContext {
                 other.primaryGoal == primaryGoal) &&
             (identical(other.weeklyAvailability, weeklyAvailability) ||
                 other.weeklyAvailability == weeklyAvailability) &&
-            const DeepCollectionEquality()
-                .equals(other._injuryHistory, _injuryHistory) &&
-            const DeepCollectionEquality()
-                .equals(other._preferredExercises, _preferredExercises));
+            const DeepCollectionEquality().equals(
+              other._injuryHistory,
+              _injuryHistory,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._preferredExercises,
+              _preferredExercises,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      userId,
-      experienceLevel,
-      primaryGoal,
-      weeklyAvailability,
-      const DeepCollectionEquality().hash(_injuryHistory),
-      const DeepCollectionEquality().hash(_preferredExercises));
+    runtimeType,
+    userId,
+    experienceLevel,
+    primaryGoal,
+    weeklyAvailability,
+    const DeepCollectionEquality().hash(_injuryHistory),
+    const DeepCollectionEquality().hash(_preferredExercises),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserContext
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserContextImplCopyWith<_$UserContextImpl> get copyWith =>
@@ -251,20 +277,19 @@ class _$UserContextImpl implements _UserContext {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserContextImplToJson(
-      this,
-    );
+    return _$$UserContextImplToJson(this);
   }
 }
 
 abstract class _UserContext implements UserContext {
-  const factory _UserContext(
-      {required final String userId,
-      required final ExperienceLevel experienceLevel,
-      required final TrainingGoal primaryGoal,
-      required final int weeklyAvailability,
-      final List<String>? injuryHistory,
-      final List<String>? preferredExercises}) = _$UserContextImpl;
+  const factory _UserContext({
+    required final String userId,
+    required final ExperienceLevel experienceLevel,
+    required final TrainingGoal primaryGoal,
+    required final int weeklyAvailability,
+    final List<String>? injuryHistory,
+    final List<String>? preferredExercises,
+  }) = _$UserContextImpl;
 
   factory _UserContext.fromJson(Map<String, dynamic> json) =
       _$UserContextImpl.fromJson;
@@ -276,13 +301,16 @@ abstract class _UserContext implements UserContext {
   @override
   TrainingGoal get primaryGoal;
   @override
-  int get weeklyAvailability;
-  @override // Number of workout days per week
+  int get weeklyAvailability; // Number of workout days per week
+  @override
   List<String>? get injuryHistory;
   @override
   List<String>? get preferredExercises;
+
+  /// Create a copy of UserContext
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserContextImplCopyWith<_$UserContextImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -2039,11 +2039,11 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ti terremo aggiornato sui tuoi progressi!';
 
   @override
-  String get workoutReminderTitle => 'Promemoria Allenamento';
+  String get workoutReminderTitle => 'Promemoria allenamento';
 
   @override
-  String workoutReminderBody(String workoutName) {
-    return 'È ora del tuo allenamento $workoutName! 💪';
+  String workoutReminderBody(String name) {
+    return 'E ora di \"$name\"';
   }
 
   @override
@@ -8449,6 +8449,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get goToHome => 'Vai alla Home';
+
+  @override
+  String get goToWorkout => 'Vai all\'allenamento';
 
   @override
   String get workoutPausedContinue =>
@@ -16320,6 +16323,45 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsSignOutConfirm => 'Sei sicuro di volerti disconnettere?';
 
   @override
+  String get settingsTutorialHelp => 'Tutorial e Aiuto';
+
+  @override
+  String get settingsContextualTutorials => 'Tutorial Contestuali';
+
+  @override
+  String get settingsContextualTutorialsDesc =>
+      'Mostra suggerimenti utili mentre usi l\'app';
+
+  @override
+  String get settingsTutorialsEnabled => 'Tutorial attivati';
+
+  @override
+  String get settingsTutorialsDisabled => 'Tutorial disattivati';
+
+  @override
+  String settingsTutorialsSeenCount(int seen, int total) {
+    return '$seen di $total tutorial visti';
+  }
+
+  @override
+  String get settingsResetTutorials => 'Resetta Tutorial';
+
+  @override
+  String get settingsResetTutorialsDesc =>
+      'Rivedi tutti i tutorial dall\'inizio';
+
+  @override
+  String get settingsResetTutorialsConfirmTitle => 'Resettare i Tutorial?';
+
+  @override
+  String get settingsResetTutorialsConfirmBody =>
+      'Questo ti permetterà di rivedere tutti i tutorial contestuali. I tuoi dati di allenamento e le impostazioni non saranno modificati.';
+
+  @override
+  String get settingsTutorialsResetSuccess =>
+      'Tutorial resettati con successo! I suggerimenti appariranno nuovamente mentre usi l\'app.';
+
+  @override
   String settingsApreCalculationMethodUpdated(Object method) {
     return 'Metodo di calcolo APRE aggiornato a $method';
   }
@@ -20798,4 +20840,181 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get fabViewPreviousWorkouts => 'Visualizza workout precedenti';
+
+  @override
+  String get scheduleWorkout => 'Programma';
+
+  @override
+  String scheduleWorkoutTitle(String name) {
+    return 'Programma \"$name\"';
+  }
+
+  @override
+  String get tapDaysToSelect => 'Tocca i giorni per selezionare/deselezionare';
+
+  @override
+  String daysSelected(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni selezionati',
+      one: '1 giorno selezionato',
+      zero: 'Nessun giorno selezionato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reminderTime => 'Orario promemoria';
+
+  @override
+  String get confirmSchedule => 'Conferma programmazione';
+
+  @override
+  String get cancelSchedule => 'Annulla';
+
+  @override
+  String workoutScheduledSuccess(String name, int count) {
+    return '\"$name\" programmato per $count giorni';
+  }
+
+  @override
+  String get scheduledWorkouts => 'Allenamenti programmati';
+
+  @override
+  String get noScheduledWorkouts => 'Nessun allenamento programmato';
+
+  @override
+  String get deleteScheduleConfirm =>
+      'Eliminare questo allenamento programmato?';
+
+  @override
+  String get deleteScheduleMessage =>
+      'Questa azione non può essere annullata. Il promemoria programmato verrà annullato.';
+
+  @override
+  String get scheduledForToday => 'Programmato per oggi';
+
+  @override
+  String get scheduledForTomorrow => 'Programmato per domani';
+
+  @override
+  String get upcomingWorkouts => 'Prossimi allenamenti';
+
+  @override
+  String get skipScheduledWorkout => 'Salta';
+
+  @override
+  String get startScheduledWorkout => 'Inizia allenamento';
+
+  @override
+  String get tutorialLoggingSetTitle => 'Come registrare una serie';
+
+  @override
+  String get tutorialLoggingSetDesc =>
+      'Tocca qui per inserire peso e ripetizioni. Ogni serie completata sarà salvata automaticamente.';
+
+  @override
+  String get tutorialRestTimerTitle => 'Timer di recupero';
+
+  @override
+  String get tutorialRestTimerDesc =>
+      'Il timer di recupero è partito! Puoi regolare il tempo, saltarlo o lasciarlo scorrere. Un suono ti avviserà quando è ora della prossima serie.';
+
+  @override
+  String get tutorialExerciseMgmtTitle => 'Gestione esercizi';
+
+  @override
+  String get tutorialExerciseMgmtDesc =>
+      'Premi a lungo su qualsiasi esercizio per riordinare, modificare o eliminare. Puoi anche trascinare gli esercizi per cambiare l\'ordine.';
+
+  @override
+  String get tutorialWorkoutCompleteTitle => 'Ottimo lavoro!';
+
+  @override
+  String get tutorialWorkoutCompleteDesc =>
+      'Hai completato il tuo primo allenamento! I tuoi progressi sono stati salvati e puoi vedere le statistiche nella sezione Analisi.';
+
+  @override
+  String get tutorialAnalyticsTitle => 'Le tue analisi';
+
+  @override
+  String get tutorialAnalyticsDesc =>
+      'Dopo 3 allenamenti inizierai a vedere statistiche utili: tendenze del volume, distribuzione muscolare e grafici di progresso.';
+
+  @override
+  String get tutorialTemplatesTitle => 'Template allenamento';
+
+  @override
+  String get tutorialTemplatesDesc =>
+      'Salva le tue routine preferite come template. Inizia gli allenamenti più velocemente caricandoli con un tocco.';
+
+  @override
+  String get tutorialAdvancedTitle => 'Tecniche avanzate';
+
+  @override
+  String get tutorialAdvancedDesc =>
+      'Superserie, drop set e rest-pause ti aiutano ad allenarti più efficacemente. Provale quando sei pronto per una sfida!';
+
+  @override
+  String get tutorialSupersetBuilderTitle => 'Costruttore Superserie';
+
+  @override
+  String get tutorialSupersetBuilderDesc =>
+      'Crea superserie abbinando esercizi. Eseguili uno dopo l\'altro senza pausa per massima intensità!';
+
+  @override
+  String get tutorialExerciseDbTitle => 'Database Esercizi';
+
+  @override
+  String get tutorialExerciseDbDesc =>
+      'Cerca tra 800+ esercizi, filtra per gruppo muscolare e salva i preferiti. Puoi anche creare esercizi personalizzati!';
+
+  @override
+  String get tutorialRpeTitle => 'Scala RPE';
+
+  @override
+  String get tutorialRpeDesc =>
+      'L\'RPE (Sforzo Percepito) aiuta a tracciare l\'intensità. 10 = sforzo massimo, 6 = riscaldamento. Tocca per impostare l\'RPE per ogni serie.';
+
+  @override
+  String get tutorialQuickEditTitle => 'Modifica Rapida';
+
+  @override
+  String get tutorialQuickEditDesc =>
+      'Regola rapidamente peso e ripetizioni con i pulsanti incremento. Tieni premuto per salti maggiori!';
+
+  @override
+  String get tutorialHistoryTitle => 'Storico Allenamenti';
+
+  @override
+  String get tutorialHistoryDesc =>
+      'Visualizza tutti i tuoi allenamenti passati, monitora i progressi nel tempo e confronta le tue performance. Tocca un allenamento per i dettagli!';
+
+  @override
+  String get tutorialRoutineCenterTitle => 'Centro Routine';
+
+  @override
+  String get tutorialRoutineCenterDesc =>
+      'Crea e gestisci le tue routine di allenamento. Salva template per avvii rapidi e organizza i tuoi programmi.';
+
+  @override
+  String get tutorialSettingsTitle => 'Impostazioni';
+
+  @override
+  String get tutorialSettingsDesc =>
+      'Personalizza la tua esperienza: durate timer, suoni, tema, unità e altro. Fai funzionare l\'app a modo tuo!';
+
+  @override
+  String get tutorialExportTitle => 'Esporta Dati';
+
+  @override
+  String get tutorialExportDesc =>
+      'Esporta i tuoi dati di allenamento in CSV o JSON. Perfetto per backup o analisi in altre app!';
+
+  @override
+  String get tutorialActionGotIt => 'Capito!';
+
+  @override
+  String get tutorialActionLearnMore => 'Scopri di più';
 }

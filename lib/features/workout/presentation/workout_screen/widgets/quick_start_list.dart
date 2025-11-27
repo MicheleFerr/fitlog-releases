@@ -25,6 +25,7 @@ class QuickStartList extends ConsumerWidget {
     required this.onTemplateEdit,
     required this.onTemplateDelete,
     required this.onCreateTemplate,
+    this.onTemplateSchedule,
   });
 
   /// Callback when user taps on a template to start workout
@@ -44,6 +45,9 @@ class QuickStartList extends ConsumerWidget {
 
   /// Callback when user creates a new template
   final VoidCallback onCreateTemplate;
+
+  /// Callback when user schedules a template (swipe right action)
+  final void Function(wt.WorkoutTemplate template)? onTemplateSchedule;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -108,6 +112,7 @@ class QuickStartList extends ConsumerWidget {
                           onTemplateEdit: onTemplateEdit,
                           onTemplateDelete: onTemplateDelete,
                           onCreateTemplate: onCreateTemplate,
+                          onTemplateSchedule: onTemplateSchedule,
                         );
                       },
                     ),
@@ -131,6 +136,7 @@ class QuickStartList extends ConsumerWidget {
                           onTemplateEdit: onTemplateEdit,
                           onTemplateDelete: onTemplateDelete,
                           onCreateTemplate: onCreateTemplate,
+                          onTemplateSchedule: onTemplateSchedule,
                         );
                       },
                     ),

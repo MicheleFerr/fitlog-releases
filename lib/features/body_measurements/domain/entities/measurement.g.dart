@@ -79,34 +79,34 @@ const _$MeasurementSourceEnumMap = {
 };
 
 _$MeasurementMetadataImpl _$$MeasurementMetadataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MeasurementMetadataImpl(
-      deviceInfo: json['deviceInfo'] as String?,
-      appVersion: json['appVersion'] as String?,
-      syncStatus:
-          $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
-              SyncStatus.pending,
-      lastSyncAttempt: json['lastSyncAttempt'] == null
-          ? null
-          : DateTime.parse(json['lastSyncAttempt'] as String),
-      syncError: json['syncError'] as String?,
-      isValidated: json['isValidated'] as bool? ?? false,
-      validationErrors: (json['validationErrors'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    );
+  Map<String, dynamic> json,
+) => _$MeasurementMetadataImpl(
+  deviceInfo: json['deviceInfo'] as String?,
+  appVersion: json['appVersion'] as String?,
+  syncStatus:
+      $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
+      SyncStatus.pending,
+  lastSyncAttempt: json['lastSyncAttempt'] == null
+      ? null
+      : DateTime.parse(json['lastSyncAttempt'] as String),
+  syncError: json['syncError'] as String?,
+  isValidated: json['isValidated'] as bool? ?? false,
+  validationErrors: (json['validationErrors'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+);
 
 Map<String, dynamic> _$$MeasurementMetadataImplToJson(
-        _$MeasurementMetadataImpl instance) =>
-    <String, dynamic>{
-      'deviceInfo': instance.deviceInfo,
-      'appVersion': instance.appVersion,
-      'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,
-      'lastSyncAttempt': instance.lastSyncAttempt?.toIso8601String(),
-      'syncError': instance.syncError,
-      'isValidated': instance.isValidated,
-      'validationErrors': instance.validationErrors,
-    };
+  _$MeasurementMetadataImpl instance,
+) => <String, dynamic>{
+  'deviceInfo': instance.deviceInfo,
+  'appVersion': instance.appVersion,
+  'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,
+  'lastSyncAttempt': instance.lastSyncAttempt?.toIso8601String(),
+  'syncError': instance.syncError,
+  'isValidated': instance.isValidated,
+  'validationErrors': instance.validationErrors,
+};
 
 const _$SyncStatusEnumMap = {
   SyncStatus.pending: 'pending',

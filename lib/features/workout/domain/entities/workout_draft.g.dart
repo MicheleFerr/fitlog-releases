@@ -8,7 +8,7 @@ part of 'workout_draft.dart';
 
 class WorkoutDraftAdapter extends TypeAdapter<WorkoutDraft> {
   @override
-  final int typeId = 10;
+  final typeId = 10;
 
   @override
   WorkoutDraft read(BinaryReader reader) {
@@ -22,7 +22,7 @@ class WorkoutDraftAdapter extends TypeAdapter<WorkoutDraft> {
       lastSaved: fields[2] as DateTime,
       deviceId: fields[3] as String?,
       metadata: (fields[4] as Map?)?.cast<String, dynamic>(),
-      isRecovered: fields[5] as bool,
+      isRecovered: fields[5] == null ? false : fields[5] as bool,
     );
   }
 

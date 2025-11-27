@@ -12,7 +12,8 @@ part of 'exercise_database.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExerciseDatabase _$ExerciseDatabaseFromJson(Map<String, dynamic> json) {
   return _ExerciseDatabase.fromJson(json);
@@ -32,8 +33,12 @@ mixin _$ExerciseDatabase {
   bool? get isFavorite => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
+  /// Serializes this ExerciseDatabase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExerciseDatabase
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseDatabaseCopyWith<ExerciseDatabase> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -41,21 +46,23 @@ mixin _$ExerciseDatabase {
 /// @nodoc
 abstract class $ExerciseDatabaseCopyWith<$Res> {
   factory $ExerciseDatabaseCopyWith(
-          ExerciseDatabase value, $Res Function(ExerciseDatabase) then) =
-      _$ExerciseDatabaseCopyWithImpl<$Res, ExerciseDatabase>;
+    ExerciseDatabase value,
+    $Res Function(ExerciseDatabase) then,
+  ) = _$ExerciseDatabaseCopyWithImpl<$Res, ExerciseDatabase>;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String? category,
-      String? equipment,
-      List<String>? primaryMuscleGroups,
-      List<String>? secondaryMuscleGroups,
-      String? difficulty,
-      String? instructions,
-      String? imageUrl,
-      bool? isFavorite,
-      Map<String, dynamic>? metadata});
+  $Res call({
+    String id,
+    String name,
+    String? category,
+    String? equipment,
+    List<String>? primaryMuscleGroups,
+    List<String>? secondaryMuscleGroups,
+    String? difficulty,
+    String? instructions,
+    String? imageUrl,
+    bool? isFavorite,
+    Map<String, dynamic>? metadata,
+  });
 }
 
 /// @nodoc
@@ -68,6 +75,8 @@ class _$ExerciseDatabaseCopyWithImpl<$Res, $Val extends ExerciseDatabase>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseDatabase
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -83,85 +92,93 @@ class _$ExerciseDatabaseCopyWithImpl<$Res, $Val extends ExerciseDatabase>
     Object? isFavorite = freezed,
     Object? metadata = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      equipment: freezed == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      primaryMuscleGroups: freezed == primaryMuscleGroups
-          ? _value.primaryMuscleGroups
-          : primaryMuscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      secondaryMuscleGroups: freezed == secondaryMuscleGroups
-          ? _value.secondaryMuscleGroups
-          : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      instructions: freezed == instructions
-          ? _value.instructions
-          : instructions // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isFavorite: freezed == isFavorite
-          ? _value.isFavorite
-          : isFavorite // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            equipment: freezed == equipment
+                ? _value.equipment
+                : equipment // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            primaryMuscleGroups: freezed == primaryMuscleGroups
+                ? _value.primaryMuscleGroups
+                : primaryMuscleGroups // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            secondaryMuscleGroups: freezed == secondaryMuscleGroups
+                ? _value.secondaryMuscleGroups
+                : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            difficulty: freezed == difficulty
+                ? _value.difficulty
+                : difficulty // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            instructions: freezed == instructions
+                ? _value.instructions
+                : instructions // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isFavorite: freezed == isFavorite
+                ? _value.isFavorite
+                : isFavorite // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            metadata: freezed == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseDatabaseImplCopyWith<$Res>
     implements $ExerciseDatabaseCopyWith<$Res> {
-  factory _$$ExerciseDatabaseImplCopyWith(_$ExerciseDatabaseImpl value,
-          $Res Function(_$ExerciseDatabaseImpl) then) =
-      __$$ExerciseDatabaseImplCopyWithImpl<$Res>;
+  factory _$$ExerciseDatabaseImplCopyWith(
+    _$ExerciseDatabaseImpl value,
+    $Res Function(_$ExerciseDatabaseImpl) then,
+  ) = __$$ExerciseDatabaseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String? category,
-      String? equipment,
-      List<String>? primaryMuscleGroups,
-      List<String>? secondaryMuscleGroups,
-      String? difficulty,
-      String? instructions,
-      String? imageUrl,
-      bool? isFavorite,
-      Map<String, dynamic>? metadata});
+  $Res call({
+    String id,
+    String name,
+    String? category,
+    String? equipment,
+    List<String>? primaryMuscleGroups,
+    List<String>? secondaryMuscleGroups,
+    String? difficulty,
+    String? instructions,
+    String? imageUrl,
+    bool? isFavorite,
+    Map<String, dynamic>? metadata,
+  });
 }
 
 /// @nodoc
 class __$$ExerciseDatabaseImplCopyWithImpl<$Res>
     extends _$ExerciseDatabaseCopyWithImpl<$Res, _$ExerciseDatabaseImpl>
     implements _$$ExerciseDatabaseImplCopyWith<$Res> {
-  __$$ExerciseDatabaseImplCopyWithImpl(_$ExerciseDatabaseImpl _value,
-      $Res Function(_$ExerciseDatabaseImpl) _then)
-      : super(_value, _then);
+  __$$ExerciseDatabaseImplCopyWithImpl(
+    _$ExerciseDatabaseImpl _value,
+    $Res Function(_$ExerciseDatabaseImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseDatabase
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -177,73 +194,75 @@ class __$$ExerciseDatabaseImplCopyWithImpl<$Res>
     Object? isFavorite = freezed,
     Object? metadata = freezed,
   }) {
-    return _then(_$ExerciseDatabaseImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      equipment: freezed == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as String?,
-      primaryMuscleGroups: freezed == primaryMuscleGroups
-          ? _value._primaryMuscleGroups
-          : primaryMuscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      secondaryMuscleGroups: freezed == secondaryMuscleGroups
-          ? _value._secondaryMuscleGroups
-          : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      instructions: freezed == instructions
-          ? _value.instructions
-          : instructions // ignore: cast_nullable_to_non_nullable
-              as String?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isFavorite: freezed == isFavorite
-          ? _value.isFavorite
-          : isFavorite // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ));
+    return _then(
+      _$ExerciseDatabaseImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        equipment: freezed == equipment
+            ? _value.equipment
+            : equipment // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        primaryMuscleGroups: freezed == primaryMuscleGroups
+            ? _value._primaryMuscleGroups
+            : primaryMuscleGroups // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        secondaryMuscleGroups: freezed == secondaryMuscleGroups
+            ? _value._secondaryMuscleGroups
+            : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        difficulty: freezed == difficulty
+            ? _value.difficulty
+            : difficulty // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        instructions: freezed == instructions
+            ? _value.instructions
+            : instructions // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isFavorite: freezed == isFavorite
+            ? _value.isFavorite
+            : isFavorite // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        metadata: freezed == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExerciseDatabaseImpl implements _ExerciseDatabase {
-  const _$ExerciseDatabaseImpl(
-      {required this.id,
-      required this.name,
-      this.category,
-      this.equipment,
-      final List<String>? primaryMuscleGroups,
-      final List<String>? secondaryMuscleGroups,
-      this.difficulty,
-      this.instructions,
-      this.imageUrl,
-      this.isFavorite,
-      final Map<String, dynamic>? metadata})
-      : _primaryMuscleGroups = primaryMuscleGroups,
-        _secondaryMuscleGroups = secondaryMuscleGroups,
-        _metadata = metadata;
+  const _$ExerciseDatabaseImpl({
+    required this.id,
+    required this.name,
+    this.category,
+    this.equipment,
+    final List<String>? primaryMuscleGroups,
+    final List<String>? secondaryMuscleGroups,
+    this.difficulty,
+    this.instructions,
+    this.imageUrl,
+    this.isFavorite,
+    final Map<String, dynamic>? metadata,
+  }) : _primaryMuscleGroups = primaryMuscleGroups,
+       _secondaryMuscleGroups = secondaryMuscleGroups,
+       _metadata = metadata;
 
   factory _$ExerciseDatabaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseDatabaseImplFromJson(json);
@@ -312,10 +331,14 @@ class _$ExerciseDatabaseImpl implements _ExerciseDatabase {
                 other.category == category) &&
             (identical(other.equipment, equipment) ||
                 other.equipment == equipment) &&
-            const DeepCollectionEquality()
-                .equals(other._primaryMuscleGroups, _primaryMuscleGroups) &&
-            const DeepCollectionEquality()
-                .equals(other._secondaryMuscleGroups, _secondaryMuscleGroups) &&
+            const DeepCollectionEquality().equals(
+              other._primaryMuscleGroups,
+              _primaryMuscleGroups,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._secondaryMuscleGroups,
+              _secondaryMuscleGroups,
+            ) &&
             (identical(other.difficulty, difficulty) ||
                 other.difficulty == difficulty) &&
             (identical(other.instructions, instructions) ||
@@ -327,50 +350,54 @@ class _$ExerciseDatabaseImpl implements _ExerciseDatabase {
             const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      category,
-      equipment,
-      const DeepCollectionEquality().hash(_primaryMuscleGroups),
-      const DeepCollectionEquality().hash(_secondaryMuscleGroups),
-      difficulty,
-      instructions,
-      imageUrl,
-      isFavorite,
-      const DeepCollectionEquality().hash(_metadata));
+    runtimeType,
+    id,
+    name,
+    category,
+    equipment,
+    const DeepCollectionEquality().hash(_primaryMuscleGroups),
+    const DeepCollectionEquality().hash(_secondaryMuscleGroups),
+    difficulty,
+    instructions,
+    imageUrl,
+    isFavorite,
+    const DeepCollectionEquality().hash(_metadata),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseDatabase
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseDatabaseImplCopyWith<_$ExerciseDatabaseImpl> get copyWith =>
       __$$ExerciseDatabaseImplCopyWithImpl<_$ExerciseDatabaseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseDatabaseImplToJson(
-      this,
-    );
+    return _$$ExerciseDatabaseImplToJson(this);
   }
 }
 
 abstract class _ExerciseDatabase implements ExerciseDatabase {
-  const factory _ExerciseDatabase(
-      {required final String id,
-      required final String name,
-      final String? category,
-      final String? equipment,
-      final List<String>? primaryMuscleGroups,
-      final List<String>? secondaryMuscleGroups,
-      final String? difficulty,
-      final String? instructions,
-      final String? imageUrl,
-      final bool? isFavorite,
-      final Map<String, dynamic>? metadata}) = _$ExerciseDatabaseImpl;
+  const factory _ExerciseDatabase({
+    required final String id,
+    required final String name,
+    final String? category,
+    final String? equipment,
+    final List<String>? primaryMuscleGroups,
+    final List<String>? secondaryMuscleGroups,
+    final String? difficulty,
+    final String? instructions,
+    final String? imageUrl,
+    final bool? isFavorite,
+    final Map<String, dynamic>? metadata,
+  }) = _$ExerciseDatabaseImpl;
 
   factory _ExerciseDatabase.fromJson(Map<String, dynamic> json) =
       _$ExerciseDatabaseImpl.fromJson;
@@ -397,8 +424,11 @@ abstract class _ExerciseDatabase implements ExerciseDatabase {
   bool? get isFavorite;
   @override
   Map<String, dynamic>? get metadata;
+
+  /// Create a copy of ExerciseDatabase
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseDatabaseImplCopyWith<_$ExerciseDatabaseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -12,16 +12,18 @@ part of 'medical_clearance_questionnaire.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MedicalClearanceQuestionnaire _$MedicalClearanceQuestionnaireFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MedicalClearanceQuestionnaire.fromJson(json);
 }
 
 /// @nodoc
 mixin _$MedicalClearanceQuestionnaire {
-// Core PAR-Q+ questions (simplified for app context)
+  // Core PAR-Q+ questions (simplified for app context)
   /// Has doctor ever said you have heart condition?
   bool get hasHeartCondition => throw _privateConstructorUsedError;
 
@@ -64,41 +66,51 @@ mixin _$MedicalClearanceQuestionnaire {
   DateTime? get completedAt => throw _privateConstructorUsedError;
   bool get userAcknowledgedRisks => throw _privateConstructorUsedError;
 
+  /// Serializes this MedicalClearanceQuestionnaire to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MedicalClearanceQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MedicalClearanceQuestionnaireCopyWith<MedicalClearanceQuestionnaire>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MedicalClearanceQuestionnaireCopyWith<$Res> {
   factory $MedicalClearanceQuestionnaireCopyWith(
-          MedicalClearanceQuestionnaire value,
-          $Res Function(MedicalClearanceQuestionnaire) then) =
-      _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
-          MedicalClearanceQuestionnaire>;
+    MedicalClearanceQuestionnaire value,
+    $Res Function(MedicalClearanceQuestionnaire) then,
+  ) =
+      _$MedicalClearanceQuestionnaireCopyWithImpl<
+        $Res,
+        MedicalClearanceQuestionnaire
+      >;
   @useResult
-  $Res call(
-      {bool hasHeartCondition,
-      bool hasChestPain,
-      bool hasChestPainAtRest,
-      bool hasDizzinessOrFainting,
-      bool hasBoneJointProblem,
-      bool takesHeartMedication,
-      bool hasOtherMedicalReason,
-      bool isHighRiskAge,
-      bool hasFamilyHistory,
-      bool currentSmoker,
-      bool isObese,
-      bool hasDiabetes,
-      bool hasHighBloodPressure,
-      DateTime? completedAt,
-      bool userAcknowledgedRisks});
+  $Res call({
+    bool hasHeartCondition,
+    bool hasChestPain,
+    bool hasChestPainAtRest,
+    bool hasDizzinessOrFainting,
+    bool hasBoneJointProblem,
+    bool takesHeartMedication,
+    bool hasOtherMedicalReason,
+    bool isHighRiskAge,
+    bool hasFamilyHistory,
+    bool currentSmoker,
+    bool isObese,
+    bool hasDiabetes,
+    bool hasHighBloodPressure,
+    DateTime? completedAt,
+    bool userAcknowledgedRisks,
+  });
 }
 
 /// @nodoc
-class _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
-        $Val extends MedicalClearanceQuestionnaire>
+class _$MedicalClearanceQuestionnaireCopyWithImpl<
+  $Res,
+  $Val extends MedicalClearanceQuestionnaire
+>
     implements $MedicalClearanceQuestionnaireCopyWith<$Res> {
   _$MedicalClearanceQuestionnaireCopyWithImpl(this._value, this._then);
 
@@ -107,6 +119,8 @@ class _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MedicalClearanceQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -126,68 +140,71 @@ class _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
     Object? completedAt = freezed,
     Object? userAcknowledgedRisks = null,
   }) {
-    return _then(_value.copyWith(
-      hasHeartCondition: null == hasHeartCondition
-          ? _value.hasHeartCondition
-          : hasHeartCondition // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasChestPain: null == hasChestPain
-          ? _value.hasChestPain
-          : hasChestPain // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasChestPainAtRest: null == hasChestPainAtRest
-          ? _value.hasChestPainAtRest
-          : hasChestPainAtRest // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasDizzinessOrFainting: null == hasDizzinessOrFainting
-          ? _value.hasDizzinessOrFainting
-          : hasDizzinessOrFainting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasBoneJointProblem: null == hasBoneJointProblem
-          ? _value.hasBoneJointProblem
-          : hasBoneJointProblem // ignore: cast_nullable_to_non_nullable
-              as bool,
-      takesHeartMedication: null == takesHeartMedication
-          ? _value.takesHeartMedication
-          : takesHeartMedication // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasOtherMedicalReason: null == hasOtherMedicalReason
-          ? _value.hasOtherMedicalReason
-          : hasOtherMedicalReason // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isHighRiskAge: null == isHighRiskAge
-          ? _value.isHighRiskAge
-          : isHighRiskAge // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasFamilyHistory: null == hasFamilyHistory
-          ? _value.hasFamilyHistory
-          : hasFamilyHistory // ignore: cast_nullable_to_non_nullable
-              as bool,
-      currentSmoker: null == currentSmoker
-          ? _value.currentSmoker
-          : currentSmoker // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isObese: null == isObese
-          ? _value.isObese
-          : isObese // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasDiabetes: null == hasDiabetes
-          ? _value.hasDiabetes
-          : hasDiabetes // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasHighBloodPressure: null == hasHighBloodPressure
-          ? _value.hasHighBloodPressure
-          : hasHighBloodPressure // ignore: cast_nullable_to_non_nullable
-              as bool,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      userAcknowledgedRisks: null == userAcknowledgedRisks
-          ? _value.userAcknowledgedRisks
-          : userAcknowledgedRisks // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            hasHeartCondition: null == hasHeartCondition
+                ? _value.hasHeartCondition
+                : hasHeartCondition // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasChestPain: null == hasChestPain
+                ? _value.hasChestPain
+                : hasChestPain // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasChestPainAtRest: null == hasChestPainAtRest
+                ? _value.hasChestPainAtRest
+                : hasChestPainAtRest // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasDizzinessOrFainting: null == hasDizzinessOrFainting
+                ? _value.hasDizzinessOrFainting
+                : hasDizzinessOrFainting // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasBoneJointProblem: null == hasBoneJointProblem
+                ? _value.hasBoneJointProblem
+                : hasBoneJointProblem // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            takesHeartMedication: null == takesHeartMedication
+                ? _value.takesHeartMedication
+                : takesHeartMedication // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasOtherMedicalReason: null == hasOtherMedicalReason
+                ? _value.hasOtherMedicalReason
+                : hasOtherMedicalReason // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isHighRiskAge: null == isHighRiskAge
+                ? _value.isHighRiskAge
+                : isHighRiskAge // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasFamilyHistory: null == hasFamilyHistory
+                ? _value.hasFamilyHistory
+                : hasFamilyHistory // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            currentSmoker: null == currentSmoker
+                ? _value.currentSmoker
+                : currentSmoker // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            isObese: null == isObese
+                ? _value.isObese
+                : isObese // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasDiabetes: null == hasDiabetes
+                ? _value.hasDiabetes
+                : hasDiabetes // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasHighBloodPressure: null == hasHighBloodPressure
+                ? _value.hasHighBloodPressure
+                : hasHighBloodPressure // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            completedAt: freezed == completedAt
+                ? _value.completedAt
+                : completedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            userAcknowledgedRisks: null == userAcknowledgedRisks
+                ? _value.userAcknowledgedRisks
+                : userAcknowledgedRisks // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -195,39 +212,45 @@ class _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
 abstract class _$$MedicalClearanceQuestionnaireImplCopyWith<$Res>
     implements $MedicalClearanceQuestionnaireCopyWith<$Res> {
   factory _$$MedicalClearanceQuestionnaireImplCopyWith(
-          _$MedicalClearanceQuestionnaireImpl value,
-          $Res Function(_$MedicalClearanceQuestionnaireImpl) then) =
-      __$$MedicalClearanceQuestionnaireImplCopyWithImpl<$Res>;
+    _$MedicalClearanceQuestionnaireImpl value,
+    $Res Function(_$MedicalClearanceQuestionnaireImpl) then,
+  ) = __$$MedicalClearanceQuestionnaireImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool hasHeartCondition,
-      bool hasChestPain,
-      bool hasChestPainAtRest,
-      bool hasDizzinessOrFainting,
-      bool hasBoneJointProblem,
-      bool takesHeartMedication,
-      bool hasOtherMedicalReason,
-      bool isHighRiskAge,
-      bool hasFamilyHistory,
-      bool currentSmoker,
-      bool isObese,
-      bool hasDiabetes,
-      bool hasHighBloodPressure,
-      DateTime? completedAt,
-      bool userAcknowledgedRisks});
+  $Res call({
+    bool hasHeartCondition,
+    bool hasChestPain,
+    bool hasChestPainAtRest,
+    bool hasDizzinessOrFainting,
+    bool hasBoneJointProblem,
+    bool takesHeartMedication,
+    bool hasOtherMedicalReason,
+    bool isHighRiskAge,
+    bool hasFamilyHistory,
+    bool currentSmoker,
+    bool isObese,
+    bool hasDiabetes,
+    bool hasHighBloodPressure,
+    DateTime? completedAt,
+    bool userAcknowledgedRisks,
+  });
 }
 
 /// @nodoc
 class __$$MedicalClearanceQuestionnaireImplCopyWithImpl<$Res>
-    extends _$MedicalClearanceQuestionnaireCopyWithImpl<$Res,
-        _$MedicalClearanceQuestionnaireImpl>
+    extends
+        _$MedicalClearanceQuestionnaireCopyWithImpl<
+          $Res,
+          _$MedicalClearanceQuestionnaireImpl
+        >
     implements _$$MedicalClearanceQuestionnaireImplCopyWith<$Res> {
   __$$MedicalClearanceQuestionnaireImplCopyWithImpl(
-      _$MedicalClearanceQuestionnaireImpl _value,
-      $Res Function(_$MedicalClearanceQuestionnaireImpl) _then)
-      : super(_value, _then);
+    _$MedicalClearanceQuestionnaireImpl _value,
+    $Res Function(_$MedicalClearanceQuestionnaireImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MedicalClearanceQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -247,68 +270,70 @@ class __$$MedicalClearanceQuestionnaireImplCopyWithImpl<$Res>
     Object? completedAt = freezed,
     Object? userAcknowledgedRisks = null,
   }) {
-    return _then(_$MedicalClearanceQuestionnaireImpl(
-      hasHeartCondition: null == hasHeartCondition
-          ? _value.hasHeartCondition
-          : hasHeartCondition // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasChestPain: null == hasChestPain
-          ? _value.hasChestPain
-          : hasChestPain // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasChestPainAtRest: null == hasChestPainAtRest
-          ? _value.hasChestPainAtRest
-          : hasChestPainAtRest // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasDizzinessOrFainting: null == hasDizzinessOrFainting
-          ? _value.hasDizzinessOrFainting
-          : hasDizzinessOrFainting // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasBoneJointProblem: null == hasBoneJointProblem
-          ? _value.hasBoneJointProblem
-          : hasBoneJointProblem // ignore: cast_nullable_to_non_nullable
-              as bool,
-      takesHeartMedication: null == takesHeartMedication
-          ? _value.takesHeartMedication
-          : takesHeartMedication // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasOtherMedicalReason: null == hasOtherMedicalReason
-          ? _value.hasOtherMedicalReason
-          : hasOtherMedicalReason // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isHighRiskAge: null == isHighRiskAge
-          ? _value.isHighRiskAge
-          : isHighRiskAge // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasFamilyHistory: null == hasFamilyHistory
-          ? _value.hasFamilyHistory
-          : hasFamilyHistory // ignore: cast_nullable_to_non_nullable
-              as bool,
-      currentSmoker: null == currentSmoker
-          ? _value.currentSmoker
-          : currentSmoker // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isObese: null == isObese
-          ? _value.isObese
-          : isObese // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasDiabetes: null == hasDiabetes
-          ? _value.hasDiabetes
-          : hasDiabetes // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hasHighBloodPressure: null == hasHighBloodPressure
-          ? _value.hasHighBloodPressure
-          : hasHighBloodPressure // ignore: cast_nullable_to_non_nullable
-              as bool,
-      completedAt: freezed == completedAt
-          ? _value.completedAt
-          : completedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      userAcknowledgedRisks: null == userAcknowledgedRisks
-          ? _value.userAcknowledgedRisks
-          : userAcknowledgedRisks // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$MedicalClearanceQuestionnaireImpl(
+        hasHeartCondition: null == hasHeartCondition
+            ? _value.hasHeartCondition
+            : hasHeartCondition // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasChestPain: null == hasChestPain
+            ? _value.hasChestPain
+            : hasChestPain // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasChestPainAtRest: null == hasChestPainAtRest
+            ? _value.hasChestPainAtRest
+            : hasChestPainAtRest // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasDizzinessOrFainting: null == hasDizzinessOrFainting
+            ? _value.hasDizzinessOrFainting
+            : hasDizzinessOrFainting // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasBoneJointProblem: null == hasBoneJointProblem
+            ? _value.hasBoneJointProblem
+            : hasBoneJointProblem // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        takesHeartMedication: null == takesHeartMedication
+            ? _value.takesHeartMedication
+            : takesHeartMedication // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasOtherMedicalReason: null == hasOtherMedicalReason
+            ? _value.hasOtherMedicalReason
+            : hasOtherMedicalReason // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isHighRiskAge: null == isHighRiskAge
+            ? _value.isHighRiskAge
+            : isHighRiskAge // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasFamilyHistory: null == hasFamilyHistory
+            ? _value.hasFamilyHistory
+            : hasFamilyHistory // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        currentSmoker: null == currentSmoker
+            ? _value.currentSmoker
+            : currentSmoker // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        isObese: null == isObese
+            ? _value.isObese
+            : isObese // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasDiabetes: null == hasDiabetes
+            ? _value.hasDiabetes
+            : hasDiabetes // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasHighBloodPressure: null == hasHighBloodPressure
+            ? _value.hasHighBloodPressure
+            : hasHighBloodPressure // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        completedAt: freezed == completedAt
+            ? _value.completedAt
+            : completedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        userAcknowledgedRisks: null == userAcknowledgedRisks
+            ? _value.userAcknowledgedRisks
+            : userAcknowledgedRisks // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
@@ -316,28 +341,29 @@ class __$$MedicalClearanceQuestionnaireImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MedicalClearanceQuestionnaireImpl
     implements _MedicalClearanceQuestionnaire {
-  const _$MedicalClearanceQuestionnaireImpl(
-      {this.hasHeartCondition = false,
-      this.hasChestPain = false,
-      this.hasChestPainAtRest = false,
-      this.hasDizzinessOrFainting = false,
-      this.hasBoneJointProblem = false,
-      this.takesHeartMedication = false,
-      this.hasOtherMedicalReason = false,
-      this.isHighRiskAge = false,
-      this.hasFamilyHistory = false,
-      this.currentSmoker = false,
-      this.isObese = false,
-      this.hasDiabetes = false,
-      this.hasHighBloodPressure = false,
-      this.completedAt,
-      this.userAcknowledgedRisks = false});
+  const _$MedicalClearanceQuestionnaireImpl({
+    this.hasHeartCondition = false,
+    this.hasChestPain = false,
+    this.hasChestPainAtRest = false,
+    this.hasDizzinessOrFainting = false,
+    this.hasBoneJointProblem = false,
+    this.takesHeartMedication = false,
+    this.hasOtherMedicalReason = false,
+    this.isHighRiskAge = false,
+    this.hasFamilyHistory = false,
+    this.currentSmoker = false,
+    this.isObese = false,
+    this.hasDiabetes = false,
+    this.hasHighBloodPressure = false,
+    this.completedAt,
+    this.userAcknowledgedRisks = false,
+  });
 
   factory _$MedicalClearanceQuestionnaireImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$MedicalClearanceQuestionnaireImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$MedicalClearanceQuestionnaireImplFromJson(json);
 
-// Core PAR-Q+ questions (simplified for app context)
+  // Core PAR-Q+ questions (simplified for app context)
   /// Has doctor ever said you have heart condition?
   @override
   @JsonKey()
@@ -372,7 +398,7 @@ class _$MedicalClearanceQuestionnaireImpl
   @override
   @JsonKey()
   final bool hasOtherMedicalReason;
-// Additional ACSM screening
+  // Additional ACSM screening
   /// Age ≥45 for men, ≥55 for women (higher risk)
   @override
   @JsonKey()
@@ -402,7 +428,7 @@ class _$MedicalClearanceQuestionnaireImpl
   @override
   @JsonKey()
   final bool hasHighBloodPressure;
-// Metadata
+  // Metadata
   @override
   final DateTime? completedAt;
   @override
@@ -450,121 +476,131 @@ class _$MedicalClearanceQuestionnaireImpl
                 other.userAcknowledgedRisks == userAcknowledgedRisks));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      hasHeartCondition,
-      hasChestPain,
-      hasChestPainAtRest,
-      hasDizzinessOrFainting,
-      hasBoneJointProblem,
-      takesHeartMedication,
-      hasOtherMedicalReason,
-      isHighRiskAge,
-      hasFamilyHistory,
-      currentSmoker,
-      isObese,
-      hasDiabetes,
-      hasHighBloodPressure,
-      completedAt,
-      userAcknowledgedRisks);
+    runtimeType,
+    hasHeartCondition,
+    hasChestPain,
+    hasChestPainAtRest,
+    hasDizzinessOrFainting,
+    hasBoneJointProblem,
+    takesHeartMedication,
+    hasOtherMedicalReason,
+    isHighRiskAge,
+    hasFamilyHistory,
+    currentSmoker,
+    isObese,
+    hasDiabetes,
+    hasHighBloodPressure,
+    completedAt,
+    userAcknowledgedRisks,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MedicalClearanceQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MedicalClearanceQuestionnaireImplCopyWith<
-          _$MedicalClearanceQuestionnaireImpl>
-      get copyWith => __$$MedicalClearanceQuestionnaireImplCopyWithImpl<
-          _$MedicalClearanceQuestionnaireImpl>(this, _$identity);
+    _$MedicalClearanceQuestionnaireImpl
+  >
+  get copyWith =>
+      __$$MedicalClearanceQuestionnaireImplCopyWithImpl<
+        _$MedicalClearanceQuestionnaireImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MedicalClearanceQuestionnaireImplToJson(
-      this,
-    );
+    return _$$MedicalClearanceQuestionnaireImplToJson(this);
   }
 }
 
 abstract class _MedicalClearanceQuestionnaire
     implements MedicalClearanceQuestionnaire {
-  const factory _MedicalClearanceQuestionnaire(
-      {final bool hasHeartCondition,
-      final bool hasChestPain,
-      final bool hasChestPainAtRest,
-      final bool hasDizzinessOrFainting,
-      final bool hasBoneJointProblem,
-      final bool takesHeartMedication,
-      final bool hasOtherMedicalReason,
-      final bool isHighRiskAge,
-      final bool hasFamilyHistory,
-      final bool currentSmoker,
-      final bool isObese,
-      final bool hasDiabetes,
-      final bool hasHighBloodPressure,
-      final DateTime? completedAt,
-      final bool userAcknowledgedRisks}) = _$MedicalClearanceQuestionnaireImpl;
+  const factory _MedicalClearanceQuestionnaire({
+    final bool hasHeartCondition,
+    final bool hasChestPain,
+    final bool hasChestPainAtRest,
+    final bool hasDizzinessOrFainting,
+    final bool hasBoneJointProblem,
+    final bool takesHeartMedication,
+    final bool hasOtherMedicalReason,
+    final bool isHighRiskAge,
+    final bool hasFamilyHistory,
+    final bool currentSmoker,
+    final bool isObese,
+    final bool hasDiabetes,
+    final bool hasHighBloodPressure,
+    final DateTime? completedAt,
+    final bool userAcknowledgedRisks,
+  }) = _$MedicalClearanceQuestionnaireImpl;
 
   factory _MedicalClearanceQuestionnaire.fromJson(Map<String, dynamic> json) =
       _$MedicalClearanceQuestionnaireImpl.fromJson;
 
-  @override // Core PAR-Q+ questions (simplified for app context)
+  // Core PAR-Q+ questions (simplified for app context)
   /// Has doctor ever said you have heart condition?
-  bool get hasHeartCondition;
   @override
+  bool get hasHeartCondition;
 
   /// Do you feel pain in chest during physical activity?
-  bool get hasChestPain;
   @override
+  bool get hasChestPain;
 
   /// In past month, chest pain when NOT doing physical activity?
-  bool get hasChestPainAtRest;
   @override
+  bool get hasChestPainAtRest;
 
   /// Do you lose balance because of dizziness or consciousness?
-  bool get hasDizzinessOrFainting;
   @override
+  bool get hasDizzinessOrFainting;
 
   /// Bone or joint problem that could worsen with activity?
-  bool get hasBoneJointProblem;
   @override
+  bool get hasBoneJointProblem;
 
   /// Currently taking medication for blood pressure or heart?
-  bool get takesHeartMedication;
   @override
+  bool get takesHeartMedication;
 
   /// Any other reason you should not do physical activity?
-  bool get hasOtherMedicalReason;
-  @override // Additional ACSM screening
-  /// Age ≥45 for men, ≥55 for women (higher risk)
-  bool get isHighRiskAge;
   @override
+  bool get hasOtherMedicalReason; // Additional ACSM screening
+  /// Age ≥45 for men, ≥55 for women (higher risk)
+  @override
+  bool get isHighRiskAge;
 
   /// Family history cardiovascular disease before age 55
-  bool get hasFamilyHistory;
   @override
+  bool get hasFamilyHistory;
 
   /// Currently smoke or quit within 6 months
-  bool get currentSmoker;
   @override
+  bool get currentSmoker;
 
   /// BMI ≥30 or waist >102cm (men) or >88cm (women)
-  bool get isObese;
   @override
+  bool get isObese;
 
   /// Diabetes (Type 1 or 2)
-  bool get hasDiabetes;
   @override
+  bool get hasDiabetes;
 
   /// High blood pressure (≥140/90 or on medication)
-  bool get hasHighBloodPressure;
-  @override // Metadata
+  @override
+  bool get hasHighBloodPressure; // Metadata
+  @override
   DateTime? get completedAt;
   @override
   bool get userAcknowledgedRisks;
+
+  /// Create a copy of MedicalClearanceQuestionnaire
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MedicalClearanceQuestionnaireImplCopyWith<
-          _$MedicalClearanceQuestionnaireImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$MedicalClearanceQuestionnaireImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

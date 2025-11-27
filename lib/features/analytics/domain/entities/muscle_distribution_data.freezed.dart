@@ -12,10 +12,12 @@ part of 'muscle_distribution_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MuscleDistributionData _$MuscleDistributionDataFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MuscleDistributionData.fromJson(json);
 }
 
@@ -41,30 +43,38 @@ mixin _$MuscleDistributionData {
   /// Data fine periodo (tipicamente oggi)
   DateTime get endDate => throw _privateConstructorUsedError;
 
+  /// Serializes this MuscleDistributionData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MuscleDistributionData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MuscleDistributionDataCopyWith<MuscleDistributionData> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MuscleDistributionDataCopyWith<$Res> {
-  factory $MuscleDistributionDataCopyWith(MuscleDistributionData value,
-          $Res Function(MuscleDistributionData) then) =
-      _$MuscleDistributionDataCopyWithImpl<$Res, MuscleDistributionData>;
+  factory $MuscleDistributionDataCopyWith(
+    MuscleDistributionData value,
+    $Res Function(MuscleDistributionData) then,
+  ) = _$MuscleDistributionDataCopyWithImpl<$Res, MuscleDistributionData>;
   @useResult
-  $Res call(
-      {Map<MuscleGroup, double> volumeByMuscle,
-      Map<MuscleGroup, int> setsByMuscle,
-      Map<MuscleGroup, double> volumePercentage,
-      TimePeriod period,
-      DateTime startDate,
-      DateTime endDate});
+  $Res call({
+    Map<MuscleGroup, double> volumeByMuscle,
+    Map<MuscleGroup, int> setsByMuscle,
+    Map<MuscleGroup, double> volumePercentage,
+    TimePeriod period,
+    DateTime startDate,
+    DateTime endDate,
+  });
 }
 
 /// @nodoc
-class _$MuscleDistributionDataCopyWithImpl<$Res,
-        $Val extends MuscleDistributionData>
+class _$MuscleDistributionDataCopyWithImpl<
+  $Res,
+  $Val extends MuscleDistributionData
+>
     implements $MuscleDistributionDataCopyWith<$Res> {
   _$MuscleDistributionDataCopyWithImpl(this._value, this._then);
 
@@ -73,6 +83,8 @@ class _$MuscleDistributionDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MuscleDistributionData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -83,32 +95,35 @@ class _$MuscleDistributionDataCopyWithImpl<$Res,
     Object? startDate = null,
     Object? endDate = null,
   }) {
-    return _then(_value.copyWith(
-      volumeByMuscle: null == volumeByMuscle
-          ? _value.volumeByMuscle
-          : volumeByMuscle // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, double>,
-      setsByMuscle: null == setsByMuscle
-          ? _value.setsByMuscle
-          : setsByMuscle // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, int>,
-      volumePercentage: null == volumePercentage
-          ? _value.volumePercentage
-          : volumePercentage // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, double>,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as TimePeriod,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            volumeByMuscle: null == volumeByMuscle
+                ? _value.volumeByMuscle
+                : volumeByMuscle // ignore: cast_nullable_to_non_nullable
+                      as Map<MuscleGroup, double>,
+            setsByMuscle: null == setsByMuscle
+                ? _value.setsByMuscle
+                : setsByMuscle // ignore: cast_nullable_to_non_nullable
+                      as Map<MuscleGroup, int>,
+            volumePercentage: null == volumePercentage
+                ? _value.volumePercentage
+                : volumePercentage // ignore: cast_nullable_to_non_nullable
+                      as Map<MuscleGroup, double>,
+            period: null == period
+                ? _value.period
+                : period // ignore: cast_nullable_to_non_nullable
+                      as TimePeriod,
+            startDate: null == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endDate: null == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -116,30 +131,33 @@ class _$MuscleDistributionDataCopyWithImpl<$Res,
 abstract class _$$MuscleDistributionDataImplCopyWith<$Res>
     implements $MuscleDistributionDataCopyWith<$Res> {
   factory _$$MuscleDistributionDataImplCopyWith(
-          _$MuscleDistributionDataImpl value,
-          $Res Function(_$MuscleDistributionDataImpl) then) =
-      __$$MuscleDistributionDataImplCopyWithImpl<$Res>;
+    _$MuscleDistributionDataImpl value,
+    $Res Function(_$MuscleDistributionDataImpl) then,
+  ) = __$$MuscleDistributionDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Map<MuscleGroup, double> volumeByMuscle,
-      Map<MuscleGroup, int> setsByMuscle,
-      Map<MuscleGroup, double> volumePercentage,
-      TimePeriod period,
-      DateTime startDate,
-      DateTime endDate});
+  $Res call({
+    Map<MuscleGroup, double> volumeByMuscle,
+    Map<MuscleGroup, int> setsByMuscle,
+    Map<MuscleGroup, double> volumePercentage,
+    TimePeriod period,
+    DateTime startDate,
+    DateTime endDate,
+  });
 }
 
 /// @nodoc
 class __$$MuscleDistributionDataImplCopyWithImpl<$Res>
-    extends _$MuscleDistributionDataCopyWithImpl<$Res,
-        _$MuscleDistributionDataImpl>
+    extends
+        _$MuscleDistributionDataCopyWithImpl<$Res, _$MuscleDistributionDataImpl>
     implements _$$MuscleDistributionDataImplCopyWith<$Res> {
   __$$MuscleDistributionDataImplCopyWithImpl(
-      _$MuscleDistributionDataImpl _value,
-      $Res Function(_$MuscleDistributionDataImpl) _then)
-      : super(_value, _then);
+    _$MuscleDistributionDataImpl _value,
+    $Res Function(_$MuscleDistributionDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MuscleDistributionData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -150,48 +168,50 @@ class __$$MuscleDistributionDataImplCopyWithImpl<$Res>
     Object? startDate = null,
     Object? endDate = null,
   }) {
-    return _then(_$MuscleDistributionDataImpl(
-      volumeByMuscle: null == volumeByMuscle
-          ? _value._volumeByMuscle
-          : volumeByMuscle // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, double>,
-      setsByMuscle: null == setsByMuscle
-          ? _value._setsByMuscle
-          : setsByMuscle // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, int>,
-      volumePercentage: null == volumePercentage
-          ? _value._volumePercentage
-          : volumePercentage // ignore: cast_nullable_to_non_nullable
-              as Map<MuscleGroup, double>,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as TimePeriod,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MuscleDistributionDataImpl(
+        volumeByMuscle: null == volumeByMuscle
+            ? _value._volumeByMuscle
+            : volumeByMuscle // ignore: cast_nullable_to_non_nullable
+                  as Map<MuscleGroup, double>,
+        setsByMuscle: null == setsByMuscle
+            ? _value._setsByMuscle
+            : setsByMuscle // ignore: cast_nullable_to_non_nullable
+                  as Map<MuscleGroup, int>,
+        volumePercentage: null == volumePercentage
+            ? _value._volumePercentage
+            : volumePercentage // ignore: cast_nullable_to_non_nullable
+                  as Map<MuscleGroup, double>,
+        period: null == period
+            ? _value.period
+            : period // ignore: cast_nullable_to_non_nullable
+                  as TimePeriod,
+        startDate: null == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endDate: null == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MuscleDistributionDataImpl implements _MuscleDistributionData {
-  const _$MuscleDistributionDataImpl(
-      {required final Map<MuscleGroup, double> volumeByMuscle,
-      required final Map<MuscleGroup, int> setsByMuscle,
-      required final Map<MuscleGroup, double> volumePercentage,
-      required this.period,
-      required this.startDate,
-      required this.endDate})
-      : _volumeByMuscle = volumeByMuscle,
-        _setsByMuscle = setsByMuscle,
-        _volumePercentage = volumePercentage;
+  const _$MuscleDistributionDataImpl({
+    required final Map<MuscleGroup, double> volumeByMuscle,
+    required final Map<MuscleGroup, int> setsByMuscle,
+    required final Map<MuscleGroup, double> volumePercentage,
+    required this.period,
+    required this.startDate,
+    required this.endDate,
+  }) : _volumeByMuscle = volumeByMuscle,
+       _setsByMuscle = setsByMuscle,
+       _volumePercentage = volumePercentage;
 
   factory _$MuscleDistributionDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$MuscleDistributionDataImplFromJson(json);
@@ -251,84 +271,97 @@ class _$MuscleDistributionDataImpl implements _MuscleDistributionData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MuscleDistributionDataImpl &&
-            const DeepCollectionEquality()
-                .equals(other._volumeByMuscle, _volumeByMuscle) &&
-            const DeepCollectionEquality()
-                .equals(other._setsByMuscle, _setsByMuscle) &&
-            const DeepCollectionEquality()
-                .equals(other._volumePercentage, _volumePercentage) &&
+            const DeepCollectionEquality().equals(
+              other._volumeByMuscle,
+              _volumeByMuscle,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._setsByMuscle,
+              _setsByMuscle,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._volumePercentage,
+              _volumePercentage,
+            ) &&
             (identical(other.period, period) || other.period == period) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_volumeByMuscle),
-      const DeepCollectionEquality().hash(_setsByMuscle),
-      const DeepCollectionEquality().hash(_volumePercentage),
-      period,
-      startDate,
-      endDate);
+    runtimeType,
+    const DeepCollectionEquality().hash(_volumeByMuscle),
+    const DeepCollectionEquality().hash(_setsByMuscle),
+    const DeepCollectionEquality().hash(_volumePercentage),
+    period,
+    startDate,
+    endDate,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MuscleDistributionData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MuscleDistributionDataImplCopyWith<_$MuscleDistributionDataImpl>
-      get copyWith => __$$MuscleDistributionDataImplCopyWithImpl<
-          _$MuscleDistributionDataImpl>(this, _$identity);
+  get copyWith =>
+      __$$MuscleDistributionDataImplCopyWithImpl<_$MuscleDistributionDataImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MuscleDistributionDataImplToJson(
-      this,
-    );
+    return _$$MuscleDistributionDataImplToJson(this);
   }
 }
 
 abstract class _MuscleDistributionData implements MuscleDistributionData {
-  const factory _MuscleDistributionData(
-      {required final Map<MuscleGroup, double> volumeByMuscle,
-      required final Map<MuscleGroup, int> setsByMuscle,
-      required final Map<MuscleGroup, double> volumePercentage,
-      required final TimePeriod period,
-      required final DateTime startDate,
-      required final DateTime endDate}) = _$MuscleDistributionDataImpl;
+  const factory _MuscleDistributionData({
+    required final Map<MuscleGroup, double> volumeByMuscle,
+    required final Map<MuscleGroup, int> setsByMuscle,
+    required final Map<MuscleGroup, double> volumePercentage,
+    required final TimePeriod period,
+    required final DateTime startDate,
+    required final DateTime endDate,
+  }) = _$MuscleDistributionDataImpl;
 
   factory _MuscleDistributionData.fromJson(Map<String, dynamic> json) =
       _$MuscleDistributionDataImpl.fromJson;
 
-  @override
-
   /// Mappa gruppo muscolare → volume totale (kg)
-  Map<MuscleGroup, double> get volumeByMuscle;
   @override
+  Map<MuscleGroup, double> get volumeByMuscle;
 
   /// Mappa gruppo muscolare → numero di serie
-  Map<MuscleGroup, int> get setsByMuscle;
   @override
+  Map<MuscleGroup, int> get setsByMuscle;
 
   /// Mappa gruppo muscolare → percentuale di volume (0-100)
-  Map<MuscleGroup, double> get volumePercentage;
   @override
+  Map<MuscleGroup, double> get volumePercentage;
 
   /// Periodo temporale di riferimento
-  TimePeriod get period;
   @override
+  TimePeriod get period;
 
   /// Data inizio periodo
-  DateTime get startDate;
   @override
+  DateTime get startDate;
 
   /// Data fine periodo (tipicamente oggi)
-  DateTime get endDate;
   @override
-  @JsonKey(ignore: true)
+  DateTime get endDate;
+
+  /// Create a copy of MuscleDistributionData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MuscleDistributionDataImplCopyWith<_$MuscleDistributionDataImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 PeriodStatistics _$PeriodStatisticsFromJson(Map<String, dynamic> json) {
@@ -358,8 +391,12 @@ mixin _$PeriodStatistics {
   /// Data fine periodo
   DateTime get endDate => throw _privateConstructorUsedError;
 
+  /// Serializes this PeriodStatistics to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PeriodStatistics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PeriodStatisticsCopyWith<PeriodStatistics> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -367,17 +404,19 @@ mixin _$PeriodStatistics {
 /// @nodoc
 abstract class $PeriodStatisticsCopyWith<$Res> {
   factory $PeriodStatisticsCopyWith(
-          PeriodStatistics value, $Res Function(PeriodStatistics) then) =
-      _$PeriodStatisticsCopyWithImpl<$Res, PeriodStatistics>;
+    PeriodStatistics value,
+    $Res Function(PeriodStatistics) then,
+  ) = _$PeriodStatisticsCopyWithImpl<$Res, PeriodStatistics>;
   @useResult
-  $Res call(
-      {int workoutsCount,
-      int totalDurationMinutes,
-      double totalVolumeKg,
-      int totalSets,
-      TimePeriod period,
-      DateTime startDate,
-      DateTime endDate});
+  $Res call({
+    int workoutsCount,
+    int totalDurationMinutes,
+    double totalVolumeKg,
+    int totalSets,
+    TimePeriod period,
+    DateTime startDate,
+    DateTime endDate,
+  });
 }
 
 /// @nodoc
@@ -390,6 +429,8 @@ class _$PeriodStatisticsCopyWithImpl<$Res, $Val extends PeriodStatistics>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PeriodStatistics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -401,65 +442,73 @@ class _$PeriodStatisticsCopyWithImpl<$Res, $Val extends PeriodStatistics>
     Object? startDate = null,
     Object? endDate = null,
   }) {
-    return _then(_value.copyWith(
-      workoutsCount: null == workoutsCount
-          ? _value.workoutsCount
-          : workoutsCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalDurationMinutes: null == totalDurationMinutes
-          ? _value.totalDurationMinutes
-          : totalDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalVolumeKg: null == totalVolumeKg
-          ? _value.totalVolumeKg
-          : totalVolumeKg // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSets: null == totalSets
-          ? _value.totalSets
-          : totalSets // ignore: cast_nullable_to_non_nullable
-              as int,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as TimePeriod,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            workoutsCount: null == workoutsCount
+                ? _value.workoutsCount
+                : workoutsCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalDurationMinutes: null == totalDurationMinutes
+                ? _value.totalDurationMinutes
+                : totalDurationMinutes // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalVolumeKg: null == totalVolumeKg
+                ? _value.totalVolumeKg
+                : totalVolumeKg // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalSets: null == totalSets
+                ? _value.totalSets
+                : totalSets // ignore: cast_nullable_to_non_nullable
+                      as int,
+            period: null == period
+                ? _value.period
+                : period // ignore: cast_nullable_to_non_nullable
+                      as TimePeriod,
+            startDate: null == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endDate: null == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$PeriodStatisticsImplCopyWith<$Res>
     implements $PeriodStatisticsCopyWith<$Res> {
-  factory _$$PeriodStatisticsImplCopyWith(_$PeriodStatisticsImpl value,
-          $Res Function(_$PeriodStatisticsImpl) then) =
-      __$$PeriodStatisticsImplCopyWithImpl<$Res>;
+  factory _$$PeriodStatisticsImplCopyWith(
+    _$PeriodStatisticsImpl value,
+    $Res Function(_$PeriodStatisticsImpl) then,
+  ) = __$$PeriodStatisticsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int workoutsCount,
-      int totalDurationMinutes,
-      double totalVolumeKg,
-      int totalSets,
-      TimePeriod period,
-      DateTime startDate,
-      DateTime endDate});
+  $Res call({
+    int workoutsCount,
+    int totalDurationMinutes,
+    double totalVolumeKg,
+    int totalSets,
+    TimePeriod period,
+    DateTime startDate,
+    DateTime endDate,
+  });
 }
 
 /// @nodoc
 class __$$PeriodStatisticsImplCopyWithImpl<$Res>
     extends _$PeriodStatisticsCopyWithImpl<$Res, _$PeriodStatisticsImpl>
     implements _$$PeriodStatisticsImplCopyWith<$Res> {
-  __$$PeriodStatisticsImplCopyWithImpl(_$PeriodStatisticsImpl _value,
-      $Res Function(_$PeriodStatisticsImpl) _then)
-      : super(_value, _then);
+  __$$PeriodStatisticsImplCopyWithImpl(
+    _$PeriodStatisticsImpl _value,
+    $Res Function(_$PeriodStatisticsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PeriodStatistics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -471,50 +520,53 @@ class __$$PeriodStatisticsImplCopyWithImpl<$Res>
     Object? startDate = null,
     Object? endDate = null,
   }) {
-    return _then(_$PeriodStatisticsImpl(
-      workoutsCount: null == workoutsCount
-          ? _value.workoutsCount
-          : workoutsCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalDurationMinutes: null == totalDurationMinutes
-          ? _value.totalDurationMinutes
-          : totalDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalVolumeKg: null == totalVolumeKg
-          ? _value.totalVolumeKg
-          : totalVolumeKg // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSets: null == totalSets
-          ? _value.totalSets
-          : totalSets // ignore: cast_nullable_to_non_nullable
-              as int,
-      period: null == period
-          ? _value.period
-          : period // ignore: cast_nullable_to_non_nullable
-              as TimePeriod,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$PeriodStatisticsImpl(
+        workoutsCount: null == workoutsCount
+            ? _value.workoutsCount
+            : workoutsCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalDurationMinutes: null == totalDurationMinutes
+            ? _value.totalDurationMinutes
+            : totalDurationMinutes // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalVolumeKg: null == totalVolumeKg
+            ? _value.totalVolumeKg
+            : totalVolumeKg // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalSets: null == totalSets
+            ? _value.totalSets
+            : totalSets // ignore: cast_nullable_to_non_nullable
+                  as int,
+        period: null == period
+            ? _value.period
+            : period // ignore: cast_nullable_to_non_nullable
+                  as TimePeriod,
+        startDate: null == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endDate: null == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PeriodStatisticsImpl implements _PeriodStatistics {
-  const _$PeriodStatisticsImpl(
-      {required this.workoutsCount,
-      required this.totalDurationMinutes,
-      required this.totalVolumeKg,
-      required this.totalSets,
-      required this.period,
-      required this.startDate,
-      required this.endDate});
+  const _$PeriodStatisticsImpl({
+    required this.workoutsCount,
+    required this.totalDurationMinutes,
+    required this.totalVolumeKg,
+    required this.totalSets,
+    required this.period,
+    required this.startDate,
+    required this.endDate,
+  });
 
   factory _$PeriodStatisticsImpl.fromJson(Map<String, dynamic> json) =>
       _$$PeriodStatisticsImplFromJson(json);
@@ -571,76 +623,82 @@ class _$PeriodStatisticsImpl implements _PeriodStatistics {
             (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      workoutsCount,
-      totalDurationMinutes,
-      totalVolumeKg,
-      totalSets,
-      period,
-      startDate,
-      endDate);
+    runtimeType,
+    workoutsCount,
+    totalDurationMinutes,
+    totalVolumeKg,
+    totalSets,
+    period,
+    startDate,
+    endDate,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PeriodStatistics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PeriodStatisticsImplCopyWith<_$PeriodStatisticsImpl> get copyWith =>
       __$$PeriodStatisticsImplCopyWithImpl<_$PeriodStatisticsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PeriodStatisticsImplToJson(
-      this,
-    );
+    return _$$PeriodStatisticsImplToJson(this);
   }
 }
 
 abstract class _PeriodStatistics implements PeriodStatistics {
-  const factory _PeriodStatistics(
-      {required final int workoutsCount,
-      required final int totalDurationMinutes,
-      required final double totalVolumeKg,
-      required final int totalSets,
-      required final TimePeriod period,
-      required final DateTime startDate,
-      required final DateTime endDate}) = _$PeriodStatisticsImpl;
+  const factory _PeriodStatistics({
+    required final int workoutsCount,
+    required final int totalDurationMinutes,
+    required final double totalVolumeKg,
+    required final int totalSets,
+    required final TimePeriod period,
+    required final DateTime startDate,
+    required final DateTime endDate,
+  }) = _$PeriodStatisticsImpl;
 
   factory _PeriodStatistics.fromJson(Map<String, dynamic> json) =
       _$PeriodStatisticsImpl.fromJson;
 
-  @override
-
   /// Numero di allenamenti completati
-  int get workoutsCount;
   @override
+  int get workoutsCount;
 
   /// Durata totale in minuti
-  int get totalDurationMinutes;
   @override
+  int get totalDurationMinutes;
 
   /// Volume totale sollevato (kg)
-  double get totalVolumeKg;
   @override
+  double get totalVolumeKg;
 
   /// Numero totale di serie completate
-  int get totalSets;
   @override
+  int get totalSets;
 
   /// Periodo di riferimento
-  TimePeriod get period;
   @override
+  TimePeriod get period;
 
   /// Data inizio periodo
-  DateTime get startDate;
   @override
+  DateTime get startDate;
 
   /// Data fine periodo
-  DateTime get endDate;
   @override
-  @JsonKey(ignore: true)
+  DateTime get endDate;
+
+  /// Create a copy of PeriodStatistics
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PeriodStatisticsImplCopyWith<_$PeriodStatisticsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -663,8 +721,12 @@ mixin _$MuscleAnalyticsData {
   /// Statistiche aggregate periodo precedente
   PeriodStatistics get previousStats => throw _privateConstructorUsedError;
 
+  /// Serializes this MuscleAnalyticsData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MuscleAnalyticsDataCopyWith<MuscleAnalyticsData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -672,14 +734,16 @@ mixin _$MuscleAnalyticsData {
 /// @nodoc
 abstract class $MuscleAnalyticsDataCopyWith<$Res> {
   factory $MuscleAnalyticsDataCopyWith(
-          MuscleAnalyticsData value, $Res Function(MuscleAnalyticsData) then) =
-      _$MuscleAnalyticsDataCopyWithImpl<$Res, MuscleAnalyticsData>;
+    MuscleAnalyticsData value,
+    $Res Function(MuscleAnalyticsData) then,
+  ) = _$MuscleAnalyticsDataCopyWithImpl<$Res, MuscleAnalyticsData>;
   @useResult
-  $Res call(
-      {MuscleDistributionData current,
-      MuscleDistributionData previous,
-      PeriodStatistics currentStats,
-      PeriodStatistics previousStats});
+  $Res call({
+    MuscleDistributionData current,
+    MuscleDistributionData previous,
+    PeriodStatistics currentStats,
+    PeriodStatistics previousStats,
+  });
 
   $MuscleDistributionDataCopyWith<$Res> get current;
   $MuscleDistributionDataCopyWith<$Res> get previous;
@@ -697,6 +761,8 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -705,26 +771,31 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
     Object? currentStats = null,
     Object? previousStats = null,
   }) {
-    return _then(_value.copyWith(
-      current: null == current
-          ? _value.current
-          : current // ignore: cast_nullable_to_non_nullable
-              as MuscleDistributionData,
-      previous: null == previous
-          ? _value.previous
-          : previous // ignore: cast_nullable_to_non_nullable
-              as MuscleDistributionData,
-      currentStats: null == currentStats
-          ? _value.currentStats
-          : currentStats // ignore: cast_nullable_to_non_nullable
-              as PeriodStatistics,
-      previousStats: null == previousStats
-          ? _value.previousStats
-          : previousStats // ignore: cast_nullable_to_non_nullable
-              as PeriodStatistics,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            current: null == current
+                ? _value.current
+                : current // ignore: cast_nullable_to_non_nullable
+                      as MuscleDistributionData,
+            previous: null == previous
+                ? _value.previous
+                : previous // ignore: cast_nullable_to_non_nullable
+                      as MuscleDistributionData,
+            currentStats: null == currentStats
+                ? _value.currentStats
+                : currentStats // ignore: cast_nullable_to_non_nullable
+                      as PeriodStatistics,
+            previousStats: null == previousStats
+                ? _value.previousStats
+                : previousStats // ignore: cast_nullable_to_non_nullable
+                      as PeriodStatistics,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MuscleDistributionDataCopyWith<$Res> get current {
@@ -733,6 +804,8 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
     });
   }
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MuscleDistributionDataCopyWith<$Res> get previous {
@@ -741,6 +814,8 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
     });
   }
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PeriodStatisticsCopyWith<$Res> get currentStats {
@@ -749,6 +824,8 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
     });
   }
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PeriodStatisticsCopyWith<$Res> get previousStats {
@@ -761,16 +838,18 @@ class _$MuscleAnalyticsDataCopyWithImpl<$Res, $Val extends MuscleAnalyticsData>
 /// @nodoc
 abstract class _$$MuscleAnalyticsDataImplCopyWith<$Res>
     implements $MuscleAnalyticsDataCopyWith<$Res> {
-  factory _$$MuscleAnalyticsDataImplCopyWith(_$MuscleAnalyticsDataImpl value,
-          $Res Function(_$MuscleAnalyticsDataImpl) then) =
-      __$$MuscleAnalyticsDataImplCopyWithImpl<$Res>;
+  factory _$$MuscleAnalyticsDataImplCopyWith(
+    _$MuscleAnalyticsDataImpl value,
+    $Res Function(_$MuscleAnalyticsDataImpl) then,
+  ) = __$$MuscleAnalyticsDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {MuscleDistributionData current,
-      MuscleDistributionData previous,
-      PeriodStatistics currentStats,
-      PeriodStatistics previousStats});
+  $Res call({
+    MuscleDistributionData current,
+    MuscleDistributionData previous,
+    PeriodStatistics currentStats,
+    PeriodStatistics previousStats,
+  });
 
   @override
   $MuscleDistributionDataCopyWith<$Res> get current;
@@ -786,10 +865,13 @@ abstract class _$$MuscleAnalyticsDataImplCopyWith<$Res>
 class __$$MuscleAnalyticsDataImplCopyWithImpl<$Res>
     extends _$MuscleAnalyticsDataCopyWithImpl<$Res, _$MuscleAnalyticsDataImpl>
     implements _$$MuscleAnalyticsDataImplCopyWith<$Res> {
-  __$$MuscleAnalyticsDataImplCopyWithImpl(_$MuscleAnalyticsDataImpl _value,
-      $Res Function(_$MuscleAnalyticsDataImpl) _then)
-      : super(_value, _then);
+  __$$MuscleAnalyticsDataImplCopyWithImpl(
+    _$MuscleAnalyticsDataImpl _value,
+    $Res Function(_$MuscleAnalyticsDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -798,35 +880,38 @@ class __$$MuscleAnalyticsDataImplCopyWithImpl<$Res>
     Object? currentStats = null,
     Object? previousStats = null,
   }) {
-    return _then(_$MuscleAnalyticsDataImpl(
-      current: null == current
-          ? _value.current
-          : current // ignore: cast_nullable_to_non_nullable
-              as MuscleDistributionData,
-      previous: null == previous
-          ? _value.previous
-          : previous // ignore: cast_nullable_to_non_nullable
-              as MuscleDistributionData,
-      currentStats: null == currentStats
-          ? _value.currentStats
-          : currentStats // ignore: cast_nullable_to_non_nullable
-              as PeriodStatistics,
-      previousStats: null == previousStats
-          ? _value.previousStats
-          : previousStats // ignore: cast_nullable_to_non_nullable
-              as PeriodStatistics,
-    ));
+    return _then(
+      _$MuscleAnalyticsDataImpl(
+        current: null == current
+            ? _value.current
+            : current // ignore: cast_nullable_to_non_nullable
+                  as MuscleDistributionData,
+        previous: null == previous
+            ? _value.previous
+            : previous // ignore: cast_nullable_to_non_nullable
+                  as MuscleDistributionData,
+        currentStats: null == currentStats
+            ? _value.currentStats
+            : currentStats // ignore: cast_nullable_to_non_nullable
+                  as PeriodStatistics,
+        previousStats: null == previousStats
+            ? _value.previousStats
+            : previousStats // ignore: cast_nullable_to_non_nullable
+                  as PeriodStatistics,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MuscleAnalyticsDataImpl implements _MuscleAnalyticsData {
-  const _$MuscleAnalyticsDataImpl(
-      {required this.current,
-      required this.previous,
-      required this.currentStats,
-      required this.previousStats});
+  const _$MuscleAnalyticsDataImpl({
+    required this.current,
+    required this.previous,
+    required this.currentStats,
+    required this.previousStats,
+  });
 
   factory _$MuscleAnalyticsDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$MuscleAnalyticsDataImplFromJson(json);
@@ -866,55 +951,59 @@ class _$MuscleAnalyticsDataImpl implements _MuscleAnalyticsData {
                 other.previousStats == previousStats));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, current, previous, currentStats, previousStats);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MuscleAnalyticsDataImplCopyWith<_$MuscleAnalyticsDataImpl> get copyWith =>
       __$$MuscleAnalyticsDataImplCopyWithImpl<_$MuscleAnalyticsDataImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MuscleAnalyticsDataImplToJson(
-      this,
-    );
+    return _$$MuscleAnalyticsDataImplToJson(this);
   }
 }
 
 abstract class _MuscleAnalyticsData implements MuscleAnalyticsData {
-  const factory _MuscleAnalyticsData(
-          {required final MuscleDistributionData current,
-          required final MuscleDistributionData previous,
-          required final PeriodStatistics currentStats,
-          required final PeriodStatistics previousStats}) =
-      _$MuscleAnalyticsDataImpl;
+  const factory _MuscleAnalyticsData({
+    required final MuscleDistributionData current,
+    required final MuscleDistributionData previous,
+    required final PeriodStatistics currentStats,
+    required final PeriodStatistics previousStats,
+  }) = _$MuscleAnalyticsDataImpl;
 
   factory _MuscleAnalyticsData.fromJson(Map<String, dynamic> json) =
       _$MuscleAnalyticsDataImpl.fromJson;
 
-  @override
-
   /// Distribuzione muscolare periodo attuale
-  MuscleDistributionData get current;
   @override
+  MuscleDistributionData get current;
 
   /// Distribuzione muscolare periodo precedente (per confronto radar chart)
-  MuscleDistributionData get previous;
   @override
+  MuscleDistributionData get previous;
 
   /// Statistiche aggregate periodo attuale
-  PeriodStatistics get currentStats;
   @override
+  PeriodStatistics get currentStats;
 
   /// Statistiche aggregate periodo precedente
-  PeriodStatistics get previousStats;
   @override
-  @JsonKey(ignore: true)
+  PeriodStatistics get previousStats;
+
+  /// Create a copy of MuscleAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MuscleAnalyticsDataImplCopyWith<_$MuscleAnalyticsDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

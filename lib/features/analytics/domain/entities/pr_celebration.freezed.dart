@@ -12,7 +12,8 @@ part of 'pr_celebration.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 PRCelebration _$PRCelebrationFromJson(Map<String, dynamic> json) {
   return _PRCelebration.fromJson(json);
@@ -53,8 +54,12 @@ mixin _$PRCelebration {
   /// When the notification was sent (if applicable)
   DateTime? get notificationSentAt => throw _privateConstructorUsedError;
 
+  /// Serializes this PRCelebration to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PRCelebration
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PRCelebrationCopyWith<PRCelebration> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,21 +67,23 @@ mixin _$PRCelebration {
 /// @nodoc
 abstract class $PRCelebrationCopyWith<$Res> {
   factory $PRCelebrationCopyWith(
-          PRCelebration value, $Res Function(PRCelebration) then) =
-      _$PRCelebrationCopyWithImpl<$Res, PRCelebration>;
+    PRCelebration value,
+    $Res Function(PRCelebration) then,
+  ) = _$PRCelebrationCopyWithImpl<$Res, PRCelebration>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String prId,
-      PRType prType,
-      DateTime celebratedAt,
-      CelebrationEngagement engagement,
-      double previousValue,
-      double newValue,
-      String? exerciseName,
-      bool notificationSent,
-      DateTime? notificationSentAt});
+  $Res call({
+    String id,
+    String userId,
+    String prId,
+    PRType prType,
+    DateTime celebratedAt,
+    CelebrationEngagement engagement,
+    double previousValue,
+    double newValue,
+    String? exerciseName,
+    bool notificationSent,
+    DateTime? notificationSentAt,
+  });
 }
 
 /// @nodoc
@@ -89,6 +96,8 @@ class _$PRCelebrationCopyWithImpl<$Res, $Val extends PRCelebration>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PRCelebration
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,52 +113,55 @@ class _$PRCelebrationCopyWithImpl<$Res, $Val extends PRCelebration>
     Object? notificationSent = null,
     Object? notificationSentAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      prId: null == prId
-          ? _value.prId
-          : prId // ignore: cast_nullable_to_non_nullable
-              as String,
-      prType: null == prType
-          ? _value.prType
-          : prType // ignore: cast_nullable_to_non_nullable
-              as PRType,
-      celebratedAt: null == celebratedAt
-          ? _value.celebratedAt
-          : celebratedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      engagement: null == engagement
-          ? _value.engagement
-          : engagement // ignore: cast_nullable_to_non_nullable
-              as CelebrationEngagement,
-      previousValue: null == previousValue
-          ? _value.previousValue
-          : previousValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      newValue: null == newValue
-          ? _value.newValue
-          : newValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      exerciseName: freezed == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notificationSent: null == notificationSent
-          ? _value.notificationSent
-          : notificationSent // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notificationSentAt: freezed == notificationSentAt
-          ? _value.notificationSentAt
-          : notificationSentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            prId: null == prId
+                ? _value.prId
+                : prId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            prType: null == prType
+                ? _value.prType
+                : prType // ignore: cast_nullable_to_non_nullable
+                      as PRType,
+            celebratedAt: null == celebratedAt
+                ? _value.celebratedAt
+                : celebratedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            engagement: null == engagement
+                ? _value.engagement
+                : engagement // ignore: cast_nullable_to_non_nullable
+                      as CelebrationEngagement,
+            previousValue: null == previousValue
+                ? _value.previousValue
+                : previousValue // ignore: cast_nullable_to_non_nullable
+                      as double,
+            newValue: null == newValue
+                ? _value.newValue
+                : newValue // ignore: cast_nullable_to_non_nullable
+                      as double,
+            exerciseName: freezed == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            notificationSent: null == notificationSent
+                ? _value.notificationSent
+                : notificationSent // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            notificationSentAt: freezed == notificationSentAt
+                ? _value.notificationSentAt
+                : notificationSentAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -157,22 +169,24 @@ class _$PRCelebrationCopyWithImpl<$Res, $Val extends PRCelebration>
 abstract class _$$PRCelebrationImplCopyWith<$Res>
     implements $PRCelebrationCopyWith<$Res> {
   factory _$$PRCelebrationImplCopyWith(
-          _$PRCelebrationImpl value, $Res Function(_$PRCelebrationImpl) then) =
-      __$$PRCelebrationImplCopyWithImpl<$Res>;
+    _$PRCelebrationImpl value,
+    $Res Function(_$PRCelebrationImpl) then,
+  ) = __$$PRCelebrationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String prId,
-      PRType prType,
-      DateTime celebratedAt,
-      CelebrationEngagement engagement,
-      double previousValue,
-      double newValue,
-      String? exerciseName,
-      bool notificationSent,
-      DateTime? notificationSentAt});
+  $Res call({
+    String id,
+    String userId,
+    String prId,
+    PRType prType,
+    DateTime celebratedAt,
+    CelebrationEngagement engagement,
+    double previousValue,
+    double newValue,
+    String? exerciseName,
+    bool notificationSent,
+    DateTime? notificationSentAt,
+  });
 }
 
 /// @nodoc
@@ -180,9 +194,12 @@ class __$$PRCelebrationImplCopyWithImpl<$Res>
     extends _$PRCelebrationCopyWithImpl<$Res, _$PRCelebrationImpl>
     implements _$$PRCelebrationImplCopyWith<$Res> {
   __$$PRCelebrationImplCopyWithImpl(
-      _$PRCelebrationImpl _value, $Res Function(_$PRCelebrationImpl) _then)
-      : super(_value, _then);
+    _$PRCelebrationImpl _value,
+    $Res Function(_$PRCelebrationImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PRCelebration
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -198,70 +215,73 @@ class __$$PRCelebrationImplCopyWithImpl<$Res>
     Object? notificationSent = null,
     Object? notificationSentAt = freezed,
   }) {
-    return _then(_$PRCelebrationImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      prId: null == prId
-          ? _value.prId
-          : prId // ignore: cast_nullable_to_non_nullable
-              as String,
-      prType: null == prType
-          ? _value.prType
-          : prType // ignore: cast_nullable_to_non_nullable
-              as PRType,
-      celebratedAt: null == celebratedAt
-          ? _value.celebratedAt
-          : celebratedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      engagement: null == engagement
-          ? _value.engagement
-          : engagement // ignore: cast_nullable_to_non_nullable
-              as CelebrationEngagement,
-      previousValue: null == previousValue
-          ? _value.previousValue
-          : previousValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      newValue: null == newValue
-          ? _value.newValue
-          : newValue // ignore: cast_nullable_to_non_nullable
-              as double,
-      exerciseName: freezed == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notificationSent: null == notificationSent
-          ? _value.notificationSent
-          : notificationSent // ignore: cast_nullable_to_non_nullable
-              as bool,
-      notificationSentAt: freezed == notificationSentAt
-          ? _value.notificationSentAt
-          : notificationSentAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$PRCelebrationImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        prId: null == prId
+            ? _value.prId
+            : prId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        prType: null == prType
+            ? _value.prType
+            : prType // ignore: cast_nullable_to_non_nullable
+                  as PRType,
+        celebratedAt: null == celebratedAt
+            ? _value.celebratedAt
+            : celebratedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        engagement: null == engagement
+            ? _value.engagement
+            : engagement // ignore: cast_nullable_to_non_nullable
+                  as CelebrationEngagement,
+        previousValue: null == previousValue
+            ? _value.previousValue
+            : previousValue // ignore: cast_nullable_to_non_nullable
+                  as double,
+        newValue: null == newValue
+            ? _value.newValue
+            : newValue // ignore: cast_nullable_to_non_nullable
+                  as double,
+        exerciseName: freezed == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        notificationSent: null == notificationSent
+            ? _value.notificationSent
+            : notificationSent // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        notificationSentAt: freezed == notificationSentAt
+            ? _value.notificationSentAt
+            : notificationSentAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PRCelebrationImpl implements _PRCelebration {
-  const _$PRCelebrationImpl(
-      {required this.id,
-      required this.userId,
-      required this.prId,
-      required this.prType,
-      required this.celebratedAt,
-      required this.engagement,
-      required this.previousValue,
-      required this.newValue,
-      this.exerciseName,
-      this.notificationSent = false,
-      this.notificationSentAt});
+  const _$PRCelebrationImpl({
+    required this.id,
+    required this.userId,
+    required this.prId,
+    required this.prType,
+    required this.celebratedAt,
+    required this.engagement,
+    required this.previousValue,
+    required this.newValue,
+    this.exerciseName,
+    this.notificationSent = false,
+    this.notificationSentAt,
+  });
 
   factory _$PRCelebrationImpl.fromJson(Map<String, dynamic> json) =>
       _$$PRCelebrationImplFromJson(json);
@@ -341,23 +361,26 @@ class _$PRCelebrationImpl implements _PRCelebration {
                 other.notificationSentAt == notificationSentAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      prId,
-      prType,
-      celebratedAt,
-      engagement,
-      previousValue,
-      newValue,
-      exerciseName,
-      notificationSent,
-      notificationSentAt);
+    runtimeType,
+    id,
+    userId,
+    prId,
+    prType,
+    celebratedAt,
+    engagement,
+    previousValue,
+    newValue,
+    exerciseName,
+    notificationSent,
+    notificationSentAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PRCelebration
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PRCelebrationImplCopyWith<_$PRCelebrationImpl> get copyWith =>
@@ -365,75 +388,76 @@ class _$PRCelebrationImpl implements _PRCelebration {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PRCelebrationImplToJson(
-      this,
-    );
+    return _$$PRCelebrationImplToJson(this);
   }
 }
 
 abstract class _PRCelebration implements PRCelebration {
-  const factory _PRCelebration(
-      {required final String id,
-      required final String userId,
-      required final String prId,
-      required final PRType prType,
-      required final DateTime celebratedAt,
-      required final CelebrationEngagement engagement,
-      required final double previousValue,
-      required final double newValue,
-      final String? exerciseName,
-      final bool notificationSent,
-      final DateTime? notificationSentAt}) = _$PRCelebrationImpl;
+  const factory _PRCelebration({
+    required final String id,
+    required final String userId,
+    required final String prId,
+    required final PRType prType,
+    required final DateTime celebratedAt,
+    required final CelebrationEngagement engagement,
+    required final double previousValue,
+    required final double newValue,
+    final String? exerciseName,
+    final bool notificationSent,
+    final DateTime? notificationSentAt,
+  }) = _$PRCelebrationImpl;
 
   factory _PRCelebration.fromJson(Map<String, dynamic> json) =
       _$PRCelebrationImpl.fromJson;
 
-  @override
-
   /// Unique celebration identifier
-  String get id;
   @override
+  String get id;
 
   /// User who achieved the PR
-  String get userId;
   @override
+  String get userId;
 
   /// Personal record identifier
-  String get prId;
   @override
+  String get prId;
 
   /// Type of personal record achieved
-  PRType get prType;
   @override
+  PRType get prType;
 
   /// When the celebration was triggered
-  DateTime get celebratedAt;
   @override
+  DateTime get celebratedAt;
 
   /// How the user engaged with the celebration
-  CelebrationEngagement get engagement;
   @override
+  CelebrationEngagement get engagement;
 
   /// Previous personal record value
-  double get previousValue;
   @override
+  double get previousValue;
 
   /// New personal record value
-  double get newValue;
   @override
+  double get newValue;
 
   /// Exercise name (optional for context)
-  String? get exerciseName;
   @override
+  String? get exerciseName;
 
   /// Whether a push notification was sent
-  bool get notificationSent;
   @override
+  bool get notificationSent;
 
   /// When the notification was sent (if applicable)
-  DateTime? get notificationSentAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get notificationSentAt;
+
+  /// Create a copy of PRCelebration
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PRCelebrationImplCopyWith<_$PRCelebrationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

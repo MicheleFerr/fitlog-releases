@@ -9,8 +9,10 @@ part of 'user_context.dart';
 _$UserContextImpl _$$UserContextImplFromJson(Map<String, dynamic> json) =>
     _$UserContextImpl(
       userId: json['userId'] as String,
-      experienceLevel:
-          $enumDecode(_$ExperienceLevelEnumMap, json['experienceLevel']),
+      experienceLevel: $enumDecode(
+        _$ExperienceLevelEnumMap,
+        json['experienceLevel'],
+      ),
       primaryGoal: $enumDecode(_$TrainingGoalEnumMap, json['primaryGoal']),
       weeklyAvailability: (json['weeklyAvailability'] as num).toInt(),
       injuryHistory: (json['injuryHistory'] as List<dynamic>?)

@@ -12,7 +12,8 @@ part of 'exercise_history_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ExerciseHistoryModel {
@@ -28,27 +29,33 @@ mixin _$ExerciseHistoryModel {
   /// When this document was last updated (for cache invalidation)
   DateTime get lastUpdated => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseHistoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseHistoryModelCopyWith<ExerciseHistoryModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExerciseHistoryModelCopyWith<$Res> {
-  factory $ExerciseHistoryModelCopyWith(ExerciseHistoryModel value,
-          $Res Function(ExerciseHistoryModel) then) =
-      _$ExerciseHistoryModelCopyWithImpl<$Res, ExerciseHistoryModel>;
+  factory $ExerciseHistoryModelCopyWith(
+    ExerciseHistoryModel value,
+    $Res Function(ExerciseHistoryModel) then,
+  ) = _$ExerciseHistoryModelCopyWithImpl<$Res, ExerciseHistoryModel>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSessionModel> sessions,
-      DateTime lastUpdated});
+  $Res call({
+    String exerciseName,
+    String muscleGroup,
+    List<ExerciseSessionModel> sessions,
+    DateTime lastUpdated,
+  });
 }
 
 /// @nodoc
-class _$ExerciseHistoryModelCopyWithImpl<$Res,
-        $Val extends ExerciseHistoryModel>
+class _$ExerciseHistoryModelCopyWithImpl<
+  $Res,
+  $Val extends ExerciseHistoryModel
+>
     implements $ExerciseHistoryModelCopyWith<$Res> {
   _$ExerciseHistoryModelCopyWithImpl(this._value, this._then);
 
@@ -57,6 +64,8 @@ class _$ExerciseHistoryModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseHistoryModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -65,50 +74,58 @@ class _$ExerciseHistoryModelCopyWithImpl<$Res,
     Object? sessions = null,
     Object? lastUpdated = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value.sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSessionModel>,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            muscleGroup: null == muscleGroup
+                ? _value.muscleGroup
+                : muscleGroup // ignore: cast_nullable_to_non_nullable
+                      as String,
+            sessions: null == sessions
+                ? _value.sessions
+                : sessions // ignore: cast_nullable_to_non_nullable
+                      as List<ExerciseSessionModel>,
+            lastUpdated: null == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseHistoryModelImplCopyWith<$Res>
     implements $ExerciseHistoryModelCopyWith<$Res> {
-  factory _$$ExerciseHistoryModelImplCopyWith(_$ExerciseHistoryModelImpl value,
-          $Res Function(_$ExerciseHistoryModelImpl) then) =
-      __$$ExerciseHistoryModelImplCopyWithImpl<$Res>;
+  factory _$$ExerciseHistoryModelImplCopyWith(
+    _$ExerciseHistoryModelImpl value,
+    $Res Function(_$ExerciseHistoryModelImpl) then,
+  ) = __$$ExerciseHistoryModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSessionModel> sessions,
-      DateTime lastUpdated});
+  $Res call({
+    String exerciseName,
+    String muscleGroup,
+    List<ExerciseSessionModel> sessions,
+    DateTime lastUpdated,
+  });
 }
 
 /// @nodoc
 class __$$ExerciseHistoryModelImplCopyWithImpl<$Res>
     extends _$ExerciseHistoryModelCopyWithImpl<$Res, _$ExerciseHistoryModelImpl>
     implements _$$ExerciseHistoryModelImplCopyWith<$Res> {
-  __$$ExerciseHistoryModelImplCopyWithImpl(_$ExerciseHistoryModelImpl _value,
-      $Res Function(_$ExerciseHistoryModelImpl) _then)
-      : super(_value, _then);
+  __$$ExerciseHistoryModelImplCopyWithImpl(
+    _$ExerciseHistoryModelImpl _value,
+    $Res Function(_$ExerciseHistoryModelImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseHistoryModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,37 +134,39 @@ class __$$ExerciseHistoryModelImplCopyWithImpl<$Res>
     Object? sessions = null,
     Object? lastUpdated = null,
   }) {
-    return _then(_$ExerciseHistoryModelImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value._sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSessionModel>,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$ExerciseHistoryModelImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        muscleGroup: null == muscleGroup
+            ? _value.muscleGroup
+            : muscleGroup // ignore: cast_nullable_to_non_nullable
+                  as String,
+        sessions: null == sessions
+            ? _value._sessions
+            : sessions // ignore: cast_nullable_to_non_nullable
+                  as List<ExerciseSessionModel>,
+        lastUpdated: null == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExerciseHistoryModelImpl extends _ExerciseHistoryModel {
-  const _$ExerciseHistoryModelImpl(
-      {required this.exerciseName,
-      required this.muscleGroup,
-      required final List<ExerciseSessionModel> sessions,
-      required this.lastUpdated})
-      : _sessions = sessions,
-        super._();
+  const _$ExerciseHistoryModelImpl({
+    required this.exerciseName,
+    required this.muscleGroup,
+    required final List<ExerciseSessionModel> sessions,
+    required this.lastUpdated,
+  }) : _sessions = sessions,
+       super._();
 
   /// Name of the exercise (also the document ID)
   @override
@@ -192,44 +211,56 @@ class _$ExerciseHistoryModelImpl extends _ExerciseHistoryModel {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, muscleGroup,
-      const DeepCollectionEquality().hash(_sessions), lastUpdated);
+  int get hashCode => Object.hash(
+    runtimeType,
+    exerciseName,
+    muscleGroup,
+    const DeepCollectionEquality().hash(_sessions),
+    lastUpdated,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseHistoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseHistoryModelImplCopyWith<_$ExerciseHistoryModelImpl>
-      get copyWith =>
-          __$$ExerciseHistoryModelImplCopyWithImpl<_$ExerciseHistoryModelImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$ExerciseHistoryModelImplCopyWithImpl<_$ExerciseHistoryModelImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ExerciseHistoryModel extends ExerciseHistoryModel {
-  const factory _ExerciseHistoryModel(
-      {required final String exerciseName,
-      required final String muscleGroup,
-      required final List<ExerciseSessionModel> sessions,
-      required final DateTime lastUpdated}) = _$ExerciseHistoryModelImpl;
+  const factory _ExerciseHistoryModel({
+    required final String exerciseName,
+    required final String muscleGroup,
+    required final List<ExerciseSessionModel> sessions,
+    required final DateTime lastUpdated,
+  }) = _$ExerciseHistoryModelImpl;
   const _ExerciseHistoryModel._() : super._();
 
-  @override
-
   /// Name of the exercise (also the document ID)
-  String get exerciseName;
   @override
+  String get exerciseName;
 
   /// Target muscle group (e.g., "chest", "back", "legs")
-  String get muscleGroup;
   @override
+  String get muscleGroup;
 
   /// All sessions for this exercise (sorted by date descending)
-  List<ExerciseSessionModel> get sessions;
   @override
+  List<ExerciseSessionModel> get sessions;
 
   /// When this document was last updated (for cache invalidation)
-  DateTime get lastUpdated;
   @override
-  @JsonKey(ignore: true)
+  DateTime get lastUpdated;
+
+  /// Create a copy of ExerciseHistoryModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseHistoryModelImplCopyWith<_$ExerciseHistoryModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

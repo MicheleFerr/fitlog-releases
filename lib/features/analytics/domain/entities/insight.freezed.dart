@@ -12,7 +12,8 @@ part of 'insight.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Insight _$InsightFromJson(Map<String, dynamic> json) {
   return _Insight.fromJson(json);
@@ -62,8 +63,12 @@ mixin _$Insight {
   /// When action was taken (if applicable)
   DateTime? get actionTakenAt => throw _privateConstructorUsedError;
 
+  /// Serializes this Insight to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Insight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InsightCopyWith<Insight> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -72,21 +77,22 @@ abstract class $InsightCopyWith<$Res> {
   factory $InsightCopyWith(Insight value, $Res Function(Insight) then) =
       _$InsightCopyWithImpl<$Res, Insight>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      InsightType type,
-      InsightPriority priority,
-      String title,
-      String message,
-      String recommendation,
-      DateTime generatedAt,
-      Map<String, dynamic> metadata,
-      InsightEngagement? engagement,
-      String? actionTaken,
-      DateTime? dismissedAt,
-      DateTime? viewedAt,
-      DateTime? actionTakenAt});
+  $Res call({
+    String id,
+    String userId,
+    InsightType type,
+    InsightPriority priority,
+    String title,
+    String message,
+    String recommendation,
+    DateTime generatedAt,
+    Map<String, dynamic> metadata,
+    InsightEngagement? engagement,
+    String? actionTaken,
+    DateTime? dismissedAt,
+    DateTime? viewedAt,
+    DateTime? actionTakenAt,
+  });
 }
 
 /// @nodoc
@@ -99,6 +105,8 @@ class _$InsightCopyWithImpl<$Res, $Val extends Insight>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Insight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,89 +125,94 @@ class _$InsightCopyWithImpl<$Res, $Val extends Insight>
     Object? viewedAt = freezed,
     Object? actionTakenAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      priority: null == priority
-          ? _value.priority
-          : priority // ignore: cast_nullable_to_non_nullable
-              as InsightPriority,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      generatedAt: null == generatedAt
-          ? _value.generatedAt
-          : generatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      metadata: null == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      engagement: freezed == engagement
-          ? _value.engagement
-          : engagement // ignore: cast_nullable_to_non_nullable
-              as InsightEngagement?,
-      actionTaken: freezed == actionTaken
-          ? _value.actionTaken
-          : actionTaken // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dismissedAt: freezed == dismissedAt
-          ? _value.dismissedAt
-          : dismissedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      viewedAt: freezed == viewedAt
-          ? _value.viewedAt
-          : viewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      actionTakenAt: freezed == actionTakenAt
-          ? _value.actionTakenAt
-          : actionTakenAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as InsightType,
+            priority: null == priority
+                ? _value.priority
+                : priority // ignore: cast_nullable_to_non_nullable
+                      as InsightPriority,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+            recommendation: null == recommendation
+                ? _value.recommendation
+                : recommendation // ignore: cast_nullable_to_non_nullable
+                      as String,
+            generatedAt: null == generatedAt
+                ? _value.generatedAt
+                : generatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            metadata: null == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>,
+            engagement: freezed == engagement
+                ? _value.engagement
+                : engagement // ignore: cast_nullable_to_non_nullable
+                      as InsightEngagement?,
+            actionTaken: freezed == actionTaken
+                ? _value.actionTaken
+                : actionTaken // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            dismissedAt: freezed == dismissedAt
+                ? _value.dismissedAt
+                : dismissedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            viewedAt: freezed == viewedAt
+                ? _value.viewedAt
+                : viewedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            actionTakenAt: freezed == actionTakenAt
+                ? _value.actionTakenAt
+                : actionTakenAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$InsightImplCopyWith<$Res> implements $InsightCopyWith<$Res> {
   factory _$$InsightImplCopyWith(
-          _$InsightImpl value, $Res Function(_$InsightImpl) then) =
-      __$$InsightImplCopyWithImpl<$Res>;
+    _$InsightImpl value,
+    $Res Function(_$InsightImpl) then,
+  ) = __$$InsightImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      InsightType type,
-      InsightPriority priority,
-      String title,
-      String message,
-      String recommendation,
-      DateTime generatedAt,
-      Map<String, dynamic> metadata,
-      InsightEngagement? engagement,
-      String? actionTaken,
-      DateTime? dismissedAt,
-      DateTime? viewedAt,
-      DateTime? actionTakenAt});
+  $Res call({
+    String id,
+    String userId,
+    InsightType type,
+    InsightPriority priority,
+    String title,
+    String message,
+    String recommendation,
+    DateTime generatedAt,
+    Map<String, dynamic> metadata,
+    InsightEngagement? engagement,
+    String? actionTaken,
+    DateTime? dismissedAt,
+    DateTime? viewedAt,
+    DateTime? actionTakenAt,
+  });
 }
 
 /// @nodoc
@@ -207,9 +220,12 @@ class __$$InsightImplCopyWithImpl<$Res>
     extends _$InsightCopyWithImpl<$Res, _$InsightImpl>
     implements _$$InsightImplCopyWith<$Res> {
   __$$InsightImplCopyWithImpl(
-      _$InsightImpl _value, $Res Function(_$InsightImpl) _then)
-      : super(_value, _then);
+    _$InsightImpl _value,
+    $Res Function(_$InsightImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of Insight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -228,86 +244,88 @@ class __$$InsightImplCopyWithImpl<$Res>
     Object? viewedAt = freezed,
     Object? actionTakenAt = freezed,
   }) {
-    return _then(_$InsightImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as InsightType,
-      priority: null == priority
-          ? _value.priority
-          : priority // ignore: cast_nullable_to_non_nullable
-              as InsightPriority,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-      recommendation: null == recommendation
-          ? _value.recommendation
-          : recommendation // ignore: cast_nullable_to_non_nullable
-              as String,
-      generatedAt: null == generatedAt
-          ? _value.generatedAt
-          : generatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      metadata: null == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      engagement: freezed == engagement
-          ? _value.engagement
-          : engagement // ignore: cast_nullable_to_non_nullable
-              as InsightEngagement?,
-      actionTaken: freezed == actionTaken
-          ? _value.actionTaken
-          : actionTaken // ignore: cast_nullable_to_non_nullable
-              as String?,
-      dismissedAt: freezed == dismissedAt
-          ? _value.dismissedAt
-          : dismissedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      viewedAt: freezed == viewedAt
-          ? _value.viewedAt
-          : viewedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      actionTakenAt: freezed == actionTakenAt
-          ? _value.actionTakenAt
-          : actionTakenAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$InsightImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as InsightType,
+        priority: null == priority
+            ? _value.priority
+            : priority // ignore: cast_nullable_to_non_nullable
+                  as InsightPriority,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+        recommendation: null == recommendation
+            ? _value.recommendation
+            : recommendation // ignore: cast_nullable_to_non_nullable
+                  as String,
+        generatedAt: null == generatedAt
+            ? _value.generatedAt
+            : generatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        metadata: null == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>,
+        engagement: freezed == engagement
+            ? _value.engagement
+            : engagement // ignore: cast_nullable_to_non_nullable
+                  as InsightEngagement?,
+        actionTaken: freezed == actionTaken
+            ? _value.actionTaken
+            : actionTaken // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        dismissedAt: freezed == dismissedAt
+            ? _value.dismissedAt
+            : dismissedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        viewedAt: freezed == viewedAt
+            ? _value.viewedAt
+            : viewedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        actionTakenAt: freezed == actionTakenAt
+            ? _value.actionTakenAt
+            : actionTakenAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$InsightImpl implements _Insight {
-  const _$InsightImpl(
-      {required this.id,
-      required this.userId,
-      required this.type,
-      required this.priority,
-      required this.title,
-      required this.message,
-      required this.recommendation,
-      required this.generatedAt,
-      final Map<String, dynamic> metadata = const {},
-      this.engagement,
-      this.actionTaken,
-      this.dismissedAt,
-      this.viewedAt,
-      this.actionTakenAt})
-      : _metadata = metadata;
+  const _$InsightImpl({
+    required this.id,
+    required this.userId,
+    required this.type,
+    required this.priority,
+    required this.title,
+    required this.message,
+    required this.recommendation,
+    required this.generatedAt,
+    final Map<String, dynamic> metadata = const {},
+    this.engagement,
+    this.actionTaken,
+    this.dismissedAt,
+    this.viewedAt,
+    this.actionTakenAt,
+  }) : _metadata = metadata;
 
   factory _$InsightImpl.fromJson(Map<String, dynamic> json) =>
       _$$InsightImplFromJson(json);
@@ -410,26 +428,29 @@ class _$InsightImpl implements _Insight {
                 other.actionTakenAt == actionTakenAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      type,
-      priority,
-      title,
-      message,
-      recommendation,
-      generatedAt,
-      const DeepCollectionEquality().hash(_metadata),
-      engagement,
-      actionTaken,
-      dismissedAt,
-      viewedAt,
-      actionTakenAt);
+    runtimeType,
+    id,
+    userId,
+    type,
+    priority,
+    title,
+    message,
+    recommendation,
+    generatedAt,
+    const DeepCollectionEquality().hash(_metadata),
+    engagement,
+    actionTaken,
+    dismissedAt,
+    viewedAt,
+    actionTakenAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Insight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InsightImplCopyWith<_$InsightImpl> get copyWith =>
@@ -437,89 +458,90 @@ class _$InsightImpl implements _Insight {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InsightImplToJson(
-      this,
-    );
+    return _$$InsightImplToJson(this);
   }
 }
 
 abstract class _Insight implements Insight {
-  const factory _Insight(
-      {required final String id,
-      required final String userId,
-      required final InsightType type,
-      required final InsightPriority priority,
-      required final String title,
-      required final String message,
-      required final String recommendation,
-      required final DateTime generatedAt,
-      final Map<String, dynamic> metadata,
-      final InsightEngagement? engagement,
-      final String? actionTaken,
-      final DateTime? dismissedAt,
-      final DateTime? viewedAt,
-      final DateTime? actionTakenAt}) = _$InsightImpl;
+  const factory _Insight({
+    required final String id,
+    required final String userId,
+    required final InsightType type,
+    required final InsightPriority priority,
+    required final String title,
+    required final String message,
+    required final String recommendation,
+    required final DateTime generatedAt,
+    final Map<String, dynamic> metadata,
+    final InsightEngagement? engagement,
+    final String? actionTaken,
+    final DateTime? dismissedAt,
+    final DateTime? viewedAt,
+    final DateTime? actionTakenAt,
+  }) = _$InsightImpl;
 
   factory _Insight.fromJson(Map<String, dynamic> json) = _$InsightImpl.fromJson;
 
-  @override
-
   /// Unique insight identifier
-  String get id;
   @override
+  String get id;
 
   /// User this insight belongs to
-  String get userId;
   @override
+  String get userId;
 
   /// Type of insight
-  InsightType get type;
   @override
+  InsightType get type;
 
   /// Priority level
-  InsightPriority get priority;
   @override
+  InsightPriority get priority;
 
   /// Insight title (localized)
-  String get title;
   @override
+  String get title;
 
   /// Insight message/description (localized)
-  String get message;
   @override
+  String get message;
 
   /// Recommended action (localized)
-  String get recommendation;
   @override
+  String get recommendation;
 
   /// When the insight was generated
-  DateTime get generatedAt;
   @override
+  DateTime get generatedAt;
 
   /// Additional metadata (exercise names, metrics, etc.)
-  Map<String, dynamic> get metadata;
   @override
+  Map<String, dynamic> get metadata;
 
   /// User's engagement with this insight (if any)
-  InsightEngagement? get engagement;
   @override
+  InsightEngagement? get engagement;
 
   /// Specific action the user took (e.g., "started_workout", "adjusted_volume")
-  String? get actionTaken;
   @override
+  String? get actionTaken;
 
   /// When the user dismissed the insight
-  DateTime? get dismissedAt;
   @override
+  DateTime? get dismissedAt;
 
   /// When the user first viewed the insight
-  DateTime? get viewedAt;
   @override
+  DateTime? get viewedAt;
 
   /// When action was taken (if applicable)
-  DateTime? get actionTakenAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get actionTakenAt;
+
+  /// Create a copy of Insight
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InsightImplCopyWith<_$InsightImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

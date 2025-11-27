@@ -7,38 +7,41 @@ part of 'muscle_distribution_data.dart';
 // **************************************************************************
 
 _$MuscleDistributionDataImpl _$$MuscleDistributionDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MuscleDistributionDataImpl(
-      volumeByMuscle: (json['volumeByMuscle'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            $enumDecode(_$MuscleGroupEnumMap, k), (e as num).toDouble()),
-      ),
-      setsByMuscle: (json['setsByMuscle'] as Map<String, dynamic>).map(
-        (k, e) =>
-            MapEntry($enumDecode(_$MuscleGroupEnumMap, k), (e as num).toInt()),
-      ),
-      volumePercentage: (json['volumePercentage'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            $enumDecode(_$MuscleGroupEnumMap, k), (e as num).toDouble()),
-      ),
-      period: $enumDecode(_$TimePeriodEnumMap, json['period']),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$MuscleDistributionDataImpl(
+  volumeByMuscle: (json['volumeByMuscle'] as Map<String, dynamic>).map(
+    (k, e) =>
+        MapEntry($enumDecode(_$MuscleGroupEnumMap, k), (e as num).toDouble()),
+  ),
+  setsByMuscle: (json['setsByMuscle'] as Map<String, dynamic>).map(
+    (k, e) =>
+        MapEntry($enumDecode(_$MuscleGroupEnumMap, k), (e as num).toInt()),
+  ),
+  volumePercentage: (json['volumePercentage'] as Map<String, dynamic>).map(
+    (k, e) =>
+        MapEntry($enumDecode(_$MuscleGroupEnumMap, k), (e as num).toDouble()),
+  ),
+  period: $enumDecode(_$TimePeriodEnumMap, json['period']),
+  startDate: DateTime.parse(json['startDate'] as String),
+  endDate: DateTime.parse(json['endDate'] as String),
+);
 
 Map<String, dynamic> _$$MuscleDistributionDataImplToJson(
-        _$MuscleDistributionDataImpl instance) =>
-    <String, dynamic>{
-      'volumeByMuscle': instance.volumeByMuscle
-          .map((k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e)),
-      'setsByMuscle': instance.setsByMuscle
-          .map((k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e)),
-      'volumePercentage': instance.volumePercentage
-          .map((k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e)),
-      'period': _$TimePeriodEnumMap[instance.period]!,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
-    };
+  _$MuscleDistributionDataImpl instance,
+) => <String, dynamic>{
+  'volumeByMuscle': instance.volumeByMuscle.map(
+    (k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e),
+  ),
+  'setsByMuscle': instance.setsByMuscle.map(
+    (k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e),
+  ),
+  'volumePercentage': instance.volumePercentage.map(
+    (k, e) => MapEntry(_$MuscleGroupEnumMap[k]!, e),
+  ),
+  'period': _$TimePeriodEnumMap[instance.period]!,
+  'startDate': instance.startDate.toIso8601String(),
+  'endDate': instance.endDate.toIso8601String(),
+};
 
 const _$MuscleGroupEnumMap = {
   MuscleGroup.schiena: 'schiena',
@@ -59,47 +62,51 @@ const _$TimePeriodEnumMap = {
 };
 
 _$PeriodStatisticsImpl _$$PeriodStatisticsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$PeriodStatisticsImpl(
-      workoutsCount: (json['workoutsCount'] as num).toInt(),
-      totalDurationMinutes: (json['totalDurationMinutes'] as num).toInt(),
-      totalVolumeKg: (json['totalVolumeKg'] as num).toDouble(),
-      totalSets: (json['totalSets'] as num).toInt(),
-      period: $enumDecode(_$TimePeriodEnumMap, json['period']),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$PeriodStatisticsImpl(
+  workoutsCount: (json['workoutsCount'] as num).toInt(),
+  totalDurationMinutes: (json['totalDurationMinutes'] as num).toInt(),
+  totalVolumeKg: (json['totalVolumeKg'] as num).toDouble(),
+  totalSets: (json['totalSets'] as num).toInt(),
+  period: $enumDecode(_$TimePeriodEnumMap, json['period']),
+  startDate: DateTime.parse(json['startDate'] as String),
+  endDate: DateTime.parse(json['endDate'] as String),
+);
 
 Map<String, dynamic> _$$PeriodStatisticsImplToJson(
-        _$PeriodStatisticsImpl instance) =>
-    <String, dynamic>{
-      'workoutsCount': instance.workoutsCount,
-      'totalDurationMinutes': instance.totalDurationMinutes,
-      'totalVolumeKg': instance.totalVolumeKg,
-      'totalSets': instance.totalSets,
-      'period': _$TimePeriodEnumMap[instance.period]!,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
-    };
+  _$PeriodStatisticsImpl instance,
+) => <String, dynamic>{
+  'workoutsCount': instance.workoutsCount,
+  'totalDurationMinutes': instance.totalDurationMinutes,
+  'totalVolumeKg': instance.totalVolumeKg,
+  'totalSets': instance.totalSets,
+  'period': _$TimePeriodEnumMap[instance.period]!,
+  'startDate': instance.startDate.toIso8601String(),
+  'endDate': instance.endDate.toIso8601String(),
+};
 
 _$MuscleAnalyticsDataImpl _$$MuscleAnalyticsDataImplFromJson(
-        Map<String, dynamic> json) =>
-    _$MuscleAnalyticsDataImpl(
-      current: MuscleDistributionData.fromJson(
-          json['current'] as Map<String, dynamic>),
-      previous: MuscleDistributionData.fromJson(
-          json['previous'] as Map<String, dynamic>),
-      currentStats: PeriodStatistics.fromJson(
-          json['currentStats'] as Map<String, dynamic>),
-      previousStats: PeriodStatistics.fromJson(
-          json['previousStats'] as Map<String, dynamic>),
-    );
+  Map<String, dynamic> json,
+) => _$MuscleAnalyticsDataImpl(
+  current: MuscleDistributionData.fromJson(
+    json['current'] as Map<String, dynamic>,
+  ),
+  previous: MuscleDistributionData.fromJson(
+    json['previous'] as Map<String, dynamic>,
+  ),
+  currentStats: PeriodStatistics.fromJson(
+    json['currentStats'] as Map<String, dynamic>,
+  ),
+  previousStats: PeriodStatistics.fromJson(
+    json['previousStats'] as Map<String, dynamic>,
+  ),
+);
 
 Map<String, dynamic> _$$MuscleAnalyticsDataImplToJson(
-        _$MuscleAnalyticsDataImpl instance) =>
-    <String, dynamic>{
-      'current': instance.current.toJson(),
-      'previous': instance.previous.toJson(),
-      'currentStats': instance.currentStats.toJson(),
-      'previousStats': instance.previousStats.toJson(),
-    };
+  _$MuscleAnalyticsDataImpl instance,
+) => <String, dynamic>{
+  'current': instance.current.toJson(),
+  'previous': instance.previous.toJson(),
+  'currentStats': instance.currentStats.toJson(),
+  'previousStats': instance.previousStats.toJson(),
+};

@@ -438,11 +438,10 @@ class _SupersetCardState extends ConsumerState<SupersetCard> {
             
             // Icona per indicare che è cliccabile
             SemanticIcon(
-  icon: AppIcons.info,
-  semanticLabel: 'Information',
-  size: AppIconSize.tiny,
-  color: context.colors.primary.withValues(alpha: 0.7,
-),
+              icon: AppIcons.info,
+              semanticLabel: 'Information',
+              size: AppIconSize.tiny,
+              color: context.colors.primary.withValues(alpha: 0.7),
             ),
             const SizedBox(width: 4),
 

@@ -12,7 +12,8 @@ part of 'weekly_stats.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 WeeklyStats _$WeeklyStatsFromJson(Map<String, dynamic> json) {
   return _WeeklyStats.fromJson(json);
@@ -41,8 +42,12 @@ mixin _$WeeklyStats {
   /// Week end date
   DateTime? get weekEndDate => throw _privateConstructorUsedError;
 
+  /// Serializes this WeeklyStats to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of WeeklyStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WeeklyStatsCopyWith<WeeklyStats> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,17 +55,19 @@ mixin _$WeeklyStats {
 /// @nodoc
 abstract class $WeeklyStatsCopyWith<$Res> {
   factory $WeeklyStatsCopyWith(
-          WeeklyStats value, $Res Function(WeeklyStats) then) =
-      _$WeeklyStatsCopyWithImpl<$Res, WeeklyStats>;
+    WeeklyStats value,
+    $Res Function(WeeklyStats) then,
+  ) = _$WeeklyStatsCopyWithImpl<$Res, WeeklyStats>;
   @useResult
-  $Res call(
-      {double avgWorkoutsPerWeek,
-      double avgRestDaysPerWeek,
-      int totalWorkouts,
-      int totalRestDays,
-      int totalActiveDays,
-      DateTime? weekStartDate,
-      DateTime? weekEndDate});
+  $Res call({
+    double avgWorkoutsPerWeek,
+    double avgRestDaysPerWeek,
+    int totalWorkouts,
+    int totalRestDays,
+    int totalActiveDays,
+    DateTime? weekStartDate,
+    DateTime? weekEndDate,
+  });
 }
 
 /// @nodoc
@@ -73,6 +80,8 @@ class _$WeeklyStatsCopyWithImpl<$Res, $Val extends WeeklyStats>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WeeklyStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -84,36 +93,39 @@ class _$WeeklyStatsCopyWithImpl<$Res, $Val extends WeeklyStats>
     Object? weekStartDate = freezed,
     Object? weekEndDate = freezed,
   }) {
-    return _then(_value.copyWith(
-      avgWorkoutsPerWeek: null == avgWorkoutsPerWeek
-          ? _value.avgWorkoutsPerWeek
-          : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
-              as double,
-      avgRestDaysPerWeek: null == avgRestDaysPerWeek
-          ? _value.avgRestDaysPerWeek
-          : avgRestDaysPerWeek // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalRestDays: null == totalRestDays
-          ? _value.totalRestDays
-          : totalRestDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalActiveDays: null == totalActiveDays
-          ? _value.totalActiveDays
-          : totalActiveDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      weekStartDate: freezed == weekStartDate
-          ? _value.weekStartDate
-          : weekStartDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      weekEndDate: freezed == weekEndDate
-          ? _value.weekEndDate
-          : weekEndDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            avgWorkoutsPerWeek: null == avgWorkoutsPerWeek
+                ? _value.avgWorkoutsPerWeek
+                : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
+                      as double,
+            avgRestDaysPerWeek: null == avgRestDaysPerWeek
+                ? _value.avgRestDaysPerWeek
+                : avgRestDaysPerWeek // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalWorkouts: null == totalWorkouts
+                ? _value.totalWorkouts
+                : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalRestDays: null == totalRestDays
+                ? _value.totalRestDays
+                : totalRestDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalActiveDays: null == totalActiveDays
+                ? _value.totalActiveDays
+                : totalActiveDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+            weekStartDate: freezed == weekStartDate
+                ? _value.weekStartDate
+                : weekStartDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            weekEndDate: freezed == weekEndDate
+                ? _value.weekEndDate
+                : weekEndDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -121,18 +133,20 @@ class _$WeeklyStatsCopyWithImpl<$Res, $Val extends WeeklyStats>
 abstract class _$$WeeklyStatsImplCopyWith<$Res>
     implements $WeeklyStatsCopyWith<$Res> {
   factory _$$WeeklyStatsImplCopyWith(
-          _$WeeklyStatsImpl value, $Res Function(_$WeeklyStatsImpl) then) =
-      __$$WeeklyStatsImplCopyWithImpl<$Res>;
+    _$WeeklyStatsImpl value,
+    $Res Function(_$WeeklyStatsImpl) then,
+  ) = __$$WeeklyStatsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double avgWorkoutsPerWeek,
-      double avgRestDaysPerWeek,
-      int totalWorkouts,
-      int totalRestDays,
-      int totalActiveDays,
-      DateTime? weekStartDate,
-      DateTime? weekEndDate});
+  $Res call({
+    double avgWorkoutsPerWeek,
+    double avgRestDaysPerWeek,
+    int totalWorkouts,
+    int totalRestDays,
+    int totalActiveDays,
+    DateTime? weekStartDate,
+    DateTime? weekEndDate,
+  });
 }
 
 /// @nodoc
@@ -140,9 +154,12 @@ class __$$WeeklyStatsImplCopyWithImpl<$Res>
     extends _$WeeklyStatsCopyWithImpl<$Res, _$WeeklyStatsImpl>
     implements _$$WeeklyStatsImplCopyWith<$Res> {
   __$$WeeklyStatsImplCopyWithImpl(
-      _$WeeklyStatsImpl _value, $Res Function(_$WeeklyStatsImpl) _then)
-      : super(_value, _then);
+    _$WeeklyStatsImpl _value,
+    $Res Function(_$WeeklyStatsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of WeeklyStats
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -154,50 +171,53 @@ class __$$WeeklyStatsImplCopyWithImpl<$Res>
     Object? weekStartDate = freezed,
     Object? weekEndDate = freezed,
   }) {
-    return _then(_$WeeklyStatsImpl(
-      avgWorkoutsPerWeek: null == avgWorkoutsPerWeek
-          ? _value.avgWorkoutsPerWeek
-          : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
-              as double,
-      avgRestDaysPerWeek: null == avgRestDaysPerWeek
-          ? _value.avgRestDaysPerWeek
-          : avgRestDaysPerWeek // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalRestDays: null == totalRestDays
-          ? _value.totalRestDays
-          : totalRestDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalActiveDays: null == totalActiveDays
-          ? _value.totalActiveDays
-          : totalActiveDays // ignore: cast_nullable_to_non_nullable
-              as int,
-      weekStartDate: freezed == weekStartDate
-          ? _value.weekStartDate
-          : weekStartDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      weekEndDate: freezed == weekEndDate
-          ? _value.weekEndDate
-          : weekEndDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$WeeklyStatsImpl(
+        avgWorkoutsPerWeek: null == avgWorkoutsPerWeek
+            ? _value.avgWorkoutsPerWeek
+            : avgWorkoutsPerWeek // ignore: cast_nullable_to_non_nullable
+                  as double,
+        avgRestDaysPerWeek: null == avgRestDaysPerWeek
+            ? _value.avgRestDaysPerWeek
+            : avgRestDaysPerWeek // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalWorkouts: null == totalWorkouts
+            ? _value.totalWorkouts
+            : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalRestDays: null == totalRestDays
+            ? _value.totalRestDays
+            : totalRestDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalActiveDays: null == totalActiveDays
+            ? _value.totalActiveDays
+            : totalActiveDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+        weekStartDate: freezed == weekStartDate
+            ? _value.weekStartDate
+            : weekStartDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        weekEndDate: freezed == weekEndDate
+            ? _value.weekEndDate
+            : weekEndDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$WeeklyStatsImpl implements _WeeklyStats {
-  const _$WeeklyStatsImpl(
-      {this.avgWorkoutsPerWeek = 0.0,
-      this.avgRestDaysPerWeek = 0.0,
-      this.totalWorkouts = 0,
-      this.totalRestDays = 0,
-      this.totalActiveDays = 0,
-      this.weekStartDate,
-      this.weekEndDate});
+  const _$WeeklyStatsImpl({
+    this.avgWorkoutsPerWeek = 0.0,
+    this.avgRestDaysPerWeek = 0.0,
+    this.totalWorkouts = 0,
+    this.totalRestDays = 0,
+    this.totalActiveDays = 0,
+    this.weekStartDate,
+    this.weekEndDate,
+  });
 
   factory _$WeeklyStatsImpl.fromJson(Map<String, dynamic> json) =>
       _$$WeeklyStatsImplFromJson(json);
@@ -261,19 +281,22 @@ class _$WeeklyStatsImpl implements _WeeklyStats {
                 other.weekEndDate == weekEndDate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      avgWorkoutsPerWeek,
-      avgRestDaysPerWeek,
-      totalWorkouts,
-      totalRestDays,
-      totalActiveDays,
-      weekStartDate,
-      weekEndDate);
+    runtimeType,
+    avgWorkoutsPerWeek,
+    avgRestDaysPerWeek,
+    totalWorkouts,
+    totalRestDays,
+    totalActiveDays,
+    weekStartDate,
+    weekEndDate,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WeeklyStats
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WeeklyStatsImplCopyWith<_$WeeklyStatsImpl> get copyWith =>
@@ -281,55 +304,56 @@ class _$WeeklyStatsImpl implements _WeeklyStats {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WeeklyStatsImplToJson(
-      this,
-    );
+    return _$$WeeklyStatsImplToJson(this);
   }
 }
 
 abstract class _WeeklyStats implements WeeklyStats {
-  const factory _WeeklyStats(
-      {final double avgWorkoutsPerWeek,
-      final double avgRestDaysPerWeek,
-      final int totalWorkouts,
-      final int totalRestDays,
-      final int totalActiveDays,
-      final DateTime? weekStartDate,
-      final DateTime? weekEndDate}) = _$WeeklyStatsImpl;
+  const factory _WeeklyStats({
+    final double avgWorkoutsPerWeek,
+    final double avgRestDaysPerWeek,
+    final int totalWorkouts,
+    final int totalRestDays,
+    final int totalActiveDays,
+    final DateTime? weekStartDate,
+    final DateTime? weekEndDate,
+  }) = _$WeeklyStatsImpl;
 
   factory _WeeklyStats.fromJson(Map<String, dynamic> json) =
       _$WeeklyStatsImpl.fromJson;
 
-  @override
-
   /// Average workouts completed per week
-  double get avgWorkoutsPerWeek;
   @override
+  double get avgWorkoutsPerWeek;
 
   /// Average rest days per week
-  double get avgRestDaysPerWeek;
   @override
+  double get avgRestDaysPerWeek;
 
   /// Total workouts in period
-  int get totalWorkouts;
   @override
+  int get totalWorkouts;
 
   /// Total rest days in period
-  int get totalRestDays;
   @override
+  int get totalRestDays;
 
   /// Total active days (days with at least one workout)
-  int get totalActiveDays;
   @override
+  int get totalActiveDays;
 
   /// Week start date
-  DateTime? get weekStartDate;
   @override
+  DateTime? get weekStartDate;
 
   /// Week end date
-  DateTime? get weekEndDate;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get weekEndDate;
+
+  /// Create a copy of WeeklyStats
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WeeklyStatsImplCopyWith<_$WeeklyStatsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

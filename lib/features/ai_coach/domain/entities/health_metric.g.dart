@@ -43,29 +43,29 @@ const _$HealthMetricTypeEnumMap = {
 };
 
 _$HealthMetricSummaryImpl _$$HealthMetricSummaryImplFromJson(
-        Map<String, dynamic> json) =>
-    _$HealthMetricSummaryImpl(
-      metricType: $enumDecode(_$HealthMetricTypeEnumMap, json['metricType']),
-      totalValue: (json['totalValue'] as num).toDouble(),
-      averageValue: (json['averageValue'] as num).toDouble(),
-      minValue: (json['minValue'] as num).toDouble(),
-      maxValue: (json['maxValue'] as num).toDouble(),
-      dataPoints: (json['dataPoints'] as num).toInt(),
-      periodStart: DateTime.parse(json['periodStart'] as String),
-      periodEnd: DateTime.parse(json['periodEnd'] as String),
-      unit: json['unit'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$HealthMetricSummaryImpl(
+  metricType: $enumDecode(_$HealthMetricTypeEnumMap, json['metricType']),
+  totalValue: (json['totalValue'] as num).toDouble(),
+  averageValue: (json['averageValue'] as num).toDouble(),
+  minValue: (json['minValue'] as num).toDouble(),
+  maxValue: (json['maxValue'] as num).toDouble(),
+  dataPoints: (json['dataPoints'] as num).toInt(),
+  periodStart: DateTime.parse(json['periodStart'] as String),
+  periodEnd: DateTime.parse(json['periodEnd'] as String),
+  unit: json['unit'] as String,
+);
 
 Map<String, dynamic> _$$HealthMetricSummaryImplToJson(
-        _$HealthMetricSummaryImpl instance) =>
-    <String, dynamic>{
-      'metricType': _$HealthMetricTypeEnumMap[instance.metricType]!,
-      'totalValue': instance.totalValue,
-      'averageValue': instance.averageValue,
-      'minValue': instance.minValue,
-      'maxValue': instance.maxValue,
-      'dataPoints': instance.dataPoints,
-      'periodStart': instance.periodStart.toIso8601String(),
-      'periodEnd': instance.periodEnd.toIso8601String(),
-      'unit': instance.unit,
-    };
+  _$HealthMetricSummaryImpl instance,
+) => <String, dynamic>{
+  'metricType': _$HealthMetricTypeEnumMap[instance.metricType]!,
+  'totalValue': instance.totalValue,
+  'averageValue': instance.averageValue,
+  'minValue': instance.minValue,
+  'maxValue': instance.maxValue,
+  'dataPoints': instance.dataPoints,
+  'periodStart': instance.periodStart.toIso8601String(),
+  'periodEnd': instance.periodEnd.toIso8601String(),
+  'unit': instance.unit,
+};

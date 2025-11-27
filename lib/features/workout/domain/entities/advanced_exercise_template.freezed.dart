@@ -12,10 +12,12 @@ part of 'advanced_exercise_template.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AdvancedExerciseTemplate _$AdvancedExerciseTemplateFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _AdvancedExerciseTemplate.fromJson(json);
 }
 
@@ -57,38 +59,46 @@ mixin _$AdvancedExerciseTemplate {
   /// Last used timestamp
   DateTime? get lastUsedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this AdvancedExerciseTemplate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AdvancedExerciseTemplateCopyWith<AdvancedExerciseTemplate> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AdvancedExerciseTemplateCopyWith<$Res> {
-  factory $AdvancedExerciseTemplateCopyWith(AdvancedExerciseTemplate value,
-          $Res Function(AdvancedExerciseTemplate) then) =
-      _$AdvancedExerciseTemplateCopyWithImpl<$Res, AdvancedExerciseTemplate>;
+  factory $AdvancedExerciseTemplateCopyWith(
+    AdvancedExerciseTemplate value,
+    $Res Function(AdvancedExerciseTemplate) then,
+  ) = _$AdvancedExerciseTemplateCopyWithImpl<$Res, AdvancedExerciseTemplate>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      AdvancedExerciseType type,
-      AdvancedExerciseConfig config,
-      List<String> tags,
-      int usageCount,
-      bool isFavorite,
-      DateTime createdAt,
-      DateTime updatedAt,
-      DateTime? lastUsedAt});
+  $Res call({
+    String id,
+    String userId,
+    String name,
+    String? description,
+    AdvancedExerciseType type,
+    AdvancedExerciseConfig config,
+    List<String> tags,
+    int usageCount,
+    bool isFavorite,
+    DateTime createdAt,
+    DateTime updatedAt,
+    DateTime? lastUsedAt,
+  });
 
   $AdvancedExerciseConfigCopyWith<$Res> get config;
 }
 
 /// @nodoc
-class _$AdvancedExerciseTemplateCopyWithImpl<$Res,
-        $Val extends AdvancedExerciseTemplate>
+class _$AdvancedExerciseTemplateCopyWithImpl<
+  $Res,
+  $Val extends AdvancedExerciseTemplate
+>
     implements $AdvancedExerciseTemplateCopyWith<$Res> {
   _$AdvancedExerciseTemplateCopyWithImpl(this._value, this._then);
 
@@ -97,6 +107,8 @@ class _$AdvancedExerciseTemplateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -113,58 +125,63 @@ class _$AdvancedExerciseTemplateCopyWithImpl<$Res,
     Object? updatedAt = null,
     Object? lastUsedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as AdvancedExerciseType,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as AdvancedExerciseConfig,
-      tags: null == tags
-          ? _value.tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      usageCount: null == usageCount
-          ? _value.usageCount
-          : usageCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      isFavorite: null == isFavorite
-          ? _value.isFavorite
-          : isFavorite // ignore: cast_nullable_to_non_nullable
-              as bool,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastUsedAt: freezed == lastUsedAt
-          ? _value.lastUsedAt
-          : lastUsedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as AdvancedExerciseType,
+            config: null == config
+                ? _value.config
+                : config // ignore: cast_nullable_to_non_nullable
+                      as AdvancedExerciseConfig,
+            tags: null == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            usageCount: null == usageCount
+                ? _value.usageCount
+                : usageCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isFavorite: null == isFavorite
+                ? _value.isFavorite
+                : isFavorite // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            lastUsedAt: freezed == lastUsedAt
+                ? _value.lastUsedAt
+                : lastUsedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AdvancedExerciseConfigCopyWith<$Res> get config {
@@ -178,24 +195,25 @@ class _$AdvancedExerciseTemplateCopyWithImpl<$Res,
 abstract class _$$AdvancedExerciseTemplateImplCopyWith<$Res>
     implements $AdvancedExerciseTemplateCopyWith<$Res> {
   factory _$$AdvancedExerciseTemplateImplCopyWith(
-          _$AdvancedExerciseTemplateImpl value,
-          $Res Function(_$AdvancedExerciseTemplateImpl) then) =
-      __$$AdvancedExerciseTemplateImplCopyWithImpl<$Res>;
+    _$AdvancedExerciseTemplateImpl value,
+    $Res Function(_$AdvancedExerciseTemplateImpl) then,
+  ) = __$$AdvancedExerciseTemplateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      AdvancedExerciseType type,
-      AdvancedExerciseConfig config,
-      List<String> tags,
-      int usageCount,
-      bool isFavorite,
-      DateTime createdAt,
-      DateTime updatedAt,
-      DateTime? lastUsedAt});
+  $Res call({
+    String id,
+    String userId,
+    String name,
+    String? description,
+    AdvancedExerciseType type,
+    AdvancedExerciseConfig config,
+    List<String> tags,
+    int usageCount,
+    bool isFavorite,
+    DateTime createdAt,
+    DateTime updatedAt,
+    DateTime? lastUsedAt,
+  });
 
   @override
   $AdvancedExerciseConfigCopyWith<$Res> get config;
@@ -203,14 +221,19 @@ abstract class _$$AdvancedExerciseTemplateImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AdvancedExerciseTemplateImplCopyWithImpl<$Res>
-    extends _$AdvancedExerciseTemplateCopyWithImpl<$Res,
-        _$AdvancedExerciseTemplateImpl>
+    extends
+        _$AdvancedExerciseTemplateCopyWithImpl<
+          $Res,
+          _$AdvancedExerciseTemplateImpl
+        >
     implements _$$AdvancedExerciseTemplateImplCopyWith<$Res> {
   __$$AdvancedExerciseTemplateImplCopyWithImpl(
-      _$AdvancedExerciseTemplateImpl _value,
-      $Res Function(_$AdvancedExerciseTemplateImpl) _then)
-      : super(_value, _then);
+    _$AdvancedExerciseTemplateImpl _value,
+    $Res Function(_$AdvancedExerciseTemplateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -227,77 +250,79 @@ class __$$AdvancedExerciseTemplateImplCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? lastUsedAt = freezed,
   }) {
-    return _then(_$AdvancedExerciseTemplateImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as AdvancedExerciseType,
-      config: null == config
-          ? _value.config
-          : config // ignore: cast_nullable_to_non_nullable
-              as AdvancedExerciseConfig,
-      tags: null == tags
-          ? _value._tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      usageCount: null == usageCount
-          ? _value.usageCount
-          : usageCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      isFavorite: null == isFavorite
-          ? _value.isFavorite
-          : isFavorite // ignore: cast_nullable_to_non_nullable
-              as bool,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      lastUsedAt: freezed == lastUsedAt
-          ? _value.lastUsedAt
-          : lastUsedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$AdvancedExerciseTemplateImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as AdvancedExerciseType,
+        config: null == config
+            ? _value.config
+            : config // ignore: cast_nullable_to_non_nullable
+                  as AdvancedExerciseConfig,
+        tags: null == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        usageCount: null == usageCount
+            ? _value.usageCount
+            : usageCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isFavorite: null == isFavorite
+            ? _value.isFavorite
+            : isFavorite // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        lastUsedAt: freezed == lastUsedAt
+            ? _value.lastUsedAt
+            : lastUsedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AdvancedExerciseTemplateImpl extends _AdvancedExerciseTemplate {
-  const _$AdvancedExerciseTemplateImpl(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      this.description,
-      required this.type,
-      required this.config,
-      final List<String> tags = const [],
-      this.usageCount = 0,
-      this.isFavorite = false,
-      required this.createdAt,
-      required this.updatedAt,
-      this.lastUsedAt})
-      : _tags = tags,
-        super._();
+  const _$AdvancedExerciseTemplateImpl({
+    required this.id,
+    required this.userId,
+    required this.name,
+    this.description,
+    required this.type,
+    required this.config,
+    final List<String> tags = const [],
+    this.usageCount = 0,
+    this.isFavorite = false,
+    required this.createdAt,
+    required this.updatedAt,
+    this.lastUsedAt,
+  }) : _tags = tags,
+       super._();
 
   factory _$AdvancedExerciseTemplateImpl.fromJson(Map<String, dynamic> json) =>
       _$$AdvancedExerciseTemplateImplFromJson(json);
@@ -390,113 +415,120 @@ class _$AdvancedExerciseTemplateImpl extends _AdvancedExerciseTemplate {
                 other.lastUsedAt == lastUsedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      name,
-      description,
-      type,
-      config,
-      const DeepCollectionEquality().hash(_tags),
-      usageCount,
-      isFavorite,
-      createdAt,
-      updatedAt,
-      lastUsedAt);
+    runtimeType,
+    id,
+    userId,
+    name,
+    description,
+    type,
+    config,
+    const DeepCollectionEquality().hash(_tags),
+    usageCount,
+    isFavorite,
+    createdAt,
+    updatedAt,
+    lastUsedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AdvancedExerciseTemplateImplCopyWith<_$AdvancedExerciseTemplateImpl>
-      get copyWith => __$$AdvancedExerciseTemplateImplCopyWithImpl<
-          _$AdvancedExerciseTemplateImpl>(this, _$identity);
+  get copyWith =>
+      __$$AdvancedExerciseTemplateImplCopyWithImpl<
+        _$AdvancedExerciseTemplateImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AdvancedExerciseTemplateImplToJson(
-      this,
-    );
+    return _$$AdvancedExerciseTemplateImplToJson(this);
   }
 }
 
 abstract class _AdvancedExerciseTemplate extends AdvancedExerciseTemplate {
-  const factory _AdvancedExerciseTemplate(
-      {required final String id,
-      required final String userId,
-      required final String name,
-      final String? description,
-      required final AdvancedExerciseType type,
-      required final AdvancedExerciseConfig config,
-      final List<String> tags,
-      final int usageCount,
-      final bool isFavorite,
-      required final DateTime createdAt,
-      required final DateTime updatedAt,
-      final DateTime? lastUsedAt}) = _$AdvancedExerciseTemplateImpl;
+  const factory _AdvancedExerciseTemplate({
+    required final String id,
+    required final String userId,
+    required final String name,
+    final String? description,
+    required final AdvancedExerciseType type,
+    required final AdvancedExerciseConfig config,
+    final List<String> tags,
+    final int usageCount,
+    final bool isFavorite,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+    final DateTime? lastUsedAt,
+  }) = _$AdvancedExerciseTemplateImpl;
   const _AdvancedExerciseTemplate._() : super._();
 
   factory _AdvancedExerciseTemplate.fromJson(Map<String, dynamic> json) =
       _$AdvancedExerciseTemplateImpl.fromJson;
 
-  @override
-
   /// Unique template ID (UUID)
-  String get id;
   @override
+  String get id;
 
   /// User ID who owns this template
-  String get userId;
   @override
+  String get userId;
 
   /// User-defined template name
-  String get name;
   @override
+  String get name;
 
   /// Optional description
-  String? get description;
   @override
+  String? get description;
 
   /// Type of advanced exercise
-  AdvancedExerciseType get type;
   @override
+  AdvancedExerciseType get type;
 
   /// Configuration data based on type
-  AdvancedExerciseConfig get config;
   @override
+  AdvancedExerciseConfig get config;
 
   /// Tags for organization
-  List<String> get tags;
   @override
+  List<String> get tags;
 
   /// Number of times this template has been used
-  int get usageCount;
   @override
+  int get usageCount;
 
   /// Whether this is a favorite template
-  bool get isFavorite;
   @override
+  bool get isFavorite;
 
   /// Created timestamp
-  DateTime get createdAt;
   @override
+  DateTime get createdAt;
 
   /// Last modified timestamp
-  DateTime get updatedAt;
   @override
+  DateTime get updatedAt;
 
   /// Last used timestamp
-  DateTime? get lastUsedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get lastUsedAt;
+
+  /// Create a copy of AdvancedExerciseTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AdvancedExerciseTemplateImplCopyWith<_$AdvancedExerciseTemplateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 AdvancedExerciseConfig _$AdvancedExerciseConfigFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   switch (json['runtimeType']) {
     case 'superset':
       return SupersetConfig.fromJson(json);
@@ -507,10 +539,11 @@ AdvancedExerciseConfig _$AdvancedExerciseConfigFromJson(
 
     default:
       throw CheckedFromJsonException(
-          json,
-          'runtimeType',
-          'AdvancedExerciseConfig',
-          'Invalid union type "${json['runtimeType']}"!');
+        json,
+        'runtimeType',
+        'AdvancedExerciseConfig',
+        'Invalid union type "${json['runtimeType']}"!',
+      );
   }
 }
 
@@ -519,82 +552,122 @@ mixin _$AdvancedExerciseConfig {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            List<String> exerciseNames,
-            List<String> exerciseIds,
-            int targetSets,
-            int restBetweenExercises,
-            int restBetweenRounds)
-        superset,
-    required TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)
-        dropSet,
-    required TResult Function(String exerciseName, String exerciseId,
-            int miniSets, int restDuration, int? targetReps)
-        restPause,
-  }) =>
-      throw _privateConstructorUsedError;
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )
+    superset,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )
+    dropSet,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )
+    restPause,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult? Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult? Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
-  }) =>
-      throw _privateConstructorUsedError;
+    TResult? Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(SupersetConfig value) superset,
     required TResult Function(DropSetConfig value) dropSet,
     required TResult Function(RestPauseConfig value) restPause,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(SupersetConfig value)? superset,
     TResult? Function(DropSetConfig value)? dropSet,
     TResult? Function(RestPauseConfig value)? restPause,
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(SupersetConfig value)? superset,
     TResult Function(DropSetConfig value)? dropSet,
     TResult Function(RestPauseConfig value)? restPause,
     required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  }) => throw _privateConstructorUsedError;
+
+  /// Serializes this AdvancedExerciseConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AdvancedExerciseConfigCopyWith<$Res> {
-  factory $AdvancedExerciseConfigCopyWith(AdvancedExerciseConfig value,
-          $Res Function(AdvancedExerciseConfig) then) =
-      _$AdvancedExerciseConfigCopyWithImpl<$Res, AdvancedExerciseConfig>;
+  factory $AdvancedExerciseConfigCopyWith(
+    AdvancedExerciseConfig value,
+    $Res Function(AdvancedExerciseConfig) then,
+  ) = _$AdvancedExerciseConfigCopyWithImpl<$Res, AdvancedExerciseConfig>;
 }
 
 /// @nodoc
-class _$AdvancedExerciseConfigCopyWithImpl<$Res,
-        $Val extends AdvancedExerciseConfig>
+class _$AdvancedExerciseConfigCopyWithImpl<
+  $Res,
+  $Val extends AdvancedExerciseConfig
+>
     implements $AdvancedExerciseConfigCopyWith<$Res> {
   _$AdvancedExerciseConfigCopyWithImpl(this._value, this._then);
 
@@ -602,20 +675,25 @@ class _$AdvancedExerciseConfigCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 abstract class _$$SupersetConfigImplCopyWith<$Res> {
-  factory _$$SupersetConfigImplCopyWith(_$SupersetConfigImpl value,
-          $Res Function(_$SupersetConfigImpl) then) =
-      __$$SupersetConfigImplCopyWithImpl<$Res>;
+  factory _$$SupersetConfigImplCopyWith(
+    _$SupersetConfigImpl value,
+    $Res Function(_$SupersetConfigImpl) then,
+  ) = __$$SupersetConfigImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {List<String> exerciseNames,
-      List<String> exerciseIds,
-      int targetSets,
-      int restBetweenExercises,
-      int restBetweenRounds});
+  $Res call({
+    List<String> exerciseNames,
+    List<String> exerciseIds,
+    int targetSets,
+    int restBetweenExercises,
+    int restBetweenRounds,
+  });
 }
 
 /// @nodoc
@@ -623,9 +701,12 @@ class __$$SupersetConfigImplCopyWithImpl<$Res>
     extends _$AdvancedExerciseConfigCopyWithImpl<$Res, _$SupersetConfigImpl>
     implements _$$SupersetConfigImplCopyWith<$Res> {
   __$$SupersetConfigImplCopyWithImpl(
-      _$SupersetConfigImpl _value, $Res Function(_$SupersetConfigImpl) _then)
-      : super(_value, _then);
+    _$SupersetConfigImpl _value,
+    $Res Function(_$SupersetConfigImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -635,44 +716,46 @@ class __$$SupersetConfigImplCopyWithImpl<$Res>
     Object? restBetweenExercises = null,
     Object? restBetweenRounds = null,
   }) {
-    return _then(_$SupersetConfigImpl(
-      exerciseNames: null == exerciseNames
-          ? _value._exerciseNames
-          : exerciseNames // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      exerciseIds: null == exerciseIds
-          ? _value._exerciseIds
-          : exerciseIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      targetSets: null == targetSets
-          ? _value.targetSets
-          : targetSets // ignore: cast_nullable_to_non_nullable
-              as int,
-      restBetweenExercises: null == restBetweenExercises
-          ? _value.restBetweenExercises
-          : restBetweenExercises // ignore: cast_nullable_to_non_nullable
-              as int,
-      restBetweenRounds: null == restBetweenRounds
-          ? _value.restBetweenRounds
-          : restBetweenRounds // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$SupersetConfigImpl(
+        exerciseNames: null == exerciseNames
+            ? _value._exerciseNames
+            : exerciseNames // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        exerciseIds: null == exerciseIds
+            ? _value._exerciseIds
+            : exerciseIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        targetSets: null == targetSets
+            ? _value.targetSets
+            : targetSets // ignore: cast_nullable_to_non_nullable
+                  as int,
+        restBetweenExercises: null == restBetweenExercises
+            ? _value.restBetweenExercises
+            : restBetweenExercises // ignore: cast_nullable_to_non_nullable
+                  as int,
+        restBetweenRounds: null == restBetweenRounds
+            ? _value.restBetweenRounds
+            : restBetweenRounds // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SupersetConfigImpl implements SupersetConfig {
-  const _$SupersetConfigImpl(
-      {required final List<String> exerciseNames,
-      required final List<String> exerciseIds,
-      required this.targetSets,
-      this.restBetweenExercises = 0,
-      this.restBetweenRounds = 90,
-      final String? $type})
-      : _exerciseNames = exerciseNames,
-        _exerciseIds = exerciseIds,
-        $type = $type ?? 'superset';
+  const _$SupersetConfigImpl({
+    required final List<String> exerciseNames,
+    required final List<String> exerciseIds,
+    required this.targetSets,
+    this.restBetweenExercises = 0,
+    this.restBetweenRounds = 90,
+    final String? $type,
+  }) : _exerciseNames = exerciseNames,
+       _exerciseIds = exerciseIds,
+       $type = $type ?? 'superset';
 
   factory _$SupersetConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$SupersetConfigImplFromJson(json);
@@ -715,10 +798,14 @@ class _$SupersetConfigImpl implements SupersetConfig {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SupersetConfigImpl &&
-            const DeepCollectionEquality()
-                .equals(other._exerciseNames, _exerciseNames) &&
-            const DeepCollectionEquality()
-                .equals(other._exerciseIds, _exerciseIds) &&
+            const DeepCollectionEquality().equals(
+              other._exerciseNames,
+              _exerciseNames,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._exerciseIds,
+              _exerciseIds,
+            ) &&
             (identical(other.targetSets, targetSets) ||
                 other.targetSets == targetSets) &&
             (identical(other.restBetweenExercises, restBetweenExercises) ||
@@ -727,78 +814,139 @@ class _$SupersetConfigImpl implements SupersetConfig {
                 other.restBetweenRounds == restBetweenRounds));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_exerciseNames),
-      const DeepCollectionEquality().hash(_exerciseIds),
-      targetSets,
-      restBetweenExercises,
-      restBetweenRounds);
+    runtimeType,
+    const DeepCollectionEquality().hash(_exerciseNames),
+    const DeepCollectionEquality().hash(_exerciseIds),
+    targetSets,
+    restBetweenExercises,
+    restBetweenRounds,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SupersetConfigImplCopyWith<_$SupersetConfigImpl> get copyWith =>
       __$$SupersetConfigImplCopyWithImpl<_$SupersetConfigImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            List<String> exerciseNames,
-            List<String> exerciseIds,
-            int targetSets,
-            int restBetweenExercises,
-            int restBetweenRounds)
-        superset,
-    required TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)
-        dropSet,
-    required TResult Function(String exerciseName, String exerciseId,
-            int miniSets, int restDuration, int? targetReps)
-        restPause,
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )
+    superset,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )
+    dropSet,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )
+    restPause,
   }) {
-    return superset(exerciseNames, exerciseIds, targetSets,
-        restBetweenExercises, restBetweenRounds);
+    return superset(
+      exerciseNames,
+      exerciseIds,
+      targetSets,
+      restBetweenExercises,
+      restBetweenRounds,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult? Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult? Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult? Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
   }) {
-    return superset?.call(exerciseNames, exerciseIds, targetSets,
-        restBetweenExercises, restBetweenRounds);
+    return superset?.call(
+      exerciseNames,
+      exerciseIds,
+      targetSets,
+      restBetweenExercises,
+      restBetweenRounds,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
     required TResult orElse(),
   }) {
     if (superset != null) {
-      return superset(exerciseNames, exerciseIds, targetSets,
-          restBetweenExercises, restBetweenRounds);
+      return superset(
+        exerciseNames,
+        exerciseIds,
+        targetSets,
+        restBetweenExercises,
+        restBetweenRounds,
+      );
     }
     return orElse();
   }
@@ -839,19 +987,18 @@ class _$SupersetConfigImpl implements SupersetConfig {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SupersetConfigImplToJson(
-      this,
-    );
+    return _$$SupersetConfigImplToJson(this);
   }
 }
 
 abstract class SupersetConfig implements AdvancedExerciseConfig {
-  const factory SupersetConfig(
-      {required final List<String> exerciseNames,
-      required final List<String> exerciseIds,
-      required final int targetSets,
-      final int restBetweenExercises,
-      final int restBetweenRounds}) = _$SupersetConfigImpl;
+  const factory SupersetConfig({
+    required final List<String> exerciseNames,
+    required final List<String> exerciseIds,
+    required final int targetSets,
+    final int restBetweenExercises,
+    final int restBetweenRounds,
+  }) = _$SupersetConfigImpl;
 
   factory SupersetConfig.fromJson(Map<String, dynamic> json) =
       _$SupersetConfigImpl.fromJson;
@@ -861,7 +1008,10 @@ abstract class SupersetConfig implements AdvancedExerciseConfig {
   int get targetSets;
   int get restBetweenExercises;
   int get restBetweenRounds;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SupersetConfigImplCopyWith<_$SupersetConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -869,15 +1019,17 @@ abstract class SupersetConfig implements AdvancedExerciseConfig {
 /// @nodoc
 abstract class _$$DropSetConfigImplCopyWith<$Res> {
   factory _$$DropSetConfigImplCopyWith(
-          _$DropSetConfigImpl value, $Res Function(_$DropSetConfigImpl) then) =
-      __$$DropSetConfigImplCopyWithImpl<$Res>;
+    _$DropSetConfigImpl value,
+    $Res Function(_$DropSetConfigImpl) then,
+  ) = __$$DropSetConfigImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      String exerciseId,
-      int drops,
-      List<double> percentageDrops,
-      int restBetweenDrops});
+  $Res call({
+    String exerciseName,
+    String exerciseId,
+    int drops,
+    List<double> percentageDrops,
+    int restBetweenDrops,
+  });
 }
 
 /// @nodoc
@@ -885,9 +1037,12 @@ class __$$DropSetConfigImplCopyWithImpl<$Res>
     extends _$AdvancedExerciseConfigCopyWithImpl<$Res, _$DropSetConfigImpl>
     implements _$$DropSetConfigImplCopyWith<$Res> {
   __$$DropSetConfigImplCopyWithImpl(
-      _$DropSetConfigImpl _value, $Res Function(_$DropSetConfigImpl) _then)
-      : super(_value, _then);
+    _$DropSetConfigImpl _value,
+    $Res Function(_$DropSetConfigImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -897,43 +1052,45 @@ class __$$DropSetConfigImplCopyWithImpl<$Res>
     Object? percentageDrops = null,
     Object? restBetweenDrops = null,
   }) {
-    return _then(_$DropSetConfigImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      drops: null == drops
-          ? _value.drops
-          : drops // ignore: cast_nullable_to_non_nullable
-              as int,
-      percentageDrops: null == percentageDrops
-          ? _value._percentageDrops
-          : percentageDrops // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      restBetweenDrops: null == restBetweenDrops
-          ? _value.restBetweenDrops
-          : restBetweenDrops // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$DropSetConfigImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        drops: null == drops
+            ? _value.drops
+            : drops // ignore: cast_nullable_to_non_nullable
+                  as int,
+        percentageDrops: null == percentageDrops
+            ? _value._percentageDrops
+            : percentageDrops // ignore: cast_nullable_to_non_nullable
+                  as List<double>,
+        restBetweenDrops: null == restBetweenDrops
+            ? _value.restBetweenDrops
+            : restBetweenDrops // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DropSetConfigImpl implements DropSetConfig {
-  const _$DropSetConfigImpl(
-      {required this.exerciseName,
-      required this.exerciseId,
-      required this.drops,
-      required final List<double> percentageDrops,
-      this.restBetweenDrops = 0,
-      final String? $type})
-      : _percentageDrops = percentageDrops,
-        $type = $type ?? 'dropSet';
+  const _$DropSetConfigImpl({
+    required this.exerciseName,
+    required this.exerciseId,
+    required this.drops,
+    required final List<double> percentageDrops,
+    this.restBetweenDrops = 0,
+    final String? $type,
+  }) : _percentageDrops = percentageDrops,
+       $type = $type ?? 'dropSet';
 
   factory _$DropSetConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$DropSetConfigImplFromJson(json);
@@ -974,18 +1131,28 @@ class _$DropSetConfigImpl implements DropSetConfig {
             (identical(other.exerciseId, exerciseId) ||
                 other.exerciseId == exerciseId) &&
             (identical(other.drops, drops) || other.drops == drops) &&
-            const DeepCollectionEquality()
-                .equals(other._percentageDrops, _percentageDrops) &&
+            const DeepCollectionEquality().equals(
+              other._percentageDrops,
+              _percentageDrops,
+            ) &&
             (identical(other.restBetweenDrops, restBetweenDrops) ||
                 other.restBetweenDrops == restBetweenDrops));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, exerciseId, drops,
-      const DeepCollectionEquality().hash(_percentageDrops), restBetweenDrops);
+  int get hashCode => Object.hash(
+    runtimeType,
+    exerciseName,
+    exerciseId,
+    drops,
+    const DeepCollectionEquality().hash(_percentageDrops),
+    restBetweenDrops,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DropSetConfigImplCopyWith<_$DropSetConfigImpl> get copyWith =>
@@ -995,57 +1162,113 @@ class _$DropSetConfigImpl implements DropSetConfig {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            List<String> exerciseNames,
-            List<String> exerciseIds,
-            int targetSets,
-            int restBetweenExercises,
-            int restBetweenRounds)
-        superset,
-    required TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)
-        dropSet,
-    required TResult Function(String exerciseName, String exerciseId,
-            int miniSets, int restDuration, int? targetReps)
-        restPause,
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )
+    superset,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )
+    dropSet,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )
+    restPause,
   }) {
     return dropSet(
-        exerciseName, exerciseId, drops, percentageDrops, restBetweenDrops);
+      exerciseName,
+      exerciseId,
+      drops,
+      percentageDrops,
+      restBetweenDrops,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult? Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult? Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult? Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
   }) {
     return dropSet?.call(
-        exerciseName, exerciseId, drops, percentageDrops, restBetweenDrops);
+      exerciseName,
+      exerciseId,
+      drops,
+      percentageDrops,
+      restBetweenDrops,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
     required TResult orElse(),
   }) {
     if (dropSet != null) {
       return dropSet(
-          exerciseName, exerciseId, drops, percentageDrops, restBetweenDrops);
+        exerciseName,
+        exerciseId,
+        drops,
+        percentageDrops,
+        restBetweenDrops,
+      );
     }
     return orElse();
   }
@@ -1086,19 +1309,18 @@ class _$DropSetConfigImpl implements DropSetConfig {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DropSetConfigImplToJson(
-      this,
-    );
+    return _$$DropSetConfigImplToJson(this);
   }
 }
 
 abstract class DropSetConfig implements AdvancedExerciseConfig {
-  const factory DropSetConfig(
-      {required final String exerciseName,
-      required final String exerciseId,
-      required final int drops,
-      required final List<double> percentageDrops,
-      final int restBetweenDrops}) = _$DropSetConfigImpl;
+  const factory DropSetConfig({
+    required final String exerciseName,
+    required final String exerciseId,
+    required final int drops,
+    required final List<double> percentageDrops,
+    final int restBetweenDrops,
+  }) = _$DropSetConfigImpl;
 
   factory DropSetConfig.fromJson(Map<String, dynamic> json) =
       _$DropSetConfigImpl.fromJson;
@@ -1108,23 +1330,28 @@ abstract class DropSetConfig implements AdvancedExerciseConfig {
   int get drops;
   List<double> get percentageDrops;
   int get restBetweenDrops;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DropSetConfigImplCopyWith<_$DropSetConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class _$$RestPauseConfigImplCopyWith<$Res> {
-  factory _$$RestPauseConfigImplCopyWith(_$RestPauseConfigImpl value,
-          $Res Function(_$RestPauseConfigImpl) then) =
-      __$$RestPauseConfigImplCopyWithImpl<$Res>;
+  factory _$$RestPauseConfigImplCopyWith(
+    _$RestPauseConfigImpl value,
+    $Res Function(_$RestPauseConfigImpl) then,
+  ) = __$$RestPauseConfigImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      String exerciseId,
-      int miniSets,
-      int restDuration,
-      int? targetReps});
+  $Res call({
+    String exerciseName,
+    String exerciseId,
+    int miniSets,
+    int restDuration,
+    int? targetReps,
+  });
 }
 
 /// @nodoc
@@ -1132,9 +1359,12 @@ class __$$RestPauseConfigImplCopyWithImpl<$Res>
     extends _$AdvancedExerciseConfigCopyWithImpl<$Res, _$RestPauseConfigImpl>
     implements _$$RestPauseConfigImplCopyWith<$Res> {
   __$$RestPauseConfigImplCopyWithImpl(
-      _$RestPauseConfigImpl _value, $Res Function(_$RestPauseConfigImpl) _then)
-      : super(_value, _then);
+    _$RestPauseConfigImpl _value,
+    $Res Function(_$RestPauseConfigImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1144,42 +1374,44 @@ class __$$RestPauseConfigImplCopyWithImpl<$Res>
     Object? restDuration = null,
     Object? targetReps = freezed,
   }) {
-    return _then(_$RestPauseConfigImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      miniSets: null == miniSets
-          ? _value.miniSets
-          : miniSets // ignore: cast_nullable_to_non_nullable
-              as int,
-      restDuration: null == restDuration
-          ? _value.restDuration
-          : restDuration // ignore: cast_nullable_to_non_nullable
-              as int,
-      targetReps: freezed == targetReps
-          ? _value.targetReps
-          : targetReps // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$RestPauseConfigImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        miniSets: null == miniSets
+            ? _value.miniSets
+            : miniSets // ignore: cast_nullable_to_non_nullable
+                  as int,
+        restDuration: null == restDuration
+            ? _value.restDuration
+            : restDuration // ignore: cast_nullable_to_non_nullable
+                  as int,
+        targetReps: freezed == targetReps
+            ? _value.targetReps
+            : targetReps // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RestPauseConfigImpl implements RestPauseConfig {
-  const _$RestPauseConfigImpl(
-      {required this.exerciseName,
-      required this.exerciseId,
-      required this.miniSets,
-      this.restDuration = 15,
-      this.targetReps,
-      final String? $type})
-      : $type = $type ?? 'restPause';
+  const _$RestPauseConfigImpl({
+    required this.exerciseName,
+    required this.exerciseId,
+    required this.miniSets,
+    this.restDuration = 15,
+    this.targetReps,
+    final String? $type,
+  }) : $type = $type ?? 'restPause';
 
   factory _$RestPauseConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$RestPauseConfigImplFromJson(json);
@@ -1221,73 +1453,139 @@ class _$RestPauseConfigImpl implements RestPauseConfig {
                 other.targetReps == targetReps));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, exerciseId,
-      miniSets, restDuration, targetReps);
+  int get hashCode => Object.hash(
+    runtimeType,
+    exerciseName,
+    exerciseId,
+    miniSets,
+    restDuration,
+    targetReps,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RestPauseConfigImplCopyWith<_$RestPauseConfigImpl> get copyWith =>
       __$$RestPauseConfigImplCopyWithImpl<_$RestPauseConfigImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            List<String> exerciseNames,
-            List<String> exerciseIds,
-            int targetSets,
-            int restBetweenExercises,
-            int restBetweenRounds)
-        superset,
-    required TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)
-        dropSet,
-    required TResult Function(String exerciseName, String exerciseId,
-            int miniSets, int restDuration, int? targetReps)
-        restPause,
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )
+    superset,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )
+    dropSet,
+    required TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )
+    restPause,
   }) {
     return restPause(
-        exerciseName, exerciseId, miniSets, restDuration, targetReps);
+      exerciseName,
+      exerciseId,
+      miniSets,
+      restDuration,
+      targetReps,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult? Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult? Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult? Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult? Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
   }) {
     return restPause?.call(
-        exerciseName, exerciseId, miniSets, restDuration, targetReps);
+      exerciseName,
+      exerciseId,
+      miniSets,
+      restDuration,
+      targetReps,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<String> exerciseNames, List<String> exerciseIds,
-            int targetSets, int restBetweenExercises, int restBetweenRounds)?
-        superset,
-    TResult Function(String exerciseName, String exerciseId, int drops,
-            List<double> percentageDrops, int restBetweenDrops)?
-        dropSet,
-    TResult Function(String exerciseName, String exerciseId, int miniSets,
-            int restDuration, int? targetReps)?
-        restPause,
+    TResult Function(
+      List<String> exerciseNames,
+      List<String> exerciseIds,
+      int targetSets,
+      int restBetweenExercises,
+      int restBetweenRounds,
+    )?
+    superset,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int drops,
+      List<double> percentageDrops,
+      int restBetweenDrops,
+    )?
+    dropSet,
+    TResult Function(
+      String exerciseName,
+      String exerciseId,
+      int miniSets,
+      int restDuration,
+      int? targetReps,
+    )?
+    restPause,
     required TResult orElse(),
   }) {
     if (restPause != null) {
       return restPause(
-          exerciseName, exerciseId, miniSets, restDuration, targetReps);
+        exerciseName,
+        exerciseId,
+        miniSets,
+        restDuration,
+        targetReps,
+      );
     }
     return orElse();
   }
@@ -1328,19 +1626,18 @@ class _$RestPauseConfigImpl implements RestPauseConfig {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RestPauseConfigImplToJson(
-      this,
-    );
+    return _$$RestPauseConfigImplToJson(this);
   }
 }
 
 abstract class RestPauseConfig implements AdvancedExerciseConfig {
-  const factory RestPauseConfig(
-      {required final String exerciseName,
-      required final String exerciseId,
-      required final int miniSets,
-      final int restDuration,
-      final int? targetReps}) = _$RestPauseConfigImpl;
+  const factory RestPauseConfig({
+    required final String exerciseName,
+    required final String exerciseId,
+    required final int miniSets,
+    final int restDuration,
+    final int? targetReps,
+  }) = _$RestPauseConfigImpl;
 
   factory RestPauseConfig.fromJson(Map<String, dynamic> json) =
       _$RestPauseConfigImpl.fromJson;
@@ -1350,7 +1647,10 @@ abstract class RestPauseConfig implements AdvancedExerciseConfig {
   int get miniSets;
   int get restDuration;
   int? get targetReps;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AdvancedExerciseConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RestPauseConfigImplCopyWith<_$RestPauseConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

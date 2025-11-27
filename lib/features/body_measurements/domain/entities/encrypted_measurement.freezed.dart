@@ -12,7 +12,8 @@ part of 'encrypted_measurement.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 EncryptedMeasurement _$EncryptedMeasurementFromJson(Map<String, dynamic> json) {
   return _EncryptedMeasurement.fromJson(json);
@@ -69,33 +70,41 @@ mixin _$EncryptedMeasurement {
   /// When this encrypted measurement was last updated
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this EncryptedMeasurement to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EncryptedMeasurement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EncryptedMeasurementCopyWith<EncryptedMeasurement> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EncryptedMeasurementCopyWith<$Res> {
-  factory $EncryptedMeasurementCopyWith(EncryptedMeasurement value,
-          $Res Function(EncryptedMeasurement) then) =
-      _$EncryptedMeasurementCopyWithImpl<$Res, EncryptedMeasurement>;
+  factory $EncryptedMeasurementCopyWith(
+    EncryptedMeasurement value,
+    $Res Function(EncryptedMeasurement) then,
+  ) = _$EncryptedMeasurementCopyWithImpl<$Res, EncryptedMeasurement>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String metricType,
-      String encryptedData,
-      String iv,
-      String tag,
-      DateTime timestamp,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String userId,
+    String metricType,
+    String encryptedData,
+    String iv,
+    String tag,
+    DateTime timestamp,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
-class _$EncryptedMeasurementCopyWithImpl<$Res,
-        $Val extends EncryptedMeasurement>
+class _$EncryptedMeasurementCopyWithImpl<
+  $Res,
+  $Val extends EncryptedMeasurement
+>
     implements $EncryptedMeasurementCopyWith<$Res> {
   _$EncryptedMeasurementCopyWithImpl(this._value, this._then);
 
@@ -104,6 +113,8 @@ class _$EncryptedMeasurementCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EncryptedMeasurement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,75 +128,83 @@ class _$EncryptedMeasurementCopyWithImpl<$Res,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      metricType: null == metricType
-          ? _value.metricType
-          : metricType // ignore: cast_nullable_to_non_nullable
-              as String,
-      encryptedData: null == encryptedData
-          ? _value.encryptedData
-          : encryptedData // ignore: cast_nullable_to_non_nullable
-              as String,
-      iv: null == iv
-          ? _value.iv
-          : iv // ignore: cast_nullable_to_non_nullable
-              as String,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            metricType: null == metricType
+                ? _value.metricType
+                : metricType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            encryptedData: null == encryptedData
+                ? _value.encryptedData
+                : encryptedData // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iv: null == iv
+                ? _value.iv
+                : iv // ignore: cast_nullable_to_non_nullable
+                      as String,
+            tag: null == tag
+                ? _value.tag
+                : tag // ignore: cast_nullable_to_non_nullable
+                      as String,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EncryptedMeasurementImplCopyWith<$Res>
     implements $EncryptedMeasurementCopyWith<$Res> {
-  factory _$$EncryptedMeasurementImplCopyWith(_$EncryptedMeasurementImpl value,
-          $Res Function(_$EncryptedMeasurementImpl) then) =
-      __$$EncryptedMeasurementImplCopyWithImpl<$Res>;
+  factory _$$EncryptedMeasurementImplCopyWith(
+    _$EncryptedMeasurementImpl value,
+    $Res Function(_$EncryptedMeasurementImpl) then,
+  ) = __$$EncryptedMeasurementImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String metricType,
-      String encryptedData,
-      String iv,
-      String tag,
-      DateTime timestamp,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String userId,
+    String metricType,
+    String encryptedData,
+    String iv,
+    String tag,
+    DateTime timestamp,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
 class __$$EncryptedMeasurementImplCopyWithImpl<$Res>
     extends _$EncryptedMeasurementCopyWithImpl<$Res, _$EncryptedMeasurementImpl>
     implements _$$EncryptedMeasurementImplCopyWith<$Res> {
-  __$$EncryptedMeasurementImplCopyWithImpl(_$EncryptedMeasurementImpl _value,
-      $Res Function(_$EncryptedMeasurementImpl) _then)
-      : super(_value, _then);
+  __$$EncryptedMeasurementImplCopyWithImpl(
+    _$EncryptedMeasurementImpl _value,
+    $Res Function(_$EncryptedMeasurementImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of EncryptedMeasurement
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -199,60 +218,63 @@ class __$$EncryptedMeasurementImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$EncryptedMeasurementImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      metricType: null == metricType
-          ? _value.metricType
-          : metricType // ignore: cast_nullable_to_non_nullable
-              as String,
-      encryptedData: null == encryptedData
-          ? _value.encryptedData
-          : encryptedData // ignore: cast_nullable_to_non_nullable
-              as String,
-      iv: null == iv
-          ? _value.iv
-          : iv // ignore: cast_nullable_to_non_nullable
-              as String,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$EncryptedMeasurementImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        metricType: null == metricType
+            ? _value.metricType
+            : metricType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        encryptedData: null == encryptedData
+            ? _value.encryptedData
+            : encryptedData // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iv: null == iv
+            ? _value.iv
+            : iv // ignore: cast_nullable_to_non_nullable
+                  as String,
+        tag: null == tag
+            ? _value.tag
+            : tag // ignore: cast_nullable_to_non_nullable
+                  as String,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EncryptedMeasurementImpl implements _EncryptedMeasurement {
-  const _$EncryptedMeasurementImpl(
-      {required this.id,
-      required this.userId,
-      required this.metricType,
-      required this.encryptedData,
-      required this.iv,
-      required this.tag,
-      required this.timestamp,
-      this.createdAt,
-      this.updatedAt});
+  const _$EncryptedMeasurementImpl({
+    required this.id,
+    required this.userId,
+    required this.metricType,
+    required this.encryptedData,
+    required this.iv,
+    required this.tag,
+    required this.timestamp,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory _$EncryptedMeasurementImpl.fromJson(Map<String, dynamic> json) =>
       _$$EncryptedMeasurementImplFromJson(json);
@@ -341,58 +363,69 @@ class _$EncryptedMeasurementImpl implements _EncryptedMeasurement {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, metricType,
-      encryptedData, iv, tag, timestamp, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    metricType,
+    encryptedData,
+    iv,
+    tag,
+    timestamp,
+    createdAt,
+    updatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EncryptedMeasurement
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EncryptedMeasurementImplCopyWith<_$EncryptedMeasurementImpl>
-      get copyWith =>
-          __$$EncryptedMeasurementImplCopyWithImpl<_$EncryptedMeasurementImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$EncryptedMeasurementImplCopyWithImpl<_$EncryptedMeasurementImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EncryptedMeasurementImplToJson(
-      this,
-    );
+    return _$$EncryptedMeasurementImplToJson(this);
   }
 }
 
 abstract class _EncryptedMeasurement implements EncryptedMeasurement {
-  const factory _EncryptedMeasurement(
-      {required final String id,
-      required final String userId,
-      required final String metricType,
-      required final String encryptedData,
-      required final String iv,
-      required final String tag,
-      required final DateTime timestamp,
-      final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$EncryptedMeasurementImpl;
+  const factory _EncryptedMeasurement({
+    required final String id,
+    required final String userId,
+    required final String metricType,
+    required final String encryptedData,
+    required final String iv,
+    required final String tag,
+    required final DateTime timestamp,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
+  }) = _$EncryptedMeasurementImpl;
 
   factory _EncryptedMeasurement.fromJson(Map<String, dynamic> json) =
       _$EncryptedMeasurementImpl.fromJson;
 
-  @override
-
   /// Measurement ID (same as original Measurement.id)
-  String get id;
   @override
+  String get id;
 
   /// User ID (Firebase Auth UID)
-  String get userId;
   @override
+  String get userId;
 
   /// Metric type (stored unencrypted for querying)
   ///
   /// **Note**: MetricType is NOT sensitive PII, safe to store unencrypted.
   /// Allows efficient Firestore queries: "Get all weight measurements"
-  String get metricType;
   @override
+  String get metricType;
 
   /// Encrypted measurement data (base64 encoded)
   ///
@@ -405,40 +438,44 @@ abstract class _EncryptedMeasurement implements EncryptedMeasurement {
   ///   "source": "manual"
   /// }
   /// ```
-  String get encryptedData;
   @override
+  String get encryptedData;
 
   /// Initialization Vector (base64 encoded)
   ///
   /// **IV**: Randomly generated 12 bytes for AES-GCM.
   /// Must be unique per encryption operation (never reuse with same key).
-  String get iv;
   @override
+  String get iv;
 
   /// Authentication tag (base64 encoded)
   ///
   /// **Tag**: 16-byte GCM tag for data integrity verification.
   /// Prevents tampering (decryption fails if data modified).
-  String get tag;
   @override
+  String get tag;
 
   /// Timestamp (stored unencrypted for sorting/filtering)
   ///
   /// **Note**: Timestamp is NOT sensitive PII, safe to store unencrypted.
   /// Allows efficient queries: "Get measurements from last 30 days"
-  DateTime get timestamp;
   @override
+  DateTime get timestamp;
 
   /// When this encrypted measurement was created
-  DateTime? get createdAt;
   @override
+  DateTime? get createdAt;
 
   /// When this encrypted measurement was last updated
-  DateTime? get updatedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get updatedAt;
+
+  /// Create a copy of EncryptedMeasurement
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EncryptedMeasurementImplCopyWith<_$EncryptedMeasurementImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EncryptionMetadata _$EncryptionMetadataFromJson(Map<String, dynamic> json) {
@@ -470,8 +507,12 @@ mixin _$EncryptionMetadata {
   /// Example: "PBKDF2-SHA256" for password-derived keys
   String? get keyDerivationFunction => throw _privateConstructorUsedError;
 
+  /// Serializes this EncryptionMetadata to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EncryptionMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EncryptionMetadataCopyWith<EncryptionMetadata> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -479,16 +520,18 @@ mixin _$EncryptionMetadata {
 /// @nodoc
 abstract class $EncryptionMetadataCopyWith<$Res> {
   factory $EncryptionMetadataCopyWith(
-          EncryptionMetadata value, $Res Function(EncryptionMetadata) then) =
-      _$EncryptionMetadataCopyWithImpl<$Res, EncryptionMetadata>;
+    EncryptionMetadata value,
+    $Res Function(EncryptionMetadata) then,
+  ) = _$EncryptionMetadataCopyWithImpl<$Res, EncryptionMetadata>;
   @useResult
-  $Res call(
-      {int keyVersion,
-      DateTime keyGeneratedAt,
-      DateTime? keyLastRotated,
-      DateTime? keyRotationScheduled,
-      String algorithm,
-      String? keyDerivationFunction});
+  $Res call({
+    int keyVersion,
+    DateTime keyGeneratedAt,
+    DateTime? keyLastRotated,
+    DateTime? keyRotationScheduled,
+    String algorithm,
+    String? keyDerivationFunction,
+  });
 }
 
 /// @nodoc
@@ -501,6 +544,8 @@ class _$EncryptionMetadataCopyWithImpl<$Res, $Val extends EncryptionMetadata>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EncryptionMetadata
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -511,60 +556,68 @@ class _$EncryptionMetadataCopyWithImpl<$Res, $Val extends EncryptionMetadata>
     Object? algorithm = null,
     Object? keyDerivationFunction = freezed,
   }) {
-    return _then(_value.copyWith(
-      keyVersion: null == keyVersion
-          ? _value.keyVersion
-          : keyVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      keyGeneratedAt: null == keyGeneratedAt
-          ? _value.keyGeneratedAt
-          : keyGeneratedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      keyLastRotated: freezed == keyLastRotated
-          ? _value.keyLastRotated
-          : keyLastRotated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      keyRotationScheduled: freezed == keyRotationScheduled
-          ? _value.keyRotationScheduled
-          : keyRotationScheduled // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      algorithm: null == algorithm
-          ? _value.algorithm
-          : algorithm // ignore: cast_nullable_to_non_nullable
-              as String,
-      keyDerivationFunction: freezed == keyDerivationFunction
-          ? _value.keyDerivationFunction
-          : keyDerivationFunction // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            keyVersion: null == keyVersion
+                ? _value.keyVersion
+                : keyVersion // ignore: cast_nullable_to_non_nullable
+                      as int,
+            keyGeneratedAt: null == keyGeneratedAt
+                ? _value.keyGeneratedAt
+                : keyGeneratedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            keyLastRotated: freezed == keyLastRotated
+                ? _value.keyLastRotated
+                : keyLastRotated // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            keyRotationScheduled: freezed == keyRotationScheduled
+                ? _value.keyRotationScheduled
+                : keyRotationScheduled // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            algorithm: null == algorithm
+                ? _value.algorithm
+                : algorithm // ignore: cast_nullable_to_non_nullable
+                      as String,
+            keyDerivationFunction: freezed == keyDerivationFunction
+                ? _value.keyDerivationFunction
+                : keyDerivationFunction // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EncryptionMetadataImplCopyWith<$Res>
     implements $EncryptionMetadataCopyWith<$Res> {
-  factory _$$EncryptionMetadataImplCopyWith(_$EncryptionMetadataImpl value,
-          $Res Function(_$EncryptionMetadataImpl) then) =
-      __$$EncryptionMetadataImplCopyWithImpl<$Res>;
+  factory _$$EncryptionMetadataImplCopyWith(
+    _$EncryptionMetadataImpl value,
+    $Res Function(_$EncryptionMetadataImpl) then,
+  ) = __$$EncryptionMetadataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int keyVersion,
-      DateTime keyGeneratedAt,
-      DateTime? keyLastRotated,
-      DateTime? keyRotationScheduled,
-      String algorithm,
-      String? keyDerivationFunction});
+  $Res call({
+    int keyVersion,
+    DateTime keyGeneratedAt,
+    DateTime? keyLastRotated,
+    DateTime? keyRotationScheduled,
+    String algorithm,
+    String? keyDerivationFunction,
+  });
 }
 
 /// @nodoc
 class __$$EncryptionMetadataImplCopyWithImpl<$Res>
     extends _$EncryptionMetadataCopyWithImpl<$Res, _$EncryptionMetadataImpl>
     implements _$$EncryptionMetadataImplCopyWith<$Res> {
-  __$$EncryptionMetadataImplCopyWithImpl(_$EncryptionMetadataImpl _value,
-      $Res Function(_$EncryptionMetadataImpl) _then)
-      : super(_value, _then);
+  __$$EncryptionMetadataImplCopyWithImpl(
+    _$EncryptionMetadataImpl _value,
+    $Res Function(_$EncryptionMetadataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of EncryptionMetadata
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -575,45 +628,48 @@ class __$$EncryptionMetadataImplCopyWithImpl<$Res>
     Object? algorithm = null,
     Object? keyDerivationFunction = freezed,
   }) {
-    return _then(_$EncryptionMetadataImpl(
-      keyVersion: null == keyVersion
-          ? _value.keyVersion
-          : keyVersion // ignore: cast_nullable_to_non_nullable
-              as int,
-      keyGeneratedAt: null == keyGeneratedAt
-          ? _value.keyGeneratedAt
-          : keyGeneratedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      keyLastRotated: freezed == keyLastRotated
-          ? _value.keyLastRotated
-          : keyLastRotated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      keyRotationScheduled: freezed == keyRotationScheduled
-          ? _value.keyRotationScheduled
-          : keyRotationScheduled // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      algorithm: null == algorithm
-          ? _value.algorithm
-          : algorithm // ignore: cast_nullable_to_non_nullable
-              as String,
-      keyDerivationFunction: freezed == keyDerivationFunction
-          ? _value.keyDerivationFunction
-          : keyDerivationFunction // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$EncryptionMetadataImpl(
+        keyVersion: null == keyVersion
+            ? _value.keyVersion
+            : keyVersion // ignore: cast_nullable_to_non_nullable
+                  as int,
+        keyGeneratedAt: null == keyGeneratedAt
+            ? _value.keyGeneratedAt
+            : keyGeneratedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        keyLastRotated: freezed == keyLastRotated
+            ? _value.keyLastRotated
+            : keyLastRotated // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        keyRotationScheduled: freezed == keyRotationScheduled
+            ? _value.keyRotationScheduled
+            : keyRotationScheduled // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        algorithm: null == algorithm
+            ? _value.algorithm
+            : algorithm // ignore: cast_nullable_to_non_nullable
+                  as String,
+        keyDerivationFunction: freezed == keyDerivationFunction
+            ? _value.keyDerivationFunction
+            : keyDerivationFunction // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EncryptionMetadataImpl implements _EncryptionMetadata {
-  const _$EncryptionMetadataImpl(
-      {required this.keyVersion,
-      required this.keyGeneratedAt,
-      this.keyLastRotated,
-      this.keyRotationScheduled,
-      this.algorithm = 'AES-256-GCM',
-      this.keyDerivationFunction});
+  const _$EncryptionMetadataImpl({
+    required this.keyVersion,
+    required this.keyGeneratedAt,
+    this.keyLastRotated,
+    this.keyRotationScheduled,
+    this.algorithm = 'AES-256-GCM',
+    this.keyDerivationFunction,
+  });
 
   factory _$EncryptionMetadataImpl.fromJson(Map<String, dynamic> json) =>
       _$$EncryptionMetadataImplFromJson(json);
@@ -672,69 +728,81 @@ class _$EncryptionMetadataImpl implements _EncryptionMetadata {
                 other.keyDerivationFunction == keyDerivationFunction));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, keyVersion, keyGeneratedAt,
-      keyLastRotated, keyRotationScheduled, algorithm, keyDerivationFunction);
+  int get hashCode => Object.hash(
+    runtimeType,
+    keyVersion,
+    keyGeneratedAt,
+    keyLastRotated,
+    keyRotationScheduled,
+    algorithm,
+    keyDerivationFunction,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EncryptionMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EncryptionMetadataImplCopyWith<_$EncryptionMetadataImpl> get copyWith =>
       __$$EncryptionMetadataImplCopyWithImpl<_$EncryptionMetadataImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EncryptionMetadataImplToJson(
-      this,
-    );
+    return _$$EncryptionMetadataImplToJson(this);
   }
 }
 
 abstract class _EncryptionMetadata implements EncryptionMetadata {
-  const factory _EncryptionMetadata(
-      {required final int keyVersion,
-      required final DateTime keyGeneratedAt,
-      final DateTime? keyLastRotated,
-      final DateTime? keyRotationScheduled,
-      final String algorithm,
-      final String? keyDerivationFunction}) = _$EncryptionMetadataImpl;
+  const factory _EncryptionMetadata({
+    required final int keyVersion,
+    required final DateTime keyGeneratedAt,
+    final DateTime? keyLastRotated,
+    final DateTime? keyRotationScheduled,
+    final String algorithm,
+    final String? keyDerivationFunction,
+  }) = _$EncryptionMetadataImpl;
 
   factory _EncryptionMetadata.fromJson(Map<String, dynamic> json) =
       _$EncryptionMetadataImpl.fromJson;
-
-  @override
 
   /// Encryption key version (incremented on key rotation)
   ///
   /// **Key Rotation**: Every 90 days or on-demand.
   /// Old encrypted data is re-encrypted with new key.
-  int get keyVersion;
   @override
+  int get keyVersion;
 
   /// When encryption key was generated
-  DateTime get keyGeneratedAt;
   @override
+  DateTime get keyGeneratedAt;
 
   /// When encryption key was last rotated
-  DateTime? get keyLastRotated;
   @override
+  DateTime? get keyLastRotated;
 
   /// Next scheduled key rotation date
-  DateTime? get keyRotationScheduled;
   @override
+  DateTime? get keyRotationScheduled;
 
   /// Encryption algorithm used
   /// Default: "AES-256-GCM"
-  String get algorithm;
   @override
+  String get algorithm;
 
   /// Key derivation function (if applicable)
   /// Example: "PBKDF2-SHA256" for password-derived keys
-  String? get keyDerivationFunction;
   @override
-  @JsonKey(ignore: true)
+  String? get keyDerivationFunction;
+
+  /// Create a copy of EncryptionMetadata
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EncryptionMetadataImplCopyWith<_$EncryptionMetadataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

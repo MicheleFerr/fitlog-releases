@@ -10,11 +10,13 @@ _$WorkoutImpl _$$WorkoutImplFromJson(Map<String, dynamic> json) =>
     _$WorkoutImpl(
       id: json['id'] as String,
       name: json['name'] as String,
-      exercises: (json['exercises'] as List<dynamic>?)
+      exercises:
+          (json['exercises'] as List<dynamic>?)
               ?.map((e) => Exercise.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      status: $enumDecodeNullable(_$WorkoutStatusEnumMap, json['status']) ??
+      status:
+          $enumDecodeNullable(_$WorkoutStatusEnumMap, json['status']) ??
           WorkoutStatus.planned,
       startTime: json['startTime'] == null
           ? null

@@ -12,7 +12,8 @@ part of 'set_execution_timing.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 SetExecutionTiming _$SetExecutionTimingFromJson(Map<String, dynamic> json) {
   return _SetExecutionTiming.fromJson(json);
@@ -33,21 +34,21 @@ mixin _$SetExecutionTiming {
   double? get weight => throw _privateConstructorUsedError;
   int get rpe =>
       throw _privateConstructorUsedError; // Rate of Perceived Exertion
-// Advanced timing analysis
+  // Advanced timing analysis
   List<int> get repTimingsMs =>
       throw _privateConstructorUsedError; // Individual rep timings
   List<double> get velocityMps =>
       throw _privateConstructorUsedError; // Velocity per rep (m/s)
   List<int> get pauseTimingsMs =>
       throw _privateConstructorUsedError; // Pauses between reps
-// Quality indicators
+  // Quality indicators
   double get formScore =>
       throw _privateConstructorUsedError; // 0-100 based on video analysis
   double get consistencyScore =>
       throw _privateConstructorUsedError; // 0-100 based on rep variation
   double get fatigueIndex =>
       throw _privateConstructorUsedError; // 0-100 calculated fatigue
-// Environmental data
+  // Environmental data
   DateTime? get restStartedAt => throw _privateConstructorUsedError;
   int? get restDurationMs => throw _privateConstructorUsedError;
   double get heartRateBpm => throw _privateConstructorUsedError;
@@ -58,8 +59,12 @@ mixin _$SetExecutionTiming {
   bool get synced => throw _privateConstructorUsedError; // Metadata
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
+  /// Serializes this SetExecutionTiming to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SetExecutionTiming
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SetExecutionTimingCopyWith<SetExecutionTiming> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -67,34 +72,36 @@ mixin _$SetExecutionTiming {
 /// @nodoc
 abstract class $SetExecutionTimingCopyWith<$Res> {
   factory $SetExecutionTimingCopyWith(
-          SetExecutionTiming value, $Res Function(SetExecutionTiming) then) =
-      _$SetExecutionTimingCopyWithImpl<$Res, SetExecutionTiming>;
+    SetExecutionTiming value,
+    $Res Function(SetExecutionTiming) then,
+  ) = _$SetExecutionTimingCopyWithImpl<$Res, SetExecutionTiming>;
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String workoutId,
-      int setNumber,
-      int executionTimeMs,
-      DateTime startTime,
-      DateTime endTime,
-      int reps,
-      double? weight,
-      int rpe,
-      List<int> repTimingsMs,
-      List<double> velocityMps,
-      List<int> pauseTimingsMs,
-      double formScore,
-      double consistencyScore,
-      double fatigueIndex,
-      DateTime? restStartedAt,
-      int? restDurationMs,
-      double heartRateBpm,
-      double ambientTemperatureC,
-      DateTime createdAt,
-      DateTime? uploadedAt,
-      bool synced,
-      Map<String, dynamic>? metadata});
+  $Res call({
+    String id,
+    String exerciseId,
+    String workoutId,
+    int setNumber,
+    int executionTimeMs,
+    DateTime startTime,
+    DateTime endTime,
+    int reps,
+    double? weight,
+    int rpe,
+    List<int> repTimingsMs,
+    List<double> velocityMps,
+    List<int> pauseTimingsMs,
+    double formScore,
+    double consistencyScore,
+    double fatigueIndex,
+    DateTime? restStartedAt,
+    int? restDurationMs,
+    double heartRateBpm,
+    double ambientTemperatureC,
+    DateTime createdAt,
+    DateTime? uploadedAt,
+    bool synced,
+    Map<String, dynamic>? metadata,
+  });
 }
 
 /// @nodoc
@@ -107,6 +114,8 @@ class _$SetExecutionTimingCopyWithImpl<$Res, $Val extends SetExecutionTiming>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SetExecutionTiming
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,150 +144,158 @@ class _$SetExecutionTimingCopyWithImpl<$Res, $Val extends SetExecutionTiming>
     Object? synced = null,
     Object? metadata = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      workoutId: null == workoutId
-          ? _value.workoutId
-          : workoutId // ignore: cast_nullable_to_non_nullable
-              as String,
-      setNumber: null == setNumber
-          ? _value.setNumber
-          : setNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      executionTimeMs: null == executionTimeMs
-          ? _value.executionTimeMs
-          : executionTimeMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      weight: freezed == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      rpe: null == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int,
-      repTimingsMs: null == repTimingsMs
-          ? _value.repTimingsMs
-          : repTimingsMs // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      velocityMps: null == velocityMps
-          ? _value.velocityMps
-          : velocityMps // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      pauseTimingsMs: null == pauseTimingsMs
-          ? _value.pauseTimingsMs
-          : pauseTimingsMs // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      formScore: null == formScore
-          ? _value.formScore
-          : formScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      fatigueIndex: null == fatigueIndex
-          ? _value.fatigueIndex
-          : fatigueIndex // ignore: cast_nullable_to_non_nullable
-              as double,
-      restStartedAt: freezed == restStartedAt
-          ? _value.restStartedAt
-          : restStartedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      restDurationMs: freezed == restDurationMs
-          ? _value.restDurationMs
-          : restDurationMs // ignore: cast_nullable_to_non_nullable
-              as int?,
-      heartRateBpm: null == heartRateBpm
-          ? _value.heartRateBpm
-          : heartRateBpm // ignore: cast_nullable_to_non_nullable
-              as double,
-      ambientTemperatureC: null == ambientTemperatureC
-          ? _value.ambientTemperatureC
-          : ambientTemperatureC // ignore: cast_nullable_to_non_nullable
-              as double,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      uploadedAt: freezed == uploadedAt
-          ? _value.uploadedAt
-          : uploadedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      synced: null == synced
-          ? _value.synced
-          : synced // ignore: cast_nullable_to_non_nullable
-              as bool,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exerciseId: null == exerciseId
+                ? _value.exerciseId
+                : exerciseId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            workoutId: null == workoutId
+                ? _value.workoutId
+                : workoutId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            setNumber: null == setNumber
+                ? _value.setNumber
+                : setNumber // ignore: cast_nullable_to_non_nullable
+                      as int,
+            executionTimeMs: null == executionTimeMs
+                ? _value.executionTimeMs
+                : executionTimeMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            startTime: null == startTime
+                ? _value.startTime
+                : startTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endTime: null == endTime
+                ? _value.endTime
+                : endTime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            reps: null == reps
+                ? _value.reps
+                : reps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            weight: freezed == weight
+                ? _value.weight
+                : weight // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            rpe: null == rpe
+                ? _value.rpe
+                : rpe // ignore: cast_nullable_to_non_nullable
+                      as int,
+            repTimingsMs: null == repTimingsMs
+                ? _value.repTimingsMs
+                : repTimingsMs // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            velocityMps: null == velocityMps
+                ? _value.velocityMps
+                : velocityMps // ignore: cast_nullable_to_non_nullable
+                      as List<double>,
+            pauseTimingsMs: null == pauseTimingsMs
+                ? _value.pauseTimingsMs
+                : pauseTimingsMs // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            formScore: null == formScore
+                ? _value.formScore
+                : formScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            consistencyScore: null == consistencyScore
+                ? _value.consistencyScore
+                : consistencyScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            fatigueIndex: null == fatigueIndex
+                ? _value.fatigueIndex
+                : fatigueIndex // ignore: cast_nullable_to_non_nullable
+                      as double,
+            restStartedAt: freezed == restStartedAt
+                ? _value.restStartedAt
+                : restStartedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            restDurationMs: freezed == restDurationMs
+                ? _value.restDurationMs
+                : restDurationMs // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            heartRateBpm: null == heartRateBpm
+                ? _value.heartRateBpm
+                : heartRateBpm // ignore: cast_nullable_to_non_nullable
+                      as double,
+            ambientTemperatureC: null == ambientTemperatureC
+                ? _value.ambientTemperatureC
+                : ambientTemperatureC // ignore: cast_nullable_to_non_nullable
+                      as double,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            uploadedAt: freezed == uploadedAt
+                ? _value.uploadedAt
+                : uploadedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            synced: null == synced
+                ? _value.synced
+                : synced // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            metadata: freezed == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$SetExecutionTimingImplCopyWith<$Res>
     implements $SetExecutionTimingCopyWith<$Res> {
-  factory _$$SetExecutionTimingImplCopyWith(_$SetExecutionTimingImpl value,
-          $Res Function(_$SetExecutionTimingImpl) then) =
-      __$$SetExecutionTimingImplCopyWithImpl<$Res>;
+  factory _$$SetExecutionTimingImplCopyWith(
+    _$SetExecutionTimingImpl value,
+    $Res Function(_$SetExecutionTimingImpl) then,
+  ) = __$$SetExecutionTimingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String exerciseId,
-      String workoutId,
-      int setNumber,
-      int executionTimeMs,
-      DateTime startTime,
-      DateTime endTime,
-      int reps,
-      double? weight,
-      int rpe,
-      List<int> repTimingsMs,
-      List<double> velocityMps,
-      List<int> pauseTimingsMs,
-      double formScore,
-      double consistencyScore,
-      double fatigueIndex,
-      DateTime? restStartedAt,
-      int? restDurationMs,
-      double heartRateBpm,
-      double ambientTemperatureC,
-      DateTime createdAt,
-      DateTime? uploadedAt,
-      bool synced,
-      Map<String, dynamic>? metadata});
+  $Res call({
+    String id,
+    String exerciseId,
+    String workoutId,
+    int setNumber,
+    int executionTimeMs,
+    DateTime startTime,
+    DateTime endTime,
+    int reps,
+    double? weight,
+    int rpe,
+    List<int> repTimingsMs,
+    List<double> velocityMps,
+    List<int> pauseTimingsMs,
+    double formScore,
+    double consistencyScore,
+    double fatigueIndex,
+    DateTime? restStartedAt,
+    int? restDurationMs,
+    double heartRateBpm,
+    double ambientTemperatureC,
+    DateTime createdAt,
+    DateTime? uploadedAt,
+    bool synced,
+    Map<String, dynamic>? metadata,
+  });
 }
 
 /// @nodoc
 class __$$SetExecutionTimingImplCopyWithImpl<$Res>
     extends _$SetExecutionTimingCopyWithImpl<$Res, _$SetExecutionTimingImpl>
     implements _$$SetExecutionTimingImplCopyWith<$Res> {
-  __$$SetExecutionTimingImplCopyWithImpl(_$SetExecutionTimingImpl _value,
-      $Res Function(_$SetExecutionTimingImpl) _then)
-      : super(_value, _then);
+  __$$SetExecutionTimingImplCopyWithImpl(
+    _$SetExecutionTimingImpl _value,
+    $Res Function(_$SetExecutionTimingImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of SetExecutionTiming
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -307,139 +324,141 @@ class __$$SetExecutionTimingImplCopyWithImpl<$Res>
     Object? synced = null,
     Object? metadata = freezed,
   }) {
-    return _then(_$SetExecutionTimingImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      workoutId: null == workoutId
-          ? _value.workoutId
-          : workoutId // ignore: cast_nullable_to_non_nullable
-              as String,
-      setNumber: null == setNumber
-          ? _value.setNumber
-          : setNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      executionTimeMs: null == executionTimeMs
-          ? _value.executionTimeMs
-          : executionTimeMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reps: null == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int,
-      weight: freezed == weight
-          ? _value.weight
-          : weight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      rpe: null == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int,
-      repTimingsMs: null == repTimingsMs
-          ? _value._repTimingsMs
-          : repTimingsMs // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      velocityMps: null == velocityMps
-          ? _value._velocityMps
-          : velocityMps // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      pauseTimingsMs: null == pauseTimingsMs
-          ? _value._pauseTimingsMs
-          : pauseTimingsMs // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      formScore: null == formScore
-          ? _value.formScore
-          : formScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      fatigueIndex: null == fatigueIndex
-          ? _value.fatigueIndex
-          : fatigueIndex // ignore: cast_nullable_to_non_nullable
-              as double,
-      restStartedAt: freezed == restStartedAt
-          ? _value.restStartedAt
-          : restStartedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      restDurationMs: freezed == restDurationMs
-          ? _value.restDurationMs
-          : restDurationMs // ignore: cast_nullable_to_non_nullable
-              as int?,
-      heartRateBpm: null == heartRateBpm
-          ? _value.heartRateBpm
-          : heartRateBpm // ignore: cast_nullable_to_non_nullable
-              as double,
-      ambientTemperatureC: null == ambientTemperatureC
-          ? _value.ambientTemperatureC
-          : ambientTemperatureC // ignore: cast_nullable_to_non_nullable
-              as double,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      uploadedAt: freezed == uploadedAt
-          ? _value.uploadedAt
-          : uploadedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      synced: null == synced
-          ? _value.synced
-          : synced // ignore: cast_nullable_to_non_nullable
-              as bool,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-    ));
+    return _then(
+      _$SetExecutionTimingImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        workoutId: null == workoutId
+            ? _value.workoutId
+            : workoutId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        setNumber: null == setNumber
+            ? _value.setNumber
+            : setNumber // ignore: cast_nullable_to_non_nullable
+                  as int,
+        executionTimeMs: null == executionTimeMs
+            ? _value.executionTimeMs
+            : executionTimeMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        startTime: null == startTime
+            ? _value.startTime
+            : startTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endTime: null == endTime
+            ? _value.endTime
+            : endTime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        reps: null == reps
+            ? _value.reps
+            : reps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        weight: freezed == weight
+            ? _value.weight
+            : weight // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        rpe: null == rpe
+            ? _value.rpe
+            : rpe // ignore: cast_nullable_to_non_nullable
+                  as int,
+        repTimingsMs: null == repTimingsMs
+            ? _value._repTimingsMs
+            : repTimingsMs // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        velocityMps: null == velocityMps
+            ? _value._velocityMps
+            : velocityMps // ignore: cast_nullable_to_non_nullable
+                  as List<double>,
+        pauseTimingsMs: null == pauseTimingsMs
+            ? _value._pauseTimingsMs
+            : pauseTimingsMs // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        formScore: null == formScore
+            ? _value.formScore
+            : formScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        consistencyScore: null == consistencyScore
+            ? _value.consistencyScore
+            : consistencyScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        fatigueIndex: null == fatigueIndex
+            ? _value.fatigueIndex
+            : fatigueIndex // ignore: cast_nullable_to_non_nullable
+                  as double,
+        restStartedAt: freezed == restStartedAt
+            ? _value.restStartedAt
+            : restStartedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        restDurationMs: freezed == restDurationMs
+            ? _value.restDurationMs
+            : restDurationMs // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        heartRateBpm: null == heartRateBpm
+            ? _value.heartRateBpm
+            : heartRateBpm // ignore: cast_nullable_to_non_nullable
+                  as double,
+        ambientTemperatureC: null == ambientTemperatureC
+            ? _value.ambientTemperatureC
+            : ambientTemperatureC // ignore: cast_nullable_to_non_nullable
+                  as double,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        uploadedAt: freezed == uploadedAt
+            ? _value.uploadedAt
+            : uploadedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        synced: null == synced
+            ? _value.synced
+            : synced // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        metadata: freezed == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SetExecutionTimingImpl implements _SetExecutionTiming {
-  const _$SetExecutionTimingImpl(
-      {required this.id,
-      required this.exerciseId,
-      required this.workoutId,
-      required this.setNumber,
-      required this.executionTimeMs,
-      required this.startTime,
-      required this.endTime,
-      this.reps = 0,
-      this.weight,
-      this.rpe = 0,
-      final List<int> repTimingsMs = const [],
-      final List<double> velocityMps = const [],
-      final List<int> pauseTimingsMs = const [],
-      this.formScore = 0.0,
-      this.consistencyScore = 0.0,
-      this.fatigueIndex = 0.0,
-      this.restStartedAt,
-      this.restDurationMs,
-      this.heartRateBpm = 0.0,
-      this.ambientTemperatureC = 0.0,
-      required this.createdAt,
-      this.uploadedAt,
-      this.synced = false,
-      final Map<String, dynamic>? metadata})
-      : _repTimingsMs = repTimingsMs,
-        _velocityMps = velocityMps,
-        _pauseTimingsMs = pauseTimingsMs,
-        _metadata = metadata;
+  const _$SetExecutionTimingImpl({
+    required this.id,
+    required this.exerciseId,
+    required this.workoutId,
+    required this.setNumber,
+    required this.executionTimeMs,
+    required this.startTime,
+    required this.endTime,
+    this.reps = 0,
+    this.weight,
+    this.rpe = 0,
+    final List<int> repTimingsMs = const [],
+    final List<double> velocityMps = const [],
+    final List<int> pauseTimingsMs = const [],
+    this.formScore = 0.0,
+    this.consistencyScore = 0.0,
+    this.fatigueIndex = 0.0,
+    this.restStartedAt,
+    this.restDurationMs,
+    this.heartRateBpm = 0.0,
+    this.ambientTemperatureC = 0.0,
+    required this.createdAt,
+    this.uploadedAt,
+    this.synced = false,
+    final Map<String, dynamic>? metadata,
+  }) : _repTimingsMs = repTimingsMs,
+       _velocityMps = velocityMps,
+       _pauseTimingsMs = pauseTimingsMs,
+       _metadata = metadata;
 
   factory _$SetExecutionTimingImpl.fromJson(Map<String, dynamic> json) =>
       _$$SetExecutionTimingImplFromJson(json);
@@ -452,14 +471,14 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
   final String workoutId;
   @override
   final int setNumber;
-// Timing precision data (milliseconds)
+  // Timing precision data (milliseconds)
   @override
   final int executionTimeMs;
   @override
   final DateTime startTime;
   @override
   final DateTime endTime;
-// Performance metrics
+  // Performance metrics
   @override
   @JsonKey()
   final int reps;
@@ -468,11 +487,11 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
   @override
   @JsonKey()
   final int rpe;
-// Rate of Perceived Exertion
-// Advanced timing analysis
+  // Rate of Perceived Exertion
+  // Advanced timing analysis
   final List<int> _repTimingsMs;
-// Rate of Perceived Exertion
-// Advanced timing analysis
+  // Rate of Perceived Exertion
+  // Advanced timing analysis
   @override
   @JsonKey()
   List<int> get repTimingsMs {
@@ -481,9 +500,9 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
     return EqualUnmodifiableListView(_repTimingsMs);
   }
 
-// Individual rep timings
+  // Individual rep timings
   final List<double> _velocityMps;
-// Individual rep timings
+  // Individual rep timings
   @override
   @JsonKey()
   List<double> get velocityMps {
@@ -492,9 +511,9 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
     return EqualUnmodifiableListView(_velocityMps);
   }
 
-// Velocity per rep (m/s)
+  // Velocity per rep (m/s)
   final List<int> _pauseTimingsMs;
-// Velocity per rep (m/s)
+  // Velocity per rep (m/s)
   @override
   @JsonKey()
   List<int> get pauseTimingsMs {
@@ -503,21 +522,21 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
     return EqualUnmodifiableListView(_pauseTimingsMs);
   }
 
-// Pauses between reps
-// Quality indicators
+  // Pauses between reps
+  // Quality indicators
   @override
   @JsonKey()
   final double formScore;
-// 0-100 based on video analysis
+  // 0-100 based on video analysis
   @override
   @JsonKey()
   final double consistencyScore;
-// 0-100 based on rep variation
+  // 0-100 based on rep variation
   @override
   @JsonKey()
   final double fatigueIndex;
-// 0-100 calculated fatigue
-// Environmental data
+  // 0-100 calculated fatigue
+  // Environmental data
   @override
   final DateTime? restStartedAt;
   @override
@@ -528,7 +547,7 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
   @override
   @JsonKey()
   final double ambientTemperatureC;
-// Synchronization
+  // Synchronization
   @override
   final DateTime createdAt;
   @override
@@ -536,9 +555,9 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
   @override
   @JsonKey()
   final bool synced;
-// Metadata
+  // Metadata
   final Map<String, dynamic>? _metadata;
-// Metadata
+  // Metadata
   @override
   Map<String, dynamic>? get metadata {
     final value = _metadata;
@@ -573,12 +592,18 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
             (identical(other.reps, reps) || other.reps == reps) &&
             (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.rpe, rpe) || other.rpe == rpe) &&
-            const DeepCollectionEquality()
-                .equals(other._repTimingsMs, _repTimingsMs) &&
-            const DeepCollectionEquality()
-                .equals(other._velocityMps, _velocityMps) &&
-            const DeepCollectionEquality()
-                .equals(other._pauseTimingsMs, _pauseTimingsMs) &&
+            const DeepCollectionEquality().equals(
+              other._repTimingsMs,
+              _repTimingsMs,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._velocityMps,
+              _velocityMps,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._pauseTimingsMs,
+              _pauseTimingsMs,
+            ) &&
             (identical(other.formScore, formScore) ||
                 other.formScore == formScore) &&
             (identical(other.consistencyScore, consistencyScore) ||
@@ -601,77 +626,80 @@ class _$SetExecutionTimingImpl implements _SetExecutionTiming {
             const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        exerciseId,
-        workoutId,
-        setNumber,
-        executionTimeMs,
-        startTime,
-        endTime,
-        reps,
-        weight,
-        rpe,
-        const DeepCollectionEquality().hash(_repTimingsMs),
-        const DeepCollectionEquality().hash(_velocityMps),
-        const DeepCollectionEquality().hash(_pauseTimingsMs),
-        formScore,
-        consistencyScore,
-        fatigueIndex,
-        restStartedAt,
-        restDurationMs,
-        heartRateBpm,
-        ambientTemperatureC,
-        createdAt,
-        uploadedAt,
-        synced,
-        const DeepCollectionEquality().hash(_metadata)
-      ]);
+    runtimeType,
+    id,
+    exerciseId,
+    workoutId,
+    setNumber,
+    executionTimeMs,
+    startTime,
+    endTime,
+    reps,
+    weight,
+    rpe,
+    const DeepCollectionEquality().hash(_repTimingsMs),
+    const DeepCollectionEquality().hash(_velocityMps),
+    const DeepCollectionEquality().hash(_pauseTimingsMs),
+    formScore,
+    consistencyScore,
+    fatigueIndex,
+    restStartedAt,
+    restDurationMs,
+    heartRateBpm,
+    ambientTemperatureC,
+    createdAt,
+    uploadedAt,
+    synced,
+    const DeepCollectionEquality().hash(_metadata),
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SetExecutionTiming
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SetExecutionTimingImplCopyWith<_$SetExecutionTimingImpl> get copyWith =>
       __$$SetExecutionTimingImplCopyWithImpl<_$SetExecutionTimingImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SetExecutionTimingImplToJson(
-      this,
-    );
+    return _$$SetExecutionTimingImplToJson(this);
   }
 }
 
 abstract class _SetExecutionTiming implements SetExecutionTiming {
-  const factory _SetExecutionTiming(
-      {required final String id,
-      required final String exerciseId,
-      required final String workoutId,
-      required final int setNumber,
-      required final int executionTimeMs,
-      required final DateTime startTime,
-      required final DateTime endTime,
-      final int reps,
-      final double? weight,
-      final int rpe,
-      final List<int> repTimingsMs,
-      final List<double> velocityMps,
-      final List<int> pauseTimingsMs,
-      final double formScore,
-      final double consistencyScore,
-      final double fatigueIndex,
-      final DateTime? restStartedAt,
-      final int? restDurationMs,
-      final double heartRateBpm,
-      final double ambientTemperatureC,
-      required final DateTime createdAt,
-      final DateTime? uploadedAt,
-      final bool synced,
-      final Map<String, dynamic>? metadata}) = _$SetExecutionTimingImpl;
+  const factory _SetExecutionTiming({
+    required final String id,
+    required final String exerciseId,
+    required final String workoutId,
+    required final int setNumber,
+    required final int executionTimeMs,
+    required final DateTime startTime,
+    required final DateTime endTime,
+    final int reps,
+    final double? weight,
+    final int rpe,
+    final List<int> repTimingsMs,
+    final List<double> velocityMps,
+    final List<int> pauseTimingsMs,
+    final double formScore,
+    final double consistencyScore,
+    final double fatigueIndex,
+    final DateTime? restStartedAt,
+    final int? restDurationMs,
+    final double heartRateBpm,
+    final double ambientTemperatureC,
+    required final DateTime createdAt,
+    final DateTime? uploadedAt,
+    final bool synced,
+    final Map<String, dynamic>? metadata,
+  }) = _$SetExecutionTimingImpl;
 
   factory _SetExecutionTiming.fromJson(Map<String, dynamic> json) =
       _$SetExecutionTimingImpl.fromJson;
@@ -683,52 +711,55 @@ abstract class _SetExecutionTiming implements SetExecutionTiming {
   @override
   String get workoutId;
   @override
-  int get setNumber;
-  @override // Timing precision data (milliseconds)
+  int get setNumber; // Timing precision data (milliseconds)
+  @override
   int get executionTimeMs;
   @override
   DateTime get startTime;
   @override
-  DateTime get endTime;
-  @override // Performance metrics
+  DateTime get endTime; // Performance metrics
+  @override
   int get reps;
   @override
   double? get weight;
   @override
-  int get rpe;
-  @override // Rate of Perceived Exertion
-// Advanced timing analysis
-  List<int> get repTimingsMs;
-  @override // Individual rep timings
-  List<double> get velocityMps;
-  @override // Velocity per rep (m/s)
-  List<int> get pauseTimingsMs;
-  @override // Pauses between reps
-// Quality indicators
-  double get formScore;
-  @override // 0-100 based on video analysis
-  double get consistencyScore;
-  @override // 0-100 based on rep variation
-  double get fatigueIndex;
-  @override // 0-100 calculated fatigue
-// Environmental data
+  int get rpe; // Rate of Perceived Exertion
+  // Advanced timing analysis
+  @override
+  List<int> get repTimingsMs; // Individual rep timings
+  @override
+  List<double> get velocityMps; // Velocity per rep (m/s)
+  @override
+  List<int> get pauseTimingsMs; // Pauses between reps
+  // Quality indicators
+  @override
+  double get formScore; // 0-100 based on video analysis
+  @override
+  double get consistencyScore; // 0-100 based on rep variation
+  @override
+  double get fatigueIndex; // 0-100 calculated fatigue
+  // Environmental data
+  @override
   DateTime? get restStartedAt;
   @override
   int? get restDurationMs;
   @override
   double get heartRateBpm;
   @override
-  double get ambientTemperatureC;
-  @override // Synchronization
+  double get ambientTemperatureC; // Synchronization
+  @override
   DateTime get createdAt;
   @override
   DateTime? get uploadedAt;
   @override
-  bool get synced;
-  @override // Metadata
-  Map<String, dynamic>? get metadata;
+  bool get synced; // Metadata
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic>? get metadata;
+
+  /// Create a copy of SetExecutionTiming
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SetExecutionTimingImplCopyWith<_$SetExecutionTimingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -757,8 +788,12 @@ mixin _$SetTimingConfig {
   bool get autoEndDetection => throw _privateConstructorUsedError;
   int get motionThresholdMs => throw _privateConstructorUsedError;
 
+  /// Serializes this SetTimingConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SetTimingConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SetTimingConfigCopyWith<SetTimingConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -766,23 +801,25 @@ mixin _$SetTimingConfig {
 /// @nodoc
 abstract class $SetTimingConfigCopyWith<$Res> {
   factory $SetTimingConfigCopyWith(
-          SetTimingConfig value, $Res Function(SetTimingConfig) then) =
-      _$SetTimingConfigCopyWithImpl<$Res, SetTimingConfig>;
+    SetTimingConfig value,
+    $Res Function(SetTimingConfig) then,
+  ) = _$SetTimingConfigCopyWithImpl<$Res, SetTimingConfig>;
   @useResult
-  $Res call(
-      {TimingMode mode,
-      int samplingRateHz,
-      bool trackVelocity,
-      bool trackPauses,
-      bool trackHeartRate,
-      int maxSetDurationMs,
-      int minRepDurationMs,
-      int maxRepDurationMs,
-      double maxVelocityVariationPercent,
-      int maxPauseBetweenRepsMs,
-      bool autoStartDetection,
-      bool autoEndDetection,
-      int motionThresholdMs});
+  $Res call({
+    TimingMode mode,
+    int samplingRateHz,
+    bool trackVelocity,
+    bool trackPauses,
+    bool trackHeartRate,
+    int maxSetDurationMs,
+    int minRepDurationMs,
+    int maxRepDurationMs,
+    double maxVelocityVariationPercent,
+    int maxPauseBetweenRepsMs,
+    bool autoStartDetection,
+    bool autoEndDetection,
+    int motionThresholdMs,
+  });
 }
 
 /// @nodoc
@@ -795,6 +832,8 @@ class _$SetTimingConfigCopyWithImpl<$Res, $Val extends SetTimingConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SetTimingConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -812,60 +851,63 @@ class _$SetTimingConfigCopyWithImpl<$Res, $Val extends SetTimingConfig>
     Object? autoEndDetection = null,
     Object? motionThresholdMs = null,
   }) {
-    return _then(_value.copyWith(
-      mode: null == mode
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as TimingMode,
-      samplingRateHz: null == samplingRateHz
-          ? _value.samplingRateHz
-          : samplingRateHz // ignore: cast_nullable_to_non_nullable
-              as int,
-      trackVelocity: null == trackVelocity
-          ? _value.trackVelocity
-          : trackVelocity // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trackPauses: null == trackPauses
-          ? _value.trackPauses
-          : trackPauses // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trackHeartRate: null == trackHeartRate
-          ? _value.trackHeartRate
-          : trackHeartRate // ignore: cast_nullable_to_non_nullable
-              as bool,
-      maxSetDurationMs: null == maxSetDurationMs
-          ? _value.maxSetDurationMs
-          : maxSetDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      minRepDurationMs: null == minRepDurationMs
-          ? _value.minRepDurationMs
-          : minRepDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxRepDurationMs: null == maxRepDurationMs
-          ? _value.maxRepDurationMs
-          : maxRepDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxVelocityVariationPercent: null == maxVelocityVariationPercent
-          ? _value.maxVelocityVariationPercent
-          : maxVelocityVariationPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxPauseBetweenRepsMs: null == maxPauseBetweenRepsMs
-          ? _value.maxPauseBetweenRepsMs
-          : maxPauseBetweenRepsMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      autoStartDetection: null == autoStartDetection
-          ? _value.autoStartDetection
-          : autoStartDetection // ignore: cast_nullable_to_non_nullable
-              as bool,
-      autoEndDetection: null == autoEndDetection
-          ? _value.autoEndDetection
-          : autoEndDetection // ignore: cast_nullable_to_non_nullable
-              as bool,
-      motionThresholdMs: null == motionThresholdMs
-          ? _value.motionThresholdMs
-          : motionThresholdMs // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            mode: null == mode
+                ? _value.mode
+                : mode // ignore: cast_nullable_to_non_nullable
+                      as TimingMode,
+            samplingRateHz: null == samplingRateHz
+                ? _value.samplingRateHz
+                : samplingRateHz // ignore: cast_nullable_to_non_nullable
+                      as int,
+            trackVelocity: null == trackVelocity
+                ? _value.trackVelocity
+                : trackVelocity // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            trackPauses: null == trackPauses
+                ? _value.trackPauses
+                : trackPauses // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            trackHeartRate: null == trackHeartRate
+                ? _value.trackHeartRate
+                : trackHeartRate // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            maxSetDurationMs: null == maxSetDurationMs
+                ? _value.maxSetDurationMs
+                : maxSetDurationMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            minRepDurationMs: null == minRepDurationMs
+                ? _value.minRepDurationMs
+                : minRepDurationMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            maxRepDurationMs: null == maxRepDurationMs
+                ? _value.maxRepDurationMs
+                : maxRepDurationMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            maxVelocityVariationPercent: null == maxVelocityVariationPercent
+                ? _value.maxVelocityVariationPercent
+                : maxVelocityVariationPercent // ignore: cast_nullable_to_non_nullable
+                      as double,
+            maxPauseBetweenRepsMs: null == maxPauseBetweenRepsMs
+                ? _value.maxPauseBetweenRepsMs
+                : maxPauseBetweenRepsMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            autoStartDetection: null == autoStartDetection
+                ? _value.autoStartDetection
+                : autoStartDetection // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            autoEndDetection: null == autoEndDetection
+                ? _value.autoEndDetection
+                : autoEndDetection // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            motionThresholdMs: null == motionThresholdMs
+                ? _value.motionThresholdMs
+                : motionThresholdMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -873,35 +915,39 @@ class _$SetTimingConfigCopyWithImpl<$Res, $Val extends SetTimingConfig>
 abstract class _$$$$SetTimingConfigImplImplCopyWith<$Res>
     implements $SetTimingConfigCopyWith<$Res> {
   factory _$$$$SetTimingConfigImplImplCopyWith(
-          _$$$SetTimingConfigImplImpl value,
-          $Res Function(_$$$SetTimingConfigImplImpl) then) =
-      __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>;
+    _$$$SetTimingConfigImplImpl value,
+    $Res Function(_$$$SetTimingConfigImplImpl) then,
+  ) = __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {TimingMode mode,
-      int samplingRateHz,
-      bool trackVelocity,
-      bool trackPauses,
-      bool trackHeartRate,
-      int maxSetDurationMs,
-      int minRepDurationMs,
-      int maxRepDurationMs,
-      double maxVelocityVariationPercent,
-      int maxPauseBetweenRepsMs,
-      bool autoStartDetection,
-      bool autoEndDetection,
-      int motionThresholdMs});
+  $Res call({
+    TimingMode mode,
+    int samplingRateHz,
+    bool trackVelocity,
+    bool trackPauses,
+    bool trackHeartRate,
+    int maxSetDurationMs,
+    int minRepDurationMs,
+    int maxRepDurationMs,
+    double maxVelocityVariationPercent,
+    int maxPauseBetweenRepsMs,
+    bool autoStartDetection,
+    bool autoEndDetection,
+    int motionThresholdMs,
+  });
 }
 
 /// @nodoc
 class __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>
     extends _$SetTimingConfigCopyWithImpl<$Res, _$$$SetTimingConfigImplImpl>
     implements _$$$$SetTimingConfigImplImplCopyWith<$Res> {
-  __$$$$SetTimingConfigImplImplCopyWithImpl(_$$$SetTimingConfigImplImpl _value,
-      $Res Function(_$$$SetTimingConfigImplImpl) _then)
-      : super(_value, _then);
+  __$$$$SetTimingConfigImplImplCopyWithImpl(
+    _$$$SetTimingConfigImplImpl _value,
+    $Res Function(_$$$SetTimingConfigImplImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of SetTimingConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -919,87 +965,90 @@ class __$$$$SetTimingConfigImplImplCopyWithImpl<$Res>
     Object? autoEndDetection = null,
     Object? motionThresholdMs = null,
   }) {
-    return _then(_$$$SetTimingConfigImplImpl(
-      mode: null == mode
-          ? _value.mode
-          : mode // ignore: cast_nullable_to_non_nullable
-              as TimingMode,
-      samplingRateHz: null == samplingRateHz
-          ? _value.samplingRateHz
-          : samplingRateHz // ignore: cast_nullable_to_non_nullable
-              as int,
-      trackVelocity: null == trackVelocity
-          ? _value.trackVelocity
-          : trackVelocity // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trackPauses: null == trackPauses
-          ? _value.trackPauses
-          : trackPauses // ignore: cast_nullable_to_non_nullable
-              as bool,
-      trackHeartRate: null == trackHeartRate
-          ? _value.trackHeartRate
-          : trackHeartRate // ignore: cast_nullable_to_non_nullable
-              as bool,
-      maxSetDurationMs: null == maxSetDurationMs
-          ? _value.maxSetDurationMs
-          : maxSetDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      minRepDurationMs: null == minRepDurationMs
-          ? _value.minRepDurationMs
-          : minRepDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxRepDurationMs: null == maxRepDurationMs
-          ? _value.maxRepDurationMs
-          : maxRepDurationMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      maxVelocityVariationPercent: null == maxVelocityVariationPercent
-          ? _value.maxVelocityVariationPercent
-          : maxVelocityVariationPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      maxPauseBetweenRepsMs: null == maxPauseBetweenRepsMs
-          ? _value.maxPauseBetweenRepsMs
-          : maxPauseBetweenRepsMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      autoStartDetection: null == autoStartDetection
-          ? _value.autoStartDetection
-          : autoStartDetection // ignore: cast_nullable_to_non_nullable
-              as bool,
-      autoEndDetection: null == autoEndDetection
-          ? _value.autoEndDetection
-          : autoEndDetection // ignore: cast_nullable_to_non_nullable
-              as bool,
-      motionThresholdMs: null == motionThresholdMs
-          ? _value.motionThresholdMs
-          : motionThresholdMs // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$$$SetTimingConfigImplImpl(
+        mode: null == mode
+            ? _value.mode
+            : mode // ignore: cast_nullable_to_non_nullable
+                  as TimingMode,
+        samplingRateHz: null == samplingRateHz
+            ? _value.samplingRateHz
+            : samplingRateHz // ignore: cast_nullable_to_non_nullable
+                  as int,
+        trackVelocity: null == trackVelocity
+            ? _value.trackVelocity
+            : trackVelocity // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        trackPauses: null == trackPauses
+            ? _value.trackPauses
+            : trackPauses // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        trackHeartRate: null == trackHeartRate
+            ? _value.trackHeartRate
+            : trackHeartRate // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        maxSetDurationMs: null == maxSetDurationMs
+            ? _value.maxSetDurationMs
+            : maxSetDurationMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        minRepDurationMs: null == minRepDurationMs
+            ? _value.minRepDurationMs
+            : minRepDurationMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        maxRepDurationMs: null == maxRepDurationMs
+            ? _value.maxRepDurationMs
+            : maxRepDurationMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        maxVelocityVariationPercent: null == maxVelocityVariationPercent
+            ? _value.maxVelocityVariationPercent
+            : maxVelocityVariationPercent // ignore: cast_nullable_to_non_nullable
+                  as double,
+        maxPauseBetweenRepsMs: null == maxPauseBetweenRepsMs
+            ? _value.maxPauseBetweenRepsMs
+            : maxPauseBetweenRepsMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        autoStartDetection: null == autoStartDetection
+            ? _value.autoStartDetection
+            : autoStartDetection // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        autoEndDetection: null == autoEndDetection
+            ? _value.autoEndDetection
+            : autoEndDetection // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        motionThresholdMs: null == motionThresholdMs
+            ? _value.motionThresholdMs
+            : motionThresholdMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
-  const _$$$SetTimingConfigImplImpl(
-      {required this.mode,
-      this.samplingRateHz = 10,
-      this.trackVelocity = true,
-      this.trackPauses = true,
-      this.trackHeartRate = false,
-      this.maxSetDurationMs = 2000,
-      this.minRepDurationMs = 100,
-      this.maxRepDurationMs = 5000,
-      this.maxVelocityVariationPercent = 20.0,
-      this.maxPauseBetweenRepsMs = 1000,
-      this.autoStartDetection = true,
-      this.autoEndDetection = true,
-      this.motionThresholdMs = 500});
+  const _$$$SetTimingConfigImplImpl({
+    required this.mode,
+    this.samplingRateHz = 10,
+    this.trackVelocity = true,
+    this.trackPauses = true,
+    this.trackHeartRate = false,
+    this.maxSetDurationMs = 2000,
+    this.minRepDurationMs = 100,
+    this.maxRepDurationMs = 5000,
+    this.maxVelocityVariationPercent = 20.0,
+    this.maxPauseBetweenRepsMs = 1000,
+    this.autoStartDetection = true,
+    this.autoEndDetection = true,
+    this.motionThresholdMs = 500,
+  });
 
   factory _$$$SetTimingConfigImplImpl.fromJson(Map<String, dynamic> json) =>
       _$$$$SetTimingConfigImplImplFromJson(json);
 
   @override
   final TimingMode mode;
-// Precision settings
+  // Precision settings
   @override
   @JsonKey()
   final int samplingRateHz;
@@ -1012,7 +1061,7 @@ class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
   @override
   @JsonKey()
   final bool trackHeartRate;
-// Analysis thresholds
+  // Analysis thresholds
   @override
   @JsonKey()
   final int maxSetDurationMs;
@@ -1022,14 +1071,14 @@ class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
   @override
   @JsonKey()
   final int maxRepDurationMs;
-// Quality thresholds
+  // Quality thresholds
   @override
   @JsonKey()
   final double maxVelocityVariationPercent;
   @override
   @JsonKey()
   final int maxPauseBetweenRepsMs;
-// Auto-detection settings
+  // Auto-detection settings
   @override
   @JsonKey()
   final bool autoStartDetection;
@@ -1065,8 +1114,10 @@ class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
                 other.minRepDurationMs == minRepDurationMs) &&
             (identical(other.maxRepDurationMs, maxRepDurationMs) ||
                 other.maxRepDurationMs == maxRepDurationMs) &&
-            (identical(other.maxVelocityVariationPercent,
-                    maxVelocityVariationPercent) ||
+            (identical(
+                  other.maxVelocityVariationPercent,
+                  maxVelocityVariationPercent,
+                ) ||
                 other.maxVelocityVariationPercent ==
                     maxVelocityVariationPercent) &&
             (identical(other.maxPauseBetweenRepsMs, maxPauseBetweenRepsMs) ||
@@ -1079,88 +1130,96 @@ class _$$$SetTimingConfigImplImpl implements _$$SetTimingConfigImpl {
                 other.motionThresholdMs == motionThresholdMs));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      mode,
-      samplingRateHz,
-      trackVelocity,
-      trackPauses,
-      trackHeartRate,
-      maxSetDurationMs,
-      minRepDurationMs,
-      maxRepDurationMs,
-      maxVelocityVariationPercent,
-      maxPauseBetweenRepsMs,
-      autoStartDetection,
-      autoEndDetection,
-      motionThresholdMs);
+    runtimeType,
+    mode,
+    samplingRateHz,
+    trackVelocity,
+    trackPauses,
+    trackHeartRate,
+    maxSetDurationMs,
+    minRepDurationMs,
+    maxRepDurationMs,
+    maxVelocityVariationPercent,
+    maxPauseBetweenRepsMs,
+    autoStartDetection,
+    autoEndDetection,
+    motionThresholdMs,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SetTimingConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$$$SetTimingConfigImplImplCopyWith<_$$$SetTimingConfigImplImpl>
-      get copyWith => __$$$$SetTimingConfigImplImplCopyWithImpl<
-          _$$$SetTimingConfigImplImpl>(this, _$identity);
+  get copyWith =>
+      __$$$$SetTimingConfigImplImplCopyWithImpl<_$$$SetTimingConfigImplImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$$$SetTimingConfigImplImplToJson(
-      this,
-    );
+    return _$$$$SetTimingConfigImplImplToJson(this);
   }
 }
 
 abstract class _$$SetTimingConfigImpl implements SetTimingConfig {
-  const factory _$$SetTimingConfigImpl(
-      {required final TimingMode mode,
-      final int samplingRateHz,
-      final bool trackVelocity,
-      final bool trackPauses,
-      final bool trackHeartRate,
-      final int maxSetDurationMs,
-      final int minRepDurationMs,
-      final int maxRepDurationMs,
-      final double maxVelocityVariationPercent,
-      final int maxPauseBetweenRepsMs,
-      final bool autoStartDetection,
-      final bool autoEndDetection,
-      final int motionThresholdMs}) = _$$$SetTimingConfigImplImpl;
+  const factory _$$SetTimingConfigImpl({
+    required final TimingMode mode,
+    final int samplingRateHz,
+    final bool trackVelocity,
+    final bool trackPauses,
+    final bool trackHeartRate,
+    final int maxSetDurationMs,
+    final int minRepDurationMs,
+    final int maxRepDurationMs,
+    final double maxVelocityVariationPercent,
+    final int maxPauseBetweenRepsMs,
+    final bool autoStartDetection,
+    final bool autoEndDetection,
+    final int motionThresholdMs,
+  }) = _$$$SetTimingConfigImplImpl;
 
   factory _$$SetTimingConfigImpl.fromJson(Map<String, dynamic> json) =
       _$$$SetTimingConfigImplImpl.fromJson;
 
   @override
-  TimingMode get mode;
-  @override // Precision settings
+  TimingMode get mode; // Precision settings
+  @override
   int get samplingRateHz;
   @override
   bool get trackVelocity;
   @override
   bool get trackPauses;
   @override
-  bool get trackHeartRate;
-  @override // Analysis thresholds
+  bool get trackHeartRate; // Analysis thresholds
+  @override
   int get maxSetDurationMs;
   @override
   int get minRepDurationMs;
   @override
-  int get maxRepDurationMs;
-  @override // Quality thresholds
+  int get maxRepDurationMs; // Quality thresholds
+  @override
   double get maxVelocityVariationPercent;
   @override
-  int get maxPauseBetweenRepsMs;
-  @override // Auto-detection settings
+  int get maxPauseBetweenRepsMs; // Auto-detection settings
+  @override
   bool get autoStartDetection;
   @override
   bool get autoEndDetection;
   @override
   int get motionThresholdMs;
+
+  /// Create a copy of SetTimingConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$$$SetTimingConfigImplImplCopyWith<_$$$SetTimingConfigImplImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 LiveSetMetrics _$LiveSetMetricsFromJson(Map<String, dynamic> json) {
@@ -1189,8 +1248,12 @@ mixin _$LiveSetMetrics {
   int? get suggestedReps => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
 
+  /// Serializes this LiveSetMetrics to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of LiveSetMetrics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LiveSetMetricsCopyWith<LiveSetMetrics> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1198,25 +1261,27 @@ mixin _$LiveSetMetrics {
 /// @nodoc
 abstract class $LiveSetMetricsCopyWith<$Res> {
   factory $LiveSetMetricsCopyWith(
-          LiveSetMetrics value, $Res Function(LiveSetMetrics) then) =
-      _$LiveSetMetricsCopyWithImpl<$Res, LiveSetMetrics>;
+    LiveSetMetrics value,
+    $Res Function(LiveSetMetrics) then,
+  ) = _$LiveSetMetricsCopyWithImpl<$Res, LiveSetMetrics>;
   @useResult
-  $Res call(
-      {String setId,
-      SetPhase phase,
-      int elapsedMs,
-      int currentRep,
-      double currentVelocityMps,
-      double averageVelocityMps,
-      double velocityDropPercent,
-      double currentFormScore,
-      double consistencyScore,
-      double fatigueIndex,
-      bool shouldStopSet,
-      String? coachingTip,
-      double? suggestedWeight,
-      int? suggestedReps,
-      DateTime timestamp});
+  $Res call({
+    String setId,
+    SetPhase phase,
+    int elapsedMs,
+    int currentRep,
+    double currentVelocityMps,
+    double averageVelocityMps,
+    double velocityDropPercent,
+    double currentFormScore,
+    double consistencyScore,
+    double fatigueIndex,
+    bool shouldStopSet,
+    String? coachingTip,
+    double? suggestedWeight,
+    int? suggestedReps,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -1229,6 +1294,8 @@ class _$LiveSetMetricsCopyWithImpl<$Res, $Val extends LiveSetMetrics>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LiveSetMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1248,105 +1315,113 @@ class _$LiveSetMetricsCopyWithImpl<$Res, $Val extends LiveSetMetrics>
     Object? suggestedReps = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_value.copyWith(
-      setId: null == setId
-          ? _value.setId
-          : setId // ignore: cast_nullable_to_non_nullable
-              as String,
-      phase: null == phase
-          ? _value.phase
-          : phase // ignore: cast_nullable_to_non_nullable
-              as SetPhase,
-      elapsedMs: null == elapsedMs
-          ? _value.elapsedMs
-          : elapsedMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentRep: null == currentRep
-          ? _value.currentRep
-          : currentRep // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentVelocityMps: null == currentVelocityMps
-          ? _value.currentVelocityMps
-          : currentVelocityMps // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageVelocityMps: null == averageVelocityMps
-          ? _value.averageVelocityMps
-          : averageVelocityMps // ignore: cast_nullable_to_non_nullable
-              as double,
-      velocityDropPercent: null == velocityDropPercent
-          ? _value.velocityDropPercent
-          : velocityDropPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentFormScore: null == currentFormScore
-          ? _value.currentFormScore
-          : currentFormScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      fatigueIndex: null == fatigueIndex
-          ? _value.fatigueIndex
-          : fatigueIndex // ignore: cast_nullable_to_non_nullable
-              as double,
-      shouldStopSet: null == shouldStopSet
-          ? _value.shouldStopSet
-          : shouldStopSet // ignore: cast_nullable_to_non_nullable
-              as bool,
-      coachingTip: freezed == coachingTip
-          ? _value.coachingTip
-          : coachingTip // ignore: cast_nullable_to_non_nullable
-              as String?,
-      suggestedWeight: freezed == suggestedWeight
-          ? _value.suggestedWeight
-          : suggestedWeight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      suggestedReps: freezed == suggestedReps
-          ? _value.suggestedReps
-          : suggestedReps // ignore: cast_nullable_to_non_nullable
-              as int?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            setId: null == setId
+                ? _value.setId
+                : setId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            phase: null == phase
+                ? _value.phase
+                : phase // ignore: cast_nullable_to_non_nullable
+                      as SetPhase,
+            elapsedMs: null == elapsedMs
+                ? _value.elapsedMs
+                : elapsedMs // ignore: cast_nullable_to_non_nullable
+                      as int,
+            currentRep: null == currentRep
+                ? _value.currentRep
+                : currentRep // ignore: cast_nullable_to_non_nullable
+                      as int,
+            currentVelocityMps: null == currentVelocityMps
+                ? _value.currentVelocityMps
+                : currentVelocityMps // ignore: cast_nullable_to_non_nullable
+                      as double,
+            averageVelocityMps: null == averageVelocityMps
+                ? _value.averageVelocityMps
+                : averageVelocityMps // ignore: cast_nullable_to_non_nullable
+                      as double,
+            velocityDropPercent: null == velocityDropPercent
+                ? _value.velocityDropPercent
+                : velocityDropPercent // ignore: cast_nullable_to_non_nullable
+                      as double,
+            currentFormScore: null == currentFormScore
+                ? _value.currentFormScore
+                : currentFormScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            consistencyScore: null == consistencyScore
+                ? _value.consistencyScore
+                : consistencyScore // ignore: cast_nullable_to_non_nullable
+                      as double,
+            fatigueIndex: null == fatigueIndex
+                ? _value.fatigueIndex
+                : fatigueIndex // ignore: cast_nullable_to_non_nullable
+                      as double,
+            shouldStopSet: null == shouldStopSet
+                ? _value.shouldStopSet
+                : shouldStopSet // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            coachingTip: freezed == coachingTip
+                ? _value.coachingTip
+                : coachingTip // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            suggestedWeight: freezed == suggestedWeight
+                ? _value.suggestedWeight
+                : suggestedWeight // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            suggestedReps: freezed == suggestedReps
+                ? _value.suggestedReps
+                : suggestedReps // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$$$LiveSetMetricsImplImplCopyWith<$Res>
     implements $LiveSetMetricsCopyWith<$Res> {
-  factory _$$$$LiveSetMetricsImplImplCopyWith(_$$$LiveSetMetricsImplImpl value,
-          $Res Function(_$$$LiveSetMetricsImplImpl) then) =
-      __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>;
+  factory _$$$$LiveSetMetricsImplImplCopyWith(
+    _$$$LiveSetMetricsImplImpl value,
+    $Res Function(_$$$LiveSetMetricsImplImpl) then,
+  ) = __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String setId,
-      SetPhase phase,
-      int elapsedMs,
-      int currentRep,
-      double currentVelocityMps,
-      double averageVelocityMps,
-      double velocityDropPercent,
-      double currentFormScore,
-      double consistencyScore,
-      double fatigueIndex,
-      bool shouldStopSet,
-      String? coachingTip,
-      double? suggestedWeight,
-      int? suggestedReps,
-      DateTime timestamp});
+  $Res call({
+    String setId,
+    SetPhase phase,
+    int elapsedMs,
+    int currentRep,
+    double currentVelocityMps,
+    double averageVelocityMps,
+    double velocityDropPercent,
+    double currentFormScore,
+    double consistencyScore,
+    double fatigueIndex,
+    bool shouldStopSet,
+    String? coachingTip,
+    double? suggestedWeight,
+    int? suggestedReps,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
 class __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>
     extends _$LiveSetMetricsCopyWithImpl<$Res, _$$$LiveSetMetricsImplImpl>
     implements _$$$$LiveSetMetricsImplImplCopyWith<$Res> {
-  __$$$$LiveSetMetricsImplImplCopyWithImpl(_$$$LiveSetMetricsImplImpl _value,
-      $Res Function(_$$$LiveSetMetricsImplImpl) _then)
-      : super(_value, _then);
+  __$$$$LiveSetMetricsImplImplCopyWithImpl(
+    _$$$LiveSetMetricsImplImpl _value,
+    $Res Function(_$$$LiveSetMetricsImplImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of LiveSetMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1366,90 +1441,93 @@ class __$$$$LiveSetMetricsImplImplCopyWithImpl<$Res>
     Object? suggestedReps = freezed,
     Object? timestamp = null,
   }) {
-    return _then(_$$$LiveSetMetricsImplImpl(
-      setId: null == setId
-          ? _value.setId
-          : setId // ignore: cast_nullable_to_non_nullable
-              as String,
-      phase: null == phase
-          ? _value.phase
-          : phase // ignore: cast_nullable_to_non_nullable
-              as SetPhase,
-      elapsedMs: null == elapsedMs
-          ? _value.elapsedMs
-          : elapsedMs // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentRep: null == currentRep
-          ? _value.currentRep
-          : currentRep // ignore: cast_nullable_to_non_nullable
-              as int,
-      currentVelocityMps: null == currentVelocityMps
-          ? _value.currentVelocityMps
-          : currentVelocityMps // ignore: cast_nullable_to_non_nullable
-              as double,
-      averageVelocityMps: null == averageVelocityMps
-          ? _value.averageVelocityMps
-          : averageVelocityMps // ignore: cast_nullable_to_non_nullable
-              as double,
-      velocityDropPercent: null == velocityDropPercent
-          ? _value.velocityDropPercent
-          : velocityDropPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentFormScore: null == currentFormScore
-          ? _value.currentFormScore
-          : currentFormScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      consistencyScore: null == consistencyScore
-          ? _value.consistencyScore
-          : consistencyScore // ignore: cast_nullable_to_non_nullable
-              as double,
-      fatigueIndex: null == fatigueIndex
-          ? _value.fatigueIndex
-          : fatigueIndex // ignore: cast_nullable_to_non_nullable
-              as double,
-      shouldStopSet: null == shouldStopSet
-          ? _value.shouldStopSet
-          : shouldStopSet // ignore: cast_nullable_to_non_nullable
-              as bool,
-      coachingTip: freezed == coachingTip
-          ? _value.coachingTip
-          : coachingTip // ignore: cast_nullable_to_non_nullable
-              as String?,
-      suggestedWeight: freezed == suggestedWeight
-          ? _value.suggestedWeight
-          : suggestedWeight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      suggestedReps: freezed == suggestedReps
-          ? _value.suggestedReps
-          : suggestedReps // ignore: cast_nullable_to_non_nullable
-              as int?,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$$$LiveSetMetricsImplImpl(
+        setId: null == setId
+            ? _value.setId
+            : setId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phase: null == phase
+            ? _value.phase
+            : phase // ignore: cast_nullable_to_non_nullable
+                  as SetPhase,
+        elapsedMs: null == elapsedMs
+            ? _value.elapsedMs
+            : elapsedMs // ignore: cast_nullable_to_non_nullable
+                  as int,
+        currentRep: null == currentRep
+            ? _value.currentRep
+            : currentRep // ignore: cast_nullable_to_non_nullable
+                  as int,
+        currentVelocityMps: null == currentVelocityMps
+            ? _value.currentVelocityMps
+            : currentVelocityMps // ignore: cast_nullable_to_non_nullable
+                  as double,
+        averageVelocityMps: null == averageVelocityMps
+            ? _value.averageVelocityMps
+            : averageVelocityMps // ignore: cast_nullable_to_non_nullable
+                  as double,
+        velocityDropPercent: null == velocityDropPercent
+            ? _value.velocityDropPercent
+            : velocityDropPercent // ignore: cast_nullable_to_non_nullable
+                  as double,
+        currentFormScore: null == currentFormScore
+            ? _value.currentFormScore
+            : currentFormScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        consistencyScore: null == consistencyScore
+            ? _value.consistencyScore
+            : consistencyScore // ignore: cast_nullable_to_non_nullable
+                  as double,
+        fatigueIndex: null == fatigueIndex
+            ? _value.fatigueIndex
+            : fatigueIndex // ignore: cast_nullable_to_non_nullable
+                  as double,
+        shouldStopSet: null == shouldStopSet
+            ? _value.shouldStopSet
+            : shouldStopSet // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        coachingTip: freezed == coachingTip
+            ? _value.coachingTip
+            : coachingTip // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        suggestedWeight: freezed == suggestedWeight
+            ? _value.suggestedWeight
+            : suggestedWeight // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        suggestedReps: freezed == suggestedReps
+            ? _value.suggestedReps
+            : suggestedReps // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$$$LiveSetMetricsImplImpl implements _$$LiveSetMetricsImpl {
-  const _$$$LiveSetMetricsImplImpl(
-      {required this.setId,
-      required this.phase,
-      required this.elapsedMs,
-      required this.currentRep,
-      this.currentVelocityMps = 0.0,
-      this.averageVelocityMps = 0.0,
-      this.velocityDropPercent = 0.0,
-      this.currentFormScore = 0.0,
-      this.consistencyScore = 0.0,
-      this.fatigueIndex = 0.0,
-      this.shouldStopSet = false,
-      this.coachingTip,
-      this.suggestedWeight,
-      this.suggestedReps,
-      required this.timestamp});
+  const _$$$LiveSetMetricsImplImpl({
+    required this.setId,
+    required this.phase,
+    required this.elapsedMs,
+    required this.currentRep,
+    this.currentVelocityMps = 0.0,
+    this.averageVelocityMps = 0.0,
+    this.velocityDropPercent = 0.0,
+    this.currentFormScore = 0.0,
+    this.consistencyScore = 0.0,
+    this.fatigueIndex = 0.0,
+    this.shouldStopSet = false,
+    this.coachingTip,
+    this.suggestedWeight,
+    this.suggestedReps,
+    required this.timestamp,
+  });
 
   factory _$$$LiveSetMetricsImplImpl.fromJson(Map<String, dynamic> json) =>
       _$$$$LiveSetMetricsImplImplFromJson(json);
@@ -1458,12 +1536,12 @@ class _$$$LiveSetMetricsImplImpl implements _$$LiveSetMetricsImpl {
   final String setId;
   @override
   final SetPhase phase;
-// Current timing
+  // Current timing
   @override
   final int elapsedMs;
   @override
   final int currentRep;
-// Live velocity data
+  // Live velocity data
   @override
   @JsonKey()
   final double currentVelocityMps;
@@ -1473,21 +1551,21 @@ class _$$$LiveSetMetricsImplImpl implements _$$LiveSetMetricsImpl {
   @override
   @JsonKey()
   final double velocityDropPercent;
-// Form feedback
+  // Form feedback
   @override
   @JsonKey()
   final double currentFormScore;
   @override
   @JsonKey()
   final double consistencyScore;
-// Fatigue indicators
+  // Fatigue indicators
   @override
   @JsonKey()
   final double fatigueIndex;
   @override
   @JsonKey()
   final bool shouldStopSet;
-// Recommendations
+  // Recommendations
   @override
   final String? coachingTip;
   @override
@@ -1537,59 +1615,63 @@ class _$$$LiveSetMetricsImplImpl implements _$$LiveSetMetricsImpl {
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      setId,
-      phase,
-      elapsedMs,
-      currentRep,
-      currentVelocityMps,
-      averageVelocityMps,
-      velocityDropPercent,
-      currentFormScore,
-      consistencyScore,
-      fatigueIndex,
-      shouldStopSet,
-      coachingTip,
-      suggestedWeight,
-      suggestedReps,
-      timestamp);
+    runtimeType,
+    setId,
+    phase,
+    elapsedMs,
+    currentRep,
+    currentVelocityMps,
+    averageVelocityMps,
+    velocityDropPercent,
+    currentFormScore,
+    consistencyScore,
+    fatigueIndex,
+    shouldStopSet,
+    coachingTip,
+    suggestedWeight,
+    suggestedReps,
+    timestamp,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LiveSetMetrics
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$$$LiveSetMetricsImplImplCopyWith<_$$$LiveSetMetricsImplImpl>
-      get copyWith =>
-          __$$$$LiveSetMetricsImplImplCopyWithImpl<_$$$LiveSetMetricsImplImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$$$LiveSetMetricsImplImplCopyWithImpl<_$$$LiveSetMetricsImplImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$$$LiveSetMetricsImplImplToJson(
-      this,
-    );
+    return _$$$$LiveSetMetricsImplImplToJson(this);
   }
 }
 
 abstract class _$$LiveSetMetricsImpl implements LiveSetMetrics {
-  const factory _$$LiveSetMetricsImpl(
-      {required final String setId,
-      required final SetPhase phase,
-      required final int elapsedMs,
-      required final int currentRep,
-      final double currentVelocityMps,
-      final double averageVelocityMps,
-      final double velocityDropPercent,
-      final double currentFormScore,
-      final double consistencyScore,
-      final double fatigueIndex,
-      final bool shouldStopSet,
-      final String? coachingTip,
-      final double? suggestedWeight,
-      final int? suggestedReps,
-      required final DateTime timestamp}) = _$$$LiveSetMetricsImplImpl;
+  const factory _$$LiveSetMetricsImpl({
+    required final String setId,
+    required final SetPhase phase,
+    required final int elapsedMs,
+    required final int currentRep,
+    final double currentVelocityMps,
+    final double averageVelocityMps,
+    final double velocityDropPercent,
+    final double currentFormScore,
+    final double consistencyScore,
+    final double fatigueIndex,
+    final bool shouldStopSet,
+    final String? coachingTip,
+    final double? suggestedWeight,
+    final int? suggestedReps,
+    required final DateTime timestamp,
+  }) = _$$$LiveSetMetricsImplImpl;
 
   factory _$$LiveSetMetricsImpl.fromJson(Map<String, dynamic> json) =
       _$$$LiveSetMetricsImplImpl.fromJson;
@@ -1597,26 +1679,26 @@ abstract class _$$LiveSetMetricsImpl implements LiveSetMetrics {
   @override
   String get setId;
   @override
-  SetPhase get phase;
-  @override // Current timing
+  SetPhase get phase; // Current timing
+  @override
   int get elapsedMs;
   @override
-  int get currentRep;
-  @override // Live velocity data
+  int get currentRep; // Live velocity data
+  @override
   double get currentVelocityMps;
   @override
   double get averageVelocityMps;
   @override
-  double get velocityDropPercent;
-  @override // Form feedback
+  double get velocityDropPercent; // Form feedback
+  @override
   double get currentFormScore;
   @override
-  double get consistencyScore;
-  @override // Fatigue indicators
+  double get consistencyScore; // Fatigue indicators
+  @override
   double get fatigueIndex;
   @override
-  bool get shouldStopSet;
-  @override // Recommendations
+  bool get shouldStopSet; // Recommendations
+  @override
   String? get coachingTip;
   @override
   double? get suggestedWeight;
@@ -1624,8 +1706,11 @@ abstract class _$$LiveSetMetricsImpl implements LiveSetMetrics {
   int? get suggestedReps;
   @override
   DateTime get timestamp;
+
+  /// Create a copy of LiveSetMetrics
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$$$LiveSetMetricsImplImplCopyWith<_$$$LiveSetMetricsImplImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

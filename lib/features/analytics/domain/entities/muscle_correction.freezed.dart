@@ -12,7 +12,8 @@ part of 'muscle_correction.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MuscleCorrection _$MuscleCorrectionFromJson(Map<String, dynamic> json) {
   return _MuscleCorrection.fromJson(json);
@@ -32,8 +33,12 @@ mixin _$MuscleCorrection {
   /// When the correction was made (local timestamp)
   DateTime get timestamp => throw _privateConstructorUsedError;
 
+  /// Serializes this MuscleCorrection to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MuscleCorrection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MuscleCorrectionCopyWith<MuscleCorrection> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -41,14 +46,16 @@ mixin _$MuscleCorrection {
 /// @nodoc
 abstract class $MuscleCorrectionCopyWith<$Res> {
   factory $MuscleCorrectionCopyWith(
-          MuscleCorrection value, $Res Function(MuscleCorrection) then) =
-      _$MuscleCorrectionCopyWithImpl<$Res, MuscleCorrection>;
+    MuscleCorrection value,
+    $Res Function(MuscleCorrection) then,
+  ) = _$MuscleCorrectionCopyWithImpl<$Res, MuscleCorrection>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      String oldMuscleGroup,
-      String newMuscleGroup,
-      DateTime timestamp});
+  $Res call({
+    String exerciseName,
+    String oldMuscleGroup,
+    String newMuscleGroup,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
@@ -61,6 +68,8 @@ class _$MuscleCorrectionCopyWithImpl<$Res, $Val extends MuscleCorrection>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MuscleCorrection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,50 +78,58 @@ class _$MuscleCorrectionCopyWithImpl<$Res, $Val extends MuscleCorrection>
     Object? newMuscleGroup = null,
     Object? timestamp = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      oldMuscleGroup: null == oldMuscleGroup
-          ? _value.oldMuscleGroup
-          : oldMuscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      newMuscleGroup: null == newMuscleGroup
-          ? _value.newMuscleGroup
-          : newMuscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            oldMuscleGroup: null == oldMuscleGroup
+                ? _value.oldMuscleGroup
+                : oldMuscleGroup // ignore: cast_nullable_to_non_nullable
+                      as String,
+            newMuscleGroup: null == newMuscleGroup
+                ? _value.newMuscleGroup
+                : newMuscleGroup // ignore: cast_nullable_to_non_nullable
+                      as String,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MuscleCorrectionImplCopyWith<$Res>
     implements $MuscleCorrectionCopyWith<$Res> {
-  factory _$$MuscleCorrectionImplCopyWith(_$MuscleCorrectionImpl value,
-          $Res Function(_$MuscleCorrectionImpl) then) =
-      __$$MuscleCorrectionImplCopyWithImpl<$Res>;
+  factory _$$MuscleCorrectionImplCopyWith(
+    _$MuscleCorrectionImpl value,
+    $Res Function(_$MuscleCorrectionImpl) then,
+  ) = __$$MuscleCorrectionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      String oldMuscleGroup,
-      String newMuscleGroup,
-      DateTime timestamp});
+  $Res call({
+    String exerciseName,
+    String oldMuscleGroup,
+    String newMuscleGroup,
+    DateTime timestamp,
+  });
 }
 
 /// @nodoc
 class __$$MuscleCorrectionImplCopyWithImpl<$Res>
     extends _$MuscleCorrectionCopyWithImpl<$Res, _$MuscleCorrectionImpl>
     implements _$$MuscleCorrectionImplCopyWith<$Res> {
-  __$$MuscleCorrectionImplCopyWithImpl(_$MuscleCorrectionImpl _value,
-      $Res Function(_$MuscleCorrectionImpl) _then)
-      : super(_value, _then);
+  __$$MuscleCorrectionImplCopyWithImpl(
+    _$MuscleCorrectionImpl _value,
+    $Res Function(_$MuscleCorrectionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MuscleCorrection
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -121,35 +138,38 @@ class __$$MuscleCorrectionImplCopyWithImpl<$Res>
     Object? newMuscleGroup = null,
     Object? timestamp = null,
   }) {
-    return _then(_$MuscleCorrectionImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      oldMuscleGroup: null == oldMuscleGroup
-          ? _value.oldMuscleGroup
-          : oldMuscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      newMuscleGroup: null == newMuscleGroup
-          ? _value.newMuscleGroup
-          : newMuscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      timestamp: null == timestamp
-          ? _value.timestamp
-          : timestamp // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MuscleCorrectionImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        oldMuscleGroup: null == oldMuscleGroup
+            ? _value.oldMuscleGroup
+            : oldMuscleGroup // ignore: cast_nullable_to_non_nullable
+                  as String,
+        newMuscleGroup: null == newMuscleGroup
+            ? _value.newMuscleGroup
+            : newMuscleGroup // ignore: cast_nullable_to_non_nullable
+                  as String,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MuscleCorrectionImpl implements _MuscleCorrection {
-  const _$MuscleCorrectionImpl(
-      {required this.exerciseName,
-      required this.oldMuscleGroup,
-      required this.newMuscleGroup,
-      required this.timestamp});
+  const _$MuscleCorrectionImpl({
+    required this.exerciseName,
+    required this.oldMuscleGroup,
+    required this.newMuscleGroup,
+    required this.timestamp,
+  });
 
   factory _$MuscleCorrectionImpl.fromJson(Map<String, dynamic> json) =>
       _$$MuscleCorrectionImplFromJson(json);
@@ -190,54 +210,64 @@ class _$MuscleCorrectionImpl implements _MuscleCorrection {
                 other.timestamp == timestamp));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, exerciseName, oldMuscleGroup, newMuscleGroup, timestamp);
+    runtimeType,
+    exerciseName,
+    oldMuscleGroup,
+    newMuscleGroup,
+    timestamp,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MuscleCorrection
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MuscleCorrectionImplCopyWith<_$MuscleCorrectionImpl> get copyWith =>
       __$$MuscleCorrectionImplCopyWithImpl<_$MuscleCorrectionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MuscleCorrectionImplToJson(
-      this,
-    );
+    return _$$MuscleCorrectionImplToJson(this);
   }
 }
 
 abstract class _MuscleCorrection implements MuscleCorrection {
-  const factory _MuscleCorrection(
-      {required final String exerciseName,
-      required final String oldMuscleGroup,
-      required final String newMuscleGroup,
-      required final DateTime timestamp}) = _$MuscleCorrectionImpl;
+  const factory _MuscleCorrection({
+    required final String exerciseName,
+    required final String oldMuscleGroup,
+    required final String newMuscleGroup,
+    required final DateTime timestamp,
+  }) = _$MuscleCorrectionImpl;
 
   factory _MuscleCorrection.fromJson(Map<String, dynamic> json) =
       _$MuscleCorrectionImpl.fromJson;
 
-  @override
-
   /// Exercise name (e.g., "Bench Press", "Squat")
-  String get exerciseName;
   @override
+  String get exerciseName;
 
   /// Original muscle group (e.g., "Chest", "Back")
-  String get oldMuscleGroup;
   @override
+  String get oldMuscleGroup;
 
   /// Corrected muscle group (e.g., "Shoulders", "Legs")
-  String get newMuscleGroup;
   @override
+  String get newMuscleGroup;
 
   /// When the correction was made (local timestamp)
-  DateTime get timestamp;
   @override
-  @JsonKey(ignore: true)
+  DateTime get timestamp;
+
+  /// Create a copy of MuscleCorrection
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MuscleCorrectionImplCopyWith<_$MuscleCorrectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

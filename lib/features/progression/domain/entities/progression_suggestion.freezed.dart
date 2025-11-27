@@ -12,7 +12,8 @@ part of 'progression_suggestion.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ProgressionSuggestion {
@@ -24,30 +25,36 @@ mixin _$ProgressionSuggestion {
   ProgressionConfidence get confidence => throw _privateConstructorUsedError;
   String? get additionalNotes => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProgressionSuggestion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ProgressionSuggestionCopyWith<ProgressionSuggestion> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProgressionSuggestionCopyWith<$Res> {
-  factory $ProgressionSuggestionCopyWith(ProgressionSuggestion value,
-          $Res Function(ProgressionSuggestion) then) =
-      _$ProgressionSuggestionCopyWithImpl<$Res, ProgressionSuggestion>;
+  factory $ProgressionSuggestionCopyWith(
+    ProgressionSuggestion value,
+    $Res Function(ProgressionSuggestion) then,
+  ) = _$ProgressionSuggestionCopyWithImpl<$Res, ProgressionSuggestion>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      double currentWeight,
-      double suggestedWeight,
-      int targetReps,
-      String reason,
-      ProgressionConfidence confidence,
-      String? additionalNotes});
+  $Res call({
+    String exerciseName,
+    double currentWeight,
+    double suggestedWeight,
+    int targetReps,
+    String reason,
+    ProgressionConfidence confidence,
+    String? additionalNotes,
+  });
 }
 
 /// @nodoc
-class _$ProgressionSuggestionCopyWithImpl<$Res,
-        $Val extends ProgressionSuggestion>
+class _$ProgressionSuggestionCopyWithImpl<
+  $Res,
+  $Val extends ProgressionSuggestion
+>
     implements $ProgressionSuggestionCopyWith<$Res> {
   _$ProgressionSuggestionCopyWithImpl(this._value, this._then);
 
@@ -56,6 +63,8 @@ class _$ProgressionSuggestionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ProgressionSuggestion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -67,36 +76,39 @@ class _$ProgressionSuggestionCopyWithImpl<$Res,
     Object? confidence = null,
     Object? additionalNotes = freezed,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentWeight: null == currentWeight
-          ? _value.currentWeight
-          : currentWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      suggestedWeight: null == suggestedWeight
-          ? _value.suggestedWeight
-          : suggestedWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetReps: null == targetReps
-          ? _value.targetReps
-          : targetReps // ignore: cast_nullable_to_non_nullable
-              as int,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as ProgressionConfidence,
-      additionalNotes: freezed == additionalNotes
-          ? _value.additionalNotes
-          : additionalNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            currentWeight: null == currentWeight
+                ? _value.currentWeight
+                : currentWeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            suggestedWeight: null == suggestedWeight
+                ? _value.suggestedWeight
+                : suggestedWeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            targetReps: null == targetReps
+                ? _value.targetReps
+                : targetReps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            reason: null == reason
+                ? _value.reason
+                : reason // ignore: cast_nullable_to_non_nullable
+                      as String,
+            confidence: null == confidence
+                ? _value.confidence
+                : confidence // ignore: cast_nullable_to_non_nullable
+                      as ProgressionConfidence,
+            additionalNotes: freezed == additionalNotes
+                ? _value.additionalNotes
+                : additionalNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -104,30 +116,34 @@ class _$ProgressionSuggestionCopyWithImpl<$Res,
 abstract class _$$ProgressionSuggestionImplCopyWith<$Res>
     implements $ProgressionSuggestionCopyWith<$Res> {
   factory _$$ProgressionSuggestionImplCopyWith(
-          _$ProgressionSuggestionImpl value,
-          $Res Function(_$ProgressionSuggestionImpl) then) =
-      __$$ProgressionSuggestionImplCopyWithImpl<$Res>;
+    _$ProgressionSuggestionImpl value,
+    $Res Function(_$ProgressionSuggestionImpl) then,
+  ) = __$$ProgressionSuggestionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      double currentWeight,
-      double suggestedWeight,
-      int targetReps,
-      String reason,
-      ProgressionConfidence confidence,
-      String? additionalNotes});
+  $Res call({
+    String exerciseName,
+    double currentWeight,
+    double suggestedWeight,
+    int targetReps,
+    String reason,
+    ProgressionConfidence confidence,
+    String? additionalNotes,
+  });
 }
 
 /// @nodoc
 class __$$ProgressionSuggestionImplCopyWithImpl<$Res>
-    extends _$ProgressionSuggestionCopyWithImpl<$Res,
-        _$ProgressionSuggestionImpl>
+    extends
+        _$ProgressionSuggestionCopyWithImpl<$Res, _$ProgressionSuggestionImpl>
     implements _$$ProgressionSuggestionImplCopyWith<$Res> {
-  __$$ProgressionSuggestionImplCopyWithImpl(_$ProgressionSuggestionImpl _value,
-      $Res Function(_$ProgressionSuggestionImpl) _then)
-      : super(_value, _then);
+  __$$ProgressionSuggestionImplCopyWithImpl(
+    _$ProgressionSuggestionImpl _value,
+    $Res Function(_$ProgressionSuggestionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ProgressionSuggestion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,50 +155,53 @@ class __$$ProgressionSuggestionImplCopyWithImpl<$Res>
     Object? confidence = null,
     Object? additionalNotes = freezed,
   }) {
-    return _then(_$ProgressionSuggestionImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentWeight: null == currentWeight
-          ? _value.currentWeight
-          : currentWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      suggestedWeight: null == suggestedWeight
-          ? _value.suggestedWeight
-          : suggestedWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetReps: null == targetReps
-          ? _value.targetReps
-          : targetReps // ignore: cast_nullable_to_non_nullable
-              as int,
-      reason: null == reason
-          ? _value.reason
-          : reason // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as ProgressionConfidence,
-      additionalNotes: freezed == additionalNotes
-          ? _value.additionalNotes
-          : additionalNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ProgressionSuggestionImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        currentWeight: null == currentWeight
+            ? _value.currentWeight
+            : currentWeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        suggestedWeight: null == suggestedWeight
+            ? _value.suggestedWeight
+            : suggestedWeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        targetReps: null == targetReps
+            ? _value.targetReps
+            : targetReps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        reason: null == reason
+            ? _value.reason
+            : reason // ignore: cast_nullable_to_non_nullable
+                  as String,
+        confidence: null == confidence
+            ? _value.confidence
+            : confidence // ignore: cast_nullable_to_non_nullable
+                  as ProgressionConfidence,
+        additionalNotes: freezed == additionalNotes
+            ? _value.additionalNotes
+            : additionalNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ProgressionSuggestionImpl implements _ProgressionSuggestion {
-  const _$ProgressionSuggestionImpl(
-      {required this.exerciseName,
-      required this.currentWeight,
-      required this.suggestedWeight,
-      required this.targetReps,
-      required this.reason,
-      required this.confidence,
-      this.additionalNotes});
+  const _$ProgressionSuggestionImpl({
+    required this.exerciseName,
+    required this.currentWeight,
+    required this.suggestedWeight,
+    required this.targetReps,
+    required this.reason,
+    required this.confidence,
+    this.additionalNotes,
+  });
 
   @override
   final String exerciseName;
@@ -225,26 +244,40 @@ class _$ProgressionSuggestionImpl implements _ProgressionSuggestion {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, currentWeight,
-      suggestedWeight, targetReps, reason, confidence, additionalNotes);
+  int get hashCode => Object.hash(
+    runtimeType,
+    exerciseName,
+    currentWeight,
+    suggestedWeight,
+    targetReps,
+    reason,
+    confidence,
+    additionalNotes,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProgressionSuggestion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ProgressionSuggestionImplCopyWith<_$ProgressionSuggestionImpl>
-      get copyWith => __$$ProgressionSuggestionImplCopyWithImpl<
-          _$ProgressionSuggestionImpl>(this, _$identity);
+  get copyWith =>
+      __$$ProgressionSuggestionImplCopyWithImpl<_$ProgressionSuggestionImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ProgressionSuggestion implements ProgressionSuggestion {
-  const factory _ProgressionSuggestion(
-      {required final String exerciseName,
-      required final double currentWeight,
-      required final double suggestedWeight,
-      required final int targetReps,
-      required final String reason,
-      required final ProgressionConfidence confidence,
-      final String? additionalNotes}) = _$ProgressionSuggestionImpl;
+  const factory _ProgressionSuggestion({
+    required final String exerciseName,
+    required final double currentWeight,
+    required final double suggestedWeight,
+    required final int targetReps,
+    required final String reason,
+    required final ProgressionConfidence confidence,
+    final String? additionalNotes,
+  }) = _$ProgressionSuggestionImpl;
 
   @override
   String get exerciseName;
@@ -260,8 +293,11 @@ abstract class _ProgressionSuggestion implements ProgressionSuggestion {
   ProgressionConfidence get confidence;
   @override
   String? get additionalNotes;
+
+  /// Create a copy of ProgressionSuggestion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProgressionSuggestionImplCopyWith<_$ProgressionSuggestionImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

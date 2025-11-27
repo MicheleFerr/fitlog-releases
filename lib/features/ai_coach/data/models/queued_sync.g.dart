@@ -8,7 +8,7 @@ part of 'queued_sync.dart';
 
 class QueuedSyncAdapter extends TypeAdapter<QueuedSync> {
   @override
-  final int typeId = 10;
+  final typeId = 10;
 
   @override
   QueuedSync read(BinaryReader reader) {
@@ -21,8 +21,8 @@ class QueuedSyncAdapter extends TypeAdapter<QueuedSync> {
       timestamp: fields[1] as DateTime,
       healthMetrics: (fields[2] as Map).cast<String, dynamic>(),
       error: fields[3] as String,
-      retryCount: (fields[4] as num).toInt(),
-      retryable: fields[5] as bool,
+      retryCount: fields[4] == null ? 0 : (fields[4] as num).toInt(),
+      retryable: fields[5] == null ? true : fields[5] as bool,
       nextRetryAt: fields[6] as DateTime?,
     );
   }

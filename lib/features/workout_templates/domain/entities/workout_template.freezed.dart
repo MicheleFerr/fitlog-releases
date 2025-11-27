@@ -12,10 +12,12 @@ part of 'workout_template.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 CommunityWorkoutTemplate _$CommunityWorkoutTemplateFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _CommunityWorkoutTemplate.fromJson(json);
 }
 
@@ -45,49 +47,57 @@ mixin _$CommunityWorkoutTemplate {
       throw _privateConstructorUsedError; // Livello difficoltà
   String? get difficultyLevel =>
       throw _privateConstructorUsedError; // beginner, intermediate, advanced, expert
-// Equipment necessario
+  // Equipment necessario
   List<String> get requiredEquipment =>
       throw _privateConstructorUsedError; // Muscoli target
   List<String> get targetMuscles => throw _privateConstructorUsedError;
 
+  /// Serializes this CommunityWorkoutTemplate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CommunityWorkoutTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CommunityWorkoutTemplateCopyWith<CommunityWorkoutTemplate> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CommunityWorkoutTemplateCopyWith<$Res> {
-  factory $CommunityWorkoutTemplateCopyWith(CommunityWorkoutTemplate value,
-          $Res Function(CommunityWorkoutTemplate) then) =
-      _$CommunityWorkoutTemplateCopyWithImpl<$Res, CommunityWorkoutTemplate>;
+  factory $CommunityWorkoutTemplateCopyWith(
+    CommunityWorkoutTemplate value,
+    $Res Function(CommunityWorkoutTemplate) then,
+  ) = _$CommunityWorkoutTemplateCopyWithImpl<$Res, CommunityWorkoutTemplate>;
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      List<Exercise> exercises,
-      TemplateCategory category,
-      TemplateVisibility visibility,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      int downloadCount,
-      int likeCount,
-      int reviewCount,
-      double averageRating,
-      String? authorName,
-      String? authorPhotoUrl,
-      List<String> tags,
-      int? estimatedDurationMinutes,
-      String? difficultyLevel,
-      List<String> requiredEquipment,
-      List<String> targetMuscles});
+  $Res call({
+    String id,
+    String userId,
+    String name,
+    String? description,
+    List<Exercise> exercises,
+    TemplateCategory category,
+    TemplateVisibility visibility,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    int downloadCount,
+    int likeCount,
+    int reviewCount,
+    double averageRating,
+    String? authorName,
+    String? authorPhotoUrl,
+    List<String> tags,
+    int? estimatedDurationMinutes,
+    String? difficultyLevel,
+    List<String> requiredEquipment,
+    List<String> targetMuscles,
+  });
 }
 
 /// @nodoc
-class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
-        $Val extends CommunityWorkoutTemplate>
+class _$CommunityWorkoutTemplateCopyWithImpl<
+  $Res,
+  $Val extends CommunityWorkoutTemplate
+>
     implements $CommunityWorkoutTemplateCopyWith<$Res> {
   _$CommunityWorkoutTemplateCopyWithImpl(this._value, this._then);
 
@@ -96,6 +106,8 @@ class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CommunityWorkoutTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -120,88 +132,91 @@ class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
     Object? requiredEquipment = null,
     Object? targetMuscles = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      exercises: null == exercises
-          ? _value.exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as TemplateCategory,
-      visibility: null == visibility
-          ? _value.visibility
-          : visibility // ignore: cast_nullable_to_non_nullable
-              as TemplateVisibility,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      downloadCount: null == downloadCount
-          ? _value.downloadCount
-          : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      reviewCount: null == reviewCount
-          ? _value.reviewCount
-          : reviewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      averageRating: null == averageRating
-          ? _value.averageRating
-          : averageRating // ignore: cast_nullable_to_non_nullable
-              as double,
-      authorName: freezed == authorName
-          ? _value.authorName
-          : authorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorPhotoUrl: freezed == authorPhotoUrl
-          ? _value.authorPhotoUrl
-          : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      tags: null == tags
-          ? _value.tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      estimatedDurationMinutes: freezed == estimatedDurationMinutes
-          ? _value.estimatedDurationMinutes
-          : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requiredEquipment: null == requiredEquipment
-          ? _value.requiredEquipment
-          : requiredEquipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      targetMuscles: null == targetMuscles
-          ? _value.targetMuscles
-          : targetMuscles // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            exercises: null == exercises
+                ? _value.exercises
+                : exercises // ignore: cast_nullable_to_non_nullable
+                      as List<Exercise>,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as TemplateCategory,
+            visibility: null == visibility
+                ? _value.visibility
+                : visibility // ignore: cast_nullable_to_non_nullable
+                      as TemplateVisibility,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            downloadCount: null == downloadCount
+                ? _value.downloadCount
+                : downloadCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            likeCount: null == likeCount
+                ? _value.likeCount
+                : likeCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            reviewCount: null == reviewCount
+                ? _value.reviewCount
+                : reviewCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            averageRating: null == averageRating
+                ? _value.averageRating
+                : averageRating // ignore: cast_nullable_to_non_nullable
+                      as double,
+            authorName: freezed == authorName
+                ? _value.authorName
+                : authorName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            authorPhotoUrl: freezed == authorPhotoUrl
+                ? _value.authorPhotoUrl
+                : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            tags: null == tags
+                ? _value.tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            estimatedDurationMinutes: freezed == estimatedDurationMinutes
+                ? _value.estimatedDurationMinutes
+                : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            difficultyLevel: freezed == difficultyLevel
+                ? _value.difficultyLevel
+                : difficultyLevel // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            requiredEquipment: null == requiredEquipment
+                ? _value.requiredEquipment
+                : requiredEquipment // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            targetMuscles: null == targetMuscles
+                ? _value.targetMuscles
+                : targetMuscles // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -209,44 +224,50 @@ class _$CommunityWorkoutTemplateCopyWithImpl<$Res,
 abstract class _$$CommunityWorkoutTemplateImplCopyWith<$Res>
     implements $CommunityWorkoutTemplateCopyWith<$Res> {
   factory _$$CommunityWorkoutTemplateImplCopyWith(
-          _$CommunityWorkoutTemplateImpl value,
-          $Res Function(_$CommunityWorkoutTemplateImpl) then) =
-      __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>;
+    _$CommunityWorkoutTemplateImpl value,
+    $Res Function(_$CommunityWorkoutTemplateImpl) then,
+  ) = __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String userId,
-      String name,
-      String? description,
-      List<Exercise> exercises,
-      TemplateCategory category,
-      TemplateVisibility visibility,
-      DateTime createdAt,
-      DateTime? updatedAt,
-      int downloadCount,
-      int likeCount,
-      int reviewCount,
-      double averageRating,
-      String? authorName,
-      String? authorPhotoUrl,
-      List<String> tags,
-      int? estimatedDurationMinutes,
-      String? difficultyLevel,
-      List<String> requiredEquipment,
-      List<String> targetMuscles});
+  $Res call({
+    String id,
+    String userId,
+    String name,
+    String? description,
+    List<Exercise> exercises,
+    TemplateCategory category,
+    TemplateVisibility visibility,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    int downloadCount,
+    int likeCount,
+    int reviewCount,
+    double averageRating,
+    String? authorName,
+    String? authorPhotoUrl,
+    List<String> tags,
+    int? estimatedDurationMinutes,
+    String? difficultyLevel,
+    List<String> requiredEquipment,
+    List<String> targetMuscles,
+  });
 }
 
 /// @nodoc
 class __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>
-    extends _$CommunityWorkoutTemplateCopyWithImpl<$Res,
-        _$CommunityWorkoutTemplateImpl>
+    extends
+        _$CommunityWorkoutTemplateCopyWithImpl<
+          $Res,
+          _$CommunityWorkoutTemplateImpl
+        >
     implements _$$CommunityWorkoutTemplateImplCopyWith<$Res> {
   __$$CommunityWorkoutTemplateImplCopyWithImpl(
-      _$CommunityWorkoutTemplateImpl _value,
-      $Res Function(_$CommunityWorkoutTemplateImpl) _then)
-      : super(_value, _then);
+    _$CommunityWorkoutTemplateImpl _value,
+    $Res Function(_$CommunityWorkoutTemplateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CommunityWorkoutTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -271,119 +292,121 @@ class __$$CommunityWorkoutTemplateImplCopyWithImpl<$Res>
     Object? requiredEquipment = null,
     Object? targetMuscles = null,
   }) {
-    return _then(_$CommunityWorkoutTemplateImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      exercises: null == exercises
-          ? _value._exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as TemplateCategory,
-      visibility: null == visibility
-          ? _value.visibility
-          : visibility // ignore: cast_nullable_to_non_nullable
-              as TemplateVisibility,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      downloadCount: null == downloadCount
-          ? _value.downloadCount
-          : downloadCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      reviewCount: null == reviewCount
-          ? _value.reviewCount
-          : reviewCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      averageRating: null == averageRating
-          ? _value.averageRating
-          : averageRating // ignore: cast_nullable_to_non_nullable
-              as double,
-      authorName: freezed == authorName
-          ? _value.authorName
-          : authorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      authorPhotoUrl: freezed == authorPhotoUrl
-          ? _value.authorPhotoUrl
-          : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      tags: null == tags
-          ? _value._tags
-          : tags // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      estimatedDurationMinutes: freezed == estimatedDurationMinutes
-          ? _value.estimatedDurationMinutes
-          : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
-              as int?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      requiredEquipment: null == requiredEquipment
-          ? _value._requiredEquipment
-          : requiredEquipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      targetMuscles: null == targetMuscles
-          ? _value._targetMuscles
-          : targetMuscles // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$CommunityWorkoutTemplateImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        exercises: null == exercises
+            ? _value._exercises
+            : exercises // ignore: cast_nullable_to_non_nullable
+                  as List<Exercise>,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as TemplateCategory,
+        visibility: null == visibility
+            ? _value.visibility
+            : visibility // ignore: cast_nullable_to_non_nullable
+                  as TemplateVisibility,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        downloadCount: null == downloadCount
+            ? _value.downloadCount
+            : downloadCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        likeCount: null == likeCount
+            ? _value.likeCount
+            : likeCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        reviewCount: null == reviewCount
+            ? _value.reviewCount
+            : reviewCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        averageRating: null == averageRating
+            ? _value.averageRating
+            : averageRating // ignore: cast_nullable_to_non_nullable
+                  as double,
+        authorName: freezed == authorName
+            ? _value.authorName
+            : authorName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        authorPhotoUrl: freezed == authorPhotoUrl
+            ? _value.authorPhotoUrl
+            : authorPhotoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        tags: null == tags
+            ? _value._tags
+            : tags // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        estimatedDurationMinutes: freezed == estimatedDurationMinutes
+            ? _value.estimatedDurationMinutes
+            : estimatedDurationMinutes // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        difficultyLevel: freezed == difficultyLevel
+            ? _value.difficultyLevel
+            : difficultyLevel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        requiredEquipment: null == requiredEquipment
+            ? _value._requiredEquipment
+            : requiredEquipment // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        targetMuscles: null == targetMuscles
+            ? _value._targetMuscles
+            : targetMuscles // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
-  const _$CommunityWorkoutTemplateImpl(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      this.description,
-      required final List<Exercise> exercises,
-      required this.category,
-      required this.visibility,
-      required this.createdAt,
-      this.updatedAt,
-      this.downloadCount = 0,
-      this.likeCount = 0,
-      this.reviewCount = 0,
-      this.averageRating = 0.0,
-      this.authorName,
-      this.authorPhotoUrl,
-      final List<String> tags = const [],
-      this.estimatedDurationMinutes,
-      this.difficultyLevel,
-      final List<String> requiredEquipment = const [],
-      final List<String> targetMuscles = const []})
-      : _exercises = exercises,
-        _tags = tags,
-        _requiredEquipment = requiredEquipment,
-        _targetMuscles = targetMuscles;
+  const _$CommunityWorkoutTemplateImpl({
+    required this.id,
+    required this.userId,
+    required this.name,
+    this.description,
+    required final List<Exercise> exercises,
+    required this.category,
+    required this.visibility,
+    required this.createdAt,
+    this.updatedAt,
+    this.downloadCount = 0,
+    this.likeCount = 0,
+    this.reviewCount = 0,
+    this.averageRating = 0.0,
+    this.authorName,
+    this.authorPhotoUrl,
+    final List<String> tags = const [],
+    this.estimatedDurationMinutes,
+    this.difficultyLevel,
+    final List<String> requiredEquipment = const [],
+    final List<String> targetMuscles = const [],
+  }) : _exercises = exercises,
+       _tags = tags,
+       _requiredEquipment = requiredEquipment,
+       _targetMuscles = targetMuscles;
 
   factory _$CommunityWorkoutTemplateImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityWorkoutTemplateImplFromJson(json);
@@ -408,12 +431,12 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
   final TemplateCategory category;
   @override
   final TemplateVisibility visibility;
-// Metadata
+  // Metadata
   @override
   final DateTime createdAt;
   @override
   final DateTime? updatedAt;
-// Stats pubbliche
+  // Stats pubbliche
   @override
   @JsonKey()
   final int downloadCount;
@@ -426,14 +449,14 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
   @override
   @JsonKey()
   final double averageRating;
-// Info autore
+  // Info autore
   @override
   final String? authorName;
   @override
   final String? authorPhotoUrl;
-// Tags per ricerca
+  // Tags per ricerca
   final List<String> _tags;
-// Tags per ricerca
+  // Tags per ricerca
   @override
   @JsonKey()
   List<String> get tags {
@@ -442,17 +465,17 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
     return EqualUnmodifiableListView(_tags);
   }
 
-// Durata stimata in minuti
+  // Durata stimata in minuti
   @override
   final int? estimatedDurationMinutes;
-// Livello difficoltà
+  // Livello difficoltà
   @override
   final String? difficultyLevel;
-// beginner, intermediate, advanced, expert
-// Equipment necessario
+  // beginner, intermediate, advanced, expert
+  // Equipment necessario
   final List<String> _requiredEquipment;
-// beginner, intermediate, advanced, expert
-// Equipment necessario
+  // beginner, intermediate, advanced, expert
+  // Equipment necessario
   @override
   @JsonKey()
   List<String> get requiredEquipment {
@@ -462,9 +485,9 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
     return EqualUnmodifiableListView(_requiredEquipment);
   }
 
-// Muscoli target
+  // Muscoli target
   final List<String> _targetMuscles;
-// Muscoli target
+  // Muscoli target
   @override
   @JsonKey()
   List<String> get targetMuscles {
@@ -488,8 +511,10 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            const DeepCollectionEquality()
-                .equals(other._exercises, _exercises) &&
+            const DeepCollectionEquality().equals(
+              other._exercises,
+              _exercises,
+            ) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.visibility, visibility) ||
@@ -512,79 +537,88 @@ class _$CommunityWorkoutTemplateImpl implements _CommunityWorkoutTemplate {
                 other.authorPhotoUrl == authorPhotoUrl) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(
-                    other.estimatedDurationMinutes, estimatedDurationMinutes) ||
+                  other.estimatedDurationMinutes,
+                  estimatedDurationMinutes,
+                ) ||
                 other.estimatedDurationMinutes == estimatedDurationMinutes) &&
             (identical(other.difficultyLevel, difficultyLevel) ||
                 other.difficultyLevel == difficultyLevel) &&
-            const DeepCollectionEquality()
-                .equals(other._requiredEquipment, _requiredEquipment) &&
-            const DeepCollectionEquality()
-                .equals(other._targetMuscles, _targetMuscles));
+            const DeepCollectionEquality().equals(
+              other._requiredEquipment,
+              _requiredEquipment,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._targetMuscles,
+              _targetMuscles,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        userId,
-        name,
-        description,
-        const DeepCollectionEquality().hash(_exercises),
-        category,
-        visibility,
-        createdAt,
-        updatedAt,
-        downloadCount,
-        likeCount,
-        reviewCount,
-        averageRating,
-        authorName,
-        authorPhotoUrl,
-        const DeepCollectionEquality().hash(_tags),
-        estimatedDurationMinutes,
-        difficultyLevel,
-        const DeepCollectionEquality().hash(_requiredEquipment),
-        const DeepCollectionEquality().hash(_targetMuscles)
-      ]);
+    runtimeType,
+    id,
+    userId,
+    name,
+    description,
+    const DeepCollectionEquality().hash(_exercises),
+    category,
+    visibility,
+    createdAt,
+    updatedAt,
+    downloadCount,
+    likeCount,
+    reviewCount,
+    averageRating,
+    authorName,
+    authorPhotoUrl,
+    const DeepCollectionEquality().hash(_tags),
+    estimatedDurationMinutes,
+    difficultyLevel,
+    const DeepCollectionEquality().hash(_requiredEquipment),
+    const DeepCollectionEquality().hash(_targetMuscles),
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CommunityWorkoutTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
-      get copyWith => __$$CommunityWorkoutTemplateImplCopyWithImpl<
-          _$CommunityWorkoutTemplateImpl>(this, _$identity);
+  get copyWith =>
+      __$$CommunityWorkoutTemplateImplCopyWithImpl<
+        _$CommunityWorkoutTemplateImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CommunityWorkoutTemplateImplToJson(
-      this,
-    );
+    return _$$CommunityWorkoutTemplateImplToJson(this);
   }
 }
 
 abstract class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
-  const factory _CommunityWorkoutTemplate(
-      {required final String id,
-      required final String userId,
-      required final String name,
-      final String? description,
-      required final List<Exercise> exercises,
-      required final TemplateCategory category,
-      required final TemplateVisibility visibility,
-      required final DateTime createdAt,
-      final DateTime? updatedAt,
-      final int downloadCount,
-      final int likeCount,
-      final int reviewCount,
-      final double averageRating,
-      final String? authorName,
-      final String? authorPhotoUrl,
-      final List<String> tags,
-      final int? estimatedDurationMinutes,
-      final String? difficultyLevel,
-      final List<String> requiredEquipment,
-      final List<String> targetMuscles}) = _$CommunityWorkoutTemplateImpl;
+  const factory _CommunityWorkoutTemplate({
+    required final String id,
+    required final String userId,
+    required final String name,
+    final String? description,
+    required final List<Exercise> exercises,
+    required final TemplateCategory category,
+    required final TemplateVisibility visibility,
+    required final DateTime createdAt,
+    final DateTime? updatedAt,
+    final int downloadCount,
+    final int likeCount,
+    final int reviewCount,
+    final double averageRating,
+    final String? authorName,
+    final String? authorPhotoUrl,
+    final List<String> tags,
+    final int? estimatedDurationMinutes,
+    final String? difficultyLevel,
+    final List<String> requiredEquipment,
+    final List<String> targetMuscles,
+  }) = _$CommunityWorkoutTemplateImpl;
 
   factory _CommunityWorkoutTemplate.fromJson(Map<String, dynamic> json) =
       _$CommunityWorkoutTemplateImpl.fromJson;
@@ -602,38 +636,41 @@ abstract class _CommunityWorkoutTemplate implements CommunityWorkoutTemplate {
   @override
   TemplateCategory get category;
   @override
-  TemplateVisibility get visibility;
-  @override // Metadata
+  TemplateVisibility get visibility; // Metadata
+  @override
   DateTime get createdAt;
   @override
-  DateTime? get updatedAt;
-  @override // Stats pubbliche
+  DateTime? get updatedAt; // Stats pubbliche
+  @override
   int get downloadCount;
   @override
   int get likeCount;
   @override
   int get reviewCount;
   @override
-  double get averageRating;
-  @override // Info autore
+  double get averageRating; // Info autore
+  @override
   String? get authorName;
   @override
-  String? get authorPhotoUrl;
-  @override // Tags per ricerca
-  List<String> get tags;
-  @override // Durata stimata in minuti
-  int? get estimatedDurationMinutes;
-  @override // Livello difficoltà
-  String? get difficultyLevel;
-  @override // beginner, intermediate, advanced, expert
-// Equipment necessario
-  List<String> get requiredEquipment;
-  @override // Muscoli target
-  List<String> get targetMuscles;
+  String? get authorPhotoUrl; // Tags per ricerca
   @override
-  @JsonKey(ignore: true)
+  List<String> get tags; // Durata stimata in minuti
+  @override
+  int? get estimatedDurationMinutes; // Livello difficoltà
+  @override
+  String? get difficultyLevel; // beginner, intermediate, advanced, expert
+  // Equipment necessario
+  @override
+  List<String> get requiredEquipment; // Muscoli target
+  @override
+  List<String> get targetMuscles;
+
+  /// Create a copy of CommunityWorkoutTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommunityWorkoutTemplateImplCopyWith<_$CommunityWorkoutTemplateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TemplateReview _$TemplateReviewFromJson(Map<String, dynamic> json) {
@@ -653,8 +690,12 @@ mixin _$TemplateReview {
   int get helpfulCount => throw _privateConstructorUsedError;
   List<String> get helpfulVoters => throw _privateConstructorUsedError;
 
+  /// Serializes this TemplateReview to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TemplateReview
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TemplateReviewCopyWith<TemplateReview> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -662,20 +703,22 @@ mixin _$TemplateReview {
 /// @nodoc
 abstract class $TemplateReviewCopyWith<$Res> {
   factory $TemplateReviewCopyWith(
-          TemplateReview value, $Res Function(TemplateReview) then) =
-      _$TemplateReviewCopyWithImpl<$Res, TemplateReview>;
+    TemplateReview value,
+    $Res Function(TemplateReview) then,
+  ) = _$TemplateReviewCopyWithImpl<$Res, TemplateReview>;
   @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      double rating,
-      String comment,
-      DateTime createdAt,
-      int helpfulCount,
-      List<String> helpfulVoters});
+  $Res call({
+    String id,
+    String templateId,
+    String userId,
+    String userName,
+    String? userPhotoUrl,
+    double rating,
+    String comment,
+    DateTime createdAt,
+    int helpfulCount,
+    List<String> helpfulVoters,
+  });
 }
 
 /// @nodoc
@@ -688,6 +731,8 @@ class _$TemplateReviewCopyWithImpl<$Res, $Val extends TemplateReview>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TemplateReview
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -702,70 +747,75 @@ class _$TemplateReviewCopyWithImpl<$Res, $Val extends TemplateReview>
     Object? helpfulCount = null,
     Object? helpfulVoters = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
-      comment: null == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulVoters: null == helpfulVoters
-          ? _value.helpfulVoters
-          : helpfulVoters // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            templateId: null == templateId
+                ? _value.templateId
+                : templateId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userPhotoUrl: freezed == userPhotoUrl
+                ? _value.userPhotoUrl
+                : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            rating: null == rating
+                ? _value.rating
+                : rating // ignore: cast_nullable_to_non_nullable
+                      as double,
+            comment: null == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            helpfulCount: null == helpfulCount
+                ? _value.helpfulCount
+                : helpfulCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            helpfulVoters: null == helpfulVoters
+                ? _value.helpfulVoters
+                : helpfulVoters // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TemplateReviewImplCopyWith<$Res>
     implements $TemplateReviewCopyWith<$Res> {
-  factory _$$TemplateReviewImplCopyWith(_$TemplateReviewImpl value,
-          $Res Function(_$TemplateReviewImpl) then) =
-      __$$TemplateReviewImplCopyWithImpl<$Res>;
+  factory _$$TemplateReviewImplCopyWith(
+    _$TemplateReviewImpl value,
+    $Res Function(_$TemplateReviewImpl) then,
+  ) = __$$TemplateReviewImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      double rating,
-      String comment,
-      DateTime createdAt,
-      int helpfulCount,
-      List<String> helpfulVoters});
+  $Res call({
+    String id,
+    String templateId,
+    String userId,
+    String userName,
+    String? userPhotoUrl,
+    double rating,
+    String comment,
+    DateTime createdAt,
+    int helpfulCount,
+    List<String> helpfulVoters,
+  });
 }
 
 /// @nodoc
@@ -773,9 +823,12 @@ class __$$TemplateReviewImplCopyWithImpl<$Res>
     extends _$TemplateReviewCopyWithImpl<$Res, _$TemplateReviewImpl>
     implements _$$TemplateReviewImplCopyWith<$Res> {
   __$$TemplateReviewImplCopyWithImpl(
-      _$TemplateReviewImpl _value, $Res Function(_$TemplateReviewImpl) _then)
-      : super(_value, _then);
+    _$TemplateReviewImpl _value,
+    $Res Function(_$TemplateReviewImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of TemplateReview
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -790,66 +843,68 @@ class __$$TemplateReviewImplCopyWithImpl<$Res>
     Object? helpfulCount = null,
     Object? helpfulVoters = null,
   }) {
-    return _then(_$TemplateReviewImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double,
-      comment: null == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      helpfulCount: null == helpfulCount
-          ? _value.helpfulCount
-          : helpfulCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      helpfulVoters: null == helpfulVoters
-          ? _value._helpfulVoters
-          : helpfulVoters // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$TemplateReviewImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        templateId: null == templateId
+            ? _value.templateId
+            : templateId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userPhotoUrl: freezed == userPhotoUrl
+            ? _value.userPhotoUrl
+            : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        rating: null == rating
+            ? _value.rating
+            : rating // ignore: cast_nullable_to_non_nullable
+                  as double,
+        comment: null == comment
+            ? _value.comment
+            : comment // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        helpfulCount: null == helpfulCount
+            ? _value.helpfulCount
+            : helpfulCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        helpfulVoters: null == helpfulVoters
+            ? _value._helpfulVoters
+            : helpfulVoters // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TemplateReviewImpl implements _TemplateReview {
-  const _$TemplateReviewImpl(
-      {required this.id,
-      required this.templateId,
-      required this.userId,
-      required this.userName,
-      this.userPhotoUrl,
-      required this.rating,
-      required this.comment,
-      required this.createdAt,
-      this.helpfulCount = 0,
-      final List<String> helpfulVoters = const []})
-      : _helpfulVoters = helpfulVoters;
+  const _$TemplateReviewImpl({
+    required this.id,
+    required this.templateId,
+    required this.userId,
+    required this.userName,
+    this.userPhotoUrl,
+    required this.rating,
+    required this.comment,
+    required this.createdAt,
+    this.helpfulCount = 0,
+    final List<String> helpfulVoters = const [],
+  }) : _helpfulVoters = helpfulVoters;
 
   factory _$TemplateReviewImpl.fromJson(Map<String, dynamic> json) =>
       _$$TemplateReviewImplFromJson(json);
@@ -866,7 +921,7 @@ class _$TemplateReviewImpl implements _TemplateReview {
   final String? userPhotoUrl;
   @override
   final double rating;
-// 1-5 stelle
+  // 1-5 stelle
   @override
   final String comment;
   @override
@@ -907,52 +962,58 @@ class _$TemplateReviewImpl implements _TemplateReview {
                 other.createdAt == createdAt) &&
             (identical(other.helpfulCount, helpfulCount) ||
                 other.helpfulCount == helpfulCount) &&
-            const DeepCollectionEquality()
-                .equals(other._helpfulVoters, _helpfulVoters));
+            const DeepCollectionEquality().equals(
+              other._helpfulVoters,
+              _helpfulVoters,
+            ));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      templateId,
-      userId,
-      userName,
-      userPhotoUrl,
-      rating,
-      comment,
-      createdAt,
-      helpfulCount,
-      const DeepCollectionEquality().hash(_helpfulVoters));
+    runtimeType,
+    id,
+    templateId,
+    userId,
+    userName,
+    userPhotoUrl,
+    rating,
+    comment,
+    createdAt,
+    helpfulCount,
+    const DeepCollectionEquality().hash(_helpfulVoters),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TemplateReview
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
       __$$TemplateReviewImplCopyWithImpl<_$TemplateReviewImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TemplateReviewImplToJson(
-      this,
-    );
+    return _$$TemplateReviewImplToJson(this);
   }
 }
 
 abstract class _TemplateReview implements TemplateReview {
-  const factory _TemplateReview(
-      {required final String id,
-      required final String templateId,
-      required final String userId,
-      required final String userName,
-      final String? userPhotoUrl,
-      required final double rating,
-      required final String comment,
-      required final DateTime createdAt,
-      final int helpfulCount,
-      final List<String> helpfulVoters}) = _$TemplateReviewImpl;
+  const factory _TemplateReview({
+    required final String id,
+    required final String templateId,
+    required final String userId,
+    required final String userName,
+    final String? userPhotoUrl,
+    required final double rating,
+    required final String comment,
+    required final DateTime createdAt,
+    final int helpfulCount,
+    final List<String> helpfulVoters,
+  }) = _$TemplateReviewImpl;
 
   factory _TemplateReview.fromJson(Map<String, dynamic> json) =
       _$TemplateReviewImpl.fromJson;
@@ -968,8 +1029,8 @@ abstract class _TemplateReview implements TemplateReview {
   @override
   String? get userPhotoUrl;
   @override
-  double get rating;
-  @override // 1-5 stelle
+  double get rating; // 1-5 stelle
+  @override
   String get comment;
   @override
   DateTime get createdAt;
@@ -977,8 +1038,11 @@ abstract class _TemplateReview implements TemplateReview {
   int get helpfulCount;
   @override
   List<String> get helpfulVoters;
+
+  /// Create a copy of TemplateReview
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TemplateReviewImplCopyWith<_$TemplateReviewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1000,8 +1064,12 @@ mixin _$TemplateComment {
   List<String> get likedBy => throw _privateConstructorUsedError;
   String? get replyToId => throw _privateConstructorUsedError;
 
+  /// Serializes this TemplateComment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TemplateComment
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TemplateCommentCopyWith<TemplateComment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1009,20 +1077,22 @@ mixin _$TemplateComment {
 /// @nodoc
 abstract class $TemplateCommentCopyWith<$Res> {
   factory $TemplateCommentCopyWith(
-          TemplateComment value, $Res Function(TemplateComment) then) =
-      _$TemplateCommentCopyWithImpl<$Res, TemplateComment>;
+    TemplateComment value,
+    $Res Function(TemplateComment) then,
+  ) = _$TemplateCommentCopyWithImpl<$Res, TemplateComment>;
   @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      String text,
-      DateTime createdAt,
-      int likeCount,
-      List<String> likedBy,
-      String? replyToId});
+  $Res call({
+    String id,
+    String templateId,
+    String userId,
+    String userName,
+    String? userPhotoUrl,
+    String text,
+    DateTime createdAt,
+    int likeCount,
+    List<String> likedBy,
+    String? replyToId,
+  });
 }
 
 /// @nodoc
@@ -1035,6 +1105,8 @@ class _$TemplateCommentCopyWithImpl<$Res, $Val extends TemplateComment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TemplateComment
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1049,70 +1121,75 @@ class _$TemplateCommentCopyWithImpl<$Res, $Val extends TemplateComment>
     Object? likedBy = null,
     Object? replyToId = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value.likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      replyToId: freezed == replyToId
-          ? _value.replyToId
-          : replyToId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            templateId: null == templateId
+                ? _value.templateId
+                : templateId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userName: null == userName
+                ? _value.userName
+                : userName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            userPhotoUrl: freezed == userPhotoUrl
+                ? _value.userPhotoUrl
+                : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            text: null == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            likeCount: null == likeCount
+                ? _value.likeCount
+                : likeCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            likedBy: null == likedBy
+                ? _value.likedBy
+                : likedBy // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            replyToId: freezed == replyToId
+                ? _value.replyToId
+                : replyToId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TemplateCommentImplCopyWith<$Res>
     implements $TemplateCommentCopyWith<$Res> {
-  factory _$$TemplateCommentImplCopyWith(_$TemplateCommentImpl value,
-          $Res Function(_$TemplateCommentImpl) then) =
-      __$$TemplateCommentImplCopyWithImpl<$Res>;
+  factory _$$TemplateCommentImplCopyWith(
+    _$TemplateCommentImpl value,
+    $Res Function(_$TemplateCommentImpl) then,
+  ) = __$$TemplateCommentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String templateId,
-      String userId,
-      String userName,
-      String? userPhotoUrl,
-      String text,
-      DateTime createdAt,
-      int likeCount,
-      List<String> likedBy,
-      String? replyToId});
+  $Res call({
+    String id,
+    String templateId,
+    String userId,
+    String userName,
+    String? userPhotoUrl,
+    String text,
+    DateTime createdAt,
+    int likeCount,
+    List<String> likedBy,
+    String? replyToId,
+  });
 }
 
 /// @nodoc
@@ -1120,9 +1197,12 @@ class __$$TemplateCommentImplCopyWithImpl<$Res>
     extends _$TemplateCommentCopyWithImpl<$Res, _$TemplateCommentImpl>
     implements _$$TemplateCommentImplCopyWith<$Res> {
   __$$TemplateCommentImplCopyWithImpl(
-      _$TemplateCommentImpl _value, $Res Function(_$TemplateCommentImpl) _then)
-      : super(_value, _then);
+    _$TemplateCommentImpl _value,
+    $Res Function(_$TemplateCommentImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of TemplateComment
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1137,66 +1217,68 @@ class __$$TemplateCommentImplCopyWithImpl<$Res>
     Object? likedBy = null,
     Object? replyToId = freezed,
   }) {
-    return _then(_$TemplateCommentImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      templateId: null == templateId
-          ? _value.templateId
-          : templateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      userName: null == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String,
-      userPhotoUrl: freezed == userPhotoUrl
-          ? _value.userPhotoUrl
-          : userPhotoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      likeCount: null == likeCount
-          ? _value.likeCount
-          : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      likedBy: null == likedBy
-          ? _value._likedBy
-          : likedBy // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      replyToId: freezed == replyToId
-          ? _value.replyToId
-          : replyToId // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$TemplateCommentImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        templateId: null == templateId
+            ? _value.templateId
+            : templateId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userName: null == userName
+            ? _value.userName
+            : userName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        userPhotoUrl: freezed == userPhotoUrl
+            ? _value.userPhotoUrl
+            : userPhotoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        text: null == text
+            ? _value.text
+            : text // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        likeCount: null == likeCount
+            ? _value.likeCount
+            : likeCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        likedBy: null == likedBy
+            ? _value._likedBy
+            : likedBy // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        replyToId: freezed == replyToId
+            ? _value.replyToId
+            : replyToId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TemplateCommentImpl implements _TemplateComment {
-  const _$TemplateCommentImpl(
-      {required this.id,
-      required this.templateId,
-      required this.userId,
-      required this.userName,
-      this.userPhotoUrl,
-      required this.text,
-      required this.createdAt,
-      this.likeCount = 0,
-      final List<String> likedBy = const [],
-      this.replyToId})
-      : _likedBy = likedBy;
+  const _$TemplateCommentImpl({
+    required this.id,
+    required this.templateId,
+    required this.userId,
+    required this.userName,
+    this.userPhotoUrl,
+    required this.text,
+    required this.createdAt,
+    this.likeCount = 0,
+    final List<String> likedBy = const [],
+    this.replyToId,
+  }) : _likedBy = likedBy;
 
   factory _$TemplateCommentImpl.fromJson(Map<String, dynamic> json) =>
       _$$TemplateCommentImplFromJson(json);
@@ -1258,48 +1340,52 @@ class _$TemplateCommentImpl implements _TemplateComment {
                 other.replyToId == replyToId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      templateId,
-      userId,
-      userName,
-      userPhotoUrl,
-      text,
-      createdAt,
-      likeCount,
-      const DeepCollectionEquality().hash(_likedBy),
-      replyToId);
+    runtimeType,
+    id,
+    templateId,
+    userId,
+    userName,
+    userPhotoUrl,
+    text,
+    createdAt,
+    likeCount,
+    const DeepCollectionEquality().hash(_likedBy),
+    replyToId,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TemplateComment
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
       __$$TemplateCommentImplCopyWithImpl<_$TemplateCommentImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TemplateCommentImplToJson(
-      this,
-    );
+    return _$$TemplateCommentImplToJson(this);
   }
 }
 
 abstract class _TemplateComment implements TemplateComment {
-  const factory _TemplateComment(
-      {required final String id,
-      required final String templateId,
-      required final String userId,
-      required final String userName,
-      final String? userPhotoUrl,
-      required final String text,
-      required final DateTime createdAt,
-      final int likeCount,
-      final List<String> likedBy,
-      final String? replyToId}) = _$TemplateCommentImpl;
+  const factory _TemplateComment({
+    required final String id,
+    required final String templateId,
+    required final String userId,
+    required final String userName,
+    final String? userPhotoUrl,
+    required final String text,
+    required final DateTime createdAt,
+    final int likeCount,
+    final List<String> likedBy,
+    final String? replyToId,
+  }) = _$TemplateCommentImpl;
 
   factory _TemplateComment.fromJson(Map<String, dynamic> json) =
       _$TemplateCommentImpl.fromJson;
@@ -1324,8 +1410,11 @@ abstract class _TemplateComment implements TemplateComment {
   List<String> get likedBy;
   @override
   String? get replyToId;
+
+  /// Create a copy of TemplateComment
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TemplateCommentImplCopyWith<_$TemplateCommentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -13,9 +13,11 @@ _$InsightRuleImpl _$$InsightRuleImplFromJson(Map<String, dynamic> json) =>
       volumeThreshold: (json['volumeThreshold'] as num).toDouble(),
       personalizedThresholds:
           (json['personalizedThresholds'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry($enumDecode(_$ExperienceLevelEnumMap, k),
-            PersonalizedThreshold.fromJson(e as Map<String, dynamic>)),
-      ),
+            (k, e) => MapEntry(
+              $enumDecode(_$ExperienceLevelEnumMap, k),
+              PersonalizedThreshold.fromJson(e as Map<String, dynamic>),
+            ),
+          ),
     );
 
 Map<String, dynamic> _$$InsightRuleImplToJson(_$InsightRuleImpl instance) =>
@@ -23,8 +25,9 @@ Map<String, dynamic> _$$InsightRuleImplToJson(_$InsightRuleImpl instance) =>
       'insightType': _$InsightTypeEnumMap[instance.insightType]!,
       'minWeeks': instance.minWeeks,
       'volumeThreshold': instance.volumeThreshold,
-      'personalizedThresholds': instance.personalizedThresholds
-          .map((k, e) => MapEntry(_$ExperienceLevelEnumMap[k]!, e.toJson())),
+      'personalizedThresholds': instance.personalizedThresholds.map(
+        (k, e) => MapEntry(_$ExperienceLevelEnumMap[k]!, e.toJson()),
+      ),
     };
 
 const _$InsightTypeEnumMap = {
@@ -48,17 +51,17 @@ const _$ExperienceLevelEnumMap = {
 };
 
 _$PersonalizedThresholdImpl _$$PersonalizedThresholdImplFromJson(
-        Map<String, dynamic> json) =>
-    _$PersonalizedThresholdImpl(
-      mev: (json['mev'] as num).toDouble(),
-      mav: (json['mav'] as num).toDouble(),
-      mrv: (json['mrv'] as num).toDouble(),
-    );
+  Map<String, dynamic> json,
+) => _$PersonalizedThresholdImpl(
+  mev: (json['mev'] as num).toDouble(),
+  mav: (json['mav'] as num).toDouble(),
+  mrv: (json['mrv'] as num).toDouble(),
+);
 
 Map<String, dynamic> _$$PersonalizedThresholdImplToJson(
-        _$PersonalizedThresholdImpl instance) =>
-    <String, dynamic>{
-      'mev': instance.mev,
-      'mav': instance.mav,
-      'mrv': instance.mrv,
-    };
+  _$PersonalizedThresholdImpl instance,
+) => <String, dynamic>{
+  'mev': instance.mev,
+  'mav': instance.mav,
+  'mrv': instance.mrv,
+};

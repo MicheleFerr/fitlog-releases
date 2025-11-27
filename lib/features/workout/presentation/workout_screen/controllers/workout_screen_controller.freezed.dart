@@ -12,7 +12,8 @@ part of 'workout_screen_controller.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$WorkoutScreenState {
@@ -28,7 +29,9 @@ mixin _$WorkoutScreenState {
   /// Whether to show the "Change Workout" banner
   bool get showChangeWorkoutBanner => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $WorkoutScreenStateCopyWith<WorkoutScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -36,14 +39,16 @@ mixin _$WorkoutScreenState {
 /// @nodoc
 abstract class $WorkoutScreenStateCopyWith<$Res> {
   factory $WorkoutScreenStateCopyWith(
-          WorkoutScreenState value, $Res Function(WorkoutScreenState) then) =
-      _$WorkoutScreenStateCopyWithImpl<$Res, WorkoutScreenState>;
+    WorkoutScreenState value,
+    $Res Function(WorkoutScreenState) then,
+  ) = _$WorkoutScreenStateCopyWithImpl<$Res, WorkoutScreenState>;
   @useResult
-  $Res call(
-      {bool isReorderMode,
-      String? selectedTemplateId,
-      bool showWelcome,
-      bool showChangeWorkoutBanner});
+  $Res call({
+    bool isReorderMode,
+    String? selectedTemplateId,
+    bool showWelcome,
+    bool showChangeWorkoutBanner,
+  });
 }
 
 /// @nodoc
@@ -56,6 +61,8 @@ class _$WorkoutScreenStateCopyWithImpl<$Res, $Val extends WorkoutScreenState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of WorkoutScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -64,50 +71,58 @@ class _$WorkoutScreenStateCopyWithImpl<$Res, $Val extends WorkoutScreenState>
     Object? showWelcome = null,
     Object? showChangeWorkoutBanner = null,
   }) {
-    return _then(_value.copyWith(
-      isReorderMode: null == isReorderMode
-          ? _value.isReorderMode
-          : isReorderMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      selectedTemplateId: freezed == selectedTemplateId
-          ? _value.selectedTemplateId
-          : selectedTemplateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      showWelcome: null == showWelcome
-          ? _value.showWelcome
-          : showWelcome // ignore: cast_nullable_to_non_nullable
-              as bool,
-      showChangeWorkoutBanner: null == showChangeWorkoutBanner
-          ? _value.showChangeWorkoutBanner
-          : showChangeWorkoutBanner // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            isReorderMode: null == isReorderMode
+                ? _value.isReorderMode
+                : isReorderMode // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            selectedTemplateId: freezed == selectedTemplateId
+                ? _value.selectedTemplateId
+                : selectedTemplateId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            showWelcome: null == showWelcome
+                ? _value.showWelcome
+                : showWelcome // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            showChangeWorkoutBanner: null == showChangeWorkoutBanner
+                ? _value.showChangeWorkoutBanner
+                : showChangeWorkoutBanner // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$WorkoutScreenStateImplCopyWith<$Res>
     implements $WorkoutScreenStateCopyWith<$Res> {
-  factory _$$WorkoutScreenStateImplCopyWith(_$WorkoutScreenStateImpl value,
-          $Res Function(_$WorkoutScreenStateImpl) then) =
-      __$$WorkoutScreenStateImplCopyWithImpl<$Res>;
+  factory _$$WorkoutScreenStateImplCopyWith(
+    _$WorkoutScreenStateImpl value,
+    $Res Function(_$WorkoutScreenStateImpl) then,
+  ) = __$$WorkoutScreenStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isReorderMode,
-      String? selectedTemplateId,
-      bool showWelcome,
-      bool showChangeWorkoutBanner});
+  $Res call({
+    bool isReorderMode,
+    String? selectedTemplateId,
+    bool showWelcome,
+    bool showChangeWorkoutBanner,
+  });
 }
 
 /// @nodoc
 class __$$WorkoutScreenStateImplCopyWithImpl<$Res>
     extends _$WorkoutScreenStateCopyWithImpl<$Res, _$WorkoutScreenStateImpl>
     implements _$$WorkoutScreenStateImplCopyWith<$Res> {
-  __$$WorkoutScreenStateImplCopyWithImpl(_$WorkoutScreenStateImpl _value,
-      $Res Function(_$WorkoutScreenStateImpl) _then)
-      : super(_value, _then);
+  __$$WorkoutScreenStateImplCopyWithImpl(
+    _$WorkoutScreenStateImpl _value,
+    $Res Function(_$WorkoutScreenStateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of WorkoutScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -116,24 +131,26 @@ class __$$WorkoutScreenStateImplCopyWithImpl<$Res>
     Object? showWelcome = null,
     Object? showChangeWorkoutBanner = null,
   }) {
-    return _then(_$WorkoutScreenStateImpl(
-      isReorderMode: null == isReorderMode
-          ? _value.isReorderMode
-          : isReorderMode // ignore: cast_nullable_to_non_nullable
-              as bool,
-      selectedTemplateId: freezed == selectedTemplateId
-          ? _value.selectedTemplateId
-          : selectedTemplateId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      showWelcome: null == showWelcome
-          ? _value.showWelcome
-          : showWelcome // ignore: cast_nullable_to_non_nullable
-              as bool,
-      showChangeWorkoutBanner: null == showChangeWorkoutBanner
-          ? _value.showChangeWorkoutBanner
-          : showChangeWorkoutBanner // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$WorkoutScreenStateImpl(
+        isReorderMode: null == isReorderMode
+            ? _value.isReorderMode
+            : isReorderMode // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        selectedTemplateId: freezed == selectedTemplateId
+            ? _value.selectedTemplateId
+            : selectedTemplateId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        showWelcome: null == showWelcome
+            ? _value.showWelcome
+            : showWelcome // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        showChangeWorkoutBanner: null == showChangeWorkoutBanner
+            ? _value.showChangeWorkoutBanner
+            : showChangeWorkoutBanner // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
@@ -142,11 +159,12 @@ class __$$WorkoutScreenStateImplCopyWithImpl<$Res>
 class _$WorkoutScreenStateImpl
     with DiagnosticableTreeMixin
     implements _WorkoutScreenState {
-  const _$WorkoutScreenStateImpl(
-      {this.isReorderMode = false,
-      this.selectedTemplateId,
-      this.showWelcome = false,
-      this.showChangeWorkoutBanner = false});
+  const _$WorkoutScreenStateImpl({
+    this.isReorderMode = false,
+    this.selectedTemplateId,
+    this.showWelcome = false,
+    this.showChangeWorkoutBanner = false,
+  });
 
   /// Whether exercise reorder mode is active
   @override
@@ -180,8 +198,9 @@ class _$WorkoutScreenStateImpl
       ..add(DiagnosticsProperty('isReorderMode', isReorderMode))
       ..add(DiagnosticsProperty('selectedTemplateId', selectedTemplateId))
       ..add(DiagnosticsProperty('showWelcome', showWelcome))
-      ..add(DiagnosticsProperty(
-          'showChangeWorkoutBanner', showChangeWorkoutBanner));
+      ..add(
+        DiagnosticsProperty('showChangeWorkoutBanner', showChangeWorkoutBanner),
+      );
   }
 
   @override
@@ -196,47 +215,61 @@ class _$WorkoutScreenStateImpl
             (identical(other.showWelcome, showWelcome) ||
                 other.showWelcome == showWelcome) &&
             (identical(
-                    other.showChangeWorkoutBanner, showChangeWorkoutBanner) ||
+                  other.showChangeWorkoutBanner,
+                  showChangeWorkoutBanner,
+                ) ||
                 other.showChangeWorkoutBanner == showChangeWorkoutBanner));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isReorderMode,
-      selectedTemplateId, showWelcome, showChangeWorkoutBanner);
+  int get hashCode => Object.hash(
+    runtimeType,
+    isReorderMode,
+    selectedTemplateId,
+    showWelcome,
+    showChangeWorkoutBanner,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of WorkoutScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$WorkoutScreenStateImplCopyWith<_$WorkoutScreenStateImpl> get copyWith =>
       __$$WorkoutScreenStateImplCopyWithImpl<_$WorkoutScreenStateImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _WorkoutScreenState implements WorkoutScreenState {
-  const factory _WorkoutScreenState(
-      {final bool isReorderMode,
-      final String? selectedTemplateId,
-      final bool showWelcome,
-      final bool showChangeWorkoutBanner}) = _$WorkoutScreenStateImpl;
-
-  @override
+  const factory _WorkoutScreenState({
+    final bool isReorderMode,
+    final String? selectedTemplateId,
+    final bool showWelcome,
+    final bool showChangeWorkoutBanner,
+  }) = _$WorkoutScreenStateImpl;
 
   /// Whether exercise reorder mode is active
-  bool get isReorderMode;
   @override
+  bool get isReorderMode;
 
   /// Currently selected template ID for workout creation
-  String? get selectedTemplateId;
   @override
+  String? get selectedTemplateId;
 
   /// Whether to show the welcome view
-  bool get showWelcome;
   @override
+  bool get showWelcome;
 
   /// Whether to show the "Change Workout" banner
-  bool get showChangeWorkoutBanner;
   @override
-  @JsonKey(ignore: true)
+  bool get showChangeWorkoutBanner;
+
+  /// Create a copy of WorkoutScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutScreenStateImplCopyWith<_$WorkoutScreenStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'conversation_tree.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ConversationTree _$ConversationTreeFromJson(Map<String, dynamic> json) {
   return _ConversationTree.fromJson(json);
@@ -35,8 +36,12 @@ mixin _$ConversationTree {
   /// Last update timestamp
   DateTime get lastUpdated => throw _privateConstructorUsedError;
 
+  /// Serializes this ConversationTree to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ConversationTree
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ConversationTreeCopyWith<ConversationTree> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,15 +49,17 @@ mixin _$ConversationTree {
 /// @nodoc
 abstract class $ConversationTreeCopyWith<$Res> {
   factory $ConversationTreeCopyWith(
-          ConversationTree value, $Res Function(ConversationTree) then) =
-      _$ConversationTreeCopyWithImpl<$Res, ConversationTree>;
+    ConversationTree value,
+    $Res Function(ConversationTree) then,
+  ) = _$ConversationTreeCopyWithImpl<$Res, ConversationTree>;
   @useResult
-  $Res call(
-      {String userId,
-      String? rootNodeId,
-      String? currentNodeId,
-      Map<String, ConversationNode> nodes,
-      DateTime lastUpdated});
+  $Res call({
+    String userId,
+    String? rootNodeId,
+    String? currentNodeId,
+    Map<String, ConversationNode> nodes,
+    DateTime lastUpdated,
+  });
 }
 
 /// @nodoc
@@ -65,6 +72,8 @@ class _$ConversationTreeCopyWithImpl<$Res, $Val extends ConversationTree>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ConversationTree
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -74,55 +83,63 @@ class _$ConversationTreeCopyWithImpl<$Res, $Val extends ConversationTree>
     Object? nodes = null,
     Object? lastUpdated = null,
   }) {
-    return _then(_value.copyWith(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      rootNodeId: freezed == rootNodeId
-          ? _value.rootNodeId
-          : rootNodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentNodeId: freezed == currentNodeId
-          ? _value.currentNodeId
-          : currentNodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nodes: null == nodes
-          ? _value.nodes
-          : nodes // ignore: cast_nullable_to_non_nullable
-              as Map<String, ConversationNode>,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            userId: null == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            rootNodeId: freezed == rootNodeId
+                ? _value.rootNodeId
+                : rootNodeId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            currentNodeId: freezed == currentNodeId
+                ? _value.currentNodeId
+                : currentNodeId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            nodes: null == nodes
+                ? _value.nodes
+                : nodes // ignore: cast_nullable_to_non_nullable
+                      as Map<String, ConversationNode>,
+            lastUpdated: null == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ConversationTreeImplCopyWith<$Res>
     implements $ConversationTreeCopyWith<$Res> {
-  factory _$$ConversationTreeImplCopyWith(_$ConversationTreeImpl value,
-          $Res Function(_$ConversationTreeImpl) then) =
-      __$$ConversationTreeImplCopyWithImpl<$Res>;
+  factory _$$ConversationTreeImplCopyWith(
+    _$ConversationTreeImpl value,
+    $Res Function(_$ConversationTreeImpl) then,
+  ) = __$$ConversationTreeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String userId,
-      String? rootNodeId,
-      String? currentNodeId,
-      Map<String, ConversationNode> nodes,
-      DateTime lastUpdated});
+  $Res call({
+    String userId,
+    String? rootNodeId,
+    String? currentNodeId,
+    Map<String, ConversationNode> nodes,
+    DateTime lastUpdated,
+  });
 }
 
 /// @nodoc
 class __$$ConversationTreeImplCopyWithImpl<$Res>
     extends _$ConversationTreeCopyWithImpl<$Res, _$ConversationTreeImpl>
     implements _$$ConversationTreeImplCopyWith<$Res> {
-  __$$ConversationTreeImplCopyWithImpl(_$ConversationTreeImpl _value,
-      $Res Function(_$ConversationTreeImpl) _then)
-      : super(_value, _then);
+  __$$ConversationTreeImplCopyWithImpl(
+    _$ConversationTreeImpl _value,
+    $Res Function(_$ConversationTreeImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ConversationTree
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -132,42 +149,44 @@ class __$$ConversationTreeImplCopyWithImpl<$Res>
     Object? nodes = null,
     Object? lastUpdated = null,
   }) {
-    return _then(_$ConversationTreeImpl(
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
-      rootNodeId: freezed == rootNodeId
-          ? _value.rootNodeId
-          : rootNodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentNodeId: freezed == currentNodeId
-          ? _value.currentNodeId
-          : currentNodeId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nodes: null == nodes
-          ? _value._nodes
-          : nodes // ignore: cast_nullable_to_non_nullable
-              as Map<String, ConversationNode>,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$ConversationTreeImpl(
+        userId: null == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        rootNodeId: freezed == rootNodeId
+            ? _value.rootNodeId
+            : rootNodeId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        currentNodeId: freezed == currentNodeId
+            ? _value.currentNodeId
+            : currentNodeId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        nodes: null == nodes
+            ? _value._nodes
+            : nodes // ignore: cast_nullable_to_non_nullable
+                  as Map<String, ConversationNode>,
+        lastUpdated: null == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ConversationTreeImpl extends _ConversationTree {
-  const _$ConversationTreeImpl(
-      {required this.userId,
-      this.rootNodeId,
-      this.currentNodeId,
-      final Map<String, ConversationNode> nodes = const {},
-      required this.lastUpdated})
-      : _nodes = nodes,
-        super._();
+  const _$ConversationTreeImpl({
+    required this.userId,
+    this.rootNodeId,
+    this.currentNodeId,
+    final Map<String, ConversationNode> nodes = const {},
+    required this.lastUpdated,
+  }) : _nodes = nodes,
+       super._();
 
   factory _$ConversationTreeImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConversationTreeImplFromJson(json);
@@ -220,60 +239,71 @@ class _$ConversationTreeImpl extends _ConversationTree {
                 other.lastUpdated == lastUpdated));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, rootNodeId,
-      currentNodeId, const DeepCollectionEquality().hash(_nodes), lastUpdated);
+  int get hashCode => Object.hash(
+    runtimeType,
+    userId,
+    rootNodeId,
+    currentNodeId,
+    const DeepCollectionEquality().hash(_nodes),
+    lastUpdated,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ConversationTree
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ConversationTreeImplCopyWith<_$ConversationTreeImpl> get copyWith =>
       __$$ConversationTreeImplCopyWithImpl<_$ConversationTreeImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConversationTreeImplToJson(
-      this,
-    );
+    return _$$ConversationTreeImplToJson(this);
   }
 }
 
 abstract class _ConversationTree extends ConversationTree {
-  const factory _ConversationTree(
-      {required final String userId,
-      final String? rootNodeId,
-      final String? currentNodeId,
-      final Map<String, ConversationNode> nodes,
-      required final DateTime lastUpdated}) = _$ConversationTreeImpl;
+  const factory _ConversationTree({
+    required final String userId,
+    final String? rootNodeId,
+    final String? currentNodeId,
+    final Map<String, ConversationNode> nodes,
+    required final DateTime lastUpdated,
+  }) = _$ConversationTreeImpl;
   const _ConversationTree._() : super._();
 
   factory _ConversationTree.fromJson(Map<String, dynamic> json) =
       _$ConversationTreeImpl.fromJson;
 
-  @override
-
   /// User ID who owns this tree
-  String get userId;
   @override
+  String get userId;
 
   /// Root node ID (first message in conversation)
-  String? get rootNodeId;
   @override
+  String? get rootNodeId;
 
   /// Current active node ID (where user is in tree)
-  String? get currentNodeId;
   @override
+  String? get currentNodeId;
 
   /// All nodes in tree (keyed by node ID)
-  Map<String, ConversationNode> get nodes;
   @override
+  Map<String, ConversationNode> get nodes;
 
   /// Last update timestamp
-  DateTime get lastUpdated;
   @override
-  @JsonKey(ignore: true)
+  DateTime get lastUpdated;
+
+  /// Create a copy of ConversationTree
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ConversationTreeImplCopyWith<_$ConversationTreeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

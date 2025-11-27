@@ -8,7 +8,7 @@ part of 'onboarding_state.dart';
 
 class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
   @override
-  final int typeId = 3;
+  final typeId = 3;
 
   @override
   OnboardingState read(BinaryReader reader) {
@@ -17,21 +17,29 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return OnboardingState(
-      hasSeenGlobalOnboarding: fields[0] as bool,
-      currentStep: (fields[1] as num).toInt(),
-      completedSteps: (fields[2] as List).cast<int>(),
-      canResume: fields[3] as bool,
-      onboardingVersion: (fields[4] as num).toInt(),
+      hasSeenGlobalOnboarding: fields[0] == null ? false : fields[0] as bool,
+      currentStep: fields[1] == null ? 0 : (fields[1] as num).toInt(),
+      completedSteps: fields[2] == null
+          ? const []
+          : (fields[2] as List).cast<int>(),
+      canResume: fields[3] == null ? false : fields[3] as bool,
+      onboardingVersion: fields[4] == null ? 1 : (fields[4] as num).toInt(),
       lastInteraction: fields[5] as DateTime?,
-      stepData: (fields[6] as Map).cast<String, dynamic>(),
+      stepData: fields[6] == null
+          ? const {}
+          : (fields[6] as Map).cast<String, dynamic>(),
       userExperienceLevel: fields[10] as String?,
-      seenOverlays: (fields[11] as List).cast<String>(),
-      overlayVersionSeen: (fields[12] as num).toInt(),
+      seenOverlays: fields[11] == null
+          ? const []
+          : (fields[11] as List).cast<String>(),
+      overlayVersionSeen: fields[12] == null ? 1 : (fields[12] as num).toInt(),
       quickStartCompletedAt: fields[13] as DateTime?,
-      hasCompletedFirstWorkout: fields[14] as bool,
+      hasCompletedFirstWorkout: fields[14] == null ? false : fields[14] as bool,
       firstExerciseAddedAt: fields[15] as DateTime?,
       firstSetCompletedAt: fields[16] as DateTime?,
-      hasSeenRestTimerExplanation: fields[17] as bool,
+      hasSeenRestTimerExplanation: fields[17] == null
+          ? false
+          : fields[17] as bool,
       userGoal: fields[18] as String?,
       weeklyWorkoutTarget: (fields[19] as num?)?.toInt(),
     );

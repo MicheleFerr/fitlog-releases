@@ -12,10 +12,12 @@ part of 'exercise_template.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExerciseDefinitionTemplate _$ExerciseDefinitionTemplateFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ExerciseDefinitionTemplate.fromJson(json);
 }
 
@@ -37,40 +39,51 @@ mixin _$ExerciseDefinitionTemplate {
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this ExerciseDefinitionTemplate to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExerciseDefinitionTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseDefinitionTemplateCopyWith<ExerciseDefinitionTemplate>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExerciseDefinitionTemplateCopyWith<$Res> {
-  factory $ExerciseDefinitionTemplateCopyWith(ExerciseDefinitionTemplate value,
-          $Res Function(ExerciseDefinitionTemplate) then) =
-      _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
-          ExerciseDefinitionTemplate>;
+  factory $ExerciseDefinitionTemplateCopyWith(
+    ExerciseDefinitionTemplate value,
+    $Res Function(ExerciseDefinitionTemplate) then,
+  ) =
+      _$ExerciseDefinitionTemplateCopyWithImpl<
+        $Res,
+        ExerciseDefinitionTemplate
+      >;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String description,
-      ExerciseCategory category,
-      ExerciseType type,
-      List<String> muscleGroups,
-      List<String> equipment,
-      List<String>? instructions,
-      String? imageUrl,
-      String? videoUrl,
-      String? difficulty,
-      Map<String, dynamic>? metadata,
-      bool isActive,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String name,
+    String description,
+    ExerciseCategory category,
+    ExerciseType type,
+    List<String> muscleGroups,
+    List<String> equipment,
+    List<String>? instructions,
+    String? imageUrl,
+    String? videoUrl,
+    String? difficulty,
+    Map<String, dynamic>? metadata,
+    bool isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
-class _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
-        $Val extends ExerciseDefinitionTemplate>
+class _$ExerciseDefinitionTemplateCopyWithImpl<
+  $Res,
+  $Val extends ExerciseDefinitionTemplate
+>
     implements $ExerciseDefinitionTemplateCopyWith<$Res> {
   _$ExerciseDefinitionTemplateCopyWithImpl(this._value, this._then);
 
@@ -79,6 +92,8 @@ class _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseDefinitionTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,68 +113,71 @@ class _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as ExerciseCategory,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ExerciseType,
-      muscleGroups: null == muscleGroups
-          ? _value.muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      equipment: null == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      instructions: freezed == instructions
-          ? _value.instructions
-          : instructions // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      videoUrl: freezed == videoUrl
-          ? _value.videoUrl
-          : videoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: null == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as ExerciseCategory,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as ExerciseType,
+            muscleGroups: null == muscleGroups
+                ? _value.muscleGroups
+                : muscleGroups // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            equipment: null == equipment
+                ? _value.equipment
+                : equipment // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            instructions: freezed == instructions
+                ? _value.instructions
+                : instructions // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            videoUrl: freezed == videoUrl
+                ? _value.videoUrl
+                : videoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            difficulty: freezed == difficulty
+                ? _value.difficulty
+                : difficulty // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            metadata: freezed == metadata
+                ? _value.metadata
+                : metadata // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
+            isActive: null == isActive
+                ? _value.isActive
+                : isActive // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -167,39 +185,45 @@ class _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
 abstract class _$$ExerciseDefinitionTemplateImplCopyWith<$Res>
     implements $ExerciseDefinitionTemplateCopyWith<$Res> {
   factory _$$ExerciseDefinitionTemplateImplCopyWith(
-          _$ExerciseDefinitionTemplateImpl value,
-          $Res Function(_$ExerciseDefinitionTemplateImpl) then) =
-      __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>;
+    _$ExerciseDefinitionTemplateImpl value,
+    $Res Function(_$ExerciseDefinitionTemplateImpl) then,
+  ) = __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      String description,
-      ExerciseCategory category,
-      ExerciseType type,
-      List<String> muscleGroups,
-      List<String> equipment,
-      List<String>? instructions,
-      String? imageUrl,
-      String? videoUrl,
-      String? difficulty,
-      Map<String, dynamic>? metadata,
-      bool isActive,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String name,
+    String description,
+    ExerciseCategory category,
+    ExerciseType type,
+    List<String> muscleGroups,
+    List<String> equipment,
+    List<String>? instructions,
+    String? imageUrl,
+    String? videoUrl,
+    String? difficulty,
+    Map<String, dynamic>? metadata,
+    bool isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
 class __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>
-    extends _$ExerciseDefinitionTemplateCopyWithImpl<$Res,
-        _$ExerciseDefinitionTemplateImpl>
+    extends
+        _$ExerciseDefinitionTemplateCopyWithImpl<
+          $Res,
+          _$ExerciseDefinitionTemplateImpl
+        >
     implements _$$ExerciseDefinitionTemplateImplCopyWith<$Res> {
   __$$ExerciseDefinitionTemplateImplCopyWithImpl(
-      _$ExerciseDefinitionTemplateImpl _value,
-      $Res Function(_$ExerciseDefinitionTemplateImpl) _then)
-      : super(_value, _then);
+    _$ExerciseDefinitionTemplateImpl _value,
+    $Res Function(_$ExerciseDefinitionTemplateImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseDefinitionTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -219,98 +243,100 @@ class __$$ExerciseDefinitionTemplateImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$ExerciseDefinitionTemplateImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as ExerciseCategory,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ExerciseType,
-      muscleGroups: null == muscleGroups
-          ? _value._muscleGroups
-          : muscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      equipment: null == equipment
-          ? _value._equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      instructions: freezed == instructions
-          ? _value._instructions
-          : instructions // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      videoUrl: freezed == videoUrl
-          ? _value.videoUrl
-          : videoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      difficulty: freezed == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String?,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$ExerciseDefinitionTemplateImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: null == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as ExerciseCategory,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as ExerciseType,
+        muscleGroups: null == muscleGroups
+            ? _value._muscleGroups
+            : muscleGroups // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        equipment: null == equipment
+            ? _value._equipment
+            : equipment // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        instructions: freezed == instructions
+            ? _value._instructions
+            : instructions // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        videoUrl: freezed == videoUrl
+            ? _value.videoUrl
+            : videoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        difficulty: freezed == difficulty
+            ? _value.difficulty
+            : difficulty // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        metadata: freezed == metadata
+            ? _value._metadata
+            : metadata // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
+        isActive: null == isActive
+            ? _value.isActive
+            : isActive // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExerciseDefinitionTemplateImpl implements _ExerciseDefinitionTemplate {
-  const _$ExerciseDefinitionTemplateImpl(
-      {required this.id,
-      required this.name,
-      required this.description,
-      required this.category,
-      required this.type,
-      required final List<String> muscleGroups,
-      required final List<String> equipment,
-      final List<String>? instructions,
-      this.imageUrl,
-      this.videoUrl,
-      this.difficulty,
-      final Map<String, dynamic>? metadata,
-      this.isActive = true,
-      this.createdAt,
-      this.updatedAt})
-      : _muscleGroups = muscleGroups,
-        _equipment = equipment,
-        _instructions = instructions,
-        _metadata = metadata;
+  const _$ExerciseDefinitionTemplateImpl({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.category,
+    required this.type,
+    required final List<String> muscleGroups,
+    required final List<String> equipment,
+    final List<String>? instructions,
+    this.imageUrl,
+    this.videoUrl,
+    this.difficulty,
+    final Map<String, dynamic>? metadata,
+    this.isActive = true,
+    this.createdAt,
+    this.updatedAt,
+  }) : _muscleGroups = muscleGroups,
+       _equipment = equipment,
+       _instructions = instructions,
+       _metadata = metadata;
 
   factory _$ExerciseDefinitionTemplateImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$ExerciseDefinitionTemplateImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$ExerciseDefinitionTemplateImplFromJson(json);
 
   @override
   final String id;
@@ -389,12 +415,18 @@ class _$ExerciseDefinitionTemplateImpl implements _ExerciseDefinitionTemplate {
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.type, type) || other.type == type) &&
-            const DeepCollectionEquality()
-                .equals(other._muscleGroups, _muscleGroups) &&
-            const DeepCollectionEquality()
-                .equals(other._equipment, _equipment) &&
-            const DeepCollectionEquality()
-                .equals(other._instructions, _instructions) &&
+            const DeepCollectionEquality().equals(
+              other._muscleGroups,
+              _muscleGroups,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._equipment,
+              _equipment,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._instructions,
+              _instructions,
+            ) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
             (identical(other.videoUrl, videoUrl) ||
@@ -410,59 +442,63 @@ class _$ExerciseDefinitionTemplateImpl implements _ExerciseDefinitionTemplate {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      description,
-      category,
-      type,
-      const DeepCollectionEquality().hash(_muscleGroups),
-      const DeepCollectionEquality().hash(_equipment),
-      const DeepCollectionEquality().hash(_instructions),
-      imageUrl,
-      videoUrl,
-      difficulty,
-      const DeepCollectionEquality().hash(_metadata),
-      isActive,
-      createdAt,
-      updatedAt);
+    runtimeType,
+    id,
+    name,
+    description,
+    category,
+    type,
+    const DeepCollectionEquality().hash(_muscleGroups),
+    const DeepCollectionEquality().hash(_equipment),
+    const DeepCollectionEquality().hash(_instructions),
+    imageUrl,
+    videoUrl,
+    difficulty,
+    const DeepCollectionEquality().hash(_metadata),
+    isActive,
+    createdAt,
+    updatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseDefinitionTemplate
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseDefinitionTemplateImplCopyWith<_$ExerciseDefinitionTemplateImpl>
-      get copyWith => __$$ExerciseDefinitionTemplateImplCopyWithImpl<
-          _$ExerciseDefinitionTemplateImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExerciseDefinitionTemplateImplCopyWithImpl<
+        _$ExerciseDefinitionTemplateImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseDefinitionTemplateImplToJson(
-      this,
-    );
+    return _$$ExerciseDefinitionTemplateImplToJson(this);
   }
 }
 
 abstract class _ExerciseDefinitionTemplate
     implements ExerciseDefinitionTemplate {
-  const factory _ExerciseDefinitionTemplate(
-      {required final String id,
-      required final String name,
-      required final String description,
-      required final ExerciseCategory category,
-      required final ExerciseType type,
-      required final List<String> muscleGroups,
-      required final List<String> equipment,
-      final List<String>? instructions,
-      final String? imageUrl,
-      final String? videoUrl,
-      final String? difficulty,
-      final Map<String, dynamic>? metadata,
-      final bool isActive,
-      final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$ExerciseDefinitionTemplateImpl;
+  const factory _ExerciseDefinitionTemplate({
+    required final String id,
+    required final String name,
+    required final String description,
+    required final ExerciseCategory category,
+    required final ExerciseType type,
+    required final List<String> muscleGroups,
+    required final List<String> equipment,
+    final List<String>? instructions,
+    final String? imageUrl,
+    final String? videoUrl,
+    final String? difficulty,
+    final Map<String, dynamic>? metadata,
+    final bool isActive,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
+  }) = _$ExerciseDefinitionTemplateImpl;
 
   factory _ExerciseDefinitionTemplate.fromJson(Map<String, dynamic> json) =
       _$ExerciseDefinitionTemplateImpl.fromJson;
@@ -497,8 +533,11 @@ abstract class _ExerciseDefinitionTemplate
   DateTime? get createdAt;
   @override
   DateTime? get updatedAt;
+
+  /// Create a copy of ExerciseDefinitionTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseDefinitionTemplateImplCopyWith<_$ExerciseDefinitionTemplateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

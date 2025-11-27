@@ -12,7 +12,8 @@ part of 'exercise_records.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExerciseRecords _$ExerciseRecordsFromJson(Map<String, dynamic> json) {
   return _ExerciseRecords.fromJson(json);
@@ -42,8 +43,12 @@ mixin _$ExerciseRecords {
       throw _privateConstructorUsedError; // First recorded workout
   int get totalWorkouts => throw _privateConstructorUsedError;
 
+  /// Serializes this ExerciseRecords to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExerciseRecords
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseRecordsCopyWith<ExerciseRecords> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,19 +56,21 @@ mixin _$ExerciseRecords {
 /// @nodoc
 abstract class $ExerciseRecordsCopyWith<$Res> {
   factory $ExerciseRecordsCopyWith(
-          ExerciseRecords value, $Res Function(ExerciseRecords) then) =
-      _$ExerciseRecordsCopyWithImpl<$Res, ExerciseRecords>;
+    ExerciseRecords value,
+    $Res Function(ExerciseRecords) then,
+  ) = _$ExerciseRecordsCopyWithImpl<$Res, ExerciseRecords>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      double maxWeightRecord,
-      double estimated1RM,
-      double totalVolumeRecord,
-      int totalSetsRecord,
-      DateTime lastWorkoutDate,
-      double weeklyFrequency,
-      DateTime firstWorkoutDate,
-      int totalWorkouts});
+  $Res call({
+    String exerciseName,
+    double maxWeightRecord,
+    double estimated1RM,
+    double totalVolumeRecord,
+    int totalSetsRecord,
+    DateTime lastWorkoutDate,
+    double weeklyFrequency,
+    DateTime firstWorkoutDate,
+    int totalWorkouts,
+  });
 }
 
 /// @nodoc
@@ -76,6 +83,8 @@ class _$ExerciseRecordsCopyWithImpl<$Res, $Val extends ExerciseRecords>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseRecords
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -89,65 +98,70 @@ class _$ExerciseRecordsCopyWithImpl<$Res, $Val extends ExerciseRecords>
     Object? firstWorkoutDate = null,
     Object? totalWorkouts = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxWeightRecord: null == maxWeightRecord
-          ? _value.maxWeightRecord
-          : maxWeightRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolumeRecord: null == totalVolumeRecord
-          ? _value.totalVolumeRecord
-          : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSetsRecord: null == totalSetsRecord
-          ? _value.totalSetsRecord
-          : totalSetsRecord // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weeklyFrequency: null == weeklyFrequency
-          ? _value.weeklyFrequency
-          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
-              as double,
-      firstWorkoutDate: null == firstWorkoutDate
-          ? _value.firstWorkoutDate
-          : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            maxWeightRecord: null == maxWeightRecord
+                ? _value.maxWeightRecord
+                : maxWeightRecord // ignore: cast_nullable_to_non_nullable
+                      as double,
+            estimated1RM: null == estimated1RM
+                ? _value.estimated1RM
+                : estimated1RM // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalVolumeRecord: null == totalVolumeRecord
+                ? _value.totalVolumeRecord
+                : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalSetsRecord: null == totalSetsRecord
+                ? _value.totalSetsRecord
+                : totalSetsRecord // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastWorkoutDate: null == lastWorkoutDate
+                ? _value.lastWorkoutDate
+                : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            weeklyFrequency: null == weeklyFrequency
+                ? _value.weeklyFrequency
+                : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+                      as double,
+            firstWorkoutDate: null == firstWorkoutDate
+                ? _value.firstWorkoutDate
+                : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            totalWorkouts: null == totalWorkouts
+                ? _value.totalWorkouts
+                : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseRecordsImplCopyWith<$Res>
     implements $ExerciseRecordsCopyWith<$Res> {
-  factory _$$ExerciseRecordsImplCopyWith(_$ExerciseRecordsImpl value,
-          $Res Function(_$ExerciseRecordsImpl) then) =
-      __$$ExerciseRecordsImplCopyWithImpl<$Res>;
+  factory _$$ExerciseRecordsImplCopyWith(
+    _$ExerciseRecordsImpl value,
+    $Res Function(_$ExerciseRecordsImpl) then,
+  ) = __$$ExerciseRecordsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      double maxWeightRecord,
-      double estimated1RM,
-      double totalVolumeRecord,
-      int totalSetsRecord,
-      DateTime lastWorkoutDate,
-      double weeklyFrequency,
-      DateTime firstWorkoutDate,
-      int totalWorkouts});
+  $Res call({
+    String exerciseName,
+    double maxWeightRecord,
+    double estimated1RM,
+    double totalVolumeRecord,
+    int totalSetsRecord,
+    DateTime lastWorkoutDate,
+    double weeklyFrequency,
+    DateTime firstWorkoutDate,
+    int totalWorkouts,
+  });
 }
 
 /// @nodoc
@@ -155,9 +169,12 @@ class __$$ExerciseRecordsImplCopyWithImpl<$Res>
     extends _$ExerciseRecordsCopyWithImpl<$Res, _$ExerciseRecordsImpl>
     implements _$$ExerciseRecordsImplCopyWith<$Res> {
   __$$ExerciseRecordsImplCopyWithImpl(
-      _$ExerciseRecordsImpl _value, $Res Function(_$ExerciseRecordsImpl) _then)
-      : super(_value, _then);
+    _$ExerciseRecordsImpl _value,
+    $Res Function(_$ExerciseRecordsImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseRecords
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -171,60 +188,63 @@ class __$$ExerciseRecordsImplCopyWithImpl<$Res>
     Object? firstWorkoutDate = null,
     Object? totalWorkouts = null,
   }) {
-    return _then(_$ExerciseRecordsImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxWeightRecord: null == maxWeightRecord
-          ? _value.maxWeightRecord
-          : maxWeightRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalVolumeRecord: null == totalVolumeRecord
-          ? _value.totalVolumeRecord
-          : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
-              as double,
-      totalSetsRecord: null == totalSetsRecord
-          ? _value.totalSetsRecord
-          : totalSetsRecord // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastWorkoutDate: null == lastWorkoutDate
-          ? _value.lastWorkoutDate
-          : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      weeklyFrequency: null == weeklyFrequency
-          ? _value.weeklyFrequency
-          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
-              as double,
-      firstWorkoutDate: null == firstWorkoutDate
-          ? _value.firstWorkoutDate
-          : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalWorkouts: null == totalWorkouts
-          ? _value.totalWorkouts
-          : totalWorkouts // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExerciseRecordsImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        maxWeightRecord: null == maxWeightRecord
+            ? _value.maxWeightRecord
+            : maxWeightRecord // ignore: cast_nullable_to_non_nullable
+                  as double,
+        estimated1RM: null == estimated1RM
+            ? _value.estimated1RM
+            : estimated1RM // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalVolumeRecord: null == totalVolumeRecord
+            ? _value.totalVolumeRecord
+            : totalVolumeRecord // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalSetsRecord: null == totalSetsRecord
+            ? _value.totalSetsRecord
+            : totalSetsRecord // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastWorkoutDate: null == lastWorkoutDate
+            ? _value.lastWorkoutDate
+            : lastWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        weeklyFrequency: null == weeklyFrequency
+            ? _value.weeklyFrequency
+            : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+                  as double,
+        firstWorkoutDate: null == firstWorkoutDate
+            ? _value.firstWorkoutDate
+            : firstWorkoutDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        totalWorkouts: null == totalWorkouts
+            ? _value.totalWorkouts
+            : totalWorkouts // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExerciseRecordsImpl implements _ExerciseRecords {
-  const _$ExerciseRecordsImpl(
-      {required this.exerciseName,
-      required this.maxWeightRecord,
-      required this.estimated1RM,
-      required this.totalVolumeRecord,
-      required this.totalSetsRecord,
-      required this.lastWorkoutDate,
-      required this.weeklyFrequency,
-      required this.firstWorkoutDate,
-      required this.totalWorkouts});
+  const _$ExerciseRecordsImpl({
+    required this.exerciseName,
+    required this.maxWeightRecord,
+    required this.estimated1RM,
+    required this.totalVolumeRecord,
+    required this.totalSetsRecord,
+    required this.lastWorkoutDate,
+    required this.weeklyFrequency,
+    required this.firstWorkoutDate,
+    required this.totalWorkouts,
+  });
 
   factory _$ExerciseRecordsImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseRecordsImplFromJson(json);
@@ -236,27 +256,27 @@ class _$ExerciseRecordsImpl implements _ExerciseRecords {
   /// Personal Records
   @override
   final double maxWeightRecord;
-// Heaviest single set weight (kg)
+  // Heaviest single set weight (kg)
   @override
   final double estimated1RM;
-// Estimated 1 rep max (Epley formula)
+  // Estimated 1 rep max (Epley formula)
   @override
   final double totalVolumeRecord;
-// Highest single-workout volume (kg)
+  // Highest single-workout volume (kg)
   @override
   final int totalSetsRecord;
-// Most sets in single workout
+  // Most sets in single workout
   /// Recent Activity
   @override
   final DateTime lastWorkoutDate;
-// Most recent workout date
+  // Most recent workout date
   @override
   final double weeklyFrequency;
-// Avg workouts per week (last 4 weeks)
+  // Avg workouts per week (last 4 weeks)
   /// Time Range
   @override
   final DateTime firstWorkoutDate;
-// First recorded workout
+  // First recorded workout
   @override
   final int totalWorkouts;
 
@@ -290,76 +310,82 @@ class _$ExerciseRecordsImpl implements _ExerciseRecords {
                 other.totalWorkouts == totalWorkouts));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      exerciseName,
-      maxWeightRecord,
-      estimated1RM,
-      totalVolumeRecord,
-      totalSetsRecord,
-      lastWorkoutDate,
-      weeklyFrequency,
-      firstWorkoutDate,
-      totalWorkouts);
+    runtimeType,
+    exerciseName,
+    maxWeightRecord,
+    estimated1RM,
+    totalVolumeRecord,
+    totalSetsRecord,
+    lastWorkoutDate,
+    weeklyFrequency,
+    firstWorkoutDate,
+    totalWorkouts,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseRecords
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseRecordsImplCopyWith<_$ExerciseRecordsImpl> get copyWith =>
       __$$ExerciseRecordsImplCopyWithImpl<_$ExerciseRecordsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseRecordsImplToJson(
-      this,
-    );
+    return _$$ExerciseRecordsImplToJson(this);
   }
 }
 
 abstract class _ExerciseRecords implements ExerciseRecords {
-  const factory _ExerciseRecords(
-      {required final String exerciseName,
-      required final double maxWeightRecord,
-      required final double estimated1RM,
-      required final double totalVolumeRecord,
-      required final int totalSetsRecord,
-      required final DateTime lastWorkoutDate,
-      required final double weeklyFrequency,
-      required final DateTime firstWorkoutDate,
-      required final int totalWorkouts}) = _$ExerciseRecordsImpl;
+  const factory _ExerciseRecords({
+    required final String exerciseName,
+    required final double maxWeightRecord,
+    required final double estimated1RM,
+    required final double totalVolumeRecord,
+    required final int totalSetsRecord,
+    required final DateTime lastWorkoutDate,
+    required final double weeklyFrequency,
+    required final DateTime firstWorkoutDate,
+    required final int totalWorkouts,
+  }) = _$ExerciseRecordsImpl;
 
   factory _ExerciseRecords.fromJson(Map<String, dynamic> json) =
       _$ExerciseRecordsImpl.fromJson;
 
-  @override
-
   /// Exercise name (matches ExerciseHistory.exerciseName)
-  String get exerciseName;
   @override
+  String get exerciseName;
 
   /// Personal Records
-  double get maxWeightRecord;
-  @override // Heaviest single set weight (kg)
-  double get estimated1RM;
-  @override // Estimated 1 rep max (Epley formula)
-  double get totalVolumeRecord;
-  @override // Highest single-workout volume (kg)
-  int get totalSetsRecord;
-  @override // Most sets in single workout
-  /// Recent Activity
-  DateTime get lastWorkoutDate;
-  @override // Most recent workout date
-  double get weeklyFrequency;
-  @override // Avg workouts per week (last 4 weeks)
-  /// Time Range
-  DateTime get firstWorkoutDate;
-  @override // First recorded workout
-  int get totalWorkouts;
   @override
-  @JsonKey(ignore: true)
+  double get maxWeightRecord; // Heaviest single set weight (kg)
+  @override
+  double get estimated1RM; // Estimated 1 rep max (Epley formula)
+  @override
+  double get totalVolumeRecord; // Highest single-workout volume (kg)
+  @override
+  int get totalSetsRecord; // Most sets in single workout
+  /// Recent Activity
+  @override
+  DateTime get lastWorkoutDate; // Most recent workout date
+  @override
+  double get weeklyFrequency; // Avg workouts per week (last 4 weeks)
+  /// Time Range
+  @override
+  DateTime get firstWorkoutDate; // First recorded workout
+  @override
+  int get totalWorkouts;
+
+  /// Create a copy of ExerciseRecords
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseRecordsImplCopyWith<_$ExerciseRecordsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

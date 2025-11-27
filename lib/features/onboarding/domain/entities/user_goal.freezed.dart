@@ -12,7 +12,8 @@ part of 'user_goal.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$UserGoal {
@@ -20,7 +21,9 @@ mixin _$UserGoal {
   int get weeklyWorkoutTarget => throw _privateConstructorUsedError;
   ExperienceLevel get experienceLevel => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserGoal
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $UserGoalCopyWith<UserGoal> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -30,10 +33,11 @@ abstract class $UserGoalCopyWith<$Res> {
   factory $UserGoalCopyWith(UserGoal value, $Res Function(UserGoal) then) =
       _$UserGoalCopyWithImpl<$Res, UserGoal>;
   @useResult
-  $Res call(
-      {GoalType goalType,
-      int weeklyWorkoutTarget,
-      ExperienceLevel experienceLevel});
+  $Res call({
+    GoalType goalType,
+    int weeklyWorkoutTarget,
+    ExperienceLevel experienceLevel,
+  });
 }
 
 /// @nodoc
@@ -46,6 +50,8 @@ class _$UserGoalCopyWithImpl<$Res, $Val extends UserGoal>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of UserGoal
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -53,20 +59,23 @@ class _$UserGoalCopyWithImpl<$Res, $Val extends UserGoal>
     Object? weeklyWorkoutTarget = null,
     Object? experienceLevel = null,
   }) {
-    return _then(_value.copyWith(
-      goalType: null == goalType
-          ? _value.goalType
-          : goalType // ignore: cast_nullable_to_non_nullable
-              as GoalType,
-      weeklyWorkoutTarget: null == weeklyWorkoutTarget
-          ? _value.weeklyWorkoutTarget
-          : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
-              as int,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            goalType: null == goalType
+                ? _value.goalType
+                : goalType // ignore: cast_nullable_to_non_nullable
+                      as GoalType,
+            weeklyWorkoutTarget: null == weeklyWorkoutTarget
+                ? _value.weeklyWorkoutTarget
+                : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
+                      as int,
+            experienceLevel: null == experienceLevel
+                ? _value.experienceLevel
+                : experienceLevel // ignore: cast_nullable_to_non_nullable
+                      as ExperienceLevel,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -74,14 +83,16 @@ class _$UserGoalCopyWithImpl<$Res, $Val extends UserGoal>
 abstract class _$$UserGoalImplCopyWith<$Res>
     implements $UserGoalCopyWith<$Res> {
   factory _$$UserGoalImplCopyWith(
-          _$UserGoalImpl value, $Res Function(_$UserGoalImpl) then) =
-      __$$UserGoalImplCopyWithImpl<$Res>;
+    _$UserGoalImpl value,
+    $Res Function(_$UserGoalImpl) then,
+  ) = __$$UserGoalImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {GoalType goalType,
-      int weeklyWorkoutTarget,
-      ExperienceLevel experienceLevel});
+  $Res call({
+    GoalType goalType,
+    int weeklyWorkoutTarget,
+    ExperienceLevel experienceLevel,
+  });
 }
 
 /// @nodoc
@@ -89,9 +100,12 @@ class __$$UserGoalImplCopyWithImpl<$Res>
     extends _$UserGoalCopyWithImpl<$Res, _$UserGoalImpl>
     implements _$$UserGoalImplCopyWith<$Res> {
   __$$UserGoalImplCopyWithImpl(
-      _$UserGoalImpl _value, $Res Function(_$UserGoalImpl) _then)
-      : super(_value, _then);
+    _$UserGoalImpl _value,
+    $Res Function(_$UserGoalImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of UserGoal
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,30 +113,33 @@ class __$$UserGoalImplCopyWithImpl<$Res>
     Object? weeklyWorkoutTarget = null,
     Object? experienceLevel = null,
   }) {
-    return _then(_$UserGoalImpl(
-      goalType: null == goalType
-          ? _value.goalType
-          : goalType // ignore: cast_nullable_to_non_nullable
-              as GoalType,
-      weeklyWorkoutTarget: null == weeklyWorkoutTarget
-          ? _value.weeklyWorkoutTarget
-          : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
-              as int,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as ExperienceLevel,
-    ));
+    return _then(
+      _$UserGoalImpl(
+        goalType: null == goalType
+            ? _value.goalType
+            : goalType // ignore: cast_nullable_to_non_nullable
+                  as GoalType,
+        weeklyWorkoutTarget: null == weeklyWorkoutTarget
+            ? _value.weeklyWorkoutTarget
+            : weeklyWorkoutTarget // ignore: cast_nullable_to_non_nullable
+                  as int,
+        experienceLevel: null == experienceLevel
+            ? _value.experienceLevel
+            : experienceLevel // ignore: cast_nullable_to_non_nullable
+                  as ExperienceLevel,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$UserGoalImpl implements _UserGoal {
-  const _$UserGoalImpl(
-      {required this.goalType,
-      required this.weeklyWorkoutTarget,
-      required this.experienceLevel});
+  const _$UserGoalImpl({
+    required this.goalType,
+    required this.weeklyWorkoutTarget,
+    required this.experienceLevel,
+  });
 
   @override
   final GoalType goalType;
@@ -153,7 +170,9 @@ class _$UserGoalImpl implements _UserGoal {
   int get hashCode =>
       Object.hash(runtimeType, goalType, weeklyWorkoutTarget, experienceLevel);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UserGoal
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UserGoalImplCopyWith<_$UserGoalImpl> get copyWith =>
@@ -161,10 +180,11 @@ class _$UserGoalImpl implements _UserGoal {
 }
 
 abstract class _UserGoal implements UserGoal {
-  const factory _UserGoal(
-      {required final GoalType goalType,
-      required final int weeklyWorkoutTarget,
-      required final ExperienceLevel experienceLevel}) = _$UserGoalImpl;
+  const factory _UserGoal({
+    required final GoalType goalType,
+    required final int weeklyWorkoutTarget,
+    required final ExperienceLevel experienceLevel,
+  }) = _$UserGoalImpl;
 
   @override
   GoalType get goalType;
@@ -172,8 +192,11 @@ abstract class _UserGoal implements UserGoal {
   int get weeklyWorkoutTarget;
   @override
   ExperienceLevel get experienceLevel;
+
+  /// Create a copy of UserGoal
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UserGoalImplCopyWith<_$UserGoalImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

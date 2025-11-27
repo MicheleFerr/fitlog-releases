@@ -12,7 +12,8 @@ part of 'exercise_analytics_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ChartDataPoint {
@@ -31,7 +32,9 @@ mixin _$ChartDataPoint {
   /// Optional session index (1, 2, 3...)
   int? get sessionIndex => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChartDataPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ChartDataPointCopyWith<ChartDataPoint> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -39,11 +42,17 @@ mixin _$ChartDataPoint {
 /// @nodoc
 abstract class $ChartDataPointCopyWith<$Res> {
   factory $ChartDataPointCopyWith(
-          ChartDataPoint value, $Res Function(ChartDataPoint) then) =
-      _$ChartDataPointCopyWithImpl<$Res, ChartDataPoint>;
+    ChartDataPoint value,
+    $Res Function(ChartDataPoint) then,
+  ) = _$ChartDataPointCopyWithImpl<$Res, ChartDataPoint>;
   @useResult
-  $Res call(
-      {DateTime date, double value, int? rpe, int? reps, int? sessionIndex});
+  $Res call({
+    DateTime date,
+    double value,
+    int? rpe,
+    int? reps,
+    int? sessionIndex,
+  });
 }
 
 /// @nodoc
@@ -56,6 +65,8 @@ class _$ChartDataPointCopyWithImpl<$Res, $Val extends ChartDataPoint>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ChartDataPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -65,41 +76,50 @@ class _$ChartDataPointCopyWithImpl<$Res, $Val extends ChartDataPoint>
     Object? reps = freezed,
     Object? sessionIndex = freezed,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double,
-      rpe: freezed == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int?,
-      reps: freezed == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int?,
-      sessionIndex: freezed == sessionIndex
-          ? _value.sessionIndex
-          : sessionIndex // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            value: null == value
+                ? _value.value
+                : value // ignore: cast_nullable_to_non_nullable
+                      as double,
+            rpe: freezed == rpe
+                ? _value.rpe
+                : rpe // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            reps: freezed == reps
+                ? _value.reps
+                : reps // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            sessionIndex: freezed == sessionIndex
+                ? _value.sessionIndex
+                : sessionIndex // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ChartDataPointImplCopyWith<$Res>
     implements $ChartDataPointCopyWith<$Res> {
-  factory _$$ChartDataPointImplCopyWith(_$ChartDataPointImpl value,
-          $Res Function(_$ChartDataPointImpl) then) =
-      __$$ChartDataPointImplCopyWithImpl<$Res>;
+  factory _$$ChartDataPointImplCopyWith(
+    _$ChartDataPointImpl value,
+    $Res Function(_$ChartDataPointImpl) then,
+  ) = __$$ChartDataPointImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date, double value, int? rpe, int? reps, int? sessionIndex});
+  $Res call({
+    DateTime date,
+    double value,
+    int? rpe,
+    int? reps,
+    int? sessionIndex,
+  });
 }
 
 /// @nodoc
@@ -107,9 +127,12 @@ class __$$ChartDataPointImplCopyWithImpl<$Res>
     extends _$ChartDataPointCopyWithImpl<$Res, _$ChartDataPointImpl>
     implements _$$ChartDataPointImplCopyWith<$Res> {
   __$$ChartDataPointImplCopyWithImpl(
-      _$ChartDataPointImpl _value, $Res Function(_$ChartDataPointImpl) _then)
-      : super(_value, _then);
+    _$ChartDataPointImpl _value,
+    $Res Function(_$ChartDataPointImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ChartDataPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,41 +142,43 @@ class __$$ChartDataPointImplCopyWithImpl<$Res>
     Object? reps = freezed,
     Object? sessionIndex = freezed,
   }) {
-    return _then(_$ChartDataPointImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      value: null == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double,
-      rpe: freezed == rpe
-          ? _value.rpe
-          : rpe // ignore: cast_nullable_to_non_nullable
-              as int?,
-      reps: freezed == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int?,
-      sessionIndex: freezed == sessionIndex
-          ? _value.sessionIndex
-          : sessionIndex // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$ChartDataPointImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        value: null == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                  as double,
+        rpe: freezed == rpe
+            ? _value.rpe
+            : rpe // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        reps: freezed == reps
+            ? _value.reps
+            : reps // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        sessionIndex: freezed == sessionIndex
+            ? _value.sessionIndex
+            : sessionIndex // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ChartDataPointImpl extends _ChartDataPoint {
-  const _$ChartDataPointImpl(
-      {required this.date,
-      required this.value,
-      this.rpe,
-      this.reps,
-      this.sessionIndex})
-      : super._();
+  const _$ChartDataPointImpl({
+    required this.date,
+    required this.value,
+    this.rpe,
+    this.reps,
+    this.sessionIndex,
+  }) : super._();
 
   /// Date of the data point
   @override
@@ -197,45 +222,52 @@ class _$ChartDataPointImpl extends _ChartDataPoint {
   int get hashCode =>
       Object.hash(runtimeType, date, value, rpe, reps, sessionIndex);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ChartDataPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ChartDataPointImplCopyWith<_$ChartDataPointImpl> get copyWith =>
       __$$ChartDataPointImplCopyWithImpl<_$ChartDataPointImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ChartDataPoint extends ChartDataPoint {
-  const factory _ChartDataPoint(
-      {required final DateTime date,
-      required final double value,
-      final int? rpe,
-      final int? reps,
-      final int? sessionIndex}) = _$ChartDataPointImpl;
+  const factory _ChartDataPoint({
+    required final DateTime date,
+    required final double value,
+    final int? rpe,
+    final int? reps,
+    final int? sessionIndex,
+  }) = _$ChartDataPointImpl;
   const _ChartDataPoint._() : super._();
 
-  @override
-
   /// Date of the data point
-  DateTime get date;
   @override
+  DateTime get date;
 
   /// Primary value (weight, volume, etc.)
-  double get value;
   @override
+  double get value;
 
   /// Optional RPE for this data point
-  int? get rpe;
   @override
+  int? get rpe;
 
   /// Optional reps count
-  int? get reps;
   @override
+  int? get reps;
 
   /// Optional session index (1, 2, 3...)
-  int? get sessionIndex;
   @override
-  @JsonKey(ignore: true)
+  int? get sessionIndex;
+
+  /// Create a copy of ChartDataPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ChartDataPointImplCopyWith<_$ChartDataPointImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -261,30 +293,36 @@ mixin _$ProgressiveOverloadData {
   /// Previous volume (for comparison)
   double get previousVolume => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProgressiveOverloadData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ProgressiveOverloadDataCopyWith<ProgressiveOverloadData> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ProgressiveOverloadDataCopyWith<$Res> {
-  factory $ProgressiveOverloadDataCopyWith(ProgressiveOverloadData value,
-          $Res Function(ProgressiveOverloadData) then) =
-      _$ProgressiveOverloadDataCopyWithImpl<$Res, ProgressiveOverloadData>;
+  factory $ProgressiveOverloadDataCopyWith(
+    ProgressiveOverloadData value,
+    $Res Function(ProgressiveOverloadData) then,
+  ) = _$ProgressiveOverloadDataCopyWithImpl<$Res, ProgressiveOverloadData>;
   @useResult
-  $Res call(
-      {double currentPercent,
-      double targetMin,
-      double targetMax,
-      OverloadStatus status,
-      String userLevel,
-      double currentVolume,
-      double previousVolume});
+  $Res call({
+    double currentPercent,
+    double targetMin,
+    double targetMax,
+    OverloadStatus status,
+    String userLevel,
+    double currentVolume,
+    double previousVolume,
+  });
 }
 
 /// @nodoc
-class _$ProgressiveOverloadDataCopyWithImpl<$Res,
-        $Val extends ProgressiveOverloadData>
+class _$ProgressiveOverloadDataCopyWithImpl<
+  $Res,
+  $Val extends ProgressiveOverloadData
+>
     implements $ProgressiveOverloadDataCopyWith<$Res> {
   _$ProgressiveOverloadDataCopyWithImpl(this._value, this._then);
 
@@ -293,6 +331,8 @@ class _$ProgressiveOverloadDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ProgressiveOverloadData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -304,36 +344,39 @@ class _$ProgressiveOverloadDataCopyWithImpl<$Res,
     Object? currentVolume = null,
     Object? previousVolume = null,
   }) {
-    return _then(_value.copyWith(
-      currentPercent: null == currentPercent
-          ? _value.currentPercent
-          : currentPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetMin: null == targetMin
-          ? _value.targetMin
-          : targetMin // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetMax: null == targetMax
-          ? _value.targetMax
-          : targetMax // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as OverloadStatus,
-      userLevel: null == userLevel
-          ? _value.userLevel
-          : userLevel // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentVolume: null == currentVolume
-          ? _value.currentVolume
-          : currentVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-      previousVolume: null == previousVolume
-          ? _value.previousVolume
-          : previousVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            currentPercent: null == currentPercent
+                ? _value.currentPercent
+                : currentPercent // ignore: cast_nullable_to_non_nullable
+                      as double,
+            targetMin: null == targetMin
+                ? _value.targetMin
+                : targetMin // ignore: cast_nullable_to_non_nullable
+                      as double,
+            targetMax: null == targetMax
+                ? _value.targetMax
+                : targetMax // ignore: cast_nullable_to_non_nullable
+                      as double,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as OverloadStatus,
+            userLevel: null == userLevel
+                ? _value.userLevel
+                : userLevel // ignore: cast_nullable_to_non_nullable
+                      as String,
+            currentVolume: null == currentVolume
+                ? _value.currentVolume
+                : currentVolume // ignore: cast_nullable_to_non_nullable
+                      as double,
+            previousVolume: null == previousVolume
+                ? _value.previousVolume
+                : previousVolume // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -341,31 +384,37 @@ class _$ProgressiveOverloadDataCopyWithImpl<$Res,
 abstract class _$$ProgressiveOverloadDataImplCopyWith<$Res>
     implements $ProgressiveOverloadDataCopyWith<$Res> {
   factory _$$ProgressiveOverloadDataImplCopyWith(
-          _$ProgressiveOverloadDataImpl value,
-          $Res Function(_$ProgressiveOverloadDataImpl) then) =
-      __$$ProgressiveOverloadDataImplCopyWithImpl<$Res>;
+    _$ProgressiveOverloadDataImpl value,
+    $Res Function(_$ProgressiveOverloadDataImpl) then,
+  ) = __$$ProgressiveOverloadDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double currentPercent,
-      double targetMin,
-      double targetMax,
-      OverloadStatus status,
-      String userLevel,
-      double currentVolume,
-      double previousVolume});
+  $Res call({
+    double currentPercent,
+    double targetMin,
+    double targetMax,
+    OverloadStatus status,
+    String userLevel,
+    double currentVolume,
+    double previousVolume,
+  });
 }
 
 /// @nodoc
 class __$$ProgressiveOverloadDataImplCopyWithImpl<$Res>
-    extends _$ProgressiveOverloadDataCopyWithImpl<$Res,
-        _$ProgressiveOverloadDataImpl>
+    extends
+        _$ProgressiveOverloadDataCopyWithImpl<
+          $Res,
+          _$ProgressiveOverloadDataImpl
+        >
     implements _$$ProgressiveOverloadDataImplCopyWith<$Res> {
   __$$ProgressiveOverloadDataImplCopyWithImpl(
-      _$ProgressiveOverloadDataImpl _value,
-      $Res Function(_$ProgressiveOverloadDataImpl) _then)
-      : super(_value, _then);
+    _$ProgressiveOverloadDataImpl _value,
+    $Res Function(_$ProgressiveOverloadDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ProgressiveOverloadData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -377,51 +426,53 @@ class __$$ProgressiveOverloadDataImplCopyWithImpl<$Res>
     Object? currentVolume = null,
     Object? previousVolume = null,
   }) {
-    return _then(_$ProgressiveOverloadDataImpl(
-      currentPercent: null == currentPercent
-          ? _value.currentPercent
-          : currentPercent // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetMin: null == targetMin
-          ? _value.targetMin
-          : targetMin // ignore: cast_nullable_to_non_nullable
-              as double,
-      targetMax: null == targetMax
-          ? _value.targetMax
-          : targetMax // ignore: cast_nullable_to_non_nullable
-              as double,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as OverloadStatus,
-      userLevel: null == userLevel
-          ? _value.userLevel
-          : userLevel // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentVolume: null == currentVolume
-          ? _value.currentVolume
-          : currentVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-      previousVolume: null == previousVolume
-          ? _value.previousVolume
-          : previousVolume // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$ProgressiveOverloadDataImpl(
+        currentPercent: null == currentPercent
+            ? _value.currentPercent
+            : currentPercent // ignore: cast_nullable_to_non_nullable
+                  as double,
+        targetMin: null == targetMin
+            ? _value.targetMin
+            : targetMin // ignore: cast_nullable_to_non_nullable
+                  as double,
+        targetMax: null == targetMax
+            ? _value.targetMax
+            : targetMax // ignore: cast_nullable_to_non_nullable
+                  as double,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as OverloadStatus,
+        userLevel: null == userLevel
+            ? _value.userLevel
+            : userLevel // ignore: cast_nullable_to_non_nullable
+                  as String,
+        currentVolume: null == currentVolume
+            ? _value.currentVolume
+            : currentVolume // ignore: cast_nullable_to_non_nullable
+                  as double,
+        previousVolume: null == previousVolume
+            ? _value.previousVolume
+            : previousVolume // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ProgressiveOverloadDataImpl extends _ProgressiveOverloadData {
-  const _$ProgressiveOverloadDataImpl(
-      {required this.currentPercent,
-      required this.targetMin,
-      required this.targetMax,
-      required this.status,
-      required this.userLevel,
-      required this.currentVolume,
-      required this.previousVolume})
-      : super._();
+  const _$ProgressiveOverloadDataImpl({
+    required this.currentPercent,
+    required this.targetMin,
+    required this.targetMax,
+    required this.status,
+    required this.userLevel,
+    required this.currentVolume,
+    required this.previousVolume,
+  }) : super._();
 
   /// Current weekly progression percentage
   @override
@@ -475,58 +526,73 @@ class _$ProgressiveOverloadDataImpl extends _ProgressiveOverloadData {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentPercent, targetMin,
-      targetMax, status, userLevel, currentVolume, previousVolume);
+  int get hashCode => Object.hash(
+    runtimeType,
+    currentPercent,
+    targetMin,
+    targetMax,
+    status,
+    userLevel,
+    currentVolume,
+    previousVolume,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProgressiveOverloadData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ProgressiveOverloadDataImplCopyWith<_$ProgressiveOverloadDataImpl>
-      get copyWith => __$$ProgressiveOverloadDataImplCopyWithImpl<
-          _$ProgressiveOverloadDataImpl>(this, _$identity);
+  get copyWith =>
+      __$$ProgressiveOverloadDataImplCopyWithImpl<
+        _$ProgressiveOverloadDataImpl
+      >(this, _$identity);
 }
 
 abstract class _ProgressiveOverloadData extends ProgressiveOverloadData {
-  const factory _ProgressiveOverloadData(
-      {required final double currentPercent,
-      required final double targetMin,
-      required final double targetMax,
-      required final OverloadStatus status,
-      required final String userLevel,
-      required final double currentVolume,
-      required final double previousVolume}) = _$ProgressiveOverloadDataImpl;
+  const factory _ProgressiveOverloadData({
+    required final double currentPercent,
+    required final double targetMin,
+    required final double targetMax,
+    required final OverloadStatus status,
+    required final String userLevel,
+    required final double currentVolume,
+    required final double previousVolume,
+  }) = _$ProgressiveOverloadDataImpl;
   const _ProgressiveOverloadData._() : super._();
 
-  @override
-
   /// Current weekly progression percentage
-  double get currentPercent;
   @override
+  double get currentPercent;
 
   /// Target min-max range for user's level
+  @override
   double get targetMin;
   @override
   double get targetMax;
-  @override
 
   /// Status classification
-  OverloadStatus get status;
   @override
+  OverloadStatus get status;
 
   /// User's experience level used for calculation
-  String get userLevel;
   @override
+  String get userLevel;
 
   /// Current volume
-  double get currentVolume;
   @override
+  double get currentVolume;
 
   /// Previous volume (for comparison)
-  double get previousVolume;
   @override
-  @JsonKey(ignore: true)
+  double get previousVolume;
+
+  /// Create a copy of ProgressiveOverloadData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProgressiveOverloadDataImplCopyWith<_$ProgressiveOverloadDataImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -552,7 +618,9 @@ mixin _$IntensityData {
   /// Intensity zone
   IntensityZone get zone => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IntensityData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IntensityDataCopyWith<IntensityData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -560,17 +628,19 @@ mixin _$IntensityData {
 /// @nodoc
 abstract class $IntensityDataCopyWith<$Res> {
   factory $IntensityDataCopyWith(
-          IntensityData value, $Res Function(IntensityData) then) =
-      _$IntensityDataCopyWithImpl<$Res, IntensityData>;
+    IntensityData value,
+    $Res Function(IntensityData) then,
+  ) = _$IntensityDataCopyWithImpl<$Res, IntensityData>;
   @useResult
-  $Res call(
-      {double estimated1RM,
-      double currentWeight,
-      int currentReps,
-      double percentOf1RM,
-      String formula,
-      String confidence,
-      IntensityZone zone});
+  $Res call({
+    double estimated1RM,
+    double currentWeight,
+    int currentReps,
+    double percentOf1RM,
+    String formula,
+    String confidence,
+    IntensityZone zone,
+  });
 }
 
 /// @nodoc
@@ -583,6 +653,8 @@ class _$IntensityDataCopyWithImpl<$Res, $Val extends IntensityData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IntensityData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -594,36 +666,39 @@ class _$IntensityDataCopyWithImpl<$Res, $Val extends IntensityData>
     Object? confidence = null,
     Object? zone = null,
   }) {
-    return _then(_value.copyWith(
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentWeight: null == currentWeight
-          ? _value.currentWeight
-          : currentWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentReps: null == currentReps
-          ? _value.currentReps
-          : currentReps // ignore: cast_nullable_to_non_nullable
-              as int,
-      percentOf1RM: null == percentOf1RM
-          ? _value.percentOf1RM
-          : percentOf1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      formula: null == formula
-          ? _value.formula
-          : formula // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as String,
-      zone: null == zone
-          ? _value.zone
-          : zone // ignore: cast_nullable_to_non_nullable
-              as IntensityZone,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            estimated1RM: null == estimated1RM
+                ? _value.estimated1RM
+                : estimated1RM // ignore: cast_nullable_to_non_nullable
+                      as double,
+            currentWeight: null == currentWeight
+                ? _value.currentWeight
+                : currentWeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+            currentReps: null == currentReps
+                ? _value.currentReps
+                : currentReps // ignore: cast_nullable_to_non_nullable
+                      as int,
+            percentOf1RM: null == percentOf1RM
+                ? _value.percentOf1RM
+                : percentOf1RM // ignore: cast_nullable_to_non_nullable
+                      as double,
+            formula: null == formula
+                ? _value.formula
+                : formula // ignore: cast_nullable_to_non_nullable
+                      as String,
+            confidence: null == confidence
+                ? _value.confidence
+                : confidence // ignore: cast_nullable_to_non_nullable
+                      as String,
+            zone: null == zone
+                ? _value.zone
+                : zone // ignore: cast_nullable_to_non_nullable
+                      as IntensityZone,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -631,18 +706,20 @@ class _$IntensityDataCopyWithImpl<$Res, $Val extends IntensityData>
 abstract class _$$IntensityDataImplCopyWith<$Res>
     implements $IntensityDataCopyWith<$Res> {
   factory _$$IntensityDataImplCopyWith(
-          _$IntensityDataImpl value, $Res Function(_$IntensityDataImpl) then) =
-      __$$IntensityDataImplCopyWithImpl<$Res>;
+    _$IntensityDataImpl value,
+    $Res Function(_$IntensityDataImpl) then,
+  ) = __$$IntensityDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double estimated1RM,
-      double currentWeight,
-      int currentReps,
-      double percentOf1RM,
-      String formula,
-      String confidence,
-      IntensityZone zone});
+  $Res call({
+    double estimated1RM,
+    double currentWeight,
+    int currentReps,
+    double percentOf1RM,
+    String formula,
+    String confidence,
+    IntensityZone zone,
+  });
 }
 
 /// @nodoc
@@ -650,9 +727,12 @@ class __$$IntensityDataImplCopyWithImpl<$Res>
     extends _$IntensityDataCopyWithImpl<$Res, _$IntensityDataImpl>
     implements _$$IntensityDataImplCopyWith<$Res> {
   __$$IntensityDataImplCopyWithImpl(
-      _$IntensityDataImpl _value, $Res Function(_$IntensityDataImpl) _then)
-      : super(_value, _then);
+    _$IntensityDataImpl _value,
+    $Res Function(_$IntensityDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IntensityData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -664,51 +744,53 @@ class __$$IntensityDataImplCopyWithImpl<$Res>
     Object? confidence = null,
     Object? zone = null,
   }) {
-    return _then(_$IntensityDataImpl(
-      estimated1RM: null == estimated1RM
-          ? _value.estimated1RM
-          : estimated1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentWeight: null == currentWeight
-          ? _value.currentWeight
-          : currentWeight // ignore: cast_nullable_to_non_nullable
-              as double,
-      currentReps: null == currentReps
-          ? _value.currentReps
-          : currentReps // ignore: cast_nullable_to_non_nullable
-              as int,
-      percentOf1RM: null == percentOf1RM
-          ? _value.percentOf1RM
-          : percentOf1RM // ignore: cast_nullable_to_non_nullable
-              as double,
-      formula: null == formula
-          ? _value.formula
-          : formula // ignore: cast_nullable_to_non_nullable
-              as String,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as String,
-      zone: null == zone
-          ? _value.zone
-          : zone // ignore: cast_nullable_to_non_nullable
-              as IntensityZone,
-    ));
+    return _then(
+      _$IntensityDataImpl(
+        estimated1RM: null == estimated1RM
+            ? _value.estimated1RM
+            : estimated1RM // ignore: cast_nullable_to_non_nullable
+                  as double,
+        currentWeight: null == currentWeight
+            ? _value.currentWeight
+            : currentWeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+        currentReps: null == currentReps
+            ? _value.currentReps
+            : currentReps // ignore: cast_nullable_to_non_nullable
+                  as int,
+        percentOf1RM: null == percentOf1RM
+            ? _value.percentOf1RM
+            : percentOf1RM // ignore: cast_nullable_to_non_nullable
+                  as double,
+        formula: null == formula
+            ? _value.formula
+            : formula // ignore: cast_nullable_to_non_nullable
+                  as String,
+        confidence: null == confidence
+            ? _value.confidence
+            : confidence // ignore: cast_nullable_to_non_nullable
+                  as String,
+        zone: null == zone
+            ? _value.zone
+            : zone // ignore: cast_nullable_to_non_nullable
+                  as IntensityZone,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$IntensityDataImpl extends _IntensityData {
-  const _$IntensityDataImpl(
-      {required this.estimated1RM,
-      required this.currentWeight,
-      required this.currentReps,
-      required this.percentOf1RM,
-      required this.formula,
-      required this.confidence,
-      required this.zone})
-      : super._();
+  const _$IntensityDataImpl({
+    required this.estimated1RM,
+    required this.currentWeight,
+    required this.currentReps,
+    required this.percentOf1RM,
+    required this.formula,
+    required this.confidence,
+    required this.zone,
+  }) : super._();
 
   /// Estimated 1RM in kg
   @override
@@ -763,10 +845,20 @@ class _$IntensityDataImpl extends _IntensityData {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, estimated1RM, currentWeight,
-      currentReps, percentOf1RM, formula, confidence, zone);
+  int get hashCode => Object.hash(
+    runtimeType,
+    estimated1RM,
+    currentWeight,
+    currentReps,
+    percentOf1RM,
+    formula,
+    confidence,
+    zone,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IntensityData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IntensityDataImplCopyWith<_$IntensityDataImpl> get copyWith =>
@@ -774,46 +866,49 @@ class _$IntensityDataImpl extends _IntensityData {
 }
 
 abstract class _IntensityData extends IntensityData {
-  const factory _IntensityData(
-      {required final double estimated1RM,
-      required final double currentWeight,
-      required final int currentReps,
-      required final double percentOf1RM,
-      required final String formula,
-      required final String confidence,
-      required final IntensityZone zone}) = _$IntensityDataImpl;
+  const factory _IntensityData({
+    required final double estimated1RM,
+    required final double currentWeight,
+    required final int currentReps,
+    required final double percentOf1RM,
+    required final String formula,
+    required final String confidence,
+    required final IntensityZone zone,
+  }) = _$IntensityDataImpl;
   const _IntensityData._() : super._();
 
-  @override
-
   /// Estimated 1RM in kg
-  double get estimated1RM;
   @override
+  double get estimated1RM;
 
   /// Current working weight
-  double get currentWeight;
   @override
+  double get currentWeight;
 
   /// Current reps performed
-  int get currentReps;
   @override
+  int get currentReps;
 
   /// Percentage of 1RM being used
-  double get percentOf1RM;
   @override
+  double get percentOf1RM;
 
   /// Formula used (Epley, Brzycki, or Epley+Brzycki)
-  String get formula;
   @override
+  String get formula;
 
   /// Confidence level (High, Medium, Low)
-  String get confidence;
   @override
+  String get confidence;
 
   /// Intensity zone
-  IntensityZone get zone;
   @override
-  @JsonKey(ignore: true)
+  IntensityZone get zone;
+
+  /// Create a copy of IntensityData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IntensityDataImplCopyWith<_$IntensityDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -856,30 +951,34 @@ mixin _$ExerciseAnalyticsData {
   /// Time span of data (in days)
   int get dataSpanDays => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseAnalyticsDataCopyWith<ExerciseAnalyticsData> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExerciseAnalyticsDataCopyWith<$Res> {
-  factory $ExerciseAnalyticsDataCopyWith(ExerciseAnalyticsData value,
-          $Res Function(ExerciseAnalyticsData) then) =
-      _$ExerciseAnalyticsDataCopyWithImpl<$Res, ExerciseAnalyticsData>;
+  factory $ExerciseAnalyticsDataCopyWith(
+    ExerciseAnalyticsData value,
+    $Res Function(ExerciseAnalyticsData) then,
+  ) = _$ExerciseAnalyticsDataCopyWithImpl<$Res, ExerciseAnalyticsData>;
   @useResult
-  $Res call(
-      {String exerciseId,
-      String exerciseName,
-      List<ChartDataPoint> weightHistory,
-      List<ChartDataPoint> volumeHistory,
-      List<ChartDataPoint> rpeHistory,
-      TrendAnalysis trend,
-      ProgressiveOverloadData overload,
-      IntensityData intensity,
-      CorrelationResults correlations,
-      DateTime lastUpdated,
-      int sessionCount,
-      int dataSpanDays});
+  $Res call({
+    String exerciseId,
+    String exerciseName,
+    List<ChartDataPoint> weightHistory,
+    List<ChartDataPoint> volumeHistory,
+    List<ChartDataPoint> rpeHistory,
+    TrendAnalysis trend,
+    ProgressiveOverloadData overload,
+    IntensityData intensity,
+    CorrelationResults correlations,
+    DateTime lastUpdated,
+    int sessionCount,
+    int dataSpanDays,
+  });
 
   $ProgressiveOverloadDataCopyWith<$Res> get overload;
   $IntensityDataCopyWith<$Res> get intensity;
@@ -887,8 +986,10 @@ abstract class $ExerciseAnalyticsDataCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
-        $Val extends ExerciseAnalyticsData>
+class _$ExerciseAnalyticsDataCopyWithImpl<
+  $Res,
+  $Val extends ExerciseAnalyticsData
+>
     implements $ExerciseAnalyticsDataCopyWith<$Res> {
   _$ExerciseAnalyticsDataCopyWithImpl(this._value, this._then);
 
@@ -897,6 +998,8 @@ class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -913,58 +1016,63 @@ class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
     Object? sessionCount = null,
     Object? dataSpanDays = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      weightHistory: null == weightHistory
-          ? _value.weightHistory
-          : weightHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      volumeHistory: null == volumeHistory
-          ? _value.volumeHistory
-          : volumeHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      rpeHistory: null == rpeHistory
-          ? _value.rpeHistory
-          : rpeHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      trend: null == trend
-          ? _value.trend
-          : trend // ignore: cast_nullable_to_non_nullable
-              as TrendAnalysis,
-      overload: null == overload
-          ? _value.overload
-          : overload // ignore: cast_nullable_to_non_nullable
-              as ProgressiveOverloadData,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as IntensityData,
-      correlations: null == correlations
-          ? _value.correlations
-          : correlations // ignore: cast_nullable_to_non_nullable
-              as CorrelationResults,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      sessionCount: null == sessionCount
-          ? _value.sessionCount
-          : sessionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      dataSpanDays: null == dataSpanDays
-          ? _value.dataSpanDays
-          : dataSpanDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseId: null == exerciseId
+                ? _value.exerciseId
+                : exerciseId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            weightHistory: null == weightHistory
+                ? _value.weightHistory
+                : weightHistory // ignore: cast_nullable_to_non_nullable
+                      as List<ChartDataPoint>,
+            volumeHistory: null == volumeHistory
+                ? _value.volumeHistory
+                : volumeHistory // ignore: cast_nullable_to_non_nullable
+                      as List<ChartDataPoint>,
+            rpeHistory: null == rpeHistory
+                ? _value.rpeHistory
+                : rpeHistory // ignore: cast_nullable_to_non_nullable
+                      as List<ChartDataPoint>,
+            trend: null == trend
+                ? _value.trend
+                : trend // ignore: cast_nullable_to_non_nullable
+                      as TrendAnalysis,
+            overload: null == overload
+                ? _value.overload
+                : overload // ignore: cast_nullable_to_non_nullable
+                      as ProgressiveOverloadData,
+            intensity: null == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                      as IntensityData,
+            correlations: null == correlations
+                ? _value.correlations
+                : correlations // ignore: cast_nullable_to_non_nullable
+                      as CorrelationResults,
+            lastUpdated: null == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            sessionCount: null == sessionCount
+                ? _value.sessionCount
+                : sessionCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            dataSpanDays: null == dataSpanDays
+                ? _value.dataSpanDays
+                : dataSpanDays // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ProgressiveOverloadDataCopyWith<$Res> get overload {
@@ -973,6 +1081,8 @@ class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $IntensityDataCopyWith<$Res> get intensity {
@@ -981,6 +1091,8 @@ class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CorrelationResultsCopyWith<$Res> get correlations {
@@ -994,24 +1106,25 @@ class _$ExerciseAnalyticsDataCopyWithImpl<$Res,
 abstract class _$$ExerciseAnalyticsDataImplCopyWith<$Res>
     implements $ExerciseAnalyticsDataCopyWith<$Res> {
   factory _$$ExerciseAnalyticsDataImplCopyWith(
-          _$ExerciseAnalyticsDataImpl value,
-          $Res Function(_$ExerciseAnalyticsDataImpl) then) =
-      __$$ExerciseAnalyticsDataImplCopyWithImpl<$Res>;
+    _$ExerciseAnalyticsDataImpl value,
+    $Res Function(_$ExerciseAnalyticsDataImpl) then,
+  ) = __$$ExerciseAnalyticsDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseId,
-      String exerciseName,
-      List<ChartDataPoint> weightHistory,
-      List<ChartDataPoint> volumeHistory,
-      List<ChartDataPoint> rpeHistory,
-      TrendAnalysis trend,
-      ProgressiveOverloadData overload,
-      IntensityData intensity,
-      CorrelationResults correlations,
-      DateTime lastUpdated,
-      int sessionCount,
-      int dataSpanDays});
+  $Res call({
+    String exerciseId,
+    String exerciseName,
+    List<ChartDataPoint> weightHistory,
+    List<ChartDataPoint> volumeHistory,
+    List<ChartDataPoint> rpeHistory,
+    TrendAnalysis trend,
+    ProgressiveOverloadData overload,
+    IntensityData intensity,
+    CorrelationResults correlations,
+    DateTime lastUpdated,
+    int sessionCount,
+    int dataSpanDays,
+  });
 
   @override
   $ProgressiveOverloadDataCopyWith<$Res> get overload;
@@ -1023,13 +1136,16 @@ abstract class _$$ExerciseAnalyticsDataImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ExerciseAnalyticsDataImplCopyWithImpl<$Res>
-    extends _$ExerciseAnalyticsDataCopyWithImpl<$Res,
-        _$ExerciseAnalyticsDataImpl>
+    extends
+        _$ExerciseAnalyticsDataCopyWithImpl<$Res, _$ExerciseAnalyticsDataImpl>
     implements _$$ExerciseAnalyticsDataImplCopyWith<$Res> {
-  __$$ExerciseAnalyticsDataImplCopyWithImpl(_$ExerciseAnalyticsDataImpl _value,
-      $Res Function(_$ExerciseAnalyticsDataImpl) _then)
-      : super(_value, _then);
+  __$$ExerciseAnalyticsDataImplCopyWithImpl(
+    _$ExerciseAnalyticsDataImpl _value,
+    $Res Function(_$ExerciseAnalyticsDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1046,79 +1162,81 @@ class __$$ExerciseAnalyticsDataImplCopyWithImpl<$Res>
     Object? sessionCount = null,
     Object? dataSpanDays = null,
   }) {
-    return _then(_$ExerciseAnalyticsDataImpl(
-      exerciseId: null == exerciseId
-          ? _value.exerciseId
-          : exerciseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      weightHistory: null == weightHistory
-          ? _value._weightHistory
-          : weightHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      volumeHistory: null == volumeHistory
-          ? _value._volumeHistory
-          : volumeHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      rpeHistory: null == rpeHistory
-          ? _value._rpeHistory
-          : rpeHistory // ignore: cast_nullable_to_non_nullable
-              as List<ChartDataPoint>,
-      trend: null == trend
-          ? _value.trend
-          : trend // ignore: cast_nullable_to_non_nullable
-              as TrendAnalysis,
-      overload: null == overload
-          ? _value.overload
-          : overload // ignore: cast_nullable_to_non_nullable
-              as ProgressiveOverloadData,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as IntensityData,
-      correlations: null == correlations
-          ? _value.correlations
-          : correlations // ignore: cast_nullable_to_non_nullable
-              as CorrelationResults,
-      lastUpdated: null == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      sessionCount: null == sessionCount
-          ? _value.sessionCount
-          : sessionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      dataSpanDays: null == dataSpanDays
-          ? _value.dataSpanDays
-          : dataSpanDays // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExerciseAnalyticsDataImpl(
+        exerciseId: null == exerciseId
+            ? _value.exerciseId
+            : exerciseId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        weightHistory: null == weightHistory
+            ? _value._weightHistory
+            : weightHistory // ignore: cast_nullable_to_non_nullable
+                  as List<ChartDataPoint>,
+        volumeHistory: null == volumeHistory
+            ? _value._volumeHistory
+            : volumeHistory // ignore: cast_nullable_to_non_nullable
+                  as List<ChartDataPoint>,
+        rpeHistory: null == rpeHistory
+            ? _value._rpeHistory
+            : rpeHistory // ignore: cast_nullable_to_non_nullable
+                  as List<ChartDataPoint>,
+        trend: null == trend
+            ? _value.trend
+            : trend // ignore: cast_nullable_to_non_nullable
+                  as TrendAnalysis,
+        overload: null == overload
+            ? _value.overload
+            : overload // ignore: cast_nullable_to_non_nullable
+                  as ProgressiveOverloadData,
+        intensity: null == intensity
+            ? _value.intensity
+            : intensity // ignore: cast_nullable_to_non_nullable
+                  as IntensityData,
+        correlations: null == correlations
+            ? _value.correlations
+            : correlations // ignore: cast_nullable_to_non_nullable
+                  as CorrelationResults,
+        lastUpdated: null == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        sessionCount: null == sessionCount
+            ? _value.sessionCount
+            : sessionCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        dataSpanDays: null == dataSpanDays
+            ? _value.dataSpanDays
+            : dataSpanDays // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExerciseAnalyticsDataImpl extends _ExerciseAnalyticsData {
-  const _$ExerciseAnalyticsDataImpl(
-      {required this.exerciseId,
-      required this.exerciseName,
-      required final List<ChartDataPoint> weightHistory,
-      required final List<ChartDataPoint> volumeHistory,
-      required final List<ChartDataPoint> rpeHistory,
-      required this.trend,
-      required this.overload,
-      required this.intensity,
-      required this.correlations,
-      required this.lastUpdated,
-      this.sessionCount = 0,
-      this.dataSpanDays = 0})
-      : _weightHistory = weightHistory,
-        _volumeHistory = volumeHistory,
-        _rpeHistory = rpeHistory,
-        super._();
+  const _$ExerciseAnalyticsDataImpl({
+    required this.exerciseId,
+    required this.exerciseName,
+    required final List<ChartDataPoint> weightHistory,
+    required final List<ChartDataPoint> volumeHistory,
+    required final List<ChartDataPoint> rpeHistory,
+    required this.trend,
+    required this.overload,
+    required this.intensity,
+    required this.correlations,
+    required this.lastUpdated,
+    this.sessionCount = 0,
+    this.dataSpanDays = 0,
+  }) : _weightHistory = weightHistory,
+       _volumeHistory = volumeHistory,
+       _rpeHistory = rpeHistory,
+       super._();
 
   /// Exercise identifier
   @override
@@ -1205,12 +1323,18 @@ class _$ExerciseAnalyticsDataImpl extends _ExerciseAnalyticsData {
                 other.exerciseId == exerciseId) &&
             (identical(other.exerciseName, exerciseName) ||
                 other.exerciseName == exerciseName) &&
-            const DeepCollectionEquality()
-                .equals(other._weightHistory, _weightHistory) &&
-            const DeepCollectionEquality()
-                .equals(other._volumeHistory, _volumeHistory) &&
-            const DeepCollectionEquality()
-                .equals(other._rpeHistory, _rpeHistory) &&
+            const DeepCollectionEquality().equals(
+              other._weightHistory,
+              _weightHistory,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._volumeHistory,
+              _volumeHistory,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._rpeHistory,
+              _rpeHistory,
+            ) &&
             (identical(other.trend, trend) || other.trend == trend) &&
             (identical(other.overload, overload) ||
                 other.overload == overload) &&
@@ -1228,94 +1352,103 @@ class _$ExerciseAnalyticsDataImpl extends _ExerciseAnalyticsData {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      exerciseId,
-      exerciseName,
-      const DeepCollectionEquality().hash(_weightHistory),
-      const DeepCollectionEquality().hash(_volumeHistory),
-      const DeepCollectionEquality().hash(_rpeHistory),
-      trend,
-      overload,
-      intensity,
-      correlations,
-      lastUpdated,
-      sessionCount,
-      dataSpanDays);
+    runtimeType,
+    exerciseId,
+    exerciseName,
+    const DeepCollectionEquality().hash(_weightHistory),
+    const DeepCollectionEquality().hash(_volumeHistory),
+    const DeepCollectionEquality().hash(_rpeHistory),
+    trend,
+    overload,
+    intensity,
+    correlations,
+    lastUpdated,
+    sessionCount,
+    dataSpanDays,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseAnalyticsDataImplCopyWith<_$ExerciseAnalyticsDataImpl>
-      get copyWith => __$$ExerciseAnalyticsDataImplCopyWithImpl<
-          _$ExerciseAnalyticsDataImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExerciseAnalyticsDataImplCopyWithImpl<_$ExerciseAnalyticsDataImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ExerciseAnalyticsData extends ExerciseAnalyticsData {
-  const factory _ExerciseAnalyticsData(
-      {required final String exerciseId,
-      required final String exerciseName,
-      required final List<ChartDataPoint> weightHistory,
-      required final List<ChartDataPoint> volumeHistory,
-      required final List<ChartDataPoint> rpeHistory,
-      required final TrendAnalysis trend,
-      required final ProgressiveOverloadData overload,
-      required final IntensityData intensity,
-      required final CorrelationResults correlations,
-      required final DateTime lastUpdated,
-      final int sessionCount,
-      final int dataSpanDays}) = _$ExerciseAnalyticsDataImpl;
+  const factory _ExerciseAnalyticsData({
+    required final String exerciseId,
+    required final String exerciseName,
+    required final List<ChartDataPoint> weightHistory,
+    required final List<ChartDataPoint> volumeHistory,
+    required final List<ChartDataPoint> rpeHistory,
+    required final TrendAnalysis trend,
+    required final ProgressiveOverloadData overload,
+    required final IntensityData intensity,
+    required final CorrelationResults correlations,
+    required final DateTime lastUpdated,
+    final int sessionCount,
+    final int dataSpanDays,
+  }) = _$ExerciseAnalyticsDataImpl;
   const _ExerciseAnalyticsData._() : super._();
 
-  @override
-
   /// Exercise identifier
-  String get exerciseId;
   @override
+  String get exerciseId;
 
   /// Exercise name for display
-  String get exerciseName;
   @override
+  String get exerciseName;
 
   /// Weight progression data points (for L1 chart)
-  List<ChartDataPoint> get weightHistory;
   @override
+  List<ChartDataPoint> get weightHistory;
 
   /// Volume progression data points
-  List<ChartDataPoint> get volumeHistory;
   @override
+  List<ChartDataPoint> get volumeHistory;
 
   /// RPE history (separate for correlations)
-  List<ChartDataPoint> get rpeHistory;
   @override
+  List<ChartDataPoint> get rpeHistory;
 
   /// Trend analysis result
-  TrendAnalysis get trend;
   @override
+  TrendAnalysis get trend;
 
   /// Progressive overload analysis
-  ProgressiveOverloadData get overload;
   @override
+  ProgressiveOverloadData get overload;
 
   /// Intensity/1RM analysis
-  IntensityData get intensity;
   @override
+  IntensityData get intensity;
 
   /// Correlation results (cached - not recalculated on each access)
-  CorrelationResults get correlations;
   @override
+  CorrelationResults get correlations;
 
   /// Last updated timestamp
-  DateTime get lastUpdated;
   @override
+  DateTime get lastUpdated;
 
   /// Number of sessions analyzed
-  int get sessionCount;
   @override
+  int get sessionCount;
 
   /// Time span of data (in days)
-  int get dataSpanDays;
   @override
-  @JsonKey(ignore: true)
+  int get dataSpanDays;
+
+  /// Create a copy of ExerciseAnalyticsData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseAnalyticsDataImplCopyWith<_$ExerciseAnalyticsDataImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'exercise_history.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExerciseHistory _$ExerciseHistoryFromJson(Map<String, dynamic> json) {
   return _ExerciseHistory.fromJson(json);
@@ -29,8 +30,12 @@ mixin _$ExerciseHistory {
   /// All sessions performed for this exercise (sorted by date)
   List<ExerciseSession> get sessions => throw _privateConstructorUsedError;
 
+  /// Serializes this ExerciseHistory to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExerciseHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExerciseHistoryCopyWith<ExerciseHistory> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -38,13 +43,15 @@ mixin _$ExerciseHistory {
 /// @nodoc
 abstract class $ExerciseHistoryCopyWith<$Res> {
   factory $ExerciseHistoryCopyWith(
-          ExerciseHistory value, $Res Function(ExerciseHistory) then) =
-      _$ExerciseHistoryCopyWithImpl<$Res, ExerciseHistory>;
+    ExerciseHistory value,
+    $Res Function(ExerciseHistory) then,
+  ) = _$ExerciseHistoryCopyWithImpl<$Res, ExerciseHistory>;
   @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSession> sessions});
+  $Res call({
+    String exerciseName,
+    String muscleGroup,
+    List<ExerciseSession> sessions,
+  });
 }
 
 /// @nodoc
@@ -57,6 +64,8 @@ class _$ExerciseHistoryCopyWithImpl<$Res, $Val extends ExerciseHistory>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExerciseHistory
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -64,35 +73,40 @@ class _$ExerciseHistoryCopyWithImpl<$Res, $Val extends ExerciseHistory>
     Object? muscleGroup = null,
     Object? sessions = null,
   }) {
-    return _then(_value.copyWith(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value.sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSession>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            exerciseName: null == exerciseName
+                ? _value.exerciseName
+                : exerciseName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            muscleGroup: null == muscleGroup
+                ? _value.muscleGroup
+                : muscleGroup // ignore: cast_nullable_to_non_nullable
+                      as String,
+            sessions: null == sessions
+                ? _value.sessions
+                : sessions // ignore: cast_nullable_to_non_nullable
+                      as List<ExerciseSession>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExerciseHistoryImplCopyWith<$Res>
     implements $ExerciseHistoryCopyWith<$Res> {
-  factory _$$ExerciseHistoryImplCopyWith(_$ExerciseHistoryImpl value,
-          $Res Function(_$ExerciseHistoryImpl) then) =
-      __$$ExerciseHistoryImplCopyWithImpl<$Res>;
+  factory _$$ExerciseHistoryImplCopyWith(
+    _$ExerciseHistoryImpl value,
+    $Res Function(_$ExerciseHistoryImpl) then,
+  ) = __$$ExerciseHistoryImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String exerciseName,
-      String muscleGroup,
-      List<ExerciseSession> sessions});
+  $Res call({
+    String exerciseName,
+    String muscleGroup,
+    List<ExerciseSession> sessions,
+  });
 }
 
 /// @nodoc
@@ -100,9 +114,12 @@ class __$$ExerciseHistoryImplCopyWithImpl<$Res>
     extends _$ExerciseHistoryCopyWithImpl<$Res, _$ExerciseHistoryImpl>
     implements _$$ExerciseHistoryImplCopyWith<$Res> {
   __$$ExerciseHistoryImplCopyWithImpl(
-      _$ExerciseHistoryImpl _value, $Res Function(_$ExerciseHistoryImpl) _then)
-      : super(_value, _then);
+    _$ExerciseHistoryImpl _value,
+    $Res Function(_$ExerciseHistoryImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExerciseHistory
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,32 +127,34 @@ class __$$ExerciseHistoryImplCopyWithImpl<$Res>
     Object? muscleGroup = null,
     Object? sessions = null,
   }) {
-    return _then(_$ExerciseHistoryImpl(
-      exerciseName: null == exerciseName
-          ? _value.exerciseName
-          : exerciseName // ignore: cast_nullable_to_non_nullable
-              as String,
-      muscleGroup: null == muscleGroup
-          ? _value.muscleGroup
-          : muscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      sessions: null == sessions
-          ? _value._sessions
-          : sessions // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseSession>,
-    ));
+    return _then(
+      _$ExerciseHistoryImpl(
+        exerciseName: null == exerciseName
+            ? _value.exerciseName
+            : exerciseName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        muscleGroup: null == muscleGroup
+            ? _value.muscleGroup
+            : muscleGroup // ignore: cast_nullable_to_non_nullable
+                  as String,
+        sessions: null == sessions
+            ? _value._sessions
+            : sessions // ignore: cast_nullable_to_non_nullable
+                  as List<ExerciseSession>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExerciseHistoryImpl extends _ExerciseHistory {
-  const _$ExerciseHistoryImpl(
-      {required this.exerciseName,
-      required this.muscleGroup,
-      required final List<ExerciseSession> sessions})
-      : _sessions = sessions,
-        super._();
+  const _$ExerciseHistoryImpl({
+    required this.exerciseName,
+    required this.muscleGroup,
+    required final List<ExerciseSession> sessions,
+  }) : _sessions = sessions,
+       super._();
 
   factory _$ExerciseHistoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseHistoryImplFromJson(json);
@@ -176,50 +195,59 @@ class _$ExerciseHistoryImpl extends _ExerciseHistory {
             const DeepCollectionEquality().equals(other._sessions, _sessions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, exerciseName, muscleGroup,
-      const DeepCollectionEquality().hash(_sessions));
+  int get hashCode => Object.hash(
+    runtimeType,
+    exerciseName,
+    muscleGroup,
+    const DeepCollectionEquality().hash(_sessions),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExerciseHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExerciseHistoryImplCopyWith<_$ExerciseHistoryImpl> get copyWith =>
       __$$ExerciseHistoryImplCopyWithImpl<_$ExerciseHistoryImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExerciseHistoryImplToJson(
-      this,
-    );
+    return _$$ExerciseHistoryImplToJson(this);
   }
 }
 
 abstract class _ExerciseHistory extends ExerciseHistory {
-  const factory _ExerciseHistory(
-      {required final String exerciseName,
-      required final String muscleGroup,
-      required final List<ExerciseSession> sessions}) = _$ExerciseHistoryImpl;
+  const factory _ExerciseHistory({
+    required final String exerciseName,
+    required final String muscleGroup,
+    required final List<ExerciseSession> sessions,
+  }) = _$ExerciseHistoryImpl;
   const _ExerciseHistory._() : super._();
 
   factory _ExerciseHistory.fromJson(Map<String, dynamic> json) =
       _$ExerciseHistoryImpl.fromJson;
 
-  @override
-
   /// Name of the exercise (e.g., "Bench Press", "Squat")
-  String get exerciseName;
   @override
+  String get exerciseName;
 
   /// Target muscle group (e.g., "chest", "back", "legs")
-  String get muscleGroup;
   @override
+  String get muscleGroup;
 
   /// All sessions performed for this exercise (sorted by date)
-  List<ExerciseSession> get sessions;
   @override
-  @JsonKey(ignore: true)
+  List<ExerciseSession> get sessions;
+
+  /// Create a copy of ExerciseHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExerciseHistoryImplCopyWith<_$ExerciseHistoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

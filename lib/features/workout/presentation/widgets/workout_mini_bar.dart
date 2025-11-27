@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
-import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -18,10 +16,10 @@ import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dar
 ///
 /// Features:
 /// - Smooth entrance animation
-/// - Drag gesture with elastic spring return
-/// - Limited downward drag (respects bottom nav margin)
+/// - Infinite rubber-band drag in both directions (never blocks)
+/// - Natural spring physics for return animation
 /// - Haptic feedback on interactions
-class WorkoutMiniBar extends ConsumerStatefulWidget {
+class WorkoutMiniBar extends StatefulWidget {
   const WorkoutMiniBar({
     required this.workout,
     super.key,
@@ -30,31 +28,30 @@ class WorkoutMiniBar extends ConsumerStatefulWidget {
   final Workout workout;
 
   @override
-  ConsumerState<WorkoutMiniBar> createState() => _WorkoutMiniBarState();
+  State<WorkoutMiniBar> createState() => _WorkoutMiniBarState();
 }
 
-class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
+class _WorkoutMiniBarState extends State<WorkoutMiniBar>
     with TickerProviderStateMixin {
   // Entrance animation
   late AnimationController _entranceController;
   late Animation<Offset> _slideAnimation;
 
-  // Drag animation
-  late AnimationController _dragController;
+  // Drag animation with spring physics
+  late AnimationController _springController;
+  late Animation<double> _springAnimation;
   double _dragOffset = 0.0;
+  bool _isDragging = false;
 
   // Timer for updating duration display
   Timer? _timerUpdateTimer;
 
-  // Drag limits
-  static const double _maxDragUp = -80.0; // Max pixels to drag up (negative = up)
-  static const double _maxDragDown = 4.0; // Max pixels to drag down (limited by bottom nav)
-
-  // Spring physics for smooth return
+  // Spring physics for ultra-smooth rubber-band return
+  // Lower stiffness + higher damping = more natural, slower rubber feel
   static const SpringDescription _springDescription = SpringDescription(
-    mass: 1.0,
-    stiffness: 400.0,
-    damping: 25.0,
+    mass: 1.2,      // Slightly heavier for more natural feel
+    stiffness: 180.0, // Lower = slower, more elastic return
+    damping: 18.0,   // Higher = less oscillation, smoother stop
   );
 
   @override
@@ -63,7 +60,7 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
 
     // Entrance animation controller
     _entranceController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 350),
       vsync: this,
     );
     _slideAnimation = Tween<Offset>(
@@ -74,70 +71,103 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
       curve: Curves.easeOutCubic,
     ));
 
-    // Drag animation controller (for spring return)
-    _dragController = AnimationController(vsync: this);
-    _dragController.addListener(_onDragAnimationUpdate);
+    // Spring animation controller
+    _springController = AnimationController(vsync: this);
+    _springAnimation = _springController.drive(Tween<double>(begin: 0, end: 0));
 
     // Start entrance animation
     _entranceController.forward();
 
-    // Update timer display every second
+    // Update timer display every second (only when workout is active)
     _timerUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() {});
+      if (mounted && widget.workout.status != WorkoutStatus.paused) {
+        setState(() {});
+      }
     });
   }
 
   @override
   void dispose() {
     _entranceController.dispose();
-    _dragController.dispose();
+    _springController.dispose();
     _timerUpdateTimer?.cancel();
     super.dispose();
   }
 
-  void _onDragAnimationUpdate() {
-    setState(() {
-      _dragOffset = _dragController.value;
-    });
+  /// Rubber-band resistance formula - infinite, never blocks
+  /// Returns a multiplier between 0 and 1 that decreases as offset increases
+  double _calculateResistance(double offset) {
+    // Logarithmic resistance - gets harder but never reaches zero
+    // Formula: 1 / (1 + k * |offset|^p) where k controls intensity, p controls curve shape
+    const k = 0.008; // Intensity factor (higher = more resistance)
+    const p = 1.4;   // Curve power (higher = steeper resistance curve)
+    return 1.0 / (1.0 + k * _pow(offset.abs(), p));
+  }
+
+  /// Safe power function
+  double _pow(double base, double exp) {
+    if (base <= 0) return 0;
+    return base <= 0 ? 0 : (base == 1 ? 1 : (base < 1 ? base : _fastPow(base, exp)));
+  }
+
+  double _fastPow(double base, double exp) {
+    // Approximation for small exponents
+    return base * (1 + (exp - 1) * (base - 1) * 0.5);
+  }
+
+  void _onVerticalDragStart(DragStartDetails details) {
+    _isDragging = true;
+    _springController.stop();
   }
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
+    if (!_isDragging) return;
+
     setState(() {
-      // Update drag offset with rubber-band effect in both directions
-      final newOffset = _dragOffset + details.delta.dy;
-
-      if (newOffset < 0) {
-        // Dragging UP - moderate rubber band effect
-        final resistance = 1 - (newOffset.abs() / (_maxDragUp.abs() * 2)).clamp(0.0, 0.8);
-        _dragOffset = (_dragOffset + details.delta.dy * resistance).clamp(_maxDragUp, _maxDragDown * 3);
-      } else {
-        // Dragging DOWN - high resistance rubber band effect (smooth but limited)
-        // Exponential resistance: gets harder the further you drag
-        const resistanceFactor = 0.15; // Very high resistance (lower = more resistance)
-        final resistance = resistanceFactor / (1 + (newOffset / _maxDragDown));
-        _dragOffset = (_dragOffset + details.delta.dy * resistance).clamp(_maxDragUp, _maxDragDown * 3);
-      }
+      // Apply rubber-band resistance based on current offset
+      final resistance = _calculateResistance(_dragOffset);
+      _dragOffset += details.delta.dy * resistance;
     });
-
-    // Light haptic on significant drag
-    if (_dragOffset.abs() > 15 && _dragOffset.abs() % 15 < 2) {
-      HapticFeedback.selectionClick();
-    }
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
-    // Animate back to original position with spring physics
+    _isDragging = false;
+
+    // Create spring simulation for smooth return
     final simulation = SpringSimulation(
       _springDescription,
       _dragOffset,
-      0.0, // Target position (back to original)
-      details.velocity.pixelsPerSecond.dy / 1000, // Initial velocity
+      0.0, // Target: back to original position
+      details.velocity.pixelsPerSecond.dy * 0.001, // Convert velocity
     );
 
-    _dragController.animateWith(simulation);
+    // Animate with spring physics
+    _springController.reset();
+    _springAnimation = _springController.drive(
+      Tween<double>(begin: _dragOffset, end: 0.0),
+    );
+
+    _springController.animateWith(simulation).then((_) {
+      if (mounted) {
+        setState(() {
+          _dragOffset = 0.0;
+        });
+      }
+    });
+
+    // Listen to animation updates
+    _springController.addListener(_onSpringUpdate);
 
     // Haptic feedback when releasing
     HapticFeedback.lightImpact();
+  }
+
+  void _onSpringUpdate() {
+    if (!_isDragging && mounted) {
+      setState(() {
+        _dragOffset = _springAnimation.value;
+      });
+    }
   }
 
   @override
@@ -153,6 +183,7 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
         offset: Offset(0, _dragOffset),
         child: GestureDetector(
           onTap: () => _navigateToWorkout(context),
+          onVerticalDragStart: _onVerticalDragStart,
           onVerticalDragUpdate: _onVerticalDragUpdate,
           onVerticalDragEnd: _onVerticalDragEnd,
           child: Container(
@@ -171,26 +202,20 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
             ),
             child: Column(
               children: [
-                // Drag handle indicator
-                _buildDragHandle(context),
-
                 // Main content
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                     child: Row(
                       children: [
-                        // Workout icon with subtle animation based on drag
-                        Transform.scale(
-                          scale: 1.0 + (_dragOffset.abs() / 200).clamp(0.0, 0.1),
-                          child: SemanticIcon(
-                            icon: AppIcons.workout,
-                            semanticLabel: context.l10n.workout,
-                            size: AppIconSize.medium,
-                            color: isPaused
-                                ? context.colors.onSurfaceVariant
-                                : context.colors.primary,
-                          ),
+                        // Workout icon
+                        SemanticIcon(
+                          icon: AppIcons.workout,
+                          semanticLabel: context.l10n.workout,
+                          size: AppIconSize.medium,
+                          color: isPaused
+                              ? context.colors.onSurfaceVariant
+                              : context.colors.primary,
                         ),
                         const SizedBox(width: AppSpacing.sm),
 
@@ -206,20 +231,7 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
                           ),
                         ),
 
-                        // Status icon
-                        SemanticIcon(
-                          icon: isPaused ? AppIcons.pause : AppIcons.playArrow,
-                          semanticLabel: isPaused
-                              ? context.l10n.workoutPaused
-                              : context.l10n.workoutActive,
-                          size: AppIconSize.small,
-                          color: isPaused
-                              ? context.colors.warning
-                              : context.colors.primary,
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-
-                        // Timer
+                        // Timer (stops updating when paused)
                         Text(
                           _formatDuration(duration),
                           style: context.textTheme.titleMedium?.copyWith(
@@ -230,10 +242,15 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
                                 : context.colors.onSurface,
                           ),
                         ),
-                        const SizedBox(width: AppSpacing.sm),
+                        const SizedBox(width: AppSpacing.xs),
 
-                        // Play/Pause button
-                        _buildPlayPauseButton(context, isPaused),
+                        // Arrow to indicate tap action
+                        SemanticIcon(
+                          icon: AppIcons.chevronRight,
+                          semanticLabel: context.l10n.goToWorkout,
+                          size: AppIconSize.small,
+                          color: context.colors.onSurfaceVariant,
+                        ),
                       ],
                     ),
                   ),
@@ -271,61 +288,9 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
     );
   }
 
-  /// Small drag handle indicator at the top of the bar
-  Widget _buildDragHandle(BuildContext context) {
-    // Opacity changes based on drag amount for visual feedback
-    final handleOpacity = (0.3 + (_dragOffset.abs() / 100).clamp(0.0, 0.4));
-
-    return Container(
-      width: 32,
-      height: 4,
-      margin: const EdgeInsets.only(top: 6),
-      decoration: BoxDecoration(
-        color: context.colors.onSurfaceVariant.withValues(alpha: handleOpacity),
-        borderRadius: BorderRadius.circular(2),
-      ),
-    );
-  }
-
-  Widget _buildPlayPauseButton(BuildContext context, bool isPaused) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => _togglePause(isPaused),
-        borderRadius: BorderRadius.circular(AppSpacing.lg),
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.colors.primary.withValues(alpha: 0.1),
-          ),
-          child: SemanticIcon(
-            icon: isPaused ? AppIcons.playArrow : AppIcons.pause,
-            semanticLabel: isPaused
-                ? context.l10n.resumeWorkout
-                : context.l10n.pauseWorkout,
-            size: AppIconSize.medium,
-            color: context.colors.primary,
-          ),
-        ),
-      ),
-    );
-  }
-
   void _navigateToWorkout(BuildContext context) {
     HapticFeedback.lightImpact();
     context.go('/workout');
-  }
-
-  void _togglePause(bool isPaused) {
-    HapticFeedback.selectionClick();
-    final notifier = ref.read(currentWorkoutProvider.notifier);
-    if (isPaused) {
-      notifier.resumeWorkout();
-    } else {
-      notifier.pauseWorkout();
-    }
   }
 
   String _formatDuration(Duration duration) {

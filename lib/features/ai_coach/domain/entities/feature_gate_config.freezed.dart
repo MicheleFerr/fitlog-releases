@@ -12,7 +12,8 @@ part of 'feature_gate_config.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FeatureGateConfig _$FeatureGateConfigFromJson(Map<String, dynamic> json) {
   return _FeatureGateConfig.fromJson(json);
@@ -41,8 +42,12 @@ mixin _$FeatureGateConfig {
   /// Whether user can manually toggle in settings
   bool get userConfigurable => throw _privateConstructorUsedError;
 
+  /// Serializes this FeatureGateConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FeatureGateConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FeatureGateConfigCopyWith<FeatureGateConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,17 +55,19 @@ mixin _$FeatureGateConfig {
 /// @nodoc
 abstract class $FeatureGateConfigCopyWith<$Res> {
   factory $FeatureGateConfigCopyWith(
-          FeatureGateConfig value, $Res Function(FeatureGateConfig) then) =
-      _$FeatureGateConfigCopyWithImpl<$Res, FeatureGateConfig>;
+    FeatureGateConfig value,
+    $Res Function(FeatureGateConfig) then,
+  ) = _$FeatureGateConfigCopyWithImpl<$Res, FeatureGateConfig>;
   @useResult
-  $Res call(
-      {AiCoachFeature feature,
-      String displayNameKey,
-      String descriptionKey,
-      List<GateRule> rules,
-      bool isGloballyEnabled,
-      bool defaultEnabled,
-      bool userConfigurable});
+  $Res call({
+    AiCoachFeature feature,
+    String displayNameKey,
+    String descriptionKey,
+    List<GateRule> rules,
+    bool isGloballyEnabled,
+    bool defaultEnabled,
+    bool userConfigurable,
+  });
 }
 
 /// @nodoc
@@ -73,6 +80,8 @@ class _$FeatureGateConfigCopyWithImpl<$Res, $Val extends FeatureGateConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FeatureGateConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -84,65 +93,73 @@ class _$FeatureGateConfigCopyWithImpl<$Res, $Val extends FeatureGateConfig>
     Object? defaultEnabled = null,
     Object? userConfigurable = null,
   }) {
-    return _then(_value.copyWith(
-      feature: null == feature
-          ? _value.feature
-          : feature // ignore: cast_nullable_to_non_nullable
-              as AiCoachFeature,
-      displayNameKey: null == displayNameKey
-          ? _value.displayNameKey
-          : displayNameKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      descriptionKey: null == descriptionKey
-          ? _value.descriptionKey
-          : descriptionKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      rules: null == rules
-          ? _value.rules
-          : rules // ignore: cast_nullable_to_non_nullable
-              as List<GateRule>,
-      isGloballyEnabled: null == isGloballyEnabled
-          ? _value.isGloballyEnabled
-          : isGloballyEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      defaultEnabled: null == defaultEnabled
-          ? _value.defaultEnabled
-          : defaultEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userConfigurable: null == userConfigurable
-          ? _value.userConfigurable
-          : userConfigurable // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            feature: null == feature
+                ? _value.feature
+                : feature // ignore: cast_nullable_to_non_nullable
+                      as AiCoachFeature,
+            displayNameKey: null == displayNameKey
+                ? _value.displayNameKey
+                : displayNameKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            descriptionKey: null == descriptionKey
+                ? _value.descriptionKey
+                : descriptionKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            rules: null == rules
+                ? _value.rules
+                : rules // ignore: cast_nullable_to_non_nullable
+                      as List<GateRule>,
+            isGloballyEnabled: null == isGloballyEnabled
+                ? _value.isGloballyEnabled
+                : isGloballyEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            defaultEnabled: null == defaultEnabled
+                ? _value.defaultEnabled
+                : defaultEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            userConfigurable: null == userConfigurable
+                ? _value.userConfigurable
+                : userConfigurable // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$FeatureGateConfigImplCopyWith<$Res>
     implements $FeatureGateConfigCopyWith<$Res> {
-  factory _$$FeatureGateConfigImplCopyWith(_$FeatureGateConfigImpl value,
-          $Res Function(_$FeatureGateConfigImpl) then) =
-      __$$FeatureGateConfigImplCopyWithImpl<$Res>;
+  factory _$$FeatureGateConfigImplCopyWith(
+    _$FeatureGateConfigImpl value,
+    $Res Function(_$FeatureGateConfigImpl) then,
+  ) = __$$FeatureGateConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {AiCoachFeature feature,
-      String displayNameKey,
-      String descriptionKey,
-      List<GateRule> rules,
-      bool isGloballyEnabled,
-      bool defaultEnabled,
-      bool userConfigurable});
+  $Res call({
+    AiCoachFeature feature,
+    String displayNameKey,
+    String descriptionKey,
+    List<GateRule> rules,
+    bool isGloballyEnabled,
+    bool defaultEnabled,
+    bool userConfigurable,
+  });
 }
 
 /// @nodoc
 class __$$FeatureGateConfigImplCopyWithImpl<$Res>
     extends _$FeatureGateConfigCopyWithImpl<$Res, _$FeatureGateConfigImpl>
     implements _$$FeatureGateConfigImplCopyWith<$Res> {
-  __$$FeatureGateConfigImplCopyWithImpl(_$FeatureGateConfigImpl _value,
-      $Res Function(_$FeatureGateConfigImpl) _then)
-      : super(_value, _then);
+  __$$FeatureGateConfigImplCopyWithImpl(
+    _$FeatureGateConfigImpl _value,
+    $Res Function(_$FeatureGateConfigImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FeatureGateConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -154,51 +171,53 @@ class __$$FeatureGateConfigImplCopyWithImpl<$Res>
     Object? defaultEnabled = null,
     Object? userConfigurable = null,
   }) {
-    return _then(_$FeatureGateConfigImpl(
-      feature: null == feature
-          ? _value.feature
-          : feature // ignore: cast_nullable_to_non_nullable
-              as AiCoachFeature,
-      displayNameKey: null == displayNameKey
-          ? _value.displayNameKey
-          : displayNameKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      descriptionKey: null == descriptionKey
-          ? _value.descriptionKey
-          : descriptionKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      rules: null == rules
-          ? _value._rules
-          : rules // ignore: cast_nullable_to_non_nullable
-              as List<GateRule>,
-      isGloballyEnabled: null == isGloballyEnabled
-          ? _value.isGloballyEnabled
-          : isGloballyEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      defaultEnabled: null == defaultEnabled
-          ? _value.defaultEnabled
-          : defaultEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      userConfigurable: null == userConfigurable
-          ? _value.userConfigurable
-          : userConfigurable // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$FeatureGateConfigImpl(
+        feature: null == feature
+            ? _value.feature
+            : feature // ignore: cast_nullable_to_non_nullable
+                  as AiCoachFeature,
+        displayNameKey: null == displayNameKey
+            ? _value.displayNameKey
+            : displayNameKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        descriptionKey: null == descriptionKey
+            ? _value.descriptionKey
+            : descriptionKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        rules: null == rules
+            ? _value._rules
+            : rules // ignore: cast_nullable_to_non_nullable
+                  as List<GateRule>,
+        isGloballyEnabled: null == isGloballyEnabled
+            ? _value.isGloballyEnabled
+            : isGloballyEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        defaultEnabled: null == defaultEnabled
+            ? _value.defaultEnabled
+            : defaultEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        userConfigurable: null == userConfigurable
+            ? _value.userConfigurable
+            : userConfigurable // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FeatureGateConfigImpl implements _FeatureGateConfig {
-  const _$FeatureGateConfigImpl(
-      {required this.feature,
-      required this.displayNameKey,
-      required this.descriptionKey,
-      final List<GateRule> rules = const [],
-      this.isGloballyEnabled = true,
-      this.defaultEnabled = false,
-      this.userConfigurable = true})
-      : _rules = rules;
+  const _$FeatureGateConfigImpl({
+    required this.feature,
+    required this.displayNameKey,
+    required this.descriptionKey,
+    final List<GateRule> rules = const [],
+    this.isGloballyEnabled = true,
+    this.defaultEnabled = false,
+    this.userConfigurable = true,
+  }) : _rules = rules;
 
   factory _$FeatureGateConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$FeatureGateConfigImplFromJson(json);
@@ -266,76 +285,82 @@ class _$FeatureGateConfigImpl implements _FeatureGateConfig {
                 other.userConfigurable == userConfigurable));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      feature,
-      displayNameKey,
-      descriptionKey,
-      const DeepCollectionEquality().hash(_rules),
-      isGloballyEnabled,
-      defaultEnabled,
-      userConfigurable);
+    runtimeType,
+    feature,
+    displayNameKey,
+    descriptionKey,
+    const DeepCollectionEquality().hash(_rules),
+    isGloballyEnabled,
+    defaultEnabled,
+    userConfigurable,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FeatureGateConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FeatureGateConfigImplCopyWith<_$FeatureGateConfigImpl> get copyWith =>
       __$$FeatureGateConfigImplCopyWithImpl<_$FeatureGateConfigImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FeatureGateConfigImplToJson(
-      this,
-    );
+    return _$$FeatureGateConfigImplToJson(this);
   }
 }
 
 abstract class _FeatureGateConfig implements FeatureGateConfig {
-  const factory _FeatureGateConfig(
-      {required final AiCoachFeature feature,
-      required final String displayNameKey,
-      required final String descriptionKey,
-      final List<GateRule> rules,
-      final bool isGloballyEnabled,
-      final bool defaultEnabled,
-      final bool userConfigurable}) = _$FeatureGateConfigImpl;
+  const factory _FeatureGateConfig({
+    required final AiCoachFeature feature,
+    required final String displayNameKey,
+    required final String descriptionKey,
+    final List<GateRule> rules,
+    final bool isGloballyEnabled,
+    final bool defaultEnabled,
+    final bool userConfigurable,
+  }) = _$FeatureGateConfigImpl;
 
   factory _FeatureGateConfig.fromJson(Map<String, dynamic> json) =
       _$FeatureGateConfigImpl.fromJson;
 
-  @override
-
   /// Feature being gated
-  AiCoachFeature get feature;
   @override
+  AiCoachFeature get feature;
 
   /// Feature display name (localization key)
-  String get displayNameKey;
   @override
+  String get displayNameKey;
 
   /// Feature description (localization key)
-  String get descriptionKey;
   @override
+  String get descriptionKey;
 
   /// Gate rules (ALL must be satisfied)
-  List<GateRule> get rules;
   @override
+  List<GateRule> get rules;
 
   /// Whether feature is globally enabled
-  bool get isGloballyEnabled;
   @override
+  bool get isGloballyEnabled;
 
   /// Default enabled state if no rules apply
-  bool get defaultEnabled;
   @override
+  bool get defaultEnabled;
 
   /// Whether user can manually toggle in settings
-  bool get userConfigurable;
   @override
-  @JsonKey(ignore: true)
+  bool get userConfigurable;
+
+  /// Create a copy of FeatureGateConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FeatureGateConfigImplCopyWith<_$FeatureGateConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -352,8 +377,12 @@ mixin _$GateRule {
   /// Required value for rule (interpretation depends on type)
   dynamic get value => throw _privateConstructorUsedError;
 
+  /// Serializes this GateRule to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of GateRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $GateRuleCopyWith<GateRule> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -376,22 +405,24 @@ class _$GateRuleCopyWithImpl<$Res, $Val extends GateRule>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of GateRule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? type = null,
-    Object? value = freezed,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as GateRuleType,
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-    ) as $Val);
+  $Res call({Object? type = null, Object? value = freezed}) {
+    return _then(
+      _value.copyWith(
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as GateRuleType,
+            value: freezed == value
+                ? _value.value
+                : value // ignore: cast_nullable_to_non_nullable
+                      as dynamic,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -399,8 +430,9 @@ class _$GateRuleCopyWithImpl<$Res, $Val extends GateRule>
 abstract class _$$GateRuleImplCopyWith<$Res>
     implements $GateRuleCopyWith<$Res> {
   factory _$$GateRuleImplCopyWith(
-          _$GateRuleImpl value, $Res Function(_$GateRuleImpl) then) =
-      __$$GateRuleImplCopyWithImpl<$Res>;
+    _$GateRuleImpl value,
+    $Res Function(_$GateRuleImpl) then,
+  ) = __$$GateRuleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({GateRuleType type, dynamic value});
@@ -411,25 +443,27 @@ class __$$GateRuleImplCopyWithImpl<$Res>
     extends _$GateRuleCopyWithImpl<$Res, _$GateRuleImpl>
     implements _$$GateRuleImplCopyWith<$Res> {
   __$$GateRuleImplCopyWithImpl(
-      _$GateRuleImpl _value, $Res Function(_$GateRuleImpl) _then)
-      : super(_value, _then);
+    _$GateRuleImpl _value,
+    $Res Function(_$GateRuleImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of GateRule
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? type = null,
-    Object? value = freezed,
-  }) {
-    return _then(_$GateRuleImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as GateRuleType,
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-    ));
+  $Res call({Object? type = null, Object? value = freezed}) {
+    return _then(
+      _$GateRuleImpl(
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as GateRuleType,
+        value: freezed == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                  as dynamic,
+      ),
+    );
   }
 }
 
@@ -463,12 +497,17 @@ class _$GateRuleImpl implements _GateRule {
             const DeepCollectionEquality().equals(other.value, value));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, type, const DeepCollectionEquality().hash(value));
+    runtimeType,
+    type,
+    const DeepCollectionEquality().hash(value),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of GateRule
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$GateRuleImplCopyWith<_$GateRuleImpl> get copyWith =>
@@ -476,30 +515,31 @@ class _$GateRuleImpl implements _GateRule {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GateRuleImplToJson(
-      this,
-    );
+    return _$$GateRuleImplToJson(this);
   }
 }
 
 abstract class _GateRule implements GateRule {
-  const factory _GateRule(
-      {required final GateRuleType type,
-      required final dynamic value}) = _$GateRuleImpl;
+  const factory _GateRule({
+    required final GateRuleType type,
+    required final dynamic value,
+  }) = _$GateRuleImpl;
 
   factory _GateRule.fromJson(Map<String, dynamic> json) =
       _$GateRuleImpl.fromJson;
 
-  @override
-
   /// Type of rule
-  GateRuleType get type;
   @override
+  GateRuleType get type;
 
   /// Required value for rule (interpretation depends on type)
-  dynamic get value;
   @override
-  @JsonKey(ignore: true)
+  dynamic get value;
+
+  /// Create a copy of GateRule
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$GateRuleImplCopyWith<_$GateRuleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -528,8 +568,12 @@ mixin _$FeatureGateStatus {
   /// When status was evaluated
   DateTime get evaluatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this FeatureGateStatus to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FeatureGateStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FeatureGateStatusCopyWith<FeatureGateStatus> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -537,16 +581,18 @@ mixin _$FeatureGateStatus {
 /// @nodoc
 abstract class $FeatureGateStatusCopyWith<$Res> {
   factory $FeatureGateStatusCopyWith(
-          FeatureGateStatus value, $Res Function(FeatureGateStatus) then) =
-      _$FeatureGateStatusCopyWithImpl<$Res, FeatureGateStatus>;
+    FeatureGateStatus value,
+    $Res Function(FeatureGateStatus) then,
+  ) = _$FeatureGateStatusCopyWithImpl<$Res, FeatureGateStatus>;
   @useResult
-  $Res call(
-      {AiCoachFeature feature,
-      bool isEnabled,
-      String reasonKey,
-      List<GateRuleType> passedRules,
-      List<GateRuleType> failedRules,
-      DateTime evaluatedAt});
+  $Res call({
+    AiCoachFeature feature,
+    bool isEnabled,
+    String reasonKey,
+    List<GateRuleType> passedRules,
+    List<GateRuleType> failedRules,
+    DateTime evaluatedAt,
+  });
 }
 
 /// @nodoc
@@ -559,6 +605,8 @@ class _$FeatureGateStatusCopyWithImpl<$Res, $Val extends FeatureGateStatus>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FeatureGateStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -569,60 +617,68 @@ class _$FeatureGateStatusCopyWithImpl<$Res, $Val extends FeatureGateStatus>
     Object? failedRules = null,
     Object? evaluatedAt = null,
   }) {
-    return _then(_value.copyWith(
-      feature: null == feature
-          ? _value.feature
-          : feature // ignore: cast_nullable_to_non_nullable
-              as AiCoachFeature,
-      isEnabled: null == isEnabled
-          ? _value.isEnabled
-          : isEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      reasonKey: null == reasonKey
-          ? _value.reasonKey
-          : reasonKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      passedRules: null == passedRules
-          ? _value.passedRules
-          : passedRules // ignore: cast_nullable_to_non_nullable
-              as List<GateRuleType>,
-      failedRules: null == failedRules
-          ? _value.failedRules
-          : failedRules // ignore: cast_nullable_to_non_nullable
-              as List<GateRuleType>,
-      evaluatedAt: null == evaluatedAt
-          ? _value.evaluatedAt
-          : evaluatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            feature: null == feature
+                ? _value.feature
+                : feature // ignore: cast_nullable_to_non_nullable
+                      as AiCoachFeature,
+            isEnabled: null == isEnabled
+                ? _value.isEnabled
+                : isEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            reasonKey: null == reasonKey
+                ? _value.reasonKey
+                : reasonKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            passedRules: null == passedRules
+                ? _value.passedRules
+                : passedRules // ignore: cast_nullable_to_non_nullable
+                      as List<GateRuleType>,
+            failedRules: null == failedRules
+                ? _value.failedRules
+                : failedRules // ignore: cast_nullable_to_non_nullable
+                      as List<GateRuleType>,
+            evaluatedAt: null == evaluatedAt
+                ? _value.evaluatedAt
+                : evaluatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$FeatureGateStatusImplCopyWith<$Res>
     implements $FeatureGateStatusCopyWith<$Res> {
-  factory _$$FeatureGateStatusImplCopyWith(_$FeatureGateStatusImpl value,
-          $Res Function(_$FeatureGateStatusImpl) then) =
-      __$$FeatureGateStatusImplCopyWithImpl<$Res>;
+  factory _$$FeatureGateStatusImplCopyWith(
+    _$FeatureGateStatusImpl value,
+    $Res Function(_$FeatureGateStatusImpl) then,
+  ) = __$$FeatureGateStatusImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {AiCoachFeature feature,
-      bool isEnabled,
-      String reasonKey,
-      List<GateRuleType> passedRules,
-      List<GateRuleType> failedRules,
-      DateTime evaluatedAt});
+  $Res call({
+    AiCoachFeature feature,
+    bool isEnabled,
+    String reasonKey,
+    List<GateRuleType> passedRules,
+    List<GateRuleType> failedRules,
+    DateTime evaluatedAt,
+  });
 }
 
 /// @nodoc
 class __$$FeatureGateStatusImplCopyWithImpl<$Res>
     extends _$FeatureGateStatusCopyWithImpl<$Res, _$FeatureGateStatusImpl>
     implements _$$FeatureGateStatusImplCopyWith<$Res> {
-  __$$FeatureGateStatusImplCopyWithImpl(_$FeatureGateStatusImpl _value,
-      $Res Function(_$FeatureGateStatusImpl) _then)
-      : super(_value, _then);
+  __$$FeatureGateStatusImplCopyWithImpl(
+    _$FeatureGateStatusImpl _value,
+    $Res Function(_$FeatureGateStatusImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FeatureGateStatus
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -633,47 +689,49 @@ class __$$FeatureGateStatusImplCopyWithImpl<$Res>
     Object? failedRules = null,
     Object? evaluatedAt = null,
   }) {
-    return _then(_$FeatureGateStatusImpl(
-      feature: null == feature
-          ? _value.feature
-          : feature // ignore: cast_nullable_to_non_nullable
-              as AiCoachFeature,
-      isEnabled: null == isEnabled
-          ? _value.isEnabled
-          : isEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      reasonKey: null == reasonKey
-          ? _value.reasonKey
-          : reasonKey // ignore: cast_nullable_to_non_nullable
-              as String,
-      passedRules: null == passedRules
-          ? _value._passedRules
-          : passedRules // ignore: cast_nullable_to_non_nullable
-              as List<GateRuleType>,
-      failedRules: null == failedRules
-          ? _value._failedRules
-          : failedRules // ignore: cast_nullable_to_non_nullable
-              as List<GateRuleType>,
-      evaluatedAt: null == evaluatedAt
-          ? _value.evaluatedAt
-          : evaluatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$FeatureGateStatusImpl(
+        feature: null == feature
+            ? _value.feature
+            : feature // ignore: cast_nullable_to_non_nullable
+                  as AiCoachFeature,
+        isEnabled: null == isEnabled
+            ? _value.isEnabled
+            : isEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        reasonKey: null == reasonKey
+            ? _value.reasonKey
+            : reasonKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        passedRules: null == passedRules
+            ? _value._passedRules
+            : passedRules // ignore: cast_nullable_to_non_nullable
+                  as List<GateRuleType>,
+        failedRules: null == failedRules
+            ? _value._failedRules
+            : failedRules // ignore: cast_nullable_to_non_nullable
+                  as List<GateRuleType>,
+        evaluatedAt: null == evaluatedAt
+            ? _value.evaluatedAt
+            : evaluatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FeatureGateStatusImpl implements _FeatureGateStatus {
-  const _$FeatureGateStatusImpl(
-      {required this.feature,
-      required this.isEnabled,
-      required this.reasonKey,
-      final List<GateRuleType> passedRules = const [],
-      final List<GateRuleType> failedRules = const [],
-      required this.evaluatedAt})
-      : _passedRules = passedRules,
-        _failedRules = failedRules;
+  const _$FeatureGateStatusImpl({
+    required this.feature,
+    required this.isEnabled,
+    required this.reasonKey,
+    final List<GateRuleType> passedRules = const [],
+    final List<GateRuleType> failedRules = const [],
+    required this.evaluatedAt,
+  }) : _passedRules = passedRules,
+       _failedRules = failedRules;
 
   factory _$FeatureGateStatusImpl.fromJson(Map<String, dynamic> json) =>
       _$$FeatureGateStatusImplFromJson(json);
@@ -733,78 +791,88 @@ class _$FeatureGateStatusImpl implements _FeatureGateStatus {
                 other.isEnabled == isEnabled) &&
             (identical(other.reasonKey, reasonKey) ||
                 other.reasonKey == reasonKey) &&
-            const DeepCollectionEquality()
-                .equals(other._passedRules, _passedRules) &&
-            const DeepCollectionEquality()
-                .equals(other._failedRules, _failedRules) &&
+            const DeepCollectionEquality().equals(
+              other._passedRules,
+              _passedRules,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._failedRules,
+              _failedRules,
+            ) &&
             (identical(other.evaluatedAt, evaluatedAt) ||
                 other.evaluatedAt == evaluatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      feature,
-      isEnabled,
-      reasonKey,
-      const DeepCollectionEquality().hash(_passedRules),
-      const DeepCollectionEquality().hash(_failedRules),
-      evaluatedAt);
+    runtimeType,
+    feature,
+    isEnabled,
+    reasonKey,
+    const DeepCollectionEquality().hash(_passedRules),
+    const DeepCollectionEquality().hash(_failedRules),
+    evaluatedAt,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FeatureGateStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FeatureGateStatusImplCopyWith<_$FeatureGateStatusImpl> get copyWith =>
       __$$FeatureGateStatusImplCopyWithImpl<_$FeatureGateStatusImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FeatureGateStatusImplToJson(
-      this,
-    );
+    return _$$FeatureGateStatusImplToJson(this);
   }
 }
 
 abstract class _FeatureGateStatus implements FeatureGateStatus {
-  const factory _FeatureGateStatus(
-      {required final AiCoachFeature feature,
-      required final bool isEnabled,
-      required final String reasonKey,
-      final List<GateRuleType> passedRules,
-      final List<GateRuleType> failedRules,
-      required final DateTime evaluatedAt}) = _$FeatureGateStatusImpl;
+  const factory _FeatureGateStatus({
+    required final AiCoachFeature feature,
+    required final bool isEnabled,
+    required final String reasonKey,
+    final List<GateRuleType> passedRules,
+    final List<GateRuleType> failedRules,
+    required final DateTime evaluatedAt,
+  }) = _$FeatureGateStatusImpl;
 
   factory _FeatureGateStatus.fromJson(Map<String, dynamic> json) =
       _$FeatureGateStatusImpl.fromJson;
 
-  @override
-
   /// Feature being evaluated
-  AiCoachFeature get feature;
   @override
+  AiCoachFeature get feature;
 
   /// Whether feature is enabled for current user
-  bool get isEnabled;
   @override
+  bool get isEnabled;
 
   /// Reason why feature is enabled/disabled
-  String get reasonKey;
   @override
+  String get reasonKey;
 
   /// Which rules passed
-  List<GateRuleType> get passedRules;
   @override
+  List<GateRuleType> get passedRules;
 
   /// Which rules failed
-  List<GateRuleType> get failedRules;
   @override
+  List<GateRuleType> get failedRules;
 
   /// When status was evaluated
-  DateTime get evaluatedAt;
   @override
-  @JsonKey(ignore: true)
+  DateTime get evaluatedAt;
+
+  /// Create a copy of FeatureGateStatus
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FeatureGateStatusImplCopyWith<_$FeatureGateStatusImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

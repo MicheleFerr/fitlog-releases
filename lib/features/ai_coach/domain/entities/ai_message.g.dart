@@ -14,7 +14,8 @@ _$AIMessageImpl _$$AIMessageImplFromJson(Map<String, dynamic> json) =>
       timestamp: DateTime.parse(json['timestamp'] as String),
       isStreaming: json['isStreaming'] as bool? ?? false,
       metadata: json['metadata'] as Map<String, dynamic>?,
-      followUpChips: (json['followUpChips'] as List<dynamic>?)
+      followUpChips:
+          (json['followUpChips'] as List<dynamic>?)
               ?.map((e) => FollowUpChip.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],

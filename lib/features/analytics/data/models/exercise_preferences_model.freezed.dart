@@ -12,10 +12,12 @@ part of 'exercise_preferences_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExercisePreferencesModel _$ExercisePreferencesModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ExercisePreferencesModel.fromJson(json);
 }
 
@@ -32,25 +34,34 @@ mixin _$ExercisePreferencesModel {
   @TimestampConverter()
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
 
+  /// Serializes this ExercisePreferencesModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExercisePreferencesModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExercisePreferencesModelCopyWith<ExercisePreferencesModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExercisePreferencesModelCopyWith<$Res> {
-  factory $ExercisePreferencesModelCopyWith(ExercisePreferencesModel value,
-          $Res Function(ExercisePreferencesModel) then) =
-      _$ExercisePreferencesModelCopyWithImpl<$Res, ExercisePreferencesModel>;
+  factory $ExercisePreferencesModelCopyWith(
+    ExercisePreferencesModel value,
+    $Res Function(ExercisePreferencesModel) then,
+  ) = _$ExercisePreferencesModelCopyWithImpl<$Res, ExercisePreferencesModel>;
   @useResult
-  $Res call(
-      {List<String> favorites, @TimestampConverter() DateTime? lastUpdated});
+  $Res call({
+    List<String> favorites,
+    @TimestampConverter() DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
-class _$ExercisePreferencesModelCopyWithImpl<$Res,
-        $Val extends ExercisePreferencesModel>
+class _$ExercisePreferencesModelCopyWithImpl<
+  $Res,
+  $Val extends ExercisePreferencesModel
+>
     implements $ExercisePreferencesModelCopyWith<$Res> {
   _$ExercisePreferencesModelCopyWithImpl(this._value, this._then);
 
@@ -59,22 +70,24 @@ class _$ExercisePreferencesModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExercisePreferencesModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? favorites = null,
-    Object? lastUpdated = freezed,
-  }) {
-    return _then(_value.copyWith(
-      favorites: null == favorites
-          ? _value.favorites
-          : favorites // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+  $Res call({Object? favorites = null, Object? lastUpdated = freezed}) {
+    return _then(
+      _value.copyWith(
+            favorites: null == favorites
+                ? _value.favorites
+                : favorites // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            lastUpdated: freezed == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -82,52 +95,58 @@ class _$ExercisePreferencesModelCopyWithImpl<$Res,
 abstract class _$$ExercisePreferencesModelImplCopyWith<$Res>
     implements $ExercisePreferencesModelCopyWith<$Res> {
   factory _$$ExercisePreferencesModelImplCopyWith(
-          _$ExercisePreferencesModelImpl value,
-          $Res Function(_$ExercisePreferencesModelImpl) then) =
-      __$$ExercisePreferencesModelImplCopyWithImpl<$Res>;
+    _$ExercisePreferencesModelImpl value,
+    $Res Function(_$ExercisePreferencesModelImpl) then,
+  ) = __$$ExercisePreferencesModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<String> favorites, @TimestampConverter() DateTime? lastUpdated});
+  $Res call({
+    List<String> favorites,
+    @TimestampConverter() DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
 class __$$ExercisePreferencesModelImplCopyWithImpl<$Res>
-    extends _$ExercisePreferencesModelCopyWithImpl<$Res,
-        _$ExercisePreferencesModelImpl>
+    extends
+        _$ExercisePreferencesModelCopyWithImpl<
+          $Res,
+          _$ExercisePreferencesModelImpl
+        >
     implements _$$ExercisePreferencesModelImplCopyWith<$Res> {
   __$$ExercisePreferencesModelImplCopyWithImpl(
-      _$ExercisePreferencesModelImpl _value,
-      $Res Function(_$ExercisePreferencesModelImpl) _then)
-      : super(_value, _then);
+    _$ExercisePreferencesModelImpl _value,
+    $Res Function(_$ExercisePreferencesModelImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExercisePreferencesModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? favorites = null,
-    Object? lastUpdated = freezed,
-  }) {
-    return _then(_$ExercisePreferencesModelImpl(
-      favorites: null == favorites
-          ? _value._favorites
-          : favorites // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+  $Res call({Object? favorites = null, Object? lastUpdated = freezed}) {
+    return _then(
+      _$ExercisePreferencesModelImpl(
+        favorites: null == favorites
+            ? _value._favorites
+            : favorites // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        lastUpdated: freezed == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExercisePreferencesModelImpl extends _ExercisePreferencesModel {
-  const _$ExercisePreferencesModelImpl(
-      {final List<String> favorites = const [],
-      @TimestampConverter() this.lastUpdated})
-      : _favorites = favorites,
-        super._();
+  const _$ExercisePreferencesModelImpl({
+    final List<String> favorites = const [],
+    @TimestampConverter() this.lastUpdated,
+  }) : _favorites = favorites,
+       super._();
 
   factory _$ExercisePreferencesModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExercisePreferencesModelImplFromJson(json);
@@ -165,57 +184,66 @@ class _$ExercisePreferencesModelImpl extends _ExercisePreferencesModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ExercisePreferencesModelImpl &&
-            const DeepCollectionEquality()
-                .equals(other._favorites, _favorites) &&
+            const DeepCollectionEquality().equals(
+              other._favorites,
+              _favorites,
+            ) &&
             (identical(other.lastUpdated, lastUpdated) ||
                 other.lastUpdated == lastUpdated));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_favorites), lastUpdated);
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_favorites),
+    lastUpdated,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExercisePreferencesModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExercisePreferencesModelImplCopyWith<_$ExercisePreferencesModelImpl>
-      get copyWith => __$$ExercisePreferencesModelImplCopyWithImpl<
-          _$ExercisePreferencesModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExercisePreferencesModelImplCopyWithImpl<
+        _$ExercisePreferencesModelImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExercisePreferencesModelImplToJson(
-      this,
-    );
+    return _$$ExercisePreferencesModelImplToJson(this);
   }
 }
 
 abstract class _ExercisePreferencesModel extends ExercisePreferencesModel {
-  const factory _ExercisePreferencesModel(
-          {final List<String> favorites,
-          @TimestampConverter() final DateTime? lastUpdated}) =
-      _$ExercisePreferencesModelImpl;
+  const factory _ExercisePreferencesModel({
+    final List<String> favorites,
+    @TimestampConverter() final DateTime? lastUpdated,
+  }) = _$ExercisePreferencesModelImpl;
   const _ExercisePreferencesModel._() : super._();
 
   factory _ExercisePreferencesModel.fromJson(Map<String, dynamic> json) =
       _$ExercisePreferencesModelImpl.fromJson;
 
-  @override
-
   /// Set of exercise names marked as favorite
   ///
   /// Stored as List in Firestore, converted to Set for O(1) lookup
-  List<String> get favorites;
   @override
+  List<String> get favorites;
 
   /// Timestamp of last update
   ///
   /// Used for sync conflict resolution and cache invalidation
+  @override
   @TimestampConverter()
   DateTime? get lastUpdated;
+
+  /// Create a copy of ExercisePreferencesModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExercisePreferencesModelImplCopyWith<_$ExercisePreferencesModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
