@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
@@ -52,7 +51,7 @@ class _WorkoutMiniBarState extends ConsumerState<WorkoutMiniBar>
   static const double _maxDragDown = 4.0; // Max pixels to drag down (limited by bottom nav)
 
   // Spring physics for smooth return
-  static final SpringDescription _springDescription = SpringDescription(
+  static const SpringDescription _springDescription = SpringDescription(
     mass: 1.0,
     stiffness: 400.0,
     damping: 25.0,
