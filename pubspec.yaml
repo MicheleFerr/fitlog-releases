@@ -85,7 +85,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # Code generation
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^3.1.0  # Migrated from ^2.4.1 (2025-11-27)
   json_annotation: ^4.8.1
   rxdart: ^0.28.0
   fl_chart: ^1.1.0
@@ -132,7 +132,7 @@ dev_dependencies:
   
   # Code generation
   build_runner: ^2.4.7
-  freezed: ^2.4.6
+  freezed: ^3.2.3  # Migrated from ^2.4.6 (2025-11-27)
   json_serializable: ^6.7.1
   hive_ce_generator: ^1.4.0  # ✅ Migrated from abandoned hive_generator (2025-11-27)
   
