@@ -33,7 +33,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/firebase_feature_gate_datasource.dart';
 import 'package:gymbro_flutter_new/features/ai_coach/data/datasources/healthkit_datasource.dart';

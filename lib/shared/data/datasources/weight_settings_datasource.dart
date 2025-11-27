@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/shared/data/models/weight_settings_model.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/weight_settings.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';

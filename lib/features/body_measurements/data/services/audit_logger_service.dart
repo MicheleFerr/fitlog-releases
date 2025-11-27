@@ -3,7 +3,7 @@ import 'dart:developer' show log;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:fpdart/fpdart.dart' hide State;
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';

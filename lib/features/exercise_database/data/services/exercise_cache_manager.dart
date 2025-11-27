@@ -10,7 +10,7 @@ library;
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/data/models/exercise_model.dart';
 import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';

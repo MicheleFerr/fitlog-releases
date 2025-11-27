@@ -6,7 +6,7 @@ import 'package:gymbro_flutter_new/features/body_measurements/data/services/audi
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/metric_type.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/entities/user_consent.dart';
 import 'package:gymbro_flutter_new/features/body_measurements/domain/repositories/measurement_repository.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 /// DataDeletionService - GDPR Article 17 compliance (Right to Erasure)
 ///

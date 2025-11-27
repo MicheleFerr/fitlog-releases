@@ -13,7 +13,7 @@
 /// - Sync patch state between Hive and Firestore
 library;
 
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/exercise_database/domain/entities/exercise_patch.dart';
 

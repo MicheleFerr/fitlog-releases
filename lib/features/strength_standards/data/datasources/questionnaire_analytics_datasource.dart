@@ -13,7 +13,7 @@ library;
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/questionnaire_analytics.dart';
 import 'package:gymbro_flutter_new/features/strength_standards/domain/entities/suggestion_accuracy.dart';
 import 'package:uuid/uuid.dart';
