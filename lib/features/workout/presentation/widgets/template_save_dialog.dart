@@ -17,8 +17,10 @@ import 'package:gymbro_flutter_new/features/workout/presentation/providers/worko
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
+import 'package:gymbro_flutter_new/shared/presentation/theme/app_spacing.dart';
 import 'package:gymbro_flutter_new/shared/presentation/widgets/semantic_icon.dart';
 import 'package:gymbro_flutter_new/shared/presentation/services/snackbar_service.dart';
+import 'package:gymbro_flutter_new/shared/presentation/mixins/safe_set_state_mixin.dart';
 
 /// Dialog options for template save
 enum TemplateSaveOption {
@@ -72,7 +74,8 @@ class _TemplateSaveDialogContent extends ConsumerStatefulWidget {
 }
 
 class _TemplateSaveDialogContentState
-    extends ConsumerState<_TemplateSaveDialogContent> {
+    extends ConsumerState<_TemplateSaveDialogContent>
+    with SafeSetStateMixin {
   TemplateSaveOption _selectedOption = TemplateSaveOption.keepOriginal;
   final TextEditingController _nameController = TextEditingController();
   bool _isLoading = false;
@@ -94,7 +97,7 @@ class _TemplateSaveDialogContentState
     final changes = _detectChanges();
 
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(24),
@@ -106,7 +109,7 @@ class _TemplateSaveDialogContentState
           // Handle bar
           Center(
             child: Container(
-              margin: const EdgeInsets.only(top: 12),
+              margin: const EdgeInsets.only(top: AppSpacing.sm),
               width: 40,
               height: 4,
               decoration: BoxDecoration(
@@ -118,7 +121,7 @@ class _TemplateSaveDialogContentState
 
           // Header
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Column(
               children: [
                 Container(
@@ -159,7 +162,7 @@ class _TemplateSaveDialogContentState
           // Changes summary
           if (changes.isNotEmpty) ...[
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: context.colors.surfaceContainerHighest,
@@ -206,7 +209,7 @@ class _TemplateSaveDialogContentState
 
           // Options
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             child: Column(
               children: [
                 _buildOptionTile(
@@ -236,7 +239,7 @@ class _TemplateSaveDialogContentState
           // New template name field (only when saveAsNew is selected)
           if (_selectedOption == TemplateSaveOption.saveAsNew)
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
               child: TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
@@ -245,7 +248,10 @@ class _TemplateSaveDialogContentState
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: const Icon(AppIcons.listAlt),
+                  prefixIcon: SemanticIcon(
+                    icon: AppIcons.listAlt,
+                    semanticLabel: context.l10n.templateName,
+                  ),
                 ),
                 textCapitalization: TextCapitalization.sentences,
               ),
@@ -253,7 +259,7 @@ class _TemplateSaveDialogContentState
 
           // Actions
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             child: Row(
               children: [
                 Expanded(
@@ -303,7 +309,7 @@ class _TemplateSaveDialogContentState
       child: InkWell(
         onTap: () {
           HapticFeedback.selectionClick();
-          setState(() => _selectedOption = option);
+          safeSetState(() => _selectedOption = option);
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(
@@ -428,7 +434,7 @@ class _TemplateSaveDialogContentState
   }
 
   Future<void> _handleConfirm() async {
-    setState(() => _isLoading = true);
+    safeSetState(() => _isLoading = true);
 
     try {
       switch (_selectedOption) {
@@ -463,7 +469,7 @@ class _TemplateSaveDialogContentState
       }
     } finally {
       if (mounted) {
-        setState(() => _isLoading = false);
+        safeSetState(() => _isLoading = false);
       }
     }
   }
