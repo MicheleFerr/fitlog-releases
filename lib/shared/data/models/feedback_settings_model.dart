@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/feedback_settings.dart';
 
 part 'feedback_settings_model.g.dart';

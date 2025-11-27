@@ -7,7 +7,7 @@
 /// Hive model per tracking utilizzo esercizi (ML-enhanced fuzzy search)
 library;
 
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 
 part 'exercise_usage_model.g.dart';
 

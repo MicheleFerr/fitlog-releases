@@ -19,7 +19,7 @@ class ExerciseUsageModelAdapter extends TypeAdapter<ExerciseUsageModel> {
     return ExerciseUsageModel(
       exerciseId: fields[0] as String,
       exerciseName: fields[1] as String,
-      usageCount: fields[2] as int,
+      usageCount: (fields[2] as num).toInt(),
       lastUsedAt: fields[3] as DateTime,
       firstUsedAt: fields[4] as DateTime,
       userId: fields[5] as String,

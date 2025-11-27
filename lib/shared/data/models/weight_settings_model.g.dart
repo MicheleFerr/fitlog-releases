@@ -17,8 +17,8 @@ class WeightSettingsModelAdapter extends TypeAdapter<WeightSettingsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WeightSettingsModel(
-      defaultIncrement: fields[0] as double,
-      customIncrement: fields[1] as double,
+      defaultIncrement: (fields[0] as num).toDouble(),
+      customIncrement: (fields[1] as num).toDouble(),
       useCustomIncrement: fields[2] as bool,
       availablePlates: (fields[3] as List).cast<PlateOptionModel>(),
     );
@@ -60,8 +60,8 @@ class PlateOptionModelAdapter extends TypeAdapter<PlateOptionModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PlateOptionModel(
-      weight: fields[0] as double,
-      count: fields[1] as int,
+      weight: (fields[0] as num).toDouble(),
+      count: (fields[1] as num).toInt(),
     );
   }
 

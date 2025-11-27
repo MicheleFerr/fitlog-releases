@@ -3,7 +3,7 @@
 /// Hive model for persisting history view preferences.
 library;
 
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/history_view_settings.dart';
 
 part 'history_view_settings_model.g.dart';

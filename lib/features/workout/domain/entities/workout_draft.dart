@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout.dart';
 
 part 'workout_draft.g.dart';
