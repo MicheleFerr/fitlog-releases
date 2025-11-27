@@ -5939,6 +5939,42 @@ abstract class AppLocalizations {
   /// **'Stall'**
   String get stall;
 
+  /// Title for progress comparison sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Comparison'**
+  String get progressComparison;
+
+  /// Status when both weight and reps improved
+  ///
+  /// In en, this message translates to:
+  /// **'Major Improvement'**
+  String get majorImprovement;
+
+  /// Status when one metric improved and one declined
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed Results'**
+  String get mixedResults;
+
+  /// Status when no change in weight or reps
+  ///
+  /// In en, this message translates to:
+  /// **'Unchanged'**
+  String get unchanged;
+
+  /// Status when weight or reps declined
+  ///
+  /// In en, this message translates to:
+  /// **'Regression'**
+  String get regression;
+
+  /// Status when both weight and reps declined
+  ///
+  /// In en, this message translates to:
+  /// **'Major Regression'**
+  String get majorRegression;
+
   /// Total exercises stats label
   ///
   /// In en, this message translates to:
@@ -15103,6 +15139,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete an existing template or upgrade to Premium for more space.'**
   String get deleteOrUpgrade;
+
+  /// Template slots remaining text
+  ///
+  /// In en, this message translates to:
+  /// **'template slots remaining'**
+  String get templateSlotsRemaining;
+
+  /// Save template button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save Template'**
+  String get saveTemplate;
+
+  /// Template saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Template saved successfully'**
+  String get templateSaved;
+
+  /// Template save error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving template'**
+  String get errorSavingTemplate;
+
+  /// Template configuration section title
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration'**
+  String get templateConfiguration;
+
+  /// Tags optional field label
+  ///
+  /// In en, this message translates to:
+  /// **'Tags (optional)'**
+  String get tagsOptional;
+
+  /// Add tag button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add tag'**
+  String get addTag;
+
+  /// Enter tag hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter tag'**
+  String get enterTag;
+
+  /// Premium upgrade prompt for templates
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium for unlimited templates'**
+  String get upgradeToPremiumForUnlimited;
+
+  /// Description optional field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get descriptionOptional;
+
+  /// Add description hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Add a description...'**
+  String get addDescription;
 
   /// Templates remaining warning
   ///
@@ -36653,6 +36755,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Based on scientific research'**
   String get warmupScienceBased;
+
+  /// Option to hide FAB button in PiP-style
+  ///
+  /// In en, this message translates to:
+  /// **'Hide button'**
+  String get fabHideButton;
+
+  /// Description for hiding FAB to edge
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize to screen edge'**
+  String get fabHideDescription;
+
+  /// Hint text about dragging to edge to hide
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to edge to hide'**
+  String get fabDragToHide;
+
+  /// Label for main FAB action
+  ///
+  /// In en, this message translates to:
+  /// **'Main action'**
+  String get fabMainAction;
+
+  /// Label for history option
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get fabHistory;
+
+  /// Description for viewing previous workouts
+  ///
+  /// In en, this message translates to:
+  /// **'View previous workouts'**
+  String get fabViewPreviousWorkouts;
 }
 
 class _AppLocalizationsDelegate

@@ -3218,6 +3218,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get stall => 'Stallo';
 
   @override
+  String get progressComparison => 'Confronto Progressi';
+
+  @override
+  String get majorImprovement => 'Grande Miglioramento';
+
+  @override
+  String get mixedResults => 'Risultati Misti';
+
+  @override
+  String get unchanged => 'Invariato';
+
+  @override
+  String get regression => 'Regressione';
+
+  @override
+  String get majorRegression => 'Grande Regressione';
+
+  @override
   String get totalExercises => 'Totale';
 
   @override
@@ -8517,6 +8535,40 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get deleteOrUpgrade =>
       'Elimina un template esistente o passa a Premium per avere più spazio.';
+
+  @override
+  String get templateSlotsRemaining => 'slot template rimanenti';
+
+  @override
+  String get saveTemplate => 'Salva Template';
+
+  @override
+  String get templateSaved => 'Template salvato con successo';
+
+  @override
+  String get errorSavingTemplate => 'Errore nel salvataggio del template';
+
+  @override
+  String get templateConfiguration => 'Configurazione';
+
+  @override
+  String get tagsOptional => 'Tag (opzionale)';
+
+  @override
+  String get addTag => 'Aggiungi tag';
+
+  @override
+  String get enterTag => 'Inserisci tag';
+
+  @override
+  String get upgradeToPremiumForUnlimited =>
+      'Passa a Premium per template illimitati';
+
+  @override
+  String get descriptionOptional => 'Descrizione (opzionale)';
+
+  @override
+  String get addDescription => 'Aggiungi una descrizione...';
 
   @override
   String templatesRemaining(int remaining) {
@@ -20728,4 +20780,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get warmupScienceBased => 'Basato su ricerca scientifica';
+
+  @override
+  String get fabHideButton => 'Nascondi pulsante';
+
+  @override
+  String get fabHideDescription => 'Minimizza sul bordo dello schermo';
+
+  @override
+  String get fabDragToHide => 'Trascina verso il bordo per nascondere';
+
+  @override
+  String get fabMainAction => 'Azione principale';
+
+  @override
+  String get fabHistory => 'Storico';
+
+  @override
+  String get fabViewPreviousWorkouts => 'Visualizza workout precedenti';
 }

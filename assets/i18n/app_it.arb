@@ -1094,6 +1094,12 @@
   "improvement": "Miglioramento",
   "decline": "Declino",
   "stall": "Stallo",
+  "progressComparison": "Confronto Progressi",
+  "majorImprovement": "Grande Miglioramento",
+  "mixedResults": "Risultati Misti",
+  "unchanged": "Invariato",
+  "regression": "Regressione",
+  "majorRegression": "Grande Regressione",
   "totalExercises": "Totale",
   "totalSets": "Serie totali",
   "avgVolumePerWorkout": "Volume Medio Per Allenamento",
@@ -3239,6 +3245,17 @@
   "view": "Visualizza",
   "templateLimitReached": "Hai raggiunto il limite di {max} template privati.",
   "deleteOrUpgrade": "Elimina un template esistente o passa a Premium per avere più spazio.",
+  "templateSlotsRemaining": "slot template rimanenti",
+  "saveTemplate": "Salva Template",
+  "templateSaved": "Template salvato con successo",
+  "errorSavingTemplate": "Errore nel salvataggio del template",
+  "templateConfiguration": "Configurazione",
+  "tagsOptional": "Tag (opzionale)",
+  "addTag": "Aggiungi tag",
+  "enterTag": "Inserisci tag",
+  "upgradeToPremiumForUnlimited": "Passa a Premium per template illimitati",
+  "descriptionOptional": "Descrizione (opzionale)",
+  "addDescription": "Aggiungi una descrizione...",
   "templatesRemaining": "Solo {remaining} template rimanenti nel piano Free",
   "customTemplate": "Template personalizzato",
   "errorSaving": "Errore nel salvataggio: {error}",
@@ -14906,5 +14923,29 @@
   "warmupScienceBased": "Basato su ricerca scientifica",
   "@warmupScienceBased": {
     "description": "Label indicating warmup is science-based"
+  },
+  "fabHideButton": "Nascondi pulsante",
+  "@fabHideButton": {
+    "description": "Option to hide FAB button in PiP-style"
+  },
+  "fabHideDescription": "Minimizza sul bordo dello schermo",
+  "@fabHideDescription": {
+    "description": "Description for hiding FAB to edge"
+  },
+  "fabDragToHide": "Trascina verso il bordo per nascondere",
+  "@fabDragToHide": {
+    "description": "Hint text about dragging to edge to hide"
+  },
+  "fabMainAction": "Azione principale",
+  "@fabMainAction": {
+    "description": "Label for main FAB action"
+  },
+  "fabHistory": "Storico",
+  "@fabHistory": {
+    "description": "Label for history option"
+  },
+  "fabViewPreviousWorkouts": "Visualizza workout precedenti",
+  "@fabViewPreviousWorkouts": {
+    "description": "Description for viewing previous workouts"
   }
 }

@@ -4255,6 +4255,30 @@
   "@stall": {
     "description": "Progress stall label"
   },
+  "progressComparison": "Progress Comparison",
+  "@progressComparison": {
+    "description": "Title for progress comparison sheet"
+  },
+  "majorImprovement": "Major Improvement",
+  "@majorImprovement": {
+    "description": "Status when both weight and reps improved"
+  },
+  "mixedResults": "Mixed Results",
+  "@mixedResults": {
+    "description": "Status when one metric improved and one declined"
+  },
+  "unchanged": "Unchanged",
+  "@unchanged": {
+    "description": "Status when no change in weight or reps"
+  },
+  "regression": "Regression",
+  "@regression": {
+    "description": "Status when weight or reps declined"
+  },
+  "majorRegression": "Major Regression",
+  "@majorRegression": {
+    "description": "Status when both weight and reps declined"
+  },
   "totalExercises": "Total",
   "@totalExercises": {
     "description": "Total exercises stats label"
@@ -9936,6 +9960,50 @@
   "deleteOrUpgrade": "Delete an existing template or upgrade to Premium for more space.",
   "@deleteOrUpgrade": {
     "description": "Delete or upgrade suggestion"
+  },
+  "templateSlotsRemaining": "template slots remaining",
+  "@templateSlotsRemaining": {
+    "description": "Template slots remaining text"
+  },
+  "saveTemplate": "Save Template",
+  "@saveTemplate": {
+    "description": "Save template button text"
+  },
+  "templateSaved": "Template saved successfully",
+  "@templateSaved": {
+    "description": "Template saved success message"
+  },
+  "errorSavingTemplate": "Error saving template",
+  "@errorSavingTemplate": {
+    "description": "Template save error message"
+  },
+  "templateConfiguration": "Configuration",
+  "@templateConfiguration": {
+    "description": "Template configuration section title"
+  },
+  "tagsOptional": "Tags (optional)",
+  "@tagsOptional": {
+    "description": "Tags optional field label"
+  },
+  "addTag": "Add tag",
+  "@addTag": {
+    "description": "Add tag button text"
+  },
+  "enterTag": "Enter tag",
+  "@enterTag": {
+    "description": "Enter tag hint text"
+  },
+  "upgradeToPremiumForUnlimited": "Upgrade to Premium for unlimited templates",
+  "@upgradeToPremiumForUnlimited": {
+    "description": "Premium upgrade prompt for templates"
+  },
+  "descriptionOptional": "Description (optional)",
+  "@descriptionOptional": {
+    "description": "Description optional field label"
+  },
+  "addDescription": "Add a description...",
+  "@addDescription": {
+    "description": "Add description hint text"
   },
   "templatesRemaining": "Only {remaining} templates remaining in Free plan",
   "@templatesRemaining": {
@@ -25364,5 +25432,29 @@
   "warmupScienceBased": "Based on scientific research",
   "@warmupScienceBased": {
     "description": "Label indicating warmup is science-based"
+  },
+  "fabHideButton": "Hide button",
+  "@fabHideButton": {
+    "description": "Option to hide FAB button in PiP-style"
+  },
+  "fabHideDescription": "Minimize to screen edge",
+  "@fabHideDescription": {
+    "description": "Description for hiding FAB to edge"
+  },
+  "fabDragToHide": "Drag to edge to hide",
+  "@fabDragToHide": {
+    "description": "Hint text about dragging to edge to hide"
+  },
+  "fabMainAction": "Main action",
+  "@fabMainAction": {
+    "description": "Label for main FAB action"
+  },
+  "fabHistory": "History",
+  "@fabHistory": {
+    "description": "Label for history option"
+  },
+  "fabViewPreviousWorkouts": "View previous workouts",
+  "@fabViewPreviousWorkouts": {
+    "description": "Description for viewing previous workouts"
   }
 }

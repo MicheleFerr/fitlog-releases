@@ -3198,6 +3198,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stall => 'Stall';
 
   @override
+  String get progressComparison => 'Progress Comparison';
+
+  @override
+  String get majorImprovement => 'Major Improvement';
+
+  @override
+  String get mixedResults => 'Mixed Results';
+
+  @override
+  String get unchanged => 'Unchanged';
+
+  @override
+  String get regression => 'Regression';
+
+  @override
+  String get majorRegression => 'Major Regression';
+
+  @override
   String get totalExercises => 'Total';
 
   @override
@@ -8439,6 +8457,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteOrUpgrade =>
       'Delete an existing template or upgrade to Premium for more space.';
+
+  @override
+  String get templateSlotsRemaining => 'template slots remaining';
+
+  @override
+  String get saveTemplate => 'Save Template';
+
+  @override
+  String get templateSaved => 'Template saved successfully';
+
+  @override
+  String get errorSavingTemplate => 'Error saving template';
+
+  @override
+  String get templateConfiguration => 'Configuration';
+
+  @override
+  String get tagsOptional => 'Tags (optional)';
+
+  @override
+  String get addTag => 'Add tag';
+
+  @override
+  String get enterTag => 'Enter tag';
+
+  @override
+  String get upgradeToPremiumForUnlimited =>
+      'Upgrade to Premium for unlimited templates';
+
+  @override
+  String get descriptionOptional => 'Description (optional)';
+
+  @override
+  String get addDescription => 'Add a description...';
 
   @override
   String templatesRemaining(int remaining) {
@@ -20531,4 +20583,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get warmupScienceBased => 'Based on scientific research';
+
+  @override
+  String get fabHideButton => 'Hide button';
+
+  @override
+  String get fabHideDescription => 'Minimize to screen edge';
+
+  @override
+  String get fabDragToHide => 'Drag to edge to hide';
+
+  @override
+  String get fabMainAction => 'Main action';
+
+  @override
+  String get fabHistory => 'History';
+
+  @override
+  String get fabViewPreviousWorkouts => 'View previous workouts';
 }
