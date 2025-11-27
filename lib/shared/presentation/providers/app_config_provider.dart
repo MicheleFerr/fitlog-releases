@@ -2,26 +2,17 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:gymbro_flutter_new/shared/presentation/l10n/generated/app_localizations.dart';
 import 'package:gymbro_flutter_new/shared/domain/entities/app_config.dart';
 import 'package:gymbro_flutter_new/core/data/providers/hive_box_manager_provider.dart';
-import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 
 // App Configuration State Provider
-final appConfigProvider = StateNotifierProvider<AppConfigNotifier, AppConfig>((ref) {
-  final boxManager = ref.watch(hiveBoxManagerProvider);
-  return AppConfigNotifier(boxManager);
-});
+final appConfigProvider = NotifierProvider<AppConfigNotifier, AppConfig>(
+  AppConfigNotifier.new,
+);
 
-class AppConfigNotifier extends StateNotifier<AppConfig> {
-
-  AppConfigNotifier(this._boxManager) : super(const AppConfig()) {
-    _initCompleter = Completer<void>();
-    _initializeConfig();
-  }
-
-  final HiveBoxManagerEnhanced _boxManager;
+class AppConfigNotifier extends Notifier<AppConfig> {
   static const String _boxName = 'app_config';
   Box<AppConfig>? _configBox;
 
@@ -32,13 +23,56 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
   int _initRetryCount = 0;
   static const int _maxInitRetries = 3;
 
+  @override
+  AppConfig build() {
+    // Register disposal callback
+    ref.onDispose(() {
+      if (kDebugMode) {
+        debugPrint('🧹 [AppConfig] Starting disposal');
+      }
+
+      try {
+        _isDisposed = true;
+
+        // Close Hive box if open
+        if (_configBox != null && _configBox!.isOpen) {
+          _configBox!.close();
+          if (kDebugMode) {
+            debugPrint('✅ [AppConfig] Config box closed');
+          }
+        }
+
+        // Null assignment for memory cleanup
+        _configBox = null;
+        _initCompleter = null;
+
+        if (kDebugMode) {
+          debugPrint('✅ [AppConfig] Disposal completed');
+        }
+      } catch (e, stackTrace) {
+        if (kDebugMode) {
+          debugPrint('❌ [AppConfig] Error during disposal: $e');
+          debugPrint('📍 Stack trace: $stackTrace');
+        }
+      }
+    });
+
+    // Initialize asynchronously
+    _initCompleter = Completer<void>();
+    _initializeConfig();
+
+    // Return default config immediately (will update once loaded)
+    return const AppConfig();
+  }
+
   Future<void> _initializeConfig() async {
     try {
       if (kDebugMode) {
         debugPrint('📱 [AppConfig] Starting initialization (attempt ${_initRetryCount + 1})');
       }
 
-      _configBox = await _boxManager.openBox<AppConfig>(_boxName);
+      final boxManager = ref.read(hiveBoxManagerProvider);
+      _configBox = await boxManager.openBox<AppConfig>(_boxName);
       final savedConfig = _configBox!.get('config');
 
       if (savedConfig != null) {
@@ -603,41 +637,6 @@ class AppConfigNotifier extends StateNotifier<AppConfig> {
     }
   }
 
-  /// CRITICAL: Dispose pattern from GOLD STANDARD
-  @override
-  void dispose() {
-    if (kDebugMode) {
-      debugPrint('🧹 [AppConfig] Starting disposal');
-    }
-
-    try {
-      _isDisposed = true;
-
-      // Close Hive box if open
-      if (_configBox != null && _configBox!.isOpen) {
-        _configBox!.close();
-        if (kDebugMode) {
-          debugPrint('✅ [AppConfig] Config box closed');
-        }
-      }
-
-      // Null assignment for memory cleanup
-      _configBox = null;
-      _initCompleter = null;
-
-      if (kDebugMode) {
-        debugPrint('✅ [AppConfig] Disposal completed');
-      }
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        debugPrint('❌ [AppConfig] Error during disposal: $e');
-        debugPrint('📍 Stack trace: $stackTrace');
-      }
-    } finally {
-      // Always call super.dispose() even if errors occur
-      super.dispose();
-    }
-  }
 }
 
 // Helper providers for specific config values

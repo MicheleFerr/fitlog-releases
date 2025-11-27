@@ -101,23 +101,18 @@ final exerciseActivityRepositoryProvider = Provider<ExerciseActivityRepository>(
 // NOTE: WorkoutHistoryRepository removed - using unified HybridWorkoutRepository instead
 
 // Current workout state provider
-final currentWorkoutProvider = StateNotifierProvider<CurrentWorkoutNotifier, Workout?>(
-  (ref) {
-    final notifier = CurrentWorkoutNotifier(ref);
-    notifier._startCleanupTimer();
+final currentWorkoutProvider = NotifierProvider<CurrentWorkoutNotifier, Workout?>(CurrentWorkoutNotifier.new);
 
+class CurrentWorkoutNotifier extends Notifier<Workout?> {
+  @override
+  Workout? build() {
+    _startCleanupTimer();
     ref.onDispose(() {
-      notifier._cleanupTimer?.cancel();
+      _isDisposed = true;
+      _cleanupTimer?.cancel();
     });
-
-    return notifier;
-  },
-);
-
-class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
-  CurrentWorkoutNotifier(this.ref) : super(null);
-
-  final Ref ref;
+    return null;
+  }
 
   // CRITICAL FIX: Track disposal state to prevent operations after dispose
   bool _isDisposed = false;
@@ -1976,26 +1971,15 @@ class CurrentWorkoutNotifier extends StateNotifier<Workout?> {
     }
   }
 
-  @override
-  void dispose() {
-    // CRITICAL FIX: Mark as disposed to prevent async operations from modifying state
-    _isDisposed = true;
-    debugLog(LogCategory.workout, '🔒 [WorkoutProvider] Provider disposed - blocking future async operations');
-
-    // Cancel cleanup timer
-    _cleanupTimer?.cancel();
-
-    super.dispose();
-  }
+  // Note: Notifier doesn't have dispose() - use ref.onDispose() in build() instead
 }
 
 // Workout history provider (for future implementation)
-final workoutHistoryProvider = StateNotifierProvider<WorkoutHistoryNotifier, List<Workout>>((ref) {
-  return WorkoutHistoryNotifier();
-});
+final workoutHistoryProvider = NotifierProvider<WorkoutHistoryNotifier, List<Workout>>(WorkoutHistoryNotifier.new);
 
-class WorkoutHistoryNotifier extends StateNotifier<List<Workout>> {
-  WorkoutHistoryNotifier() : super([]);
+class WorkoutHistoryNotifier extends Notifier<List<Workout>> {
+  @override
+  List<Workout> build() => [];
 
   void addCompletedWorkout(Workout workout) {
     if (workout.isCompleted) {

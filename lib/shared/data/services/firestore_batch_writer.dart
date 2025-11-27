@@ -176,10 +176,9 @@ class BatchOperation {
 /// Gestisce una coda globale di operazioni Firestore che vengono
 /// eseguite in batch per ottimizzare performance e costi.
 ///
-/// Espone lo stato del sync tramite StateNotifier<BatchSyncState>
+/// Espone lo stato del sync tramite Notifier\<BatchSyncState\>
 /// per permettere UI feedback in real-time.
-class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
-  FirestoreBatchWriter(this.ref) : super(BatchSyncState.idle);
+class FirestoreBatchWriter extends Notifier<BatchSyncState> {
   /// Limite Firestore: massimo 500 operazioni per batch
   static const int _maxBatchSize = 500;
 
@@ -188,9 +187,6 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
 
   /// Auto-flush se la coda raggiunge 10 operazioni (threshold)
   static const int _autoFlushThreshold = 10;
-
-  /// Riferimento al ProviderContainer
-  final Ref ref;
 
   /// Coda di operazioni in attesa di flush
   final List<BatchOperation> _queue = [];
@@ -201,8 +197,8 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
   /// Flag per prevenire flush concorrenti
   bool _flushInProgress = false;
 
-  /// Inizializza il batch writer
-  void initialize() {
+  @override
+  BatchSyncState build() {
     // Cleanup quando il provider viene disposed
     ref.onDispose(() {
       _autoFlushTimer?.cancel();
@@ -216,6 +212,8 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
         flushQueue();
       }
     });
+
+    return BatchSyncState.idle;
   }
 
   /// Aggiunge un'operazione alla coda batch
@@ -283,7 +281,7 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
   /// - Nessuna race condition tra operazioni correlate
   ///
   /// **Progress Tracking**:
-  /// - Emette stato di progresso via StateNotifier
+  /// - Emette stato di progresso via Notifier
   /// - UI può mostrare progress bar in real-time
   Future<void> flushQueue() async {
     if (_queue.isEmpty) {
@@ -468,21 +466,6 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
     await flushQueue();
   }
 
-  @override
-  void dispose() {
-    _autoFlushTimer?.cancel();
-
-    // CRITICAL: Flush operazioni rimanenti prima del dispose
-    if (_queue.isNotEmpty && !_flushInProgress) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [BatchWriter] Flushing ${_queue.length} pending operations on dispose');
-      }
-      // Fire-and-forget: non possiamo await in dispose
-      flushQueue();
-    }
-
-    super.dispose();
-  }
 }
 
 /// Provider per FirestoreBatchWriter
@@ -490,8 +473,6 @@ class FirestoreBatchWriter extends StateNotifier<BatchSyncState> {
 /// Usa keepAlive: true per mantenere lo stato globale
 /// anche quando non ci sono listener attivi.
 final firestoreBatchWriterProvider =
-    StateNotifierProvider<FirestoreBatchWriter, BatchSyncState>((ref) {
-  final writer = FirestoreBatchWriter(ref);
-  writer.initialize();
-  return writer;
-});
+    NotifierProvider<FirestoreBatchWriter, BatchSyncState>(
+  FirestoreBatchWriter.new,
+);

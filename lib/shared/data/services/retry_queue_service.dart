@@ -97,9 +97,7 @@ class RetryMetadata {
 ///
 /// Gestisce una coda di operazioni fallite che vengono ritentate
 /// automaticamente con exponential backoff.
-class RetryQueueService extends StateNotifier<void> {
-  RetryQueueService(this.ref) : super(null);
-
+class RetryQueueService extends Notifier<void> {
   /// Max retry attempts prima di dichiarare fallimento permanente
   static const int _maxRetryAttempts = 5;
 
@@ -112,9 +110,6 @@ class RetryQueueService extends StateNotifier<void> {
   /// Check intervallo per processing della queue (ogni 5 secondi)
   static const Duration _checkInterval = Duration(seconds: 5);
 
-  /// Riferimento al ProviderContainer
-  final Ref ref;
-
   /// Queue di operazioni in retry (key: collection/documentId)
   final Map<String, RetryMetadata> _retryQueue = {};
 
@@ -124,8 +119,8 @@ class RetryQueueService extends StateNotifier<void> {
   /// Flag per prevenire processing concorrenti
   bool _processingInProgress = false;
 
-  /// Inizializza il retry queue service
-  void initialize() {
+  @override
+  void build() {
     // Start periodic check timer
     _checkTimer = Timer.periodic(_checkInterval, (_) {
       if (kDebugMode) {
@@ -347,20 +342,12 @@ class RetryQueueService extends StateNotifier<void> {
     }
   }
 
-  @override
-  void dispose() {
-    _checkTimer?.cancel();
-    super.dispose();
-  }
 }
 
 /// Provider per RetryQueueService
 ///
 /// Usa keepAlive implicito per mantenere lo stato globale
 /// anche quando non ci sono listener attivi.
-final retryQueueServiceProvider =
-    StateNotifierProvider<RetryQueueService, void>((ref) {
-  final service = RetryQueueService(ref);
-  service.initialize();
-  return service;
-});
+final retryQueueServiceProvider = NotifierProvider<RetryQueueService, void>(
+  RetryQueueService.new,
+);

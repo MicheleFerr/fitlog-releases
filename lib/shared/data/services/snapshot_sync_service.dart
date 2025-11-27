@@ -143,14 +143,9 @@ class EntitySnapshot {
 ///
 /// Gestisce il tracking di entity snapshots e la sincronizzazione
 /// differenziale usando MD5 checksums per rilevare modifiche.
-class SnapshotSyncService extends StateNotifier<void> {
-  SnapshotSyncService(this.ref) : super(null);
-
+class SnapshotSyncService extends Notifier<void> {
   /// Periodic sync ogni 5 minuti
   static const Duration _periodicSyncInterval = Duration(minutes: 5);
-
-  /// Riferimento al ProviderContainer
-  final Ref ref;
 
   /// Map di entity snapshots (key: collection/documentId)
   final Map<String, EntitySnapshot> _snapshots = {};
@@ -161,8 +156,8 @@ class SnapshotSyncService extends StateNotifier<void> {
   /// Flag per prevenire sync concorrenti
   bool _syncInProgress = false;
 
-  /// Inizializza il sync service
-  void initialize() {
+  @override
+  void build() {
     // Start periodic sync timer
     _periodicSyncTimer = Timer.periodic(_periodicSyncInterval, (_) {
       if (kDebugMode) {
@@ -384,30 +379,12 @@ class SnapshotSyncService extends StateNotifier<void> {
     }
   }
 
-  @override
-  void dispose() {
-    _periodicSyncTimer?.cancel();
-
-    // CRITICAL: Sync operazioni rimanenti prima del dispose
-    if (_snapshots.values.where((s) => s.pendingSync).isNotEmpty && !_syncInProgress) {
-      if (kDebugMode) {
-        debugPrint('⚠️ [SnapshotSync] Syncing ${_getPendingCount()} pending entities on dispose');
-      }
-      // Fire-and-forget: non possiamo await in dispose
-      syncPendingEntities();
-    }
-
-    super.dispose();
-  }
 }
 
 /// Provider per SnapshotSyncService
 ///
 /// Usa keepAlive implicito per mantenere lo stato globale
 /// anche quando non ci sono listener attivi.
-final snapshotSyncServiceProvider =
-    StateNotifierProvider<SnapshotSyncService, void>((ref) {
-  final service = SnapshotSyncService(ref);
-  service.initialize();
-  return service;
-});
+final snapshotSyncServiceProvider = NotifierProvider<SnapshotSyncService, void>(
+  SnapshotSyncService.new,
+);

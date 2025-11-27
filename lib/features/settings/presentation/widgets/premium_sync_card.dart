@@ -66,16 +66,14 @@ class SyncState {
 }
 
 /// Provider for sync state
-final syncStateProvider = StateNotifierProvider<SyncStateNotifier, SyncState>((ref) {
-  return SyncStateNotifier(ref);
-});
+final syncStateProvider = NotifierProvider<SyncStateNotifier, SyncState>(SyncStateNotifier.new);
 
-class SyncStateNotifier extends StateNotifier<SyncState> {
-  
-  SyncStateNotifier(this.ref) : super(SyncState()) {
+class SyncStateNotifier extends Notifier<SyncState> {
+  @override
+  SyncState build() {
     _loadLastSyncTime();
+    return SyncState();
   }
-  final Ref ref;
   
   Future<void> _loadLastSyncTime() async {
     // Load from SharedPreferences if needed

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gymbro_flutter_new/core/errors/error_handler.dart';
 
-/// Mixin to add error handling capabilities to StateNotifier
-mixin ErrorHandlerMixin<T> on StateNotifier<T> {
+/// Mixin to add error handling capabilities to Notifier
+mixin ErrorHandlerMixin<T> on Notifier<T> {
   BuildContext? _context;
 
   /// Set the context for error handling UI
@@ -70,13 +70,13 @@ mixin ErrorHandlerMixin<T> on StateNotifier<T> {
   }
 }
 
-/// Base class for error-aware state notifiers
-abstract class ErrorAwareStateNotifier<T> extends StateNotifier<T> with ErrorHandlerMixin<T> {
-  ErrorAwareStateNotifier(super.state);
+/// Base class for error-aware notifiers
+abstract class ErrorAwareNotifier<T> extends Notifier<T> with ErrorHandlerMixin<T> {
+  // Subclasses must implement build()
 }
 
-/// Extension to make any StateNotifier error-aware
-extension ErrorHandlerExtension<T> on StateNotifier<T> {
+/// Extension to make any Notifier error-aware
+extension ErrorHandlerExtension<T> on Notifier<T> {
   /// Execute operation with error handling
   Future<R?> withErrorHandling<R>(
     Future<R> Function() operation, {

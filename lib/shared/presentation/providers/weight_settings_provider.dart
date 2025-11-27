@@ -11,42 +11,36 @@ final weightSettingsDataSourceProvider = Provider<WeightSettingsDataSource>((ref
   return WeightSettingsDataSource(boxManager);
 });
 
-/// Weight Settings Provider (StateNotifier)
-final weightSettingsProvider = StateNotifierProvider<WeightSettingsNotifier, AsyncValue<WeightSettings>>((ref) {
-  final dataSource = ref.watch(weightSettingsDataSourceProvider);
-  final unit = ref.watch(measurementUnitProvider);
-  return WeightSettingsNotifier(dataSource, unit);
-});
+/// Weight Settings Provider (AsyncNotifier)
+final weightSettingsProvider = AsyncNotifierProvider<WeightSettingsNotifier, WeightSettings>(
+  WeightSettingsNotifier.new,
+);
 
-class WeightSettingsNotifier extends StateNotifier<AsyncValue<WeightSettings>> {
-  WeightSettingsNotifier(this._dataSource, this._unit) : super(const AsyncValue.loading()) {
-    _loadSettings();
+class WeightSettingsNotifier extends AsyncNotifier<WeightSettings> {
+  @override
+  Future<WeightSettings> build() async {
+    final dataSource = ref.watch(weightSettingsDataSourceProvider);
+    final unit = ref.watch(measurementUnitProvider);
+
+    final settings = await dataSource.getSettings();
+
+    if (settings == null) {
+      // First time: use defaults based on unit
+      final defaultSettings = unit == 'kg'
+          ? WeightSettings.defaultKg()
+          : WeightSettings.defaultLbs();
+
+      await dataSource.saveSettings(defaultSettings);
+      return defaultSettings;
+    }
+
+    return settings;
   }
 
-  final WeightSettingsDataSource _dataSource;
-  final String _unit; // 'kg' or 'lbs'
-
-  /// Load settings from Hive
-  Future<void> _loadSettings() async {
+  /// Refresh settings from data source
+  Future<void> refresh() async {
     state = const AsyncValue.loading();
-
-    try {
-      final settings = await _dataSource.getSettings();
-
-      if (settings == null) {
-        // First time: use defaults based on unit
-        final defaultSettings = _unit == 'kg'
-            ? WeightSettings.defaultKg()
-            : WeightSettings.defaultLbs();
-
-        await _dataSource.saveSettings(defaultSettings);
-        state = AsyncValue.data(defaultSettings);
-      } else {
-        state = AsyncValue.data(settings);
-      }
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-    }
+    state = await AsyncValue.guard(() => build());
   }
 
   /// Update default increment
@@ -99,7 +93,8 @@ class WeightSettingsNotifier extends StateNotifier<AsyncValue<WeightSettings>> {
 
   /// Reset to defaults
   Future<void> resetToDefaults() async {
-    final defaultSettings = _unit == 'kg'
+    final unit = ref.read(measurementUnitProvider);
+    final defaultSettings = unit == 'kg'
         ? WeightSettings.defaultKg()
         : WeightSettings.defaultLbs();
 
@@ -108,9 +103,11 @@ class WeightSettingsNotifier extends StateNotifier<AsyncValue<WeightSettings>> {
 
   /// Save settings (local Hive + optional Firebase sync)
   Future<void> _saveSettings(WeightSettings settings) async {
+    final dataSource = ref.read(weightSettingsDataSourceProvider);
+
     try {
       // 1. Save to Hive (instant, local-first)
-      await _dataSource.saveSettings(settings);
+      await dataSource.saveSettings(settings);
 
       // 2. Update state
       state = AsyncValue.data(settings);

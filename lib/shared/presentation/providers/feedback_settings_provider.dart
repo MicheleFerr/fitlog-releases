@@ -9,37 +9,32 @@ final feedbackSettingsDataSourceProvider = Provider<FeedbackSettingsDataSource>(
   return FeedbackSettingsDataSource(boxManager);
 });
 
-/// Feedback Settings Provider (StateNotifier)
-final feedbackSettingsProvider = StateNotifierProvider<FeedbackSettingsNotifier, AsyncValue<FeedbackSettings>>((ref) {
-  final dataSource = ref.watch(feedbackSettingsDataSourceProvider);
-  return FeedbackSettingsNotifier(dataSource);
-});
+/// Feedback Settings Provider (AsyncNotifier)
+final feedbackSettingsProvider = AsyncNotifierProvider<FeedbackSettingsNotifier, FeedbackSettings>(
+  FeedbackSettingsNotifier.new,
+);
 
-class FeedbackSettingsNotifier extends StateNotifier<AsyncValue<FeedbackSettings>> {
-  FeedbackSettingsNotifier(this._dataSource) : super(const AsyncValue.loading()) {
-    _loadSettings();
+class FeedbackSettingsNotifier extends AsyncNotifier<FeedbackSettings> {
+  @override
+  Future<FeedbackSettings> build() async {
+    final dataSource = ref.watch(feedbackSettingsDataSourceProvider);
+
+    final settings = await dataSource.getSettings();
+
+    if (settings == null) {
+      // First time: use defaults
+      final defaultSettings = FeedbackSettings.defaults();
+      await dataSource.saveSettings(defaultSettings);
+      return defaultSettings;
+    }
+
+    return settings;
   }
 
-  final FeedbackSettingsDataSource _dataSource;
-
-  /// Load settings from Hive
-  Future<void> _loadSettings() async {
+  /// Refresh settings from data source
+  Future<void> refresh() async {
     state = const AsyncValue.loading();
-
-    try {
-      final settings = await _dataSource.getSettings();
-
-      if (settings == null) {
-        // First time: use defaults
-        final defaultSettings = FeedbackSettings.defaults();
-        await _dataSource.saveSettings(defaultSettings);
-        state = AsyncValue.data(defaultSettings);
-      } else {
-        state = AsyncValue.data(settings);
-      }
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-    }
+    state = await AsyncValue.guard(() => build());
   }
 
   /// Toggle haptic feedback on/off
@@ -74,9 +69,11 @@ class FeedbackSettingsNotifier extends StateNotifier<AsyncValue<FeedbackSettings
 
   /// Save settings (local Hive)
   Future<void> _saveSettings(FeedbackSettings settings) async {
+    final dataSource = ref.read(feedbackSettingsDataSourceProvider);
+
     try {
       // 1. Save to Hive (instant, local-first)
-      await _dataSource.saveSettings(settings);
+      await dataSource.saveSettings(settings);
 
       // 2. Update state
       state = AsyncValue.data(settings);

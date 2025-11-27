@@ -46,10 +46,10 @@ class WorkoutScreenState with _$WorkoutScreenState {
 ///
 /// It separates business logic from UI, making the screen more testable
 /// and maintainable.
-class WorkoutScreenController extends StateNotifier<WorkoutScreenState> {
-  WorkoutScreenController(this.ref) : super(const WorkoutScreenState());
+class WorkoutScreenController extends Notifier<WorkoutScreenState> {
+  @override
+  WorkoutScreenState build() => const WorkoutScreenState();
 
-  final Ref ref;
   final _interstitialAdService = InterstitialAdService();
 
   /// Start a new workout from a template or empty
@@ -405,17 +405,9 @@ class WorkoutScreenController extends StateNotifier<WorkoutScreenState> {
     _interstitialAdService.preloadWorkoutCompleteAd();
   }
 
-  @override
-  void dispose() {
-    if (kDebugMode) {
-      debugPrint('🧹 [WorkoutScreenController] Disposing');
-    }
-    super.dispose();
-  }
+  // Note: Notifier doesn't have dispose() - cleanup handled automatically
 }
 
 /// Provider for WorkoutScreenController
 final workoutScreenControllerProvider =
-    StateNotifierProvider<WorkoutScreenController, WorkoutScreenState>(
-  (ref) => WorkoutScreenController(ref),
-);
+    NotifierProvider<WorkoutScreenController, WorkoutScreenState>(WorkoutScreenController.new);

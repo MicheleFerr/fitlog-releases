@@ -9,37 +9,32 @@ final historyViewSettingsDataSourceProvider = Provider<HistoryViewSettingsDataSo
   return HistoryViewSettingsDataSource(boxManager);
 });
 
-/// History View Settings Provider (StateNotifier)
-final historyViewSettingsProvider = StateNotifierProvider<HistoryViewSettingsNotifier, AsyncValue<HistoryViewSettings>>((ref) {
-  final dataSource = ref.watch(historyViewSettingsDataSourceProvider);
-  return HistoryViewSettingsNotifier(dataSource);
-});
+/// History View Settings Provider (AsyncNotifier)
+final historyViewSettingsProvider = AsyncNotifierProvider<HistoryViewSettingsNotifier, HistoryViewSettings>(
+  HistoryViewSettingsNotifier.new,
+);
 
-class HistoryViewSettingsNotifier extends StateNotifier<AsyncValue<HistoryViewSettings>> {
-  HistoryViewSettingsNotifier(this._dataSource) : super(const AsyncValue.loading()) {
-    _loadSettings();
+class HistoryViewSettingsNotifier extends AsyncNotifier<HistoryViewSettings> {
+  @override
+  Future<HistoryViewSettings> build() async {
+    final dataSource = ref.watch(historyViewSettingsDataSourceProvider);
+
+    final settings = await dataSource.getSettings();
+
+    if (settings == null) {
+      // First time: use defaults
+      final defaultSettings = HistoryViewSettings.defaults();
+      await dataSource.saveSettings(defaultSettings);
+      return defaultSettings;
+    }
+
+    return settings;
   }
 
-  final HistoryViewSettingsDataSource _dataSource;
-
-  /// Load settings from Hive
-  Future<void> _loadSettings() async {
+  /// Refresh settings from data source
+  Future<void> refresh() async {
     state = const AsyncValue.loading();
-
-    try {
-      final settings = await _dataSource.getSettings();
-
-      if (settings == null) {
-        // First time: use defaults
-        final defaultSettings = HistoryViewSettings.defaults();
-        await _dataSource.saveSettings(defaultSettings);
-        state = AsyncValue.data(defaultSettings);
-      } else {
-        state = AsyncValue.data(settings);
-      }
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-    }
+    state = await AsyncValue.guard(() => build());
   }
 
   /// Change view mode
@@ -92,9 +87,11 @@ class HistoryViewSettingsNotifier extends StateNotifier<AsyncValue<HistoryViewSe
 
   /// Save settings (local Hive)
   Future<void> _saveSettings(HistoryViewSettings settings) async {
+    final dataSource = ref.read(historyViewSettingsDataSourceProvider);
+
     try {
       // 1. Save to Hive (instant, local-first)
-      await _dataSource.saveSettings(settings);
+      await dataSource.saveSettings(settings);
 
       // 2. Update state
       state = AsyncValue.data(settings);
