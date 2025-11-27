@@ -74,19 +74,11 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
         children: [
           CustomScrollView(
             slivers: [
-              // Compact header - Profile style
-              SliverToBoxAdapter(
-                child: _CompactTemplatesHeader(
-                  onViewModeToggle: _tabController.index == 0
-                      ? () => setState(() => _isGridView = !_isGridView)
-                      : null,
-                  isGridView: _isGridView,
-                ),
-              ),
-
-              // Metric cards row - Profile style
-              SliverToBoxAdapter(
-                child: _TemplateMetricsRow(
+              // Collapsible header with metrics - slides up when scrolling
+              SliverPersistentHeader(
+                pinned: false,
+                floating: true,
+                delegate: _CollapsibleTemplateHeaderDelegate(
                   myTemplatesCount: myTemplatesAsync.when(
                     data: (templates) => templates.length,
                     loading: () => 0,
@@ -94,14 +86,14 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
                   ),
                   publicTemplatesCount: templateState.publicTemplates.length,
                   avgRating: 4.8,
+                  onViewModeToggle: _tabController.index == 0
+                      ? () => setState(() => _isGridView = !_isGridView)
+                      : null,
+                  isGridView: _isGridView,
                 ),
               ),
 
-              const SliverToBoxAdapter(
-                child: SizedBox(height: AppSpacing.lg),
-              ),
-
-              // Tab bar - always visible, not inside expandable header
+              // Tab bar - always visible, pinned
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _SliverTabBarDelegate(
@@ -583,183 +575,206 @@ class _TemplatesHomeScreenState extends ConsumerState<TemplatesHomeScreen>
 }
 
 // ============================================================================
-// COMPACT HEADER - Profile Style
+// COLLAPSIBLE HEADER DELEGATE - Slides up when scrolling (like Stats)
 // ============================================================================
 
-class _CompactTemplatesHeader extends StatelessWidget {
-  const _CompactTemplatesHeader({
-    this.onViewModeToggle,
-    this.isGridView = true,
-  });
-
-  final VoidCallback? onViewModeToggle;
-  final bool isGridView;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top row with actions
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Back button (if needed)
-                IconButton(
-                  icon: SemanticIcon(
-                    icon: AppIcons.arrowBack,
-                    semanticLabel: l10n.back,
-                    size: AppIconSize.medium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  onPressed: () => Navigator.of(context).maybePop(),
-                ),
-                // View toggle
-                if (onViewModeToggle != null)
-                  IconButton(
-                    icon: SemanticIcon(
-                      icon: isGridView ? AppIcons.viewList : AppIcons.gridView,
-                      semanticLabel: isGridView ? l10n.listView : l10n.gridView,
-                      size: AppIconSize.medium,
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      onViewModeToggle!();
-                    },
-                  ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-
-            // Title
-            Text(
-              l10n.workoutTemplates,
-              style: context.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-
-            // Subtitle
-            Text(
-              l10n.workoutRoutines,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colors.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================================
-// METRIC CARDS ROW - Profile Style
-// ============================================================================
-
-class _TemplateMetricsRow extends StatelessWidget {
-  const _TemplateMetricsRow({
+class _CollapsibleTemplateHeaderDelegate extends SliverPersistentHeaderDelegate {
+  _CollapsibleTemplateHeaderDelegate({
     required this.myTemplatesCount,
     required this.publicTemplatesCount,
     required this.avgRating,
+    this.onViewModeToggle,
+    this.isGridView = true,
   });
 
   final int myTemplatesCount;
   final int publicTemplatesCount;
   final double avgRating;
+  final VoidCallback? onViewModeToggle;
+  final bool isGridView;
+
+  // Header expanded height (SafeArea + header + metrics + padding)
+  static const double _expandedHeight = 220.0;
+  // Collapsed height (0 = fully hidden)
+  static const double _collapsedHeight = 0.0;
 
   @override
-  Widget build(BuildContext context) {
+  double get minExtent => _collapsedHeight;
+
+  @override
+  double get maxExtent => _expandedHeight;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final l10n = AppLocalizations.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Row(
-        children: [
-          Expanded(
-            child: _MetricCard(
-              icon: AppIcons.folderOutlined,
-              value: '$myTemplatesCount',
-              label: l10n.myTemplates,
-              color: context.colors.primary,
-            ),
+    // Calculate collapse progress (0 = expanded, 1 = collapsed)
+    final progress = (shrinkOffset / maxExtent).clamp(0.0, 1.0);
+    final opacity = 1.0 - progress;
+
+    // Don't render if fully collapsed
+    if (opacity <= 0.01) return const SizedBox.shrink();
+
+    return Opacity(
+      opacity: opacity,
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          boxShadow: shrinkOffset > 0
+              ? [
+                  BoxShadow(
+                    color: context.colors.onSurface.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top row with actions
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Back button
+                    IconButton(
+                      icon: SemanticIcon(
+                        icon: AppIcons.arrowBack,
+                        semanticLabel: l10n.back,
+                        size: AppIconSize.medium,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      onPressed: () => Navigator.of(context).maybePop(),
+                    ),
+                    // View toggle (only on My Templates)
+                    if (onViewModeToggle != null)
+                      IconButton(
+                        icon: SemanticIcon(
+                          icon: isGridView ? AppIcons.viewList : AppIcons.gridView,
+                          semanticLabel: isGridView ? l10n.listView : l10n.gridView,
+                          size: AppIconSize.medium,
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          onViewModeToggle!();
+                        },
+                      )
+                    else
+                      const SizedBox(width: 48), // Placeholder for alignment
+                  ],
+                ),
+              ),
+
+              // Title and subtitle
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.workoutTemplates,
+                      style: context.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.workoutRoutines,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.md),
+
+              // Metrics row
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildMetricCard(
+                        context,
+                        icon: AppIcons.folderOutlined,
+                        value: '$myTemplatesCount',
+                        label: l10n.myTemplates,
+                        color: context.colors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: _buildMetricCard(
+                        context,
+                        icon: AppIcons.public,
+                        value: '$publicTemplatesCount',
+                        label: l10n.discover,
+                        color: context.colors.secondary,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: _buildMetricCard(
+                        context,
+                        icon: AppIcons.star,
+                        value: avgRating.toStringAsFixed(1),
+                        label: l10n.avgRating,
+                        color: context.colors.tertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.sm),
+            ],
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: _MetricCard(
-              icon: AppIcons.public,
-              value: '$publicTemplatesCount',
-              label: l10n.discover,
-              color: context.colors.secondary,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: _MetricCard(
-              icon: AppIcons.star,
-              value: avgRating.toStringAsFixed(1),
-              label: l10n.avgRating,
-              color: context.colors.tertiary,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
-}
 
-class _MetricCard extends StatelessWidget {
-  const _MetricCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildMetricCard(
+    BuildContext context, {
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.sm,
+        horizontal: AppSpacing.xs,
+      ),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: SemanticIcon(
-              icon: icon,
-              semanticLabel: label,
-              size: AppIconSize.medium,
+          SemanticIcon(
+            icon: icon,
+            semanticLabel: label,
+            size: AppIconSize.small,
+            color: color,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            value,
+            style: context.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            value,
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
           Text(
             label,
             style: context.textTheme.labelSmall?.copyWith(
@@ -772,6 +787,15 @@ class _MetricCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  bool shouldRebuild(_CollapsibleTemplateHeaderDelegate oldDelegate) {
+    return myTemplatesCount != oldDelegate.myTemplatesCount ||
+           publicTemplatesCount != oldDelegate.publicTemplatesCount ||
+           avgRating != oldDelegate.avgRating ||
+           onViewModeToggle != oldDelegate.onViewModeToggle ||
+           isGridView != oldDelegate.isGridView;
   }
 }
 
