@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/exercise.dart';
 import 'package:gymbro_flutter_new/features/workout/domain/entities/workout_template.dart' as wt;
 import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/providers/workout_template_provider.dart';
+import 'package:gymbro_flutter_new/features/workout/presentation/widgets/template_save_dialog.dart';
 import 'package:gymbro_flutter_new/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:gymbro_flutter_new/features/analytics/domain/entities/pr_celebration.dart';
 import 'package:gymbro_flutter_new/features/analytics/presentation/providers/achievement_provider.dart';
@@ -109,6 +111,9 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
   ///
   /// Completes the workout, tracks analytics, shows PR celebrations if any,
   /// and navigates back to home after showing completion ad.
+  ///
+  /// If the workout was started from a template and has modifications,
+  /// shows a dialog to let user choose: update template, save as new, or keep original.
   Future<void> endWorkout({
     required BuildContext context,
   }) async {
@@ -124,6 +129,35 @@ class WorkoutScreenController extends Notifier<WorkoutScreenState> {
 
         if (kDebugMode) {
           debugPrint('🎉 [WorkoutScreenController] First workout completed! Onboarding Phase 2 complete');
+        }
+      }
+
+      // Check if workout was started from a template
+      final currentWorkout = ref.read(currentWorkoutProvider);
+      if (currentWorkout != null &&
+          currentWorkout.templateId != null &&
+          currentWorkout.templateId!.isNotEmpty &&
+          context.mounted) {
+        // Fetch original template
+        final originalTemplate = await ref.read(
+          templateByIdProvider(currentWorkout.templateId!).future,
+        );
+
+        if (originalTemplate != null && context.mounted) {
+          if (kDebugMode) {
+            debugPrint('📝 [WorkoutScreenController] Workout from template, showing save dialog');
+          }
+
+          // Show template save dialog
+          await showTemplateSaveDialog(
+            context: context,
+            completedWorkout: currentWorkout,
+            originalTemplate: originalTemplate,
+          );
+
+          if (kDebugMode) {
+            debugPrint('📝 [WorkoutScreenController] Template save dialog completed');
+          }
         }
       }
 

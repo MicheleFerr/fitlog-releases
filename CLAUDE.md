@@ -1599,6 +1599,17 @@ Version changes auto-update CONTEXT.md milestone table:
 - ❌ `Template` in 3 feature diverse
 - ✅ Entità condivise vanno in `lib/shared/domain/entities/`
 
+#### MANTRA 2.5: NOMENCLATURA CHIARA - Exercise vs ExerciseDefinition
+```
+📛 "NOMI SIMILI ≠ DUPLICATI - Verificare lo scopo prima di consolidare"
+```
+**Esempio CORRETTO**:
+- `Exercise` (workout) - Runtime workout instance con sets/reps/RPE
+- `ExerciseDefinition` (exercise_database) - Static catalog metadata
+
+**NON sono duplicati** - Sono due entità diverse con nomi simili ma scopi diversi.
+Verificare SEMPRE il contenuto dei file prima di assumere duplicazione.
+
 #### MANTRA 3: UN REPOSITORY PER ENTITÀ
 ```
 🏛️ "Ogni entità ha UN SOLO repository che la gestisce"
@@ -1753,7 +1764,9 @@ STOP! Rispondi a queste domande:
 
 | Dominio | File Canonico | NON DUPLICARE |
 |---------|---------------|---------------|
-| **Exercise entity** | `lib/shared/domain/entities/exercise.dart` | Mai creare altra classe Exercise |
+| **Exercise (workout instance)** | `lib/features/workout/domain/entities/exercise.dart` | Runtime workout tracking - sets, reps, RPE |
+| **ExerciseDefinition (catalog)** | `lib/features/exercise_database/domain/entities/exercise.dart` | Static exercise metadata - muscles, equipment |
+| ⚠️ **NOT duplicates** | Different purposes, different layers | Both valid SSoT for their domains |
 | **Workout entity** | `lib/features/workout/domain/entities/workout.dart` | Una sola definizione |
 | **User profile** | `unifiedUserProfileProvider` | Mai creare altri user provider |
 | **Analytics** | `UnifiedAnalyticsProvider` (da creare) | Consolidare 8 provider esistenti |

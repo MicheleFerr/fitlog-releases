@@ -9977,6 +9977,104 @@
   "@templateSaved": {
     "description": "Template saved success message"
   },
+  "saveTemplateChanges": "Save Template Changes?",
+  "@saveTemplateChanges": {
+    "description": "Dialog title for template save options"
+  },
+  "workoutModifiedFromTemplate": "Your workout was modified from \"{templateName}\"",
+  "@workoutModifiedFromTemplate": {
+    "description": "Subtitle explaining the workout was from a template",
+    "placeholders": {
+      "templateName": {
+        "type": "String",
+        "example": "Push Day"
+      }
+    }
+  },
+  "changesDetected": "Changes detected:",
+  "@changesDetected": {
+    "description": "Label for changes summary"
+  },
+  "updateTemplate": "Update Template",
+  "@updateTemplate": {
+    "description": "Option to update existing template"
+  },
+  "updateTemplateDescription": "Apply changes to the original template",
+  "@updateTemplateDescription": {
+    "description": "Description for update template option"
+  },
+  "saveAsNewTemplate": "Save as New Template",
+  "@saveAsNewTemplate": {
+    "description": "Option to save as new template"
+  },
+  "saveAsNewTemplateDescription": "Keep original and create a copy with changes",
+  "@saveAsNewTemplateDescription": {
+    "description": "Description for save as new template option"
+  },
+  "keepOriginal": "Don't Save Changes",
+  "@keepOriginal": {
+    "description": "Option to keep original template unchanged"
+  },
+  "keepOriginalDescription": "Workout saved to history, template unchanged",
+  "@keepOriginalDescription": {
+    "description": "Description for keep original option"
+  },
+  "exercisesAdded": "{count} exercise(s) added",
+  "@exercisesAdded": {
+    "description": "Change summary for added exercises",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "exercisesRemoved": "{count} exercise(s) removed",
+  "@exercisesRemoved": {
+    "description": "Change summary for removed exercises",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "newExercisesAdded": "New exercises added",
+  "@newExercisesAdded": {
+    "description": "Change summary for new exercises"
+  },
+  "exercisesReplaced": "Some exercises replaced",
+  "@exercisesReplaced": {
+    "description": "Change summary for replaced exercises"
+  },
+  "setCountChanged": "Set count modified",
+  "@setCountChanged": {
+    "description": "Change summary for changed set count"
+  },
+  "templateUpdated": "Template updated successfully",
+  "@templateUpdated": {
+    "description": "Success message after updating template"
+  },
+  "templateCreated": "New template created",
+  "@templateCreated": {
+    "description": "Success message after creating new template"
+  },
+  "failedToSaveTemplate": "Failed to save template",
+  "@failedToSaveTemplate": {
+    "description": "Error message when template save fails"
+  },
+  "pleaseEnterTemplateName": "Please enter a template name",
+  "@pleaseEnterTemplateName": {
+    "description": "Validation message for empty template name"
+  },
+  "enterTemplateName": "Enter template name",
+  "@enterTemplateName": {
+    "description": "Hint text for template name input"
+  },
+  "selected": "Selected",
+  "@selected": {
+    "description": "Accessibility label for selected option"
+  },
   "errorSavingTemplate": "Error saving template",
   "@errorSavingTemplate": {
     "description": "Template save error message"

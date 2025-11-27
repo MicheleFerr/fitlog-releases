@@ -506,10 +506,10 @@ abstract class AppLocalizations {
   /// **'You have completed the complete FitLog Pro tutorial. Now you\'re ready to start your workouts!'**
   String get onboardingCompletedMessage;
 
-  /// Selected count suffix
+  /// Accessibility label for selected option
   ///
   /// In en, this message translates to:
-  /// **'selected'**
+  /// **'Selected'**
   String get selected;
 
   /// Title for the features overview step
@@ -15110,10 +15110,10 @@ abstract class AppLocalizations {
   /// **'The template will be saved to Firebase and available on all your devices'**
   String get templateSyncInfo;
 
-  /// Template name required validation
+  /// Hint text for template name input
   ///
   /// In en, this message translates to:
-  /// **'Enter a template name'**
+  /// **'Enter template name'**
   String get enterTemplateName;
 
   /// Saving to Firebase loading message
@@ -15163,6 +15163,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Template saved successfully'**
   String get templateSaved;
+
+  /// Dialog title for template save options
+  ///
+  /// In en, this message translates to:
+  /// **'Save Template Changes?'**
+  String get saveTemplateChanges;
+
+  /// Subtitle explaining the workout was from a template
+  ///
+  /// In en, this message translates to:
+  /// **'Your workout was modified from \"{templateName}\"'**
+  String workoutModifiedFromTemplate(String templateName);
+
+  /// Label for changes summary
+  ///
+  /// In en, this message translates to:
+  /// **'Changes detected:'**
+  String get changesDetected;
+
+  /// Option to update existing template
+  ///
+  /// In en, this message translates to:
+  /// **'Update Template'**
+  String get updateTemplate;
+
+  /// Description for update template option
+  ///
+  /// In en, this message translates to:
+  /// **'Apply changes to the original template'**
+  String get updateTemplateDescription;
+
+  /// Option to save as new template
+  ///
+  /// In en, this message translates to:
+  /// **'Save as New Template'**
+  String get saveAsNewTemplate;
+
+  /// Description for save as new template option
+  ///
+  /// In en, this message translates to:
+  /// **'Keep original and create a copy with changes'**
+  String get saveAsNewTemplateDescription;
+
+  /// Option to keep original template unchanged
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t Save Changes'**
+  String get keepOriginal;
+
+  /// Description for keep original option
+  ///
+  /// In en, this message translates to:
+  /// **'Workout saved to history, template unchanged'**
+  String get keepOriginalDescription;
+
+  /// Change summary for added exercises
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercise(s) added'**
+  String exercisesAdded(int count);
+
+  /// Change summary for removed exercises
+  ///
+  /// In en, this message translates to:
+  /// **'{count} exercise(s) removed'**
+  String exercisesRemoved(int count);
+
+  /// Change summary for new exercises
+  ///
+  /// In en, this message translates to:
+  /// **'New exercises added'**
+  String get newExercisesAdded;
+
+  /// Change summary for replaced exercises
+  ///
+  /// In en, this message translates to:
+  /// **'Some exercises replaced'**
+  String get exercisesReplaced;
+
+  /// Change summary for changed set count
+  ///
+  /// In en, this message translates to:
+  /// **'Set count modified'**
+  String get setCountChanged;
+
+  /// Success message after updating template
+  ///
+  /// In en, this message translates to:
+  /// **'Template updated successfully'**
+  String get templateUpdated;
+
+  /// Success message after creating new template
+  ///
+  /// In en, this message translates to:
+  /// **'New template created'**
+  String get templateCreated;
+
+  /// Error message when template save fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save template'**
+  String get failedToSaveTemplate;
+
+  /// Validation message for empty template name
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a template name'**
+  String get pleaseEnterTemplateName;
 
   /// Template save error message
   ///

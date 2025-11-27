@@ -140,7 +140,13 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
         await _cacheTemplates(cloudTemplates);
         return cloudTemplates;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      // CRITICAL: Log the error - this was silently failing before!
+      if (kDebugMode) {
+        debugPrint('❌ Firebase getAllTemplates ERROR: $e');
+        debugPrint('❌ Stack trace: $stackTrace');
+        debugPrint('❌ Falling back to cache...');
+      }
     }
 
     // Fallback alla cache locale se cloud non disponibile
@@ -390,6 +396,7 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
   // METODI PRIVATI
 
   /// Carica template dal cloud (rate-limited)
+  /// NOTE: Uses fallback query without orderBy if index is missing
   Future<List<WorkoutTemplate>> _getTemplatesFromCloud() async {
     if (_auth.currentUser == null) return [];
 
@@ -398,11 +405,26 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
         debugPrint('🔥 Firebase: Getting templates for user ${_auth.currentUser!.uid}');
       }
 
-      final querySnapshot = await _firestore
-          .collection(_templatesCollection)
-          .where('userId', isEqualTo: _auth.currentUser!.uid)
-          .orderBy('updatedAt', descending: true)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+
+      try {
+        // Try with orderBy first (requires composite index)
+        querySnapshot = await _firestore
+            .collection(_templatesCollection)
+            .where('userId', isEqualTo: _auth.currentUser!.uid)
+            .orderBy('updatedAt', descending: true)
+            .get();
+      } catch (e) {
+        // Fallback: query without orderBy if index is missing
+        // This happens when the composite index hasn't been created yet
+        if (kDebugMode) {
+          debugPrint('⚠️ Firebase: Index missing, using fallback query without orderBy: $e');
+        }
+        querySnapshot = await _firestore
+            .collection(_templatesCollection)
+            .where('userId', isEqualTo: _auth.currentUser!.uid)
+            .get();
+      }
 
       if (kDebugMode) {
         debugPrint('🔥 Firebase: Found ${querySnapshot.docs.length} documents');
@@ -427,6 +449,9 @@ class FirebaseWorkoutTemplateRepository with RateLimitedFirestoreMixin {
 
         return template;
       }).toList();
+
+      // Sort client-side to ensure consistent ordering
+      templates.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
       if (kDebugMode) {
         debugPrint('🔥 Firebase: Returning ${templates.length} templates');

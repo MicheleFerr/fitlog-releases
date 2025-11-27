@@ -238,7 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'You have completed the complete FitLog Pro tutorial. Now you\'re ready to start your workouts!';
 
   @override
-  String get selected => 'selected';
+  String get selected => 'Selected';
 
   @override
   String get onboardingFeaturesTitle => 'Powerful Features';
@@ -8439,7 +8439,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The template will be saved to Firebase and available on all your devices';
 
   @override
-  String get enterTemplateName => 'Enter a template name';
+  String get enterTemplateName => 'Enter template name';
 
   @override
   String get savingToFirebase => 'Saving to Firebase...';
@@ -8469,6 +8469,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get templateSaved => 'Template saved successfully';
+
+  @override
+  String get saveTemplateChanges => 'Save Template Changes?';
+
+  @override
+  String workoutModifiedFromTemplate(String templateName) {
+    return 'Your workout was modified from \"$templateName\"';
+  }
+
+  @override
+  String get changesDetected => 'Changes detected:';
+
+  @override
+  String get updateTemplate => 'Update Template';
+
+  @override
+  String get updateTemplateDescription =>
+      'Apply changes to the original template';
+
+  @override
+  String get saveAsNewTemplate => 'Save as New Template';
+
+  @override
+  String get saveAsNewTemplateDescription =>
+      'Keep original and create a copy with changes';
+
+  @override
+  String get keepOriginal => 'Don\'t Save Changes';
+
+  @override
+  String get keepOriginalDescription =>
+      'Workout saved to history, template unchanged';
+
+  @override
+  String exercisesAdded(int count) {
+    return '$count exercise(s) added';
+  }
+
+  @override
+  String exercisesRemoved(int count) {
+    return '$count exercise(s) removed';
+  }
+
+  @override
+  String get newExercisesAdded => 'New exercises added';
+
+  @override
+  String get exercisesReplaced => 'Some exercises replaced';
+
+  @override
+  String get setCountChanged => 'Set count modified';
+
+  @override
+  String get templateUpdated => 'Template updated successfully';
+
+  @override
+  String get templateCreated => 'New template created';
+
+  @override
+  String get failedToSaveTemplate => 'Failed to save template';
+
+  @override
+  String get pleaseEnterTemplateName => 'Please enter a template name';
 
   @override
   String get errorSavingTemplate => 'Error saving template';

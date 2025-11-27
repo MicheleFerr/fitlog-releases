@@ -239,7 +239,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Hai completato il tutorial completo di FitLog Pro. Ora sei pronto per iniziare i tuoi allenamenti!';
 
   @override
-  String get selected => 'selezionati';
+  String get selected => 'Selezionato';
 
   @override
   String get onboardingFeaturesTitle => 'Funzionalità Potenti';
@@ -8517,7 +8517,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il template verrà salvato su Firebase e sarà disponibile su tutti i tuoi dispositivi';
 
   @override
-  String get enterTemplateName => 'Inserisci un nome per il template';
+  String get enterTemplateName => 'Inserisci nome template';
 
   @override
   String get savingToFirebase => 'Salvataggio su Firebase...';
@@ -8547,6 +8547,69 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get templateSaved => 'Template salvato con successo';
+
+  @override
+  String get saveTemplateChanges => 'Salvare le Modifiche al Template?';
+
+  @override
+  String workoutModifiedFromTemplate(String templateName) {
+    return 'Il tuo allenamento è stato modificato da \"$templateName\"';
+  }
+
+  @override
+  String get changesDetected => 'Modifiche rilevate:';
+
+  @override
+  String get updateTemplate => 'Aggiorna Template';
+
+  @override
+  String get updateTemplateDescription =>
+      'Applica le modifiche al template originale';
+
+  @override
+  String get saveAsNewTemplate => 'Salva come Nuovo Template';
+
+  @override
+  String get saveAsNewTemplateDescription =>
+      'Mantieni l\'originale e crea una copia con le modifiche';
+
+  @override
+  String get keepOriginal => 'Non Salvare le Modifiche';
+
+  @override
+  String get keepOriginalDescription =>
+      'Allenamento salvato nello storico, template invariato';
+
+  @override
+  String exercisesAdded(int count) {
+    return '$count esercizio/i aggiunto/i';
+  }
+
+  @override
+  String exercisesRemoved(int count) {
+    return '$count esercizio/i rimosso/i';
+  }
+
+  @override
+  String get newExercisesAdded => 'Nuovi esercizi aggiunti';
+
+  @override
+  String get exercisesReplaced => 'Alcuni esercizi sostituiti';
+
+  @override
+  String get setCountChanged => 'Numero di serie modificato';
+
+  @override
+  String get templateUpdated => 'Template aggiornato con successo';
+
+  @override
+  String get templateCreated => 'Nuovo template creato';
+
+  @override
+  String get failedToSaveTemplate => 'Impossibile salvare il template';
+
+  @override
+  String get pleaseEnterTemplateName => 'Inserisci un nome per il template';
 
   @override
   String get errorSavingTemplate => 'Errore nel salvataggio del template';
