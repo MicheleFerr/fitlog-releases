@@ -10,9 +10,17 @@ import 'package:gymbro_flutter_new/core/services/rate_limiter.dart';
 class AuthService with RateLimiterMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  // google_sign_in 7.x: Use singleton instance
+  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  static bool _googleSignInInitialized = false;
+
+  /// Initialize GoogleSignIn (must be called once at app startup)
+  /// Call this in your main.dart or app initialization
+  static Future<void> initializeGoogleSignIn() async {
+    if (_googleSignInInitialized) return;
+    await GoogleSignIn.instance.initialize();
+    _googleSignInInitialized = true;
+  }
 
   // Current user stream
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -80,25 +88,40 @@ class AuthService with RateLimiterMixin {
     }
   }
 
-  // Google Sign In
+  // Google Sign In (google_sign_in 7.x API)
   Future<UserCredential?> signInWithGoogle() async {
     try {
+      // Ensure GoogleSignIn is initialized
+      await initializeGoogleSignIn();
+
       // Sign out first to ensure account picker shows
       await _googleSignIn.signOut();
-      
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
-      if (googleUser == null) {
-        return null; // User cancelled the sign-in
+
+      // google_sign_in 7.x: Use authenticate() with scopeHint
+      final GoogleSignInAccount googleUser;
+      try {
+        googleUser = await _googleSignIn.authenticate(
+          scopeHint: ['email', 'profile'],
+        );
+      } on GoogleSignInException catch (e) {
+        // Handle cancellation gracefully
+        if (e.code == GoogleSignInExceptionCode.canceled) {
+          return null; // User cancelled the sign-in
+        }
+        rethrow;
       }
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // google_sign_in 7.x: authentication is now a sync getter
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      // Create a new credential
+      // google_sign_in 7.x: accessToken requires authorization step
+      final authorization = await googleUser.authorizationClient.authorizeScopes(
+        ['email', 'profile'],
+      );
+
+      // Create a new credential with idToken and accessToken
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: authorization.accessToken,
         idToken: googleAuth.idToken,
       );
 
@@ -106,13 +129,16 @@ class AuthService with RateLimiterMixin {
       final userCredential = await _auth.signInWithCredential(credential);
 
       // Create user document if it's a new user
-      if (userCredential.user != null && userCredential.additionalUserInfo?.isNewUser == true) {
+      if (userCredential.user != null &&
+          userCredential.additionalUserInfo?.isNewUser == true) {
         await _createUserDocument(userCredential.user!);
       }
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(_handleAuthException(e));
+    } on GoogleSignInException catch (e) {
+      throw Exception('Google Sign In failed: ${e.code} - ${e.description}');
     } catch (e) {
       throw Exception('Google Sign In failed: $e');
     }

@@ -33,6 +33,7 @@ import 'package:gymbro_flutter_new/core/data/hive_box_manager_enhanced.dart';
 import 'package:gymbro_flutter_new/core/data/hive_migration_service.dart'; // 🔐 SECURITY: Hive encryption migration
 // NOTE: Notification deep linking imports removed - will be rebuilt from scratch
 import 'package:voo_logging/voo_logging.dart'; // 🔍 Unified logging + HTTP inspector
+import 'package:gymbro_flutter_new/features/auth/data/auth_service.dart'; // google_sign_in 7.x init
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -87,6 +88,22 @@ void main() async {
     if (!e.toString().contains('duplicate-app')) {
       rethrow; // Re-throw if it's a different error
     }
+  }
+
+  // ========================================
+  // 🔐 GOOGLE SIGN-IN: Initialize (google_sign_in 7.x)
+  // ========================================
+  // Must be called after Firebase init, before any auth operations
+  try {
+    await AuthService.initializeGoogleSignIn();
+    if (kDebugMode) {
+      debugPrint('✅ GoogleSignIn initialized (7.x singleton)');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('⚠️ GoogleSignIn initialization failed: $e');
+    }
+    // Non-fatal: auth will reinitialize when needed
   }
 
   // ========================================

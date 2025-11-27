@@ -22,7 +22,7 @@ dependencies:
   firebase_performance: ^0.11.1+1  # Performance monitoring
   firebase_app_check: ^0.4.1+1  # 🔐 SECURITY: Prevents API abuse
   # plausible_analytics: ^0.3.0  # 🔐 PRIVACY: EU-hosted analytics (TODO: add when implementing)
-  google_sign_in: ^6.3.0   # Supporta GoogleUtilities 8.0+
+  google_sign_in: ^7.2.0  # ✅ Migrated from ^6.3.0 (2025-11-27) - singleton pattern
   sign_in_with_apple: ^7.0.0  # Upgraded for Flutter Android embedding compatibility
   
   # State Management
