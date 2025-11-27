@@ -54,30 +54,60 @@ class MainShell extends ConsumerStatefulWidget {
 }
 
 class _MainShellState extends ConsumerState<MainShell> {
+  // Track if user has visited workout screen since workout started
+  bool _hasVisitedWorkoutScreen = false;
+  String? _lastWorkoutId;
+
   @override
   Widget build(BuildContext context) {
     final workout = ref.watch(currentWorkoutProvider);
     final currentIndex = widget.navigationShell.currentIndex;
 
+    // Reset tracking if workout changed or ended
+    if (workout?.id != _lastWorkoutId) {
+      _hasVisitedWorkoutScreen = false;
+      _lastWorkoutId = workout?.id;
+    }
+
+    // Mark as visited when user enters workout tab with active workout
+    if (currentIndex == 1 && workout != null) {
+      _hasVisitedWorkoutScreen = true;
+    }
+
     // Check if we should show mini-bar:
     // - Workout exists
     // - Workout is in progress or paused
     // - User is NOT on workout tab (index 1)
+    // - User has visited workout screen at least once (exited from it)
     final showMiniBar = workout != null &&
         (workout.status == WorkoutStatus.inProgress ||
             workout.status == WorkoutStatus.paused) &&
-        currentIndex != 1;
+        currentIndex != 1 &&
+        _hasVisitedWorkoutScreen;
 
     // TODO: Re-enable auto-pause feature
     // _handleAutoPause(currentIndex, workout);
+
+    // Determine if we should render the mini-bar (for animation purposes)
+    final shouldRenderMiniBar = workout != null &&
+        (workout.status == WorkoutStatus.inProgress ||
+            workout.status == WorkoutStatus.paused);
 
     return Scaffold(
       body: widget.navigationShell,
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Mini-bar integrated directly above nav bar
-          if (showMiniBar) WorkoutMiniBar(workout: workout),
+          // Mini-bar with slide up/down animation
+          ClipRect(
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
+              child: shouldRenderMiniBar && showMiniBar
+                  ? WorkoutMiniBar(workout: workout)
+                  : const SizedBox.shrink(),
+            ),
+          ),
           _BottomNavigationBar(
             currentIndex: currentIndex,
             onDestinationSelected: (index) =>

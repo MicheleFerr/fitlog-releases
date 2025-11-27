@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/start_workout_card.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/templates_carousel_compact.dart';
 import 'package:gymbro_flutter_new/features/home/presentation/widgets/ai_coach_card.dart';
@@ -8,6 +7,7 @@ import 'package:gymbro_flutter_new/features/home/presentation/widgets/exercise_w
 import 'package:gymbro_flutter_new/features/home/presentation/providers/ai_coach_provider.dart';
 import 'package:gymbro_flutter_new/features/auth/presentation/providers/admin_provider.dart';
 import 'package:gymbro_flutter_new/features/admin/presentation/screens/exercise_feedback_screen.dart';
+import 'package:gymbro_flutter_new/features/profile/presentation/widgets/settings_bottom_sheet.dart';
 import 'package:gymbro_flutter_new/shared/presentation/extensions/build_context_extensions.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icons.dart';
 import 'package:gymbro_flutter_new/shared/presentation/theme/app_icon_size.dart';
@@ -52,9 +52,9 @@ class MinimalHomeScreen extends ConsumerWidget {
             ),
             actions: [
               IconButton(
-                onPressed: () => context.push('/profile/settings'),
+                onPressed: () => showSettingsBottomSheet(context),
                 icon: SemanticIcon(
-                  icon: AppIcons.settings,
+                  icon: AppIcons.settingsOutlined,
                   semanticLabel: context.l10n.settings,
                   size: AppIconSize.medium,
                   color: context.colors.onSurfaceVariant,

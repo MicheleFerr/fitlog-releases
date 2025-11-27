@@ -1295,6 +1295,18 @@ service cloud.firestore {
 
     // ============= TOP-LEVEL COLLECTIONS WITH USERID (HIGH PRIORITY) =============
 
+    // User Achievements - Achievement XP tracking per user (user_achievements/{userId})
+    // Added: 2025-11-27 - Fix for permission denied on profile page
+    match /user_achievements/{userId} {
+      // User can read their own achievements
+      allow read: if isAuthenticated() && isOwner(userId);
+      // User can create/update their own achievements
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && isOwner(userId);
+      // No deletion allowed (preserve achievement history)
+      allow delete: if false;
+    }
+
     // Achievements - AI Coach achievements
     match /achievements/{achievementId} {
       allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
