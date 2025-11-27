@@ -8,7 +8,7 @@ part 'pattern_detection_result.g.dart';
 /// Represents a detected repeating pattern in user's workout sequence.
 /// Example: ["Push", "Pull", "Legs"] detected with 4 repetitions
 @freezed
-class PatternDetectionResult with _$PatternDetectionResult {
+abstract class PatternDetectionResult with _$PatternDetectionResult {
   const factory PatternDetectionResult({
     /// The detected pattern sequence (e.g., ["Franco", "Ciccio", "Paolo"])
     required List<String> pattern,

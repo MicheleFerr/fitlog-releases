@@ -8,7 +8,7 @@ part 'user_goal.freezed.dart';
 /// Part of P4 onboarding retention feature (+10-15% completion improvement)
 /// Evidence: Personalized experience increases commitment
 @freezed
-class UserGoal with _$UserGoal {
+abstract class UserGoal with _$UserGoal {
   const factory UserGoal({
     required GoalType goalType,
     required int weeklyWorkoutTarget,

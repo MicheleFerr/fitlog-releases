@@ -50,7 +50,7 @@ enum TemplateCategory {
 }
 
 @freezed
-class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
+abstract class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
   const factory CommunityWorkoutTemplate({
     required String id,
     required String userId,
@@ -95,7 +95,7 @@ class CommunityWorkoutTemplate with _$CommunityWorkoutTemplate {
 }
 
 @freezed
-class TemplateReview with _$TemplateReview {
+abstract class TemplateReview with _$TemplateReview {
   const factory TemplateReview({
     required String id,
     required String templateId,
@@ -114,7 +114,7 @@ class TemplateReview with _$TemplateReview {
 }
 
 @freezed
-class TemplateComment with _$TemplateComment {
+abstract class TemplateComment with _$TemplateComment {
   const factory TemplateComment({
     required String id,
     required String templateId,

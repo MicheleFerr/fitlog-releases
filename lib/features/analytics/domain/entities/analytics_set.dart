@@ -39,7 +39,7 @@ part 'analytics_set.freezed.dart';
 part 'analytics_set.g.dart';
 
 @freezed
-class AnalyticsSet with _$AnalyticsSet {
+abstract class AnalyticsSet with _$AnalyticsSet {
 
   const factory AnalyticsSet({
     /// Weight lifted in kg (must be > 0)

@@ -12,7 +12,7 @@ part 'health_permission_status.freezed.dart';
 /// iOS: Sequential permission requests (workout → weight)
 /// Android: Batch permission request + Health Connect availability check
 @freezed
-class HealthPermissionStatus with _$HealthPermissionStatus {
+abstract class HealthPermissionStatus with _$HealthPermissionStatus {
   const factory HealthPermissionStatus({
     /// Map of permission states per data type
     /// Key: HealthDataType (workout, bodyWeight, etc.)

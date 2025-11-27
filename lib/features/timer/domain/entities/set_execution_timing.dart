@@ -6,7 +6,7 @@ part 'set_execution_timing.g.dart';
 /// TIER-1 Set Execution Timing Entity
 /// Tracks precise timing data for individual sets with millisecond accuracy
 @freezed
-class SetExecutionTiming with _$SetExecutionTiming {
+abstract class SetExecutionTiming with _$SetExecutionTiming {
   const factory SetExecutionTiming({
     required String id,
     required String exerciseId,
@@ -54,7 +54,7 @@ class SetExecutionTiming with _$SetExecutionTiming {
 
 /// Set Timing Configuration for different training types
 @freezed
-class SetTimingConfig with _$SetTimingConfig {
+abstract class SetTimingConfig with _$SetTimingConfig {
   const factory SetTimingConfig({
     required TimingMode mode,
     
@@ -101,7 +101,7 @@ enum SetPhase {
 
 /// Real-time set metrics for live feedback
 @freezed
-class LiveSetMetrics with _$LiveSetMetrics {
+abstract class LiveSetMetrics with _$LiveSetMetrics {
   const factory LiveSetMetrics({
     required String setId,
     required SetPhase phase,

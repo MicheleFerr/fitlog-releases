@@ -40,7 +40,7 @@ part 'overtraining_risk.g.dart';
 /// // ⚠️ TSB: -5.2
 /// ```
 @freezed
-class OvertrainingRisk with _$OvertrainingRisk {
+abstract class OvertrainingRisk with _$OvertrainingRisk {
   const factory OvertrainingRisk({
     /// Overall risk level for overtraining
     required RiskLevel riskLevel,
@@ -158,7 +158,7 @@ enum RiskLevel {
 /// );
 /// ```
 @freezed
-class RiskFactors with _$RiskFactors {
+abstract class RiskFactors with _$RiskFactors {
   const factory RiskFactors({
     /// Acute Training Load (7-day average)
     ///

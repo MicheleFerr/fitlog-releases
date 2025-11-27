@@ -15,7 +15,7 @@ part 'health_sync_status.g.dart';
 /// Generic design allows single entity to handle all health data types
 /// (workout, weight, body fat, etc.) without code duplication.
 @freezed
-class HealthSyncStatus with _$HealthSyncStatus {
+abstract class HealthSyncStatus with _$HealthSyncStatus {
   const factory HealthSyncStatus({
     /// The type of health data this status represents
     required HealthDataType dataType,

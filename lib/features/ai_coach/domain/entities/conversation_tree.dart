@@ -31,7 +31,7 @@ part 'conversation_tree.freezed.dart';
 part 'conversation_tree.g.dart';
 
 @freezed
-class ConversationTree with _$ConversationTree {
+abstract class ConversationTree with _$ConversationTree {
 
   const factory ConversationTree({
     /// User ID who owns this tree

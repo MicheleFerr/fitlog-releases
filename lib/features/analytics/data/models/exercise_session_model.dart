@@ -41,7 +41,7 @@ import 'package:gymbro_flutter_new/features/analytics/domain/entities/exercise_s
 part 'exercise_session_model.freezed.dart';
 
 @freezed
-class ExerciseSessionModel with _$ExerciseSessionModel {
+abstract class ExerciseSessionModel with _$ExerciseSessionModel {
 
   const factory ExerciseSessionModel({
     /// Name of the exercise (e.g., "Bench Press", "Squat")

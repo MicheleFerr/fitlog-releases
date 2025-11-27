@@ -5,7 +5,7 @@ part 'scheduling_ui_state.freezed.dart';
 
 /// UI state for the schedule bottom sheet
 @freezed
-class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
+abstract class ScheduleBottomSheetState with _$ScheduleBottomSheetState {
   const ScheduleBottomSheetState._();
 
   const factory ScheduleBottomSheetState({

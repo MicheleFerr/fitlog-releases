@@ -31,7 +31,7 @@ extension ScheduleStatusExtension on ScheduleStatus {
 
 /// Represents a workout scheduled for a specific date
 @freezed
-class ScheduledWorkout with _$ScheduledWorkout {
+abstract class ScheduledWorkout with _$ScheduledWorkout {
   const ScheduledWorkout._();
 
   const factory ScheduledWorkout({

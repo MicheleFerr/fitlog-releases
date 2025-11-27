@@ -41,7 +41,7 @@ enum BadgeType {
 /// Tracks when a user achieves specific fitness milestones with evidence
 /// to support gamification and retention features.
 @freezed
-class Achievement with _$Achievement {
+abstract class Achievement with _$Achievement {
   const factory Achievement({
     /// Unique achievement identifier
     required String id,

@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'home_state.freezed.dart';
 
 @freezed
-class HomeState with _$HomeState {
+abstract class HomeState with _$HomeState {
   const factory HomeState({
     required String greeting,
     required WorkoutSection workoutSection,
@@ -27,7 +27,7 @@ enum LoadingPhase {
 }
 
 @freezed
-class WorkoutSection with _$WorkoutSection {
+abstract class WorkoutSection with _$WorkoutSection {
   const factory WorkoutSection({
     required bool hasActiveWorkout,
     String? workoutName,
@@ -46,7 +46,7 @@ class WorkoutSection with _$WorkoutSection {
 }
 
 @freezed
-class AICoachSection with _$AICoachSection {
+abstract class AICoachSection with _$AICoachSection {
   const factory AICoachSection({
     required String message,
     String? suggestion,
@@ -63,7 +63,7 @@ class AICoachSection with _$AICoachSection {
 }
 
 @freezed
-class StreakSection with _$StreakSection {
+abstract class StreakSection with _$StreakSection {
   const factory StreakSection({
     required int currentStreak,
     required int bestStreak,

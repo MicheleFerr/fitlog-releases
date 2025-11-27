@@ -20,7 +20,7 @@ enum ContributionStatus {
 }
 
 @freezed
-class CommunityContribution with _$CommunityContribution {
+abstract class CommunityContribution with _$CommunityContribution {
   const factory CommunityContribution({
     required String id,
     required String exerciseId,
@@ -68,7 +68,7 @@ class CommunityContribution with _$CommunityContribution {
 }
 
 @freezed
-class ContributionComment with _$ContributionComment {
+abstract class ContributionComment with _$ContributionComment {
   const factory ContributionComment({
     required String id,
     required String userId,
@@ -85,7 +85,7 @@ class ContributionComment with _$ContributionComment {
 }
 
 @freezed
-class UserContributionStats with _$UserContributionStats {
+abstract class UserContributionStats with _$UserContributionStats {
   const factory UserContributionStats({
     required String userId,
     @Default(0) int totalContributions,
@@ -111,7 +111,7 @@ class UserContributionStats with _$UserContributionStats {
 }
 
 @freezed
-class ContributorBadge with _$ContributorBadge {
+abstract class ContributorBadge with _$ContributorBadge {
   const factory ContributorBadge({
     required String id,
     required String name,

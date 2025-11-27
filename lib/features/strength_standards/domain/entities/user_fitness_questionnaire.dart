@@ -14,7 +14,7 @@ part 'user_fitness_questionnaire.g.dart';
 /// Collected through a 6-step onboarding flow to determine appropriate
 /// starting weights based on experience, bodyweight, and optional max lifts.
 @freezed
-class UserFitnessQuestionnaire with _$UserFitnessQuestionnaire {
+abstract class UserFitnessQuestionnaire with _$UserFitnessQuestionnaire {
   const factory UserFitnessQuestionnaire({
     // Step 1: Demographics
     /// User's bodyweight in kg
@@ -274,7 +274,7 @@ extension UserFitnessQuestionnaireExtension on UserFitnessQuestionnaire {
 
 /// Injury details for detailed screening (Sciascia 2015)
 @freezed
-class InjuryDetails with _$InjuryDetails {
+abstract class InjuryDetails with _$InjuryDetails {
   const factory InjuryDetails({
     /// Type of injury (e.g., "Lower back strain", "Shoulder impingement")
     required String injuryType,

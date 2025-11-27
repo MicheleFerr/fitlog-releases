@@ -36,7 +36,7 @@ part 'user_consent.g.dart';
 /// );
 /// ```
 @freezed
-class UserConsent with _$UserConsent {
+abstract class UserConsent with _$UserConsent {
   const factory UserConsent({
     /// Unique consent record ID (UUID v4)
     required String id,
@@ -215,7 +215,7 @@ enum ConsentState {
 /// );
 /// ```
 @freezed
-class AuditLog with _$AuditLog {
+abstract class AuditLog with _$AuditLog {
   const factory AuditLog({
     /// Unique audit log ID (UUID v4)
     required String id,

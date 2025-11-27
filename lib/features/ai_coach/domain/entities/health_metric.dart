@@ -50,7 +50,7 @@ enum HealthMetricType {
 /// );
 /// ```
 @freezed
-class HealthMetric with _$HealthMetric {
+abstract class HealthMetric with _$HealthMetric {
   const factory HealthMetric({
     /// Metric type (steps, heart rate, etc.)
     required HealthMetricType type,
@@ -162,7 +162,7 @@ extension HealthMetricX on HealthMetric {
 /// );
 /// ```
 @freezed
-class HealthMetricSummary with _$HealthMetricSummary {
+abstract class HealthMetricSummary with _$HealthMetricSummary {
   const factory HealthMetricSummary({
     /// Metric type being summarized
     required HealthMetricType metricType,

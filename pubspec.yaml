@@ -79,7 +79,7 @@ dependencies:
   visibility_detector: ^0.4.0+2
 
   # AdMob Integration
-  google_mobile_ads: ^5.1.0
+  google_mobile_ads: ^6.0.0  # ✅ Migrated from ^5.1.0 (2025-11-27) - minSdk 23
 
   # Icons
   cupertino_icons: ^1.0.8

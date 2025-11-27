@@ -35,7 +35,7 @@ part 'exercise_records.freezed.dart';
 part 'exercise_records.g.dart';
 
 @freezed
-class ExerciseRecords with _$ExerciseRecords {
+abstract class ExerciseRecords with _$ExerciseRecords {
   const factory ExerciseRecords({
     /// Exercise name (matches ExerciseHistory.exerciseName)
     required String exerciseName,

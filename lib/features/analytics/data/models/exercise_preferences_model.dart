@@ -51,7 +51,7 @@ part 'exercise_preferences_model.g.dart';
 /// - Batch writes to reduce write operations
 /// - Local caching to minimize reads
 @freezed
-class ExercisePreferencesModel with _$ExercisePreferencesModel {
+abstract class ExercisePreferencesModel with _$ExercisePreferencesModel {
 
   const factory ExercisePreferencesModel({
     /// Set of exercise names marked as favorite

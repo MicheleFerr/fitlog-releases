@@ -7,7 +7,7 @@ part 'insight_rule.g.dart';
 
 /// Dynamic rules for insight generation
 @freezed
-class InsightRule with _$InsightRule {
+abstract class InsightRule with _$InsightRule {
   const factory InsightRule({
     required InsightType insightType,
     required int minWeeks, // Minimum weeks of data required
@@ -21,7 +21,7 @@ class InsightRule with _$InsightRule {
 
 /// Personalized thresholds based on experience level
 @freezed
-class PersonalizedThreshold with _$PersonalizedThreshold {
+abstract class PersonalizedThreshold with _$PersonalizedThreshold {
   const factory PersonalizedThreshold({
     required double mev, // Minimum Effective Volume (sets per week)
     required double mav, // Maximum Adaptive Volume (sets per week)

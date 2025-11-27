@@ -6,7 +6,7 @@ part 'set_progress_data.g.dart';
 /// Represents the progress comparison between current set and last workout.
 /// Used to display progress arrows (green/red) in set rows.
 @freezed
-class SetProgressData with _$SetProgressData {
+abstract class SetProgressData with _$SetProgressData {
   const SetProgressData._();
 
   const factory SetProgressData({
@@ -117,7 +117,7 @@ enum ProgressStatus {
 
 /// Parameters for querying set progress data
 @freezed
-class SetProgressParams with _$SetProgressParams {
+abstract class SetProgressParams with _$SetProgressParams {
   const factory SetProgressParams({
     required String exerciseName,
     required int setNumber,

@@ -7,7 +7,7 @@ part 'onboarding_tour_step.freezed.dart';
 /// Each step highlights a specific widget and shows an explanation in a bottom sheet.
 /// Steps can be SIMPLE (auto-advance after duration) or COMPLEX (user-controlled with buttons).
 @freezed
-class OnboardingTourStep with _$OnboardingTourStep {
+abstract class OnboardingTourStep with _$OnboardingTourStep {
   const factory OnboardingTourStep({
     /// Unique identifier for this step (e.g., 'aiCoach', 'fab', 'analytics')
     required String id,

@@ -21,7 +21,7 @@ enum CelebrationEngagement {
 /// Tracks when a user achieves a personal record and how they engage
 /// with the celebration (view, share, dismiss) for analytics and retention.
 @freezed
-class PRCelebration with _$PRCelebration {
+abstract class PRCelebration with _$PRCelebration {
   const factory PRCelebration({
     /// Unique celebration identifier
     required String id,

@@ -18,7 +18,7 @@ part 'questionnaire_analytics.g.dart';
 
 /// Analytics data for questionnaire completion tracking
 @freezed
-class QuestionnaireAnalytics with _$QuestionnaireAnalytics {
+abstract class QuestionnaireAnalytics with _$QuestionnaireAnalytics {
   const factory QuestionnaireAnalytics({
     /// User ID for aggregation
     required String userId,

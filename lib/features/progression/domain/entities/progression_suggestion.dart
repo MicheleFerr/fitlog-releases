@@ -15,7 +15,7 @@ enum ProgressionConfidence { low, medium, high }
 /// Uses transparent rules (no AI) to analyze workout history
 /// and suggest next step for progression
 @freezed
-class ProgressionSuggestion with _$ProgressionSuggestion {
+abstract class ProgressionSuggestion with _$ProgressionSuggestion {
   const factory ProgressionSuggestion({
     required String exerciseName,
     required double currentWeight,

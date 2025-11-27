@@ -14,7 +14,7 @@ part 'body_measurement.g.dart';
 ///
 /// Sources: FitLog (manual entry), HealthKit (iOS), Health Connect (Android)
 @freezed
-class BodyMeasurement with _$BodyMeasurement {
+abstract class BodyMeasurement with _$BodyMeasurement {
   const factory BodyMeasurement({
     /// Numeric value of the measurement
     required double value,

@@ -8,7 +8,7 @@ part 'advanced_exercise_template.g.dart';
 /// Supports superset, dropset, and rest-pause configurations.
 /// Free users limited to 3 templates, premium unlimited.
 @freezed
-class AdvancedExerciseTemplate with _$AdvancedExerciseTemplate {
+abstract class AdvancedExerciseTemplate with _$AdvancedExerciseTemplate {
   const AdvancedExerciseTemplate._();
 
   const factory AdvancedExerciseTemplate({

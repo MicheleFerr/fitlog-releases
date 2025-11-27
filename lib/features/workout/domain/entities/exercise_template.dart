@@ -9,7 +9,7 @@ part 'exercise_template.g.dart';
 /// Reduces friction by remembering user's typical weight/reps/sets
 /// Can be created manually or from last workout of an exercise
 @freezed
-class ExerciseTemplate with _$ExerciseTemplate {
+abstract class ExerciseTemplate with _$ExerciseTemplate {
   const factory ExerciseTemplate({
     required String exerciseName,
     required double defaultWeight,

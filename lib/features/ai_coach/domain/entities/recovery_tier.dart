@@ -94,7 +94,7 @@ enum RecoveryTier {
 /// }
 /// ```
 @freezed
-class RecoveryTierConfig with _$RecoveryTierConfig {
+abstract class RecoveryTierConfig with _$RecoveryTierConfig {
   const factory RecoveryTierConfig({
     /// The tier this configuration applies to
     required RecoveryTier tier,
@@ -171,7 +171,7 @@ class RecoveryTierConfig with _$RecoveryTierConfig {
 /// print('Unlocks in: ${status.daysRemaining} days'); // 4 days
 /// ```
 @freezed
-class RecoveryTierStatus with _$RecoveryTierStatus {
+abstract class RecoveryTierStatus with _$RecoveryTierStatus {
   const factory RecoveryTierStatus({
     /// The tier this status applies to
     required RecoveryTier tier,

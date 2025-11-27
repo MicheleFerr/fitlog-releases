@@ -72,7 +72,7 @@ enum PatternSeverity {
 
 /// Detected training pattern with context and recommendations
 @freezed
-class TrainingPattern with _$TrainingPattern {
+abstract class TrainingPattern with _$TrainingPattern {
   const factory TrainingPattern({
     /// Type of pattern detected
     required PatternType type,
@@ -149,7 +149,7 @@ class TrainingPattern with _$TrainingPattern {
 
 /// Collection of detected patterns for an exercise
 @freezed
-class TrainingPatternResults with _$TrainingPatternResults {
+abstract class TrainingPatternResults with _$TrainingPatternResults {
   const factory TrainingPatternResults({
     /// All detected patterns, sorted by priority
     required List<TrainingPattern> patterns,

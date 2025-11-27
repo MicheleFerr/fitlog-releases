@@ -23,7 +23,7 @@ part 'analytics_page_feedback.g.dart';
 
 /// Feedback dell'utente sulla schermata Analytics
 @freezed
-class AnalyticsPageFeedback with _$AnalyticsPageFeedback {
+abstract class AnalyticsPageFeedback with _$AnalyticsPageFeedback {
   const factory AnalyticsPageFeedback({
     /// Unique identifier: {userId}_{timestamp}
     required String id,

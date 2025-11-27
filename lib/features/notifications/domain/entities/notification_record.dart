@@ -15,7 +15,7 @@ part 'notification_record.g.dart';
 
 /// Record of a sent notification for tracking and anti-spam purposes.
 @freezed
-class NotificationRecord with _$NotificationRecord {
+abstract class NotificationRecord with _$NotificationRecord {
   const factory NotificationRecord({
     /// Unique identifier
     required String id,
@@ -56,7 +56,7 @@ class NotificationRecord with _$NotificationRecord {
 
 /// Statistics for a notification type
 @freezed
-class NotificationStats with _$NotificationStats {
+abstract class NotificationStats with _$NotificationStats {
   const factory NotificationStats({
     /// Total notifications sent
     required int totalSent,

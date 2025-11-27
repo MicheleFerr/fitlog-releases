@@ -5,7 +5,7 @@ part 'ai_insight.g.dart';
 
 /// Represents an AI-generated coaching insight
 @freezed
-class AIInsight with _$AIInsight {
+abstract class AIInsight with _$AIInsight {
   const factory AIInsight({
     required String id,
     required InsightType type,

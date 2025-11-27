@@ -74,7 +74,7 @@ enum GateRuleType {
 /// Determines whether a feature should be enabled for a user
 /// based on multiple criteria (AND logic - all rules must pass)
 @freezed
-class FeatureGateConfig with _$FeatureGateConfig {
+abstract class FeatureGateConfig with _$FeatureGateConfig {
   const factory FeatureGateConfig({
     /// Feature being gated
     required AiCoachFeature feature,
@@ -106,7 +106,7 @@ class FeatureGateConfig with _$FeatureGateConfig {
 ///
 /// Individual rule that must be satisfied for feature access
 @freezed
-class GateRule with _$GateRule {
+abstract class GateRule with _$GateRule {
   const factory GateRule({
     /// Type of rule
     required GateRuleType type,
@@ -158,7 +158,7 @@ extension FeatureGateConfigX on FeatureGateConfig {
 ///
 /// Evaluation result for a specific feature gate
 @freezed
-class FeatureGateStatus with _$FeatureGateStatus {
+abstract class FeatureGateStatus with _$FeatureGateStatus {
   const factory FeatureGateStatus({
     /// Feature being evaluated
     required AiCoachFeature feature,

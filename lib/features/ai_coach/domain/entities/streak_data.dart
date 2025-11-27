@@ -26,7 +26,7 @@ part 'streak_data.g.dart';
 /// - Breaks if gap >48h (allows 1 rest day)
 /// - Resets to 0 on break, but preserves longestStreak
 @freezed
-class StreakData with _$StreakData {
+abstract class StreakData with _$StreakData {
   const factory StreakData({
     /// Current consecutive workout days
     @Default(0) int currentStreak,

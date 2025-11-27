@@ -8,7 +8,7 @@ part 'strength_standard.g.dart';
 /// Contains data from sources like ExRx.net and SymmetricStrength to provide
 /// reference 1RM values for different experience levels and bodyweights.
 @freezed
-class StrengthStandard with _$StrengthStandard {
+abstract class StrengthStandard with _$StrengthStandard {
   const factory StrengthStandard({
     /// Unique identifier (e.g., "barbell_bench_press")
     required String id,

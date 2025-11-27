@@ -79,7 +79,7 @@ class ExerciseDisambiguation {
 
 /// State for template import process
 @freezed
-class TemplateImportState with _$TemplateImportState {
+abstract class TemplateImportState with _$TemplateImportState {
   const factory TemplateImportState({
     @Default([]) List<ImportParsingResult> parsingResults,
     @Default([]) List<ExerciseDisambiguation> exerciseDisambiguations,
